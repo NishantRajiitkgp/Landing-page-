@@ -1,0 +1,145 @@
+      <div className="wrap sec hair-top">
+        {' '}
+        <h2 className="h2">
+          33 checks. Most take minutes.
+        </h2>
+        {' '}
+        <p className="lede">
+          Grouped by how long you wait, from upload to report.
+        </p>
+        {' '}
+        <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+          {' '}
+          <div className="bucket">
+            <div className="bk">
+              <span className="serif" style={{ fontStyle: 'italic', fontSize: '28px', lineHeight: '1' }}>
+                15–30 min
+              </span>
+              <span className="k">
+                Identity, documents, records
+              </span>
+            </div>
+            <div className="cloud">
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Identity
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                PAN
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Passport
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Age
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Credit
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Global database
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Driving licence
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Registration certificate
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Criminal
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Current address
+              </span>
+            </div>
+          </div>
+          {' '}
+          <div className="bucket">
+            <div className="bk">
+              <span className="serif" style={{ fontStyle: 'italic', fontSize: '28px', lineHeight: '1' }}>
+                60 min
+              </span>
+              <span className="k">
+                Provident-fund records
+              </span>
+            </div>
+            <div className="cloud">
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Digital employment
+              </span>
+              <span className="pl fast">
+                <span className="d">
+                </span>
+                Moonlighting
+              </span>
+            </div>
+          </div>
+          {' '}
+          <div className="bucket">
+            <div className="bk">
+              <span className="serif" style={{ fontStyle: 'italic', fontSize: '28px', lineHeight: '1' }}>
+                1–3 days
+              </span>
+              <span className="k">
+                Confirmed with a registrar, employer or authority
+              </span>
+            </div>
+            <div className="cloud">
+              <span className="pl">
+                <span className="d">
+                </span>
+                Entitlement to work
+              </span>
+              <span className="pl">
+                <span className="d">
+                </span>
+                Employment
+              </span>
+              <span className="pl">
+                <span className="d">
+                </span>
+                Education
+              </span>
+              <span className="pl">
+                <span className="d">
+                </span>
+                Trade licence
+              </span>
+              <span className="pl">
+                <span className="d">
+                </span>
+                Directors{' '}
+                &amp;
+                {' '}GST
+              </span>
+            </div>
+          </div>
+          {' '}
+        </div>
+        {' '}
+        <a href="#" className="btn btn-line full" style={{ marginTop: '28px' }}>
+          All 33 checks
+        </a>
+        {' '}
+      </div>

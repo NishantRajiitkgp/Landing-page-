@@ -1,0 +1,314 @@
+/** /business/enterprise — vertical page (Template 3, the workhorse pattern). */
+import type { Metadata } from "next";
+import { PageShell } from "@/components/chrome/PageShell";
+import Image from "next/image";
+import { CERT_BOX } from "@/lib/img";
+
+export const metadata: Metadata = {
+  title: "Enterprise background verification — HelloVerify",
+  description:
+    "High-volume background checks with an SLA. AI reads the documents, our team confirms with the issuer, your ATS gets the answer back — from 15 minutes.",
+};
+
+const Tick = () => (
+  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const Arrow = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const LANES: { gt: string; gh: string; pills: { n: string; t: string; fast?: boolean }[] }[] = [
+  {
+    gt: "01 — Identity",
+    gh: "Who they are",
+    pills: [
+      { n: "Identity", t: "15 min", fast: true },
+      { n: "PAN", t: "15 min", fast: true },
+      { n: "Passport", t: "15 min", fast: true },
+      { n: "Age", t: "15 min", fast: true },
+      { n: "Driving licence", t: "30 min", fast: true },
+      { n: "Registration certificate", t: "60 min", fast: true },
+    ],
+  },
+  {
+    gt: "02 — Work & education",
+    gh: "What they've done",
+    pills: [
+      { n: "Digital employment", t: "60 min", fast: true },
+      { n: "Moonlighting", t: "60 min", fast: true },
+      { n: "Entitlement to work", t: "60 min", fast: true },
+      { n: "Employment", t: "2 days" },
+      { n: "Education", t: "3 days" },
+    ],
+  },
+  {
+    gt: "03 — Records & risk",
+    gh: "What's on file",
+    pills: [
+      { n: "Credit", t: "15 min", fast: true },
+      { n: "Global database", t: "15 min", fast: true },
+      { n: "Criminal", t: "30 min", fast: true },
+      { n: "Current address", t: "30 min", fast: true },
+      { n: "Trade licence", t: "2 days" },
+      { n: "Directors & GST", t: "3 days" },
+    ],
+  },
+];
+
+const ROWS: { nm: string; sub: string; tm: string; fast?: boolean; src: string }[] = [
+  { nm: "Identity & PAN", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
+  { nm: "Driving licence", sub: "class, validity, endorsements", tm: "30 min", fast: true, src: "state transport authority" },
+  { nm: "Criminal record", sub: "court & police databases", tm: "30 min", fast: true, src: "court records" },
+  { nm: "Digital employment", sub: "EPFO-backed work history", tm: "60 min", fast: true, src: "provident fund records" },
+  { nm: "Employment", sub: "role, tenure, exit remarks", tm: "2 days", src: "the employer's HR" },
+  { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
+];
+
+export default function EnterprisePage() {
+  return (
+    <PageShell
+      crumbs={[{ label: "Business", href: "/business" }, { label: "Enterprise BGV" }]}
+      closing={{
+        heading: (
+          <>
+            Four hundred riders a week? <em>Before lunch.</em>
+          </>
+        ),
+        sub: "Tell us your volume and your roles. You'll have a pilot running this week.",
+      }}
+    >
+      {/* hero */}
+      <div className="wrap hero3">
+        <div className="k">Business · Enterprise BGV</div>
+        <h1 className="h1">
+          Verification that keeps up <em>with hiring.</em>
+        </h1>
+        <p className="sub">
+          High-volume background checks with an SLA. AI reads every document, our team
+          confirms with the issuer, and your ATS gets the answer back — from 15 minutes.
+        </p>
+        <div className="hrow">
+          <a href="/contact" className="btn btn-ink">Talk to sales</a>
+          <a href="#turnaround" className="btn btn-ghost">
+            <span>See turnaround times</span>
+            <Arrow />
+          </a>
+        </div>
+      </div>
+
+      {/* trust strip */}
+      <div className="wrap">
+        <div className="strip3">
+          <span className="it"><b>2,000+</b> enterprise clients</span>
+          <span className="it"><b>20M+</b> checks, every one at the source</span>
+          <span className="it"><b>1,600+</b> riders verified a month, one client</span>
+          <span className="it"><span className="dot" /> ISO 27001 · PBSA</span>
+        </div>
+      </div>
+
+      {/* what we verify */}
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <div>
+            <div className="k">What we verify</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>33 checks.<br />Three questions.</h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            Green means the answer usually lands within the hour. The rest go to a registrar
+            or a court, and come back in days — with the source named.
+          </p>
+        </div>
+        <div className="body3 lanes3">
+          {LANES.map((l) => (
+            <div key={l.gt}>
+              <div className="lgt">{l.gt}</div>
+              <div className="lgh">{l.gh}</div>
+              <div className="cloud3">
+                {l.pills.map((p) => (
+                  <span key={p.n} className={`pl3${p.fast ? " fast" : ""}`}>
+                    <span className="d" />
+                    {p.n}
+                    <span className="t">{p.t}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 36 }}>
+          <a href="/resources/checks" className="btn btn-line btn-sm">All 33 checks</a>
+        </div>
+      </div>
+
+      {/* how it works */}
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <div>
+            <div className="k">How it works</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>One upload.<br />Then we get to work.</h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            Candidates upload over WhatsApp or a link — no app, no account. Everything runs in
+            parallel, so a package is only as slow as its slowest check.
+          </p>
+        </div>
+        <div className="body3 steps3">
+          <div>
+            <div className="n">01 · Candidate's phone</div>
+            <div className="t">Upload</div>
+            <p className="p">Photograph the document. Edges, glare and focus are checked before the shutter fires.</p>
+          </div>
+          <div>
+            <div className="n">02 · HelloVerify AI</div>
+            <div className="t">Read</div>
+            <p className="p">Every field extracted, the document checked against itself, the issuing office located — in about a second.</p>
+          </div>
+          <div>
+            <div className="n">03 · The source</div>
+            <div className="t">Confirm</div>
+            <p className="p">The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one.</p>
+          </div>
+          <div>
+            <div className="n">04 · Your ATS</div>
+            <div className="t">Report</div>
+            <p className="p">One report, the source named beside every result, with an auditable trail behind it.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* turnaround & coverage */}
+      <div className="wrap sec3" id="turnaround">
+        <div className="sec-head">
+          <div>
+            <div className="k">Turnaround &amp; coverage</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>Times we'll put<br />in the contract.</h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            Measured from upload to report. Where the issuer is offline, the report says so —
+            and says how long the paper route takes.
+          </p>
+        </div>
+        <div className="body3 tbl3">
+          <div className="hd">
+            <span>Check</span>
+            <span>Turnaround</span>
+            <span>Confirmed with</span>
+          </div>
+          {ROWS.map((r) => (
+            <div className="r" key={r.nm}>
+              <span className="nm">{r.nm}<small>{r.sub}</small></span>
+              <span className={`tm${r.fast ? " fast" : ""}`}>{r.tm}</span>
+              <span className="src">{r.src}</span>
+            </div>
+          ))}
+          <div className="note">Times shown are from upload to report · 120+ countries via the same pipeline — see <a href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</a></div>
+        </div>
+      </div>
+
+      {/* compliance & security */}
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <div>
+            <div className="k">Compliance &amp; security</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>The unexciting part,<br />done properly.</h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            Every check involves someone's most personal documents. Consent comes first,
+            retention has limits, and all of it is auditable.
+          </p>
+        </div>
+        <div className="body3 certs3">
+          <div className="cert">
+            <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
+            <div>
+              <div className="h">ISO 27001 certified</div>
+              <p className="p">Information security management, independently audited.</p>
+            </div>
+          </div>
+          <div className="cert">
+            <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />
+            <div>
+              <div className="h">GDPR compliant</div>
+              <p className="p">Consent, retention limits and the right to be forgotten, built into every workflow.</p>
+            </div>
+          </div>
+          <div className="cert">
+            <Image src="/img/pbsa.jpg" alt="PBSA" width={CERT_BOX} height={CERT_BOX} />
+            <div>
+              <div className="h">Professional Background Screening Association</div>
+              <p className="p">Member of the global standards body for the screening industry.</p>
+            </div>
+          </div>
+          <div className="cert">
+            <Image src="/img/nsr.jpg" alt="NSR" width={CERT_BOX} height={CERT_BOX} />
+            <div>
+              <div className="h">National Skills Registry</div>
+              <p className="p">India's registry of verified IT and ITeS professionals.</p>
+            </div>
+          </div>
+        </div>
+        <div style={{ marginTop: 32 }}>
+          <a href="/platform/security-compliance" className="btn btn-ghost btn-sm">
+            <span>Security &amp; compliance, in full — DPA, residency, conformance</span>
+            <Arrow />
+          </a>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
+        <div className="sec-head" style={{ marginBottom: 44 }}>
+          <div>
+            <div className="k">Questions</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>Asked before<br />every pilot.</h2>
+          </div>
+        </div>
+        <div className="faq3">
+          <details>
+            <summary>How fast is "fast" at real volume?<span className="m">+</span></summary>
+            <p className="a">
+              The times on this page hold at volume because the pipeline is parallel — a thousand
+              driving licences take about as long as one. Identity-class checks come back in
+              15–60 minutes; anything that needs a registrar or a court is quoted in days, and the
+              SLA we sign reflects your actual mix of checks.
+            </p>
+          </details>
+          <details>
+            <summary>What does "confirmed at the source" actually mean?<span className="m">+</span></summary>
+            <p className="a">
+              No proxy databases as the final word. A degree is confirmed with the university
+              registrar, a licence with the issuing authority, employment with the employer or
+              provident-fund records. The report names the source beside every result.
+            </p>
+          </details>
+          <details>
+            <summary>How do candidates submit documents?<span className="m">+</span></summary>
+            <p className="a">
+              Over WhatsApp or a one-time link — no app to install, no account to create. Consent is
+              captured first, and the capture flow checks focus, edges and glare before upload.
+            </p>
+          </details>
+          <details>
+            <summary>Can this plug into our ATS?<span className="m">+</span></summary>
+            <p className="a">
+              Yes — REST API and webhooks, bulk CSV for batch drives, and connectors for common ATS
+              platforms. Results post back automatically; your recruiters never leave their queue.
+            </p>
+          </details>
+          <details>
+            <summary>What happens when a check fails?<span className="m">+</span></summary>
+            <p className="a">
+              The report shows exactly what didn't match and where it was checked, with the evidence
+              attached. Candidates get a dispute path, and re-verification after a correction is free.
+            </p>
+          </details>
+        </div>
+      </div>
+    </PageShell>
+  );
+}

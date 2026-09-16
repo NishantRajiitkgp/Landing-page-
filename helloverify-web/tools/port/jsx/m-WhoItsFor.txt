@@ -1,0 +1,125 @@
+      <div className="wrap sec hair-top">
+        {' '}
+        <h2 className="h2">
+          For the moment you need to trust someone.
+        </h2>
+        {' '}
+        <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {' '}
+          <div className="cell ph" style={{ background: '#B3B08F' }}>
+            <div className="light">
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="tag">
+              Governments
+            </div>
+            <div className="from">
+              from 3 days
+            </div>
+            <div className="body">
+              <div className="h">
+                Licences, visas
+                <br />
+                and permits
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="cell ph" style={{ background: '#D8CBB2' }}>
+            <div className="light">
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="tag">
+              Enterprise{' '}
+              &amp;
+              {' '}SMB · BGV
+            </div>
+            <div className="from">
+              from 30 min
+            </div>
+            <div className="body">
+              <div className="h">
+                Every hire, white-collar and blue
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="cell ph" style={{ background: '#ADB4BE' }}>
+            <div className="light">
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="tag">
+              KYC · Trust{' '}
+              &amp;
+              {' '}Safety
+            </div>
+            <div className="from">
+              15 min
+            </div>
+            <div className="body">
+              <div className="h">
+                Customers, verified at signup
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="cell ph" style={{ background: '#6E6C63' }}>
+            <div className="light">
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="tag">
+              Vendors · Certifier
+            </div>
+            <div className="from">
+              from 2 days
+            </div>
+            <div className="body">
+              <div className="h">
+                Know who you buy from
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="cell ph" style={{ background: '#C9C2B4' }}>
+            <div className="light">
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="tag">
+              Premium services
+            </div>
+            <div className="from">
+              assisted
+            </div>
+            <div className="body">
+              <div className="h">
+                Visas and healthcare credentials
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="cell ph" style={{ background: '#D6BCB2' }}>
+            <div className="light">
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="tag">
+              Consumer · HelloV
+            </div>
+            <div className="from">
+              30 min
+            </div>
+            <div className="body">
+              <div className="h">
+                The people in your home
+              </div>
+            </div>
+          </div>
+          {' '}
+        </div>
+        {' '}
+      </div>

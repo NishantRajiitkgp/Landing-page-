@@ -1,0 +1,420 @@
+      <div className="wrap hair-top" style={{ paddingTop: '120px', paddingBottom: '140px' }}>
+        {' '}
+        <div className="sec-head">
+          {' '}
+          <h2 className="h2">
+            Verified in 120 countries.
+            <br />
+            With a time you can plan around.
+          </h2>
+          {' '}
+          <p className="lede" style={{ marginBottom: '8px' }}>
+            Local sources — the same courts, registries and licensing bodies a local employer would call. Start now and the report lands by the time shown.
+          </p>
+          {' '}
+        </div>
+        {' '}
+        <div style={{ marginTop: '64px', display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: '20px' }}>
+          {' '}
+          <div className="cc">
+            {' '}
+            <div className="ccard ph" style={{ background: '#5E6A78' }}>
+              {' '}
+              <div className="light">
+              </div>
+              <Image className="pimg" src="/img/16-united-kingdom.jpg" alt="" fill sizes={SIZES_CCARD} />
+              <div className="note" style={{ top: '22%', color: 'rgba(255,255,255,0.45)' }}>
+                photo · London street
+              </div>
+              {' '}
+              <div className="shade">
+              </div>
+              {' '}
+              <div className="ccin">
+                {' '}
+                <div className="flag">
+                  <span className="fl" style={{ width: '30px', height: '30px' }}>
+                    <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                      <rect width="30" height="20" fill="#012169" />
+                      <path d="M0 0L30 20M30 0L0 20" stroke="#FFFFFF" strokeWidth="4" />
+                      <path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" strokeWidth="1.5" />
+                      <rect x="12.5" width="5" height="20" fill="#FFFFFF" />
+                      <rect y="7.5" width="30" height="5" fill="#FFFFFF" />
+                      <rect x="13.5" width="3" height="20" fill="#C8102E" />
+                      <rect y="8.5" width="30" height="3" fill="#C8102E" />
+                    </svg>
+                  </span>
+                </div>
+                {' '}
+                <div className="cn">
+                  United Kingdom
+                </div>
+                {' '}
+                <div className="crule">
+                </div>
+                {' '}
+                <div className="cst">
+                  <div>
+                    <span>
+                      For
+                    </span>
+                    <b>
+                      Drivers
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Checks
+                    </span>
+                    <b>
+                      2
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Ready in
+                    </span>
+                    <b>
+                      30 min
+                    </b>
+                  </div>
+                </div>
+                {' '}
+              </div>
+              {' '}
+            </div>
+            {' '}
+            <div className="cby">
+              <span>
+                Report ready by
+              </span>
+              <b>
+                Today, 4:12 PM
+              </b>
+            </div>
+            {' '}
+          </div>
+          {' '}
+          <div className="cc">
+            {' '}
+            <div className="ccard ph" style={{ background: '#6F7A5C' }}>
+              {' '}
+              <div className="light">
+              </div>
+              <Image className="pimg" src="/img/17-philippines.jpg" alt="" fill sizes={SIZES_CCARD} />
+              <div className="note" style={{ top: '22%', color: 'rgba(255,255,255,0.45)' }}>
+                photo · Manila, jeepney
+              </div>
+              {' '}
+              <div className="shade">
+              </div>
+              {' '}
+              <div className="ccin">
+                {' '}
+                <div className="flag">
+                  <span className="fl" style={{ width: '30px', height: '30px' }}>
+                    <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                      <rect width="30" height="10" fill="#0038A8" />
+                      <rect y="10" width="30" height="10" fill="#CE1126" />
+                      <polygon points="3,0 16,10 3,20" fill="#FFFFFF" />
+                      <circle cx="8" cy="10" r="1.7" fill="#FCD116" />
+                    </svg>
+                  </span>
+                </div>
+                {' '}
+                <div className="cn">
+                  Philippines
+                </div>
+                {' '}
+                <div className="crule">
+                </div>
+                {' '}
+                <div className="cst">
+                  <div>
+                    <span>
+                      For
+                    </span>
+                    <b>
+                      Drivers
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Checks
+                    </span>
+                    <b>
+                      3
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Ready in
+                    </span>
+                    <b>
+                      30 min
+                    </b>
+                  </div>
+                </div>
+                {' '}
+              </div>
+              {' '}
+            </div>
+            {' '}
+            <div className="cby">
+              <span>
+                Report ready by
+              </span>
+              <b>
+                Today, 4:12 PM
+              </b>
+            </div>
+            {' '}
+          </div>
+          {' '}
+          <div className="cc">
+            {' '}
+            <div className="ccard ph" style={{ background: '#9A7E5E' }}>
+              {' '}
+              <div className="light">
+              </div>
+              <Image className="pimg" src="/img/18-uae.jpg" alt="" fill sizes={SIZES_CCARD} />
+              <div className="note" style={{ top: '22%', color: 'rgba(255,255,255,0.45)' }}>
+                photo · Dubai skyline
+              </div>
+              {' '}
+              <div className="shade">
+              </div>
+              {' '}
+              <div className="ccin">
+                {' '}
+                <div className="flag">
+                  <span className="fl" style={{ width: '30px', height: '30px' }}>
+                    <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                      <rect width="30" height="6.7" fill="#00732F" />
+                      <rect y="6.7" width="30" height="6.6" fill="#FFFFFF" />
+                      <rect y="13.3" width="30" height="6.7" fill="#15140F" />
+                      <rect x="3" width="8" height="20" fill="#FF0000" />
+                    </svg>
+                  </span>
+                </div>
+                {' '}
+                <div className="cn">
+                  United Arab Emirates
+                </div>
+                {' '}
+                <div className="crule">
+                </div>
+                {' '}
+                <div className="cst">
+                  <div>
+                    <span>
+                      For
+                    </span>
+                    <b>
+                      House help
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Checks
+                    </span>
+                    <b>
+                      3
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Ready in
+                    </span>
+                    <b>
+                      24 hrs
+                    </b>
+                  </div>
+                </div>
+                {' '}
+              </div>
+              {' '}
+            </div>
+            {' '}
+            <div className="cby">
+              <span>
+                Report ready by
+              </span>
+              <b>
+                Tomorrow, 9:00 AM
+              </b>
+            </div>
+            {' '}
+          </div>
+          {' '}
+          <div className="cc">
+            {' '}
+            <div className="ccard ph" style={{ background: '#5C6F73' }}>
+              {' '}
+              <div className="light">
+              </div>
+              <Image className="pimg" src="/img/19-singapore.jpg" alt="" fill sizes={SIZES_CCARD} />
+              <div className="note" style={{ top: '22%', color: 'rgba(255,255,255,0.45)' }}>
+                photo · Singapore campus
+              </div>
+              {' '}
+              <div className="shade">
+              </div>
+              {' '}
+              <div className="ccin">
+                {' '}
+                <div className="flag">
+                  <span className="fl" style={{ width: '30px', height: '30px' }}>
+                    <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                      <rect width="30" height="10" fill="#EF3340" />
+                      <rect y="10" width="30" height="10" fill="#FFFFFF" />
+                      <circle cx="9.5" cy="5" r="2.8" fill="#FFFFFF" />
+                      <circle cx="10.6" cy="5" r="2.4" fill="#EF3340" />
+                    </svg>
+                  </span>
+                </div>
+                {' '}
+                <div className="cn">
+                  Singapore
+                </div>
+                {' '}
+                <div className="crule">
+                </div>
+                {' '}
+                <div className="cst">
+                  <div>
+                    <span>
+                      For
+                    </span>
+                    <b>
+                      Graduates
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Checks
+                    </span>
+                    <b>
+                      1
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Ready in
+                    </span>
+                    <b>
+                      3 days
+                    </b>
+                  </div>
+                </div>
+                {' '}
+              </div>
+              {' '}
+            </div>
+            {' '}
+            <div className="cby">
+              <span>
+                Report ready by
+              </span>
+              <b>
+                Fri, 19 Sep
+              </b>
+            </div>
+            {' '}
+          </div>
+          {' '}
+          <div className="cc">
+            {' '}
+            <div className="ccard ph" style={{ background: '#A08260' }}>
+              {' '}
+              <div className="light">
+              </div>
+              <Image className="pimg" src="/img/20-egypt.jpg" alt="" fill sizes={SIZES_CCARD} />
+              <div className="note" style={{ top: '22%', color: 'rgba(255,255,255,0.45)' }}>
+                photo · Cairo rooftops
+              </div>
+              {' '}
+              <div className="shade">
+              </div>
+              {' '}
+              <div className="ccin">
+                {' '}
+                <div className="flag">
+                  <span className="fl" style={{ width: '30px', height: '30px' }}>
+                    <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                      <rect width="30" height="6.7" fill="#CE1126" />
+                      <rect y="6.7" width="30" height="6.6" fill="#FFFFFF" />
+                      <rect y="13.3" width="30" height="6.7" fill="#15140F" />
+                      <circle cx="15" cy="10" r="1.8" fill="#C09300" />
+                    </svg>
+                  </span>
+                </div>
+                {' '}
+                <div className="cn">
+                  Egypt
+                </div>
+                {' '}
+                <div className="crule">
+                </div>
+                {' '}
+                <div className="cst">
+                  <div>
+                    <span>
+                      For
+                    </span>
+                    <b>
+                      Tenants
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Checks
+                    </span>
+                    <b>
+                      3
+                    </b>
+                  </div>
+                  <div>
+                    <span>
+                      Ready in
+                    </span>
+                    <b>
+                      30 min
+                    </b>
+                  </div>
+                </div>
+                {' '}
+              </div>
+              {' '}
+            </div>
+            {' '}
+            <div className="cby">
+              <span>
+                Report ready by
+              </span>
+              <b>
+                Today, 4:12 PM
+              </b>
+            </div>
+            {' '}
+          </div>
+          {' '}
+        </div>
+        {' '}
+        <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', color: '#6F6B62' }}>
+          {' '}
+          <span>
+            Criminal records are checked across Supreme, High and District Courts and tribunals. Times are from upload, in your local time.
+          </span>
+          {' '}
+          <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: '500', color: '#15140F' }}>
+            All countries{' '}
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              </path>
+            </svg>
+          </a>
+          {' '}
+        </div>
+        {' '}
+      </div>

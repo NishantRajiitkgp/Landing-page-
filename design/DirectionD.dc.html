@@ -1,0 +1,237 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #6B85F2; text-decoration: none; }
+    a:hover { color: #93A9FB; }
+    * { box-sizing: border-box; }
+
+    .mono { font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace; }
+
+    @keyframes d-rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes d-pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.35; transform: scale(0.82); }
+    }
+    @keyframes d-fill {
+      from { width: 8%; }
+      to   { width: 74%; }
+    }
+    @keyframes d-sweep {
+      0%   { transform: translateY(-100%); opacity: 0; }
+      12%  { opacity: 1; }
+      88%  { opacity: 1; }
+      100% { transform: translateY(620%); opacity: 0; }
+    }
+    .d-row { animation: d-rise 620ms cubic-bezier(0.16, 0.84, 0.32, 1) both; }
+    .d-dot { animation: d-pulse 1900ms ease-in-out infinite; }
+    .d-bar { animation: d-fill 5200ms cubic-bezier(0.22, 0.61, 0.36, 1) infinite alternate; }
+    .d-scan { animation: d-sweep 6400ms linear infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      .d-row, .d-dot, .d-bar, .d-scan { animation: none !important; }
+    }
+  </style>
+</helmet>
+
+<div style="width: 1440px; background-color: #080F24; background-image: radial-gradient(880px 520px at 14% -8%, rgba(61, 95, 232, 0.34), transparent 64%), linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px); background-size: auto, 80px 80px, 80px 80px; color: #FFFFFF; display: flex; flex-direction: column; overflow: hidden;">
+
+  <!-- Status bar -->
+  <div class="mono" style="display: flex; justify-content: space-between; align-items: center; height: 34px; padding: 0 44px; border-bottom: 1px solid rgba(255, 255, 255, 0.07); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #7C8AAC;">
+    <div style="display: flex; gap: 26px; align-items: center;">
+      <span style="color: #FFFFFF;">HelloVerify</span>
+      <span>ISO 27001 / 27701</span>
+      <span>SOC 2 Type II</span>
+      <span>PBSA</span>
+    </div>
+    <div style="display: flex; gap: 22px; align-items: center;">
+      <span style="color: #FFFFFF;">EN</span><span>AR</span><span>HI</span>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <div style="display: flex; justify-content: space-between; align-items: center; height: 78px; padding: 0 44px; border-bottom: 1px solid rgba(255, 255, 255, 0.07);">
+    <div style="font-size: 21px; font-weight: 600; letter-spacing: -0.03em; color: #FFFFFF;">HelloVerify</div>
+    <div class="mono" style="display: flex; gap: 32px; align-items: center; font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: #B9C4DE;">
+      <span>Governments</span><span>Business</span><span>Individuals</span><span>Platform</span><span>Resources</span>
+    </div>
+    <div style="display: flex; gap: 22px; align-items: center;">
+      <span class="mono" style="font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: #7C8AAC;">Sign in</span>
+      <span style="background: #1A3FCB; color: #FFFFFF; font-size: 14px; font-weight: 500; padding: 12px 22px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(107, 133, 242, 0.5), 0 8px 26px -10px rgba(61, 95, 232, 0.9);">Talk to sales</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div style="display: flex; gap: 56px; padding: 78px 44px 64px 44px; align-items: flex-start;">
+
+    <div style="width: 636px; display: flex; flex-direction: column; gap: 26px;">
+      <div class="mono" style="display: flex; align-items: center; gap: 10px; font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #6B85F2;">
+        <span class="d-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #2FD79D; display: inline-block;"></span>
+        <span>Verification infrastructure · 120+ countries</span>
+      </div>
+      <h1 style="margin: 0; font-size: 82px; line-height: 0.98; font-weight: 600; letter-spacing: -0.042em; color: #FFFFFF;">Age verified in 15 minutes.</h1>
+      <p style="margin: 0; font-size: 19px; line-height: 1.6; color: #B9C4DE; max-width: 520px; text-wrap: pretty;">Licence in 30. Employment in 60. Every check goes to the authority that issued the document — and comes back with a record that names it.</p>
+      <div style="display: flex; gap: 14px; align-items: center; padding-top: 8px;">
+        <span style="background: #1A3FCB; color: #FFFFFF; font-size: 16px; font-weight: 500; padding: 16px 30px; border-radius: 3px; box-shadow: 0 0 0 1px rgba(107, 133, 242, 0.55), 0 14px 40px -14px rgba(61, 95, 232, 1);">Talk to sales</span>
+        <span style="color: #B9C4DE; font-size: 16px; font-weight: 500; padding: 16px 26px; border-radius: 3px; border: 1px solid rgba(255, 255, 255, 0.14);">Read the API docs</span>
+      </div>
+      <div class="mono" style="display: flex; gap: 22px; align-items: center; padding-top: 14px; font-size: 11px; letter-spacing: 0.11em; text-transform: uppercase; color: #5A6784;">
+        <span>SOC 2 Type II</span><span style="color: #2B3A5C;">/</span>
+        <span>GDPR · DPDP</span><span style="color: #2B3A5C;">/</span>
+        <span>WCAG 2.2 AA</span>
+      </div>
+    </div>
+
+    <!-- Live panel -->
+    <div style="width: 660px; position: relative; background: rgba(13, 27, 62, 0.72); border: 1px solid rgba(255, 255, 255, 0.10); border-radius: 6px; overflow: hidden; box-shadow: 0 40px 90px -40px rgba(0, 0, 0, 0.9);">
+
+      <div class="d-scan" style="position: absolute; left: 0; right: 0; top: 0; height: 84px; background: linear-gradient(180deg, transparent, rgba(107, 133, 242, 0.10), transparent); pointer-events: none;"></div>
+
+      <div class="mono" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.09); font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;">
+        <div style="display: flex; align-items: center; gap: 9px; color: #FFFFFF;">
+          <span class="d-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #2FD79D; display: inline-block;"></span>
+          <span>Verification queue</span>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: center; color: #5A6784;">
+          <span>Sample data</span>
+          <span style="color: #2B3A5C;">/</span>
+          <span>Last 60 s</span>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column;">
+
+        <div class="d-row" style="animation-delay: 60ms; display: grid; grid-template-columns: 1fr 118px 104px 104px; gap: 14px; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+          <div style="font-size: 15px; font-weight: 500; color: #FFFFFF;">Age &amp; identity</div>
+          <div class="mono" style="font-size: 11px; letter-spacing: 0.07em; color: #7C8AAC;">IN · Delhi</div>
+          <div class="mono" style="font-size: 12px; color: #B9C4DE; font-variant-numeric: tabular-nums;">14:06</div>
+          <div style="display: flex; align-items: center; gap: 7px; justify-self: end;">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#2FD79D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"></path></svg>
+            <span class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #2FD79D;">Cleared</span>
+          </div>
+        </div>
+
+        <div class="d-row" style="animation-delay: 200ms; display: grid; grid-template-columns: 1fr 118px 104px 104px; gap: 14px; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+          <div style="font-size: 15px; font-weight: 500; color: #FFFFFF;">Driving licence</div>
+          <div class="mono" style="font-size: 11px; letter-spacing: 0.07em; color: #7C8AAC;">AE · Dubai</div>
+          <div class="mono" style="font-size: 12px; color: #B9C4DE; font-variant-numeric: tabular-nums;">28:41</div>
+          <div style="display: flex; align-items: center; gap: 7px; justify-self: end;">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#2FD79D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"></path></svg>
+            <span class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #2FD79D;">Cleared</span>
+          </div>
+        </div>
+
+        <div class="d-row" style="animation-delay: 340ms; display: grid; grid-template-columns: 1fr 118px 104px 104px; gap: 14px; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); background: rgba(26, 63, 203, 0.10);">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="font-size: 15px; font-weight: 500; color: #FFFFFF;">Employment history</div>
+            <div style="height: 2px; background: rgba(255, 255, 255, 0.09); border-radius: 2px; overflow: hidden;">
+              <div class="d-bar" style="height: 100%; width: 74%; background: #6B85F2;"></div>
+            </div>
+          </div>
+          <div class="mono" style="font-size: 11px; letter-spacing: 0.07em; color: #7C8AAC;">PH · Manila</div>
+          <div class="mono" style="font-size: 12px; color: #B9C4DE; font-variant-numeric: tabular-nums;">41:12</div>
+          <div style="display: flex; align-items: center; gap: 7px; justify-self: end;">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#6B85F2" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="6.6"></circle><path d="M10 6.2V10l2.6 1.6"></path></svg>
+            <span class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #6B85F2;">Running</span>
+          </div>
+        </div>
+
+        <div class="d-row" style="animation-delay: 480ms; display: grid; grid-template-columns: 1fr 118px 104px 104px; gap: 14px; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+          <div style="font-size: 15px; font-weight: 500; color: #FFFFFF;">Medical registration</div>
+          <div class="mono" style="font-size: 11px; letter-spacing: 0.07em; color: #7C8AAC;">SA · Riyadh</div>
+          <div class="mono" style="font-size: 12px; color: #B9C4DE; font-variant-numeric: tabular-nums;">06:58</div>
+          <div style="display: flex; align-items: center; gap: 7px; justify-self: end;">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#2FD79D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"></path></svg>
+            <span class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #2FD79D;">Cleared</span>
+          </div>
+        </div>
+
+        <div class="d-row" style="animation-delay: 620ms; display: grid; grid-template-columns: 1fr 118px 104px 104px; gap: 14px; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.06);">
+          <div style="font-size: 15px; font-weight: 500; color: #FFFFFF;">Degree certificate</div>
+          <div class="mono" style="font-size: 11px; letter-spacing: 0.07em; color: #7C8AAC;">KE · Nairobi</div>
+          <div class="mono" style="font-size: 12px; color: #B9C4DE; font-variant-numeric: tabular-nums;">02:14</div>
+          <div style="display: flex; align-items: center; gap: 7px; justify-self: end;">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="#F4657F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3.6l7 12.4H3z"></path><path d="M10 8.4v3.3"></path><path d="M10 13.9v0.1"></path></svg>
+            <span class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #F4657F;">Discrepancy</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mono" style="display: flex; justify-content: space-between; align-items: center; padding: 13px 20px; background: rgba(8, 15, 36, 0.6); font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #5A6784;">
+        <span>Every line names its source</span>
+        <span style="color: #B9C4DE;">Export · JSON / PDF</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metrics -->
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 40px 44px;">
+      <div style="font-size: 76px; line-height: 1; font-weight: 300; letter-spacing: -0.045em; color: #FFFFFF; font-variant-numeric: tabular-nums;">20M+</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #7C8AAC;">Checks completed</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 40px 44px; border-left: 1px solid rgba(255, 255, 255, 0.08);">
+      <div style="font-size: 76px; line-height: 1; font-weight: 300; letter-spacing: -0.045em; color: #FFFFFF; font-variant-numeric: tabular-nums;">120+</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #7C8AAC;">Countries covered</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 10px; padding: 40px 44px; border-left: 1px solid rgba(255, 255, 255, 0.08);">
+      <div style="font-size: 76px; line-height: 1; font-weight: 300; letter-spacing: -0.045em; color: #FFFFFF; font-variant-numeric: tabular-nums;">2,000+</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #7C8AAC;">Organisations served</div>
+    </div>
+  </div>
+
+  <!-- Router -->
+  <div style="display: flex; flex-direction: column; gap: 30px; padding: 72px 44px 60px 44px;">
+    <div class="mono" style="font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #6B85F2;">Who are you verifying for</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px 26px 26px 26px; background: rgba(13, 27, 62, 0.6); border: 1px solid rgba(107, 133, 242, 0.5); border-radius: 5px; box-shadow: 0 0 0 1px rgba(26, 63, 203, 0.18), 0 30px 60px -40px rgba(61, 95, 232, 0.9);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 25px; font-weight: 600; letter-spacing: -0.03em; color: #FFFFFF;">Governments</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6B85F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #B9C4DE;">Licensing, immigration and manpower authorities verifying credentials at national scale.</p>
+        <div class="mono" style="font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #5A6784; padding-top: 4px;">Health · Immigration · Manpower · Trade</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px 26px 26px 26px; background: rgba(13, 27, 62, 0.45); border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 5px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 25px; font-weight: 600; letter-spacing: -0.03em; color: #FFFFFF;">Business</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A6784" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #B9C4DE;">Employers and platforms screening candidates, staff, customers and vendors.</p>
+        <div class="mono" style="font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #5A6784; padding-top: 4px;">Enterprise · SMB · KYC · Vendor DD</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; padding: 28px 26px 26px 26px; background: rgba(13, 27, 62, 0.45); border: 1px solid rgba(255, 255, 255, 0.09); border-radius: 5px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 25px; font-weight: 600; letter-spacing: -0.03em; color: #FFFFFF;">Individuals</div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5A6784" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </div>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #B9C4DE;">Check someone you are about to trust — or your own record, before anyone asks for it.</p>
+        <div class="mono" style="font-size: 10.5px; letter-spacing: 0.12em; text-transform: uppercase; color: #5A6784; padding-top: 4px;">HelloV · Visa · Home &amp; family</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="mono" style="padding: 0 44px 34px 44px; font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: #3D4C6E;">Motion is CSS only and stops under prefers-reduced-motion. Queue rows are sample data.</div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":1700}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>
