@@ -1,0 +1,159 @@
+      <div className="wrap" style={{ paddingTop: '120px' }}>
+        {' '}
+        <div className="sec-head">
+          {' '}
+          <div>
+            <div className="k">
+              HelloVerify AI
+            </div>
+            <h2 className="h2" style={{ marginTop: '14px' }}>
+              Watch it read
+              <br />
+              a licence.
+            </h2>
+          </div>
+          {' '}
+          <p className="lede" style={{ marginBottom: '8px' }}>
+            Every document starts here. Fields, forgery checks and the issuing office — in about a second, before a person touches it.
+          </p>
+          {' '}
+        </div>
+        {' '}
+        <div className="demo">
+          {' '}
+          <div className="dring">
+          </div>
+          {' '}
+          <div className="dcard">
+            {' '}
+            <div className="dtabs">
+              <span className="on">
+                Driving licence
+              </span>
+              <span>
+                Degree certificate
+              </span>
+              <span>
+                PAN card
+              </span>
+              <span>
+                Passport
+              </span>
+              <span className="more">
+                +29
+              </span>
+            </div>
+            {' '}
+            <div className="dbody">
+              {' '}
+              <div className="dleft">
+                <div className="dscan">
+                  <div className="lic demo" style={{  }}>
+                    <span className="lt">
+                      Driving licence
+                    </span>
+                    <span className="lr">
+                      IND
+                    </span>
+                    <div className="face">
+                    </div>
+                    <div className="ln1">
+                    </div>
+                    <div className="ln2">
+                    </div>
+                    <div className="ln3">
+                    </div>
+                    <div className="ln4">
+                    </div>
+                    <div className="holo">
+                    </div>
+                  </div>
+                  <div className="beam dbeam">
+                  </div>
+                </div>
+                <div className="dmeta">
+                  <span className="dot live">
+                  </span>
+                  <span>
+                    HelloVerify AI · sample document
+                  </span>
+                </div>
+              </div>
+              {' '}
+              <div className="dright">
+                <div className="dl" style={{ animation: 'dl0 9.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
+                  <span className="pr">
+                    ›
+                  </span>
+                  <span>
+                    Reading document
+                  </span>
+                  <b>
+                    1.2 s
+                  </b>
+                </div>
+                <div className="dl" style={{ animation: 'dl1 9.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
+                  <span className="pr">
+                    ›
+                  </span>
+                  <span>
+                    14 fields extracted · name, DOB, licence no., class, validity
+                  </span>
+                </div>
+                <div className="dl" style={{ animation: 'dl2 9.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
+                  <span className="pr">
+                    ›
+                  </span>
+                  <span>
+                    Template{' '}
+                    &amp;
+                    {' '}fonts · Karnataka 2019
+                  </span>
+                  <b>
+                    match
+                  </b>
+                </div>
+                <div className="dl" style={{ animation: 'dl3 9.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
+                  <span className="pr">
+                    ›
+                  </span>
+                  <span>
+                    Face vs. selfie
+                  </span>
+                  <b>
+                    98%
+                  </b>
+                </div>
+                <div className="dl" style={{ animation: 'dl4 9.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
+                  <span className="pr">
+                    ›
+                  </span>
+                  <span>
+                    Issuer located
+                  </span>
+                  <b>
+                    RTO Karnataka
+                  </b>
+                </div>
+                <div className="dl ok" style={{ animation: 'dl5 9.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
+                  <span className="pr">
+                    ›
+                  </span>
+                  <span>
+                    Route: confirm at source
+                  </span>
+                  <b>
+                    ready in 30 min
+                  </b>
+                  <span className="dcaret">
+                  </span>
+                </div>
+              </div>
+              {' '}
+            </div>
+            {' '}
+          </div>
+          {' '}
+        </div>
+        {' '}
+      </div>

@@ -1,0 +1,411 @@
+      <div className="rise d6" style={{ padding: '40px 0 8px', overflow: 'hidden' }}>
+        {' '}
+        <div className="track">
+          {' '}
+          <div className="person ph" style={{ width: '300px', height: '420px', background: '#CFA58E' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/01-rider-bengaluru.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · delivery rider
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Driving licence · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Delivery rider
+              </div>
+              <div className="city">
+                Bengaluru
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '340px', height: '470px', background: '#B7C3B2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/02-nurse-abudhabi.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · nurse
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Degree · 3 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Nurse
+              </div>
+              <div className="city">
+                Abu Dhabi
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '290px', height: '390px', background: '#ADB4BE' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · engineer
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Employment · 60 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Software engineer
+              </div>
+              <div className="city">
+                Manila
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '320px', height: '440px', background: '#D8CBB2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/04-nanny-gurugram.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · nanny
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Criminal · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Nanny
+              </div>
+              <div className="city">
+                Gurugram
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '300px', height: '400px', background: '#6E6C63' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/05-warehouse-pune.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              photo · warehouse
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot live">
+              </span>
+              Reading Aadhaar…
+            </div>
+            <div className="who">
+              <div className="role">
+                Warehouse associate
+              </div>
+              <div className="city">
+                Pune · identity check, 00:41 elapsed
+              </div>
+              <div className="progress">
+                <span>
+                </span>
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '330px', height: '460px', background: '#B3B08F' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/06-supplier-cairo.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · supplier
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Trade licence · 2 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Textile supplier
+              </div>
+              <div className="city">
+                Cairo
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '290px', height: '410px', background: '#D6BCB2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/07-tenant-singapore.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · tenant
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Identity · 15 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Tenant
+              </div>
+              <div className="city">
+                Singapore
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '310px', height: '430px', background: '#C9C2B4' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/08-cfo-london.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · executive
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Global database · 15 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Chief financial officer
+              </div>
+              <div className="city">
+                London
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '300px', height: '420px', background: '#CFA58E' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/01-rider-bengaluru.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · delivery rider
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Driving licence · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Delivery rider
+              </div>
+              <div className="city">
+                Bengaluru
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '340px', height: '470px', background: '#B7C3B2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/02-nurse-abudhabi.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · nurse
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Degree · 3 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Nurse
+              </div>
+              <div className="city">
+                Abu Dhabi
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '290px', height: '390px', background: '#ADB4BE' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · engineer
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Employment · 60 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Software engineer
+              </div>
+              <div className="city">
+                Manila
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '320px', height: '440px', background: '#D8CBB2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/04-nanny-gurugram.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · nanny
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Criminal · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Nanny
+              </div>
+              <div className="city">
+                Gurugram
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '300px', height: '400px', background: '#6E6C63' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/05-warehouse-pune.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              photo · warehouse
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot live">
+              </span>
+              Reading Aadhaar…
+            </div>
+            <div className="who">
+              <div className="role">
+                Warehouse associate
+              </div>
+              <div className="city">
+                Pune · identity check, 00:41 elapsed
+              </div>
+              <div className="progress">
+                <span>
+                </span>
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '330px', height: '460px', background: '#B3B08F' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/06-supplier-cairo.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · supplier
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Trade licence · 2 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Textile supplier
+              </div>
+              <div className="city">
+                Cairo
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '290px', height: '410px', background: '#D6BCB2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/07-tenant-singapore.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · tenant
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Identity · 15 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Tenant
+              </div>
+              <div className="city">
+                Singapore
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '310px', height: '430px', background: '#C9C2B4' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/08-cfo-london.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="note">
+              photo · executive
+            </div>
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Global database · 15 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Chief financial officer
+              </div>
+              <div className="city">
+                London
+              </div>
+            </div>
+          </div>
+          {' '}
+        </div>
+        {' '}
+      </div>
+      {' '}
+      <div className="wrap" style={{ paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', color: '#6F6B62' }}>
+        {' '}
+        <span>
+          Hires, tenants, drivers, suppliers, nannies. Anyone you need to trust.
+        </span>
+        {' '}
+        <span className="mono" style={{ color: '#A29E94' }}>
+          Times shown are from upload to report
+        </span>
+        {' '}
+      </div>

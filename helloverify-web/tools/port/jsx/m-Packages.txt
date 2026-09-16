@@ -1,0 +1,260 @@
+      <div className="wrap sec hair-top">
+        {' '}
+        <h2 className="h2">
+          Or take a package. One upload, one answer.
+        </h2>
+        {' '}
+        <p className="lede">
+          A fixed set of checks with one turnaround — as fast as its slowest check.
+        </p>
+        {' '}
+        <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '34px' }}>
+          {' '}
+          <div className="rc">
+            {' '}
+            <div className="hd">
+              <span>
+                Package
+              </span>
+              <span>
+                Enterprise · SMB
+              </span>
+            </div>
+            <div className="tt">
+              Blue-collar hire
+            </div>
+            <div className="sub">
+              Drivers, riders, warehouse, security
+            </div>
+            <div className="sep">
+            </div>
+            {' '}
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                PAN card
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Registration certificate
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Driving licence
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Criminal record
+              </span>
+            </div>
+            {' '}
+            <div className="sep">
+            </div>
+            <div className="tot">
+              <span className="lb">
+                4 checks · ready in
+              </span>
+              <span className="v">
+                30 minutes
+              </span>
+            </div>
+            <div className="bc">
+            </div>
+            {' '}
+            <div className="act">
+              <span className="who">
+                One upload from the candidate
+              </span>
+              <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                Explore{' '}
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  </path>
+                </svg>
+              </a>
+            </div>
+            {' '}
+          </div>
+          {' '}
+          <div className="rc">
+            {' '}
+            <div className="hd">
+              <span>
+                Package
+              </span>
+              <span>
+                Consumer · HelloV
+              </span>
+            </div>
+            <div className="tt">
+              Driver
+            </div>
+            <div className="sub">
+              For families and small fleets
+            </div>
+            <div className="sep">
+            </div>
+            {' '}
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Driving licence
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Criminal record
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Current address
+              </span>
+            </div>
+            {' '}
+            <div className="sep">
+            </div>
+            <div className="tot">
+              <span className="lb">
+                3 checks · ready in
+              </span>
+              <span className="v">
+                30 minutes
+              </span>
+            </div>
+            <div className="bc">
+            </div>
+            {' '}
+            <div className="act">
+              <span className="who">
+                Also as Basic, without address
+              </span>
+              <a href="#" className="btn btn-ink btn-sm" style={{ height: '34px' }}>
+                Buy now
+              </a>
+            </div>
+            {' '}
+          </div>
+          {' '}
+          <div className="rc">
+            {' '}
+            <div className="hd">
+              <span>
+                Package
+              </span>
+              <span>
+                Enterprise · SMB
+              </span>
+            </div>
+            <div className="tt">
+              White-collar hire
+            </div>
+            <div className="sub">
+              Corporate, tech, finance, healthcare
+            </div>
+            <div className="sep">
+            </div>
+            {' '}
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Education
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Employment
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Moonlighting
+              </span>
+            </div>
+            <div className="ln">
+              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                </path>
+              </svg>
+              <span>
+                Current address
+              </span>
+            </div>
+            {' '}
+            <div className="sep">
+            </div>
+            <div className="tot">
+              <span className="lb">
+                4 checks · ready in
+              </span>
+              <span className="v">
+                3 days
+              </span>
+            </div>
+            <div className="bc">
+            </div>
+            {' '}
+            <div className="act">
+              <span className="who">
+                Registrar-confirmed
+              </span>
+              <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                Explore{' '}
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  </path>
+                </svg>
+              </a>
+            </div>
+            {' '}
+          </div>
+          {' '}
+        </div>
+        {' '}
+        <a href="#" className="btn btn-line full" style={{ marginTop: '34px' }}>
+          Trade licence, vendor risk{' '}
+          &amp;
+          {' '}premium packages
+        </a>
+        {' '}
+      </div>

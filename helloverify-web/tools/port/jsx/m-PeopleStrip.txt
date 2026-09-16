@@ -1,0 +1,259 @@
+      <div style={{ padding: '12px 0 0', overflow: 'hidden' }}>
+        {' '}
+        <div className="track">
+          {' '}
+          <div className="person ph" style={{ width: '200px', height: '270px', background: '#CFA58E' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/01-rider-bengaluru.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Licence · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Delivery rider
+              </div>
+              <div className="city">
+                Bengaluru
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '220px', height: '300px', background: '#B7C3B2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/02-nurse-abudhabi.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Degree · 3 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Nurse
+              </div>
+              <div className="city">
+                Abu Dhabi
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '190px', height: '250px', background: '#ADB4BE' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Employment · 60 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Software engineer
+              </div>
+              <div className="city">
+                Manila
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '200px', height: '280px', background: '#D8CBB2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/04-nanny-gurugram.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Criminal · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Nanny
+              </div>
+              <div className="city">
+                Gurugram
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '200px', height: '260px', background: '#6E6C63' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/05-warehouse-pune.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot live">
+              </span>
+              Reading Aadhaar…
+            </div>
+            <div className="who">
+              <div className="role">
+                Warehouse associate
+              </div>
+              <div className="city">
+                Pune · 00:41 elapsed
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '210px', height: '290px', background: '#B3B08F' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/06-supplier-cairo.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Trade licence · 2 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Textile supplier
+              </div>
+              <div className="city">
+                Cairo
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '200px', height: '270px', background: '#CFA58E' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/01-rider-bengaluru.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Licence · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Delivery rider
+              </div>
+              <div className="city">
+                Bengaluru
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '220px', height: '300px', background: '#B7C3B2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/02-nurse-abudhabi.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Degree · 3 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Nurse
+              </div>
+              <div className="city">
+                Abu Dhabi
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '190px', height: '250px', background: '#ADB4BE' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Employment · 60 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Software engineer
+              </div>
+              <div className="city">
+                Manila
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '200px', height: '280px', background: '#D8CBB2' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/04-nanny-gurugram.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Criminal · 30 min
+            </div>
+            <div className="who">
+              <div className="role">
+                Nanny
+              </div>
+              <div className="city">
+                Gurugram
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '200px', height: '260px', background: '#6E6C63' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/05-warehouse-pune.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot live">
+              </span>
+              Reading Aadhaar…
+            </div>
+            <div className="who">
+              <div className="role">
+                Warehouse associate
+              </div>
+              <div className="city">
+                Pune · 00:41 elapsed
+              </div>
+            </div>
+          </div>
+          {' '}
+          <div className="person ph" style={{ width: '210px', height: '290px', background: '#B3B08F' }}>
+            <div className="light">
+            </div>
+            <Image className="pimg" src="/img/06-supplier-cairo.jpg" alt="" fill sizes={SIZES_PERSON} loading="eager" />
+            <div className="scrim">
+            </div>
+            <div className="chip">
+              <span className="dot">
+              </span>
+              Trade licence · 2 days
+            </div>
+            <div className="who">
+              <div className="role">
+                Textile supplier
+              </div>
+              <div className="city">
+                Cairo
+              </div>
+            </div>
+          </div>
+          {' '}
+        </div>
+        {' '}
+      </div>

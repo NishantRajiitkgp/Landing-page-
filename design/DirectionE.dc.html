@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,200..600&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Archivo', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #1A3FCB; text-decoration: none; }
+    a:hover { color: #1533A4; }
+    * { box-sizing: border-box; }
+
+    .clip { overflow: hidden; display: block; }
+    @keyframes e-lift {
+      from { transform: translateY(104%); }
+      to   { transform: translateY(0); }
+    }
+    @keyframes e-march {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    @keyframes e-wipe {
+      0%, 6%    { transform: scaleX(0); }
+      26%, 74%  { transform: scaleX(1); }
+      94%, 100% { transform: scaleX(0); }
+    }
+    @keyframes e-nudge {
+      0%, 6%    { transform: translateX(0); }
+      26%, 74%  { transform: translateX(18px); }
+      94%, 100% { transform: translateX(0); }
+    }
+    .lift  { display: block; animation: e-lift 900ms cubic-bezier(0.18, 0.86, 0.28, 1) both; }
+    .march { animation: e-march 34s linear infinite; }
+    .wipe  { animation: e-wipe 6000ms cubic-bezier(0.62, 0.02, 0.2, 1) infinite; transform-origin: left center; }
+    .nudge { animation: e-nudge 6000ms cubic-bezier(0.62, 0.02, 0.2, 1) infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      .lift, .march, .wipe, .nudge { animation: none !important; }
+      .wipe { transform: scaleX(0); }
+    }
+  </style>
+</helmet>
+
+<div style="width: 1440px; background: #FBFBF9; color: #0D1B3E; display: flex; flex-direction: column; overflow: hidden;">
+
+  <!-- Header -->
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 22px 56px; border-bottom: 1px solid #0D1B3E;">
+    <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase;">HelloVerify</div>
+    <div style="display: flex; gap: 34px; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #2B3A5C;">
+      <span>Governments</span><span>Business</span><span>Individuals</span><span>Platform</span><span>Resources</span>
+    </div>
+    <div style="display: flex; gap: 20px; align-items: center; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;">
+      <span style="color: #5A6784;">EN / AR / HI</span>
+      <span style="border-bottom: 2px solid #1A3FCB; padding-bottom: 3px; color: #1A3FCB;">Talk to sales</span>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div style="display: flex; gap: 0; align-items: stretch;">
+
+    <div style="width: 56px; border-right: 1px solid #E4E8F0; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 32px;">
+      <div style="writing-mode: vertical-rl; transform: rotate(180deg); font-size: 10px; font-weight: 600; letter-spacing: 0.34em; text-transform: uppercase; color: #8A95AC;">01 — Verification</div>
+    </div>
+
+    <div style="flex-grow: 1; display: flex; flex-direction: column; padding: 60px 56px 0 40px;">
+
+      <h1 style="margin: 0 0 8px 0; font-family: 'Newsreader', Georgia, serif; font-size: 154px; line-height: 0.92; font-weight: 200; letter-spacing: -0.045em; color: #0D1B3E;">
+        <span class="clip"><span class="lift">Age verified</span></span>
+        <span class="clip"><span class="lift" style="animation-delay: 130ms;">in 15 minutes.</span></span>
+      </h1>
+
+      <div style="display: flex; gap: 56px; align-items: flex-end; padding-top: 44px;">
+
+        <div style="width: 420px; display: flex; flex-direction: column; gap: 24px; padding-bottom: 6px;">
+          <p style="margin: 0; font-size: 20px; line-height: 1.5; color: #2B3A5C; text-wrap: pretty;">Licence in 30. Employment in 60. Every result traced back to the authority that issued it.</p>
+          <div style="display: flex; gap: 18px; align-items: center;">
+            <span style="background: #1A3FCB; color: #FFFFFF; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; padding: 18px 30px;">Talk to sales</span>
+            <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #0D1B3E; border-bottom: 2px solid #0D1B3E; padding-bottom: 3px;">How it runs</span>
+          </div>
+        </div>
+
+        <div style="flex-grow: 1; display: flex; flex-direction: column; border-top: 2px solid #0D1B3E;">
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E4E8F0;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #5A6784;">Age &amp; identity</div>
+            <div style="font-family: 'Newsreader', Georgia, serif; font-size: 62px; line-height: 0.9; font-weight: 200; letter-spacing: -0.04em; font-variant-numeric: tabular-nums;">15<span style="font-family: 'Archivo', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; vertical-align: super; padding-left: 6px; color: #047857;">min</span></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 20px; padding: 14px 0; border-bottom: 1px solid #E4E8F0;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #5A6784;">Driving licence</div>
+            <div style="font-family: 'Newsreader', Georgia, serif; font-size: 62px; line-height: 0.9; font-weight: 200; letter-spacing: -0.04em; font-variant-numeric: tabular-nums;">30<span style="font-family: 'Archivo', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; vertical-align: super; padding-left: 6px; color: #047857;">min</span></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 20px; padding: 14px 0;">
+            <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #5A6784;">Employment history</div>
+            <div style="font-family: 'Newsreader', Georgia, serif; font-size: 62px; line-height: 0.9; font-weight: 200; letter-spacing: -0.04em; font-variant-numeric: tabular-nums;">60<span style="font-family: 'Archivo', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; vertical-align: super; padding-left: 6px; color: #047857;">min</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Marquee -->
+  <div style="margin-top: 52px; background: #0D1B3E; color: #FBFBF9; padding: 26px 0; overflow: hidden; display: flex;">
+    <div class="march" style="display: flex; gap: 0; flex-shrink: 0; white-space: nowrap;">
+      <div style="display: flex; gap: 34px; align-items: center; padding-right: 34px; font-family: 'Newsreader', Georgia, serif; font-size: 40px; font-weight: 200; letter-spacing: -0.01em;">
+        <span style="color: #6B85F2;">120+ countries</span><span style="color: #2B3A5C;">/</span>
+        <span>India</span><span style="color: #2B3A5C;">/</span>
+        <span>United Arab Emirates</span><span style="color: #2B3A5C;">/</span>
+        <span>Saudi Arabia</span><span style="color: #2B3A5C;">/</span>
+        <span>Philippines</span><span style="color: #2B3A5C;">/</span>
+        <span>Kenya</span><span style="color: #2B3A5C;">/</span>
+        <span>United Kingdom</span><span style="color: #2B3A5C;">/</span>
+        <span>Nigeria</span><span style="color: #2B3A5C;">/</span>
+        <span>Egypt</span><span style="color: #2B3A5C;">/</span>
+        <span>Qatar</span><span style="color: #2B3A5C;">/</span>
+        <span>Singapore</span><span style="color: #2B3A5C;">/</span>
+        <span>Nepal</span><span style="color: #2B3A5C;">/</span>
+        <span>Ghana</span><span style="color: #2B3A5C;">/</span>
+      </div>
+      <div style="display: flex; gap: 34px; align-items: center; padding-right: 34px; font-family: 'Newsreader', Georgia, serif; font-size: 40px; font-weight: 200; letter-spacing: -0.01em;">
+        <span style="color: #6B85F2;">120+ countries</span><span style="color: #2B3A5C;">/</span>
+        <span>India</span><span style="color: #2B3A5C;">/</span>
+        <span>United Arab Emirates</span><span style="color: #2B3A5C;">/</span>
+        <span>Saudi Arabia</span><span style="color: #2B3A5C;">/</span>
+        <span>Philippines</span><span style="color: #2B3A5C;">/</span>
+        <span>Kenya</span><span style="color: #2B3A5C;">/</span>
+        <span>United Kingdom</span><span style="color: #2B3A5C;">/</span>
+        <span>Nigeria</span><span style="color: #2B3A5C;">/</span>
+        <span>Egypt</span><span style="color: #2B3A5C;">/</span>
+        <span>Qatar</span><span style="color: #2B3A5C;">/</span>
+        <span>Singapore</span><span style="color: #2B3A5C;">/</span>
+        <span>Nepal</span><span style="color: #2B3A5C;">/</span>
+        <span>Ghana</span><span style="color: #2B3A5C;">/</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audience rows -->
+  <div style="display: flex; flex-direction: column; padding: 76px 56px 0 56px;">
+    <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #8A95AC; padding-bottom: 26px;">02 — Who are you verifying for</div>
+
+    <div style="position: relative; overflow: hidden; border-top: 1px solid #0D1B3E;">
+      <div class="wipe" style="position: absolute; inset: 0; background: #1A3FCB;"></div>
+      <div style="position: relative; display: flex; justify-content: space-between; align-items: center; gap: 40px; padding: 26px 24px 26px 0;">
+        <div class="nudge" style="display: flex; align-items: baseline; gap: 26px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; color: #FFFFFF;">01</span>
+          <span style="font-family: 'Newsreader', Georgia, serif; font-size: 72px; line-height: 1; font-weight: 200; letter-spacing: -0.035em; color: #FFFFFF;">Governments</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 30px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #BCCBFF;">Health · Immigration · Manpower · Trade</span>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </div>
+      </div>
+    </div>
+
+    <div style="position: relative; overflow: hidden; border-top: 1px solid #0D1B3E;">
+      <div style="position: relative; display: flex; justify-content: space-between; align-items: center; gap: 40px; padding: 26px 24px 26px 0;">
+        <div style="display: flex; align-items: baseline; gap: 26px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; color: #8A95AC;">02</span>
+          <span style="font-family: 'Newsreader', Georgia, serif; font-size: 72px; line-height: 1; font-weight: 200; letter-spacing: -0.035em; color: #0D1B3E;">Business</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 30px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5A6784;">Enterprise · SMB · KYC · Vendor DD</span>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0D1B3E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </div>
+      </div>
+    </div>
+
+    <div style="position: relative; overflow: hidden; border-top: 1px solid #0D1B3E; border-bottom: 1px solid #0D1B3E;">
+      <div style="position: relative; display: flex; justify-content: space-between; align-items: center; gap: 40px; padding: 26px 24px 26px 0;">
+        <div style="display: flex; align-items: baseline; gap: 26px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.16em; color: #8A95AC;">03</span>
+          <span style="font-family: 'Newsreader', Georgia, serif; font-size: 72px; line-height: 1; font-weight: 200; letter-spacing: -0.035em; color: #0D1B3E;">Individuals</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 30px;">
+          <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #5A6784;">HelloV · Visa · Home &amp; family</span>
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#0D1B3E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Proof -->
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; padding: 76px 56px 0 56px;">
+    <div style="display: flex; flex-direction: column; gap: 6px; padding-right: 40px;">
+      <div style="font-family: 'Newsreader', Georgia, serif; font-size: 96px; line-height: 0.9; font-weight: 200; letter-spacing: -0.05em; font-variant-numeric: tabular-nums;">20M+</div>
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #5A6784;">Checks completed</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px; padding: 0 40px; border-left: 1px solid #E4E8F0;">
+      <div style="font-family: 'Newsreader', Georgia, serif; font-size: 96px; line-height: 0.9; font-weight: 200; letter-spacing: -0.05em; font-variant-numeric: tabular-nums;">120+</div>
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #5A6784;">Countries covered</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px; padding-left: 40px; border-left: 1px solid #E4E8F0;">
+      <div style="font-family: 'Newsreader', Georgia, serif; font-size: 96px; line-height: 0.9; font-weight: 200; letter-spacing: -0.05em; font-variant-numeric: tabular-nums;">2,000+</div>
+      <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #5A6784;">Organisations served</div>
+    </div>
+  </div>
+
+  <!-- Close -->
+  <div style="margin-top: 76px; background: #1A3FCB; color: #FFFFFF; display: flex; justify-content: space-between; align-items: center; gap: 56px; padding: 62px 56px;">
+    <div style="font-family: 'Newsreader', Georgia, serif; font-size: 62px; line-height: 1.02; font-weight: 200; letter-spacing: -0.035em; max-width: 720px; text-wrap: pretty;">Bring us the checks you cannot get done.</div>
+    <div style="display: flex; flex-direction: column; gap: 18px; align-items: flex-end;">
+      <span style="background: #FBFBF9; color: #0D1B3E; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; padding: 20px 34px;">Talk to sales</span>
+      <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #BCCBFF;">Four fields · reply in [N] hours</span>
+    </div>
+  </div>
+
+  <div style="padding: 22px 56px 30px 56px; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #8A95AC;">154 px display type — set as text, not an image. Reveal and marquee are CSS only and stop under prefers-reduced-motion.</div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":1440,"height":2150}}'>
+class Component extends DCLogic {}
+</script>
+</body>
+</html>

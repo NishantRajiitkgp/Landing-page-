@@ -1,0 +1,67 @@
+      <div className="wrap" style={{ paddingTop: '80px', paddingBottom: '72px' }}>
+        {' '}
+        <h2 className="h2">
+          Built on trust. Proven by numbers.
+        </h2>
+        {' '}
+        <div style={{ marginTop: '40px', display: 'grid', gridTemplateColumns: '1fr', gap: '36px' }}>
+          {' '}
+          <div>
+            <div className="big">
+              <span className="in" style={{ animationDelay: '0.1s' }}>
+                20M
+              </span>
+              <span className="sfx in" style={{ animationDelay: '0.18s' }}>
+                +
+              </span>
+            </div>
+            <div className="big-l">
+              checks completed since 2018, every one at the primary source.
+            </div>
+          </div>
+          {' '}
+          <div>
+            <div className="big">
+              <span className="in" style={{ animationDelay: '0.2s' }}>
+                2,000
+              </span>
+              <span className="sfx in" style={{ animationDelay: '0.28s' }}>
+                +
+              </span>
+            </div>
+            <div className="big-l">
+              enterprise clients globally, from fleets to health ministries.
+            </div>
+          </div>
+          {' '}
+          <div>
+            <div className="big">
+              <span className="in" style={{ animationDelay: '0.3s' }}>
+                120
+              </span>
+              <span className="sfx in" style={{ animationDelay: '0.38s' }}>
+                +
+              </span>
+            </div>
+            <div className="big-l">
+              countries where we can reach the issuing authority.
+            </div>
+          </div>
+          {' '}
+          <div>
+            <div className="big">
+              <span className="in" style={{ animationDelay: '0.4s' }}>
+                33
+              </span>
+              <span className="sfx in" style={{ animationDelay: '0.48s' }}>
+                +
+              </span>
+            </div>
+            <div className="big-l">
+              verification checks, from a driving licence to a director's default history.
+            </div>
+          </div>
+          {' '}
+        </div>
+        {' '}
+      </div>

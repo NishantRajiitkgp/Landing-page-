@@ -1,0 +1,161 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "name": "Directions"
+    },
+    {
+      "id": "page-2",
+      "name": "Homepage"
+    },
+    {
+      "id": "page-3",
+      "name": "System"
+    }
+  ],
+  "artboards": [
+    {
+      "file": "DirectionD.dc.html",
+      "title": "D · Signal",
+      "page": "page-1",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1700
+    },
+    {
+      "file": "DirectionE.dc.html",
+      "title": "E · Broadside",
+      "page": "page-1",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 2150
+    },
+    {
+      "file": "DirectionA.dc.html",
+      "title": "A · Ledger",
+      "page": "page-1",
+      "x": 0,
+      "y": 2700,
+      "w": 1280,
+      "h": 870
+    },
+    {
+      "file": "DirectionB.dc.html",
+      "title": "B · Record",
+      "page": "page-1",
+      "x": 1400,
+      "y": 2700,
+      "w": 1280,
+      "h": 870
+    },
+    {
+      "file": "DirectionC.dc.html",
+      "title": "C · Marquee",
+      "page": "page-1",
+      "x": 2800,
+      "y": 2700,
+      "w": 1280,
+      "h": 870
+    },
+    {
+      "file": "Main.dc.html",
+      "title": "Homepage · 1440",
+      "page": "page-2",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 6400
+    },
+    {
+      "file": "MainMobile.dc.html",
+      "title": "Homepage · 390",
+      "page": "page-2",
+      "x": 1580,
+      "y": 0,
+      "w": 390,
+      "h": 2000
+    },
+    {
+      "file": "Type.dc.html",
+      "title": "Typography",
+      "page": "page-3",
+      "x": 0,
+      "y": 0,
+      "w": 1100,
+      "h": 2400
+    },
+    {
+      "file": "Tokens.dc.html",
+      "title": "Colour & tokens",
+      "page": "page-3",
+      "x": 1220,
+      "y": 0,
+      "w": 1100,
+      "h": 1900
+    }
+  ],
+  "annotations": [
+    {
+      "id": "dir-d",
+      "page": "page-1",
+      "x": 0,
+      "y": -300,
+      "w": 460,
+      "text": "D · SIGNAL — the YC / Linear register\n\nNear-black ground, an engineering grid, one cobalt light source, mono microtype, and a live verification queue where rows land, a timer runs and a status flips. Grotesque only — no serif anywhere.\n\nWhy: it puts the product on screen in the first second, and the motion is the product working rather than decoration. This is the register Linear, Vercel and Resend are in, and it is what a technical evaluator expects a platform to look like in 2026.\n\nCost: a third font family (JetBrains Mono). The dark ground needs two ramp steps that do not exist yet — a lighter emerald and a lighter blue for links. And a ministry procurement officer is not the audience this register flatters."
+    },
+    {
+      "id": "dir-e",
+      "page": "page-1",
+      "x": 1560,
+      "y": -300,
+      "w": 460,
+      "text": "E · BROADSIDE — the Awwwards register\n\n154 px display type near-bleed, a masked line-by-line reveal, an infinite marquee of real corridor countries, and the three audiences as full-width list rows with a cobalt wipe. Scale contrast does the work: 154 px against 11 px, nothing in between.\n\nWhy: it is the only one of the five nobody would call safe, and it is still your colours, your numbers, your accessibility work. The marquee is content, not decoration — it is the 120+ claim made physical.\n\nCost: the headline reveal animates the LCP element, which the performance budget forbids — it can be reworked as a paint-safe reveal or dropped. Display type this large is brutal in Arabic and Hindi and will need per-locale sizes."
+    },
+    {
+      "id": "dir-a",
+      "page": "page-1",
+      "x": 0,
+      "y": 2450,
+      "w": 420,
+      "text": "A · LEDGER\n\nEvidence as typography. The claim is the headline; the proof is a rule-separated table read like a statement of account.\n\nWhy: nothing to load, so the H1 is the LCP and the page opens instantly. Cleanest translation into Arabic and Hindi.\n\nTradeoff: austere. It asks the buyer to read, and nothing on screen shows what the product looks like. This is the one you called boring."
+    },
+    {
+      "id": "dir-b",
+      "page": "page-1",
+      "x": 1400,
+      "y": 2450,
+      "w": 420,
+      "text": "B · RECORD\n\nEvidence as the artefact — the hero shows the record the buyer receives, sources named, elapsed time per line.\n\nWhy: answers \"what do I get\" without a word of marketing copy.\n\nTradeoff: a UI surface that has to stay true as the product changes, redrawn per locale."
+    },
+    {
+      "id": "dir-c",
+      "page": "page-1",
+      "x": 2800,
+      "y": 2450,
+      "w": 420,
+      "text": "C · MARQUEE\n\nEvidence as scale — the three turnaround figures are the composition, hairline-separated.\n\nWhy: the most quotable page for an AI answer engine.\n\nTradeoff: numerals alone are abstract until you read the labels, and the centred layout is the hardest to hold together once the locale changes."
+    },
+    {
+      "id": "home-note",
+      "page": "page-2",
+      "x": 0,
+      "y": -250,
+      "w": 520,
+      "text": "HOMEPAGE — rebuilt, unconstrained.\n\nDark ground, engineering grid, one cobalt light source, mono microtype. The hero queue runs live, the country band marches, the method rule traces itself in. Grotesque plus mono, no serif.\n\nStill honest about what it costs: a third font family, two new colour steps for the dark ground, and the motion all stops under prefers-reduced-motion.\n\nAnything in [SQUARE BRACKETS] is a real fact I do not have and did not invent — named clients, G2 rating, the customer quote and its metric, SOC 2 and pen-test dates, residency regions, sales email, response time."
+    },
+    {
+      "id": "sys-note",
+      "page": "page-3",
+      "x": 0,
+      "y": -220,
+      "w": 480,
+      "text": "SYSTEM — these two boards are now behind the light directions (A, B, C, E), not the homepage.\n\nThe dark page needs its own pass: a lighter emerald and a lighter blue computed for the near-black ground, and a decision on whether the mono earns its place as a third family. Say the word and I will redo both boards for the dark system."
+    }
+  ],
+  "launch": {
+    "view": "canvas",
+    "page": "page-2"
+  }
+}

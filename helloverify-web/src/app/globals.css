@@ -1,0 +1,9 @@
+/* Tailwind without preflight: the ported canvas stylesheet assumes UA defaults
+   (notably line-height: normal), and preflight's own resets fight it. Utilities
+   and theme stay available for anything built outside the canvas. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+@import "./design.css";
+@import "./pages.css";

@@ -1,0 +1,95 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 5000,
+      "title": "Desktop 1/4"
+    },
+    {
+      "file": "Desktop2.dc.html",
+      "x": 0,
+      "y": 5140,
+      "w": 1440,
+      "h": 4600,
+      "title": "Desktop 2/4"
+    },
+    {
+      "file": "Desktop3.dc.html",
+      "x": 0,
+      "y": 9880,
+      "w": 1440,
+      "h": 3700,
+      "title": "Desktop 3/4"
+    },
+    {
+      "file": "Desktop4.dc.html",
+      "x": 0,
+      "y": 13720,
+      "w": 1440,
+      "h": 3400,
+      "title": "Desktop 4/4"
+    },
+    {
+      "file": "Mobile.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 390,
+      "h": 5200,
+      "title": "Mobile 1/5"
+    },
+    {
+      "file": "Mobile2.dc.html",
+      "x": 1560,
+      "y": 5340,
+      "w": 390,
+      "h": 3100,
+      "title": "Mobile 2/5"
+    },
+    {
+      "file": "Mobile3.dc.html",
+      "x": 1560,
+      "y": 8580,
+      "w": 390,
+      "h": 3700,
+      "title": "Mobile 3/5"
+    },
+    {
+      "file": "Mobile4.dc.html",
+      "x": 1560,
+      "y": 12420,
+      "w": 390,
+      "h": 3700,
+      "title": "Mobile 4/5"
+    },
+    {
+      "file": "Mobile5.dc.html",
+      "x": 1560,
+      "y": 16260,
+      "w": 390,
+      "h": 3300,
+      "title": "Mobile 5/5"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "read-me-first",
+      "x": 2070,
+      "y": 0,
+      "w": 360,
+      "text": "WHAT'S REAL vs. DUMMY\n\nREAL, from helloverify.com: logo (recoloured for light mode), Y Combinator badge, 20M+ checks since 2018, 2,000+ clients, 120+ countries, 33+ checks, 6 offices, Ministry of Manpower (Singapore), governments list (India, KSA, UAE, Singapore, European), certifications (ISO 27001, GDPR, PBSA, NSR), all footer links, form fields and consent text. Real times: Age 15 min, Driving licence 30 min, Digital employment 60 min, blue-collar & consumer packages 30 min.\n\nDUMMY (replace): every other time on the checks catalogue, receipts and cards; the sample candidate A. Ramesh and all timestamps; the WhatsApp chat; the customer story quote and its two numbers; [₹ price] on the driver plans.\n\nNOTE: the original site shows no client logos — only YC and Ministry of Manpower. Send logos if you have permission to use them and I'll add a strip.\n\nBRAND: the logo's swoosh is red (#EC2E21). Red reads as 'error' in a verification product, so the page keeps red only in the logo and uses green for 'verified'. Say if you want red as the accent instead."
+    },
+    {
+      "id": "photo-brief",
+      "x": 2070,
+      "y": 520,
+      "w": 360,
+      "text": "PHOTOGRAPHY BRIEF\n\nEvery toned block is a photo slot. Warm, candid, real people at work in real places: a rider in Bengaluru traffic, a nurse in an Abu Dhabi ward, a supplier on a Cairo factory floor, a family at a Gurugram doorway, a ministry hall. Natural light, no stock handshakes, no laptops-with-graphs.\n\nThe contact-section photo should be the single strongest image — it carries the closing line."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}
