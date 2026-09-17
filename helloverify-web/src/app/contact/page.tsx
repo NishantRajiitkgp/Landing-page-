@@ -1,8 +1,9 @@
 /** /contact — conversion page (Template 7). The canvas contact section grown to a page.
- *  Fields are real inputs now (the canvas drew styled divs); the POST target and the
- *  server-only Zoho bridge land in the functionality phase (BUILD-SPEC §4). */
+ *  Fields are real inputs now (the canvas drew styled divs); the form posts to a
+ *  Server Action (BUILD-SPEC §10); see components/forms/ContactForm. */
 import type { Metadata } from "next";
 import { PageShell } from "@/components/chrome/PageShell";
+import { ContactForm } from "@/components/forms/ContactForm";
 import Image from "next/image";
 import { SIZES_SIDE } from "@/lib/img";
 
@@ -52,67 +53,7 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <form className="form" action="#" method="post">
-            <div className="fld-l" style={{ marginBottom: 10 }}>Talk to sales</div>
-            <div className="segs">
-              <label className="seg on"><input type="radio" name="segment" defaultChecked className="vh" />Business</label>
-              <label className="seg"><input type="radio" name="segment" className="vh" />Government</label>
-              <label className="seg"><input type="radio" name="segment" className="vh" />Individual</label>
-            </div>
-
-            <div className="fgrid" style={{ marginTop: 22 }}>
-              <div>
-                <label className="fld-l" htmlFor="name">Full name</label>
-                <input className="inp" id="name" name="name" type="text" placeholder="Priya Menon" required />
-              </div>
-              <div>
-                <label className="fld-l" htmlFor="company">Company</label>
-                <input className="inp" id="company" name="company" type="text" placeholder="Company name" />
-              </div>
-              <div>
-                <label className="fld-l" htmlFor="email">Business email</label>
-                <input className="inp" id="email" name="email" type="email" placeholder="name@company.com" required />
-              </div>
-              <div>
-                <label className="fld-l" htmlFor="mobile">Mobile</label>
-                <input className="inp" id="mobile" name="mobile" type="tel" placeholder="+91" />
-              </div>
-              <div className="full2">
-                <label className="fld-l" htmlFor="interest">Services of interest</label>
-                <select className="inp" id="interest" name="interest" defaultValue="">
-                  <option value="" disabled>Employee verification, KYC, Certifier, Consumer…</option>
-                  <option>Enterprise background verification</option>
-                  <option>SMB packages</option>
-                  <option>Employee verification</option>
-                  <option>Customer KYC / Trust &amp; Safety</option>
-                  <option>Vendor due diligence (Certifier)</option>
-                  <option>Government / authority programme</option>
-                  <option>Individual / HelloV</option>
-                </select>
-              </div>
-              <div className="full2">
-                <label className="fld-l" htmlFor="message">Message</label>
-                <textarea
-                  className="inp"
-                  id="message"
-                  name="message"
-                  rows={3}
-                  placeholder="How many checks a month, and where?"
-                  style={{ height: "auto", paddingTop: 14, paddingBottom: 14, alignItems: "flex-start", resize: "vertical" }}
-                />
-              </div>
-            </div>
-
-            <p className="consent">
-              By submitting, you consent to HelloVerify processing your data for lead generation and
-              related communications, per our <a href="/legal/privacy-policy">Privacy Policy</a>. We&apos;ll
-              never share your brand.
-            </p>
-
-            <div style={{ marginTop: 18 }}>
-              <button type="submit" className="btn btn-ink">Submit</button>
-            </div>
-          </form>
+          <ContactForm />
         </div>
       </div>
 

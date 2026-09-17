@@ -455,3 +455,26 @@ select.inp:invalid, select.inp option[value=""] { color: #7D796F; }
 .inp:focus-visible, .btn:focus-visible, a:focus-visible, summary:focus-visible, .seg:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
 .ct3 .seg { cursor: pointer; }
 .ct3 .seg:hover { border-color: var(--ink); }
+
+/* The canvas drew the selected segment as a static .seg.on class, and the radios
+   it drew carried no value at all — the form posted segment=on and the pill never
+   moved. Real radios now, with the selected state derived from :checked so it
+   works with no JavaScript. Property list matches design.css's .seg.on exactly. */
+.ct3 .seg:has(input:checked) { border-color: var(--ink); color: var(--ink); font-weight: 500; }
+
+/* Validation states. DESIGN.md 2.1: red exists only inside the logo, so failure
+   is carried by ink and by words, never by colour. The inset shadow thickens the
+   border visually without changing the box, so an error cannot reflow the form.
+   :user-invalid rather than :invalid — the latter marks every empty required
+   field before the user has typed anything. */
+.inp[aria-invalid="true"], .inp:user-invalid { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.ct3 .err { margin-top: 6px; font-size: 12.5px; line-height: 1.5; font-weight: 500; color: var(--ink); }
+
+/* Submission outcome. Green marks a concluded thing (DESIGN.md 2.1) and appears
+   only on success; every other outcome is ink on panel with the message doing
+   the work. */
+.ct3 .status { margin-top: 18px; padding: 13px 15px; border: 1px solid var(--hair); border-radius: 12px; background: #FBFAF6; font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.ct3 .status.ok::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 999px; background: var(--green); margin-right: 9px; vertical-align: 1px; }
+
+.btn[disabled] { opacity: 0.6; cursor: default; }
+.btn-ink[disabled]:hover { background: var(--ink); }
