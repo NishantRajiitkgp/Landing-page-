@@ -116,8 +116,16 @@ python tools/port/lint-collisions.py   # new markup must not reuse bare canvas c
 ## Known gaps
 
 - **Design phase only.** No routing beyond static pages, no i18n, no CMS.
-- The contact form has real fields but no action — it needs the server-only Zoho
-  bridge (BUILD-SPEC §4).
+- **The contact form is wired end to end; Zoho credentials are not set.** The
+  form posts to a Server Action (`src/app/contact/actions.ts`) which validates
+  against the zod contract, runs the §10 abuse layers, and delivers through
+  `src/lib/integrations/zoho.ts` (REST v8, OAuth refresh token, `server-only`).
+  With `ZOHO_CLIENT_ID`/`_SECRET`/`_REFRESH_TOKEN` absent, development logs the
+  lead and reports success while production logs it at ERROR and tells the user
+  to email `LEADS_FALLBACK_EMAIL` — it never claims a lead was received when it
+  was not. See `.env.example` for the full contract, including
+  `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`, which Cloud Run requires once it runs
+  more than one container.
 - **Legal copy is not drafted.** `src/lib/content/legal.ts` holds document
   structure only; operative text ports verbatim from the existing site after
   counsel review. Pages render a visible "awaiting legal copy" state.
