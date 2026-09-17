@@ -115,7 +115,19 @@ python tools/port/lint-collisions.py   # new markup must not reuse bare canvas c
 
 ## Known gaps
 
-- **Design phase only.** No routing beyond static pages, no i18n, no CMS.
+- **Locale routing is live; `hi` and `ar` are not.** Every URL is
+  `/<locale>/<path>` (`localePrefix: "always"`), negotiated in `src/proxy.ts`
+  — note `proxy.ts`, not `middleware.ts`: the middleware file convention is
+  deprecated in Next 16. `src/lib/i18n/routing.ts` declares `en` only, because
+  §7 makes a missing translation a type error and declaring a locale without
+  copy would publish a whole English route tree under /hi and /ar. Adding a
+  locale is one array entry once the copy exists; the old repo has real
+  Devanagari and Arabic content to port.
+- **RTL is not done.** §7 requires logical CSS properties. There are 165
+  physical ones in the generated `design.css` and 32 in `pages.css`. Fixing the
+  generated file means teaching `tools/port/build-css.py` to emit logical
+  properties — not hand-editing its output.
+- No CMS.
 - **The contact form is wired end to end; Zoho credentials are not set.** The
   form posts to a Server Action (`src/app/contact/actions.ts`) which validates
   against the zod contract, runs the §10 abuse layers, and delivers through

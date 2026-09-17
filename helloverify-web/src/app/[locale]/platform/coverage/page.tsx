@@ -1,0 +1,241 @@
+/** /platform/coverage — where a document can be confirmed at its source.
+ *  Replaces legacy /international. Country times are indicative and labelled so. */
+import type { Metadata } from "next";
+import { PageShell } from "@/components/chrome/PageShell";
+import { AppLink } from "@/components/chrome/AppLink";
+import { setRequestLocale } from "next-intl/server";
+
+export const metadata: Metadata = {
+  title: "Global coverage — 120+ countries — HelloVerify",
+  description:
+    "Where a document can be confirmed with the authority that issued it, how long it takes there, and the six offices that keep the queue moving.",
+};
+
+const REGIONS: { r: string; list: { c: string; t: string }[] }[] = [
+  {
+    r: "South & Southeast Asia",
+    list: [
+      { c: "India", t: "15 min – 3 days" },
+      { c: "Philippines", t: "Tomorrow, 9:00 AM" },
+      { c: "Singapore", t: "Fri, 10:30 AM" },
+      { c: "Indonesia", t: "2 – 4 days" },
+      { c: "Vietnam", t: "2 – 4 days" },
+      { c: "Sri Lanka", t: "2 – 5 days" },
+      { c: "Nepal", t: "2 – 5 days" },
+      { c: "Bangladesh", t: "3 – 5 days" },
+    ],
+  },
+  {
+    r: "Middle East & Africa",
+    list: [
+      { c: "United Arab Emirates", t: "Today, 4:00 PM" },
+      { c: "Saudi Arabia", t: "1 – 3 days" },
+      { c: "Egypt", t: "Today, 4:00 PM" },
+      { c: "Qatar", t: "1 – 3 days" },
+      { c: "Kuwait", t: "2 – 4 days" },
+      { c: "Kenya", t: "3 – 5 days" },
+      { c: "Nigeria", t: "3 – 6 days" },
+      { c: "South Africa", t: "2 – 4 days" },
+    ],
+  },
+  {
+    r: "Europe & the Americas",
+    list: [
+      { c: "United Kingdom", t: "Today, 4:00 PM" },
+      { c: "Germany", t: "1 – 3 days" },
+      { c: "France", t: "1 – 3 days" },
+      { c: "Netherlands", t: "1 – 3 days" },
+      { c: "Poland", t: "2 – 4 days" },
+      { c: "United States", t: "1 – 3 days" },
+      { c: "Canada", t: "1 – 3 days" },
+      { c: "Brazil", t: "3 – 5 days" },
+    ],
+  },
+];
+
+export default async function CoveragePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  // Enables static rendering: without it every next-intl call in this
+  // subtree (AppLink resolves the locale) falls back to reading request
+  // headers, which makes the route dynamic. BUILD-SPEC §5.
+  setRequestLocale(locale);
+
+  return (
+    <PageShell
+      crumbs={[{ label: "Platform", href: "/platform" }, { label: "Global coverage" }]}
+      closing={{
+        heading: (
+          <>
+            Tell us the country. <em>We'll tell you the truth.</em>
+          </>
+        ),
+        sub: "Including when the honest answer is that a registry still works on paper.",
+        img: "/img/19-singapore.jpg",
+      }}
+    >
+      <div className="wrap hero3">
+        <div className="k">Platform · Global coverage</div>
+        <h1 className="h1">
+          Verified in <em>120+ countries.</em>
+        </h1>
+        <p className="sub">
+          A document is only properly verified in the country that issued it. Our own offices and
+          partner network reach the registries, universities, courts and employers that hold the
+          records — locally, in language, to local process.
+        </p>
+        <div className="hrow">
+          <AppLink href="/contact" className="btn btn-ink">Ask about a country</AppLink>
+          <a href="#countries" className="btn btn-ghost">
+            <span>See country times</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div className="wrap">
+        <div className="strip3">
+          <span className="it"><b>120+</b> countries reachable</span>
+          <span className="it"><b>6</b> offices, twelve hours apart</span>
+          <span className="it"><b>21 of 24</b> hours with someone at a desk</span>
+          <span className="it"><span className="dot live" /> someone is working now</span>
+        </div>
+      </div>
+
+      {/* offices */}
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <div>
+            <div className="k">Six offices</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>Twelve hours apart,<br />on purpose.</h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            A request filed at night in one place is picked up in the morning somewhere else. That
+            overlap is why turnaround is measured in hours rather than business days.
+          </p>
+        </div>
+        <div className="body3 off3">
+          <div className="o3"><b>Manila</b><span>09–18 local</span></div>
+          <div className="o3"><b>Singapore</b><span>09–18 local</span></div>
+          <div className="o3"><b>Noida</b><span>09–18 local</span></div>
+          <div className="o3"><b>Dubai</b><span>09–18 local</span></div>
+          <div className="o3"><b>Cairo</b><span>09–18 local</span></div>
+          <div className="o3"><b>New York</b><span>09–18 local</span></div>
+        </div>
+      </div>
+
+      {/* countries */}
+      <div className="wrap sec3" id="countries">
+        <div className="sec-head">
+          <div>
+            <div className="k">Country times</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>How long it takes,<br />where it's issued.</h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            Indicative times for source-confirmed checks. Digital registries answer in minutes;
+            where a registrar works on paper, the estimate says days — and we say which it is
+            before you order.
+          </p>
+        </div>
+        <div className="body3 reg3">
+          {REGIONS.map((g) => (
+            <div key={g.r}>
+              <div className="rgt">{g.r}</div>
+              <div className="rl">
+                {g.list.map((x) => (
+                  <div className="c3" key={x.c}>
+                    <span className="cn3">{x.c}</span>
+                    <span className="ct3">{x.t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="pricenote">
+          Indicative times for source-confirmed checks · a further 90+ countries are covered through
+          the partner network — <AppLink href="/contact" style={{ color: "inherit", textDecoration: "underline" }}>ask about a specific country</AppLink>
+        </div>
+      </div>
+
+      {/* how coverage works */}
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <div>
+            <div className="k">What coverage means</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>Not a logo<br />on a map.</h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            Plenty of vendors claim global coverage and mean a database licence. Coverage here means
+            somebody can reach the office that holds the record.
+          </p>
+        </div>
+        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
+          <div>
+            <div className="n">01</div>
+            <div className="t">In-country</div>
+            <p className="p">The check runs where the document was issued, by people who know that registry's process and language.</p>
+          </div>
+          <div>
+            <div className="n">02</div>
+            <div className="t">At the source</div>
+            <p className="p">The university, the court, the transport authority — not an aggregator that once copied their data.</p>
+          </div>
+          <div>
+            <div className="n">03</div>
+            <div className="t">Honestly reported</div>
+            <p className="p">If a registry can't be reached, the report says unverifiable and names the route tried. Never a silent pass.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* FAQ */}
+      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
+        <div className="sec-head" style={{ marginBottom: 44 }}>
+          <div>
+            <div className="k">Questions</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>About reach.</h2>
+          </div>
+        </div>
+        <div className="faq3">
+          <details>
+            <summary>What does "120+ countries" actually count?<span className="m">+</span></summary>
+            <p className="a">
+              Countries where we can confirm at least one check type with the authority that issued
+              the document, through our own offices or a named partner. It does not count countries
+              where all we could do is search a commercial database.
+            </p>
+          </details>
+          <details>
+            <summary>Is every check available everywhere?<span className="m">+</span></summary>
+            <p className="a">
+              No, and any vendor claiming otherwise is describing a database. Criminal record access
+              in particular varies by jurisdiction — some require the individual to request their
+              own certificate. The catalogue shows what is possible per country before you order.
+            </p>
+          </details>
+          <details>
+            <summary>How do you handle countries in crisis?<span className="m">+</span></summary>
+            <p className="a">
+              Where institutions are closed or records are destroyed, we say so. The report
+              distinguishes unverifiable from failed, which protects applicants who did nothing
+              wrong but happen to come from somewhere with broken record-keeping.
+            </p>
+          </details>
+          <details>
+            <summary>Can you add a country for us?<span className="m">+</span></summary>
+            <p className="a">
+              Often, yes — for a committed volume we will establish a route into a new jurisdiction,
+              typically a matter of weeks. Tell us the country and the check types you need.
+            </p>
+          </details>
+        </div>
+      </div>
+    </PageShell>
+  );
+}

@@ -6,6 +6,7 @@
 import { Logo } from "@/components/brand/Logo";
 import Image from "next/image";
 import { CERTLINE_BOX } from "@/lib/img";
+import { AppLink } from "@/components/chrome/AppLink";
 
 const COLS: { h: string; links: { label: string; href: string }[] }[] = [
   {
@@ -74,7 +75,7 @@ export function SiteFooter() {
       <div className="wrap">
         <div className="cols">
           <div className="fcol2 brandcol">
-            <a href="/" aria-label="HelloVerify — home"><Logo width={103} height={30} /></a>
+            <AppLink href="/" aria-label="HelloVerify — home"><Logo width={103} height={30} /></AppLink>
             <p className="blurb">
               Background verification at the primary source — for enterprises, governments and families.
             </p>
@@ -98,8 +99,8 @@ export function SiteFooter() {
               </a>
             </div>
             <div className="co">
-              <a href="/about">About us</a>
-              <a href="/contact">Contact &amp; support</a>
+              <AppLink href="/about">About us</AppLink>
+              <AppLink href="/contact">Contact &amp; support</AppLink>
               <a href="#" className="lang" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 500 }}>
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.4" />
@@ -113,7 +114,7 @@ export function SiteFooter() {
             <div className="fcol2" key={c.h}>
               <div className="h">{c.h}</div>
               {c.links.map((l) => (
-                <a key={l.href + l.label} href={l.href}>{l.label}</a>
+                <AppLink key={l.href + l.label} href={l.href}>{l.label}</AppLink>
               ))}
             </div>
           ))}
@@ -127,9 +128,9 @@ export function SiteFooter() {
         <div className="base">
           <span className="cr">© 2026 All rights reserved. Hello Verify India Private Ltd.</span>
           <span className="lg">
-            <a href="/legal/privacy-policy">Privacy Policy</a>
-            <a href="/legal/terms-of-service">Terms of Service</a>
-            <a href="/legal/cookie-policy">Cookie Policy</a>
+            <AppLink href="/legal/privacy-policy">Privacy Policy</AppLink>
+            <AppLink href="/legal/terms-of-service">Terms of Service</AppLink>
+            <AppLink href="/legal/cookie-policy">Cookie Policy</AppLink>
           </span>
           <span className="offices">India · UAE · Singapore · Philippines · Egypt · United States</span>
         </div>
