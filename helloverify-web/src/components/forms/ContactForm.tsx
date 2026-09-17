@@ -12,7 +12,7 @@
 
 import { useActionState, useEffect, useRef } from "react";
 
-import { submitLead } from "@/app/contact/actions";
+import { submitLead } from "@/app/[locale]/contact/actions";
 import {
   ELAPSED_FIELD,
   HONEYPOT_FIELD,
@@ -26,8 +26,14 @@ import {
   type LeadField,
 } from "@/lib/leads/constraints";
 import { INITIAL_LEAD_FORM_STATE } from "@/lib/leads/state";
+import { localise } from "@/lib/i18n/href";
 
-export function ContactForm() {
+/** `locale` is a prop rather than a hook: reading it from next-intl on the
+ *  client would require NextIntlClientProvider at the root, which ships
+ *  next-intl's client runtime to every page for the sake of three hrefs. */
+export function ContactForm({ locale }: { locale: string }) {
+  const L = (path: string) => localise(path, locale);
+
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_FORM_STATE);
 
   const mountedAt = useRef(Date.now());
@@ -92,8 +98,8 @@ export function ContactForm() {
           {state.message}
         </div>
         <p className="consent">
-          In the meantime, the <a href="/platform/security-compliance">compliance pack</a> lists
-          what we can send before a call, and <a href="/resources/checks">the check library</a>{" "}
+          In the meantime, the <a href={L("/platform/security-compliance")}>compliance pack</a> lists
+          what we can send before a call, and <a href={L("/resources/checks")}>the check library</a>{" "}
           covers turnaround times per check.
         </p>
       </div>
@@ -282,7 +288,7 @@ export function ContactForm() {
 
       <p className="consent">
         By submitting, you consent to HelloVerify processing your data for lead generation and
-        related communications, per our <a href="/legal/privacy-policy">Privacy Policy</a>. We&apos;ll
+        related communications, per our <a href={L("/legal/privacy-policy")}>Privacy Policy</a>. We&apos;ll
         never share your brand.
       </p>
 

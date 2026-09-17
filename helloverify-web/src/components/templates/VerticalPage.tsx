@@ -7,6 +7,7 @@ import { PageShell } from "@/components/chrome/PageShell";
 import type { ClosingCta } from "@/components/chrome/ClosingCta";
 import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
+import { AppLink } from "@/components/chrome/AppLink";
 
 const Arrow = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -62,12 +63,12 @@ export function VerticalPage(c: VerticalContent) {
         <h1 className="h1">{c.h1}</h1>
         <p className="sub">{c.sub}</p>
         <div className="hrow">
-          <a href={c.primary?.href ?? "/contact"} className="btn btn-ink">{c.primary?.label ?? "Talk to sales"}</a>
+          <AppLink href={c.primary?.href ?? "/contact"} className="btn btn-ink">{c.primary?.label ?? "Talk to sales"}</AppLink>
           {c.secondary && (
-            <a href={c.secondary.href} className="btn btn-ghost">
+            <AppLink href={c.secondary.href} className="btn btn-ghost">
               <span>{c.secondary.label}</span>
               <Arrow />
-            </a>
+            </AppLink>
           )}
         </div>
       </div>
@@ -187,10 +188,10 @@ export function VerticalPage(c: VerticalContent) {
           ))}
         </div>
         <div style={{ marginTop: 32 }}>
-          <a href="/platform/security-compliance" className="btn btn-ghost btn-sm">
+          <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">
             <span>Security &amp; compliance, in full — DPA, residency, conformance</span>
             <Arrow />
-          </a>
+          </AppLink>
         </div>
       </div>
 

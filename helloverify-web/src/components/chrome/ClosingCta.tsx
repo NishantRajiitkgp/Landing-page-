@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { SIZES_FULL } from "@/lib/img";
+import { AppLink } from "@/components/chrome/AppLink";
 
 /**
  * Closing CTA band for inner pages (the homepage keeps its full contact section).
@@ -31,13 +32,13 @@ export function ClosingCta({
           <h2 className="h">{heading}</h2>
           <p className="p">{sub}</p>
           <div className="hrow">
-            <a href={ctaHref} className="btn btn-paper">{ctaLabel}</a>
-            <a href="/business/smb" className="btn btn-ghost ghost-w">
+            <AppLink href={ctaHref} className="btn btn-paper">{ctaLabel}</AppLink>
+            <AppLink href="/business/smb" className="btn btn-ghost ghost-w">
               <span>See plans &amp; pricing</span>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-            </a>
+            </AppLink>
           </div>
         </div>
       </div>

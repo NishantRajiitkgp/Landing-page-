@@ -4,6 +4,7 @@
  * footer. Mobile menu is CSS-only (checkbox disclosure) for the design phase.
  */
 import { Logo } from "@/components/brand/Logo";
+import { AppLink } from "@/components/chrome/AppLink";
 
 const LINKS = [
   { href: "/governments", label: "Governments" },
@@ -17,12 +18,12 @@ export function SiteNav() {
   return (
     <header className="nav2">
       <div className="wrap nbar">
-        <a href="/" style={{ display: "flex", alignItems: "center" }} aria-label="HelloVerify — home">
+        <AppLink href="/" style={{ display: "flex", alignItems: "center" }} aria-label="HelloVerify — home">
           <Logo width={103} height={30} />
-        </a>
+        </AppLink>
         <nav className="links" aria-label="Primary">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href}>{l.label}</a>
+            <AppLink key={l.href} href={l.href}>{l.label}</AppLink>
           ))}
         </nav>
         <div className="acts">
@@ -33,7 +34,7 @@ export function SiteNav() {
             </svg>
             <span>English</span>
           </a>
-          <a href="/contact" className="btn btn-ink btn-sm">Talk to sales</a>
+          <AppLink href="/contact" className="btn btn-ink btn-sm">Talk to sales</AppLink>
           <label htmlFor="nav-menu-toggle" className="burger" aria-label="Open menu">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M2.5 5h11M2.5 11h11" stroke="#15140F" strokeWidth="1.5" strokeLinecap="round" />
@@ -45,12 +46,12 @@ export function SiteNav() {
       <input type="checkbox" id="nav-menu-toggle" className="mtoggle vh" />
       <nav className="menu" aria-label="Primary, mobile">
         {LINKS.map((l) => (
-          <a key={l.href} href={l.href}>
+          <AppLink key={l.href} href={l.href}>
             <span>{l.label}</span>
             <span className="k">→</span>
-          </a>
+          </AppLink>
         ))}
-        <a href="/contact"><span>Contact &amp; support</span><span className="k">→</span></a>
+        <AppLink href="/contact"><span>Contact &amp; support</span><span className="k">→</span></AppLink>
       </nav>
     </header>
   );
