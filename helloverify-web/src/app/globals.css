@@ -80,3 +80,20 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   The confirmation tick's four tones (components/brand/Tick.tsx).
+
+   The mark draws with `stroke="currentColor"`, so colouring it is a matter of
+   setting `color` here rather than putting a `var()` inside an SVG presentation
+   attribute. That is legal CSS and does work, but nothing in this project
+   renders in a browser yet (TASKS.md Part 6), and `currentColor` needs no claim
+   that cannot be checked.
+
+   `.tick` itself only sets size in design.css; the stroke was previously a hex
+   literal repeated on all 65 copies of the mark.
+   ───────────────────────────────────────────────────────────────────────── */
+.tick { color: var(--green); }
+.tick-light { color: var(--green-light); }
+.tick-inverse { color: var(--white); }
+.tick-off { color: var(--tick-off); }

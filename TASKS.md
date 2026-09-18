@@ -113,23 +113,39 @@ entries; `check:llms` still rejects the unevidenced certifications.
 
 ---
 
-## Part 3 — Design tokens: eliminate the 382 hex literals
+## Part 3 — Design tokens · **DONE (18 Sep 2026)**
 
-§17 condition 21. **382 hex literals** remain in component files, concentrated in
-the ported canvas sections — 108 in `Presence.tsx`, 58 in `International.tsx`,
-33 in `Packages.tsx`.
+**UI colour literals: 119 → 0.** Total hex 382 → 199, the remainder being 194
+SVG artwork and 5 OG-card constants, both documented exemptions enforced by
+`npm run check:tokens` (gate broken four ways, all caught).
 
-- Map every literal to an existing token where one matches; propose new tokens
-  only where the value is genuinely distinct, and say how many uses justify each.
-- The palette is seven tokens today (`--paper --ink --muted --faint --hair
-  --green --red`); expect the real answer to be a handful more, not fifty.
-- Held to **byte-identical rendered markup** — the technique used for the FAQ
-  lift and the logical-CSS conversion. A literal replaced by a token with a
-  different value is a visual regression the gates cannot see.
+What the measurement changed about the plan:
 
-**Acceptance:** hex count in `src/components` and `src/app/**/*.tsx` is zero or
-justified per remaining case; all 56 pages byte-identical to the pre-change
-build with `<script>` bodies stripped.
+- **Most of the 382 were not UI colour.** 194 are SVG artwork — national flags,
+  the wordmark — which are facts about the world, not palette. 57 were
+  per-photograph placeholder tints. Only 119 were design-system colour.
+- **The dominant cause was duplication.** One confirmation tick was inlined
+  **87 times**, each copy carrying its own hex, plus four local `const Tick`
+  declarations (one never used). Now `components/brand/Tick.tsx`.
+- **Four new tokens, not seventeen** — `--white`, `--green-light`, `--tick-off`,
+  `--ink-soft`. The tints went to `PLACEHOLDER_TINT` in `lib/img.ts`, keyed by
+  image, because a tint belongs to a photograph rather than to the design.
+
+**The acceptance criterion in the original plan was wrong**, and is corrected
+here for every future part: **byte-identity cannot test a tokenisation**, because
+`background:#F6F4EF` and `background:var(--paper)` are different bytes and
+identical rendering. Use instead, in order of preference:
+
+1. **Inverse substitution** — resolve every `var(--x)` on *both* sides back to
+   its literal, then compare. (Resolving only the new side gives a false
+   mismatch once a snapshot itself contains `var()`.)
+2. **Source-level positional proof** where the change is a source rewrite —
+   compare against `HEAD` rather than against a build.
+3. **An explicit chain assertion** where neither applies, as for `currentColor`:
+   class → token → value, asserted equal to what it replaced.
+
+Byte-identity remains the right test for a pure refactor that changes no values
+at all — the FAQ lift and the component splits in Part 5.
 
 ---
 
@@ -154,9 +170,20 @@ deliberately introduced violation.
 §4 rule 2 and §17 condition 22. **13 files exceed 300 lines**; the largest is
 `HowItWorks.tsx` at 910, then `Packages.tsx` 809, `International.tsx` 778.
 
-All are ported canvas sections, so the risk is visual regression. Do Part 3
-first — tokenised markup is far easier to split safely — and lean on the
-byte-identity harness throughout.
+All are ported canvas sections, so the risk is visual regression. Part 3 is
+done, so the markup is tokenised; lean on the byte-identity harness throughout
+(it *is* the right test here — a split changes no values).
+
+Two things Part 3 turned up that belong in this part:
+
+- **`WhoItsFor.tsx`'s mobile block renders no photographs.** The desktop grid has
+  six cells with six images; the `.mob` block repeats the same six cells with the
+  same tints and zero `<Image>` elements. Flat colour on mobile where desktop
+  shows a photo — almost certainly a porting miss.
+- **`HowItWorks.tsx` holds the last 18 inline ticks**, each with a unique
+  `animation` name and dash offset, so they are individually drawn rather than
+  repeats. Splitting that file is the moment to decide whether they should be
+  one animated component taking a delay.
 
 **Acceptance:** no file in `src/components` or `src/app` over 300 lines; all 56
 pages byte-identical.

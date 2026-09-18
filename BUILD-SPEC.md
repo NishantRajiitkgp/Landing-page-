@@ -1051,6 +1051,27 @@ HelloVerify sells to ministries. **An accessibility conformance statement is a s
 
 ---
 
+> **CORRECTION (item 12, implemented).** Condition 21 reads "zero hex literals
+> … outside `@theme`", and taken literally that would require tokenising the
+> national flags drawn in `sections/International.tsx`. Singapore's flag is
+> `#C8102E` regardless of the brand; putting it in the palette would make the
+> palette meaningless.
+>
+> Measured: of 382 literals, **194 are SVG artwork** (flags, the wordmark, the
+> YC badge), **57 were per-photograph placeholder tints**, and only **119 were
+> UI colour**. The rule is now read as "no colour literal in UI code", enforced
+> by `npm run check:tokens`, with two documented exemptions: SVG artwork, and
+> the OG card, which Satori renders without a CSSOM and so cannot resolve a
+> custom property.
+>
+> UI colour literals: **119 → 0**. The tints moved to `PLACEHOLDER_TINT` in
+> `lib/img.ts`, keyed by photograph, because a tint is a property of one image
+> rather than of the design. Four new tokens were needed, not seventeen.
+>
+> The dominant cause was duplication: one confirmation tick inlined **87 times**,
+> each copy carrying its own hex. Condition 22 (no file over 300 lines) is the
+> same finding from the other end.
+
 ## 14. Testing and CI/CD
 
 ### 14.1 Test strategy

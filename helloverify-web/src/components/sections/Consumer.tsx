@@ -1,5 +1,7 @@
 /** HelloV - the consumer side. */
 
+import { Tick } from "@/components/brand/Tick";
+
 export function Consumer() {
   return (
     <>
@@ -75,24 +77,15 @@ export function Consumer() {
                   {' '}
                   <div className="pl">
                     <div>
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick />
                       Driving licence check
                     </div>
                     <div>
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick />
                       Criminal record check
                     </div>
                     <div className="dim">
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#CFCAC0" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick tone="muted" />
                       Current address check
                     </div>
                   </div>
@@ -134,24 +127,15 @@ export function Consumer() {
                   {' '}
                   <div className="pl">
                     <div>
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#8FD3B3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick tone="light" />
                       Driving licence check
                     </div>
                     <div>
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#8FD3B3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick tone="light" />
                       Criminal record check
                     </div>
                     <div>
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#8FD3B3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick tone="light" />
                       Current address check
                     </div>
                   </div>
@@ -164,7 +148,7 @@ export function Consumer() {
                     </span>
                   </div>
                   {' '}
-                  <a href="#" className="btn" style={{ width: '100%', marginTop: '16px', background: '#FFFFFF', color: '#15140F' }}>
+                  <a href="#" className="btn" style={{ width: '100%', marginTop: '16px', background: 'var(--white)', color: 'var(--ink)' }}>
                     Buy Advanced
                   </a>
                   {' '}
@@ -172,7 +156,7 @@ export function Consumer() {
                 {' '}
               </div>
               {' '}
-              <p className="mono" style={{ margin: '14px 0 0', color: '#A29E94' }}>
+              <p className="mono" style={{ margin: '14px 0 0', color: 'var(--faint)' }}>
                 Prices are placeholders. Home staff, tenant and nanny packages priced the same way.
               </p>
               {' '}
@@ -187,10 +171,7 @@ export function Consumer() {
                   <div className="chd">
                     {' '}
                     <div className="cav">
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#FFFFFF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick tone="inverse" />
                     </div>
                     {' '}
                     <div>
@@ -296,26 +277,17 @@ export function Consumer() {
                       </div>
                       {' '}
                       <div className="rr">
-                        <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                          <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                          </path>
-                        </svg>
+                        <Tick />
                         Driving licence · valid
                       </div>
                       {' '}
                       <div className="rr">
-                        <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                          <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                          </path>
-                        </svg>
+                        <Tick />
                         Criminal record · none found
                       </div>
                       {' '}
                       <div className="rr">
-                        <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                          <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                          </path>
-                        </svg>
+                        <Tick />
                         Current address · confirmed
                       </div>
                       {' '}
@@ -392,10 +364,7 @@ export function Consumer() {
                 <div className="chd">
                   {' '}
                   <div className="cav">
-                    <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path d="M3.5 8.5l3 3 6-7" stroke="#FFFFFF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                      </path>
-                    </svg>
+                    <Tick tone="inverse" />
                   </div>
                   {' '}
                   <div>
@@ -501,26 +470,17 @@ export function Consumer() {
                     </div>
                     {' '}
                     <div className="rr">
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick />
                       Driving licence · valid
                     </div>
                     {' '}
                     <div className="rr">
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick />
                       Criminal record · none found
                     </div>
                     {' '}
                     <div className="rr">
-                      <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                        <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                        </path>
-                      </svg>
+                      <Tick />
                       Current address · confirmed
                     </div>
                     {' '}
@@ -564,17 +524,11 @@ export function Consumer() {
               {' '}
               <div className="pl">
                 <div>
-                  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    </path>
-                  </svg>
+                  <Tick />
                   Driving licence check
                 </div>
                 <div>
-                  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    </path>
-                  </svg>
+                  <Tick />
                   Criminal record check
                 </div>
               </div>
@@ -616,24 +570,15 @@ export function Consumer() {
               {' '}
               <div className="pl">
                 <div>
-                  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3.5 8.5l3 3 6-7" stroke="#8FD3B3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    </path>
-                  </svg>
+                  <Tick tone="light" />
                   Driving licence check
                 </div>
                 <div>
-                  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3.5 8.5l3 3 6-7" stroke="#8FD3B3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    </path>
-                  </svg>
+                  <Tick tone="light" />
                   Criminal record check
                 </div>
                 <div>
-                  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3.5 8.5l3 3 6-7" stroke="#8FD3B3" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    </path>
-                  </svg>
+                  <Tick tone="light" />
                   Current address check
                 </div>
               </div>
@@ -646,7 +591,7 @@ export function Consumer() {
                 </span>
               </div>
               {' '}
-              <a href="#" className="btn full" style={{ marginTop: '14px', background: '#FFFFFF', color: '#15140F' }}>
+              <a href="#" className="btn full" style={{ marginTop: '14px', background: 'var(--white)', color: 'var(--ink)' }}>
                 Buy Advanced
               </a>
               {' '}
@@ -654,7 +599,7 @@ export function Consumer() {
             {' '}
           </div>
           {' '}
-          <p className="mono" style={{ margin: '12px 0 0', color: '#A29E94' }}>
+          <p className="mono" style={{ margin: '12px 0 0', color: 'var(--faint)' }}>
             Prices are placeholders.
           </p>
           {' '}

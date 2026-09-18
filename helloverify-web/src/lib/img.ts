@@ -61,3 +61,60 @@ export const CERTLINE_BOX = 34;
 export const AVATAR_GT = 36;
 export const AVATAR_BY = 44;
 export const AVATAR_BYLINE = 40;
+
+/** The placeholder tint behind each photograph.
+ *
+ *  `.ph` is the box a photo sits in. It carries a neutral default in
+ *  `design.css`, and every instance overrode it inline with a colour matched to
+ *  that specific image - 57 hex literals across the components, which is what
+ *  BUILD-SPEC §17 condition 21 was counting.
+ *
+ *  They are NOT palette, which is why they are here rather than in DESIGN.md as
+ *  tokens: the tint is a property of one photograph, the same category as
+ *  `blurDataURL`. Swapping the brand palette does not change the colour that
+ *  belongs behind a picture of a rider in Bengaluru. Keyed by image so the two
+ *  cannot drift, and so a new photo without a tint is a type error rather than
+ *  a silently wrong box.
+ */
+export const PLACEHOLDER_TINT: Record<string, string> = {
+  "/img/01-rider-bengaluru.jpg": "#CFA58E",
+  "/img/02-nurse-abudhabi.jpg": "#B7C3B2",
+  "/img/03-engineer-manila.jpg": "#ADB4BE",
+  "/img/04-nanny-gurugram.jpg": "#D8CBB2",
+  "/img/05-warehouse-pune.jpg": "#6E6C63",
+  "/img/06-supplier-cairo.jpg": "#B3B08F",
+  "/img/07-tenant-singapore.jpg": "#D6BCB2",
+  "/img/08-cfo-london.jpg": "#C9C2B4",
+  "/img/09-licensing-officer.jpg": "#8C8C7A",
+  "/img/10-ministry-hall.jpg": "#B3B08F",
+  "/img/11-office-first-day.jpg": "#D8CBB2",
+  "/img/12-phone-signup.jpg": "#ADB4BE",
+  "/img/13-factory-floor.jpg": "#6E6C63",
+  "/img/14-visa-counter.jpg": "#C9C2B4",
+  "/img/15-home-doorway.jpg": "#D6BCB2",
+  "/img/16-united-kingdom.jpg": "#5E6A78",
+  "/img/17-philippines.jpg": "#6F7A5C",
+  "/img/18-uae.jpg": "#9A7E5E",
+  "/img/19-singapore.jpg": "#5C6F73",
+  "/img/20-egypt.jpg": "#A08260",
+  "/img/21-portrait-ramesh.jpg": "#B7C3B2",
+  "/img/22-portrait-fleet-head.jpg": "#ADB4BE",
+  "/img/23-closing.jpg": "#6B6E5B",
+};
+
+/** `tint("/img/01-rider-bengaluru.jpg")` -> its placeholder colour.
+ *
+ *  Throws rather than returning a default: a missing entry means a photograph
+ *  was added without one, and a wrong-coloured box is exactly the kind of thing
+ *  nobody notices until it is in front of a customer.
+ */
+export function tint(src: string): string {
+  const value = PLACEHOLDER_TINT[src];
+  if (!value) {
+    throw new Error(
+      `tint: no placeholder colour for ${JSON.stringify(src)}. ` +
+        `Add one to PLACEHOLDER_TINT in lib/img.ts.`,
+    );
+  }
+  return value;
+}

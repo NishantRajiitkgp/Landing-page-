@@ -14,7 +14,7 @@
         --muted: #6F6B62;
         --faint: #A29E94;
         --hair: #E3DFD6;
-        --green: #1B6B4A;
+        --green: #1B6B4A; --white: #FFFFFF; --green-light: #8FD3B3; --tick-off: #CFCAC0; --ink-soft: #3D3B35;
         --red: #EC2E21;
         --serif: var(--font-newsreader), "Times New Roman", Georgia, serif;
         --sans: var(--font-instrument), "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -413,7 +413,7 @@
 
 /* ============ MOBILE - artboards Mobile1-5 ============ */
 @media (max-width: 1080px) {
-  :root { --paper: #F6F4EF; --ink: #15140F; --muted: #6F6B62; --faint: #A29E94; --hair: #E3DFD6; --green: #1B6B4A; --serif: var(--font-newsreader), "Times New Roman", Georgia, serif; --sans: var(--font-instrument), "Helvetica Neue", Helvetica, Arial, sans-serif; --mono: var(--font-geist-mono), "SF Mono", Menlo, Consolas, monospace; }
+  :root { --paper: #F6F4EF; --ink: #15140F; --muted: #6F6B62; --faint: #A29E94; --hair: #E3DFD6; --green: #1B6B4A; --white: #FFFFFF; --green-light: #8FD3B3; --tick-off: #CFCAC0; --ink-soft: #3D3B35; --serif: var(--font-newsreader), "Times New Roman", Georgia, serif; --sans: var(--font-instrument), "Helvetica Neue", Helvetica, Arial, sans-serif; --mono: var(--font-geist-mono), "SF Mono", Menlo, Consolas, monospace; }
       html, body { margin: 0; background: #F6F4EF; }
       body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
       a { color: #15140F; text-decoration: none; } a:hover { color: #1B6B4A; }

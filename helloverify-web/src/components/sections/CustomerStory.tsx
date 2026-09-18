@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SIZES_MARK } from "@/lib/img";
+import { SIZES_MARK, tint } from "@/lib/img";
 /** Customer story. */
 
 export function CustomerStory() {
@@ -16,7 +16,7 @@ export function CustomerStory() {
                 <span className="k">
                   Customer story
                 </span>
-                <span className="mono" style={{ padding: '3px 8px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid #E3DFD6', color: '#A29E94', fontSize: '10.5px' }}>
+                <span className="mono" style={{ padding: '3px 8px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--faint)', fontSize: '10.5px' }}>
                   SAMPLE — REPLACE
                 </span>
               </div>
@@ -27,7 +27,7 @@ export function CustomerStory() {
               {' '}
               <div style={{ marginTop: '36px', display: 'flex', alignItems: 'center', gap: '16px' }}>
                 {' '}
-                <div className="ph" style={{ width: '52px', height: '52px', borderRadius: '50%', background: '#ADB4BE' }}>
+                <div className="ph" style={{ width: '52px', height: '52px', borderRadius: '50%', background: tint("/img/22-portrait-fleet-head.jpg") }}>
                   <div className="light">
                   </div>
                   <Image className="pimg" src="/img/22-portrait-fleet-head.jpg" alt="" fill sizes={SIZES_MARK} />
@@ -37,7 +37,7 @@ export function CustomerStory() {
                   <div style={{ fontSize: '16px', fontWeight: '500' }}>
                     Head of Fleet Operations
                   </div>
-                  <div style={{ marginTop: '2px', fontSize: '14px', color: '#6F6B62' }}>
+                  <div style={{ marginTop: '2px', fontSize: '14px', color: 'var(--muted)' }}>
                     Quick-commerce company, Bengaluru
                   </div>
                 </div>
@@ -48,27 +48,27 @@ export function CustomerStory() {
             {' '}
             <div style={{ paddingTop: '8px' }}>
               {' '}
-              <div style={{ paddingBottom: '24px', borderBottom: '1px solid #E3DFD6' }}>
+              <div style={{ paddingBottom: '24px', borderBottom: '1px solid var(--hair)' }}>
                 <div className="serif" style={{ fontSize: '56px', lineHeight: '1', letterSpacing: '-0.03em' }}>
                   1,600
-                  <span style={{ color: '#A29E94' }}>
+                  <span style={{ color: 'var(--faint)' }}>
                     +
                   </span>
                 </div>
-                <div style={{ marginTop: '8px', fontSize: '15px', color: '#6F6B62' }}>
+                <div style={{ marginTop: '8px', fontSize: '15px', color: 'var(--muted)' }}>
                   riders verified a month
                 </div>
               </div>
               {' '}
-              <div style={{ padding: '24px 0', borderBottom: '1px solid #E3DFD6' }}>
+              <div style={{ padding: '24px 0', borderBottom: '1px solid var(--hair)' }}>
                 <div className="serif" style={{ fontSize: '44px', lineHeight: '1', letterSpacing: '-0.03em' }}>
                   5 days{' '}
-                  <span style={{ color: '#A29E94' }}>
+                  <span style={{ color: 'var(--faint)' }}>
                     to
                   </span>
                   {' '}30 min
                 </div>
-                <div style={{ marginTop: '8px', fontSize: '15px', color: '#6F6B62' }}>
+                <div style={{ marginTop: '8px', fontSize: '15px', color: 'var(--muted)' }}>
                   time to a completed report, before and after
                 </div>
               </div>
@@ -96,7 +96,7 @@ export function CustomerStory() {
             <span className="k">
               Customer story
             </span>
-            <span className="mono" style={{ padding: '2px 7px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid #E3DFD6', color: '#A29E94', fontSize: '10px' }}>
+            <span className="mono" style={{ padding: '2px 7px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--faint)', fontSize: '10px' }}>
               SAMPLE
             </span>
           </div>
@@ -109,18 +109,18 @@ export function CustomerStory() {
             <b style={{ fontWeight: '500' }}>
               Head of Fleet Operations
             </b>
-            <span style={{ color: '#6F6B62' }}>
+            <span style={{ color: 'var(--muted)' }}>
               {' '}· Quick-commerce company, Bengaluru
             </span>
           </div>
           {' '}
-          <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px', paddingTop: '20px', borderTop: '1px solid #E3DFD6' }}>
+          <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px', paddingTop: '20px', borderTop: '1px solid var(--hair)' }}>
             {' '}
             <div>
               <div className="serif" style={{ fontSize: '36px', lineHeight: '1' }}>
                 1,600+
               </div>
-              <div style={{ marginTop: '6px', fontSize: '13px', color: '#6F6B62' }}>
+              <div style={{ marginTop: '6px', fontSize: '13px', color: 'var(--muted)' }}>
                 riders verified a month
               </div>
             </div>
@@ -129,7 +129,7 @@ export function CustomerStory() {
               <div className="serif" style={{ fontSize: '28px', lineHeight: '1' }}>
                 5 days to 30 min
               </div>
-              <div style={{ marginTop: '6px', fontSize: '13px', color: '#6F6B62' }}>
+              <div style={{ marginTop: '6px', fontSize: '13px', color: 'var(--muted)' }}>
                 time to a report
               </div>
             </div>

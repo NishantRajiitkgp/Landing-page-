@@ -814,6 +814,71 @@ and what `build:logo` rasterises with). Upgraded 0.34.5 → **0.35.4**, a semver
 major: build clean, logo byte-identical at 1064×388, image optimiser still
 answering 200, all gates green. **`npm audit` now reports 0 vulnerabilities.**
 
+## Design tokens
+
+```sh
+npm run check:tokens
+```
+
+§17 condition 21 asks for zero hex literals outside the theme. There were
+**382**. There are now **5**, and all five are a documented exemption.
+
+| | was | now |
+|---|---:|---:|
+| UI colour (`style={{ }}`) | 119 | **0** |
+| placeholder tints | 57 | **0** — moved to the asset layer |
+| SVG artwork | 194 | 194 — exempt, see below |
+| OG image constants | 5 | 5 — exempt |
+
+**The biggest single cause was duplication, not colour.** The confirmation tick
+was inlined **87 times** across 9 files, each copy carrying its own hex, and
+four page modules had declared their own local `const Tick` on top of that — one
+of which was never used. It is now `components/brand/Tick.tsx`, drawn once with
+four tones. That alone removed 65 SVG blocks.
+
+The tick takes its colour from `currentColor` and a tone class, not from
+`stroke="var(--green)"`. A `var()` in an SVG presentation attribute is legal CSS
+and does work in current browsers — but nothing in this project renders in a
+browser yet (Part 6), so that would have been a claim nothing here could check.
+`currentColor` needs no such claim.
+
+**Placeholder tints are not palette.** `.ph` is the box a photo sits in, and
+each of the 57 inline backgrounds was matched to one photograph. Swapping the
+brand does not change the colour that belongs behind a picture of a rider in
+Bengaluru, so they moved to `PLACEHOLDER_TINT` in `lib/img.ts`, keyed by image —
+the same category as `blurDataURL`. 23 photographs, and the map was built from
+the literals themselves: **zero photographs had conflicting tints**.
+
+**SVG artwork stays literal**, and that is the rule working rather than an
+escape from it. Singapore's flag is `#C8102E` whether or not the brand changes.
+The test is repetition and role, not file type — which is why the tick was
+extracted and the flags were not.
+
+Four new tokens: `--white`, `--green-light`, `--tick-off`, `--ink-soft`. Four,
+not seventeen, because the tints went to the asset layer instead.
+
+### Verification, and why it is not byte-identity
+
+Byte-identity cannot be the test for a tokenisation: `background: "#F6F4EF"`
+emits `background:#F6F4EF` and the tokenised form emits `background:var(--paper)`
+— different bytes, identical rendering. Three proofs were used instead:
+
+- **Inverse substitution.** Resolve every `var(--x)` in both the old and the new
+  output back to the literal it names, then compare. 56 pages: 54 byte-identical,
+  2 value-equivalent, **0 unexplained**.
+- **Source-level positional proof** for the tints: every `tint("…")` call
+  resolves, through `PLACEHOLDER_TINT`, to exactly the literal it replaced, in
+  the same order, in the same file, compared against `HEAD`. **57 of 57.**
+- **The tone chain** for the tick, which `currentColor` puts beyond substitution:
+  each tone class → its token → its value, asserted equal to the original
+  stroke. **4 of 4.**
+
+The gate was broken four ways: a hex returning in a style prop, a hex on the
+same line as an exempt SVG attribute (proving the exemption is not a line-level
+loophole), a tint hardcoded instead of looked up, and a photograph losing its
+map entry — which fails the build, because `tint()` throws rather than returning
+a default.
+
 ## Known gaps
 
 - **`--faint` is 2.43:1 and is the one remaining WCAG AA text failure.** It is
@@ -867,6 +932,12 @@ answering 200, all gates green. **`npm audit` now reports 0 vulnerabilities.**
   grep. `npm run check:secrets` exists and runs in `check:all`; the git hook is
   repo tooling, which is out of scope while the move to Azure is pending.
 - **No Dependabot.** §13 pairs it with `npm audit`. Also repo configuration.
+- **`WhoItsFor.tsx`'s mobile block renders no photographs.** Found while moving
+  the tints: the desktop grid has six cells with six images, and the `.mob`
+  block repeats the same six cells with the same tints and **zero** `<Image>`
+  elements. On mobile those cells are flat colour where desktop shows a photo.
+  Almost certainly a porting miss rather than a design decision — worth fixing
+  with Part 5, which splits that file anyway.
 - **Two §9.1 budgets are not met, and the gate says so on every run.** Fonts
   241.9 KB against 60, scripts 159.7 KB against 120. The font gap needs a
   DESIGN.md decision (see the measured curve above). The script gap is React 19

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SIZES_WHY } from "@/lib/img";
+import { SIZES_WHY, tint } from "@/lib/img";
 /** Why governments work with us. */
 
 export function Why() {
@@ -96,7 +96,7 @@ export function Why() {
               {' '}
             </div>
             {' '}
-            <div className="whyv ph" style={{ background: '#8C8C7A' }}>
+            <div className="whyv ph" style={{ background: tint("/img/09-licensing-officer.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -252,7 +252,7 @@ export function Why() {
           </div>
           {' '}
           <div style={{ marginTop: '28px' }}>
-            <div className="whyv ph" style={{ background: '#8C8C7A', height: '520px' }}>
+            <div className="whyv ph" style={{ background: tint("/img/09-licensing-officer.jpg"), height: '520px' }}>
               {' '}
               <div className="light">
               </div>

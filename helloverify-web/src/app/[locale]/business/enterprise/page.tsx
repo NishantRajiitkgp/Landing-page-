@@ -27,11 +27,6 @@ export async function generateMetadata({
   return pageMetadata(locale, PATH);
 }
 
-const Tick = () => (
-  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-    <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
 
 const Arrow = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">

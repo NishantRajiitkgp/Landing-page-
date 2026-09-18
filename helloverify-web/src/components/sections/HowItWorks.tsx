@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SIZES_AVATAR } from "@/lib/img";
+import { SIZES_AVATAR, tint } from "@/lib/img";
 /** How a verification runs, end to end. */
 
 export function HowItWorks() {
@@ -145,7 +145,7 @@ export function HowItWorks() {
                     </svg>
                     Captured
                   </span>
-                  <span className="mono" style={{ color: '#6F6B62' }}>
+                  <span className="mono" style={{ color: 'var(--muted)' }}>
                     sharp · no glare · all edges
                   </span>
                 </div>
@@ -335,7 +335,7 @@ export function HowItWorks() {
               <div className="panel">
                 {' '}
                 <div className="who" style={{ animation: 'r_rep 12.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-                  <div className="ph av" style={{ background: '#B7C3B2' }}>
+                  <div className="ph av" style={{ background: tint("/img/21-portrait-ramesh.jpg") }}>
                     <div className="light">
                     </div>
                     <Image className="pimg" src="/img/21-portrait-ramesh.jpg" alt="" fill sizes={SIZES_AVATAR} />
@@ -575,7 +575,7 @@ export function HowItWorks() {
                     </svg>
                     Captured
                   </span>
-                  <span className="mono" style={{ color: '#6F6B62' }}>
+                  <span className="mono" style={{ color: 'var(--muted)' }}>
                     sharp · no glare · all edges
                   </span>
                 </div>
@@ -813,7 +813,7 @@ export function HowItWorks() {
               <div className="panel">
                 {' '}
                 <div className="who" style={{ animation: 'r_rep 12.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-                  <div className="ph av" style={{ background: '#B7C3B2' }}>
+                  <div className="ph av" style={{ background: tint("/img/21-portrait-ramesh.jpg") }}>
                     <div className="light">
                     </div>
                     <Image className="pimg" src="/img/21-portrait-ramesh.jpg" alt="" fill sizes={SIZES_AVATAR} />

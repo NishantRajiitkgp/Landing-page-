@@ -10,6 +10,7 @@ import { FaqSection } from "@/components/chrome/FaqSection";
 import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { Tick } from "@/components/brand/Tick";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -26,11 +27,6 @@ export async function generateMetadata({
   return pageMetadata(locale, PATH);
 }
 
-const Tick = () => (
-  <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-    <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
 
 const PACKS = [
   {

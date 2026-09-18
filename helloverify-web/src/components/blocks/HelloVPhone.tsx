@@ -2,6 +2,8 @@
  *  so the consumer pages and the homepage show the identical device.
  *  Every class here is a canvas class, defined at both breakpoints — checked.
  *  lint-collisions: canvas-verbatim */
+import { Tick } from "@/components/brand/Tick";
+
 export function HelloVPhone() {
   return (
     <div className="phone2">
@@ -11,10 +13,7 @@ export function HelloVPhone() {
         <div className="chd">
           {' '}
           <div className="cav">
-            <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3.5 8.5l3 3 6-7" stroke="#FFFFFF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-              </path>
-            </svg>
+            <Tick tone="inverse" />
           </div>
           {' '}
           <div>
@@ -120,26 +119,17 @@ export function HelloVPhone() {
             </div>
             {' '}
             <div className="rr">
-              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                </path>
-              </svg>
+              <Tick />
               Driving licence · valid
             </div>
             {' '}
             <div className="rr">
-              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                </path>
-              </svg>
+              <Tick />
               Criminal record · none found
             </div>
             {' '}
             <div className="rr">
-              <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                </path>
-              </svg>
+              <Tick />
               Current address · confirmed
             </div>
             {' '}
