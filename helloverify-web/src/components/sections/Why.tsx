@@ -264,7 +264,7 @@ export function Why() {
               <div className="scrim" style={{ height: '70%' }}>
               </div>
               {' '}
-              <div className="evcard" style={{ left: '16px', right: '16px', bottom: '16px', width: 'auto' }}>
+              <div className="evcard" style={{ insetInlineStart: '16px', insetInlineEnd: '16px', bottom: '16px', width: 'auto' }}>
                 {' '}
                 <div className="sealsm">
                   <span>
