@@ -1,6 +1,7 @@
 /** /about — the company page. Facts only: everything here traces to the canvas
  *  annotation's "REAL" list (YC, 20M+, 2,000+, 120+, 33+, 6 offices, MOM, certs). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { YCBadge } from "@/components/brand/YCBadge";
 import Image from "next/image";
@@ -8,11 +9,14 @@ import { CERT_BOX, SIZES_PATH_SPAN2 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "About HelloVerify",
-  description:
-    "We verify claims at their source — 20M+ checks since 2018, for enterprises, governments and families across 120+ countries.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/about");
+}
 
 export default async function AboutPage({
   params,

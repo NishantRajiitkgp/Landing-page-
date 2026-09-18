@@ -1,16 +1,20 @@
 /** /business — audience hub (Template 2). Real content, not a link farm (IA §10.1). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import Image from "next/image";
 import { CERT_BOX, SIZES_PATH_SPAN2, SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Background verification for business — HelloVerify",
-  description:
-    "One pipeline for every role you hire — riders to directors. Enterprise BGV, SMB packages, employee verification, customer KYC and vendor due diligence.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/business");
+}
 
 const PATHS = [
   {

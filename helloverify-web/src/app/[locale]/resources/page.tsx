@@ -1,16 +1,20 @@
 /** /resources — hub for the organic-growth surface (IA §7). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { CHECKS } from "@/lib/content/checks";
 import { COUNTRIES } from "@/lib/content/countries";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Resources — HelloVerify",
-  description:
-    "The check library, country guides, a glossary of verification terms, and writing about how verification actually works.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/resources");
+}
 
 export default async function ResourcesHub({
   params,

@@ -1,5 +1,6 @@
 /** /legal/[slug] — long-form legal document (Template 8). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/chrome/PageShell";
 import { LEGAL, getLegal } from "@/lib/content/legal";
@@ -12,12 +13,12 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const d = getLegal(slug);
   if (!d) return {};
-  return { title: `${d.title} — HelloVerify`, description: d.summary };
+  return pageMetadata(locale, `/legal/${d.slug}`);
 }
 
 export default async function LegalPage({

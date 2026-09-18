@@ -1,12 +1,36 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { copyFor } from "@/lib/seo/copy";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { VerticalPage } from "@/components/templates/VerticalPage";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Verification for health authorities — HelloVerify",
-  description:
-    "Medical degrees, council registrations and practice history confirmed with the issuing institution — before a clinician touches a patient.",
+/** This page's route, stated ONCE. `pageMetadata` and the Service node below
+ *  both read it, so §8.2's graph does not add a second chance to name the
+ *  wrong route on top of the one §8.1 already guards. */
+const PATH = "/governments/health";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, PATH);
+}
+
+/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
+ *  `description` is this page's own reviewed description, read from the copy
+ *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
+ *  title, the meta description, the Service node and llms.txt cannot drift
+ *  apart. */
+const SERVICE: ServiceFacts = {
+  path: PATH,
+  name: "Verification for health authorities",
+  description: copyFor(PATH).description,
+  serviceType: "Credential verification",
 };
 
 export default async function Page({
@@ -22,6 +46,7 @@ export default async function Page({
 
   return (
     <VerticalPage
+      service={SERVICE}
       crumbs={[{ label: "Governments", href: "/governments" }, { label: "Health authorities" }]}
       eyebrow="Governments · Health authorities"
       h1={<>No one practises <em>on an unchecked degree.</em></>}

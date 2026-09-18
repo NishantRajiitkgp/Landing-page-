@@ -1,13 +1,66 @@
 /** /business/employee-verification — vertical page (Template 3). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { copyFor } from "@/lib/seo/copy";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Employee verification — HelloVerify",
-  description:
-    "Existing staff, contractors and gig workforces — verified at joining and re-verified when it matters. EPFO-backed employment history in 60 minutes.",
+/** This page's route, stated ONCE. `pageMetadata` and the Service node below
+ *  both read it, so §8.2's graph does not add a second chance to name the
+ *  wrong route on top of the one §8.1 already guards. */
+const PATH = "/business/employee-verification";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, PATH);
+}
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "Is re-verifying existing employees even legal?",
+    a:
+      "Yes, with consent — which the flow captures per run, not as a blanket signature from five years ago. Scope is limited to what the role justifies, and employees can see what was checked.",
+  },
+  {
+    q: "What is a \"digital employment\" check?",
+    a:
+      "Work history reconstructed from provident-fund contribution records — employer names, overlaps and gaps — confirmed at the source in about an hour, without calling anyone's current employer.",
+  },
+  {
+    q: "Can it detect moonlighting?",
+    a:
+      "Concurrent PF contributions from a second employer show up in the same 60-minute check. The report shows the overlap period, not an accusation — what you do with it is policy.",
+  },
+  {
+    q: "Will employees be contacted?",
+    a:
+      "Only for consent, on their own phone. Digital checks never touch their employer or colleagues; manual employment checks do, and are marked clearly before you order one.",
+  },
+];
+
+/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
+ *  `description` is this page's own reviewed description, read from the copy
+ *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
+ *  title, the meta description, the Service node and llms.txt cannot drift
+ *  apart. */
+const SERVICE: ServiceFacts = {
+  path: PATH,
+  name: "Employee verification",
+  description: copyFor(PATH).description,
+  serviceType: "Background verification",
 };
 
 export default async function EmployeeVerificationPage({
@@ -152,47 +205,10 @@ export default async function EmployeeVerificationPage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Fair questions.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>Is re-verifying existing employees even legal?<span className="m">+</span></summary>
-            <p className="a">
-              Yes, with consent — which the flow captures per run, not as a blanket signature from
-              five years ago. Scope is limited to what the role justifies, and employees can see
-              what was checked.
-            </p>
-          </details>
-          <details>
-            <summary>What is a "digital employment" check?<span className="m">+</span></summary>
-            <p className="a">
-              Work history reconstructed from provident-fund contribution records — employer names,
-              overlaps and gaps — confirmed at the source in about an hour, without calling anyone's
-              current employer.
-            </p>
-          </details>
-          <details>
-            <summary>Can it detect moonlighting?<span className="m">+</span></summary>
-            <p className="a">
-              Concurrent PF contributions from a second employer show up in the same 60-minute check.
-              The report shows the overlap period, not an accusation — what you do with it is policy.
-            </p>
-          </details>
-          <details>
-            <summary>Will employees be contacted?<span className="m">+</span></summary>
-            <p className="a">
-              Only for consent, on their own phone. Digital checks never touch their employer or
-              colleagues; manual employment checks do, and are marked clearly before you order one.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>Fair questions.</>} faqs={FAQS} />
+
+      <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
   );
 }

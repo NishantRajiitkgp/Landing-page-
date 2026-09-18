@@ -16,6 +16,21 @@ import { Compliance } from "@/components/sections/Compliance";
 import { Contact } from "@/components/sections/Contact";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+
+/** The homepage inherited its title and description from the root layout and
+ *  needed no export of its own — until §8.1, because a canonical cannot be
+ *  inherited: a layout-level `alternates` would stamp `/en` onto all 32 pages.
+ *  The copy is the same constant the layout uses, not a second literal. */
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/");
+}
 
 export default async function Home({
   params,
@@ -31,21 +46,26 @@ export default async function Home({
   return (
     <div className="page">
       <SiteNav />
-      <Hero />
-      <PeopleStrip />
-      <Demo2 />
-      <Numbers />
-      <Presence />
-      <Why />
-      <Checks />
-      <Packages />
-      <HowItWorks />
-      <WhoItsFor />
-      <International />
-      <Consumer />
-      <CustomerStory />
-      <Compliance />
-      <Contact />
+      {/* The homepage does not use PageShell, so it carries its own <main>.
+          Without it this is the one page of 56 with no main landmark, and the
+          site-wide skip link has nothing to skip to (WCAG 2.4.1, 1.3.1). */}
+      <main id="main-content">
+        <Hero />
+        <PeopleStrip />
+        <Demo2 />
+        <Numbers />
+        <Presence />
+        <Why />
+        <Checks />
+        <Packages />
+        <HowItWorks />
+        <WhoItsFor />
+        <International />
+        <Consumer />
+        <CustomerStory />
+        <Compliance />
+        <Contact />
+      </main>
       <SiteFooter />
     </div>
   );

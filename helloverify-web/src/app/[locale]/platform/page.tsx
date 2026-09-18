@@ -1,16 +1,20 @@
 /** /platform — hub for the proof layer (Template 2, lighter). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import Image from "next/image";
 import { SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "The HelloVerify platform — technology, security, coverage",
-  description:
-    "The proof layer: how verification runs, how data is protected, and where in the world a document can be confirmed at its source.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/platform");
+}
 
 export default async function PlatformHub({
   params,

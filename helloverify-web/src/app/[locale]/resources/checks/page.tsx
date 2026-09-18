@@ -1,15 +1,19 @@
 /** /resources/checks — the check library index. Replaces the old "All 33 checks" link target. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { CHECKS, CHECK_GROUPS } from "@/lib/content/checks";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "The check library — HelloVerify",
-  description:
-    "Every verification check: what it answers, who confirms it, how long it takes, and what it cannot tell you.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/resources/checks");
+}
 
 export default async function ChecksIndex({
   params,

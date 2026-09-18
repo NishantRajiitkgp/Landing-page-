@@ -1,6 +1,7 @@
 /** /checks/[check] — programmatic check page (Template 5, IA §7).
  *  One route file, one page per catalogue entry, statically generated. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/chrome/PageShell";
 import { CHECKS, getCheck } from "@/lib/content/checks";
@@ -13,15 +14,17 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ check: string }>;
+  params: Promise<{ locale: string; check: string }>;
 }): Promise<Metadata> {
-  const { check } = await params;
+  const { locale, check } = await params;
   const c = getCheck(check);
+  // No canonical on a 404. An unknown slug renders notFound() below, and a
+  // canonical tag on a 404 invites Google to index the error page.
   if (!c) return {};
-  return {
-    title: `${c.name} verification — HelloVerify`,
-    description: `${c.answers} Confirmed with ${c.source}, typically in ${c.time}.`,
-  };
+  // `c.slug`, not the `check` param: the sitemap is built from the catalogue,
+  // so taking the path from the same object is what makes the two byte-identical
+  // even if the URL arrived percent-encoded or in a different case.
+  return pageMetadata(locale, `/checks/${c.slug}`);
 }
 
 export default async function CheckPage({

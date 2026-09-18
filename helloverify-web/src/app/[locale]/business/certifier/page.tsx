@@ -1,21 +1,74 @@
 /** /business/certifier — vendor due diligence (Template 3 + two package receipts).
  *  Descriptive name leads, brand follows (IA §10.2). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { copyFor } from "@/lib/seo/copy";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Vendor due diligence — Certifier by HelloVerify",
-  description:
-    "Trade licences, directors, credit and criminal records — verified at the registry before you sign a supplier. Certified vendor profiles in 2 days.",
-};
+/** This page's route, stated ONCE. `pageMetadata` and the Service node below
+ *  both read it, so §8.2's graph does not add a second chance to name the
+ *  wrong route on top of the one §8.1 already guards. */
+const PATH = "/business/certifier";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, PATH);
+}
 
 const Tick = () => (
   <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "Does the vendor have to cooperate?",
+    a:
+      "Mostly no — registries, courts and bureaus answer without the vendor's involvement. Where a document must come from the vendor, they get the same one-link upload flow candidates use.",
+  },
+  {
+    q: "What does \"certified\" mean here?",
+    a:
+      "Every fact in the profile carries its source and check date. Certification isn't our opinion of the vendor — it's proof that each claim was verified at the registry that holds it.",
+  },
+  {
+    q: "Can this run on our whole vendor base?",
+    a:
+      "Yes — batches run in parallel, so a thousand vendors take days, not quarters. Renewals re-run automatically before a licence or rating goes stale.",
+  },
+  {
+    q: "International suppliers too?",
+    a:
+      "120+ countries, checked in-country: an Egyptian textile supplier's trade licence is confirmed in Cairo, not translated from a scan.",
+  },
+];
+
+/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
+ *  `description` is this page's own reviewed description, read from the copy
+ *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
+ *  title, the meta description, the Service node and llms.txt cannot drift
+ *  apart. */
+const SERVICE: ServiceFacts = {
+  path: PATH,
+  name: "Certifier — vendor due diligence",
+  description: copyFor(PATH).description,
+  serviceType: "Vendor due diligence",
+};
 
 export default async function CertifierPage({
   params,
@@ -190,47 +243,10 @@ export default async function CertifierPage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>From procurement.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>Does the vendor have to cooperate?<span className="m">+</span></summary>
-            <p className="a">
-              Mostly no — registries, courts and bureaus answer without the vendor's involvement.
-              Where a document must come from the vendor, they get the same one-link upload flow
-              candidates use.
-            </p>
-          </details>
-          <details>
-            <summary>What does "certified" mean here?<span className="m">+</span></summary>
-            <p className="a">
-              Every fact in the profile carries its source and check date. Certification isn't our
-              opinion of the vendor — it's proof that each claim was verified at the registry that
-              holds it.
-            </p>
-          </details>
-          <details>
-            <summary>Can this run on our whole vendor base?<span className="m">+</span></summary>
-            <p className="a">
-              Yes — batches run in parallel, so a thousand vendors take days, not quarters. Renewals
-              re-run automatically before a licence or rating goes stale.
-            </p>
-          </details>
-          <details>
-            <summary>International suppliers too?<span className="m">+</span></summary>
-            <p className="a">
-              120+ countries, checked in-country: an Egyptian textile supplier's trade licence is
-              confirmed in Cairo, not translated from a scan.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>From procurement.</>} faqs={FAQS} />
+
+      <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
   );
 }

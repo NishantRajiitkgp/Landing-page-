@@ -1,15 +1,21 @@
 /** /platform/coverage — where a document can be confirmed at its source.
  *  Replaces legacy /international. Country times are indicative and labelled so. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Global coverage — 120+ countries — HelloVerify",
-  description:
-    "Where a document can be confirmed with the authority that issued it, how long it takes there, and the six offices that keep the queue moving.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/platform/coverage");
+}
 
 const REGIONS: { r: string; list: { c: string; t: string }[] }[] = [
   {
@@ -50,6 +56,32 @@ const REGIONS: { r: string; list: { c: string; t: string }[] }[] = [
       { c: "Canada", t: "1 – 3 days" },
       { c: "Brazil", t: "3 – 5 days" },
     ],
+  },
+];
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "What does \"120+ countries\" actually count?",
+    a:
+      "Countries where we can confirm at least one check type with the authority that issued the document, through our own offices or a named partner. It does not count countries where all we could do is search a commercial database.",
+  },
+  {
+    q: "Is every check available everywhere?",
+    a:
+      "No, and any vendor claiming otherwise is describing a database. Criminal record access in particular varies by jurisdiction — some require the individual to request their own certificate. The catalogue shows what is possible per country before you order.",
+  },
+  {
+    q: "How do you handle countries in crisis?",
+    a:
+      "Where institutions are closed or records are destroyed, we say so. The report distinguishes unverifiable from failed, which protects applicants who did nothing wrong but happen to come from somewhere with broken record-keeping.",
+  },
+  {
+    q: "Can you add a country for us?",
+    a:
+      "Often, yes — for a committed volume we will establish a route into a new jurisdiction, typically a matter of weeks. Tell us the country and the check types you need.",
   },
 ];
 
@@ -194,48 +226,8 @@ export default async function CoveragePage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>About reach.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>What does "120+ countries" actually count?<span className="m">+</span></summary>
-            <p className="a">
-              Countries where we can confirm at least one check type with the authority that issued
-              the document, through our own offices or a named partner. It does not count countries
-              where all we could do is search a commercial database.
-            </p>
-          </details>
-          <details>
-            <summary>Is every check available everywhere?<span className="m">+</span></summary>
-            <p className="a">
-              No, and any vendor claiming otherwise is describing a database. Criminal record access
-              in particular varies by jurisdiction — some require the individual to request their
-              own certificate. The catalogue shows what is possible per country before you order.
-            </p>
-          </details>
-          <details>
-            <summary>How do you handle countries in crisis?<span className="m">+</span></summary>
-            <p className="a">
-              Where institutions are closed or records are destroyed, we say so. The report
-              distinguishes unverifiable from failed, which protects applicants who did nothing
-              wrong but happen to come from somewhere with broken record-keeping.
-            </p>
-          </details>
-          <details>
-            <summary>Can you add a country for us?<span className="m">+</span></summary>
-            <p className="a">
-              Often, yes — for a committed volume we will establish a route into a new jurisdiction,
-              typically a matter of weeks. Tell us the country and the check types you need.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>About reach.</>} faqs={FAQS} />
     </PageShell>
   );
 }

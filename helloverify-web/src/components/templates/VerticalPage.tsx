@@ -4,10 +4,16 @@
  * self-contained, citable unit; only the content varies.
  */
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
 import type { ClosingCta } from "@/components/chrome/ClosingCta";
 import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
+import type { Crumb } from "@/lib/seo/schema/breadcrumbs";
+import type { Faq } from "@/lib/seo/schema/faq";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getLocale } from "next-intl/server";
 
 const Arrow = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -19,10 +25,14 @@ export type Pill = { n: string; t: string; fast?: boolean };
 export type Lane = { gt: string; gh: string; pills: Pill[] };
 export type Step = { n: string; t: string; p: string };
 export type Row = { nm: string; sub: string; tm: string; fast?: boolean; src: string };
-export type Faq = { q: string; a: string };
 
 export type VerticalContent = {
-  crumbs: { label: string; href?: string }[];
+  crumbs: readonly Crumb[];
+  /** The `Service` this page describes (BUILD-SPEC §8.2). Required rather
+   *  than optional: every page built on this template IS a solution page,
+   *  so a missing node here would be an omission, not a choice, and tsc
+   *  reporting it is cheaper than a checker noticing later. */
+  service: ServiceFacts;
   eyebrow: string;
   h1: React.ReactNode;
   sub: string;
@@ -43,7 +53,7 @@ export type VerticalContent = {
   complianceHead?: React.ReactNode;
   complianceLede?: string;
   faqHead: React.ReactNode;
-  faqs: Faq[];
+  faqs: readonly Faq[];
   closing: React.ComponentProps<typeof ClosingCta>;
 };
 
@@ -54,7 +64,12 @@ const CERTS = [
   { img: "/img/nsr.jpg", alt: "NSR", h: "National Skills Registry", p: "India's registry of verified IT and ITeS professionals." },
 ];
 
-export function VerticalPage(c: VerticalContent) {
+/** Async only to resolve the locale for the Service node's absolute URLs —
+ *  the same `getLocale()` call `PageShell` and `AppLink` already make, and
+ *  static because every page calls `setRequestLocale` (BUILD-SPEC §5). */
+export async function VerticalPage(c: VerticalContent) {
+  const locale = await getLocale();
+
   return (
     <PageShell crumbs={c.crumbs} closing={c.closing}>
       {/* hero */}
@@ -195,23 +210,10 @@ export function VerticalPage(c: VerticalContent) {
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>{c.faqHead}</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          {c.faqs.map((f) => (
-            <details key={f.q}>
-              <summary>{f.q}<span className="m">+</span></summary>
-              <p className="a">{f.a}</p>
-            </details>
-          ))}
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from `c.faqs` (see FaqSection). */}
+      <FaqSection head={c.faqHead} faqs={c.faqs} />
+
+      <JsonLd data={serviceNode(locale, c.service)} />
     </PageShell>
   );
 }

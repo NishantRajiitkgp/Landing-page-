@@ -1,5 +1,6 @@
 /** /resources/blog — editorial index (legacy /blog redirects here per IA §9). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { POSTS, formatDate } from "@/lib/content/posts";
 import Image from "next/image";
@@ -7,11 +8,14 @@ import { SIZES_FULL } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Blog — HelloVerify",
-  description:
-    "Writing about how verification actually works, by the people who run the checks.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/resources/blog");
+}
 
 export default async function BlogIndex({
   params,

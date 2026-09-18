@@ -1,16 +1,20 @@
 /** /governments — audience hub (Template 2). Evidence-first: this buyer converts on artefacts (IA §4.1). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import Image from "next/image";
 import { CERT_BOX, SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Verification for governments & authorities — HelloVerify",
-  description:
-    "Primary-source verification at national scale — work passes, medical credentials, visas and trade licences. Trusted by ministries across India, KSA, UAE, Singapore and Europe.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/governments");
+}
 
 const VERTICALS = [
   {

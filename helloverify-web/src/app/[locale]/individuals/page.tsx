@@ -1,16 +1,20 @@
 /** /individuals — audience hub (Template 2). Surfaces what the old site hid behind /#consumer-services. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import Image from "next/image";
 import { CERT_BOX, SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Background checks for individuals & families — HelloVerify",
-  description:
-    "Verify a driver, a nanny, a tenant or your own documents for a visa. Send a photo over WhatsApp, get the report in 30 minutes.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/individuals");
+}
 
 const PATHS = [
   {

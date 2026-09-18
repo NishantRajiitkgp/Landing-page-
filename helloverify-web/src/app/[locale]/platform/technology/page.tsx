@@ -1,14 +1,46 @@
 /** /platform/technology — how it works, for a technical evaluator. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Technology & APIs — HelloVerify",
-  description:
-    "How HelloVerify reads a document in about a second, reaches the issuing authority, and returns a defensible result over REST and webhooks.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/platform/technology");
+}
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "Is the result synchronous?",
+    a:
+      "The document read is — fields and forgery signals return in about a second. Source confirmation is asynchronous by nature, because a registrar answers on their own schedule, so completion arrives by webhook with the source named.",
+  },
+  {
+    q: "What happens if your model is unsure?",
+    a:
+      "Low-confidence extractions go to a human reviewer rather than being returned as confident guesses. The record shows that a person intervened, which matters when a result is later challenged.",
+  },
+  {
+    q: "Do you store our candidates' documents?",
+    a:
+      "On the retention schedule in your DPA, encrypted at rest — or zero-retention if you hold the files yourself and send us only what a check needs. Both are configured per account, not per request.",
+  },
+  {
+    q: "Rate limits and volume spikes?",
+    a:
+      "Batch submission is built for hiring drives and seasonal intakes; the pipeline parallelises across checks, so a thousand candidates take roughly as long as one plus queue time. Limits are set per contract rather than per plan tier.",
+  },
+];
 
 export default async function TechnologyPage({
   params,
@@ -212,49 +244,8 @@ export default async function TechnologyPage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>From engineers.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>Is the result synchronous?<span className="m">+</span></summary>
-            <p className="a">
-              The document read is — fields and forgery signals return in about a second. Source
-              confirmation is asynchronous by nature, because a registrar answers on their own
-              schedule, so completion arrives by webhook with the source named.
-            </p>
-          </details>
-          <details>
-            <summary>What happens if your model is unsure?<span className="m">+</span></summary>
-            <p className="a">
-              Low-confidence extractions go to a human reviewer rather than being returned as
-              confident guesses. The record shows that a person intervened, which matters when a
-              result is later challenged.
-            </p>
-          </details>
-          <details>
-            <summary>Do you store our candidates' documents?<span className="m">+</span></summary>
-            <p className="a">
-              On the retention schedule in your DPA, encrypted at rest — or zero-retention if you
-              hold the files yourself and send us only what a check needs. Both are configured per
-              account, not per request.
-            </p>
-          </details>
-          <details>
-            <summary>Rate limits and volume spikes?<span className="m">+</span></summary>
-            <p className="a">
-              Batch submission is built for hiring drives and seasonal intakes; the pipeline
-              parallelises across checks, so a thousand candidates take roughly as long as one plus
-              queue time. Limits are set per contract rather than per plan tier.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>From engineers.</>} faqs={FAQS} />
     </PageShell>
   );
 }

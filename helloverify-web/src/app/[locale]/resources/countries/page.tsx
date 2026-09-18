@@ -1,15 +1,19 @@
 /** /resources/countries — country guide index. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { COUNTRIES, REGIONS } from "@/lib/content/countries";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Country guides — HelloVerify",
-  description:
-    "What verification is actually like country by country: the registries, the timelines, and the local trap that catches people out.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/resources/countries");
+}
 
 export default async function CountriesIndex({
   params,
