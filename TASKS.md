@@ -184,28 +184,68 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the 13 oversized components
+## Part 5 — Split the oversized components · **1 of 9 done**
 
-§4 rule 2 and §17 condition 22. **13 files exceed 300 lines**; the largest is
-`HowItWorks.tsx` at 910, then `Packages.tsx` 809, `International.tsx` 778.
+§4 rule 2 and §17 condition 22. **11 files still exceed 300 lines.**
 
-All are ported canvas sections, so the risk is visual regression. Part 3 is
-done, so the markup is tokenised; lean on the byte-identity harness throughout
-(it *is* the right test here — a split changes no values).
+**The shape is the same in every one: one card written N times.** Measured:
 
-Two things Part 3 turned up that belong in this part:
+| file | lines | the repeat |
+|---|---:|---|
+| `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
+| `International.tsx` | 778 | 10 country cards |
+| `Packages.tsx` | 712 | 9 receipt cards, 33 lines |
+| `Consumer.tsx` | 610 | 16 service rows |
+| `Presence.tsx` | 532 | 20 flags, 12 rows |
+| `Checks.tsx` | 520 | 17 product rows |
+| `Why.tsx` | 328 | 10 reason rows |
+| `WhoItsFor.tsx` | 324 | 12 cells |
+| `ContactForm.tsx` | 328 | — no repeat; a genuine split |
+| `security-compliance/page.tsx` | 334 | — |
+| `enterprise/page.tsx` | 334 | — |
+| ~~`PeopleStrip.tsx`~~ | ~~684~~ → **209** | **done** |
 
-- **`WhoItsFor.tsx`'s mobile block renders no photographs.** The desktop grid has
-  six cells with six images; the `.mob` block repeats the same six cells with the
-  same tints and zero `<Image>` elements. Flat colour on mobile where desktop
-  shows a photo — almost certainly a porting miss.
+So the fix is not "cut the file in half" — it is extract the repeated unit and
+drive it from a record list, which is what `smb/page.tsx` already does with
+`PACKS` and what `components/brand/Tick.tsx` did in Part 3. Each file also holds
+a `.dsk` and a `.mob` block, which are NOT the same markup: the copy differs
+between breakpoints, so they stay as separate lists.
+
+**Do not batch these.** PeopleStrip alone produced two regressions that only the
+byte-identity check caught:
+
+- the rewrite dropped a whole caption row from the desktop block — two visible
+  lines of marketing copy, gone, because the extraction looked at the repeated
+  track and not at what followed it;
+- and it gave the mobile in-progress card a progress bar it never had, by
+  conflating "pulsing dot" with "progress bar".
+
+Neither would have survived a screenshot, and neither was visible in review.
+
+**Method, per file:**
+
+1. Parse the repeated unit's fields out of the existing markup — never retype
+   copy.
+2. Check whether the halves of any duplicated run are identical before
+   collapsing them.
+3. Account for everything *outside* the repeated run, which is where both
+   regressions above came from.
+4. Snapshot `.next/server/app`, rewrite, rebuild, and require **byte-identical**
+   HTML on all 56 pages. This is the one part where byte-identity IS the right
+   test: a split changes no values.
+
+**Carried findings:**
+
+- **`WhoItsFor.tsx`'s mobile block renders no photographs.** Desktop has six
+  cells with six images; `.mob` repeats the cells with the same tints and zero
+  `<Image>`. Fix it while that file is open.
 - **`HowItWorks.tsx` holds the last 18 inline ticks**, each with a unique
   `animation` name and dash offset, so they are individually drawn rather than
-  repeats. Splitting that file is the moment to decide whether they should be
-  one animated component taking a delay.
-
-**Acceptance:** no file in `src/components` or `src/app` over 300 lines; all 56
-pages byte-identical.
+  repeats of `<Tick>`. Decide there whether they become one component taking a
+  delay.
+- **`hv/no-color-literal` only matches hex.** `rgba(255,255,255,0.4)` in a style
+  prop slips through — found in PeopleStrip's live card. Worth extending the
+  rule to `rgb()`/`rgba()`/`hsl()` when convenient.
 
 ---
 
