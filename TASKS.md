@@ -61,22 +61,24 @@ npm run contract http://localhost:3100          # 27 assertions
 
 ---
 
-## Part 1 — Checkpoint the work
+## Part 1 — Checkpoint the work · **DONE (18 Sep 2026)**
 
-**98 files are uncommitted.** Five items of work — canonical/hreflang,
-structured data, llms.txt and the copy table, fonts and budgets, Vitest and the
-gates, accessibility, security headers — sit in one working tree with no restore
-point.
+Eight thematic commits, `4886729`..`69157b7`, on `feat/leads-api-zoho`. Working
+tree clean; build, ten gates, 100 tests and `tsc` all green afterwards.
 
-- Break it into conventional commits, one per item, so the history reads.
-- Local only. No push, no branch strategy, no pipeline — those are deliberately
-  deferred to the Azure move and are **not** part of this.
+Two things worth recording:
 
-**Acceptance:** `git log` shows the work as discrete commits; `git status` is
-clean; all gates still pass afterwards.
+- **"One commit per item" was not achievable.** `next.config.ts`, `layout.tsx`
+  and the 32 page files each carry changes from three or four items, and
+  hunk-level splitting (`git add -p`) is interactive, which this environment
+  blocks. Commits are therefore file-granular and thematic, and each message
+  states what it spans.
+- **The real count was 77 files, not 98.** 21 of the 76 "modified" files had
+  line-ending-only changes from an earlier EOL normaliser and staged as zero
+  content — `core.autocrlf` normalises to LF on staging, so git recorded nothing
+  for them. That is more evidence for the `.gitattributes` decision in Part 11.
 
-> Flagged twice already. Everything below assumes it is safe to experiment,
-> which it currently is not.
+Not done here, deliberately: no push, no branch strategy, no pipeline.
 
 ---
 
