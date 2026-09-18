@@ -7,3 +7,76 @@
 
 @import "./design.css";
 @import "./pages.css";
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Accessibility primitives (BUILD-SPEC §12).
+   Not design decisions — the three WCAG 2.2 AA obligations the ported canvas
+   had no reason to carry, since none of them is visible in a static mockup.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* Text for assistive technology only. Clipped rather than `display:none`,
+   which would remove it from the accessibility tree along with the visual
+   layout — the point is that a screen reader still reads it. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* WCAG 2.4.1 Bypass Blocks. Every page opens with the same 60-odd navigation
+   links; without this a keyboard or screen-reader user traverses all of them
+   on every page before reaching the content. Visible only while focused. */
+.skip-link {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-start: 8px;
+  z-index: 100;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* WCAG 2.4.7 Focus Visible and 2.4.11 Focus Not Obscured (AA, new in 2.2).
+   The canvas defines no focus style at all, so keyboard users get whatever the
+   browser defaults to — which several themes suppress entirely. `:focus-visible`
+   rather than `:focus` so a mouse click does not draw a ring.
+   `outline-offset` keeps the ring off the glyphs on dark buttons. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* On the ink-coloured surfaces the ink outline is invisible; flip it. */
+:where(.btn-ink, .close2, .scrim) :where(a, button):focus-visible {
+  outline-color: var(--paper);
+}
+
+/* WCAG 2.3.3 Animation from Interactions, and a vestibular-safety baseline.
+   The design animates on scroll and hover in several sections; honouring the
+   OS setting is one rule rather than an audit of each. `0.01ms` rather than `0`
+   so transitionend/animationend still fire and nothing waits forever on them. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
