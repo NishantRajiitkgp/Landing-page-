@@ -1,5 +1,6 @@
 /** /countries/[country] — programmatic country guide (Template 5, IA §7). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/chrome/PageShell";
 import { COUNTRIES, getCountry } from "@/lib/content/countries";
@@ -12,15 +13,12 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ country: string }>;
+  params: Promise<{ locale: string; country: string }>;
 }): Promise<Metadata> {
-  const { country } = await params;
+  const { locale, country } = await params;
   const c = getCountry(country);
   if (!c) return {};
-  return {
-    title: `Background verification in ${c.name} — HelloVerify`,
-    description: `${c.summary} Source-confirmed checks typically in ${c.turnaround}.`,
-  };
+  return pageMetadata(locale, `/countries/${c.slug}`);
 }
 
 export default async function CountryPage({

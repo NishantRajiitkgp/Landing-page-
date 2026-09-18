@@ -1,0 +1,160 @@
+/** The reviewed facts about HelloVerify, stated once (BUILD-SPEC §11a.3, §11a.4).
+ *
+ *  §11a.4 requires `llms.txt` to carry "the hard numbers (20M+, 120+, 2000+,
+ *  certifications)", and §11a.3 requires the `Organization` entity to match
+ *  external profiles exactly. Both were about to restate figures that
+ *  `app/[locale]/about/page.tsx` already carries — which is how "20M+" comes to
+ *  be three strings in three files and two of them go stale.
+ *
+ *  SOURCES, and how conflicts between them were settled. The old site is at
+ *  `D:\Projects\Application Frontend HV`; §8.2 and §8.3 both say "port" from it.
+ *  It disagrees with this repo in several places, and where it does the newer
+ *  reviewed copy wins and the conflict is recorded rather than quietly dropped:
+ *
+ *  - **Head office: Noida.** The old live schema
+ *    (`src/components/StructuredData.tsx:45`) says Mumbai, its `seo.ts:50` says
+ *    "Founded in Noida", and its contact page says "India, New Delhi" — four
+ *    answers across two repos. Confirmed as Noida, which is what `/about`
+ *    already said, so the schema running in production today is wrong.
+ *  - **Six offices.** The old contact page lists four (New Delhi, Cairo, Dubai,
+ *    Singapore); `/about` lists six. Confirmed as six — Manila and New York
+ *    are real.
+ *  - **LinkedIn.** The old repo carries two URLs: `/company/helloverify` in the
+ *    schema and `/in/hello-verify-trust-line-06b895148/` in the footer, which
+ *    is a personal-profile URL. Confirmed as the `/company/` one.
+ *  - **NOT PORTED: ISO/IEC 27701 and SOC 2.** The old `llms.txt` claims 27701
+ *    and the old `seo.ts` claims SOC 2. Neither appears on this site's
+ *    `/about`, which is the reviewed credentials list. An unevidenced
+ *    certification claim is the worst kind of schema error for a compliance
+ *    vendor, so both are omitted pending confirmation — README known gaps.
+ *
+ *  THE SOURCE OF TRUTH FOR THE NUMBERS IS STILL `/about`. This module does not
+ *  replace it — rewiring that page's JSX would risk the DESIGN-complete markup
+ *  for no gain — it restates it for the two machine-readable consumers, and
+ *  `tools/seo/check-llms.mjs` asserts every figure below still appears verbatim
+ *  in the rendered `/en/about`. Hand-stated, but checked.
+ */
+
+/** One claim, and the shape it takes on `/about`'s trust strip. */
+export type CompanyFact = {
+  /** The figure exactly as `/about` renders it — the string the checker greps. */
+  readonly value: string;
+  readonly label: string;
+};
+
+export const COMPANY_FACTS: readonly CompanyFact[] = [
+  { value: "2018", label: "founded" },
+  { value: "20M+", label: "checks completed" },
+  { value: "2,000+", label: "clients" },
+  { value: "120+", label: "countries" },
+  { value: "6", label: "offices" },
+];
+
+/** The six offices, in the order `/about` lists them. Noida is the head office
+ *  and is the `addressLocality` on the `Organization` node. */
+export const OFFICES: readonly string[] = [
+  "Noida, India (head office)",
+  "Manila, Philippines",
+  "Singapore",
+  "Dubai, UAE",
+  "Cairo, Egypt",
+  "New York, United States",
+];
+
+/** Public contact details, ported from the old site's contact-page CMS
+ *  (`public/cms/en/contactUs.base.json`) and its `StructuredData.tsx`.
+ *
+ *  These are the fields §11a.3 calls the entity-disambiguation lever, and they
+ *  were the item-6 blocker: nothing in THIS repo carried a phone number, a
+ *  public email or a real social URL, so the `Organization` node shipped
+ *  without them rather than with guesses. The old repo carries all three.
+ */
+export const CONTACT = {
+  /** The general enquiry address, on the old `Organization` node and in the old
+   *  `llms.txt`. `privacy@helloverify.com` is the data-protection contact and
+   *  stays on the pages that use it; `support@` is below. */
+  salesEmail: "hello@helloverify.com",
+  supportEmail: "support@helloverify.com",
+  /** E.164, because schema.org asks for it and no crawler will reformat
+   *  "+91 9289 6276 22" for you. Same digits, from the old contact page. */
+  indiaPhone: "+919289627622",
+  uaePhone: "+97145741066",
+} as const;
+
+/** External profiles, for `Organization.sameAs` — §11a.3's entity
+ *  disambiguation, and the single highest-value field on that node. Every URL
+ *  here is one the old site already publishes, so none of them is a guess. */
+export const PROFILES: readonly { label: string; url: string }[] = [
+  { label: "LinkedIn", url: "https://www.linkedin.com/company/helloverify" },
+  { label: "Facebook", url: "https://www.facebook.com/HelloVerify/" },
+  { label: "Instagram", url: "https://www.instagram.com/helloverify" },
+];
+
+/** Just the URLs, for `Organization.sameAs`, which takes bare strings. */
+export const SAME_AS: readonly string[] = PROFILES.map((p) => p.url);
+
+/** Credentials, merged from `/about` and the old `llms.txt`'s "Trust &
+ *  compliance" block. `Organization` emits ISO 27001 as a `Certification` and
+ *  PBSA as `memberOf`; the distinction matters and is argued there. NSR is a
+ *  registry HelloVerify participates in and the Ministry of Manpower is a
+ *  customer, so neither is claimed as an accreditation. */
+export const CREDENTIALS: readonly string[] = [
+  "ISO 27001 certified — information security management, independently audited",
+  "GDPR-aligned data protection practices",
+  "PBSA member — the global standards body for the screening industry",
+  "National Skills Registry — India's registry of verified IT and ITeS professionals",
+  "Primary source verification with auditable, forgery-protected reports",
+  "In production with Singapore's Ministry of Manpower for work-pass credential verification",
+  "Backed by Y Combinator",
+];
+
+/** What HelloVerify sells, ported verbatim from the old `llms.txt`'s "Core
+ *  services" block.
+ *
+ *  Kept as prose rather than derived from the route list because it is a
+ *  different cut of the same business: this answers "what do they do", and the
+ *  generated page index below answers "where do I read about it". §11a.2 rates
+ *  both formats highly for extraction.
+ */
+export const CORE_SERVICES: readonly string[] = [
+  "Employment verification and criminal background checks",
+  "Education and qualification verification (primary source)",
+  "Healthcare professional credential verification (PSV)",
+  "Immigration and visa pre-screening",
+  "International background checks (120+ countries)",
+  "Vendor and third-party due diligence (Certifier)",
+  "Customer KYC with identity and liveness checks",
+  "Instant verification via HelloV (WhatsApp and messaging)",
+];
+
+/** The quotable definition §11a.4 asks to lead with.
+ *
+ *  PORTED VERBATIM from the old site's `public/llms.txt`. §11a.4 says that file
+ *  "is genuinely ahead of the market and must be ported", and this paragraph is
+ *  the part that matters most: it is the single string a retrieval engine is
+ *  most likely to quote word for word.
+ *
+ *  Item 7 first shipped a paragraph assembled from `/about`'s standfirst and
+ *  `SITE_DESCRIPTION`, because the old repo was not available at the time. That
+ *  is REPLACED rather than merged — the reviewed original beats a
+ *  reconstruction, and two near-identical definitions in circulation is exactly
+ *  the entity inconsistency §11a.3 warns about.
+ */
+export const COMPANY_DEFINITION =
+  "HelloVerify is a global AI-powered background verification (BGV) company, providing fast, " +
+  "accurate, and compliant screening for employment, healthcare, immigration, and enterprise " +
+  "workforce programs. 20M+ verifications completed for 2000+ organizations across 120+ countries.";
+
+/** The supporting paragraph, also ported.
+ *
+ *  One sentence of the original is dropped: "Public site locales: English
+ *  (`/en`), Hindi (`/hi`), Arabic (`/ar`)." This site serves `en` only
+ *  (`lib/i18n/routing.ts`) and the 56 `/hi` and `/ar` URLs currently 308 onto
+ *  English (`lib/seo/legacy-urls.ts`). Advertising them to a crawler that
+ *  handles redirects badly (§11a.1) would be AUDIT A2 in a new file. It goes
+ *  back the moment those locales ship.
+ */
+export const COMPANY_INTRO =
+  "HelloVerify delivers AI-powered background checks, primary source verification (PSV), and " +
+  "authority-specific screening programs for regulators, enterprises, SMBs, and applicants " +
+  "worldwide.";

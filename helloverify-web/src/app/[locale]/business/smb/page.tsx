@@ -1,15 +1,30 @@
 /** /business/smb — product page with PUBLIC pricing (Template 4, IA §4.3).
  *  Prices are placeholders pending commercial sign-off (IA §10.4) and say so on the page. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { copyFor } from "@/lib/seo/copy";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Background check packages for small business — HelloVerify",
-  description:
-    "Pick a package, see the price, upload documents, get answers — no sales call. Blue-collar and driver packages ready in 30 minutes.",
-};
+/** This page's route, stated ONCE. `pageMetadata` and the Service node below
+ *  both read it, so §8.2's graph does not add a second chance to name the
+ *  wrong route on top of the one §8.1 already guards. */
+const PATH = "/business/smb";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, PATH);
+}
 
 const Tick = () => (
   <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -46,6 +61,45 @@ const PACKS = [
     who: "Also on HelloV, without address",
   },
 ];
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "Do I need the candidate's permission?",
+    a:
+      "Yes, and the flow handles it: the candidate consents on their own phone before any document is captured. No consent, no check — that's a legal requirement, not a setting.",
+  },
+  {
+    q: "Is there a subscription?",
+    a:
+      "No. You pay per candidate, per package. If you verify fifty people a month or more, volume pricing kicks in — talk to sales for a rate card.",
+  },
+  {
+    q: "What if a document can't be verified?",
+    a:
+      "The report says exactly what could not be confirmed and why — issuer offline, record not found, mismatch — and what it would take to resolve it. You're never charged twice for a re-run after a correction.",
+  },
+  {
+    q: "Do you send a proper invoice?",
+    a:
+      "Every order comes with a GST invoice, automatically, to the email on the account.",
+  },
+];
+
+/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
+ *  `description` is this page's own reviewed description, read from the copy
+ *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
+ *  title, the meta description, the Service node and llms.txt cannot drift
+ *  apart. */
+const SERVICE: ServiceFacts = {
+  path: PATH,
+  name: "Background check packages for small business",
+  description: copyFor(PATH).description,
+  serviceType: "Background verification",
+  offers: PACKS.map((p) => ({ name: p.tt, description: p.sub })),
+};
 
 export default async function SmbPage({
   params,
@@ -200,43 +254,10 @@ export default async function SmbPage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Before you buy.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>Do I need the candidate's permission?<span className="m">+</span></summary>
-            <p className="a">
-              Yes, and the flow handles it: the candidate consents on their own phone before any
-              document is captured. No consent, no check — that's a legal requirement, not a setting.
-            </p>
-          </details>
-          <details>
-            <summary>Is there a subscription?<span className="m">+</span></summary>
-            <p className="a">
-              No. You pay per candidate, per package. If you verify fifty people a month or more,
-              volume pricing kicks in — talk to sales for a rate card.
-            </p>
-          </details>
-          <details>
-            <summary>What if a document can't be verified?<span className="m">+</span></summary>
-            <p className="a">
-              The report says exactly what could not be confirmed and why — issuer offline, record
-              not found, mismatch — and what it would take to resolve it. You're never charged twice
-              for a re-run after a correction.
-            </p>
-          </details>
-          <details>
-            <summary>Do you send a proper invoice?<span className="m">+</span></summary>
-            <p className="a">Every order comes with a GST invoice, automatically, to the email on the account.</p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>Before you buy.</>} faqs={FAQS} />
+
+      <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
   );
 }

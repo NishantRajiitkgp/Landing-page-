@@ -2,17 +2,21 @@
  *  Real facts only: MOM is a named client on the current site. Figures marked
  *  [placeholder] await sign-off and are rendered as such rather than invented. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import Image from "next/image";
 import { AVATAR_BY } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Ministry of Manpower, Singapore — HelloVerify",
-  description:
-    "How work-pass credential verification runs with Singapore's Ministry of Manpower: foreign qualifications confirmed with the issuing institution, before arrival.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/governments/manpower-education/ministry-of-manpower");
+}
 
 export default async function MomCaseStudy({
   params,

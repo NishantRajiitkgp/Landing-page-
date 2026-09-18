@@ -1,13 +1,17 @@
 /** /resources/glossary — vocabulary the industry uses loosely, defined precisely. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Glossary of verification terms — HelloVerify",
-  description:
-    "Primary source, attestation, screening, adverse media, BGV — the words vendors use interchangeably, defined precisely.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/resources/glossary");
+}
 
 const TERMS: { t: string; d: React.ReactNode }[] = [
   {

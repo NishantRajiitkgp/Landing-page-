@@ -6,17 +6,23 @@
  *  Status language is deliberate: "certified" vs "aligned" vs "targeting" are
  *  different claims, and are not blurred here. Items awaiting sign-off say so. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Security & compliance — HelloVerify",
-  description:
-    "Certifications, data residency, sub-processors, accessibility conformance and the artefacts a security review needs — in one place.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/platform/security-compliance");
+}
 
 const CERTS = [
   {
@@ -52,6 +58,37 @@ const ARTEFACTS = [
   { t: "Penetration test summary", p: "Most recent third-party test, executive summary under NDA.", s: "Under NDA", req: true },
   { t: "Accessibility conformance statement", p: "WCAG 2.2 AA conformance claim for this site and the candidate capture flow.", s: "In progress", req: false },
   { t: "Sub-processor register", p: "Every third party that may process personal data, with purpose and location.", s: "On request", req: true },
+];
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "Will you complete our security questionnaire?",
+    a:
+      "Yes — including long-form vendor assessments and public-sector templates. Send it to your contact or through the contact form; two working days is typical, and we'll tell you immediately if something in it needs a longer answer.",
+  },
+  {
+    q: "Can data stay inside our jurisdiction?",
+    a:
+      "Storage region is set per contract. The one thing that cannot stay local is the source confirmation itself — verifying a Philippine degree requires contacting a Philippine institution. That transfer is documented in the DPA rather than hidden.",
+  },
+  {
+    q: "What happens in a breach?",
+    a:
+      "Notification timelines are contractual and align with GDPR's 72-hour requirement. The incident response process — detection, containment, notification, post-incident review — is described in the security whitepaper.",
+  },
+  {
+    q: "How long are candidate documents kept?",
+    a:
+      "For the period set in your DPA, then deleted on schedule. Zero-retention is available where you keep the originals and send only what a check requires. Deletion can be evidenced on request.",
+  },
+  {
+    q: "Do you sell or reuse the data you verify?",
+    a:
+      "No. Verification data is processed for the verification you requested and nothing else — not for model training on identifiable documents, not for enrichment, not for resale.",
+  },
 ];
 
 export default async function SecurityCompliancePage({
@@ -230,16 +267,29 @@ export default async function SecurityCompliancePage({
         </div>
         <div className="body3 prose3">
           <p>
-            This site is being built to <strong>WCAG 2.2 Level AA</strong>. Every text colour in the
-            design system was contrast-checked rather than eyeballed — body text sits at 16.8:1,
-            secondary text at 10.2:1, and the lightest text we use for readable content at 4.8:1,
-            all above the 4.5:1 threshold. Decorative meta that falls below it is redundant by
-            design: it never carries information that isn't already stated elsewhere.
+            This site is being built to <strong>WCAG 2.2 Level AA</strong>, and the claim is
+            checked on every build rather than asserted. An automated audit runs the axe-core
+            ruleset across all 56 pages and blocks the build on any critical or serious
+            violation; it currently reports none at any severity. Colour contrast is computed
+            from the design tokens themselves rather than sampled from screenshots, which means
+            no text is skipped for sitting on a photograph or a gradient.
+          </p>
+          <p>
+            Measured: body text <strong>16.8:1</strong>, secondary text <strong>4.8:1</strong>,
+            and the confirmation green <strong>5.9:1</strong>, against a 4.5:1 requirement. One
+            exception is outstanding and we would rather name it than round it away — the
+            lightest label tone, used for small uppercase captions such as table headers and
+            chart axes, measures <strong>2.4:1</strong>. It is being resolved by changing the
+            token, not by reclassifying the text.
           </p>
           <div className="aside">
-            Status · the conformance statement and VPAT for this site and the candidate capture
-            flow are in progress. We would rather publish a dated, accurate statement than a
-            confident one — ask us where it stands and you'll get the real answer.
+            Status · what is automated today: the axe audit, the contrast computation, and a
+            post-deploy check that the live origin serves what was built. Not yet automated: a
+            manual keyboard and screen-reader pass, pointer target sizes (2.5.8, which needs a
+            real browser), and right-to-left rendering for the Arabic locale. The formal
+            conformance statement and VPAT cover both this site and the candidate capture flow
+            and are in progress. We would rather publish a dated, accurate statement than a
+            confident one — ask where it stands and you will get the real answer.
           </div>
           <p>
             The candidate capture flow matters most: it is used by people on low-end phones, in
@@ -277,56 +327,8 @@ export default async function SecurityCompliancePage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>From security<br />reviewers.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>Will you complete our security questionnaire?<span className="m">+</span></summary>
-            <p className="a">
-              Yes — including long-form vendor assessments and public-sector templates. Send it to
-              your contact or through the contact form; two working days is typical, and we'll tell
-              you immediately if something in it needs a longer answer.
-            </p>
-          </details>
-          <details>
-            <summary>Can data stay inside our jurisdiction?<span className="m">+</span></summary>
-            <p className="a">
-              Storage region is set per contract. The one thing that cannot stay local is the source
-              confirmation itself — verifying a Philippine degree requires contacting a Philippine
-              institution. That transfer is documented in the DPA rather than hidden.
-            </p>
-          </details>
-          <details>
-            <summary>What happens in a breach?<span className="m">+</span></summary>
-            <p className="a">
-              Notification timelines are contractual and align with GDPR's 72-hour requirement. The
-              incident response process — detection, containment, notification, post-incident review
-              — is described in the security whitepaper.
-            </p>
-          </details>
-          <details>
-            <summary>How long are candidate documents kept?<span className="m">+</span></summary>
-            <p className="a">
-              For the period set in your DPA, then deleted on schedule. Zero-retention is available
-              where you keep the originals and send only what a check requires. Deletion can be
-              evidenced on request.
-            </p>
-          </details>
-          <details>
-            <summary>Do you sell or reuse the data you verify?<span className="m">+</span></summary>
-            <p className="a">
-              No. Verification data is processed for the verification you requested and nothing else
-              — not for model training on identifiable documents, not for enrichment, not for resale.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>From security<br />reviewers.</>} faqs={FAQS} />
     </PageShell>
   );
 }

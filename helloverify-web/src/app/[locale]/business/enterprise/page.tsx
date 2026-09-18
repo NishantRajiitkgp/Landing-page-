@@ -1,16 +1,31 @@
 /** /business/enterprise — vertical page (Template 3, the workhorse pattern). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { copyFor } from "@/lib/seo/copy";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Enterprise background verification — HelloVerify",
-  description:
-    "High-volume background checks with an SLA. AI reads the documents, our team confirms with the issuer, your ATS gets the answer back — from 15 minutes.",
-};
+/** This page's route, stated ONCE. `pageMetadata` and the Service node below
+ *  both read it, so §8.2's graph does not add a second chance to name the
+ *  wrong route on top of the one §8.1 already guards. */
+const PATH = "/business/enterprise";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, PATH);
+}
 
 const Tick = () => (
   <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -70,6 +85,49 @@ const ROWS: { nm: string; sub: string; tm: string; fast?: boolean; src: string }
   { nm: "Employment", sub: "role, tenure, exit remarks", tm: "2 days", src: "the employer's HR" },
   { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
 ];
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "How fast is \"fast\" at real volume?",
+    a:
+      "The times on this page hold at volume because the pipeline is parallel — a thousand driving licences take about as long as one. Identity-class checks come back in 15–60 minutes; anything that needs a registrar or a court is quoted in days, and the SLA we sign reflects your actual mix of checks.",
+  },
+  {
+    q: "What does \"confirmed at the source\" actually mean?",
+    a:
+      "No proxy databases as the final word. A degree is confirmed with the university registrar, a licence with the issuing authority, employment with the employer or provident-fund records. The report names the source beside every result.",
+  },
+  {
+    q: "How do candidates submit documents?",
+    a:
+      "Over WhatsApp or a one-time link — no app to install, no account to create. Consent is captured first, and the capture flow checks focus, edges and glare before upload.",
+  },
+  {
+    q: "Can this plug into our ATS?",
+    a:
+      "Yes — REST API and webhooks, bulk CSV for batch drives, and connectors for common ATS platforms. Results post back automatically; your recruiters never leave their queue.",
+  },
+  {
+    q: "What happens when a check fails?",
+    a:
+      "The report shows exactly what didn't match and where it was checked, with the evidence attached. Candidates get a dispute path, and re-verification after a correction is free.",
+  },
+];
+
+/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
+ *  `description` is this page's own reviewed description, read from the copy
+ *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
+ *  title, the meta description, the Service node and llms.txt cannot drift
+ *  apart. */
+const SERVICE: ServiceFacts = {
+  path: PATH,
+  name: "Enterprise background verification",
+  description: copyFor(PATH).description,
+  serviceType: "Background verification",
+};
 
 export default async function EnterprisePage({
   params,
@@ -272,55 +330,10 @@ export default async function EnterprisePage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Asked before<br />every pilot.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>How fast is "fast" at real volume?<span className="m">+</span></summary>
-            <p className="a">
-              The times on this page hold at volume because the pipeline is parallel — a thousand
-              driving licences take about as long as one. Identity-class checks come back in
-              15–60 minutes; anything that needs a registrar or a court is quoted in days, and the
-              SLA we sign reflects your actual mix of checks.
-            </p>
-          </details>
-          <details>
-            <summary>What does "confirmed at the source" actually mean?<span className="m">+</span></summary>
-            <p className="a">
-              No proxy databases as the final word. A degree is confirmed with the university
-              registrar, a licence with the issuing authority, employment with the employer or
-              provident-fund records. The report names the source beside every result.
-            </p>
-          </details>
-          <details>
-            <summary>How do candidates submit documents?<span className="m">+</span></summary>
-            <p className="a">
-              Over WhatsApp or a one-time link — no app to install, no account to create. Consent is
-              captured first, and the capture flow checks focus, edges and glare before upload.
-            </p>
-          </details>
-          <details>
-            <summary>Can this plug into our ATS?<span className="m">+</span></summary>
-            <p className="a">
-              Yes — REST API and webhooks, bulk CSV for batch drives, and connectors for common ATS
-              platforms. Results post back automatically; your recruiters never leave their queue.
-            </p>
-          </details>
-          <details>
-            <summary>What happens when a check fails?<span className="m">+</span></summary>
-            <p className="a">
-              The report shows exactly what didn't match and where it was checked, with the evidence
-              attached. Candidates get a dispute path, and re-verification after a correction is free.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>Asked before<br />every pilot.</>} faqs={FAQS} />
+
+      <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
   );
 }

@@ -1,11 +1,15 @@
 /** /resources/blog/[slug] — editorial post (Template 6). */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { notFound } from "next/navigation";
 import { PageShell } from "@/components/chrome/PageShell";
 import { POSTS, getPost, formatDate } from "@/lib/content/posts";
 import Image from "next/image";
 import { AVATAR_BYLINE } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { blogPosting } from "@/lib/seo/schema/blog";
+import { getLocale } from "next-intl/server";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -14,12 +18,12 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const p = getPost(slug);
   if (!p) return {};
-  return { title: `${p.title} — HelloVerify`, description: p.standfirst };
+  return pageMetadata(locale, `/resources/blog/${p.slug}`);
 }
 
 export default async function PostPage({
@@ -30,6 +34,11 @@ export default async function PostPage({
   const { slug } = await params;
   const p = getPost(slug);
   if (!p) notFound();
+
+  /** Not from `params`: this component destructures only `slug`, and the
+   *  locale is what `BlogPosting.mainEntityOfPage` has to be absolute in.
+   *  Same server-side accessor `PageShell` uses two lines below. */
+  const locale = await getLocale();
 
   const more = POSTS.filter((x) => x.slug !== p.slug);
 
@@ -78,7 +87,7 @@ export default async function PostPage({
           <div className="prose3">
             {p.sections.map((s) => (
               <section key={s.id} id={s.id}>
-                <h3>{s.h}</h3>
+                <h2>{s.h}</h2>
                 {s.paras.map((t, i) => (
                   <p key={i}>{t}</p>
                 ))}
@@ -88,6 +97,11 @@ export default async function PostPage({
           </div>
         </div>
       </article>
+
+      {/* BUILD-SPEC §8.2 (new — AUDIT.md:314 records that no blog route emitted
+          article schema) and §11a.3 (Perplexity deprioritises undated content).
+          Every field comes from the POSTS record this page already rendered. */}
+      <JsonLd data={blogPosting(locale, p)} />
 
       {more.length > 0 && (
         <div className="wrap sec3" style={{ paddingBottom: 20 }}>

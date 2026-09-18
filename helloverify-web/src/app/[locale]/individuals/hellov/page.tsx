@@ -1,21 +1,83 @@
 /** /individuals/hellov — consumer product page (Template 4: receipts + the phone).
  *  Leads with the job, brand follows (IA §10.3). Prices are placeholders pending sign-off. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { copyFor } from "@/lib/seo/copy";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import { HelloVPhone } from "@/components/blocks/HelloVPhone";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Verify anyone from your phone — HelloV by HelloVerify",
-  description:
-    "Send a photo of the document over WhatsApp and get a verified report in about 30 minutes. Drivers, maids, tenants, dates — consent-first, from ₹499.",
-};
+/** This page's route, stated ONCE. `pageMetadata` and the Service node below
+ *  both read it, so §8.2's graph does not add a second chance to name the
+ *  wrong route on top of the one §8.1 already guards. */
+const PATH = "/individuals/hellov";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, PATH);
+}
 
 const Tick = () => (
   <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "Does the person know I'm checking them?",
+    a:
+      "Yes — always. They get a message explaining what is being verified and must consent on their own phone before anything runs. A check without consent isn't something we can do, or would.",
+  },
+  {
+    q: "What if they refuse?",
+    a:
+      "Then no check runs and you aren't charged. How you read a refusal is your judgement — plenty of people simply want to know what's being collected before they agree.",
+  },
+  {
+    q: "How is this different from searching their name online?",
+    a:
+      "A search finds what someone published. We ask the authority that issued the document whether the record is real — the transport office for a licence, the courts for a criminal record. The report names that source beside every result.",
+  },
+  {
+    q: "What do I actually receive?",
+    a:
+      "A short report in plain language: what was checked, what came back, and who confirmed it. No risk scores, no opinions about the person — facts with sources.",
+  },
+  {
+    q: "Is 30 minutes realistic?",
+    a:
+      "For licence, criminal and address checks, usually yes — those registries answer digitally. If something needs a slower route, the chat tells you before you pay.",
+  },
+];
+
+/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
+ *  `description` is this page's own reviewed description, read from the copy
+ *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
+ *  title, the meta description, the Service node and llms.txt cannot drift
+ *  apart. */
+const SERVICE: ServiceFacts = {
+  path: PATH,
+  name: "HelloV — verification from your phone",
+  description: copyFor(PATH).description,
+  serviceType: "Background verification",
+  offers: [
+    { name: "Basic", description: "The essentials, in half an hour" },
+    { name: "Advanced", description: "For the people inside your home" },
+  ],
+};
 
 export default async function HelloVPage({
   params,
@@ -217,54 +279,10 @@ export default async function HelloVPage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Before you start.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>Does the person know I'm checking them?<span className="m">+</span></summary>
-            <p className="a">
-              Yes — always. They get a message explaining what is being verified and must consent on
-              their own phone before anything runs. A check without consent isn't something we can
-              do, or would.
-            </p>
-          </details>
-          <details>
-            <summary>What if they refuse?<span className="m">+</span></summary>
-            <p className="a">
-              Then no check runs and you aren't charged. How you read a refusal is your judgement —
-              plenty of people simply want to know what's being collected before they agree.
-            </p>
-          </details>
-          <details>
-            <summary>How is this different from searching their name online?<span className="m">+</span></summary>
-            <p className="a">
-              A search finds what someone published. We ask the authority that issued the document
-              whether the record is real — the transport office for a licence, the courts for a
-              criminal record. The report names that source beside every result.
-            </p>
-          </details>
-          <details>
-            <summary>What do I actually receive?<span className="m">+</span></summary>
-            <p className="a">
-              A short report in plain language: what was checked, what came back, and who confirmed
-              it. No risk scores, no opinions about the person — facts with sources.
-            </p>
-          </details>
-          <details>
-            <summary>Is 30 minutes realistic?<span className="m">+</span></summary>
-            <p className="a">
-              For licence, criminal and address checks, usually yes — those registries answer
-              digitally. If something needs a slower route, the chat tells you before you pay.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>Before you start.</>} faqs={FAQS} />
+
+      <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
   );
 }

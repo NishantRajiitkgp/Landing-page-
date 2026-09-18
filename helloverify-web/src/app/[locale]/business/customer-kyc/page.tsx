@@ -1,15 +1,68 @@
 /** /business/customer-kyc — vertical page (Template 3). Absorbs legacy /kyc and /products/trust-safety. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
+import { copyFor } from "@/lib/seo/copy";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import type { Faq } from "@/lib/seo/schema/faq";
 import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 
-export const metadata: Metadata = {
-  title: "Customer KYC & trust and safety — HelloVerify",
-  description:
-    "Verify customers the moment they sign up — identity in 15 minutes, screened against courts and global databases, over API or a hosted flow.",
+/** This page's route, stated ONCE. `pageMetadata` and the Service node below
+ *  both read it, so §8.2's graph does not add a second chance to name the
+ *  wrong route on top of the one §8.1 already guards. */
+const PATH = "/business/customer-kyc";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, PATH);
+}
+
+/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
+ *  matching `FAQPage` node from the same array — Google requires the two to
+ *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
+const FAQS: Faq[] = [
+  {
+    q: "How much friction does this add to signup?",
+    a:
+      "The capture flow takes under a minute on a phone, and identity verdicts return in minutes. Most platforms gate features, not signup — the account exists immediately, the risky action waits for the verdict.",
+  },
+  {
+    q: "Can we tier the checks by risk?",
+    a:
+      "Yes — per API call. A buyer might get identity only; a seller adds criminal and global database; a high-value partner adds trade licence and directors. One integration, any mix.",
+  },
+  {
+    q: "What do we store, and what do you store?",
+    a:
+      "You receive the verdict and the fields you asked for. Documents stay in HelloVerify's encrypted store on the retention schedule in the DPA — or zero-retention if you bring your own storage.",
+  },
+  {
+    q: "Does this work outside India?",
+    a:
+      "Yes — 120+ countries through the same API, with the check running in the country that issued the document. See global coverage for the country-by-country picture.",
+  },
+];
+
+/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
+ *  `description` is this page's own reviewed description, read from the copy
+ *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
+ *  title, the meta description, the Service node and llms.txt cannot drift
+ *  apart. */
+const SERVICE: ServiceFacts = {
+  path: PATH,
+  name: "Customer KYC and trust & safety verification",
+  description: copyFor(PATH).description,
+  serviceType: "Identity verification",
 };
 
 export default async function CustomerKycPage({
@@ -170,47 +223,10 @@ export default async function CustomerKycPage({
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="wrap sec3" style={{ paddingBottom: 30 }}>
-        <div className="sec-head" style={{ marginBottom: 44 }}>
-          <div>
-            <div className="k">Questions</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>From trust &amp;<br />safety teams.</h2>
-          </div>
-        </div>
-        <div className="faq3">
-          <details>
-            <summary>How much friction does this add to signup?<span className="m">+</span></summary>
-            <p className="a">
-              The capture flow takes under a minute on a phone, and identity verdicts return in
-              minutes. Most platforms gate features, not signup — the account exists immediately,
-              the risky action waits for the verdict.
-            </p>
-          </details>
-          <details>
-            <summary>Can we tier the checks by risk?<span className="m">+</span></summary>
-            <p className="a">
-              Yes — per API call. A buyer might get identity only; a seller adds criminal and global
-              database; a high-value partner adds trade licence and directors. One integration, any mix.
-            </p>
-          </details>
-          <details>
-            <summary>What do we store, and what do you store?<span className="m">+</span></summary>
-            <p className="a">
-              You receive the verdict and the fields you asked for. Documents stay in HelloVerify's
-              encrypted store on the retention schedule in the DPA — or zero-retention if you bring
-              your own storage.
-            </p>
-          </details>
-          <details>
-            <summary>Does this work outside India?<span className="m">+</span></summary>
-            <p className="a">
-              Yes — 120+ countries through the same API, with the check running in the country that
-              issued the document. See global coverage for the country-by-country picture.
-            </p>
-          </details>
-        </div>
-      </div>
+      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
+      <FaqSection head={<>From trust &amp;<br />safety teams.</>} faqs={FAQS} />
+
+      <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
   );
 }

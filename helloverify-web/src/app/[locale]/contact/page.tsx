@@ -2,17 +2,21 @@
  *  Fields are real inputs now (the canvas drew styled divs); the form posts to a
  *  Server Action (BUILD-SPEC §10); see components/forms/ContactForm. */
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { ContactForm } from "@/components/forms/ContactForm";
 import Image from "next/image";
 import { SIZES_SIDE } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 
-export const metadata: Metadata = {
-  title: "Talk to sales — HelloVerify",
-  description:
-    "Tell us what you need verified, for whom, and at what volume. Enterprise, government and individual enquiries, answered by a person.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return pageMetadata(locale, "/contact");
+}
 
 export default async function ContactPage({
   params,
