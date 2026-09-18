@@ -1,17 +1,6 @@
 import { parseSubmission } from "../../src/lib/leads/schema.ts";
 
-let pass = 0;
-let fail = 0;
-
-function check(label: string, cond: boolean, got?: unknown) {
-  if (cond) {
-    pass++;
-    console.log("  ok   " + label);
-  } else {
-    fail++;
-    console.log("  FAIL " + label + "   got=" + JSON.stringify(got));
-  }
-}
+import { check } from "./harness.ts";
 
 function fd(o: Record<string, string>) {
   const f = new FormData();
@@ -128,6 +117,3 @@ console.log("6. extra posted fields are ignored, not mapped");
   }
 }
 
-console.log("");
-console.log(pass + " passed, " + fail + " failed");
-if (fail > 0) process.exit(1);

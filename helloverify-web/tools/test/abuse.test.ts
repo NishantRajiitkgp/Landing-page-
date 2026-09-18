@@ -13,18 +13,7 @@ const { rateLimiter } = await import(BASE + "ratelimit.ts");
 const { assessEmail } = await import(BASE + "email.ts");
 const { screenSubmission } = await import(BASE + "abuse.ts");
 
-let pass = 0;
-let fail = 0;
-
-function check(label: string, cond: boolean, got?: unknown) {
-  if (cond) {
-    pass++;
-    console.log("  ok   " + label);
-  } else {
-    fail++;
-    console.log("  FAIL " + label + "   got=" + JSON.stringify(got));
-  }
-}
+import { check } from "./harness.ts";
 
 const H = (xff?: string) => new Headers(xff === undefined ? {} : { "x-forwarded-for": xff });
 
@@ -152,6 +141,3 @@ console.log("4. screen — full stack, mx off");
   );
 }
 
-console.log("");
-console.log(pass + " passed, " + fail + " failed");
-if (fail > 0) process.exit(1);
