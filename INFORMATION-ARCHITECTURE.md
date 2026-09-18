@@ -523,6 +523,16 @@ Per `BUILD-SPEC.md` §6.2, every legacy path becomes a real server **308**.
 - The `/index.html` family must be explicitly consolidated — it is in Google's index right now
 - Old sitemap stays served for 30 days post-cutover
 
+**Implemented** in `helloverify-web/src/lib/seo/legacy-urls.ts`. Five things the table above did not anticipate:
+
+| | |
+| --- | --- |
+| `/hi/*`, `/ar/*` | 56 of the 84 indexed URLs. They **consolidate onto English**, since those pages do not exist here. The debt: when `hi` ships it must reclaim URLs that were already 308'd away. |
+| `/blog/<4 slugs>` | The four indexed posts did not come across — `posts.ts` has two unrelated slugs. Each 308s to the live page on the **same subject** (`/checks/criminal`, `/checks/current-address`, `/platform/security-compliance` ×2), not to the blog index: Google treats a redirect to a generic index as a soft 404. Second-best; porting the posts beats it. |
+| `/terms-and-conditions` | → `/legal/terms-of-service`. A rename, not just a regrouping. |
+| `/equal-opportunities`, `/criminal-convictions-policy` | Indexed policies with **no successor**. Both were added to `lib/content/legal.ts` as skeletons carrying the old pages' own section ids, so the verbatim port is a paste per section. Legal document count: 6 → 8. |
+| `/cart`, `/cartlist`, `/orders*`, `/profile-settings`, `/consumer/passwordrecovery/*`, `/consumer/PayUPayment/PaymentSuccess1` | SPA routes, 308 to `app.helloverify.com` per `BUILD-SPEC.md` §18 decision 1. 308 rather than 302 is load-bearing: it preserves the request method, so PayU's POSTed callback stays a POST. |
+
 ---
 
 
