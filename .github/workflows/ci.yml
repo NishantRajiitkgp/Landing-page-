@@ -1,0 +1,120 @@
+# BUILD-SPEC §14.2 — the checks that run on every PR.
+#
+# §14.2's pipeline is:
+#   typecheck -> lint -> unit + component -> build (assert: 0 dynamic routes)
+#   -> E2E on preview -> axe -> Lighthouse CI
+#
+# The first four run here today. The last three need a browser and a preview
+# deployment and belong with §12 (accessibility) — see the `todo` job at the
+# bottom, which documents them rather than pretending they run.
+#
+# WHY THIS FILE EXISTS AT ALL. Until now every gate in this repo was manual: four
+# build-output checkers, a 823-assertion redirect probe, a production contract
+# suite and 100 unit tests, none of which anything ran automatically. AUDIT G2
+# is the old pipeline's `trigger: none` — a CI config that had to be run by hand
+# and therefore wasn't. §14.4 says: "Automated deploy on merge to main. No
+# `trigger: none`."
+#
+# Deployment is deliberately NOT in this file yet: it needs GCP credentials and
+# the Cloud Run service to exist (§3.6). Adding a deploy job that cannot
+# authenticate would be the same lie in a new place.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A second push to the same PR cancels the first: these jobs build the site
+# twice over and there is no value in finishing a run nobody will read.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: helloverify-web
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches the runtime the project is developed against. @types/node is
+          # pinned to ^24 for the same reason (vitest 5 requires >=22).
+          node-version: 24
+          cache: npm
+          cache-dependency-path: helloverify-web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      # §14.2 asks for lint "incl. token + logical-property rules". No ESLint is
+      # configured in this repo yet, so there is nothing to run and this step
+      # says so instead of passing silently. The two custom rules it names —
+      # no hex literals outside @theme, logical CSS properties for RTL — are
+      # tracked in README's known gaps and belong with §12's RTL work.
+      - name: Lint
+        run: echo "no ESLint configured yet - see BUILD-SPEC 14.2 and README known gaps"
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # §14.2: "build (assert: 0 dynamic routes)". §5 makes every page static;
+      # a route that silently becomes dynamic loses the prerendered HTML every
+      # SEO gate in this repo depends on, and would otherwise only show up as a
+      # latency regression months later. The Proxy/middleware line is expected
+      # and is excluded by matching the route-table marker specifically.
+      - name: Assert zero dynamic routes
+        run: node tools/ci/assert-static.mjs
+
+      # The four build-output gates: sitemap/canonical/hreflang, the JSON-LD
+      # graph, llms.txt, the §9.1 performance budgets, and the client-bundle
+      # secret grep.
+      - name: SEO, performance and secret gates
+        run: npm run check:all
+
+      # §6.3 and §14.3 against a real server. `next start` is not a deployment,
+      # so the CDN and DNS assertions in the contract suite degrade to warnings
+      # there — the suite decides that from the URL, not from a flag.
+      # `&` alone would end with the step, so the server is disowned and the
+      # next step polls for it. No `wait-on` dependency for a four-line loop.
+      - name: Start the built site
+        run: |
+          npx next start -p 3100 > "$RUNNER_TEMP/server.log" 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3100/en && exit 0
+            sleep 1
+          done
+          echo "server did not start"; cat "$RUNNER_TEMP/server.log"; exit 1
+
+      - name: Redirect probe (§6.3)
+        run: npm run probe:redirects http://localhost:3100
+
+      - name: Production contract (§14.3)
+        run: npm run contract http://localhost:3100
+
+  # Not a real job — a record of what §14.2 asks for that is not wired up, so
+  # that the gap is visible in the PR checks list rather than only in a doc.
+  todo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Not yet implemented
+        run: |
+          echo "BUILD-SPEC 14.2 steps still missing, all needing a browser or a preview deploy:"
+          echo "  - E2E on preview        (Playwright: locale switching, RTL, form submission)"
+          echo "  - axe                   (@axe-core/playwright, every route, all locales) - section 12"
+          echo "  - Lighthouse CI         (the three timings budgets deferred from section 9.1)"
+          echo "  - deploy on merge       (needs GCP credentials and the Cloud Run service)"

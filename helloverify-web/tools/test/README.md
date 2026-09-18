@@ -1,6 +1,7 @@
-# Lead pipeline tests
+# Tests
 
-94 assertions over the item-2 lead pipeline. No test runner yet — BUILD-SPEC
+104 assertions: 94 over the item-2 lead pipeline, 10 over the item-6
+JSON-LD serialiser. No test runner yet — BUILD-SPEC
 §3.7 picks Vitest, and wiring it up belongs to item 8. These run on bare Node
 using its built-in type stripping, so they work today and are not lost.
 
@@ -9,7 +10,17 @@ node --conditions=react-server --import ./tools/test/register.mjs ./tools/test/s
 node --conditions=react-server --import ./tools/test/register.mjs ./tools/test/abuse.test.ts
 node --conditions=react-server --import ./tools/test/register.mjs ./tools/test/zoho.test.ts
 node --conditions=react-server --import ./tools/test/register.mjs ./tools/test/dns.test.ts   # needs network
+node --import ./tools/test/register.mjs ./tools/test/json-ld.test.ts
 ```
+
+`json-ld.test.ts` needs neither flag — it imports one pure function and no
+`server-only` module. It covers the one part of the §8.2 graph that the
+build-output gate cannot: `<script type="application/ld+json">` is a raw text
+element, so a `</script` sequence anywhere in the copy would end the block
+early, and no page contains one *yet*. The test asserts both halves — that the
+unescaped form really does break, and that the escaped form round-trips.
+See also `schema-types.md`, which measures where `schema-dts` does and does not
+catch a malformed graph.
 
 Two flags are load-bearing:
 

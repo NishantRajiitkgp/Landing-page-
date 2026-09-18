@@ -93,17 +93,7 @@ const { zohoSink } = await import(BASE + "integrations/zoho.ts");
 const { toZohoLead } = await import(BASE + "integrations/zoho-fields.ts");
 const { deliverLead } = await import(BASE + "leads/delivery.ts");
 
-let pass = 0;
-let fail = 0;
-const check = (label: string, cond: boolean, got?: unknown) => {
-  if (cond) {
-    pass++;
-    console.log("  ok   " + label);
-  } else {
-    fail++;
-    console.log("  FAIL " + label + "  got=" + JSON.stringify(got));
-  }
-};
+import { check } from "./harness.ts";
 
 const g = globalThis as Record<string, unknown>;
 const resetToken = () => {
@@ -219,7 +209,3 @@ console.log("7. bad ZOHO_LEAD_SOURCE is caught against the live picklist");
   check("lists the allowed values", Boolean(hit && hit.includes("Web Form")), logs);
 }
 
-console.log("");
-console.log(pass + " passed, " + fail + " failed");
-server.close();
-if (fail > 0) process.exit(1);
