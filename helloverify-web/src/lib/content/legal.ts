@@ -138,6 +138,53 @@ export const LEGAL: LegalDoc[] = [
       s("timeframes", "Timeframes and method"),
     ],
   },
+  /* The two policies below exist because their URLs are indexed on the old
+   * site and had no successor here, so `/en/equal-opportunities` and
+   * `/en/criminal-convictions-policy` would have 404'd at cutover. Section ids
+   * and order are lifted from the old pages (`src/pages/policy/*.tsx`, 311 and
+   * 347 lines of real copy) so the verbatim port is a 1:1 paste per section
+   * rather than a re-derivation. */
+  {
+    slug: "equal-opportunities",
+    title: "Equal Opportunities",
+    summary:
+      "How HelloVerify treats applicants and employees equally, and how that obligation carries into the verification work we do for clients.",
+    effective: "Awaiting legal sign-off",
+    sections: [
+      s("scope", "Scope"),
+      s("purpose", "Purpose"),
+      s("discrimination", "Discrimination"),
+      s("recruitment", "Recruitment and selection"),
+      s("training", "Training, promotion and conditions of service"),
+      s("disabilities", "Disabilities"),
+      s("part-time", "Part-time and fixed-term work"),
+      s("monitoring", "Monitoring equal opportunity"),
+      s("grievance", "Grievance management"),
+      s("responsibility", "Responsibility and administration of the policy"),
+      s("breach", "Breach of the policy"),
+      s("policy-changes", "Policy changes"),
+    ],
+  },
+  {
+    slug: "criminal-convictions-policy",
+    title: "Criminal Convictions and Data Malpractice Policy",
+    summary:
+      "The basis on which HelloVerify processes criminal conviction and professional malpractice data, which is special-category data almost everywhere we operate.",
+    effective: "Awaiting legal sign-off",
+    sections: [
+      s("about", "About this policy"),
+      s("definitions", "Definitions"),
+      s("why", "Why we process criminal conviction and professional malpractice data"),
+      s("lawfulness", "Lawfulness, fairness and transparency"),
+      s("purpose-limitation", "Purpose limitation"),
+      s("data-minimisation", "Data minimisation"),
+      s("accuracy", "Accuracy"),
+      s("storage", "Storage limitation"),
+      s("security", "Security, integrity and confidentiality"),
+      s("accountability", "Accountability principle"),
+      s("review", "Review"),
+    ],
+  },
 ];
 
 export function getLegal(slug: string) {
