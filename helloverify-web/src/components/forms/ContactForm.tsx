@@ -28,6 +28,26 @@ import {
 import { INITIAL_LEAD_FORM_STATE } from "@/lib/leads/state";
 import { localise } from "@/lib/i18n/href";
 
+/** Hoisted out of `ContactForm` deliberately.
+ *
+ *  Declared inside the render body, this is a NEW component type on every
+ *  render, so React unmounts and remounts the paragraph each time rather than
+ *  updating it - `react-hooks/static-components`. Nothing here holds focus or
+ *  state, so the visible cost was nil, but it defeats reconciliation for no
+ *  reason and the rule is right to refuse it.
+ *
+ *  It takes the message rather than closing over `errorFor`, which is what lets
+ *  it live out here at all.
+ */
+function ErrorText({ field, message }: { field: LeadField; message?: string }) {
+  if (!message) return null;
+  return (
+    <p className="err" id={`${field}-error`}>
+      {message}
+    </p>
+  );
+}
+
 /** `locale` is a prop rather than a hook: reading it from next-intl on the
  *  client would require NextIntlClientProvider at the root, which ships
  *  next-intl's client runtime to every page for the sake of three hrefs. */
@@ -36,7 +56,17 @@ export function ContactForm({ locale }: { locale: string }) {
 
   const [state, formAction, pending] = useActionState(submitLead, INITIAL_LEAD_FORM_STATE);
 
-  const mountedAt = useRef(Date.now());
+  /** Set in an effect, not as `useRef(Date.now())`.
+   *
+   *  A `useRef` initialiser is evaluated on EVERY render even though only the
+   *  first value is kept, so reading the clock there is an impure render -
+   *  which `react-hooks/purity` flags and React's compiler is entitled to
+   *  reorder. An effect runs once, after mount, on the client only, which is
+   *  also exactly what "how long has this form been on screen" means. */
+  const mountedAt = useRef(0);
+  useEffect(() => {
+    mountedAt.current = Date.now();
+  }, []);
   const elapsed = useRef<HTMLInputElement>(null);
 
   /** Stamps how long the form has been on screen, on first interaction rather
@@ -44,7 +74,12 @@ export function ContactForm({ locale }: { locale: string }) {
    *  value reads as "no signal" server-side — so a visitor with JavaScript
    *  disabled submits a perfectly valid form and is never judged on timing. */
   const stampElapsed = () => {
-    if (elapsed.current) elapsed.current.value = String(Date.now() - mountedAt.current);
+    // `mountedAt` is 0 until the mount effect runs. Stamping a bogus 56-year
+    // elapsed time would read as a signal server-side, so nothing is written -
+    // which is the same "no signal" the no-JavaScript path produces.
+    if (elapsed.current && mountedAt.current) {
+      elapsed.current.value = String(Date.now() - mountedAt.current);
+    }
   };
 
   /** `/contact?interest=certifier` from a vertical page arrives pre-selected.
@@ -78,15 +113,6 @@ export function ContactForm({ locale }: { locale: string }) {
   const invalidProps = (field: LeadField) =>
     errorFor(field) ? { "aria-invalid": true as const, "aria-describedby": `${field}-error` } : {};
 
-  const ErrorText = ({ field }: { field: LeadField }) => {
-    const message = errorFor(field);
-    if (!message) return null;
-    return (
-      <p className="err" id={`${field}-error`}>
-        {message}
-      </p>
-    );
-  };
 
   if (state.status === "success") {
     return (
@@ -145,7 +171,7 @@ export function ContactForm({ locale }: { locale: string }) {
             defaultValue={state.values?.name ?? ""}
             {...invalidProps("name")}
           />
-          <ErrorText field="name" />
+          <ErrorText field="name" message={errorFor("name")} />
         </div>
 
         <div>
@@ -163,7 +189,7 @@ export function ContactForm({ locale }: { locale: string }) {
             defaultValue={state.values?.company ?? ""}
             {...invalidProps("company")}
           />
-          <ErrorText field="company" />
+          <ErrorText field="company" message={errorFor("company")} />
         </div>
 
         <div>
@@ -182,7 +208,7 @@ export function ContactForm({ locale }: { locale: string }) {
             defaultValue={state.values?.email ?? ""}
             {...invalidProps("email")}
           />
-          <ErrorText field="email" />
+          <ErrorText field="email" message={errorFor("email")} />
         </div>
 
         <div>
@@ -201,7 +227,7 @@ export function ContactForm({ locale }: { locale: string }) {
             defaultValue={state.values?.mobile ?? ""}
             {...invalidProps("mobile")}
           />
-          <ErrorText field="mobile" />
+          <ErrorText field="mobile" message={errorFor("mobile")} />
         </div>
 
         <div className="full2">
@@ -233,7 +259,7 @@ export function ContactForm({ locale }: { locale: string }) {
               </option>
             ))}
           </select>
-          <ErrorText field="interest" />
+          <ErrorText field="interest" message={errorFor("interest")} />
         </div>
 
         <div className="full2">
@@ -257,7 +283,7 @@ export function ContactForm({ locale }: { locale: string }) {
             }}
             {...invalidProps("message")}
           />
-          <ErrorText field="message" />
+          <ErrorText field="message" message={errorFor("message")} />
         </div>
       </div>
 

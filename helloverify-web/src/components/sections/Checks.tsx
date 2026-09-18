@@ -28,16 +28,16 @@ export function Checks() {
               </span>
               {' '}
               <div className="axis">
-                <span style={{ left: '4%' }}>
+                <span style={{ insetInlineStart: '4%' }}>
                   15 min
                 </span>
-                <span style={{ left: '26%' }}>
+                <span style={{ insetInlineStart: '26%' }}>
                   1 hour
                 </span>
-                <span style={{ left: '62%' }}>
+                <span style={{ insetInlineStart: '62%' }}>
                   1 day
                 </span>
-                <span style={{ left: '92%' }}>
+                <span style={{ insetInlineStart: '92%' }}>
                   3 days
                 </span>
               </div>
@@ -63,18 +63,18 @@ export function Checks() {
                     an hour or less
                   </span>
                 </div>
-                <i className="tk" style={{ left: '4%' }}>
+                <i className="tk" style={{ insetInlineStart: '4%' }}>
                 </i>
-                <i className="tk" style={{ left: '26%' }}>
+                <i className="tk" style={{ insetInlineStart: '26%' }}>
                 </i>
-                <i className="tk" style={{ left: '62%' }}>
+                <i className="tk" style={{ insetInlineStart: '62%' }}>
                 </i>
-                <i className="tk" style={{ left: '92%' }}>
+                <i className="tk" style={{ insetInlineStart: '92%' }}>
                 </i>
                 <div className="prow">
                   <i className="lead fast" style={{ width: '4%', animationDuration: '0.10s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '4%', animationDelay: '0.40s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '4%', animationDelay: '0.40s' }}>
                     <span className="d">
                     </span>
                     Identity
@@ -86,7 +86,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '4%', animationDuration: '0.10s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '4%', animationDelay: '0.40s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '4%', animationDelay: '0.40s' }}>
                     <span className="d">
                     </span>
                     PAN
@@ -98,7 +98,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '4%', animationDuration: '0.10s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '4%', animationDelay: '0.40s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '4%', animationDelay: '0.40s' }}>
                     <span className="d">
                     </span>
                     Passport
@@ -110,7 +110,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '4%', animationDuration: '0.10s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '4%', animationDelay: '0.40s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '4%', animationDelay: '0.40s' }}>
                     <span className="d">
                     </span>
                     Age
@@ -122,7 +122,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '14%', animationDuration: '0.36s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '14%', animationDelay: '0.66s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '14%', animationDelay: '0.66s' }}>
                     <span className="d">
                     </span>
                     Driving licence
@@ -134,7 +134,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '14%', animationDuration: '0.36s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '14%', animationDelay: '0.66s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '14%', animationDelay: '0.66s' }}>
                     <span className="d">
                     </span>
                     Registration certificate
@@ -165,18 +165,18 @@ export function Checks() {
                 </div>
                 <div className="zone">
                 </div>
-                <i className="tk" style={{ left: '4%' }}>
+                <i className="tk" style={{ insetInlineStart: '4%' }}>
                 </i>
-                <i className="tk" style={{ left: '26%' }}>
+                <i className="tk" style={{ insetInlineStart: '26%' }}>
                 </i>
-                <i className="tk" style={{ left: '62%' }}>
+                <i className="tk" style={{ insetInlineStart: '62%' }}>
                 </i>
-                <i className="tk" style={{ left: '92%' }}>
+                <i className="tk" style={{ insetInlineStart: '92%' }}>
                 </i>
                 <div className="prow">
                   <i className="lead fast" style={{ width: '26%', animationDuration: '0.68s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '26%', animationDelay: '0.98s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '26%', animationDelay: '0.98s' }}>
                     <span className="d">
                     </span>
                     Digital employment
@@ -188,7 +188,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '26%', animationDuration: '0.68s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '26%', animationDelay: '0.98s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '26%', animationDelay: '0.98s' }}>
                     <span className="d">
                     </span>
                     Moonlighting
@@ -200,7 +200,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead" style={{ width: '62%', animationDuration: '1.61s' }}>
                   </i>
-                  <span className="pin r" style={{ left: '62%', animationDelay: '1.91s' }}>
+                  <span className="pin r" style={{ insetInlineStart: '62%', animationDelay: '1.91s' }}>
                     <span className="d">
                     </span>
                     Entitlement to work
@@ -212,7 +212,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead" style={{ width: '78%', animationDuration: '2.03s' }}>
                   </i>
-                  <span className="pin r" style={{ left: '78%', animationDelay: '2.33s' }}>
+                  <span className="pin r" style={{ insetInlineStart: '78%', animationDelay: '2.33s' }}>
                     <span className="d">
                     </span>
                     Employment
@@ -224,7 +224,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead" style={{ width: '92%', animationDuration: '2.39s' }}>
                   </i>
-                  <span className="pin r" style={{ left: '92%', animationDelay: '2.69s' }}>
+                  <span className="pin r" style={{ insetInlineStart: '92%', animationDelay: '2.69s' }}>
                     <span className="d">
                     </span>
                     Education
@@ -255,18 +255,18 @@ export function Checks() {
                 </div>
                 <div className="zone">
                 </div>
-                <i className="tk" style={{ left: '4%' }}>
+                <i className="tk" style={{ insetInlineStart: '4%' }}>
                 </i>
-                <i className="tk" style={{ left: '26%' }}>
+                <i className="tk" style={{ insetInlineStart: '26%' }}>
                 </i>
-                <i className="tk" style={{ left: '62%' }}>
+                <i className="tk" style={{ insetInlineStart: '62%' }}>
                 </i>
-                <i className="tk" style={{ left: '92%' }}>
+                <i className="tk" style={{ insetInlineStart: '92%' }}>
                 </i>
                 <div className="prow">
                   <i className="lead fast" style={{ width: '4%', animationDuration: '0.10s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '4%', animationDelay: '0.40s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '4%', animationDelay: '0.40s' }}>
                     <span className="d">
                     </span>
                     Credit
@@ -278,7 +278,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '4%', animationDuration: '0.10s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '4%', animationDelay: '0.40s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '4%', animationDelay: '0.40s' }}>
                     <span className="d">
                     </span>
                     Global database
@@ -290,7 +290,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '14%', animationDuration: '0.36s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '14%', animationDelay: '0.66s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '14%', animationDelay: '0.66s' }}>
                     <span className="d">
                     </span>
                     Criminal
@@ -302,7 +302,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead fast" style={{ width: '14%', animationDuration: '0.36s' }}>
                   </i>
-                  <span className="pin fast" style={{ left: '14%', animationDelay: '0.66s' }}>
+                  <span className="pin fast" style={{ insetInlineStart: '14%', animationDelay: '0.66s' }}>
                     <span className="d">
                     </span>
                     Current address
@@ -314,7 +314,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead" style={{ width: '78%', animationDuration: '2.03s' }}>
                   </i>
-                  <span className="pin r" style={{ left: '78%', animationDelay: '2.33s' }}>
+                  <span className="pin r" style={{ insetInlineStart: '78%', animationDelay: '2.33s' }}>
                     <span className="d">
                     </span>
                     Trade licence
@@ -326,7 +326,7 @@ export function Checks() {
                 <div className="prow">
                   <i className="lead" style={{ width: '78%', animationDuration: '2.03s' }}>
                   </i>
-                  <span className="pin r" style={{ left: '78%', animationDelay: '2.33s' }}>
+                  <span className="pin r" style={{ insetInlineStart: '78%', animationDelay: '2.33s' }}>
                     <span className="d">
                     </span>
                     Directors{' '}

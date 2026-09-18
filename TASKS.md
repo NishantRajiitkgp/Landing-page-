@@ -149,19 +149,38 @@ at all — the FAQ lift and the component splits in Part 5.
 
 ---
 
-## Part 4 — ESLint, and the two rules §14.2 asks for
+## Part 4 — ESLint · **DONE (18 Sep 2026)**
 
-No ESLint is configured; the CI `Lint` step currently says so rather than
-passing silently.
+`npm run lint` is real and passes. Flat config with `eslint-config-next`, plus
+`hv/no-color-literal` and `hv/logical-css` in `tools/eslint/`. Both broken on
+purpose — five mutations fire, two correctly stay silent. CI's Lint step now
+runs it instead of explaining itself.
 
-- Wire up ESLint with the Next config.
-- **The no-hex-outside-theme rule**, which only becomes enforceable after Part 3.
-- **The logical-CSS rule** — already enforced for stylesheets by
-  `npm run check:logical`; this extends it to inline `style={{ }}` objects in
-  TSX, which that gate does not read.
+`tools/ci/check-tokens.mjs` was **removed**, not kept alongside: the ESLint rule
+does the same job on the AST, so keeping both would be two implementations of
+one rule. `check:logical` stays — it reads the stylesheets, which ESLint cannot.
 
-**Acceptance:** `npm run lint` is real and passes; both rules fail on a
-deliberately introduced violation.
+**The AST found what the regex gates could not**, and the biggest item is worth
+carrying forward:
+
+- **77 physical properties in inline `style={{ }}` objects.** Every one is an
+  RTL blocker that `check:logical` structurally could not see, so Part 3's "192
+  declarations converted" undercounted the real job by a third. Fixed by
+  `eslint --fix` (the rule ships a fixer) and proved by inverse substitution:
+  74 changed lines, 0 unexplained.
+- **2 colour literals in `app/manifest.ts`** — now a third documented exemption.
+  The manifest is JSON the OS chrome reads before any stylesheet exists.
+- **7 React issues in `ContactForm.tsx`**: `ErrorText` was declared inside the
+  render body (a new component type every render, so the paragraph remounted
+  rather than updated) and `useRef(Date.now())` read the clock during render.
+  Both fixed. Worth noting the visible cost of the first was nil — nothing in
+  `ErrorText` holds focus or state — so this was a correctness smell, not the
+  user-facing bug it first looked like.
+- **6 dead `serviceNode` imports** left over from the JSON-LD work.
+
+`react/no-unescaped-entities` is narrowed rather than disabled: it still forbids
+`>` and `}`, and no longer forbids a plain apostrophe, which had flagged 71
+places in signed-off copy for zero rendered difference.
 
 ---
 

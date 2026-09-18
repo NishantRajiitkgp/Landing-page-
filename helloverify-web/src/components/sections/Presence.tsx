@@ -22,34 +22,34 @@ export function Presence() {
           <div className="dayband">
             {' '}
             <div className="dayaxis">
-              <span style={{ left: '0%' }}>
+              <span style={{ insetInlineStart: '0%' }}>
                 00:00
               </span>
-              <span style={{ left: '25%' }}>
+              <span style={{ insetInlineStart: '25%' }}>
                 06:00
               </span>
-              <span style={{ left: '50%' }}>
+              <span style={{ insetInlineStart: '50%' }}>
                 12:00
               </span>
-              <span style={{ left: '75%' }}>
+              <span style={{ insetInlineStart: '75%' }}>
                 18:00
               </span>
-              <span style={{ left: '100%' }}>
+              <span style={{ insetInlineStart: '100%' }}>
                 24:00 UTC
               </span>
             </div>
             {' '}
             <div className="daygrid">
-              <div className="cov" style={{ left: '4.17%', width: '87.5%' }}>
+              <div className="cov" style={{ insetInlineStart: '4.17%', width: '87.5%' }}>
                 <span>
                   Someone at a desk · 21 of 24 hours
                 </span>
               </div>
-              <i style={{ left: '25%' }}>
+              <i style={{ insetInlineStart: '25%' }}>
               </i>
-              <i style={{ left: '50%' }}>
+              <i style={{ insetInlineStart: '50%' }}>
               </i>
-              <i style={{ left: '75%' }}>
+              <i style={{ insetInlineStart: '75%' }}>
               </i>
               <div className="nowl">
               </div>
@@ -57,7 +57,7 @@ export function Presence() {
             {' '}
             <div className="drows">
               <div className="drow">
-                <div className="bar2" style={{ left: '4.17%', width: '37.5%', animationDelay: '0.0s' }}>
+                <div className="bar2" style={{ insetInlineStart: '4.17%', width: '37.5%', animationDelay: '0.0s' }}>
                   <span className="fl" style={{ width: '24px', height: '24px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="10" fill="#0038A8" />
@@ -75,7 +75,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '4.17%', width: '37.5%', animationDelay: '0.1s' }}>
+                <div className="bar2" style={{ insetInlineStart: '4.17%', width: '37.5%', animationDelay: '0.1s' }}>
                   <span className="fl" style={{ width: '24px', height: '24px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="10" fill="#EF3340" />
@@ -93,7 +93,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '14.58%', width: '37.5%', animationDelay: '0.2s' }}>
+                <div className="bar2" style={{ insetInlineStart: '14.58%', width: '37.5%', animationDelay: '0.2s' }}>
                   <span className="fl" style={{ width: '24px', height: '24px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="20" fill="#FFFFFF" />
@@ -111,7 +111,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '20.83%', width: '37.5%', animationDelay: '0.3s' }}>
+                <div className="bar2" style={{ insetInlineStart: '20.83%', width: '37.5%', animationDelay: '0.3s' }}>
                   <span className="fl" style={{ width: '24px', height: '24px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="6.7" fill="#00732F" />
@@ -129,7 +129,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '25.0%', width: '37.5%', animationDelay: '0.4s' }}>
+                <div className="bar2" style={{ insetInlineStart: '25.0%', width: '37.5%', animationDelay: '0.4s' }}>
                   <span className="fl" style={{ width: '24px', height: '24px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="6.7" fill="#CE1126" />
@@ -147,7 +147,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '54.17%', width: '37.5%', animationDelay: '0.5s' }}>
+                <div className="bar2" style={{ insetInlineStart: '54.17%', width: '37.5%', animationDelay: '0.5s' }}>
                   <span className="fl" style={{ width: '24px', height: '24px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="20" fill="#FFFFFF" />
@@ -290,34 +290,34 @@ export function Presence() {
           <div className="dayband">
             {' '}
             <div className="dayaxis">
-              <span style={{ left: '0%' }}>
+              <span style={{ insetInlineStart: '0%' }}>
                 00:00
               </span>
-              <span style={{ left: '25%' }}>
+              <span style={{ insetInlineStart: '25%' }}>
                 06:00
               </span>
-              <span style={{ left: '50%' }}>
+              <span style={{ insetInlineStart: '50%' }}>
                 12:00
               </span>
-              <span style={{ left: '75%' }}>
+              <span style={{ insetInlineStart: '75%' }}>
                 18:00
               </span>
-              <span style={{ left: '100%' }}>
+              <span style={{ insetInlineStart: '100%' }}>
                 24:00 UTC
               </span>
             </div>
             {' '}
             <div className="daygrid">
-              <div className="cov" style={{ left: '4.17%', width: '87.5%' }}>
+              <div className="cov" style={{ insetInlineStart: '4.17%', width: '87.5%' }}>
                 <span>
                   Someone at a desk · 21 of 24 hours
                 </span>
               </div>
-              <i style={{ left: '25%' }}>
+              <i style={{ insetInlineStart: '25%' }}>
               </i>
-              <i style={{ left: '50%' }}>
+              <i style={{ insetInlineStart: '50%' }}>
               </i>
-              <i style={{ left: '75%' }}>
+              <i style={{ insetInlineStart: '75%' }}>
               </i>
               <div className="nowl">
               </div>
@@ -325,7 +325,7 @@ export function Presence() {
             {' '}
             <div className="drows">
               <div className="drow">
-                <div className="bar2" style={{ left: '4.17%', width: '37.5%', animationDelay: '0.0s' }}>
+                <div className="bar2" style={{ insetInlineStart: '4.17%', width: '37.5%', animationDelay: '0.0s' }}>
                   <span className="fl" style={{ width: '22px', height: '22px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="10" fill="#0038A8" />
@@ -340,7 +340,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '4.17%', width: '37.5%', animationDelay: '0.1s' }}>
+                <div className="bar2" style={{ insetInlineStart: '4.17%', width: '37.5%', animationDelay: '0.1s' }}>
                   <span className="fl" style={{ width: '22px', height: '22px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="10" fill="#EF3340" />
@@ -355,7 +355,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '14.58%', width: '37.5%', animationDelay: '0.2s' }}>
+                <div className="bar2" style={{ insetInlineStart: '14.58%', width: '37.5%', animationDelay: '0.2s' }}>
                   <span className="fl" style={{ width: '22px', height: '22px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="20" fill="#FFFFFF" />
@@ -370,7 +370,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '20.83%', width: '37.5%', animationDelay: '0.3s' }}>
+                <div className="bar2" style={{ insetInlineStart: '20.83%', width: '37.5%', animationDelay: '0.3s' }}>
                   <span className="fl" style={{ width: '22px', height: '22px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="6.7" fill="#00732F" />
@@ -385,7 +385,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '25.0%', width: '37.5%', animationDelay: '0.4s' }}>
+                <div className="bar2" style={{ insetInlineStart: '25.0%', width: '37.5%', animationDelay: '0.4s' }}>
                   <span className="fl" style={{ width: '22px', height: '22px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="6.7" fill="#CE1126" />
@@ -400,7 +400,7 @@ export function Presence() {
                 </div>
               </div>
               <div className="drow">
-                <div className="bar2" style={{ left: '54.17%', width: '37.5%', animationDelay: '0.5s' }}>
+                <div className="bar2" style={{ insetInlineStart: '54.17%', width: '37.5%', animationDelay: '0.5s' }}>
                   <span className="fl" style={{ width: '22px', height: '22px' }}>
                     <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                       <rect width="30" height="20" fill="#FFFFFF" />

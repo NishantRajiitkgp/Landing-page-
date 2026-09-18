@@ -46,19 +46,19 @@ export function HowItWorks() {
             <div className="pk">
             </div>
             {' '}
-            <div className="node" style={{ left: '14.25%', animationName: 'node0' }}>
+            <div className="node" style={{ insetInlineStart: '14.25%', animationName: 'node0' }}>
             </div>
             {' '}
-            <div className="node" style={{ left: '38.08%', animationName: 'node1' }}>
+            <div className="node" style={{ insetInlineStart: '38.08%', animationName: 'node1' }}>
             </div>
             {' '}
-            <div className="node" style={{ left: '61.9%', animationName: 'node2' }}>
+            <div className="node" style={{ insetInlineStart: '61.9%', animationName: 'node2' }}>
             </div>
             {' '}
-            <div className="node" style={{ left: '85.75%', animationName: 'node3' }}>
+            <div className="node" style={{ insetInlineStart: '85.75%', animationName: 'node3' }}>
             </div>
             {' '}
-            <div className="stlbl" style={{ left: '14.25%' }}>
+            <div className="stlbl" style={{ insetInlineStart: '14.25%' }}>
               <b>
                 Upload
               </b>
@@ -67,7 +67,7 @@ export function HowItWorks() {
               </span>
             </div>
             {' '}
-            <div className="stlbl" style={{ left: '38.08%' }}>
+            <div className="stlbl" style={{ insetInlineStart: '38.08%' }}>
               <b>
                 Read
               </b>
@@ -76,7 +76,7 @@ export function HowItWorks() {
               </span>
             </div>
             {' '}
-            <div className="stlbl" style={{ left: '61.9%' }}>
+            <div className="stlbl" style={{ insetInlineStart: '61.9%' }}>
               <b>
                 Confirm
               </b>
@@ -85,7 +85,7 @@ export function HowItWorks() {
               </span>
             </div>
             {' '}
-            <div className="stlbl" style={{ left: '85.75%' }}>
+            <div className="stlbl" style={{ insetInlineStart: '85.75%' }}>
               <b>
                 Report
               </b>

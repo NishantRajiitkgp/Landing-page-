@@ -58,13 +58,11 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
-      # §14.2 asks for lint "incl. token + logical-property rules". No ESLint is
-      # configured in this repo yet, so there is nothing to run and this step
-      # says so instead of passing silently. The two custom rules it names —
-      # no hex literals outside @theme, logical CSS properties for RTL — are
-      # tracked in README's known gaps and belong with §12's RTL work.
+      # §14.2's "lint (incl. token + logical-property rules)". Both custom rules
+      # are in tools/eslint/ and run as errors: hv/no-color-literal and
+      # hv/logical-css.
       - name: Lint
-        run: echo "no ESLint configured yet - see BUILD-SPEC 14.2 and README known gaps"
+        run: npm run lint
 
       - name: Unit tests
         run: npm test

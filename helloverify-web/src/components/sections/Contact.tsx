@@ -23,7 +23,7 @@ export function Contact() {
               <div style={{ position: 'absolute', inset: '0', background: 'linear-gradient(to top, rgba(14,13,10,0.95) 0%, rgba(14,13,10,0.7) 32%, rgba(14,13,10,0.15) 70%, rgba(14,13,10,0) 100%)' }}>
               </div>
               {' '}
-              <div style={{ position: 'absolute', left: '56px', right: '56px', bottom: '56px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
+              <div style={{ position: 'absolute', insetInlineStart: '56px', insetInlineEnd: '56px', bottom: '56px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
                 {' '}
                 <h2 className="serif" style={{ margin: '0', fontSize: '64px', lineHeight: '0.98', letterSpacing: '-0.03em', fontWeight: '400' }}>
                   Every great journey deserves a{' '}
@@ -171,7 +171,7 @@ export function Contact() {
               <div style={{ position: 'absolute', inset: '0', background: 'linear-gradient(to top, rgba(14,13,10,0.95) 0%, rgba(14,13,10,0.7) 32%, rgba(14,13,10,0.15) 70%, rgba(14,13,10,0) 100%)' }}>
               </div>
               {' '}
-              <div style={{ position: 'absolute', left: '22px', right: '22px', bottom: '22px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
+              <div style={{ position: 'absolute', insetInlineStart: '22px', insetInlineEnd: '22px', bottom: '22px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
                 <h2 className="serif" style={{ margin: '0', fontSize: '36px', lineHeight: '1', letterSpacing: '-0.03em', fontWeight: '400' }}>
                   Every great journey deserves a{' '}
                   <em style={{ fontStyle: 'italic' }}>

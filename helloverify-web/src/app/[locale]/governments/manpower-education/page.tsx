@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { copyFor } from "@/lib/seo/copy";
-import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import type { ServiceFacts } from "@/lib/seo/schema/service";
 import { VerticalPage } from "@/components/templates/VerticalPage";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";

@@ -879,6 +879,66 @@ loophole), a tint hardcoded instead of looked up, and a photograph losing its
 map entry — which fails the build, because `tint()` throws rather than returning
 a default.
 
+## Lint
+
+```sh
+npm run lint
+```
+
+§14.2's pipeline asks for "lint (incl. token + logical-property rules)". ESLint
+flat config (`eslint.config.mjs`) with `eslint-config-next`, plus **two local
+rules in `tools/eslint/`** — which are the reason this is not just the stock
+config.
+
+**`hv/no-color-literal`** replaced `tools/ci/check-tokens.mjs` outright. Same
+rule, done on the AST rather than by regex, which buys two things: it can tell a
+colour in an SVG artwork attribute from one in a style object *on the same line*
+(the regex needed a masking trick), and it reports in the editor rather than at
+the end of a build. One rule, one implementation — the script is gone.
+
+**`hv/logical-css`** covers what `npm run check:logical` structurally cannot.
+That gate reads the stylesheets; this reads `style={{ }}` objects in TSX, which
+are JavaScript and invisible to it. Both are needed.
+
+### What the AST found that the regex gates could not
+
+| | found |
+|---|---:|
+| physical properties in inline styles | **77** |
+| colour literals (in `app/manifest.ts`) | **2** |
+| components created during render | **6** |
+| impure `Date.now()` during render | **1** |
+| dead imports | **6** |
+
+The 77 are the significant ones: every `left:` and `marginLeft:` in a `style`
+prop is an RTL blocker that `check:logical` was never able to see, so Part 3's
+"192 declarations converted" was an undercount of the real job by a third.
+
+They were fixed by `eslint --fix` — the rule ships a fixer, which is safe
+because every replacement is value-identical until `dir` flips. Proved the same
+way as the stylesheet conversion: 74 changed lines across 5 files, each
+reversing exactly to the original under the inverse mapping, **0 unexplained**.
+
+### Three exemptions, each with a reason in the rule
+
+- **SVG presentation attributes** — artwork. Singapore's flag is `#C8102E`
+  whatever the brand does.
+- **`app/[locale]/opengraph-image.tsx`** — Satori has no CSSOM.
+- **`app/manifest.ts`** — found by the rule itself. The web app manifest is JSON
+  the OS chrome reads before any stylesheet exists, so `theme_color` cannot be a
+  custom property.
+
+`react/no-unescaped-entities` is **narrowed rather than disabled**: it keeps
+forbidding `>` and `}`, which are genuinely ambiguous next to JSX, and stops
+forbidding a plain apostrophe. That default flagged 71 places in reviewed
+marketing copy, and `Don't` and `Don&apos;t` render byte-identical HTML.
+
+### The rules were broken seven ways
+
+Five fire, two correctly stay silent: artwork colour in an SVG attribute, and a
+physical key in an object that is not a `style` prop. A rule that fires on
+correct code gets disabled, so the negative tests matter as much as the others.
+
 ## Known gaps
 
 - **`--faint` is 2.43:1 and is the one remaining WCAG AA text failure.** It is
@@ -909,10 +969,6 @@ a default.
   carries table headers and chart axes. Now states measured values and names the
   outstanding exception. **Worth a copy review**, since it is the page a
   procurement reviewer reads.
-- **No ESLint.** §14.2 wants lint "incl. token + logical-property rules" — the
-  no-hex-outside-`@theme` rule and the logical-CSS-property rule for RTL. Neither
-  exists; the CI `Lint` step says so rather than passing silently. Both belong
-  with §12's RTL work.
 - **CI does not deploy.** §14.4 wants automated deploy on merge to `main`. That
   needs GCP credentials and the Cloud Run service to exist (§3.6); a deploy job
   that cannot authenticate would be AUDIT G2 in a new file. Branch protection,
