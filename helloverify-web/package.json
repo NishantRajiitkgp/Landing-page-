@@ -5,7 +5,27 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "probe:redirects": "node tools/seo/probe-redirects.mjs",
+    "check:sitemap": "node tools/seo/check-sitemap.mjs",
+    "check:schema": "node tools/seo/check-schema.mjs",
+    "check:seo": "npm run check:sitemap && npm run check:schema && npm run check:llms",
+    "check:llms": "node tools/seo/check-llms.mjs",
+    "build:logo": "node tools/brand/make-logo.mjs",
+    "build:fonts": "node tools/perf/subset-fonts.mjs",
+    "check:perf": "node tools/perf/check-budgets.mjs",
+    "check:all": "npm run check:static && npm run check:sitemap && npm run check:schema && npm run check:llms && npm run check:perf && npm run check:secrets && npm run check:a11y && npm run check:contrast && npm run check:logical && npm run check:csp",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:net": "vitest run tools/test/dns.test.ts",
+    "typecheck": "tsc --noEmit",
+    "check:secrets": "node tools/ci/check-secrets.mjs",
+    "contract": "node tools/ci/production-contract.mjs",
+    "check:static": "node --import ./tools/test/register.mjs tools/ci/assert-static.mjs",
+    "check:a11y": "node tools/a11y/check-axe.mjs",
+    "check:contrast": "node tools/a11y/check-contrast.mjs",
+    "check:logical": "node tools/a11y/check-logical-css.mjs",
+    "check:csp": "node tools/ci/check-csp.mjs"
   },
   "dependencies": {
     "next": "16.3.5",
@@ -13,15 +33,20 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "server-only": "^0.0.1",
-    "sharp": "^0.34.4",
+    "sharp": "^0.35.4",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24.13.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "axe-core": "^4.13.0",
+    "jsdom": "^30.1.0",
+    "schema-dts": "^2.0.0",
+    "subset-font": "^2.7.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.1"
   }
 }
