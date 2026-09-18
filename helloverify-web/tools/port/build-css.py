@@ -2,6 +2,30 @@
 
     python tools/port/build-css.py
 
+TWO THINGS TO KNOW BEFORE RUNNING THIS.
+
+1. It cannot run in this tree. It reads design-src/artboards/*.dc.html, and that
+   directory is not checked in - the first open() fails. design.css is therefore
+   maintained in place despite the "regenerate rather than hand-tuning" header
+   it writes, and that header is now a description of intent rather than of a
+   working path.
+
+2. If the artboards are restored and this IS re-run, it will emit the canvas
+   stylesheet verbatim - which means physical left/right properties, undoing the
+   RTL conversion (BUILD-SPEC 12, section 7). Follow it immediately with:
+
+       python tools/port/logical-css.py --write
+
+   
+> helloverify-web@0.1.0 check:logical
+> node tools/a11y/check-logical-css.mjs
+
+stylesheets scanned: 3
+rules: 12 inline-axis properties (block axis and paint positioning are out of scope)
+
+PASS - no physical inline properties; the stylesheets can mirror fails the build if that is forgotten, so this is a
+   reminder rather than the safeguard.
+
 The desktop (Main/Desktop2-4) and mobile (Mobile1-5) boards each carry one
 complete stylesheet. Both are copied verbatim except for the edits listed in
 PATCHES, which are what turn two fixed-width canvases into one fluid page.

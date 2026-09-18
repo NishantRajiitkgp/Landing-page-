@@ -35,7 +35,12 @@ export function SiteNav() {
             <span>English</span>
           </a>
           <AppLink href="/contact" className="btn btn-ink btn-sm">Talk to sales</AppLink>
-          <label htmlFor="nav-menu-toggle" className="burger" aria-label="Open menu">
+          {/* The accessible name is real text, not `aria-label`: a <label> has no
+              role that permits a name from `aria-label`, so axe reports
+              `aria-prohibited-attr` (serious) and assistive tech may announce
+              the control as unnamed. Measured on all 56 pages. */}
+          <label htmlFor="nav-menu-toggle" className="burger">
+            <span className="sr-only">Open menu</span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M2.5 5h11M2.5 11h11" stroke="#15140F" strokeWidth="1.5" strokeLinecap="round" />
             </svg>

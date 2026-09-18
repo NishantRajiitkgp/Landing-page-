@@ -5,6 +5,14 @@ import { AppLink } from "@/components/chrome/AppLink";
 /**
  * Closing CTA band for inner pages (the homepage keeps its full contact section).
  * One photo, one claim, one primary action — DESIGN.md §7 chrome.
+ *
+ * The wrapper is <aside>, not <div>. `PageShell` renders this band as a
+ * sibling of <main>, so without a landmark every heading and paragraph in it
+ * belongs to none — axe's `region` rule, 516 nodes across 56 pages, which was
+ * the bulk of the site's advisory findings. `aside` is the accurate element:
+ * the band is complementary to the page's main content, not part of it.
+ * Wrapping rather than moving it inside <main> keeps DOM order and every CSS
+ * selector untouched.
  */
 export function ClosingCta({
   heading = (
@@ -24,7 +32,7 @@ export function ClosingCta({
   img?: string;
 }) {
   return (
-    <div className="wrap" style={{ paddingTop: 40, paddingBottom: 96 }}>
+    <aside className="wrap" aria-label="Get started" style={{ paddingTop: 40, paddingBottom: 96 }}>
       <div className="close2 ph">
         <Image className="pimg" src={img} alt="" fill sizes={SIZES_FULL} />
         <div className="scrim" />
@@ -42,6 +50,6 @@ export function ClosingCta({
           </div>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }
