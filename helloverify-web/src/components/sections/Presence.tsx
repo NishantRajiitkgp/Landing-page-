@@ -177,7 +177,7 @@ export function Presence() {
             <span className="k" style={{ whiteSpace: 'nowrap' }}>
               Governments we work with
             </span>
-            <div style={{ flex: '1', height: '1px', background: '#E3DFD6' }}>
+            <div style={{ flex: '1', height: '1px', background: 'var(--hair)' }}>
             </div>
           </div>
           {' '}
@@ -427,7 +427,7 @@ export function Presence() {
             <span className="k" style={{ whiteSpace: 'nowrap' }}>
               Governments we work with
             </span>
-            <div style={{ flex: '1', height: '1px', background: '#E3DFD6' }}>
+            <div style={{ flex: '1', height: '1px', background: 'var(--hair)' }}>
             </div>
           </div>
           {' '}

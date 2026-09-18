@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SIZES_CCARD } from "@/lib/img";
+import { SIZES_CCARD, tint } from "@/lib/img";
 /** International coverage. */
 
 export function International() {
@@ -26,7 +26,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#5E6A78' }}>
+              <div className="ccard ph" style={{ background: tint("/img/16-united-kingdom.jpg") }}>
                 {' '}
                 <div className="light">
                 </div>
@@ -105,7 +105,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#6F7A5C' }}>
+              <div className="ccard ph" style={{ background: tint("/img/17-philippines.jpg") }}>
                 {' '}
                 <div className="light">
                 </div>
@@ -181,7 +181,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#9A7E5E' }}>
+              <div className="ccard ph" style={{ background: tint("/img/18-uae.jpg") }}>
                 {' '}
                 <div className="light">
                 </div>
@@ -257,7 +257,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#5C6F73' }}>
+              <div className="ccard ph" style={{ background: tint("/img/19-singapore.jpg") }}>
                 {' '}
                 <div className="light">
                 </div>
@@ -333,7 +333,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#A08260' }}>
+              <div className="ccard ph" style={{ background: tint("/img/20-egypt.jpg") }}>
                 {' '}
                 <div className="light">
                 </div>
@@ -409,13 +409,13 @@ export function International() {
             {' '}
           </div>
           {' '}
-          <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', color: '#6F6B62' }}>
+          <div style={{ marginTop: '28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '14px', color: 'var(--muted)' }}>
             {' '}
             <span>
               Criminal records are checked across Supreme, High and District Courts and tribunals. Times are from upload, in your local time.
             </span>
             {' '}
-            <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: '500', color: '#15140F' }}>
+            <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: '500', color: 'var(--ink)' }}>
               All countries{' '}
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
@@ -438,7 +438,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#5E6A78' }}>
+              <div className="ccard ph" style={{ background: tint("/img/16-united-kingdom.jpg") }}>
                 <div className="light">
                 </div>
                 <Image className="pimg" src="/img/16-united-kingdom.jpg" alt="" fill sizes={SIZES_CCARD} />
@@ -507,7 +507,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#6F7A5C' }}>
+              <div className="ccard ph" style={{ background: tint("/img/17-philippines.jpg") }}>
                 <div className="light">
                 </div>
                 <Image className="pimg" src="/img/17-philippines.jpg" alt="" fill sizes={SIZES_CCARD} />
@@ -573,7 +573,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#9A7E5E' }}>
+              <div className="ccard ph" style={{ background: tint("/img/18-uae.jpg") }}>
                 <div className="light">
                 </div>
                 <Image className="pimg" src="/img/18-uae.jpg" alt="" fill sizes={SIZES_CCARD} />
@@ -639,7 +639,7 @@ export function International() {
             {' '}
             <div className="cc">
               {' '}
-              <div className="ccard ph" style={{ background: '#5C6F73' }}>
+              <div className="ccard ph" style={{ background: tint("/img/19-singapore.jpg") }}>
                 <div className="light">
                 </div>
                 <Image className="pimg" src="/img/19-singapore.jpg" alt="" fill sizes={SIZES_CCARD} />
@@ -705,7 +705,7 @@ export function International() {
             {' '}
             <div className="cc" style={{ gridColumn: 'span 2' }}>
               {' '}
-              <div className="ccard ph" style={{ background: '#A08260', height: '230px' }}>
+              <div className="ccard ph" style={{ background: tint("/img/20-egypt.jpg"), height: '230px' }}>
                 <div className="light">
                 </div>
                 <Image className="pimg" src="/img/20-egypt.jpg" alt="" fill sizes={SIZES_CCARD} />

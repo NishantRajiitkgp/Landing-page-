@@ -346,9 +346,9 @@ export function Checks() {
               <span>
               </span>
               {' '}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', paddingTop: '24px', borderTop: '1px solid #E3DFD6' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px', paddingTop: '24px', borderTop: '1px solid var(--hair)' }}>
                 {' '}
-                <span style={{ fontSize: '15px', color: '#6F6B62' }}>
+                <span style={{ fontSize: '15px', color: 'var(--muted)' }}>
                   Plus 16 more — Cyber Identity, Know Your Contact, Financial Assessment, Promoter Criminal History and others.
                 </span>
                 {' '}

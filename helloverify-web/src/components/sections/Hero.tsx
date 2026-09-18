@@ -7,7 +7,7 @@ export function Hero() {
       <div className="dsk">
         <div className="wrap" style={{ paddingTop: '88px', paddingBottom: '56px', textAlign: 'center' }}>
           {' '}
-          <a href="#" className="rise d1" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', height: '38px', padding: '0 16px 0 14px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid #E3DFD6', fontSize: '13px', fontWeight: '500', color: '#3D3B35' }}>
+          <a href="#" className="rise d1" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', height: '38px', padding: '0 16px 0 14px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', fontSize: '13px', fontWeight: '500', color: 'var(--ink-soft)' }}>
             {' '}
             <span>
               Backed by
@@ -27,7 +27,7 @@ export function Hero() {
             {' '}
           </h1>
           {' '}
-          <p className="rise d3" style={{ margin: '36px auto 0', maxWidth: '640px', fontSize: '21px', lineHeight: '1.45', color: '#3D3B35', letterSpacing: '-0.005em', textWrap: 'pretty' }}>
+          <p className="rise d3" style={{ margin: '36px auto 0', maxWidth: '640px', fontSize: '21px', lineHeight: '1.45', color: 'var(--ink-soft)', letterSpacing: '-0.005em', textWrap: 'pretty' }}>
             {' '}AI reads the documents. Our team confirms with the issuer — the university, the employer, the registry. You get an answer in as little as 15 minutes.{' '}
           </p>
           {' '}
@@ -57,7 +57,7 @@ export function Hero() {
       <div className="mob">
         <div className="wrap" style={{ paddingTop: '40px', paddingBottom: '28px' }}>
           {' '}
-          <span className="rise d1" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', height: '32px', padding: '0 12px', borderRadius: '999px', background: '#FFFFFF', border: '1px solid #E3DFD6', fontSize: '12px', fontWeight: '500', color: '#3D3B35' }}>
+          <span className="rise d1" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', height: '32px', padding: '0 12px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', fontSize: '12px', fontWeight: '500', color: 'var(--ink-soft)' }}>
             {' '}
             <span>
               Backed by
@@ -74,7 +74,7 @@ export function Hero() {
             </em>
           </h1>
           {' '}
-          <p className="rise d3" style={{ margin: '20px 0 0', fontSize: '17px', lineHeight: '1.45', color: '#3D3B35' }}>
+          <p className="rise d3" style={{ margin: '20px 0 0', fontSize: '17px', lineHeight: '1.45', color: 'var(--ink-soft)' }}>
             AI reads the documents. Our team confirms with the issuer — the university, the employer, the registry. You get an answer in as little as 15 minutes.
           </p>
           {' '}

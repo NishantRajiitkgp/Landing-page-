@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE } from "@/lib/img";
+import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE, tint } from "@/lib/img";
 /** Who it is for - the audience bento. */
 
 export function WhoItsFor() {
@@ -24,7 +24,7 @@ export function WhoItsFor() {
           {' '}
           <div style={{ marginTop: '80px', display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gridAutoRows: '290px', gap: '20px' }}>
             {' '}
-            <div className="cell ph" style={{ gridRow: 'span 2', background: '#B3B08F' }}>
+            <div className="cell ph" style={{ gridRow: 'span 2', background: tint("/img/10-ministry-hall.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -54,7 +54,7 @@ export function WhoItsFor() {
               {' '}
             </div>
             {' '}
-            <div className="cell ph" style={{ gridColumn: 'span 2', background: '#D8CBB2' }}>
+            <div className="cell ph" style={{ gridColumn: 'span 2', background: tint("/img/11-office-first-day.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -82,7 +82,7 @@ export function WhoItsFor() {
               {' '}
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#ADB4BE' }}>
+            <div className="cell ph" style={{ background: tint("/img/12-phone-signup.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -110,7 +110,7 @@ export function WhoItsFor() {
               {' '}
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#6E6C63' }}>
+            <div className="cell ph" style={{ background: tint("/img/13-factory-floor.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -136,7 +136,7 @@ export function WhoItsFor() {
               {' '}
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#C9C2B4' }}>
+            <div className="cell ph" style={{ background: tint("/img/14-visa-counter.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -162,7 +162,7 @@ export function WhoItsFor() {
               {' '}
             </div>
             {' '}
-            <div className="cell ph" style={{ gridColumn: 'span 2', background: '#D6BCB2' }}>
+            <div className="cell ph" style={{ gridColumn: 'span 2', background: tint("/img/15-home-doorway.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -201,7 +201,7 @@ export function WhoItsFor() {
           {' '}
           <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {' '}
-            <div className="cell ph" style={{ background: '#B3B08F' }}>
+            <div className="cell ph" style={{ background: tint("/img/10-ministry-hall.jpg") }}>
               <div className="light">
               </div>
               <div className="scrim">
@@ -221,7 +221,7 @@ export function WhoItsFor() {
               </div>
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#D8CBB2' }}>
+            <div className="cell ph" style={{ background: tint("/img/11-office-first-day.jpg") }}>
               <div className="light">
               </div>
               <div className="scrim">
@@ -241,7 +241,7 @@ export function WhoItsFor() {
               </div>
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#ADB4BE' }}>
+            <div className="cell ph" style={{ background: tint("/img/12-phone-signup.jpg") }}>
               <div className="light">
               </div>
               <div className="scrim">
@@ -261,7 +261,7 @@ export function WhoItsFor() {
               </div>
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#6E6C63' }}>
+            <div className="cell ph" style={{ background: tint("/img/13-factory-floor.jpg") }}>
               <div className="light">
               </div>
               <div className="scrim">
@@ -279,7 +279,7 @@ export function WhoItsFor() {
               </div>
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#C9C2B4' }}>
+            <div className="cell ph" style={{ background: tint("/img/14-visa-counter.jpg") }}>
               <div className="light">
               </div>
               <div className="scrim">
@@ -297,7 +297,7 @@ export function WhoItsFor() {
               </div>
             </div>
             {' '}
-            <div className="cell ph" style={{ background: '#D6BCB2' }}>
+            <div className="cell ph" style={{ background: tint("/img/15-home-doorway.jpg") }}>
               <div className="light">
               </div>
               <div className="scrim">

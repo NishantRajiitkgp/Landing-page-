@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SIZES_FEATURE } from "@/lib/img";
+import { SIZES_FEATURE, tint } from "@/lib/img";
 /** Contact form. */
 
 export function Contact() {
@@ -8,9 +8,9 @@ export function Contact() {
       <div className="dsk">
         <div style={{ padding: '0 40px' }}>
           {' '}
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 6fr) minmax(0, 6fr)', borderRadius: '32px', overflow: 'hidden', border: '1px solid #E3DFD6', background: '#FFFFFF' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 6fr) minmax(0, 6fr)', borderRadius: '32px', overflow: 'hidden', border: '1px solid var(--hair)', background: 'var(--white)' }}>
             {' '}
-            <div className="ph" style={{ minHeight: '760px', background: '#6B6E5B' }}>
+            <div className="ph" style={{ minHeight: '760px', background: tint("/img/23-closing.jpg") }}>
               {' '}
               <div className="light" style={{ background: 'radial-gradient(90% 70% at 70% 100%, rgba(255,255,255,0.18), rgba(255,255,255,0) 60%)' }}>
               </div>
@@ -23,7 +23,7 @@ export function Contact() {
               <div style={{ position: 'absolute', inset: '0', background: 'linear-gradient(to top, rgba(14,13,10,0.95) 0%, rgba(14,13,10,0.7) 32%, rgba(14,13,10,0.15) 70%, rgba(14,13,10,0) 100%)' }}>
               </div>
               {' '}
-              <div style={{ position: 'absolute', left: '56px', right: '56px', bottom: '56px', zIndex: '3', color: '#FFFFFF', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
+              <div style={{ position: 'absolute', left: '56px', right: '56px', bottom: '56px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
                 {' '}
                 <h2 className="serif" style={{ margin: '0', fontSize: '64px', lineHeight: '0.98', letterSpacing: '-0.03em', fontWeight: '400' }}>
                   Every great journey deserves a{' '}
@@ -98,7 +98,7 @@ export function Contact() {
                   </div>
                   <div className="inp">
                     <span>
-                      <span style={{ color: '#15140F' }}>
+                      <span style={{ color: 'var(--ink)' }}>
                         +91
                       </span>
                       {' '}· 98··· ·····
@@ -132,13 +132,13 @@ export function Contact() {
                 {' '}
               </div>
               {' '}
-              <p style={{ margin: '24px 0 0', fontSize: '13px', lineHeight: '1.5', color: '#6F6B62' }}>
+              <p style={{ margin: '24px 0 0', fontSize: '13px', lineHeight: '1.5', color: 'var(--muted)' }}>
                 By submitting, you consent to HelloVerify processing your data for lead generation and related communications, per our{' '}
-                <a href="#" style={{ color: '#6F6B62', textDecoration: 'underline' }}>
+                <a href="#" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
                   Privacy Policy
                 </a>
                 . Withdraw any time at{' '}
-                <a href="#" style={{ color: '#6F6B62', textDecoration: 'underline' }}>
+                <a href="#" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
                   privacy@helloverify.com
                 </a>
                 .
@@ -161,9 +161,9 @@ export function Contact() {
       <div className="mob">
         <div style={{ padding: '0 12px' }}>
           {' '}
-          <div style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid #E3DFD6', background: '#FFFFFF' }}>
+          <div style={{ borderRadius: '24px', overflow: 'hidden', border: '1px solid var(--hair)', background: 'var(--white)' }}>
             {' '}
-            <div className="ph" style={{ height: '300px', background: '#6B6E5B' }}>
+            <div className="ph" style={{ height: '300px', background: tint("/img/23-closing.jpg") }}>
               {' '}
               <div className="light">
               </div>
@@ -171,7 +171,7 @@ export function Contact() {
               <div style={{ position: 'absolute', inset: '0', background: 'linear-gradient(to top, rgba(14,13,10,0.95) 0%, rgba(14,13,10,0.7) 32%, rgba(14,13,10,0.15) 70%, rgba(14,13,10,0) 100%)' }}>
               </div>
               {' '}
-              <div style={{ position: 'absolute', left: '22px', right: '22px', bottom: '22px', zIndex: '3', color: '#FFFFFF', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
+              <div style={{ position: 'absolute', left: '22px', right: '22px', bottom: '22px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
                 <h2 className="serif" style={{ margin: '0', fontSize: '36px', lineHeight: '1', letterSpacing: '-0.03em', fontWeight: '400' }}>
                   Every great journey deserves a{' '}
                   <em style={{ fontStyle: 'italic' }}>
@@ -232,7 +232,7 @@ export function Contact() {
                   </div>
                   <div className="inp">
                     <span>
-                      <span style={{ color: '#15140F' }}>
+                      <span style={{ color: 'var(--ink)' }}>
                         +91
                       </span>
                       {' '}· 98··· ·····
@@ -266,9 +266,9 @@ export function Contact() {
                 {' '}
               </div>
               {' '}
-              <p style={{ margin: '18px 0 0', fontSize: '12.5px', lineHeight: '1.5', color: '#6F6B62' }}>
+              <p style={{ margin: '18px 0 0', fontSize: '12.5px', lineHeight: '1.5', color: 'var(--muted)' }}>
                 By submitting, you consent to HelloVerify processing your data for lead generation, per our{' '}
-                <a href="#" style={{ color: '#6F6B62', textDecoration: 'underline' }}>
+                <a href="#" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
                   Privacy Policy
                 </a>
                 . Withdraw any time at privacy@helloverify.com.

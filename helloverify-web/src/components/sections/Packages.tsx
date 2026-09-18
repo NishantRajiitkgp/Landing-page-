@@ -1,5 +1,7 @@
 /** Packages, drawn as receipts. */
 
+import { Tick } from "@/components/brand/Tick";
+
 export function Packages() {
   return (
     <>
@@ -45,37 +47,25 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   PAN card
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Registration certificate
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Driving licence
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Criminal record
                 </span>
@@ -134,37 +124,25 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Education
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Employment
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Moonlighting
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Current address
                 </span>
@@ -223,28 +201,19 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Driving licence
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Criminal record
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Current address
                 </span>
@@ -299,37 +268,25 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Trade licence
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Defaulting directors
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Criminal records
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Credit{' '}
                   &amp;
@@ -390,37 +347,25 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Financial assessment
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   GST screening
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Credit checks
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Promoter criminal history
                 </span>
@@ -481,28 +426,19 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Application form filling
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Document pre-screening
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Primary source verification
                 </span>
@@ -575,37 +511,25 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   PAN card
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Registration certificate
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Driving licence
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Criminal record
                 </span>
@@ -659,28 +583,19 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Driving licence
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Criminal record
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Current address
                 </span>
@@ -730,37 +645,25 @@ export function Packages() {
               </div>
               {' '}
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Education
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Employment
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Moonlighting
                 </span>
               </div>
               <div className="ln">
-                <svg className="tick" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M3.5 8.5l3 3 6-7" stroke="#1B6B4A" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  </path>
-                </svg>
+                <Tick />
                 <span>
                   Current address
                 </span>

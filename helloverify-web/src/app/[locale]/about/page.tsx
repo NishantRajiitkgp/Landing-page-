@@ -55,8 +55,8 @@ export default async function AboutPage({
             className="rise"
             style={{
               display: "inline-flex", alignItems: "center", gap: 10, height: 38,
-              padding: "0 16px 0 14px", borderRadius: 999, background: "#FFFFFF",
-              border: "1px solid #E3DFD6", fontSize: 13, fontWeight: 500, color: "#3D3B35",
+              padding: "0 16px 0 14px", borderRadius: 999, background: "var(--white)",
+              border: "1px solid var(--hair)", fontSize: 13, fontWeight: 500, color: "var(--ink-soft)",
             }}
           >
             <span>Backed by</span>
