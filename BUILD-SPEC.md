@@ -138,7 +138,7 @@ The old codebase has **zero `: any`** (AUDIT D6). That discipline is the one thi
 
 ### 3.4 Internationalisation — `next-intl`
 
-**Chosen.** Built for App Router from the ground up; translations work in Server Components with no workarounds; middleware handles locale negotiation from one config; TypeScript knows every translation key. ~1.8M weekly downloads vs ~494k for `next-i18next`, and growing ~4× year on year.
+**Chosen.** Built for App Router from the ground up; translations work in Server Components with no workarounds; the proxy (`middleware.ts` was renamed `proxy.ts` in Next 16) handles locale negotiation from one config; TypeScript knows every translation key. ~1.8M weekly downloads vs ~494k for `next-i18next`, and growing ~4× year on year.
 
 **Rejected:** `react-i18next` (what the old site uses) — client-runtime-first, requires provider gymnastics in RSC, and would push translation loading back into the browser. `next-i18next` only gained App Router support in v16 (March 2026) and remains the smaller ecosystem for this router.
 
@@ -248,7 +248,7 @@ helloverify-web/
 ├── messages/  en.json  hi.json  ar.json
 ├── public/                             # only truly static files. NOT an image dump.
 ├── e2e/                                # Playwright
-├── middleware.ts                       # locale negotiation
+├── src/proxy.ts                        # locale negotiation (NOT middleware.ts — renamed in Next 16)
 ├── next.config.ts                      # redirects, headers, image config
 └── lighthouse-budget.json
 ```
@@ -314,8 +314,21 @@ The `/` → `/en` redirect is **307 (temporary)**, not 308: the response varies 
 
 All legacy redirects move from the dead `web.config` and from client-side `<Navigate>` into `next.config.ts` as real **308**s.
 
+> **CORRECTION (item 3, implemented).** The sketch below predates the audience-first IA and **every one of its targets points at a route that does not exist** — `/products/bgv-smb`, `/products/customer-kyc`, `/products/hellov`, `/products/immigration`, `/solutions/trade-authorities`. It is also incomplete: it lists 16 obsolete aliases and omits the ~20 pages that simply *moved*, which are the ones actually in the sitemap. Treat it as historical.
+>
+> The live contract is `src/lib/seo/legacy-urls.ts` (the table, with the provenance of every row) and `src/lib/seo/redirects.ts` (the emitter). **53 routes → 388 rules.** Targets follow `INFORMATION-ARCHITECTURE.md` §9, which supersedes this block wherever the two disagree — notably `/solutions` and `/products`, which go to `/governments` and `/business`, not to `/`.
+>
+> Four things this sketch does not account for, each of which produces a redirect chain if missed:
+>
+> 1. **`redirects` run before the proxy** (Next 16 pipeline step 2 vs 3), so every destination must be locale-prefixed and land on a real 200.
+> 2. **`/index.html` must be generated per rule**, not stripped generically. The one-line strip below turns `/en/smb/index.html` into `/en/smb` and only *then* into `/en/business/smb` — a chain on exactly the URLs AUDIT A2 says Google holds.
+> 3. **The indexed locale set is `en|hi|ar`; the served set is `en`.** 56 of the old sitemap's 84 URLs are `/hi` and `/ar`, and they consolidate onto English rather than 404ing. Pages that never moved (`/hi/about`) need a catch-all ordered after the specific rules and before the `/index.html` strip.
+> 4. **Trailing-slash forms cannot be one hop.** Next registers `/:path+/` with `priority: true`, so `/en/smb/` is 308 → 308. The only lever is `skipTrailingSlashRedirect`, which would serve both `/en/about` and `/en/about/` as 200 site-wide — the duplicate-content failure §6.1 forbids. Two 308s is the better trade and is asserted as such.
+>
+> Still open: `/support/track` has no destination (see `PENDING_DECISIONS`). The old site already contradicted itself there — `web.config` *and* `App.tsx` both sent it to `?tab=enquiry`, never `?tab=track`.
+
 ```ts
-// next.config.ts
+// Historical sketch — see the correction above. Targets here are dead routes.
 const LEGACY = [
   ['/smb',                         '/products/bgv-smb'],
   ['/kyc',                         '/products/customer-kyc'],
@@ -359,6 +372,8 @@ export default {
 ### 6.3 Verification
 
 A post-deploy CI job probes the live origin for every rule in §6.1 and every entry in §6.2, and **fails the release** on mismatch. This is the missing control from AUDIT G1 — the old pipeline verified `dist/`, never production.
+
+**Built:** `tools/seo/probe-redirects.mjs` (`npm run probe:redirects <origin>`). It takes an origin, so the same command gates a local build and a production deploy. **815 assertions**, and the one that matters most is hop *count*: every legacy URL must reach a 200 in one hop, because a chain is the specific failure the old site shipped. It also reads `.next/routes-manifest.json` when present, to check what Next actually registered rather than what the emitter meant to hand it. Two deviations are reported without failing — `/xx/about` returns 307→404 rather than a flat 404 (§7's to settle), and the seven cross-host rules assume `app.helloverify.com` resolves at cutover.
 
 ---
 
@@ -411,6 +426,20 @@ The old site sets `dir="rtl"` correctly but styles with physical properties, so 
 
 ### 8.1 Metadata
 
+> **CORRECTION (item 5, implemented).** The sketch below is right about the shape and wrong about two details, both of which were measured on the build output rather than argued. The live contract is `src/lib/seo/metadata.ts` (one helper, called by all 32 pages) and `tools/seo/check-sitemap.mjs` (which reads the emitted HTML and fails the build on a disagreement).
+>
+> 1. **`openGraph` must NOT be set per page.** Next merges metadata shallowly, so a page-level `openGraph` *replaces* the object the layout resolved — and `next/dist/lib/metadata/resolve-metadata.js#mergeStaticMetadata` attaches an `opengraph-image` file only to the segment that owns it, which is the layout. Setting `openGraph` exactly as sketched below removed `og:image` from all 56 prerendered pages at once. The trade is `og:url` against `og:image`, and `og:image` wins: every page here is reachable at exactly one URL (§6.1 — the alternatives 308), so a scraper's fetched URL already *is* the canonical, while a dead card is visible on every share. `og:title`/`og:description` auto-fill from the page title and description; `og:type`, `og:site_name`, `og:locale`, `og:image` and `twitter:card` inherit from the layout. All six are asserted per page.
+> 2. **The copy does not come from a `seo` translation namespace — yet.** Each page still states its own reviewed title and description and passes them to the helper. Centralising 32 pairs into a table is the right end state and is what the `getTranslations` call below implies, but it is a copy review, so it belongs with the locale work (§7), not with a canonical tag.
+>
+> Two things the sketch leaves implicit, both load-bearing:
+>
+> - **`generateMetadata` is handed no pathname**, so every page names its own route as a string — 32 chances to name the wrong one. That is guarded twice: the helper rejects a `path` that is not in the route manifest (a build error), and the checker asserts each emitted canonical equals *its own* URL, which is the half the helper cannot see because another page's route is still a valid manifest entry. Both guards were confirmed by breaking them on purpose.
+> - **Canonical and hreflang are built by the same `absoluteUrl(localePath(…))` calls `app/sitemap.ts` makes**, so §6.1's byte-identity rule holds by construction. Passing the relative form instead emits identical bytes (`metadataBase` resolves it) — absolute is for legibility and for a checker that can compare plain strings, not for the output.
+>
+> Cosmetic, but it costs an hour if you meet it cold: **Next writes `hrefLang="en"`, not `hreflang="en"`**, into the HTML, despite its own docs showing the lowercase form. Crawlers do not care — HTML attribute names are case-insensitive — but grepping the build output for `hreflang` finds nothing.
+>
+> §14.3's production contract test still stands: this gate proves the build is correct, not that the deployment is.
+
 ```ts
 // app/[locale]/[...]/page.tsx
 export async function generateMetadata({ params }): Promise<Metadata> {
@@ -436,7 +465,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
 `metadataBase: new URL('https://www.helloverify.com')` and a title template go in the root layout — everything else inherits.
 
-**Hreflang correctness rules** (all currently satisfied by the old site; do not regress):
+**Hreflang correctness rules** (all currently satisfied by the old site; do not regress — each is now asserted per page by `npm run check:sitemap`):
 - Absolute URLs with protocol and host. Relative `href` is invalid.
 - Trailing-slash form **identical** across canonical, hreflang and sitemap.
 - Every language version carries a **self-referencing** canonical. Never point `hi` and `ar` at the `en` page — that tells Google to ignore them.
@@ -447,6 +476,84 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 **Drop:** `<meta name="keywords">`.
 
 ### 8.2 Structured data
+
+> **CORRECTION (item 6, implemented).** The table below is right about which
+> nodes to emit and where. Three things in the surrounding prose are wrong, and
+> one instruction cannot be followed as written.
+>
+> 1. **`WithContext<Thing>` on the component prop does not make a malformed
+>    graph fail `tsc`.** `Thing` is the union of every schema.org type, and
+>    TypeScript's excess-property check fires only on a *fresh object literal at
+>    its assignment site*. Measured, four cases, transcripts in
+>    `tools/test/schema-types.md`: `foundingYear: "2018"` on a fresh literal
+>    typed `WithContext<Organization>` is an error; the same invented property
+>    on a non-fresh value assigned to `WithContext<Thing>` — which is exactly
+>    the shape the sketch below produces — type-checks clean. The strictness
+>    therefore lives in each builder's concrete return type
+>    (`src/lib/seo/schema/*.ts`), and the component prop stays loose because it
+>    has to render all six node kinds. Incidentally, `WithContext<T>` is a
+>    union, so one node cannot be derived from another by spreading
+>    (*TS2698*) — write a fresh literal.
+>
+> 2. **`JSON.stringify` alone is not safe in that `dangerouslySetInnerHTML`.**
+>    `<script type="application/ld+json">` is a raw text element: the HTML
+>    parser ends it at the first `</script` sequence, wherever that appears,
+>    including inside a JSON string, and does not decode entities. The
+>    serialiser escapes `<` as `\u003c` — legal JSON for the same character, so
+>    the graph is unchanged while the sequence never reaches the HTML parser.
+>    Nothing on the site triggers it today; `tools/test/json-ld.test.ts` covers
+>    it in 10 assertions, including that the unescaped form really does break.
+>
+> 3. **"Port from `StructuredData.tsx`" — done, from
+>    `D:\Projects\Application Frontend HV`.** (Item 6 shipped before that repo
+>    was available and re-derived the facts from `app/[locale]/about` and
+>    `src/lib/content/*`, omitting every field it could not evidence. Item 7
+>    completed the port.) `sameAs`, `telephone` and `email` are now real values
+>    from the old site rather than omissions.
+>
+>    **The old schema was wrong about the head office**, which is the reason to
+>    port facts rather than files: it says Mumbai (`StructuredData.tsx:45`),
+>    while its own `seo.ts:50` says "Founded in Noida" and its contact page says
+>    "India, New Delhi". Confirmed as **Noida** — so the JSON-LD running in
+>    production today names the wrong city. Two further conflicts settled the
+>    same way: **six** offices, not the four its contact page lists, and the
+>    LinkedIn `/company/` page, not the `/in/…` personal profile its footer
+>    links.
+>
+>    **Not ported: ISO/IEC 27701 and SOC 2.** The old `llms.txt` claims the
+>    first and the old `seo.ts` the second; neither appears on this site's
+>    reviewed `/about` credentials list, so both are omitted pending
+>    confirmation and `check-llms.mjs` fails the build if either reappears. An
+>    unevidenced certification claim is the worst kind of schema error for a
+>    compliance vendor. `logo` and `streetAddress` remain absent — the old
+>    repo's logo is an SVG at a path that does not exist here, and no street
+>    line exists in either repo.
+>
+> 4. **`BreadcrumbList` "on every page below depth 1" is emitted slightly wider
+>    and slightly narrower than that.** Wider: it comes from `PageShell`, so
+>    every page with a visible trail gets one, hubs included. Narrower: the
+>    eight `/legal/*` pages get none, because their middle rung (`Legal`) is not
+>    a page and Google requires `item` on every element but the last. 47 of 56.
+>
+> Two further decisions worth recording, both taken because the alternative
+> asserts something untrue:
+>
+> - **`Offer` carries no `price`.** Both package pages say on the page that
+>   their prices are placeholders pending commercial sign-off (IA §10.4). A
+>   visible caveat is a sentence a human reads; `"price": "349"` in JSON-LD is a
+>   machine-readable commercial claim an engine will quote without it.
+> - **`Service.areaServed` is the text `"120+ countries"`**, not the eight
+>   entries in `content/countries.ts` — which the coverage page itself describes
+>   as a subset. A short country list would let an engine answer "do you operate
+>   in Germany" with a confident no.
+>
+> Verified the way §8.1 was: `tools/seo/check-schema.mjs` parses the emitted
+> HTML and compares the graph against the page it describes, and the gate was
+> broken thirteen ways — ten caught by the gate, two caught only by `tsc` and
+> recorded as compiler catches rather than counted as coverage, one a
+> byte-identical no-op and documented as one. The FAQ lift that made
+> `FAQPage` derivable was held to byte-identical rendered markup across all 56
+> pages.
 
 JSON-LD renders **inside the page/layout component**, not in `generateMetadata`, and must be injected in a way React does not escape:
 
@@ -478,6 +585,33 @@ Note the January 2026 Google schema deprecations — do not implement `Q&A` or `
 
 ### 8.3 Generated SEO files
 
+> **CORRECTION (item 7, implemented).** `llms.txt` is now generated
+> (`src/lib/seo/llms.ts`, served by `src/app/llms.txt/route.ts`) and gated by
+> `tools/seo/check-llms.mjs`. Three notes on the instruction as written:
+>
+> 1. **"Port the hand-written content" — done.** The original is 75 lines at
+>    `D:\Projects\Application Frontend HV\public\llms.txt`. Its quotable
+>    definition, supporting paragraph, Company block, Core services, Trust &
+>    compliance and Optional blocks are all ported; only the page index is
+>    regenerated, which is exactly the split this section asks for. One sentence
+>    is deliberately dropped — "Public site locales: English (`/en`), Hindi
+>    (`/hi`), Arabic (`/ar`)" — because this site serves `en` only and those 56
+>    URLs currently 308 onto English. Advertising them to a crawler that handles
+>    redirects badly (§11a.1) would be AUDIT A2 in a new file.
+> 2. **"Regenerate route lists from the same manifest" required a copy table
+>    first.** The manifest holds paths, change frequencies and priorities and no
+>    copy; the 32 reviewed descriptions lived inside the page files. §8.1's own
+>    correction called centralising them "the right end state" and deferred it —
+>    item 7 forced it. `src/lib/seo/copy.ts` is that table, `pageMetadata` lost
+>    its `copy` argument, and the refactor was held to byte-identical rendered
+>    markup on all 56 pages.
+> 3. **A Route Handler needs `export const dynamic = "force-static"`.** Next 16
+>    does not cache them by default — its own docs,
+>    `next/dist/docs/01-app/01-getting-started/15-route-handlers.md:51`. Without
+>    it the file renders per request and never reaches the build output, so the
+>    gate has nothing to read. `check-llms.mjs` fails if the prerendered body is
+>    missing, which makes that a caught regression rather than a silent one.
+
 | Old | New |
 |---|---|
 | `scripts/generate-seo-files.mjs` (203 lines) | `app/sitemap.ts`, `app/robots.ts` — framework-native |
@@ -489,6 +623,22 @@ The sitemap derives from the same route source as `generateStaticParams`. **A pa
 
 ### 8.4 Referrer policy
 
+> **CORRECTION (item 7, implemented).** The instruction says "change from
+> `no-referrer`", but `next.config.ts` had **no `headers()` block at all** — so
+> this was adding the first one, not editing a value. It now sets
+> `Referrer-Policy: strict-origin-when-cross-origin` on `/:path*`, documents and
+> subresources alike.
+>
+> It is the only header set. §13's HSTS, CSP and frame-options each need their
+> own measurement — a CSP has to be built against the real script and style
+> inventory — and are left to their own item rather than guessed at here.
+>
+> **No build-output gate can verify this**, which is worth recording: reverting
+> the value passes `check:sitemap`, `check:schema` and `check:llms` untouched
+> (measured). The assertion lives in `npm run probe:redirects` against a running
+> origin, where reverting it fails 4 of 823 assertions — the same §14.3 argument
+> that a build being correct is not the deployment being correct.
+
 Change from `no-referrer` to **`strict-origin-when-cross-origin`** (AUDIT C2). The current setting silently degrades first-party attribution and partner referral tracking.
 
 ---
@@ -496,6 +646,26 @@ Change from `no-referrer` to **`strict-origin-when-cross-origin`** (AUDIT C2). T
 ## 9. Performance
 
 ### 9.1 Budgets — enforced in CI, not aspirational
+
+> **CORRECTION (item 8, implemented).** The budgets are now measured on every
+> build by `tools/perf/check-budgets.mjs` (`npm run check:perf`). Three things
+> about the sketch above:
+>
+> 1. **`lhci autorun` on a preview deployment is not possible here** — this repo
+>    has no CI and no preview deployment. It also conflates two different kinds
+>    of check. `resourceSizes` and `resourceCounts` are properties of the BUILD:
+>    deterministic, no browser needed, measured today. `timings` (LCP, CLS, TBT)
+>    are properties of a DEPLOYMENT and belong with §14.3, for exactly the reason
+>    §14.3 exists — a build being correct is not the deployment being correct.
+> 2. **One `"path": "/*"` entry is not enough.** This site has 56 routes of very
+>    different weight; a per-page budget is only met if the WORST page meets it,
+>    so all 56 are measured and the worst is reported per metric.
+> 3. **Two of the five numbers are not met, and one may not be reachable.**
+>    Measured, brotli: script 159.7 KB against 120, font 241.9 KB against 60.
+>    Total is met at 445.7 KB against 500 (it was 528.7 KB before item 8). The
+>    gate therefore runs two tiers — §9.1 as the reported target, and a measured
+>    ceiling as the enforced one — because a gate pinned to an unreachable number
+>    gets switched off or gets the number quietly raised.
 
 ```jsonc
 // lighthouse-budget.json
@@ -532,6 +702,23 @@ Change from `no-referrer` to **`strict-origin-when-cross-origin`** (AUDIT C2). T
 
 ### 9.2 Images
 
+> **CORRECTION (item 8).** Two claims here do not survive measurement:
+>
+> - **"`priority` + `fetchpriority="high"` on the LCP image of every page."**
+>   Measured across all 56 prerendered pages: the `<h1>` precedes the first
+>   `<img>` on **every one of them**. The LCP element on this design is text, so
+>   there is no LCP image to prioritise, and adding `priority` broadly would
+>   preload non-LCP images and make things worse. Separately, Next 16.3.5's
+>   `priority` emits `<link rel="preload" as="image">` and drops
+>   `loading="lazy"`, but does not add `fetchpriority="high"` to the `<img>`.
+> - **"No raw `<img>` — lint rule."** True today (zero across 24 files using
+>   `next/image`) and now enforced, but by `check-budgets.mjs` rather than a
+>   linter, since none is wired up and the rule is one grep.
+>
+> Image WEIGHT is still unmeasured by any gate: the optimizer generates
+> `/_next/image?url=…` variants at request time, so they are not in the build
+> output to weigh. That budget belongs with the timings, against a running origin.
+
 - **`next/image` everywhere.** No raw `<img>` in components — lint rule.
 - Automatic **AVIF → WebP → original** negotiation. Sharp compression alone typically cuts 40–70%; format conversion adds another 25–35%, for a combined **60–80% reduction** against the current PNGs.
 - `priority` + `fetchpriority="high"` on the LCP image of every page. Currently **zero** images on the site carry it (AUDIT B5).
@@ -543,6 +730,23 @@ Change from `no-referrer` to **`strict-origin-when-cross-origin`** (AUDIT C2). T
 **One-time migration task:** re-encode all 155 PNG/JPG source images. The 3 MB and 1.8 MB PNGs must not survive the move.
 
 ### 9.3 Fonts
+
+> **CORRECTION (item 8, implemented).** The fonts are now self-hosted and
+> subset: `npm run build:fonts` (`tools/perf/subset-fonts.mjs`) takes a census of
+> the 133 characters the 56 pages actually render and cuts the faces to it, then
+> `next/font/local` serves them. **324.1 KB -> 241.9 KB**, no visual change —
+> both of Newsreader's variable axes survive a harfbuzz subset.
+>
+> **"Maximum two families" is not met: the design ships three** (Newsreader,
+> Instrument Sans, Geist Mono), and that is why 60 KB is out of reach. Measured
+> on Newsreader roman, glyph-subset: 82 KB with both axes, 35 KB with `opsz`
+> pinned, 23 KB with `opsz` pinned and `wght` narrowed, 13 KB fully static. The
+> serif runs 15px to 176px, so `font-optical-sizing` is doing visible work and
+> pinning it is a DESIGN.md decision rather than a build step. Even fully
+> instanced, three families land near 90 KB.
+>
+> `subsets: ["latin"]` was the trap: it sounds like subsetting and is not — it
+> is ~200 glyphs of Google's choosing, against the ~130 this site renders.
 
 - `next/font/local` with **self-hosted variable WOFF2**, subset to the glyphs actually used per script (Latin / Devanagari / Arabic).
 - **Maximum two families.** The old site loads four across 14 weights (AUDIT B3).
@@ -723,6 +927,37 @@ Classical rank tracking will not show this. Required from day one:
 
 ## 12. Accessibility — a procurement requirement
 
+> **CORRECTION (item 10, implemented).** The gate is
+> `helloverify-web/tools/a11y/check-axe.mjs` plus `check-contrast.mjs`, both in
+> `npm run check:all`. **Zero critical or serious violations across all 56
+> pages**, down from 56 serious and 518 advisory. Four notes:
+>
+> 1. **axe runs in jsdom, not Playwright.** Same axe-core ruleset, same engine,
+>    no browser — the §14.3 argument again: a check needing a 200 MB download is
+>    a check that gets skipped. Three rules cannot run without layout and are
+>    named in the output: `color-contrast`, `target-size`, and
+>    `scrollable-region-focusable`.
+> 2. **Contrast is computed from the tokens, which is stricter than axe.** axe
+>    samples rendered pixels and skips text whose background it cannot resolve —
+>    gradients, photographs, scrims, all of which this design uses heavily. A
+>    token table has no such gaps. `#007AFF` is gone and its return fails the
+>    build.
+> 3. **The table's "Known live failure" is now `--faint`, not `#007AFF`.** It
+>    measures **2.43:1** — worse than the 4.02:1 this section flags — and is used
+>    as text in 40 selectors at 10.5–12px. The lightest passing value is 1.06:1
+>    from `--muted`, i.e. indistinguishable, so the third text tier is not
+>    achievable at AA on this paper. That is a DESIGN.md decision and is carried
+>    as an explicit, measured exception rather than silently changed.
+> 4. **The canvas shipped no focus style, no skip link and no
+>    `prefers-reduced-motion`** — none of which is visible in a static mockup, so
+>    none survived the port. All three are now in `globals.css`, deliberately not
+>    in the generated `design.css`/`pages.css`.
+>
+> Still open, and all needing a real browser or real Arabic copy: the manual
+> keyboard and screen-reader pass, `target-size` (2.5.8), and RTL — 165 physical
+> CSS properties in `design.css` and 32 in `pages.css`, which must be fixed in
+> `tools/port/build-css.py` rather than in its output.
+
 Not a quality preference. A contractual one.
 
 - EAA enforcement active since **28 June 2025**
@@ -750,11 +985,57 @@ HelloVerify sells to ministries. **An accessibility conformance statement is a s
 
 ---
 
+> **RTL (item 10, implemented).** 192 physical inline declarations converted to
+> logical across `design.css` and `pages.css` by
+> `tools/port/logical-css.py`, and enforced by `npm run check:logical` — the
+> lint rule §14.2 asks for, living with the build gates because there is no
+> ESLint and this is a CSS concern ESLint would not see.
+>
+> Two scoping decisions, both measured: **only the inline axis** is converted
+> (RTL does not flip block, so the 156 `margin-top`-style declarations are
+> already correct), and **paint positioning is left alone** (six values that
+> place artwork rather than layout).
+>
+> Note for §4: **`tools/port/build-css.py` cannot run in this tree** —
+> `design-src/artboards/` is not checked in — so `design.css` is maintained in
+> place despite its generated-file header, and re-running the generator would
+> undo this conversion. `check:logical` catches that.
+
 ## 13. Security
+
+> **CORRECTION (item 11, implemented).** All of §13's headers are set in one
+> `headers()` in `next.config.ts`, and `npm run contract` asserts them against a
+> running origin (27 assertions). One row of the table cannot be implemented as
+> written.
+>
+> **"CSP with nonce — generated per request in `proxy.ts`" is incompatible with
+> §5 and §17.** Next's own documentation
+> (`docs/01-app/02-guides/content-security-policy.md:181`): *"To use a nonce,
+> your page must be dynamically rendered. … Static pages are generated at build
+> time, when no request or response headers exist — so no nonce can be
+> injected."* This site is 56 statically prerendered pages because §5 says so,
+> §17 requires zero dynamic routes, and all ten build-output gates read that
+> prerendered HTML. A nonce would make every page dynamic and blind every gate,
+> to remove `'unsafe-inline'` from a site with zero third-party scripts and no
+> inline handlers of its own.
+>
+> So `script-src 'unsafe-inline'` remains and §17's box stays open, reported as
+> a named deviation by the contract suite. The two routes to closing it —
+> post-build hash injection, or accepting dynamic rendering — are written up in
+> `helloverify-web/README.md`.
+>
+> **`style-src` needed no such compromise.** The build emits exactly two inline
+> `<style>` blocks (Next's `/_not-found` and `/_global-error`), so both are
+> `sha256-` pinned and `npm run check:csp` fails if a Next upgrade changes them.
+>
+> **Dependency scanning found one high-severity advisory** in `sharp`; upgraded
+> across a semver major to 0.35.4 with the logo and image optimiser verified.
+> `npm audit` is now clean. The pre-commit hook and Dependabot rows are repo
+> configuration and are not set up.
 
 | Control | Implementation | Fixes |
 |---|---|---|
-| **CSP with nonce** | Generated per request in `middleware.ts`, removes `'unsafe-inline'` from `script-src` | AUDIT E2 |
+| **CSP with nonce** | Generated per request in `proxy.ts` (renamed from `middleware.ts` in Next 16), removes `'unsafe-inline'` from `script-src` | AUDIT E2 |
 | **Single CSP source** | Defined once in `next.config.ts` `headers()`. No duplicated copies. | AUDIT E3 |
 | **No client secrets** | `server-only` on every integration module; CI greps the build output for known secret patterns | AUDIT E1 |
 | **Referrer-Policy** | `strict-origin-when-cross-origin` | AUDIT C2 |
@@ -773,6 +1054,29 @@ HelloVerify sells to ministries. **An accessibility conformance statement is a s
 ## 14. Testing and CI/CD
 
 ### 14.1 Test strategy
+
+> **CORRECTION (item 9, implemented).** The PR pipeline is
+> `.github/workflows/ci.yml`; §14.3's suite is
+> `helloverify-web/tools/ci/production-contract.mjs`. Four notes:
+>
+> 1. **§14.3 does not need Playwright.** Every assertion it lists is an HTTP
+>    request and a header or status check — no DOM. It is plain `fetch`, sharing
+>    the redirect probe's assertion helpers. Playwright earns its place for
+>    §14.1's E2E and page-a11y rows, which is §12's work.
+> 2. **A build is not a deployment, and the suite knows.** Against `localhost`
+>    the apex-redirect and `immutable`-cache assertions degrade to warnings,
+>    decided from the URL rather than a flag. The CSP assertion warns too, and
+>    becomes a hard check when §13 lands.
+> 3. **"Assert: 0 dynamic routes" needs to be exact.** A floor does not work: a
+>    mutation adding `await headers()` to one page took the prerendered count
+>    from 64 to 63 and passed a `< 50` check. `tools/ci/assert-static.mjs` now
+>    compares against `allRoutes()` × locales and names the route that dropped
+>    out. Note that `/[locale]/opengraph-image` legitimately carries
+>    `fallback: null` — measured, `/xx/opengraph-image` answers 307 from the
+>    proxy, not an on-demand render — so metadata conventions are excluded.
+> 4. **The pipeline does not deploy.** §14.4's automated deploy needs GCP
+>    credentials and the Cloud Run service; shipping a job that cannot
+>    authenticate would repeat AUDIT G2 rather than fix it.
 
 | Layer | Tool | Scope |
 |---|---|---|
