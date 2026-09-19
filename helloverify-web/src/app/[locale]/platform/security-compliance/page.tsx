@@ -16,6 +16,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 export async function generateMetadata({
   params,
@@ -171,28 +172,14 @@ export default async function SecurityCompliancePage({
           Every verification handles the most sensitive documents a person owns. These are the
           controls that apply to all of them, on every plan.
         </SecHead>
-        <div className="body3 steps3">
-          <div>
-            <div className="n">01 · Lawful basis</div>
-            <div className="t">Consent first</div>
-            <p className="p">The person being verified consents on their own device before capture, per verification — not once, forever.</p>
-          </div>
-          <div>
-            <div className="n">02 · In transit &amp; at rest</div>
-            <div className="t">Encrypted</div>
-            <p className="p">TLS in transit, encryption at rest, keys managed separately from the data they protect.</p>
-          </div>
-          <div>
-            <div className="n">03 · Access</div>
-            <div className="t">Least privilege</div>
-            <p className="p">Role-based access, scoped to the verification being worked on, with an audit log per access.</p>
-          </div>
-          <div>
-            <div className="n">04 · Retention</div>
-            <div className="t">Bounded, then gone</div>
-            <p className="p">Documents deleted on the schedule in your DPA. Zero-retention available where you hold the files.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · Lawful basis", t: "Consent first", p: "The person being verified consents on their own device before capture, per verification — not once, forever." },
+          { n: "02 · In transit & at rest", t: "Encrypted", p: "TLS in transit, encryption at rest, keys managed separately from the data they protect." },
+          { n: "03 · Access", t: "Least privilege", p: "Role-based access, scoped to the verification being worked on, with an audit log per access." },
+          { n: "04 · Retention", t: "Bounded, then gone", p: "Documents deleted on the schedule in your DPA. Zero-retention available where you hold the files." },
+          ]}
+        />
       </div>
 
       {/* residency & sub-processors */}

@@ -8,6 +8,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 export async function generateMetadata({
   params,
@@ -140,23 +141,13 @@ export default async function IndividualsHub({
         <SecHead k="How it works" h={<>Three steps,<br />one chat.</>}>
           No app, no account, no forms. If you can send a photo on WhatsApp, you can run a check.
         </SecHead>
-        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-          <div>
-            <div className="n">01 · You</div>
-            <div className="t">Send a photo</div>
-            <p className="p">Message HelloV on WhatsApp and photograph the person's document. They consent on their own phone.</p>
-          </div>
-          <div>
-            <div className="n">02 · Us</div>
-            <div className="t">We check the source</div>
-            <p className="p">Not a database of copies — the transport authority, the court, the registry that issued it.</p>
-          </div>
-          <div>
-            <div className="n">03 · The chat</div>
-            <div className="t">The report</div>
-            <p className="p">A plain-language result with the source named, back in the same conversation.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · You", t: "Send a photo", p: "Message HelloV on WhatsApp and photograph the person's document. They consent on their own phone." },
+          { n: "02 · Us", t: "We check the source", p: "Not a database of copies — the transport authority, the court, the registry that issued it." },
+          { n: "03 · The chat", t: "The report", p: "A plain-language result with the source named, back in the same conversation." },
+          ]}
+        />
       </div>
 
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>

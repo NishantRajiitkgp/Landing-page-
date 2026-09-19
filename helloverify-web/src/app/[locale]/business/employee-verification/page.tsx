@@ -11,6 +11,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -168,23 +169,13 @@ export default async function EmployeeVerificationPage({
           Employees consent once on their own phone; after that, refreshes run without
           interrupting anyone's day.
         </SecHead>
-        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-          <div>
-            <div className="n">01 · One CSV or API call</div>
-            <div className="t">Enroll</div>
-            <p className="p">Upload the roster or sync from your HRMS. Each employee gets a consent link.</p>
-          </div>
-          <div>
-            <div className="n">02 · On schedule</div>
-            <div className="t">Verify</div>
-            <p className="p">Checks run digitally against provident-fund, court and registry records. Humans handle the exceptions.</p>
-          </div>
-          <div>
-            <div className="n">03 · Only the changes</div>
-            <div className="t">Alert</div>
-            <p className="p">You hear about the deltas — a new court record, a second employer — not five hundred clean results.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · One CSV or API call", t: "Enroll", p: "Upload the roster or sync from your HRMS. Each employee gets a consent link." },
+          { n: "02 · On schedule", t: "Verify", p: "Checks run digitally against provident-fund, court and registry records. Humans handle the exceptions." },
+          { n: "03 · Only the changes", t: "Alert", p: "You hear about the deltas — a new court record, a second employer — not five hundred clean results." },
+          ]}
+        />
       </div>
 
       {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}

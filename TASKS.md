@@ -184,9 +184,9 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **8 of 9 done**
+## Part 5 — Split the oversized components · **10 of 11 done**
 
-§4 rule 2 and §17 condition 22. **4 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **2 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
@@ -194,8 +194,6 @@ places in signed-off copy for zero rendered difference.
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
 | `ContactForm.tsx` | 328 | — no repeat; a genuine split |
-| `security-compliance/page.tsx` | 334 | — |
-| `enterprise/page.tsx` | 334 | — |
 | ~~`PeopleStrip.tsx`~~ | ~~684~~ → **209** | **done** |
 | ~~`Packages.tsx`~~ | ~~712~~ → **294** | **done** |
 | ~~`International.tsx`~~ | ~~778~~ → **285** | **done** |
@@ -204,6 +202,8 @@ places in signed-off copy for zero rendered difference.
 | ~~`Checks.tsx`~~ | ~~520~~ → **265** | **done** |
 | ~~`WhoItsFor.tsx`~~ | ~~324~~ → **198** | **done** |
 | ~~`Why.tsx`~~ | ~~328~~ → **155** | **done** |
+| ~~`enterprise/page.tsx`~~ | ~~334~~ → **293** | **done** |
+| ~~`security-compliance/page.tsx`~~ | ~~334~~ → **291** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
@@ -320,6 +320,37 @@ Neither would have survived a screenshot, and neither was visible in review.
   eight files changed nothing at all in length and were still caught, which is
   the argument against ever gating these on file size.
 
+**The two page files were long because of repetition OUTSIDE them.** TASKS
+recorded "no repeat" for both, and that was wrong — the repetition was
+cross-file, so counting within a file could not see it. Three shared components
+came out of them and shortened seventeen other files on the way:
+
+| component | copies | in | removed |
+|---|---:|---:|---:|
+| `chrome/SecHead.tsx` | 47 | 17 files | 232 lines |
+| `chrome/Steps.tsx` | 41 cards, 12 blocks | 12 files | ~120 lines |
+| `brand/Arrow.tsx` | 19 | 17 files | — |
+
+`Steps` already existed inside `templates/VerticalPage.tsx`, driving the six
+vertical pages from data; twelve pages not built on that template had
+hand-written the same five-line card 41 times. It is now one module and
+`VerticalPage` imports it. **Grep the templates as well as the components**
+before writing a new one — that is the second time a unit already existed.
+
+**Two codemod bugs, both caught, both worth not repeating:**
+
+- **`.*?` under `re.S` spans lines.** The first `SecHead` codemod matched from
+  one block through to a *later* block's `<h2>` and rewrote everything between.
+  `tsc` caught it; a luckier mis-match would have compiled. Groups must be
+  `[^
+]*?` unless the field genuinely spans lines. The same bug was in the
+  census regex, which is why the count was first reported as 49 and is 47.
+- **JSX text is not a JS string.** The JSX parser decodes entities in text
+  children, so `&amp;` there is one character; moved verbatim into a JS string
+  it is five, and React escapes the `&` again and emits `&amp;amp;`. Three
+  pages, caught by the byte check and by nothing else. Decode with
+  `html.unescape` when lifting JSX text into data.
+
 **Carried findings:**
 
 - ~~**`WhoItsFor.tsx`'s mobile block renders no photographs.**~~ **Fixed**, in
@@ -345,6 +376,27 @@ Neither would have survived a screenshot, and neither was visible in review.
   and `check:perf` measures the total without questioning what is in it. The fix
   is to restrict Tailwind's source globs to `src/`; it is not in the refactor
   commit because it is a build-config change, not a split.
+- **Six arrow SVGs carry no `aria-hidden`.** They are otherwise identical to
+  the 19 that `brand/Arrow.tsx` now owns. A decorative SVG with no label and no
+  `aria-hidden` is announced as an unnamed graphic, so this is an accessibility
+  defect rather than a formatting one and wants its own commit. `check:a11y`
+  does not catch it — jsdom axe has no rule that fires here — which is worth
+  knowing on its own.
+- **The same check has three different turnaround times across the site.**
+  `lib/content/checks.ts` is the canonical catalogue behind `/checks/[check]`,
+  and two other places restate it: `sections/Checks.tsx` and
+  `business/enterprise/page.tsx`. Measured disagreements — Directors & GST is
+  3 days in the catalogue and on enterprise but **2 days** on the homepage;
+  Registration certificate is 30 min on the homepage and **60 min** on
+  enterprise; Entitlement to work is 24 hrs and slow on the homepage but
+  **60 min and fast** on enterprise. Two of those are not in the catalogue at
+  all. This needs an answer before the three can be driven from one list, and
+  the homepage currently contradicts a page on the same site.
+- **`.cert` cards are written out 28 times across 9 files**, and only
+  `security-compliance` drives them from an array. They are NOT all the same:
+  the ISO 27001 logo carries five different headings and GDPR four, so this is
+  not a lift-and-share like `SecHead`. It also touches the credentials surface
+  that Part 2b is blocked on, so it waits for 2b.
 - **`hv/no-color-literal` only matches hex.** `rgba(255,255,255,0.4)` in a style
   prop slips through — found in PeopleStrip's live card. Worth extending the
   rule to `rgb()`/`rgba()`/`hsl()` when convenient.
