@@ -184,9 +184,9 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **1 of 9 done**
+## Part 5 — Split the oversized components · **2 of 9 done**
 
-§4 rule 2 and §17 condition 22. **11 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **10 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
@@ -194,7 +194,6 @@ places in signed-off copy for zero rendered difference.
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
 | `International.tsx` | 778 | 10 country cards |
-| `Packages.tsx` | 712 | 9 receipt cards, 33 lines |
 | `Consumer.tsx` | 610 | 16 service rows |
 | `Presence.tsx` | 532 | 20 flags, 12 rows |
 | `Checks.tsx` | 520 | 17 product rows |
@@ -204,12 +203,20 @@ places in signed-off copy for zero rendered difference.
 | `security-compliance/page.tsx` | 334 | — |
 | `enterprise/page.tsx` | 334 | — |
 | ~~`PeopleStrip.tsx`~~ | ~~684~~ → **209** | **done** |
+| ~~`Packages.tsx`~~ | ~~712~~ → **294** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
 `PACKS` and what `components/brand/Tick.tsx` did in Part 3. Each file also holds
-a `.dsk` and a `.mob` block, which are NOT the same markup: the copy differs
-between breakpoints, so they stay as separate lists.
+a `.dsk` and a `.mob` block, which are NOT the same markup.
+
+**Whether the two breakpoints share one list is a per-file measurement, not a
+rule.** PeopleStrip's copy genuinely differed ("Driving licence · 30 min" vs
+"Licence · 30 min"), so folding its lists would have meant inventing a shared
+string, and they stayed apart. Packages measured the other way: all seven fields
+of all three mobile cards were byte-identical to their desktop counterparts, and
+only the order and the subset differed, so two lists would have been two copies
+of the same words. Check before deciding; do not assume either shape.
 
 **Do not batch these.** PeopleStrip alone produced two regressions that only the
 byte-identity check caught:
@@ -231,8 +238,27 @@ Neither would have survived a screenshot, and neither was visible in review.
 3. Account for everything *outside* the repeated run, which is where both
    regressions above came from.
 4. Snapshot `.next/server/app`, rewrite, rebuild, and require **byte-identical**
-   HTML on all 56 pages. This is the one part where byte-identity IS the right
+   markup on all 58 pages — `tools/port/html-identity.mjs snapshot|compare`,
+   written for this part. This is the one part where byte-identity IS the right
    test: a split changes no values.
+
+   Three things that harness had to learn, all by being broken:
+
+   - **Normalise the build id.** Next mints a fresh one per build and embeds it
+     in every page; without that substitution all 58 files differ and the check
+     reports nothing.
+   - **The flight payload cannot be held identical, and is reported separately.**
+     `.map()` gives every child a `key` where a hand-written sibling has none, so
+     the serialised React tree moves even when the markup does not — measured on
+     Packages: identical markup on all 58 pages, 11 fewer shared rows and +268
+     bytes of payload on the homepage. It still fails the run unless
+     `--allow-payload` says the deviation was expected, because a moved payload
+     is the only signal left that the tree changed shape invisibly.
+   - **The stylesheet hash is its own finding.** Tailwind generates from the
+     classes it finds, so dropping one `className` renames `chunks/*.css`, which
+     appears in the `<link>` of every page — 58 near-identical diffs hiding the
+     one real one. It is now reported once, and is fatal: a pure split changes no
+     classes.
 
 **Carried findings:**
 
@@ -243,6 +269,16 @@ Neither would have survived a screenshot, and neither was visible in review.
   `animation` name and dash offset, so they are individually drawn rather than
   repeats of `<Tick>`. Decide there whether they become one component taking a
   delay.
+- **Tailwind v4 scans `tools/`, so a word in a build script ships CSS.** The
+  new harness used the bare word for the CSS property between `border` and
+  `box-shadow` in a comment; Tailwind's extractor read it as a candidate and
+  generated a real 165-byte `.outline` rule into `chunks/*.css` on every page,
+  moving the chunk hash. Measured by removing the file and rebuilding: 122,086
+  bytes back to 121,921. The comment was reworded, but the exposure is general —
+  every script in `tools/` that quotes markup is a source of phantom utilities,
+  and `check:perf` measures the total without questioning what is in it. The fix
+  is to restrict Tailwind's source globs to `src/`; it is not in the refactor
+  commit because it is a build-config change, not a split.
 - **`hv/no-color-literal` only matches hex.** `rgba(255,255,255,0.4)` in a style
   prop slips through — found in PeopleStrip's live card. Worth extending the
   rule to `rgb()`/`rgba()`/`hsl()` when convenient.
