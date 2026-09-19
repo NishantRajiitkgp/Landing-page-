@@ -184,16 +184,15 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **2 of 9 done**
+## Part 5 — Split the oversized components · **3 of 9 done**
 
-§4 rule 2 and §17 condition 22. **10 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **9 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
 | file | lines | the repeat |
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
-| `International.tsx` | 778 | 10 country cards |
 | `Consumer.tsx` | 610 | 16 service rows |
 | `Presence.tsx` | 532 | 20 flags, 12 rows |
 | `Checks.tsx` | 520 | 17 product rows |
@@ -204,6 +203,7 @@ places in signed-off copy for zero rendered difference.
 | `enterprise/page.tsx` | 334 | — |
 | ~~`PeopleStrip.tsx`~~ | ~~684~~ → **209** | **done** |
 | ~~`Packages.tsx`~~ | ~~712~~ → **294** | **done** |
+| ~~`International.tsx`~~ | ~~778~~ → **285** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
@@ -216,7 +216,16 @@ rule.** PeopleStrip's copy genuinely differed ("Driving licence · 30 min" vs
 string, and they stayed apart. Packages measured the other way: all seven fields
 of all three mobile cards were byte-identical to their desktop counterparts, and
 only the order and the subset differed, so two lists would have been two copies
-of the same words. Check before deciding; do not assume either shape.
+of the same words. International measured the same way — same five countries,
+same order, flags equal character for character. Check before deciding; do not
+assume either shape.
+
+**Two files in, the first draft has landed byte-identical once and wrong once.**
+Packages needed a second pass (`{n} checks` emitting nine `<!-- -->`
+separators); International passed on the first build. The difference was that
+International's fields were extracted with a script that printed a table of all
+ten cards, so the desktop/mobile comparison was a diff rather than a reading.
+Do that first on the remaining files.
 
 **Do not batch these.** PeopleStrip alone produced two regressions that only the
 byte-identity check caught:
