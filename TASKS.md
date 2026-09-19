@@ -184,16 +184,15 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **5 of 9 done**
+## Part 5 — Split the oversized components · **6 of 9 done**
 
-§4 rule 2 and §17 condition 22. **7 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **6 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
 | file | lines | the repeat |
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
-| `Checks.tsx` | 520 | 17 product rows |
 | `Why.tsx` | 328 | 10 reason rows |
 | `WhoItsFor.tsx` | 324 | 12 cells |
 | `ContactForm.tsx` | 328 | — no repeat; a genuine split |
@@ -204,6 +203,7 @@ places in signed-off copy for zero rendered difference.
 | ~~`International.tsx`~~ | ~~778~~ → **285** | **done** |
 | ~~`Consumer.tsx`~~ | ~~610~~ → **241** | **done** |
 | ~~`Presence.tsx`~~ | ~~532~~ → **298** | **done** |
+| ~~`Checks.tsx`~~ | ~~520~~ → **265** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
@@ -238,6 +238,19 @@ component. `Presence.tsx` is the counter-example that makes this a check
 rather than a rule: its five flags look like `International.tsx`'s, and they are
 not — the same countries are drawn for different boxes, so only Egypt matches.
 Diff before sharing.
+
+**When the two views disagree on order, reference by id rather than picking
+one.** `Checks.tsx` draws the same 17 checks as a desktop timeline and three
+mobile buckets, and neither order derives from the other — mobile's slow bucket
+is lane order, its fast bucket is position order. Each view now lists the ids it
+shows, so both orders are explicit and no name is written twice. A no-op
+mutation confirmed it: reordering the check records themselves changes nothing,
+because the views name their own order.
+
+**An array whose last child is a text node costs 8 bytes.** React emits a
+`<!-- -->` after it for hydration, so a `{" "}` that trailed each mapped item
+has to sit outside the `.map()` instead. Measured on `Checks.tsx`; the same
+shape is why `PeopleStrip.tsx`'s `Track` is written `{...map}{" "}`.
 
 **Do not batch these.** PeopleStrip alone produced two regressions that only the
 byte-identity check caught:
