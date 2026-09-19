@@ -184,9 +184,9 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **6 of 9 done**
+## Part 5 — Split the oversized components · **7 of 9 done**
 
-§4 rule 2 and §17 condition 22. **6 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **5 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
@@ -194,7 +194,6 @@ places in signed-off copy for zero rendered difference.
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
 | `Why.tsx` | 328 | 10 reason rows |
-| `WhoItsFor.tsx` | 324 | 12 cells |
 | `ContactForm.tsx` | 328 | — no repeat; a genuine split |
 | `security-compliance/page.tsx` | 334 | — |
 | `enterprise/page.tsx` | 334 | — |
@@ -204,6 +203,7 @@ places in signed-off copy for zero rendered difference.
 | ~~`Consumer.tsx`~~ | ~~610~~ → **241** | **done** |
 | ~~`Presence.tsx`~~ | ~~532~~ → **298** | **done** |
 | ~~`Checks.tsx`~~ | ~~520~~ → **265** | **done** |
+| ~~`WhoItsFor.tsx`~~ | ~~324~~ → **198** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
@@ -251,6 +251,15 @@ because the views name their own order.
 `<!-- -->` after it for hydration, so a `{" "}` that trailed each mapped item
 has to sit outside the `.map()` instead. Measured on `Checks.tsx`; the same
 shape is why `PeopleStrip.tsx`'s `Track` is written `{...map}{" "}`.
+
+**A behaviour fix in one of these files is its own commit.** The extraction is
+gated on byte-identical output; a fix changes the output, so the two cannot be
+verified by the same run. Sequence them: extract, prove identity, commit, then
+fix and show that the diff is exactly the intended change and nothing else. On
+`WhoItsFor.tsx` the fix was applied as a mutation first, caught at +4,087 bytes,
+which is the evidence for splitting rather than an argument for it — and the fix
+commit's own diff was six `<img>` elements added and zero tokens removed,
+checked element by element.
 
 **Do not batch these.** PeopleStrip alone produced two regressions that only the
 byte-identity check caught:
@@ -302,9 +311,15 @@ Neither would have survived a screenshot, and neither was visible in review.
 
 **Carried findings:**
 
-- **`WhoItsFor.tsx`'s mobile block renders no photographs.** Desktop has six
-  cells with six images; `.mob` repeats the cells with the same tints and zero
-  `<Image>`. Fix it while that file is open.
+- ~~**`WhoItsFor.tsx`'s mobile block renders no photographs.**~~ **Fixed**, in
+  its own commit after the extraction. That it was a defect and not a choice was
+  settled from `design.css`, not from taste: the `max-width: 1080px` block
+  already defines `.pimg` and already carries `.ph:has(.pimg) .light
+  { display: none }`, and `SIZES_BENTO_NARROW` opens with a
+  `(max-width: 1080px) 90vw` clause — complete support for an image never
+  rendered. The same rule set also settled what NOT to add: `.ph:has(.pimg)
+  .note { display: none }` means the caption is the placeholder shown *instead
+  of* a photograph, so mobile did not get one.
 - **`HowItWorks.tsx` holds the last 18 inline ticks**, each with a unique
   `animation` name and dash offset, so they are individually drawn rather than
   repeats of `<Tick>`. Decide there whether they become one component taking a
