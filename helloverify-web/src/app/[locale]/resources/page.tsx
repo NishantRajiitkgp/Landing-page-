@@ -6,6 +6,7 @@ import { CHECKS } from "@/lib/content/checks";
 import { COUNTRIES } from "@/lib/content/countries";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -74,15 +75,9 @@ export default async function ResourcesHub({
       </div>
 
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Writing</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>From the blog.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Occasional, specific, and written by people who run these checks rather than a content team.
-          </p>
-        </div>
+        <SecHead k="Writing" h="From the blog.">
+          Occasional, specific, and written by people who run these checks rather than a content team.
+        </SecHead>
         <div className="body3 rcard3">
           <AppLink href="/resources/blog/primary-source-vs-database">
             <div className="rk">Verification · 6 min</div>

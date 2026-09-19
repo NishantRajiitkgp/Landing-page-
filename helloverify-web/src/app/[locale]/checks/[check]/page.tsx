@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/chrome/PageShell";
 import { CHECKS, getCheck } from "@/lib/content/checks";
 import { AppLink } from "@/components/chrome/AppLink";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export function generateStaticParams() {
   return CHECKS.map((c) => ({ check: c.slug }));
@@ -77,15 +78,9 @@ export default async function CheckPage({
 
       {/* what you get */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What comes back</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>In the report.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Every field carries the source that confirmed it and the date it was confirmed.
-          </p>
-        </div>
+        <SecHead k="What comes back" h="In the report.">
+          Every field carries the source that confirmed it and the date it was confirmed.
+        </SecHead>
         <div className="body3 cloud3">
           {c.fields.map((f) => (
             <span className={`pl3${c.fast ? " fast" : ""}`} key={f}>

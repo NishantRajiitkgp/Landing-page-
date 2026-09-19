@@ -11,6 +11,7 @@ import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { Tick } from "@/components/brand/Tick";
+import { SecHead } from "@/components/chrome/SecHead";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -122,16 +123,10 @@ export default async function CertifierPage({
 
       {/* what we check */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What we check</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>The company,<br />and its people.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            A vendor is a legal entity and the humans behind it. Certifier checks both — and keeps
-            checking, because licences expire and directors change.
-          </p>
-        </div>
+        <SecHead k="What we check" h={<>The company,<br />and its people.</>}>
+          A vendor is a legal entity and the humans behind it. Certifier checks both — and keeps
+          checking, because licences expire and directors change.
+        </SecHead>
         <div className="body3 lanes3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
           <div>
             <div className="lgt">01 — The entity</div>
@@ -158,16 +153,10 @@ export default async function CertifierPage({
 
       {/* the two packages */}
       <div className="wrap sec3" id="packages">
-        <div className="sec-head">
-          <div>
-            <div className="k">Packages</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Two receipts,<br />most vendors covered.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Licence risk before onboarding; financial risk before the big order. Both end in a
-            certified vendor profile your whole team can cite.
-          </p>
-        </div>
+        <SecHead k="Packages" h={<>Two receipts,<br />most vendors covered.</>}>
+          Licence risk before onboarding; financial risk before the big order. Both end in a
+          certified vendor profile your whole team can cite.
+        </SecHead>
         <div className="body3 rack3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))", maxWidth: 900 }}>
           <div className="rc">
             <div className="hd"><span>Package</span><span>Vendors · Certifier</span></div>

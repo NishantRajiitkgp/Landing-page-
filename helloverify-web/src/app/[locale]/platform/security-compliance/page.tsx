@@ -14,6 +14,7 @@ import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -148,16 +149,10 @@ export default async function SecurityCompliancePage({
 
       {/* certifications */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Certifications &amp; memberships</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>What we hold,<br />stated precisely.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Certified, aligned and member are three different claims. We don't blur them — a
-            reviewer who catches a vendor overstating one stops trusting the rest.
-          </p>
-        </div>
+        <SecHead k="Certifications &amp; memberships" h={<>What we hold,<br />stated precisely.</>}>
+          Certified, aligned and member are three different claims. We don't blur them — a
+          reviewer who catches a vendor overstating one stops trusting the rest.
+        </SecHead>
         <div className="body3 certs3">
           {CERTS.map((c) => (
             <div className="cert" key={c.alt}>
@@ -173,16 +168,10 @@ export default async function SecurityCompliancePage({
 
       {/* how data is handled */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Data protection</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Someone's passport<br />is not "data".</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Every verification handles the most sensitive documents a person owns. These are the
-            controls that apply to all of them, on every plan.
-          </p>
-        </div>
+        <SecHead k="Data protection" h={<>Someone's passport<br />is not "data".</>}>
+          Every verification handles the most sensitive documents a person owns. These are the
+          controls that apply to all of them, on every plan.
+        </SecHead>
         <div className="body3 steps3">
           <div>
             <div className="n">01 · Lawful basis</div>
@@ -209,16 +198,10 @@ export default async function SecurityCompliancePage({
 
       {/* residency & sub-processors */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Residency &amp; sub-processors</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Where the data<br />actually sits.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Verification is cross-border by nature: a check runs where the document was issued.
-            What stays local, what moves, and who touches it is documented rather than assumed.
-          </p>
-        </div>
+        <SecHead k="Residency &amp; sub-processors" h={<>Where the data<br />actually sits.</>}>
+          Verification is cross-border by nature: a check runs where the document was issued.
+          What stays local, what moves, and who touches it is documented rather than assumed.
+        </SecHead>
         <div className="body3 tbl3">
           <div className="hd">
             <span>Data</span>
@@ -254,17 +237,11 @@ export default async function SecurityCompliancePage({
 
       {/* accessibility */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Accessibility</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>A procurement<br />requirement now.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            European Accessibility Act enforcement has been active since June 2025, and EN 301 549
-            makes WCAG 2.2 AA the presumed standard. Public bodies increasingly require a
-            conformance statement in the tender itself.
-          </p>
-        </div>
+        <SecHead k="Accessibility" h={<>A procurement<br />requirement now.</>}>
+          European Accessibility Act enforcement has been active since June 2025, and EN 301 549
+          makes WCAG 2.2 AA the presumed standard. Public bodies increasingly require a
+          conformance statement in the tender itself.
+        </SecHead>
         <div className="body3 prose3">
           <p>
             This site is being built to <strong>WCAG 2.2 Level AA</strong>, and the claim is
@@ -301,16 +278,10 @@ export default async function SecurityCompliancePage({
 
       {/* artefacts */}
       <div className="wrap sec3" id="artefacts">
-        <div className="sec-head">
-          <div>
-            <div className="k">Artefacts</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>What we can<br />send you.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Ask for any of these by name. Most arrive within two working days; anything under NDA
-            needs the NDA first, which we'll send the same day.
-          </p>
-        </div>
+        <SecHead k="Artefacts" h={<>What we can<br />send you.</>}>
+          Ask for any of these by name. Most arrive within two working days; anything under NDA
+          needs the NDA first, which we'll send the same day.
+        </SecHead>
         <div className="body3 art3">
           {ARTEFACTS.map((a) => (
             <div className="a3" key={a.t}>

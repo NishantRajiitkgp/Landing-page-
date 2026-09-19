@@ -8,6 +8,7 @@ import { ContactForm } from "@/components/forms/ContactForm";
 import Image from "next/image";
 import { SIZES_SIDE } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -70,16 +71,10 @@ export default async function ContactPage({
 
       {/* other routes in */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Other ways in</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Depending on<br />who you are.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Sales, support, security reviews and individual purchases go to different places —
-            here is which is which.
-          </p>
-        </div>
+        <SecHead k="Other ways in" h={<>Depending on<br />who you are.</>}>
+          Sales, support, security reviews and individual purchases go to different places —
+          here is which is which.
+        </SecHead>
         <div className="body3 art3">
           <div className="a3">
             <div>
@@ -120,16 +115,10 @@ export default async function ContactPage({
 
       {/* offices */}
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <div className="sec-head">
-          <div>
-            <div className="k">Offices</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Six of them,<br />twelve hours apart.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Someone is at a desk for 21 of every 24 hours, which is why a request filed at night is
-            usually answered by morning somewhere.
-          </p>
-        </div>
+        <SecHead k="Offices" h={<>Six of them,<br />twelve hours apart.</>}>
+          Someone is at a desk for 21 of every 24 hours, which is why a request filed at night is
+          usually answered by morning somewhere.
+        </SecHead>
         <div className="body3 offices3">
           <div className="o"><b>Noida</b><span>India · 09–18 IST<br />Head office</span></div>
           <div className="o"><b>Manila</b><span>Philippines · 09–18 PHT</span></div>

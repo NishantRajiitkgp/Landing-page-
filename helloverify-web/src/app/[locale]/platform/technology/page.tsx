@@ -6,6 +6,7 @@ import { FaqSection } from "@/components/chrome/FaqSection";
 import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -97,16 +98,10 @@ export default async function TechnologyPage({
 
       {/* the pipeline */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">The pipeline</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Four stages,<br />one request.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            You post a document and a list of checks. Everything after that is ours, and every
-            stage records what it did.
-          </p>
-        </div>
+        <SecHead k="The pipeline" h={<>Four stages,<br />one request.</>}>
+          You post a document and a list of checks. Everything after that is ours, and every
+          stage records what it did.
+        </SecHead>
         <div className="body3 steps3">
           <div>
             <div className="n">01 · Capture</div>
@@ -133,15 +128,9 @@ export default async function TechnologyPage({
 
       {/* request / response */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Shape of it</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>One POST,<br />one webhook.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Illustrative shapes — the published reference is issued with sandbox credentials.
-          </p>
-        </div>
+        <SecHead k="Shape of it" h={<>One POST,<br />one webhook.</>}>
+          Illustrative shapes — the published reference is issued with sandbox credentials.
+        </SecHead>
         <div className="body3" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 22 }}>
           <div className="code3">
             <div className="ch"><span>Request</span><b>POST /v1/verifications</b></div>
@@ -181,16 +170,10 @@ export default async function TechnologyPage({
 
       {/* endpoints */}
       <div className="wrap sec3" id="api">
-        <div className="sec-head">
-          <div>
-            <div className="k">Endpoints</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Small surface,<br />on purpose.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Five endpoints cover every product on this site. Check types are parameters, not
-            separate integrations.
-          </p>
-        </div>
+        <SecHead k="Endpoints" h={<>Small surface,<br />on purpose.</>}>
+          Five endpoints cover every product on this site. Check types are parameters, not
+          separate integrations.
+        </SecHead>
         <div className="body3 api3">
           <div className="e">
             <span className="mth">POST</span>
@@ -222,16 +205,10 @@ export default async function TechnologyPage({
 
       {/* integration options */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Ways to integrate</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>However deep<br />you want to go.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            From a link you paste into an email to a full API integration with results posted back
-            into your ATS.
-          </p>
-        </div>
+        <SecHead k="Ways to integrate" h={<>However deep<br />you want to go.</>}>
+          From a link you paste into an email to a full API integration with results posted back
+          into your ATS.
+        </SecHead>
         <div className="body3 intg3">
           <span className="svc">REST API</span>
           <span className="svc">Webhooks</span>
