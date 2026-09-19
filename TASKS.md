@@ -184,16 +184,15 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **7 of 9 done**
+## Part 5 — Split the oversized components · **8 of 9 done**
 
-§4 rule 2 and §17 condition 22. **5 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **4 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
 | file | lines | the repeat |
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
-| `Why.tsx` | 328 | 10 reason rows |
 | `ContactForm.tsx` | 328 | — no repeat; a genuine split |
 | `security-compliance/page.tsx` | 334 | — |
 | `enterprise/page.tsx` | 334 | — |
@@ -204,6 +203,7 @@ places in signed-off copy for zero rendered difference.
 | ~~`Presence.tsx`~~ | ~~532~~ → **298** | **done** |
 | ~~`Checks.tsx`~~ | ~~520~~ → **265** | **done** |
 | ~~`WhoItsFor.tsx`~~ | ~~324~~ → **198** | **done** |
+| ~~`Why.tsx`~~ | ~~328~~ → **155** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
@@ -308,6 +308,17 @@ Neither would have survived a screenshot, and neither was visible in review.
      appears in the `<link>` of every page — 58 near-identical diffs hiding the
      one real one. It is now reported once, and is fatal: a pure split changes no
      classes.
+
+**Two things measured along the way that settle earlier claims.**
+
+- **`&apos;` and a plain apostrophe emit identical bytes.** Part 4 narrowed
+  `react/no-unescaped-entities` on that basis; a no-op mutation on `Why.tsx`
+  now measures it rather than restating it.
+- **The finest differences this check resolves are one byte.** A single `{" "}`
+  dropped from a run — on `Consumer.tsx` and again on `Why.tsx` — moves the
+  page by exactly one byte and is caught. Three separate mutations across the
+  eight files changed nothing at all in length and were still caught, which is
+  the argument against ever gating these on file size.
 
 **Carried findings:**
 
