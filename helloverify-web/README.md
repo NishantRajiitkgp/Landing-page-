@@ -94,6 +94,67 @@ and `tools/diffmap.py` instead of `tools/port/...`, and `diffmap.py` opened its
 JSON with the platform default encoding, which threw on any page containing
 smart quotes.
 
+### Byte-identity, for the component splits
+
+`tools/port/html-identity.mjs` is the cheaper check the element-box harness does
+not replace: it needs no browser, and it reads the build rather than a running
+page.
+
+```sh
+npm run build
+node tools/port/html-identity.mjs snapshot ../.snap   # before the change
+# rewrite the component
+npm run build
+node tools/port/html-identity.mjs compare  ../.snap   # after it
+```
+
+It exists for BUILD-SPEC §4 rule 2 / §17 condition 22 — splitting the oversized
+section components into record-driven ones. A split changes no values, so this
+is the one place where byte-identity IS the right test; §"Design tokens" below
+explains why it is the wrong test for a tokenisation.
+
+Three separate signals, because they mean different things:
+
+| Signal | Fatal? | Why |
+|---|---|---|
+| markup differs | yes | the rendered page changed; this is the whole point |
+| stylesheet hash moved | yes | Tailwind generates from the classes it finds, so a pure split cannot move it |
+| flight payload differs | only without `--allow-payload` | `.map()` gives children `key`s that hand-written siblings never had |
+
+The build id is normalised, and nothing else is. Next mints a fresh 21-character
+`BUILD_ID` per build and embeds it in every page; without that one substitution
+all 58 files differ and the check reports nothing. Script `src` hashes are
+deliberately **not** normalised — once the build id was neutralised, 57 of 58
+pages were already byte-equal, so the chunk names carry no content hash here and
+normalising them would only have widened the blind spot.
+
+**It found a bug in itself on the first mutation.** Deleting one `className` to
+prove the check fires renamed `chunks/*.css`, which is in the `<link>` of every
+page, so all 58 reported and the one real difference was lost. The stylesheet is
+now pulled out and compared once. It is reported rather than quietly normalised,
+because a moved stylesheet hash is itself a regression for this kind of change.
+
+**And Tailwind read this harness's own comments.** The file used the bare word
+for the CSS property between `border` and `box-shadow`; Tailwind v4 auto-detects
+sources, that sweep includes `tools/`, and the extractor generated a real
+165-byte rule into the shipped CSS on every page — 121,921 bytes to 122,086,
+chunk hash moved. Measured by removing the file and rebuilding. The comment was
+reworded; the general exposure is a carried finding in `../TASKS.md`.
+
+#### The check was broken five ways
+
+| # | Mutation | Result |
+|---|---|---|
+| M1 | the trailing CTA link deleted — outside the repeated run, exactly the PeopleStrip regression | caught, and named the link |
+| M2 | one `{' '}` text node dropped between two card rows | caught — 6 bytes |
+| M3 | the mobile cards reordered | caught — **same byte length**, which a size check would have passed |
+| M4 | `` {`${n} checks`} `` reverted to `{n} checks` | caught — +72 bytes, nine `<!-- -->` separators |
+| M5 | the fields of one record reordered | **no-op** — byte-identical, as predicted |
+
+M5 is recorded as a no-op rather than counted as coverage. M4 is not a
+hypothetical: that spelling is what the first rewrite of `Packages.tsx` shipped,
+and nothing else in the repo would have noticed.
+
 ## Pages
 
 36 static routes covering the audience-first IA (`../INFORMATION-ARCHITECTURE.md`):
