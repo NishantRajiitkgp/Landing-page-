@@ -184,16 +184,15 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **3 of 9 done**
+## Part 5 — Split the oversized components · **4 of 9 done**
 
-§4 rule 2 and §17 condition 22. **9 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **8 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
 | file | lines | the repeat |
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
-| `Consumer.tsx` | 610 | 16 service rows |
 | `Presence.tsx` | 532 | 20 flags, 12 rows |
 | `Checks.tsx` | 520 | 17 product rows |
 | `Why.tsx` | 328 | 10 reason rows |
@@ -204,6 +203,7 @@ places in signed-off copy for zero rendered difference.
 | ~~`PeopleStrip.tsx`~~ | ~~684~~ → **209** | **done** |
 | ~~`Packages.tsx`~~ | ~~712~~ → **294** | **done** |
 | ~~`International.tsx`~~ | ~~778~~ → **285** | **done** |
+| ~~`Consumer.tsx`~~ | ~~610~~ → **241** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
@@ -220,12 +220,21 @@ of the same words. International measured the same way — same five countries,
 same order, flags equal character for character. Check before deciding; do not
 assume either shape.
 
-**Two files in, the first draft has landed byte-identical once and wrong once.**
-Packages needed a second pass (`{n} checks` emitting nine `<!-- -->`
-separators); International passed on the first build. The difference was that
-International's fields were extracted with a script that printed a table of all
-ten cards, so the desktop/mobile comparison was a diff rather than a reading.
-Do that first on the remaining files.
+**Extract the fields with a script that diffs the copies, before writing any
+markup.** Packages was read by eye and needed a second pass (`{n} checks`
+emitted nine `<!-- -->` separators). International and Consumer were diffed by
+script and landed byte-identical on the first build. On Consumer that script
+paid for itself twice over: it found that the mobile Basic plan card has two
+ticked lines where desktop has three, which reading would have smoothed over,
+and it found that the 142-line phone mock was byte-identical to a component the
+repo already had.
+
+**Look for the unit somewhere else in the repo before extracting it.**
+`components/blocks/HelloVPhone.tsx` already existed, lifted from the same
+artboard for `/individuals/hellov`. Consumer held two more hand-written copies
+of it — 284 of its 610 lines — and nothing had noticed. Worth a grep for a
+distinctive class name (`phone2`, `rc`, `ccard`) before writing a new
+component.
 
 **Do not batch these.** PeopleStrip alone produced two regressions that only the
 byte-identity check caught:
