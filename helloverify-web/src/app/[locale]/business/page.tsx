@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CERT_BOX, SIZES_PATH_SPAN2, SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -111,16 +112,10 @@ export default async function BusinessHub({
 
       {/* the five paths */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Five ways in</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Start where it hurts.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Hiring at scale, a first employee, a customer you've never met, or a supplier
-            three borders away — each gets its own pipeline on the same platform.
-          </p>
-        </div>
+        <SecHead k="Five ways in" h="Start where it hurts.">
+          Hiring at scale, a first employee, a customer you've never met, or a supplier
+          three borders away — each gets its own pipeline on the same platform.
+        </SecHead>
         <div className="body3 paths3">
           {PATHS.map((c) => (
             <AppLink key={c.href} href={c.href} className={`cell ph ${c.span}`}>
@@ -144,15 +139,9 @@ export default async function BusinessHub({
 
       {/* how it runs + receipt proof */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">One pipeline</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Upload once.<br />We do the rest.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            The same four stages behind every product — what changes is only which checks run.
-          </p>
-        </div>
+        <SecHead k="One pipeline" h={<>Upload once.<br />We do the rest.</>}>
+          The same four stages behind every product — what changes is only which checks run.
+        </SecHead>
         <div className="body3 steps3">
           <div>
             <div className="n">01</div>
@@ -179,15 +168,9 @@ export default async function BusinessHub({
 
       {/* integrations */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Integrate once</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Fits the tools you hire with.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Candidates upload over WhatsApp or a link; results come back wherever your team already works.
-          </p>
-        </div>
+        <SecHead k="Integrate once" h="Fits the tools you hire with.">
+          Candidates upload over WhatsApp or a link; results come back wherever your team already works.
+        </SecHead>
         <div className="body3 intg3">
           <span className="svc">REST API</span>
           <span className="svc">Webhooks</span>

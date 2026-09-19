@@ -6,6 +6,7 @@ import Image from "next/image";
 import { SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -70,16 +71,10 @@ export default async function PlatformHub({
       </div>
 
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Three layers</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>How an answer<br />gets made.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            The interesting part isn't the model. It's what happens after it — reaching a registrar
-            in another country and coming back with something you can defend.
-          </p>
-        </div>
+        <SecHead k="Three layers" h={<>How an answer<br />gets made.</>}>
+          The interesting part isn't the model. It's what happens after it — reaching a registrar
+          in another country and coming back with something you can defend.
+        </SecHead>
         <div className="body3 paths3">
           <AppLink href="/platform/technology" className="cell ph span3">
             <Image className="pimg" src="/img/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />

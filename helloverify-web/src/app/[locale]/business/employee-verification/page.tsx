@@ -9,6 +9,7 @@ import { FaqSection } from "@/components/chrome/FaqSection";
 import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -117,16 +118,10 @@ export default async function EmployeeVerificationPage({
 
       {/* what we check */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What we check</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Work history,<br />from the record.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Digital first: provident-fund records answer in an hour. Where an employer must be
-            called, we call — and the report says who picked up.
-          </p>
-        </div>
+        <SecHead k="What we check" h={<>Work history,<br />from the record.</>}>
+          Digital first: provident-fund records answer in an hour. Where an employer must be
+          called, we call — and the report says who picked up.
+        </SecHead>
         <div className="body3 cloud3" style={{ marginTop: 40 }}>
           <span className="pl3 fast"><span className="d" />Digital employment<span className="t">60 min</span></span>
           <span className="pl3 fast"><span className="d" />Moonlighting<span className="t">60 min</span></span>
@@ -140,16 +135,10 @@ export default async function EmployeeVerificationPage({
 
       {/* when to re-verify */}
       <div className="wrap sec3" id="when">
-        <div className="sec-head">
-          <div>
-            <div className="k">When it matters</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Four moments<br />worth a second look.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            A check is a snapshot. These are the moments the picture changes — and the ones
-            auditors ask about.
-          </p>
-        </div>
+        <SecHead k="When it matters" h={<>Four moments<br />worth a second look.</>}>
+          A check is a snapshot. These are the moments the picture changes — and the ones
+          auditors ask about.
+        </SecHead>
         <div className="body3 when3">
           <div className="w">
             <div className="wt">Joining</div>
@@ -176,16 +165,10 @@ export default async function EmployeeVerificationPage({
 
       {/* how it works */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">How it works</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Quiet by design.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Employees consent once on their own phone; after that, refreshes run without
-            interrupting anyone's day.
-          </p>
-        </div>
+        <SecHead k="How it works" h="Quiet by design.">
+          Employees consent once on their own phone; after that, refreshes run without
+          interrupting anyone's day.
+        </SecHead>
         <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
           <div>
             <div className="n">01 · One CSV or API call</div>

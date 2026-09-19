@@ -7,6 +7,7 @@ import { FaqSection } from "@/components/chrome/FaqSection";
 import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -141,16 +142,10 @@ export default async function CoveragePage({
 
       {/* offices */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Six offices</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Twelve hours apart,<br />on purpose.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            A request filed at night in one place is picked up in the morning somewhere else. That
-            overlap is why turnaround is measured in hours rather than business days.
-          </p>
-        </div>
+        <SecHead k="Six offices" h={<>Twelve hours apart,<br />on purpose.</>}>
+          A request filed at night in one place is picked up in the morning somewhere else. That
+          overlap is why turnaround is measured in hours rather than business days.
+        </SecHead>
         <div className="body3 off3">
           <div className="o3"><b>Manila</b><span>09–18 local</span></div>
           <div className="o3"><b>Singapore</b><span>09–18 local</span></div>
@@ -163,17 +158,11 @@ export default async function CoveragePage({
 
       {/* countries */}
       <div className="wrap sec3" id="countries">
-        <div className="sec-head">
-          <div>
-            <div className="k">Country times</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>How long it takes,<br />where it's issued.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Indicative times for source-confirmed checks. Digital registries answer in minutes;
-            where a registrar works on paper, the estimate says days — and we say which it is
-            before you order.
-          </p>
-        </div>
+        <SecHead k="Country times" h={<>How long it takes,<br />where it's issued.</>}>
+          Indicative times for source-confirmed checks. Digital registries answer in minutes;
+          where a registrar works on paper, the estimate says days — and we say which it is
+          before you order.
+        </SecHead>
         <div className="body3 reg3">
           {REGIONS.map((g) => (
             <div key={g.r}>
@@ -197,16 +186,10 @@ export default async function CoveragePage({
 
       {/* how coverage works */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What coverage means</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Not a logo<br />on a map.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Plenty of vendors claim global coverage and mean a database licence. Coverage here means
-            somebody can reach the office that holds the record.
-          </p>
-        </div>
+        <SecHead k="What coverage means" h={<>Not a logo<br />on a map.</>}>
+          Plenty of vendors claim global coverage and mean a database licence. Coverage here means
+          somebody can reach the office that holds the record.
+        </SecHead>
         <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
           <div>
             <div className="n">01</div>

@@ -11,6 +11,7 @@ import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -119,16 +120,10 @@ export default async function CustomerKycPage({
 
       {/* what we verify */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What we verify</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>The person,<br />then the record.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Identity resolves in minutes; risk screens run beside it. You choose the depth per
-            signup tier — a browser needs less than a seller of medical devices.
-          </p>
-        </div>
+        <SecHead k="What we verify" h={<>The person,<br />then the record.</>}>
+          Identity resolves in minutes; risk screens run beside it. You choose the depth per
+          signup tier — a browser needs less than a seller of medical devices.
+        </SecHead>
         <div className="body3 lanes3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
           <div>
             <div className="lgt">01 — Identity</div>
@@ -156,16 +151,10 @@ export default async function CustomerKycPage({
 
       {/* how it fits the flow */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">In your flow</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Three ways in,<br />one decision out.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            However the documents arrive, you get one webhook back: verified, failed, or needs a
-            human — with the evidence attached.
-          </p>
-        </div>
+        <SecHead k="In your flow" h={<>Three ways in,<br />one decision out.</>}>
+          However the documents arrive, you get one webhook back: verified, failed, or needs a
+          human — with the evidence attached.
+        </SecHead>
         <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
           <div>
             <div className="n">01 · Embed</div>
@@ -187,16 +176,10 @@ export default async function CustomerKycPage({
 
       {/* privacy stance */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Compliance &amp; privacy</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Their data.<br />Handled like it.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            KYC touches the most personal documents your customers own. That's a responsibility
-            before it's a feature.
-          </p>
-        </div>
+        <SecHead k="Compliance &amp; privacy" h={<>Their data.<br />Handled like it.</>}>
+          KYC touches the most personal documents your customers own. That's a responsibility
+          before it's a feature.
+        </SecHead>
         <div className="body3 certs3">
           <div className="cert">
             <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />

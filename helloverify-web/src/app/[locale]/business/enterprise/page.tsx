@@ -11,6 +11,7 @@ import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -178,16 +179,10 @@ export default async function EnterprisePage({
 
       {/* what we verify */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What we verify</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>33 checks.<br />Three questions.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Green means the answer usually lands within the hour. The rest go to a registrar
-            or a court, and come back in days — with the source named.
-          </p>
-        </div>
+        <SecHead k="What we verify" h={<>33 checks.<br />Three questions.</>}>
+          Green means the answer usually lands within the hour. The rest go to a registrar
+          or a court, and come back in days — with the source named.
+        </SecHead>
         <div className="body3 lanes3">
           {LANES.map((l) => (
             <div key={l.gt}>
@@ -212,16 +207,10 @@ export default async function EnterprisePage({
 
       {/* how it works */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">How it works</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>One upload.<br />Then we get to work.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Candidates upload over WhatsApp or a link — no app, no account. Everything runs in
-            parallel, so a package is only as slow as its slowest check.
-          </p>
-        </div>
+        <SecHead k="How it works" h={<>One upload.<br />Then we get to work.</>}>
+          Candidates upload over WhatsApp or a link — no app, no account. Everything runs in
+          parallel, so a package is only as slow as its slowest check.
+        </SecHead>
         <div className="body3 steps3">
           <div>
             <div className="n">01 · Candidate's phone</div>
@@ -248,16 +237,10 @@ export default async function EnterprisePage({
 
       {/* turnaround & coverage */}
       <div className="wrap sec3" id="turnaround">
-        <div className="sec-head">
-          <div>
-            <div className="k">Turnaround &amp; coverage</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Times we'll put<br />in the contract.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Measured from upload to report. Where the issuer is offline, the report says so —
-            and says how long the paper route takes.
-          </p>
-        </div>
+        <SecHead k="Turnaround &amp; coverage" h={<>Times we'll put<br />in the contract.</>}>
+          Measured from upload to report. Where the issuer is offline, the report says so —
+          and says how long the paper route takes.
+        </SecHead>
         <div className="body3 tbl3">
           <div className="hd">
             <span>Check</span>
@@ -277,16 +260,10 @@ export default async function EnterprisePage({
 
       {/* compliance & security */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Compliance &amp; security</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>The unexciting part,<br />done properly.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Every check involves someone's most personal documents. Consent comes first,
-            retention has limits, and all of it is auditable.
-          </p>
-        </div>
+        <SecHead k="Compliance &amp; security" h={<>The unexciting part,<br />done properly.</>}>
+          Every check involves someone's most personal documents. Consent comes first,
+          retention has limits, and all of it is auditable.
+        </SecHead>
         <div className="body3 certs3">
           <div className="cert">
             <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />

@@ -8,6 +8,7 @@ import Image from "next/image";
 import { CERT_BOX, SIZES_PATH_SPAN2 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -77,16 +78,10 @@ export default async function AboutPage({
 
       {/* what we believe */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What we believe</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Three opinions,<br />held firmly.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            They are why the product is slower than some competitors in exactly one place, and
-            better everywhere it matters.
-          </p>
-        </div>
+        <SecHead k="What we believe" h={<>Three opinions,<br />held firmly.</>}>
+          They are why the product is slower than some competitors in exactly one place, and
+          better everywhere it matters.
+        </SecHead>
         <div className="body3" style={{ maxWidth: 760 }}>
           <div className="rz">
             <div className="n">01</div>
@@ -114,16 +109,10 @@ export default async function AboutPage({
 
       {/* who we serve */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Who we serve</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Ministries and<br />mothers, same rails.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            The same pipeline that supports work-pass decisions for a national ministry runs a
-            ₹499 check on a school-run driver. That is deliberate.
-          </p>
-        </div>
+        <SecHead k="Who we serve" h={<>Ministries and<br />mothers, same rails.</>}>
+          The same pipeline that supports work-pass decisions for a national ministry runs a
+          ₹499 check on a school-run driver. That is deliberate.
+        </SecHead>
         <div className="body3 paths3">
           <AppLink href="/governments" className="cell ph span2">
             <Image className="pimg" src="/img/10-ministry-hall.jpg" alt="" fill sizes={SIZES_PATH_SPAN2} />
@@ -157,16 +146,10 @@ export default async function AboutPage({
 
       {/* offices */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Where we are</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Six offices,<br />on purpose.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Verification has to happen where the document was issued. Offices in the places our
-            clients&apos; people come from is not a growth story — it is the product working.
-          </p>
-        </div>
+        <SecHead k="Where we are" h={<>Six offices,<br />on purpose.</>}>
+          Verification has to happen where the document was issued. Offices in the places our
+          clients&apos; people come from is not a growth story — it is the product working.
+        </SecHead>
         <div className="body3 off3">
           <div className="o3"><b>Noida</b><span>India · head office</span></div>
           <div className="o3"><b>Manila</b><span>Philippines</span></div>
@@ -179,15 +162,9 @@ export default async function AboutPage({
 
       {/* credentials */}
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <div className="sec-head">
-          <div>
-            <div className="k">Credentials</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Checked,<br />ourselves.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            A verification company that cannot evidence its own claims is telling on itself.
-          </p>
-        </div>
+        <SecHead k="Credentials" h={<>Checked,<br />ourselves.</>}>
+          A verification company that cannot evidence its own claims is telling on itself.
+        </SecHead>
         <div className="body3 certs3">
           <div className="cert">
             <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />

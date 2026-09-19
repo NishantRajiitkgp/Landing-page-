@@ -11,6 +11,7 @@ import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { Tick } from "@/components/brand/Tick";
+import { SecHead } from "@/components/chrome/SecHead";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -156,16 +157,10 @@ export default async function SmbPage({
 
       {/* pricing rack */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Packages &amp; pricing</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>One receipt.<br />No surprises.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            A fixed set of checks with one turnaround. Everything runs in parallel, so a package
-            is only as slow as its slowest check.
-          </p>
-        </div>
+        <SecHead k="Packages &amp; pricing" h={<>One receipt.<br />No surprises.</>}>
+          A fixed set of checks with one turnaround. Everything runs in parallel, so a package
+          is only as slow as its slowest check.
+        </SecHead>
         <div className="body3 rack3">
           {PACKS.map((p) => (
             <div className="rc" key={p.tt}>
@@ -201,15 +196,9 @@ export default async function SmbPage({
 
       {/* build your own */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">À la carte</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Or build your own.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Every check can be bought alone inside the app — same sources, same report.
-          </p>
-        </div>
+        <SecHead k="À la carte" h="Or build your own.">
+          Every check can be bought alone inside the app — same sources, same report.
+        </SecHead>
         <div className="body3 cloud3" style={{ marginTop: 36 }}>
           <span className="pl3 fast"><span className="d" />Identity<span className="t">15 min</span></span>
           <span className="pl3 fast"><span className="d" />PAN<span className="t">15 min</span></span>

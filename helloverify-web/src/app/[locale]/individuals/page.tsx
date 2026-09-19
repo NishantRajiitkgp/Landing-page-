@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CERT_BOX, SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -111,16 +112,10 @@ export default async function IndividualsHub({
       </div>
 
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">What people check</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>For the moment you<br />need to trust someone.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            A new driver for the school run. A tenant for the upstairs flat. Your own documents
-            before a visa interview. Same pipeline, same sources.
-          </p>
-        </div>
+        <SecHead k="What people check" h={<>For the moment you<br />need to trust someone.</>}>
+          A new driver for the school run. A tenant for the upstairs flat. Your own documents
+          before a visa interview. Same pipeline, same sources.
+        </SecHead>
         <div className="body3 paths3">
           {PATHS.map((c) => (
             <AppLink key={c.h} href={c.href} className={`cell ph ${c.span}`}>
@@ -143,15 +138,9 @@ export default async function IndividualsHub({
       </div>
 
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">How it works</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Three steps,<br />one chat.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            No app, no account, no forms. If you can send a photo on WhatsApp, you can run a check.
-          </p>
-        </div>
+        <SecHead k="How it works" h={<>Three steps,<br />one chat.</>}>
+          No app, no account, no forms. If you can send a photo on WhatsApp, you can run a check.
+        </SecHead>
         <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
           <div>
             <div className="n">01 · You</div>
@@ -172,16 +161,10 @@ export default async function IndividualsHub({
       </div>
 
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <div className="sec-head">
-          <div>
-            <div className="k">Your responsibility, and ours</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Consent isn't<br />a formality.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            You can't check someone behind their back, and we won't help you try. The person being
-            verified consents on their own phone first — every time.
-          </p>
-        </div>
+        <SecHead k="Your responsibility, and ours" h={<>Consent isn't<br />a formality.</>}>
+          You can't check someone behind their back, and we won't help you try. The person being
+          verified consents on their own phone first — every time.
+        </SecHead>
         <div className="body3 certs3">
           <div className="cert">
             <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CERT_BOX, SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { SecHead } from "@/components/chrome/SecHead";
 
 export async function generateMetadata({
   params,
@@ -128,16 +129,10 @@ export default async function GovernmentsHub({
 
       {/* the four verticals */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Four mandates</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Whatever you license,<br />we verify.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            The same primary-source pipeline, tuned to four kinds of authority — each with its
-            own registries, its own documents, its own law.
-          </p>
-        </div>
+        <SecHead k="Four mandates" h={<>Whatever you license,<br />we verify.</>}>
+          The same primary-source pipeline, tuned to four kinds of authority — each with its
+          own registries, its own documents, its own law.
+        </SecHead>
         <div className="body3 paths3">
           {VERTICALS.map((c) => (
             <AppLink key={c.href} href={c.href} className={`cell ph ${c.span}`}>
@@ -161,16 +156,10 @@ export default async function GovernmentsHub({
 
       {/* why governments — the five reasons from the homepage canvas */}
       <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">Why governments work with us</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Reasons that survive<br />a tender committee.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Procurement doesn't buy stories. Each of these has an artefact behind it —
-            an audit report, a named workflow, a conformance statement.
-          </p>
-        </div>
+        <SecHead k="Why governments work with us" h={<>Reasons that survive<br />a tender committee.</>}>
+          Procurement doesn't buy stories. Each of these has an artefact behind it —
+          an audit report, a named workflow, a conformance statement.
+        </SecHead>
         <div className="body3" style={{ maxWidth: 760 }}>
           <div className="rz">
             <div className="n">01</div>
@@ -212,16 +201,10 @@ export default async function GovernmentsHub({
 
       {/* procurement readiness */}
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <div className="sec-head">
-          <div>
-            <div className="k">Procurement-ready</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>The file your<br />committee asks for.</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            Certifications, data residency, sub-processors, accessibility conformance — one page,
-            every artefact requestable.
-          </p>
-        </div>
+        <SecHead k="Procurement-ready" h={<>The file your<br />committee asks for.</>}>
+          Certifications, data residency, sub-processors, accessibility conformance — one page,
+          every artefact requestable.
+        </SecHead>
         <div className="body3 certs3">
           <div className="cert">
             <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
