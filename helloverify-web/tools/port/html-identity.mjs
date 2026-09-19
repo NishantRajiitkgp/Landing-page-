@@ -84,7 +84,15 @@ function read(path, buildId) {
   return readFileSync(path, "utf8").split(buildId).join("<BUILD_ID>");
 }
 
-const PUSH = /<script>self\.__next_f\.push\(.*?\)<\/script>/gs;
+/** A RUN of adjacent push scripts collapses to ONE token, not one each.
+ *
+ *  Found by `Presence.tsx`, which reported a markup difference of exactly six
+ *  bytes: `<PUSH>` once fewer at the very end of the document. Next splits the
+ *  flight payload into `<script>` chunks by size, so reshaping the payload
+ *  changes how many there are — which is a payload fact, and this function
+ *  exists to remove payload facts. Replacing each script with its own token
+ *  leaked the count back in, and would have failed every future split on it. */
+const PUSH = /(?:<script>self\.__next_f\.push\(.*?\)<\/script>)+/gs;
 const markupOf = (html) => html.replace(PUSH, "<PUSH>");
 
 /** The emitted stylesheet, whose name is a hash of its contents.

@@ -184,16 +184,15 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **4 of 9 done**
+## Part 5 — Split the oversized components · **5 of 9 done**
 
-§4 rule 2 and §17 condition 22. **8 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **7 files still exceed 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
 | file | lines | the repeat |
 |---|---:|---|
 | `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
-| `Presence.tsx` | 532 | 20 flags, 12 rows |
 | `Checks.tsx` | 520 | 17 product rows |
 | `Why.tsx` | 328 | 10 reason rows |
 | `WhoItsFor.tsx` | 324 | 12 cells |
@@ -204,6 +203,7 @@ places in signed-off copy for zero rendered difference.
 | ~~`Packages.tsx`~~ | ~~712~~ → **294** | **done** |
 | ~~`International.tsx`~~ | ~~778~~ → **285** | **done** |
 | ~~`Consumer.tsx`~~ | ~~610~~ → **241** | **done** |
+| ~~`Presence.tsx`~~ | ~~532~~ → **298** | **done** |
 
 So the fix is not "cut the file in half" — it is extract the repeated unit and
 drive it from a record list, which is what `smb/page.tsx` already does with
@@ -234,7 +234,10 @@ repo already had.
 artboard for `/individuals/hellov`. Consumer held two more hand-written copies
 of it — 284 of its 610 lines — and nothing had noticed. Worth a grep for a
 distinctive class name (`phone2`, `rc`, `ccard`) before writing a new
-component.
+component. `Presence.tsx` is the counter-example that makes this a check
+rather than a rule: its five flags look like `International.tsx`'s, and they are
+not — the same countries are drawn for different boxes, so only Egypt matches.
+Diff before sharing.
 
 **Do not batch these.** PeopleStrip alone produced two regressions that only the
 byte-identity check caught:
@@ -272,6 +275,12 @@ Neither would have survived a screenshot, and neither was visible in review.
      bytes of payload on the homepage. It still fails the run unless
      `--allow-payload` says the deviation was expected, because a moved payload
      is the only signal left that the tree changed shape invisibly.
+   - **A run of `<script>self.__next_f.push()>` chunks collapses to ONE token,
+     not one each.** Presence reported a six-byte markup difference that was a
+     `<PUSH>` once fewer at the end of the document: Next splits the payload
+     into script chunks by size, so reshaping the payload changes how many there
+     are. Tokenising them individually leaked a payload fact back into the
+     markup comparison and would have failed every future split on it.
    - **The stylesheet hash is its own finding.** Tailwind generates from the
      classes it finds, so dropping one `className` renames `chunks/*.css`, which
      appears in the `<link>` of every page — 58 near-identical diffs hiding the
