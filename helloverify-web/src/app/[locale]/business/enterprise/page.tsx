@@ -13,6 +13,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -206,28 +207,14 @@ export default async function EnterprisePage({
           Candidates upload over WhatsApp or a link — no app, no account. Everything runs in
           parallel, so a package is only as slow as its slowest check.
         </SecHead>
-        <div className="body3 steps3">
-          <div>
-            <div className="n">01 · Candidate's phone</div>
-            <div className="t">Upload</div>
-            <p className="p">Photograph the document. Edges, glare and focus are checked before the shutter fires.</p>
-          </div>
-          <div>
-            <div className="n">02 · HelloVerify AI</div>
-            <div className="t">Read</div>
-            <p className="p">Every field extracted, the document checked against itself, the issuing office located — in about a second.</p>
-          </div>
-          <div>
-            <div className="n">03 · The source</div>
-            <div className="t">Confirm</div>
-            <p className="p">The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one.</p>
-          </div>
-          <div>
-            <div className="n">04 · Your ATS</div>
-            <div className="t">Report</div>
-            <p className="p">One report, the source named beside every result, with an auditable trail behind it.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · Candidate's phone", t: "Upload", p: "Photograph the document. Edges, glare and focus are checked before the shutter fires." },
+          { n: "02 · HelloVerify AI", t: "Read", p: "Every field extracted, the document checked against itself, the issuing office located — in about a second." },
+          { n: "03 · The source", t: "Confirm", p: "The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one." },
+          { n: "04 · Your ATS", t: "Report", p: "One report, the source named beside every result, with an auditable trail behind it." },
+          ]}
+        />
       </div>
 
       {/* turnaround & coverage */}

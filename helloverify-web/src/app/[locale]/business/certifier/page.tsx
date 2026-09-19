@@ -13,6 +13,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Tick } from "@/components/brand/Tick";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -208,23 +209,13 @@ export default async function CertifierPage({
             <h2 className="h2" style={{ marginTop: 12 }}>You send a list.<br />We send certainty.</h2>
           </div>
         </div>
-        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-          <div>
-            <div className="n">01 · Procurement</div>
-            <div className="t">The list</div>
-            <p className="p">Vendor names and GST numbers — a CSV or an API call from your procurement system.</p>
-          </div>
-          <div>
-            <div className="n">02 · The registries</div>
-            <div className="t">The digging</div>
-            <p className="p">Licence registers, ministry records, courts, credit bureaus — each fact confirmed where it's filed.</p>
-          </div>
-          <div>
-            <div className="n">03 · Two days later</div>
-            <div className="t">The profile</div>
-            <p className="p">A certified profile per vendor: what was checked, where, what was found — and when it expires.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · Procurement", t: "The list", p: "Vendor names and GST numbers — a CSV or an API call from your procurement system." },
+          { n: "02 · The registries", t: "The digging", p: "Licence registers, ministry records, courts, credit bureaus — each fact confirmed where it's filed." },
+          { n: "03 · Two days later", t: "The profile", p: "A certified profile per vendor: what was checked, where, what was found — and when it expires." },
+          ]}
+        />
       </div>
 
       {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}

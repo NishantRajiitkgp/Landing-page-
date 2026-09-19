@@ -9,6 +9,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 export async function generateMetadata({
   params,
@@ -189,23 +190,13 @@ export default async function CoveragePage({
           Plenty of vendors claim global coverage and mean a database licence. Coverage here means
           somebody can reach the office that holds the record.
         </SecHead>
-        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-          <div>
-            <div className="n">01</div>
-            <div className="t">In-country</div>
-            <p className="p">The check runs where the document was issued, by people who know that registry's process and language.</p>
-          </div>
-          <div>
-            <div className="n">02</div>
-            <div className="t">At the source</div>
-            <p className="p">The university, the court, the transport authority — not an aggregator that once copied their data.</p>
-          </div>
-          <div>
-            <div className="n">03</div>
-            <div className="t">Honestly reported</div>
-            <p className="p">If a registry can't be reached, the report says unverifiable and names the route tried. Never a silent pass.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01", t: "In-country", p: "The check runs where the document was issued, by people who know that registry's process and language." },
+          { n: "02", t: "At the source", p: "The university, the court, the transport authority — not an aggregator that once copied their data." },
+          { n: "03", t: "Honestly reported", p: "If a registry can't be reached, the report says unverifiable and names the route tried. Never a silent pass." },
+          ]}
+        />
       </div>
 
       {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}

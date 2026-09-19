@@ -9,6 +9,7 @@ import { AVATAR_BY } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 export async function generateMetadata({
   params,
@@ -171,28 +172,14 @@ export default async function MomCaseStudy({
             <h2 className="h2" style={{ marginTop: 12 }}>Four things,<br />in the contract.</h2>
           </div>
         </div>
-        <div className="body3 steps3">
-          <div>
-            <div className="n">01</div>
-            <div className="t">Source proof</div>
-            <p className="p">Each credential confirmed with its issuing institution, named and dated in the file.</p>
-          </div>
-          <div>
-            <div className="n">02</div>
-            <div className="t">Honest gaps</div>
-            <p className="p">Unverifiable is reported as unverifiable, with the route tried — never quietly passed.</p>
-          </div>
-          <div>
-            <div className="n">03</div>
-            <div className="t">Scale</div>
-            <p className="p">Parallel processing and twelve hours of office coverage hold turnaround at intake volume.</p>
-          </div>
-          <div>
-            <div className="n">04</div>
-            <div className="t">Appeal-ready</div>
-            <p className="p">An auditable trail per applicant, built to be defended rather than merely read.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01", t: "Source proof", p: "Each credential confirmed with its issuing institution, named and dated in the file." },
+          { n: "02", t: "Honest gaps", p: "Unverifiable is reported as unverifiable, with the route tried — never quietly passed." },
+          { n: "03", t: "Scale", p: "Parallel processing and twelve hours of office coverage hold turnaround at intake volume." },
+          { n: "04", t: "Appeal-ready", p: "An auditable trail per applicant, built to be defended rather than merely read." },
+          ]}
+        />
         <div style={{ marginTop: 40, display: "flex", gap: 14, flexWrap: "wrap" }}>
           <AppLink href="/governments/manpower-education" className="btn btn-line btn-sm">Manpower &amp; education verification</AppLink>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">

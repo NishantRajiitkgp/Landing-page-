@@ -13,6 +13,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Tick } from "@/components/brand/Tick";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -219,23 +220,13 @@ export default async function SmbPage({
             <h2 className="h2" style={{ marginTop: 12 }}>Three steps.<br />No training required.</h2>
           </div>
         </div>
-        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-          <div>
-            <div className="n">01 · Two minutes</div>
-            <div className="t">Pick &amp; pay</div>
-            <p className="p">Choose a package, pay per candidate. No subscription, no minimum order.</p>
-          </div>
-          <div>
-            <div className="n">02 · The candidate</div>
-            <div className="t">One link</div>
-            <p className="p">They get a WhatsApp link, photograph their documents, and consent on their own phone.</p>
-          </div>
-          <div>
-            <div className="n">03 · Your inbox</div>
-            <div className="t">The report</div>
-            <p className="p">One PDF, the source named beside every result. Blue-collar packages land in about 30 minutes.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · Two minutes", t: "Pick & pay", p: "Choose a package, pay per candidate. No subscription, no minimum order." },
+          { n: "02 · The candidate", t: "One link", p: "They get a WhatsApp link, photograph their documents, and consent on their own phone." },
+          { n: "03 · Your inbox", t: "The report", p: "One PDF, the source named beside every result. Blue-collar packages land in about 30 minutes." },
+          ]}
+        />
       </div>
 
       {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}

@@ -13,6 +13,7 @@ import { setRequestLocale } from "next-intl/server";
 import { Tick } from "@/components/brand/Tick";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -238,23 +239,13 @@ export default async function HelloVPage({
           That isn't a limitation we added reluctantly — it's the line between verification and
           surveillance, and it's the law.
         </SecHead>
-        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-          <div>
-            <div className="n">01</div>
-            <div className="t">They agree</div>
-            <p className="p">The person receives a message, sees exactly what will be checked, and consents on their own phone.</p>
-          </div>
-          <div>
-            <div className="n">02</div>
-            <div className="t">We check</div>
-            <p className="p">Only the checks they agreed to, only at the authority that issued the document.</p>
-          </div>
-          <div>
-            <div className="n">03</div>
-            <div className="t">Then it's deleted</div>
-            <p className="p">Documents are kept for a bounded period, encrypted, then removed on schedule.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01", t: "They agree", p: "The person receives a message, sees exactly what will be checked, and consents on their own phone." },
+          { n: "02", t: "We check", p: "Only the checks they agreed to, only at the authority that issued the document." },
+          { n: "03", t: "Then it's deleted", p: "Documents are kept for a bounded period, encrypted, then removed on schedule." },
+          ]}
+        />
       </div>
 
       {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}

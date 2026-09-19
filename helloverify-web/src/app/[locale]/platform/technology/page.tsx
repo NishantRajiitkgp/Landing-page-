@@ -8,6 +8,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 export async function generateMetadata({
   params,
@@ -101,28 +102,14 @@ export default async function TechnologyPage({
           You post a document and a list of checks. Everything after that is ours, and every
           stage records what it did.
         </SecHead>
-        <div className="body3 steps3">
-          <div>
-            <div className="n">01 · Capture</div>
-            <div className="t">Quality gate</div>
-            <p className="p">Edges, glare, focus and resolution checked on-device before upload — bad captures never enter the queue.</p>
-          </div>
-          <div>
-            <div className="n">02 · Extract</div>
-            <div className="t">Read &amp; verify</div>
-            <p className="p">Fields extracted, template and fonts matched against the issuer's known series, security features and face compared.</p>
-          </div>
-          <div>
-            <div className="n">03 · Route</div>
-            <div className="t">Find the issuer</div>
-            <p className="p">The issuing office is resolved from the document itself, then the request is routed to the team or API that can reach it.</p>
-          </div>
-          <div>
-            <div className="n">04 · Return</div>
-            <div className="t">Signed result</div>
-            <p className="p">A structured result with the source, timestamp and evidence — delivered by webhook, not discovered by polling.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · Capture", t: "Quality gate", p: "Edges, glare, focus and resolution checked on-device before upload — bad captures never enter the queue." },
+          { n: "02 · Extract", t: "Read & verify", p: "Fields extracted, template and fonts matched against the issuer's known series, security features and face compared." },
+          { n: "03 · Route", t: "Find the issuer", p: "The issuing office is resolved from the document itself, then the request is routed to the team or API that can reach it." },
+          { n: "04 · Return", t: "Signed result", p: "A structured result with the source, timestamp and evidence — delivered by webhook, not discovered by polling." },
+          ]}
+        />
       </div>
 
       {/* request / response */}

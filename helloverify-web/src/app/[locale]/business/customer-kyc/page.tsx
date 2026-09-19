@@ -13,6 +13,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -154,23 +155,13 @@ export default async function CustomerKycPage({
           However the documents arrive, you get one webhook back: verified, failed, or needs a
           human — with the evidence attached.
         </SecHead>
-        <div className="body3 steps3" style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}>
-          <div>
-            <div className="n">01 · Embed</div>
-            <div className="t">API</div>
-            <p className="p">Your UI, our pipeline. Send the document image, get structured fields and a verdict back.</p>
-          </div>
-          <div>
-            <div className="n">02 · Or redirect</div>
-            <div className="t">Hosted flow</div>
-            <p className="p">A HelloVerify-hosted capture page in your colours — consent, capture and quality checks handled.</p>
-          </div>
-          <div>
-            <div className="n">03 · Or async</div>
-            <div className="t">WhatsApp</div>
-            <p className="p">For sellers and partners who sign up by phone — the same link flow candidates use.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01 · Embed", t: "API", p: "Your UI, our pipeline. Send the document image, get structured fields and a verdict back." },
+          { n: "02 · Or redirect", t: "Hosted flow", p: "A HelloVerify-hosted capture page in your colours — consent, capture and quality checks handled." },
+          { n: "03 · Or async", t: "WhatsApp", p: "For sellers and partners who sign up by phone — the same link flow candidates use." },
+          ]}
+        />
       </div>
 
       {/* privacy stance */}

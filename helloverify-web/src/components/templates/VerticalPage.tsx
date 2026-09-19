@@ -15,10 +15,14 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getLocale } from "next-intl/server";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps, type Step } from "@/components/chrome/Steps";
 
 export type Pill = { n: string; t: string; fast?: boolean };
 export type Lane = { gt: string; gh: string; pills: Pill[] };
-export type Step = { n: string; t: string; p: string };
+// The step card moved to `chrome/Steps.tsx` when 41 hand-written copies of
+// it turned up across 12 pages that are not built on this template. Re-
+// exported here so the six vertical pages keep importing one module.
+export type { Step };
 export type Row = { nm: string; sub: string; tm: string; fast?: boolean; src: string };
 
 export type VerticalContent = {
@@ -132,18 +136,7 @@ export async function VerticalPage(c: VerticalContent) {
           </div>
           {c.stepsLede && <p className="lede" style={{ marginBottom: 8 }}>{c.stepsLede}</p>}
         </div>
-        <div
-          className="body3 steps3"
-          style={c.steps.length !== 4 ? { gridTemplateColumns: `repeat(${c.steps.length}, minmax(0, 1fr))` } : undefined}
-        >
-          {c.steps.map((s) => (
-            <div key={s.t}>
-              <div className="n">{s.n}</div>
-              <div className="t">{s.t}</div>
-              <p className="p">{s.p}</p>
-            </div>
-          ))}
-        </div>
+        <Steps items={c.steps} />
       </div>
 
       {/* turnaround & coverage */}

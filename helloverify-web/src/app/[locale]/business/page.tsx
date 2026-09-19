@@ -8,6 +8,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { Steps } from "@/components/chrome/Steps";
 
 export async function generateMetadata({
   params,
@@ -141,28 +142,14 @@ export default async function BusinessHub({
         <SecHead k="One pipeline" h={<>Upload once.<br />We do the rest.</>}>
           The same four stages behind every product — what changes is only which checks run.
         </SecHead>
-        <div className="body3 steps3">
-          <div>
-            <div className="n">01</div>
-            <div className="t">Upload</div>
-            <p className="p">Photograph the document. Edges, glare and focus are checked before the shutter fires.</p>
-          </div>
-          <div>
-            <div className="n">02</div>
-            <div className="t">Read</div>
-            <p className="p">AI captures every field, checks the document against itself, and finds the office that issued it.</p>
-          </div>
-          <div>
-            <div className="n">03</div>
-            <div className="t">Confirm</div>
-            <p className="p">The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one.</p>
-          </div>
-          <div>
-            <div className="n">04</div>
-            <div className="t">Report</div>
-            <p className="p">One report, with the source named beside every result. Wired to your ATS or inbox.</p>
-          </div>
-        </div>
+        <Steps
+          items={[
+          { n: "01", t: "Upload", p: "Photograph the document. Edges, glare and focus are checked before the shutter fires." },
+          { n: "02", t: "Read", p: "AI captures every field, checks the document against itself, and finds the office that issued it." },
+          { n: "03", t: "Confirm", p: "The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one." },
+          { n: "04", t: "Report", p: "One report, with the source named beside every result. Wired to your ATS or inbox." },
+          ]}
+        />
       </div>
 
       {/* integrations */}
