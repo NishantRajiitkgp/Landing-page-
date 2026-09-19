@@ -12,6 +12,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { Tick } from "@/components/brand/Tick";
 import { SecHead } from "@/components/chrome/SecHead";
+import { Arrow } from "@/components/brand/Arrow";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -105,9 +106,7 @@ export default async function CertifierPage({
           <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
           <a href="#packages" className="btn btn-ghost">
             <span>See the two packages</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <Arrow />
           </a>
         </div>
       </div>

@@ -8,6 +8,7 @@ import Image from "next/image";
 import { AVATAR_BY } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { Arrow } from "@/components/brand/Arrow";
 
 export async function generateMetadata({
   params,
@@ -196,9 +197,7 @@ export default async function MomCaseStudy({
           <AppLink href="/governments/manpower-education" className="btn btn-line btn-sm">Manpower &amp; education verification</AppLink>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">
             <span>Procurement &amp; compliance artefacts</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <Arrow />
           </AppLink>
         </div>
       </div>

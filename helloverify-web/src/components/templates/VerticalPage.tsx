@@ -14,12 +14,7 @@ import type { Faq } from "@/lib/seo/schema/faq";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getLocale } from "next-intl/server";
-
-const Arrow = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+import { Arrow } from "@/components/brand/Arrow";
 
 export type Pill = { n: string; t: string; fast?: boolean };
 export type Lane = { gt: string; gh: string; pills: Pill[] };
