@@ -7,6 +7,7 @@ import { CERT_BOX, SIZES_PATH_SPAN3 } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
+import { Arrow } from "@/components/brand/Arrow";
 
 export async function generateMetadata({
   params,
@@ -95,9 +96,7 @@ export default async function GovernmentsHub({
           <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost">
             <span>Procurement &amp; compliance artefacts</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <Arrow />
           </AppLink>
         </div>
       </div>

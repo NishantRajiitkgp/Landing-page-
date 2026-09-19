@@ -12,6 +12,7 @@ import { CERT_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
+import { Arrow } from "@/components/brand/Arrow";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -102,9 +103,7 @@ export default async function CustomerKycPage({
           <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
           <AppLink href="/platform/technology" className="btn btn-ghost">
             <span>See the API</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <Arrow />
           </AppLink>
         </div>
       </div>
@@ -199,9 +198,7 @@ export default async function CustomerKycPage({
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">
             <span>Security &amp; compliance, in full</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <Arrow />
           </AppLink>
         </div>
       </div>

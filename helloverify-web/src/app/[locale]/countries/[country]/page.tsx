@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/chrome/PageShell";
 import { COUNTRIES, getCountry } from "@/lib/content/countries";
 import { AppLink } from "@/components/chrome/AppLink";
+import { Arrow } from "@/components/brand/Arrow";
 
 export function generateStaticParams() {
   return COUNTRIES.map((c) => ({ country: c.slug }));
@@ -59,9 +60,7 @@ export default async function CountryPage({
           <AppLink href="/contact" className="btn btn-ink">Ask about {c.name}</AppLink>
           <AppLink href="/platform/coverage" className="btn btn-ghost">
             <span>All 120+ countries</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            <Arrow />
           </AppLink>
         </div>
       </div>
