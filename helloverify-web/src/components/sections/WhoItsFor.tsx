@@ -14,12 +14,16 @@ import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE, tint } from "@/lib/img";
  *  the first cell's tag is "Governments & authorities" on desktop and
  *  "Governments" on mobile.
  *
- *  THE MOBILE CELLS RENDER NO PHOTOGRAPH. Desktop has six `<Image>`s and six
- *  `note` captions; mobile has the same six tints and neither. That is a real
- *  defect, carried in TASKS.md, and it is deliberately NOT fixed in the same
- *  commit as this extraction: the extraction is gated on byte-identical output,
- *  and fixing it changes the output. So `mob` reproduces the defect here, and
- *  the fix lands separately where its diff is the whole point.
+ *  THE MOBILE CELLS USED TO RENDER NO PHOTOGRAPH - six flat tints where desktop
+ *  had six photographs. Fixed in its own commit, after the extraction, because
+ *  the extraction is gated on byte-identical output and this changes it.
+ *
+ *  That it was a defect and not a choice is settled by `design.css` rather than
+ *  by taste: the mobile stylesheet already defines `.pimg`, and already carries
+ *  `.ph:has(.pimg) .light { display: none }` and `.ph:has(.pimg)::after` inside
+ *  its `max-width: 1080px` block - complete support for an image that was never
+ *  rendered. `SIZES_BENTO_NARROW` even opens with `(max-width: 1080px) 90vw`,
+ *  a clause written for a mobile bento photograph and never once exercised.
  *
  *  `sizes` is derived from the column span rather than stored. A cell that
  *  spans two columns is twice as wide, so it takes `SIZES_BENTO_WIDE`; that
@@ -108,19 +112,22 @@ function BentoCell({ c, mob = false }: { c: Cell; mob?: boolean }) {
     <div className="cell ph" style={mob ? { background: tint(c.src) } : { ...span, background: tint(c.src) }}>
       {gap}
       <div className="light"></div>
+      <Image
+        className="pimg"
+        src={c.src}
+        alt=""
+        fill
+        sizes={c.span === "col" ? SIZES_BENTO_WIDE : SIZES_BENTO_NARROW}
+      />
+      {/* The placeholder label, shown only where there is no photograph:
+          `design.css` has `.ph:has(.pimg) .note { display: none }` at BOTH
+          breakpoints. So it is desktop-only markup by inheritance from the
+          artboard rather than by design, and the mobile cell does not get one
+          now that it has a picture. */}
       {!mob && (
-        <>
-          <Image
-            className="pimg"
-            src={c.src}
-            alt=""
-            fill
-            sizes={c.span === "col" ? SIZES_BENTO_WIDE : SIZES_BENTO_NARROW}
-          />
-          <div className="note" {...(c.dimNote ? { style: { color: "rgba(255,255,255,0.4)" } } : {})}>
-            {c.note}
-          </div>
-        </>
+        <div className="note" {...(c.dimNote ? { style: { color: "rgba(255,255,255,0.4)" } } : {})}>
+          {c.note}
+        </div>
       )}
       <div className="scrim"></div>
       {gap}
