@@ -723,6 +723,39 @@ read files as text, was removed in Part 4 as redundant with it; and
 invisible to it. Accepted with its measurement alongside `--faint`, because the
 fix (`--muted`, 4.83:1) is a DESIGN.md decision — see `../TASKS.md`.
 
+### Navigation
+
+`tools/e2e/navigation.spec.ts` — 9 tests. `probe:redirects` already asserts 823
+URL contracts over HTTP and `check:sitemap` proves the manifest and the emitted
+canonicals agree; neither can see whether a link in the chrome goes anywhere
+when clicked, or whether the menu opens for someone on a keyboard.
+
+- **Every internal `href` carries its locale.** A raw `href="/about"` would
+  still resolve — `src/proxy.ts` would redirect it — at the cost of a round
+  trip per click, which is invisible until someone measures a navigation. This
+  is `chrome/AppLink.tsx` checked in the DOM rather than trusted. Broken with
+  one unprefixed anchor in `SiteNav`: caught on all four pages, and it named
+  `/about`.
+- **The mobile menu opens from the keyboard.** The disclosure is CSS-only — a
+  `<label class="burger">` and a `.vh` checkbox with `:checked ~ .menu`. A
+  `<label>` is not focusable, so the keyboard path depends entirely on the
+  checkbox staying in the tab order, which is exactly why `.vh` is used there
+  instead of `display: none`. That reasoning is now a test.
+- **A nav click is a full document load** — asserted, not lamented. The first
+  version of this test asserted the opposite and failed, which was the test
+  being wrong about the architecture. `AppLink` emits a plain `<a>` and says
+  why: next-intl's `<Link>` is a Client Component, so using it anywhere forces
+  `NextIntlClientProvider` on at the root and ships 15.7 KB brotli to every
+  visitor, on a page already over the §9.1 script budget, to compute a prefix
+  the server already knows. There is not one `next/link` in the codebase. The
+  test is a guard on that decision: introduce `next/link` and it fails, and
+  whoever did has to say what happened to the budget.
+
+  It also **proves its own instrument first**. `toBeUndefined()` passes just as
+  happily when the sentinel was never set, so the test does a `pushState` and
+  checks the sentinel survives *that* before concluding anything from the real
+  click. Without it the assertion could not fail and would be theatre.
+
 ### The lead form, end to end
 
 `tools/e2e/contact-form.spec.ts` — 7 tests, both viewports. `abuse.test.ts` and

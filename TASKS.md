@@ -498,10 +498,29 @@ today something renders a page**.
    step, so nothing is broken and nothing reaches production. The alternative is
    moving Lighthouse to CI-only.
 
-**Still to do in this part:** navigation E2E; and a decision on whether
-Playwright runs in CI, which means a ~115 MB browser download in the pipeline —
-the README's argument against putting one in the header-check suite does not
-automatically apply to a suite whose whole purpose is a browser.
+**Navigation E2E done (22 Sep).** `tools/e2e/navigation.spec.ts`, 9 tests. Every
+internal `href` carries its locale — `AppLink` checked in the DOM rather than
+trusted, broken with one unprefixed anchor and caught on all four pages. The
+CSS-only mobile menu opens from the keyboard, which pins the reason `.vh` is
+used for the checkbox instead of `display: none`: a `<label>` is not focusable,
+so the whole keyboard path depends on the checkbox staying in the tab order.
+
+**And one thing worth knowing about the architecture, now asserted:** a nav
+click is a **full document load**. The first version of that test asserted the
+opposite and failed — the test being wrong, not the site. `AppLink` emits a
+plain `<a>` because next-intl's `<Link>` is a Client Component that would force
+`NextIntlClientProvider` on at the root for 15.7 KB brotli on every page, and
+there is not one `next/link` in the codebase. The test guards that decision
+rather than endorsing it: add `next/link` and it fails, and whoever did has to
+account for the script budget. It also proves its own instrument with a
+`pushState` first, because `toBeUndefined()` would otherwise pass even if the
+sentinel were never set.
+
+**Still to do in this part:** a decision on whether Playwright runs in CI, which
+means a ~115 MB browser download in the pipeline — the README's argument against
+putting one in the header-check suite does not automatically apply to a suite
+whose whole purpose is a browser. **This is the last thing in Part 6, and it is
+yours.**
 
 - ~~**`@axe-core/playwright`** for the two rules jsdom cannot run~~ — **done**,
   and it was three rules, not two: `color-contrast` as well as `target-size`
