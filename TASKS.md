@@ -686,7 +686,64 @@ tree under `/hi` and `/ar`.
 
 ---
 
-## Part 10 — Measurement
+## Part 10 — Measurement · **the code is done (22 Sep 2026); the rest is access
+and two non-code blockers**
+
+**Shipped, and inert until configured.** `components/analytics/Analytics.tsx`
+renders GA4 only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set at build time, and
+`next.config.ts` adds Google's origins to `script-src`, `connect-src` and
+`img-src` only then. Measured both ways: with an id the header gains
+`googletagmanager` plus the four analytics hosts, 56 pages carry the tag and
+every one of their inline init scripts is hashed by `inject-csp` (428 hashes,
+from 425), the third-party origin count goes 0 → 1 against a budget of 5, and
+the homepage grows 447.7 → 450.1 KB against a 460 KB ceiling. Without it,
+neither the header nor the body mentions Google at all and §9.4's measured zero
+third-party origins stays zero.
+
+**`lib/analytics/ai-referrers.ts` is the segment, as code.** A GA4 segment
+defined in the console is invisible to this repo — no diff, no test, and it
+silently stops matching when a product changes hostname. This classifies the
+referrer here and sends the result as one `ai_source` dimension, so the GA4 side
+is `ai_source = claude` rather than a pattern nobody owns, and the same function
+will serve the server-log analysis below. 36 new assertions (100 → 136),
+including the near-misses a naive `includes()` would get wrong:
+`notperplexity.ai` and `claude.ai.attacker.example` are both `null`.
+
+§11a.5 names four hosts; the list carries ten, because a segment built on
+`chat.openai.com` alone misses everyone who arrived from `chatgpt.com`.
+
+**One hazard avoided, worth recording.** The obvious shape — read `headers()`,
+classify the referrer on the server — calls a dynamic API and would turn all 58
+prerendered pages into per-request renders, taking §5, condition 23 and every
+build-output gate with it. The host list is serialised into the tag's snippet
+and matched against `document.referrer` in the browser instead.
+
+**Two blockers that are not GA4 access:**
+
+1. **`/legal/cookie-policy` is a stub** — every section reads "[ Section text
+   pending legal review ]", including "Analytics and performance". Setting an
+   analytics cookie while the policy says nothing about it is not defensible,
+   and the `Organization` node's `areaServed` includes the UK.
+2. **There is no consent UI.** Consent Mode initialises with
+   `analytics_storage: "denied"`, which is the only correct default without one;
+   GA4 then sends cookieless pings and stores nothing until something calls
+   `gtag('consent','update',…)`. Nothing does. Until a banner exists the reports
+   are modelled rather than counted, so the AI-referral numbers will be
+   directional. A banner is a design decision, not a dependency.
+
+**Still needing access rather than code:**
+
+- **GA4 segments** — the dimension arrives as `ai_source`; building audiences on
+  it is console work.
+- **Server-log analysis** of AI crawler hits. This is CDN and load-balancer log
+  work, not application code: a page served from cache never reaches the app at
+  all, so app-side logging would systematically miss exactly the hits that
+  matter. It belongs with Part 11.
+- **Citation monitoring** — periodically prompt each engine with the 20 target
+  queries and log whether HelloVerify is cited. Real code, but it needs an API
+  key per engine.
+
+### The original plan, for reference
 
 §17 conditions 19 and 20, and §11a.5. Both need access rather than code.
 

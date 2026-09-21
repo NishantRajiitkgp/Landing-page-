@@ -90,10 +90,26 @@ const nextConfig: NextConfig = {
      *  someone forgetting an env var. */
     const dev = process.env.NODE_ENV !== "production";
 
+    /** GA4's origins, and ONLY when there is a GA4 (§11a.5, TASKS.md Part 10).
+     *
+     *  `components/analytics/Analytics.tsx` renders nothing unless
+     *  `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set, so relaxing the policy for it
+     *  unconditionally would widen `script-src` and `connect-src` for a script
+     *  that is not on the page. §9.4 measures zero third-party origins today
+     *  and this keeps that true until someone deliberately changes it.
+     *
+     *  Read at build time on purpose: the tag is baked in at build time too, so
+     *  the policy and the page cannot disagree about whether GA exists. */
+    const ga = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ? "https://www.googletagmanager.com" : "";
+    const gaConnect = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+      ? " https://www.google-analytics.com https://*.google-analytics.com" +
+        " https://*.analytics.google.com https://www.googletagmanager.com"
+      : "";
+
     const csp = [
       "default-src 'self'",
       // See the long note above. Everything else in this policy is strict.
-      `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}`,
+      `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}${ga ? ` ${ga}` : ""}`,
       // Stylesheets come from this origin only. The 30 `style=` attributes the
       // ported canvas uses are governed by `style-src-attr`, which is relaxed
       // separately so that the stylesheet directive itself stays tight.
@@ -108,12 +124,12 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'sha256-Wwucq8eX2r0YFymkQhDXm5hN0+FfSvI3s4JSSaqa4iw=' 'sha256-Z5XTK23DFuEMs0PwnyZDO9SWxemQ5HxcpVaBNuUJyWY='",
       "style-src-attr 'unsafe-inline'",
       // `data:` is for the inlined blur placeholders `next/image` emits.
-      "img-src 'self' data:",
+      `img-src 'self' data:${ga ? " https://www.google-analytics.com" : ""}${ga ? ` ${ga}` : ""}`,
       "font-src 'self'",
       // The lead form posts to a Server Action on this origin. Nothing else
       // makes a network call — §9.4 measures zero third-party origins. In
       // development the HMR websocket needs `ws:` on the same origin.
-      `connect-src 'self'${dev ? " ws:" : ""}`,
+      `connect-src 'self'${dev ? " ws:" : ""}${gaConnect}`,
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
