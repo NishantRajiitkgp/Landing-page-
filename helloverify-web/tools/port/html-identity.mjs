@@ -110,6 +110,18 @@ const markupOf = (html) => html.replace(PUSH, "<PUSH>");
 const CSS_CHUNK = /\/_next\/static\/chunks\/[a-z0-9]+\.css/g;
 const stylesheets = (html) => new Set(html.match(CSS_CHUNK) ?? []);
 
+/** The emitted client chunks, whose names are hashes of their contents.
+ *
+ *  Deliberately NOT normalised by default, and this tool's own history is the
+ *  argument: through the first eleven extractions not one JS chunk name moved,
+ *  because a Server Component's markup never reaches the client bundle.
+ *  Splitting `ContactForm.tsx` moved one, correctly — it is a Client Component,
+ *  so re-chunking it changes what the browser downloads even when the markup is
+ *  identical to the byte. That gets said out loud once and acknowledged with
+ *  `--allow-script`, rather than normalised away where nobody would see it. */
+const JS_CHUNK = /\/_next\/static\/chunks\/[a-z0-9]+\.js/g;
+const scripts = (html) => new Set(html.match(JS_CHUNK) ?? []);
+
 function snapshot(dir) {
   if (!existsSync(APP)) fail(`no ${APP} — run \`npm run build\` first`);
   rmSync(dir, { recursive: true, force: true });
@@ -134,7 +146,7 @@ function firstDiff(a, b) {
   return { at: i, old: a.slice(Math.max(0, i - ctx), i + ctx), new: b.slice(Math.max(0, i - ctx), i + ctx) };
 }
 
-function compare(dir, allowPayload) {
+function compare(dir, allowPayload, allowScript) {
   if (!existsSync(join(dir, MANIFEST))) fail(`${dir} is not a snapshot — no ${MANIFEST}`);
   const oldId = readFileSync(join(dir, MANIFEST), "utf8").trim();
   const newId = readFileSync(BUILD_ID_FILE, "utf8").trim();
@@ -149,6 +161,8 @@ function compare(dir, allowPayload) {
   const pair = new Map();
   const cssBefore = new Set();
   const cssAfter = new Set();
+  const jsBefore = new Set();
+  const jsAfter = new Set();
   for (const rel of before) {
     if (missing.includes(rel)) continue;
     const a = read(join(dir, rel), oldId);
@@ -156,11 +170,17 @@ function compare(dir, allowPayload) {
     pair.set(rel, [a, b]);
     for (const s of stylesheets(a)) cssBefore.add(s);
     for (const s of stylesheets(b)) cssAfter.add(s);
+    for (const s of scripts(a)) jsBefore.add(s);
+    for (const s of scripts(b)) jsAfter.add(s);
   }
   const cssMoved = [...cssBefore].some((s) => !cssAfter.has(s)) || cssBefore.size !== cssAfter.size;
+  const jsGone = [...jsBefore].filter((s) => !jsAfter.has(s));
+  const jsNew = [...jsAfter].filter((s) => !jsBefore.has(s));
+  const jsMoved = jsGone.length > 0 || jsNew.length > 0;
   // Substituted only so the per-page diffs show the real difference instead of
   // the hash; the move itself is reported and is fatal.
   const blindCss = (s) => s.replace(CSS_CHUNK, "/_next/static/chunks/<CSS>.css");
+  const blindJs = (s) => s.replace(JS_CHUNK, "/_next/static/chunks/<JS>.js");
 
   const markupDiff = [];
   const payloadDiff = [];
@@ -168,6 +188,7 @@ function compare(dir, allowPayload) {
     if (missing.includes(rel)) continue;
     let [a, b] = pair.get(rel);
     if (cssMoved) [a, b] = [blindCss(a), blindCss(b)];
+    if (jsMoved) [a, b] = [blindJs(a), blindJs(b)];
     if (a === b) continue;
     const ma = markupOf(a);
     const mb = markupOf(b);
@@ -181,6 +202,13 @@ function compare(dir, allowPayload) {
     console.error(
       `STYLESHEET   ${[...cssBefore].join(" ")} -> ${[...cssAfter].join(" ")}\n` +
         `             the class set changed, so this is not a pure split`,
+    );
+  }
+  if (jsMoved) {
+    console.error(
+      `SCRIPT       ${jsGone.join(" ")} -> ${jsNew.join(" ")}\n` +
+        `             a client chunk's contents changed — expected only when a Client\n` +
+        `             Component was reshaped. Acknowledge with --allow-script.`,
     );
   }
   for (const [rel, la, lb, d] of markupDiff) {
@@ -205,6 +233,7 @@ function compare(dir, allowPayload) {
     extra.length +
     markupDiff.length +
     (cssMoved ? 1 : 0) +
+    (jsMoved && !allowScript ? 1 : 0) +
     (allowPayload ? 0 : payloadDiff.length);
   if (fatal) {
     if (payloadDiff.length && !allowPayload) {
@@ -225,9 +254,10 @@ function fail(msg) {
 
 const argv = process.argv.slice(2);
 const allowPayload = argv.includes("--allow-payload");
+const allowScript = argv.includes("--allow-script");
 const [mode, dir] = argv.filter((a) => !a.startsWith("--"));
 if (!dir || (mode !== "snapshot" && mode !== "compare")) {
-  fail("usage: html-identity.mjs snapshot|compare <dir> [--allow-payload]");
+  fail("usage: html-identity.mjs snapshot|compare <dir> [--allow-payload] [--allow-script]");
 }
 if (mode === "snapshot") snapshot(dir);
-else compare(dir, allowPayload);
+else compare(dir, allowPayload, allowScript);

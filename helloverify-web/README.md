@@ -119,7 +119,14 @@ Three separate signals, because they mean different things:
 |---|---|---|
 | markup differs | yes | the rendered page changed; this is the whole point |
 | stylesheet hash moved | yes | Tailwind generates from the classes it finds, so a pure split cannot move it |
+| client chunk hash moved | only without `--allow-script` | a Client Component was reshaped, so the browser downloads something different |
 | flight payload differs | only without `--allow-payload` | `.map()` gives children `key`s that hand-written siblings never had |
+
+The script signal was added last, by the last file in the set. Through eleven
+extractions not one JS chunk name moved — a Server Component's markup never
+reaches the client bundle — and then splitting `ContactForm.tsx`, the one Client
+Component in the list, moved exactly one. It is reported rather than normalised
+for the same reason as the stylesheet: it is a real change to what ships.
 
 The build id is normalised, and nothing else is. Next mints a fresh 21-character
 `BUILD_ID` per build and embeds it in every page; without that one substitution

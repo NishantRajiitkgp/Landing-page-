@@ -3,9 +3,9 @@
 The remaining work on the helloverify.com rebuild, in the order it should be
 done. One part per sitting: say **"next"** to move to the following part.
 
-Status as measured on **18 September 2026**, branch `feat/leads-api-zoho`.
-BUILD-SPEC §17 defines done as 24 conditions — **8 met, 9 partly met, 7 not
-started**. The full reading, with evidence per condition, is in the build ledger
+Status as measured on **21 September 2026**, branch `feat/leads-api-zoho`.
+BUILD-SPEC §17 defines done as 24 conditions — **9 met, 9 partly met, 6 not
+started**. Condition 22 closed with Part 5. The full reading, with evidence per condition, is in the build ledger
 artifact and in `helloverify-web/README.md`.
 
 ---
@@ -184,16 +184,17 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **11 of 12 done**
+## Part 5 — Split the oversized components · **DONE (21 Sep 2026)**
 
-§4 rule 2 and §17 condition 22. **1 file still exceeds 300 lines.**
+§4 rule 2 and **§17 condition 22, now met: no component file exceeds 300
+lines.** Measured with `find src -name '*.tsx'` after the last extraction.
 
 **The shape is the same in every one: one card written N times.** Measured:
 
 | file | lines | the repeat |
 |---|---:|---|
-| `ContactForm.tsx` | 328 | — no repeat; a genuine split |
 | ~~`HowItWorks.tsx`~~ | ~~910~~ → **192** + **292** | **done**, split in two |
+| ~~`ContactForm.tsx`~~ | ~~328~~ → **243** + **102** | **done**, split in two |
 | ~~`PeopleStrip.tsx`~~ | ~~684~~ → **209** | **done** |
 | ~~`Packages.tsx`~~ | ~~712~~ → **294** | **done** |
 | ~~`International.tsx`~~ | ~~778~~ → **285** | **done** |
