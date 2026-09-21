@@ -3,9 +3,13 @@
 The remaining work on the helloverify.com rebuild, in the order it should be
 done. One part per sitting: say **"next"** to move to the following part.
 
-Status as measured on **21 September 2026**, branch `feat/leads-api-zoho`.
-BUILD-SPEC §17 defines done as 24 conditions — **9 met, 9 partly met, 6 not
-started**. Condition 22 closed with Part 5. The full reading, with evidence per condition, is in the build ledger
+Status as measured on **22 September 2026**, branch `feat/leads-api-zoho`.
+BUILD-SPEC §17 defines done as 24 conditions — **9 met, 10 partly met, 5 not
+started**. Condition 22 closed with Part 5. Condition 11 is now met in
+enforcement and open in the header's wording — see Part 7, which is deliberate
+and measured rather than unfinished. Conditions 3 and 12 moved to partly met
+with Part 6: the lab half is measured, the field half needs a deployment and
+the locale half needs Part 9. The full reading, with evidence per condition, is in the build ledger
 artifact and in `helloverify-web/README.md`.
 
 ---
@@ -570,22 +574,44 @@ next person will hit them too:**
 
 ---
 
-## Part 7 — Close the CSP
+## Part 7 — Close the CSP · **DONE in enforcement (22 Sep 2026)**
 
-§17 condition 11. Every CSP directive is strict except `script-src`, which keeps
-`'unsafe-inline'` because the nonce §13 specifies requires per-request rendering
-— which would make all 56 static pages dynamic and blind every build-output gate
-(Next's own docs, `content-security-policy.md:181`).
+§17 condition 11. The preferred route was taken: **post-build hash injection**.
+`tools/ci/inject-csp.mjs` runs as part of `npm run build`, computes the SHA-256
+of every inline script on every page — 425 blocks across 58 pages, 2 to 17 per
+page — and writes a per-page `<meta http-equiv>` carrying `script-src 'self'`
+plus exactly those hashes and nothing else. Static rendering is untouched;
+`check:static` still passes and `next build` still emits zero dynamic routes.
 
-- **Preferred: post-build hash injection.** Compute each page's inline-script
-  hashes after `next build` and rewrite a per-page `<meta http-equiv>` CSP.
-  Preserves static rendering. `frame-ancestors` must stay in the HTTP header
-  because `<meta>` ignores it.
-- Alternative: accept dynamic rendering. Much larger than it sounds — it trades
-  away §5 and every gate built on it.
+**Read the acceptance criterion carefully, because it is half met and the half
+that is missing is the wording rather than the security.**
 
-**Acceptance:** `script-src` has no `'unsafe-inline'`; `npm run contract` stops
-reporting it as a deviation; `check:static` still passes.
+Measured in a browser, not reasoned about: with the header at
+`script-src 'self' 'unsafe-inline'` and a document meta at `script-src 'self'`,
+an inline script **does not run**. Multiple policies are each enforced and a
+script must satisfy all of them, so the **effective** policy is the intersection
+— hash-only. `tools/e2e/csp.spec.ts` proves it on the real site, including that
+an unlisted inline script is actually refused; without that last assertion the
+rest would pass equally well if the browser were ignoring the meta.
+
+The header still contains `'unsafe-inline'`, and cannot not: the hashes are per
+page, every one changes on every build (the flight payload embeds the build id
+and the chunk names), and `headers()` is evaluated before any page is rendered.
+The union across 58 pages is 258 hashes, ~14 KB on every response.
+
+So: **`script-src` has no inline latitude in enforcement; the header text still
+has the token.** `npm run contract` no longer says "box open" — it makes both
+halves of that statement, and gained two assertions doing it (29, from 27). The
+remaining literal gap needs per-request headers from middleware over a
+build-time manifest, which cannot exist before the build that produces the
+hashes. **That is a decision for you, not a task:** it is real work for a
+wording, and it would put a per-request step in front of 58 static pages.
+
+`check:csp` now proves each page lists the right hashes for the bytes beside it
+— a wrong hash is silent, since the page still paints and only hydration is
+gone. Broken three ways: injector skipped (58 pages named), a script added after
+hashing (a missing hash *and* a stale one), `'unsafe-inline'` smuggled into the
+meta (caught, plus the 17 scripts it orphaned).
 
 ---
 

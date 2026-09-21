@@ -18,13 +18,20 @@
  *  `check-sitemap.mjs` has to `routes.ts`: the config states an intention, the
  *  gate proves the build still matches it.
  *
- *  `script-src` is NOT hash-checked, because it cannot be: Next inlines the RSC
- *  flight payload as `self.__next_f.push(...)`, which differs per page — 424
- *  blocks across 58 pages. That is why `script-src` keeps `'unsafe-inline'`,
- *  and the long note in `next.config.ts` explains why the nonce §13 asks for is
- *  not available to a statically prerendered site.
+ *  `script-src` IS hash-checked now, and not from this config. Next inlines the
+ *  RSC flight payload as `self.__next_f.push(...)`, which differs per page —
+ *  425 blocks across 58 pages, every one of them changing on every build
+ *  because the payload embeds the build id and the chunk names. No static
+ *  config can name them, which is why `tools/ci/inject-csp.mjs` computes them
+ *  after the build and writes a per-page `<meta http-equiv>`.
  *
- *  Run after `next build`:
+ *  So the second half of this gate checks a different relation from the first.
+ *  For styles, the config states an intention and the gate proves the build
+ *  matches it. For scripts, the build states the hashes and the gate proves
+ *  they are the RIGHT hashes for the bytes beside them — because a wrong hash
+ *  is silent: the page still paints, and only hydration is gone.
+ *
+ *  Run after `next build` (which runs the injector):
  *      node tools/ci/check-csp.mjs
  */
 import { createHash } from "node:crypto";
@@ -91,5 +98,72 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log("PASS - every inline <style> in the build is allowlisted by the CSP");
+// ───────────────────────────────────────────── script-src, per page, by hash
+
+/** Inline `<script>` only — anything with a `src` is governed by `'self'`.
+ *  Must stay identical to the pattern in `inject-csp.mjs`; if the two ever
+ *  disagree about what counts as an inline script, this gate stops being a
+ *  check on that tool and becomes a second opinion. */
+const INLINE_SCRIPT = /<script(?![^>]*\ssrc=)[^>]*>([\s\S]*?)<\/script>/g;
+const CSP_META = /<meta data-csp-hashes[^>]*content="([^"]*)"[^>]*>/;
+
+const scriptProblems = [];
+let pagesWithMeta = 0;
+let scriptHashes = 0;
+
+for (const [page, file] of pages) {
+  const html = await readFile(new URL(file, root), "utf8");
+  const meta = CSP_META.exec(html);
+  if (!meta) {
+    scriptProblems.push(`${page}: no injected script-src meta — did \`inject-csp\` run?`);
+    continue;
+  }
+  pagesWithMeta += 1;
+  const policy = meta[1];
+
+  if (policy.includes("unsafe-inline")) {
+    scriptProblems.push(`${page}: the injected policy contains 'unsafe-inline'`);
+  }
+
+  // The meta is stripped before hashing, exactly as the injector does, so the
+  // two are computing over the same bytes.
+  const body = html.replace(CSP_META, "");
+  const expected = new Set(
+    [...body.matchAll(INLINE_SCRIPT)].map(
+      ([, src]) => `'sha256-${createHash("sha256").update(src, "utf8").digest("base64")}'`,
+    ),
+  );
+  const listed = new Set(policy.split(/\s+/).filter((t) => t.startsWith("'sha256-")));
+  scriptHashes += listed.size;
+
+  const missing = [...expected].filter((h) => !listed.has(h));
+  const extra = [...listed].filter((h) => !expected.has(h));
+  if (missing.length) {
+    scriptProblems.push(
+      `${page}: ${missing.length} inline script(s) would be BLOCKED — hash not listed`,
+    );
+  }
+  if (extra.length) {
+    // Not merely untidy: a hash that matches nothing means the block it was
+    // computed for has changed, and the new one is in `missing` above.
+    scriptProblems.push(`${page}: ${extra.length} listed hash(es) match no script — stale`);
+  }
+}
+
+console.log(
+  `\npages with an injected script-src: ${pagesWithMeta} of ${pages.size}` +
+    `   (${scriptHashes} hashes, ${(scriptHashes / Math.max(1, pagesWithMeta)).toFixed(1)} per page)`,
+);
+
+if (scriptProblems.length) {
+  for (const p of scriptProblems.slice(0, 12)) console.log(`  x ${p}`);
+  if (scriptProblems.length > 12) console.log(`  … and ${scriptProblems.length - 12} more`);
+  console.log(`\nFAIL - ${scriptProblems.length} script-src problem(s)`);
+  process.exit(1);
+}
+
+console.log(
+  "PASS - every inline <style> is allowlisted, and every page's script-src\n" +
+    "       lists exactly the hashes of the inline scripts beside it",
+);
 process.exit(0);

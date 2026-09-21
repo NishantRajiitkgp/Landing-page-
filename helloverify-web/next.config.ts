@@ -42,10 +42,32 @@ const nextConfig: NextConfig = {
    *  every one of those checks — to remove `'unsafe-inline'` from a site that
    *  ships no third-party script and no inline handler of its own.
    *
-   *  So `script-src` keeps `'unsafe-inline'`, and §17's "CSP has no
-   *  'unsafe-inline' in script-src" box stays open and honest rather than being
-   *  quietly ticked. The two routes to closing it are written up in README's
-   *  known gaps; both are real work, and neither is a config change.
+   *  SO THE HASHES COME FROM THE BUILD INSTEAD, and this header is no longer
+   *  the whole policy. `tools/ci/inject-csp.mjs` runs after `next build`,
+   *  computes the SHA-256 of every inline script on every page, and writes a
+   *  per-page `<meta http-equiv>` carrying `script-src 'self'` plus exactly
+   *  those hashes. `npm run check:csp` then proves each page lists the right
+   *  ones, and `tools/e2e/csp.spec.ts` proves a browser agrees — including that
+   *  an unlisted inline script is actually refused.
+   *
+   *  Measured in a real browser, because it is the load-bearing claim: with
+   *  this header at `'unsafe-inline'` and a document meta at `script-src
+   *  'self'`, an inline script does NOT run. Multiple policies are each
+   *  enforced and a script must satisfy all of them, so the EFFECTIVE policy is
+   *  the intersection — hash-only.
+   *
+   *  `'unsafe-inline'` therefore stays HERE, and the reason is not inertia: the
+   *  hashes are per page and change on every build, and this function is
+   *  evaluated before any page is rendered. Removing the token from the header
+   *  would block the build's own scripts, whose hashes the header cannot know.
+   *  The union across 58 pages is 258 distinct hashes, roughly 14 KB on every
+   *  response.
+   *
+   *  §17 condition 11 reads "CSP has no 'unsafe-inline' in script-src". The
+   *  enforced policy has no inline latitude; this header still contains the
+   *  token. That distinction is recorded rather than rounded off — closing it
+   *  literally needs per-request headers from middleware over a build-time
+   *  manifest, which cannot exist before the build that produces the hashes.
    *
    *  WHAT IS INLINE, measured rather than assumed — 7 blocks on a typical page:
    *  4 are Next's own `self.__next_f.push(...)` flight payload and 3 are the
