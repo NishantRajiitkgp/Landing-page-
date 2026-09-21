@@ -20,33 +20,13 @@ import {
   INTEREST_VALUES,
   type InterestValue,
   LIMITS,
-  MOBILE_PATTERN,
   SEGMENT_LABELS,
   SEGMENT_VALUES,
   type LeadField,
 } from "@/lib/leads/constraints";
+import { Field, TEXT_FIELDS } from "@/components/forms/LeadFields";
 import { INITIAL_LEAD_FORM_STATE } from "@/lib/leads/state";
 import { localise } from "@/lib/i18n/href";
-
-/** Hoisted out of `ContactForm` deliberately.
- *
- *  Declared inside the render body, this is a NEW component type on every
- *  render, so React unmounts and remounts the paragraph each time rather than
- *  updating it - `react-hooks/static-components`. Nothing here holds focus or
- *  state, so the visible cost was nil, but it defeats reconciliation for no
- *  reason and the rule is right to refuse it.
- *
- *  It takes the message rather than closing over `errorFor`, which is what lets
- *  it live out here at all.
- */
-function ErrorText({ field, message }: { field: LeadField; message?: string }) {
-  if (!message) return null;
-  return (
-    <p className="err" id={`${field}-error`}>
-      {message}
-    </p>
-  );
-}
 
 /** `locale` is a prop rather than a hook: reading it from next-intl on the
  *  client would require NextIntlClientProvider at the root, which ships
@@ -154,86 +134,26 @@ export function ContactForm({ locale }: { locale: string }) {
       </div>
 
       <div className="fgrid" style={{ marginTop: 22 }}>
-        <div>
-          <label className="fld-l" htmlFor="name">
-            Full name
-          </label>
-          <input
-            className="inp"
-            id="name"
-            name="name"
-            type="text"
-            placeholder="Priya Menon"
-            autoComplete="name"
-            required
-            minLength={LIMITS.name.min}
-            maxLength={LIMITS.name.max}
-            defaultValue={state.values?.name ?? ""}
-            {...invalidProps("name")}
-          />
-          <ErrorText field="name" message={errorFor("name")} />
-        </div>
+        {TEXT_FIELDS.map((f) => (
+          <Field key={f.id} id={f.id} label={f.label} message={errorFor(f.id)}>
+            <input
+              className="inp"
+              id={f.id}
+              name={f.id}
+              type={f.type}
+              placeholder={f.placeholder}
+              autoComplete={f.autoComplete}
+              required={f.required}
+              minLength={f.minLength}
+              pattern={f.pattern}
+              maxLength={f.maxLength}
+              defaultValue={state.values?.[f.id] ?? ""}
+              {...invalidProps(f.id)}
+            />
+          </Field>
+        ))}
 
-        <div>
-          <label className="fld-l" htmlFor="company">
-            Company
-          </label>
-          <input
-            className="inp"
-            id="company"
-            name="company"
-            type="text"
-            placeholder="Company name"
-            autoComplete="organization"
-            maxLength={LIMITS.company.max}
-            defaultValue={state.values?.company ?? ""}
-            {...invalidProps("company")}
-          />
-          <ErrorText field="company" message={errorFor("company")} />
-        </div>
-
-        <div>
-          <label className="fld-l" htmlFor="email">
-            Business email
-          </label>
-          <input
-            className="inp"
-            id="email"
-            name="email"
-            type="email"
-            placeholder="name@company.com"
-            autoComplete="email"
-            required
-            maxLength={LIMITS.email.max}
-            defaultValue={state.values?.email ?? ""}
-            {...invalidProps("email")}
-          />
-          <ErrorText field="email" message={errorFor("email")} />
-        </div>
-
-        <div>
-          <label className="fld-l" htmlFor="mobile">
-            Mobile
-          </label>
-          <input
-            className="inp"
-            id="mobile"
-            name="mobile"
-            type="tel"
-            placeholder="+91"
-            autoComplete="tel"
-            pattern={MOBILE_PATTERN}
-            maxLength={LIMITS.mobile.max}
-            defaultValue={state.values?.mobile ?? ""}
-            {...invalidProps("mobile")}
-          />
-          <ErrorText field="mobile" message={errorFor("mobile")} />
-        </div>
-
-        <div className="full2">
-          <label className="fld-l" htmlFor="interest">
-            Services of interest
-          </label>
+        <Field id="interest" label="Services of interest" wide message={errorFor("interest")}>
           {/* `key` forces a remount on each submission, and it is doing real
               work. React resets the form once the action resolves; for an
               <input> that is harmless because `defaultValue` becomes the value
@@ -259,13 +179,9 @@ export function ContactForm({ locale }: { locale: string }) {
               </option>
             ))}
           </select>
-          <ErrorText field="interest" message={errorFor("interest")} />
-        </div>
+        </Field>
 
-        <div className="full2">
-          <label className="fld-l" htmlFor="message">
-            Message
-          </label>
+        <Field id="message" label="Message" wide message={errorFor("message")}>
           <textarea
             className="inp"
             id="message"
@@ -283,8 +199,7 @@ export function ContactForm({ locale }: { locale: string }) {
             }}
             {...invalidProps("message")}
           />
-          <ErrorText field="message" message={errorFor("message")} />
-        </div>
+        </Field>
       </div>
 
       {/* A field no human can see: anything in it came from automation. One
