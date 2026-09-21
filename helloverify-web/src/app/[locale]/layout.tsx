@@ -10,6 +10,7 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { directionOf, routing } from "@/lib/i18n/routing";
+import { Analytics } from "@/components/analytics/Analytics";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ORGANIZATION, WEBSITE } from "@/lib/seo/schema/organization";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/seo/site";
@@ -174,6 +175,11 @@ export default async function LocaleLayout({
             §9.1 budget. Add it back the moment a Client Component needs
             translations — and scope it to that subtree, not the root. */}
         {children}
+        {/* GA4, and it renders NOTHING unless NEXT_PUBLIC_GA_MEASUREMENT_ID is
+            set at build time — no script, no request, no cookie. See the file:
+            the id is the small half of turning it on, and the cookie policy
+            and a consent banner are the other half. */}
+        <Analytics />
       </body>
     </html>
   );
