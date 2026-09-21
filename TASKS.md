@@ -184,16 +184,16 @@ places in signed-off copy for zero rendered difference.
 
 ---
 
-## Part 5 — Split the oversized components · **10 of 11 done**
+## Part 5 — Split the oversized components · **11 of 12 done**
 
-§4 rule 2 and §17 condition 22. **2 files still exceed 300 lines.**
+§4 rule 2 and §17 condition 22. **1 file still exceeds 300 lines.**
 
 **The shape is the same in every one: one card written N times.** Measured:
 
 | file | lines | the repeat |
 |---|---:|---|
-| `HowItWorks.tsx` | 910 | 8 nodes, 8 panels, 18 animated ticks |
 | `ContactForm.tsx` | 328 | — no repeat; a genuine split |
+| ~~`HowItWorks.tsx`~~ | ~~910~~ → **192** + **292** | **done**, split in two |
 | ~~`PeopleStrip.tsx`~~ | ~~684~~ → **209** | **done** |
 | ~~`Packages.tsx`~~ | ~~712~~ → **294** | **done** |
 | ~~`International.tsx`~~ | ~~778~~ → **285** | **done** |
@@ -362,10 +362,27 @@ before writing a new one — that is the second time a unit already existed.
   rendered. The same rule set also settled what NOT to add: `.ph:has(.pimg)
   .note { display: none }` means the caption is the placeholder shown *instead
   of* a photograph, so mobile did not get one.
-- **`HowItWorks.tsx` holds the last 18 inline ticks**, each with a unique
-  `animation` name and dash offset, so they are individually drawn rather than
-  repeats of `<Tick>`. Decide there whether they become one component taking a
-  delay.
+- ~~**`HowItWorks.tsx` holds the last 18 inline ticks.**~~ **Settled by
+  measurement, not by decision.** The premise was wrong: they do not carry
+  unique dash offsets. All 18 share one path, one stroke width, one
+  `pathLength` and one `strokeDasharray`, and differ ONLY in the keyframe name
+  and the box they are set in. So `PanelTick` reproduces every one exactly and
+  the change was structural, which is why it could be proved byte-identical.
+  They are still not `brand/Tick.tsx`: that one is a static mark coloured by
+  CSS, these are drawn on by a keyframe and carry their own stroke.
+- **`hv/no-color-literal` cannot see through a conditional.** Its exemption
+  requires the JSX attribute to be the literal's *direct* parent, so
+  `stroke={onChip ? "#FFFFFF" : "#1B6B4A"}` is an error where two branched
+  `<path>`s are not. That strictness is deliberate and documented in the rule —
+  UI colour must not hide one expression deep inside an SVG — so
+  `HowItWorksPanels.tsx` bends to it rather than the exemption being widened
+  for the first file that tripped it. Recorded in case a second file makes the
+  case, not as a defect.
+- **The `.lic` licence-card markup is written three times** — twice in
+  `blocks/HowItWorksPanels.tsx`, where it is now one local component, and once
+  more in `blocks/HelloVPhone.tsx` as `.lic chat`. Sharing it across the two
+  would touch a file marked `lint-collisions: canvas-verbatim`, so it wants its
+  own commit and its own diff of the two inner blocks first.
 - **Tailwind v4 scans `tools/`, so a word in a build script ships CSS.** The
   new harness used the bare word for the CSS property between `border` and
   `box-shadow` in a comment; Tailwind's extractor read it as a candidate and
