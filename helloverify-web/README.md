@@ -674,6 +674,73 @@ argument: `/xx/opengraph-image` answers **307**, because `src/proxy.ts` rewrites
 an unrecognised first segment before the route is reached. It is an asset of a
 page, not a page, and is excluded.
 
+## The browser layer
+
+`npm run test:e2e` — Playwright, 124 tests over two viewports. The first thing
+in this repo that renders a page; everything else reads build output or HTTP
+headers.
+
+```sh
+npm run build          # it tests the BUILD, not `next dev`
+npm run test:e2e
+npm run test:a11y      # just the axe sweep
+```
+
+Two viewports, 1440 and 390, because `.dsk` and `.mob` are separate markup
+swapped at 1080px rather than one tree reflowing — a single viewport leaves half
+the site unrendered.
+
+### What it proves that nothing else could
+
+| Spec | Claim |
+|---|---|
+| `breakpoints.spec.ts` | both trees ship and **exactly one is on screen**, either side of the 1080/1081 seam |
+| `a11y.spec.ts` | the three axe rules jsdom reports it cannot run, over all 56 routes |
+
+`check:a11y` has always printed "not runnable without layout: color-contrast,
+target-size, scrollable-region-focusable". Those three need a box model. The
+browser scan runs **only** those three: the jsdom gate already covers every
+other rule on every page in seconds with no browser, and re-running them here
+would cost minutes to re-prove what is proved, and make this suite the one
+people skip. Together they are the complete rule set; neither alone is.
+
+### It found two things on its first run
+
+**A keyboard trap in reverse, and it is fixed.** The two API samples on
+`/platform/technology` set `overflow-x: auto`, so at 390px they scroll sideways
+— and a keyboard user could not reach or move them (WCAG 2.1.1). They now carry
+`tabIndex={0}` and a `role="region"` named from the header already above each
+block, so the name is existing copy rather than invented. Desktop never showed
+it: the samples fit, so nothing scrolls.
+
+**A colour below AA that no gate could see.** `#7D796F`, the placeholder text of
+the homepage's mock contact form, measures **3.95:1** on paper where 4.5:1 is
+required, on five nodes. It is hard-coded in `app/design.css` on `.inp` at both
+breakpoints. Three gates all miss it by construction: `hv/no-color-literal` is
+an ESLint rule and reads TypeScript, not stylesheets; `check:tokens`, which did
+read files as text, was removed in Part 4 as redundant with it; and
+`check:contrast` walks the **token table**, so a colour that is not a token is
+invisible to it. Accepted with its measurement alongside `--faint`, because the
+fix (`--muted`, 4.83:1) is a DESIGN.md decision — see `../TASKS.md`.
+
+### Three things the harness had to learn, each by being wrong
+
+- **Only the homepage is a two-tree port.** The first draft of
+  `breakpoints.spec.ts` asserted two trees on five pages and failed on four.
+  Measured: `class="dsk"` appears in 1 of 58 emitted pages. The other 57 are
+  `pages.css`, one responsive tree — so they are now asserted to have *no*
+  canvas breakpoint block, which pins the boundary instead of ignoring it.
+- **Animations and scroll reveal made the scan both flaky and lenient.** Two
+  identical runs returned 68 and 69 contrast nodes. `reducedMotion: "reduce"`
+  settles the 12-second loops using the site's own
+  `prefers-reduced-motion` block rather than injected CSS; `settle()` then
+  scrolls the whole document so `.rise` blocks actually paint. Before it, the
+  scan was auditing roughly the first screen and calling it the page.
+- **A stale `next start` silently became the thing under test.** A verified fix
+  kept reporting as broken because the origin was three builds old.
+  `tools/e2e/global-setup.ts` now refuses to run unless the served page
+  contains `.next/BUILD_ID`. Broken both ways to check it fires.
+
 ## Accessibility
 
 ```sh

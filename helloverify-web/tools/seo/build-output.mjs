@@ -5,15 +5,22 @@
  *  find the emitted HTML" is how one checker comes to be looking at a different
  *  set of pages than the other and neither noticing.
  */
-import { readdir } from "node:fs/promises";
+import { readdirSync } from "node:fs";
 
 /** Every prerendered page, keyed by the URL it is served at.
- *  `.next/server/app/en/about.html` -> `/en/about`; `en.html` -> `/en`. */
-export async function htmlPages(root, dir = ".next/server/app/", prefix = "") {
+ *  `.next/server/app/en/about.html` -> `/en/about`; `en.html` -> `/en`.
+ *
+ *  SYNCHRONOUS, and that is not a style preference. The Playwright a11y sweep
+ *  has to build one test per page at collection time, and Playwright
+ *  transpiles specs to CommonJS — so it has neither top-level `await` nor
+ *  `import.meta`. The alternative was a second directory walk living in the
+ *  spec, which is the exact duplication the note above this function warns
+ *  about. One walk, called two ways. */
+export function htmlPagesSync(root, dir = ".next/server/app/", prefix = "") {
   const out = new Map();
-  for (const item of await readdir(new URL(dir, root), { withFileTypes: true })) {
+  for (const item of readdirSync(new URL(dir, root), { withFileTypes: true })) {
     if (item.isDirectory()) {
-      for (const [k, v] of await htmlPages(root, `${dir}${item.name}/`, `${prefix}/${item.name}`)) {
+      for (const [k, v] of htmlPagesSync(root, `${dir}${item.name}/`, `${prefix}/${item.name}`)) {
         out.set(k, v);
       }
     } else if (item.name.endsWith(".html")) {
@@ -21,6 +28,12 @@ export async function htmlPages(root, dir = ".next/server/app/", prefix = "") {
     }
   }
   return out;
+}
+
+/** The async shape the three `check:*` gates already call. Kept so none of
+ *  them has to change, and so there is still only one implementation. */
+export async function htmlPages(root, dir, prefix) {
+  return htmlPagesSync(root, dir, prefix);
 }
 
 /** The five entities React escapes in a text node, undone.
