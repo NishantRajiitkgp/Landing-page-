@@ -108,9 +108,30 @@ neither is published and the build fails if either reappears. If they are real,
 add them to `lib/content/company.ts` **and** `/about` together. If they are not,
 the old site is claiming them today and should stop.
 
-**2c. The live site's schema names the wrong city.** The old
-`StructuredData.tsx` says Mumbai; confirmed answer is Noida. Worth correcting on
-the old site while it is still serving traffic.
+**2c. The live site's schema names the wrong city.** ~~The old
+`StructuredData.tsx` says Mumbai; confirmed answer is Noida.~~ **ANSWERED
+(Noida) and DONE, 22 Sep** — old repo, branch `fix/schema-city-noida`, commit
+`bc32f92`, not pushed.
+
+Both the `Organization` and `LocalBusiness` nodes said Mumbai, Maharashtra.
+`addressRegion` was dropped rather than corrected to Uttar Pradesh, because the
+reviewed address carries city and country only and a region stated there and
+nowhere else is the same kind of guess that produced Maharashtra.
+
+Checking the first one found a second: the English contact page said **"India,
+New Delhi:"** — a different wrong city for the same office. Also fixed.
+
+**Still wrong, and it needs a native speaker rather than a guess:** the Hindi
+and Arabic contact pages carry the same stale city — `नई दिल्ली` in
+`public/cms/hi/contactUs.base.json` and `نيودلهي` in `public/cms/ar/...`. Only
+the city name is wrong; the structure around it is fine. Transliterating a place
+name is unreviewed copy, which this project does not publish, so it is left for
+confirmation. The standard renderings are `नोएडा` and `نويدا` — one word each,
+if you want to confirm them.
+
+Not verified by a build: the old repo has no `node_modules`, so neither `tsc`
+nor `vite` could run. The JSON was re-parsed after editing; the TSX change
+removes one property from two object literals.
 
 **Acceptance:** §17 condition 14 closes; `check:contrast` passes with no ACCEPTED
 entries; `check:llms` still rejects the unevidenced certifications.
