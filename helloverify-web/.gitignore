@@ -42,3 +42,8 @@ next-env.d.ts
 
 # ...except the documented contract, which is not a secret.
 !.env.example
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/

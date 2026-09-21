@@ -119,8 +119,14 @@ export default async function TechnologyPage({
         </SecHead>
         <div className="body3" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 22 }}>
           <div className="code3">
-            <div className="ch"><span>Request</span><b>POST /v1/verifications</b></div>
-            <pre>{`{
+            {/* `tabIndex` + a named `region`: `pre` sets `overflow-x: auto`,
+                so at mobile width these samples scroll sideways and a keyboard
+                user had no way to reach or move them (WCAG 2.1.1). Found by
+                the browser axe sweep — `scrollable-region-focusable` needs a
+                box model, so it had never run. The name comes from the header
+                already above the block rather than from invented copy. */}
+            <div className="ch" id="code-request"><span>Request</span><b>POST /v1/verifications</b></div>
+            <pre tabIndex={0} role="region" aria-labelledby="code-request">{`{
   "candidate": {
     "name": "A. Ramesh",
     "phone": "+91XXXXXXXXXX"
@@ -136,8 +142,8 @@ export default async function TechnologyPage({
 }`}</pre>
           </div>
           <div className="code3">
-            <div className="ch"><span>Webhook</span><b>verification.completed</b></div>
-            <pre>{`{
+            <div className="ch" id="code-webhook"><span>Webhook</span><b>verification.completed</b></div>
+            <pre tabIndex={0} role="region" aria-labelledby="code-webhook">{`{
   "id": "ver_01HQ…",
   "status": "verified",
   "checks": [

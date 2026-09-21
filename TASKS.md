@@ -415,21 +415,62 @@ before writing a new one — that is the second time a unit already existed.
   the ISO 27001 logo carries five different headings and GDPR four, so this is
   not a lift-and-share like `SecHead`. It also touches the credentials surface
   that Part 2b is blocked on, so it waits for 2b.
+- **No gate reads the stylesheets for colour.** Part 3 measured "UI colour
+  literals: 119 → 0" over `src/**/*.tsx` and said so; the stylesheets were never
+  in scope. `app/design.css` holds **228** colour literals and `app/pages.css`
+  **36**. Most are artwork or are token values written out longhand (`#FFFFFF`
+  ×81, `#1B6B4A` ×40, `#CFCAC0` ×30), but `#7D796F` is neither — it is UI colour
+  that is not a token and fails AA at 3.95:1, and it shipped. The coverage was
+  lost in Part 4: `check:tokens` read files as text and was removed as redundant
+  with `hv/no-color-literal`, which is an ESLint rule and cannot see CSS —
+  exactly the reasoning that kept `check:logical`, not applied to colour. Note
+  `design.css` carries a generated-file header and its generator cannot run
+  (see the open questions below), so this is not a simple find-and-replace.
 - **`hv/no-color-literal` only matches hex.** `rgba(255,255,255,0.4)` in a style
   prop slips through — found in PeopleStrip's live card. Worth extending the
   rule to `rgb()`/`rgba()`/`hsl()` when convenient.
 
 ---
 
-## Part 6 — The browser layer
+## Part 6 — The browser layer · **in progress (21 Sep 2026)**
 
 Unlocks four §17 conditions at once, and is the single biggest remaining gap in
-verification. Everything so far reads static output or HTTP headers; nothing has
-ever rendered a page.
+verification. Everything before it read static output or HTTP headers; **as of
+today something renders a page**.
 
-- **Playwright**, per §14.1 — E2E for locale switching, form submission,
-  navigation.
-- **`@axe-core/playwright`** for the two rules jsdom cannot run: `target-size`
+**Done:** Playwright on pinned Chromium, 124 tests over two viewports (1440 and
+390, because `.dsk`/`.mob` are separate markup rather than one tree reflowing).
+`npm run test:e2e`. Two specs so far:
+
+- `tools/e2e/breakpoints.spec.ts` — both trees ship and exactly one is on
+  screen, checked either side of the 1080/1081 seam. Nothing could see this
+  before: that both trees are in the HTML is a string search, that one of them
+  is *painted* needs a box model.
+- `tools/e2e/a11y.spec.ts` — the three axe rules `check:a11y` has always
+  reported it cannot run, over all 56 routes. Only those three: the jsdom gate
+  already covers every other rule on every page in seconds with no browser.
+
+**It found two things on the first run.** One is fixed, one needs you:
+
+- **Fixed:** the two API samples on `/platform/technology` scroll sideways at
+  390px and were not keyboard-reachable (WCAG 2.1.1). They now carry
+  `tabIndex={0}` and a `role="region"` named from the header above each block.
+  Desktop never showed it — the samples fit, so nothing scrolls.
+- **Needs a decision, and it is a THIRD colour problem, not Part 2a:**
+  `#7D796F` measures **3.95:1** on paper where 4.5:1 is required, on five nodes
+  — the placeholder text of the homepage's mock contact form, hard-coded in
+  `app/design.css` on `.inp` at both breakpoints. `--muted` (#6F6B62) would pass
+  at 4.83:1. Accepted in the sweep with its measurement, exactly as `--faint`
+  is, so the finding is visible rather than silent.
+
+**Still to do in this part:** Lighthouse CI for the three `timings` budgets and
+the image-weight budget; E2E for form submission and navigation; and a decision
+on whether Playwright runs in CI, which means a browser download in the
+pipeline — the README's argument against putting one in the header-check suite
+does not automatically apply to a suite whose whole purpose is a browser.
+
+- ~~**`@axe-core/playwright`** for the two rules jsdom cannot run~~ — **done**,
+  and it was three rules, not two: `color-contrast` as well as `target-size`
   (2.5.8, AA in WCAG 2.2) and `scrollable-region-focusable`.
 - **Lighthouse CI** for the three `timings` budgets deferred from §9.1 — LCP
   < 2.0s, CLS < 0.1, TBT < 200ms — and the image-weight budget, which cannot be
@@ -439,7 +480,27 @@ ever rendered a page.
   forward if those feel hairy.
 
 **Acceptance:** §17 conditions 3 and 12 close; `check:a11y` stops listing three
-rules as unrunnable.
+rules as unrunnable. Condition 12 is now met for `en` with two accepted
+foregrounds; it stays open until those are decided and until `hi`/`ar` exist
+(Part 9), since it reads "all three locales".
+
+**Three things the harness had to learn, each by being wrong — kept because the
+next person will hit them too:**
+
+1. **Only the homepage is a two-tree port.** The first spec asserted two trees
+   on five pages and failed on four. `class="dsk"` appears in 1 of 58 emitted
+   pages; the other 57 are one responsive tree.
+2. **Animation and scroll reveal made the scan flaky AND lenient.** Two
+   identical runs returned 68 and 69 contrast nodes. Fixed with
+   `reducedMotion: "reduce"` — which uses the site's own
+   `prefers-reduced-motion` block rather than injected CSS — plus a `settle()`
+   that scrolls the whole document so `.rise` blocks actually paint. Before it,
+   the scan audited roughly the first screen and called it the page.
+3. **A stale `next start` silently became the thing under test.** A fix
+   verified present in `.next/server/app/...` kept reporting as broken because
+   the origin was three builds old. `tools/e2e/global-setup.ts` now refuses to
+   run unless the served page contains `.next/BUILD_ID`; broken both ways to
+   check it fires. `reuseExistingServer` is worth the speed, but not unguarded.
 
 ---
 
