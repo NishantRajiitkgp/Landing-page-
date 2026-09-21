@@ -26,9 +26,10 @@
     "check:contrast": "node tools/a11y/check-contrast.mjs",
     "check:logical": "node tools/a11y/check-logical-css.mjs",
     "check:csp": "node tools/ci/check-csp.mjs",
-    "test:e2e": "playwright test",
-  "test:a11y": "playwright test tools/e2e/a11y.spec.ts",
-  "lint": "eslint ."
+    "perf:lab": "lhci autorun --config=lighthouserc.json",
+  "test:e2e": "playwright test",
+    "test:a11y": "playwright test tools/e2e/a11y.spec.ts",
+    "lint": "eslint ."
   },
   "dependencies": {
     "next": "16.3.5",
@@ -41,6 +42,7 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
+    "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.13.5",

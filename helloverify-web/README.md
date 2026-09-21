@@ -723,6 +723,91 @@ read files as text, was removed in Part 4 as redundant with it; and
 invisible to it. Accepted with its measurement alongside `--faint`, because the
 fix (`--muted`, 4.83:1) is a DESIGN.md decision — see `../TASKS.md`.
 
+### The lead form, end to end
+
+`tools/e2e/contact-form.spec.ts` — 7 tests, both viewports. `abuse.test.ts` and
+`schema.test.ts` already cover screening and parsing as units; what no unit
+reaches is the seam, where a Server Action is invoked by a real form POST,
+`useActionState` renders what came back, and the browser's own constraint
+validation decides whether the POST happens at all.
+
+What it pins, all of which could break with every unit test still green:
+
+- an empty submit makes **no POST** — the browser enforces `required` and
+  `minLength`, which is why the form ships no client validator and no zod on
+  the client
+- a server field error comes back **associated**, not merely visible:
+  `aria-invalid` and `aria-describedby` pointing at the rendered `.err`
+- typing survives a rejected submission, because the action echoes the known
+  fields back
+- the `<select>` keeps its choice across a rejected submission — this is the
+  regression `key={state.token}` exists for, now guarded
+- `?interest=` pre-selects, and an unknown value is ignored rather than injected
+- the honeypot is laid out but clipped, `aria-hidden`, and unreachable by Tab
+
+**Nothing leaves the machine, and that was checked before writing a single
+submission.** `deliverLead` resolves its CRM sink through `zohoConfig()`, which
+returns `null` unless `ZOHO_CLIENT_ID`, `ZOHO_CLIENT_SECRET` and
+`ZOHO_REFRESH_TOKEN` are all set. There is no `.env` in this tree, only
+`.env.example`, so the sink is null and no outbound request is made. **That is a
+property of the environment, not of the test** — pointing this suite at an
+origin that does have Zoho credentials would file real leads.
+
+`toBeVisible()` was the wrong predicate for the honeypot and the first version
+used it. Playwright calls an element visible when it has a non-empty box, and
+`.vh` is the clip technique — a 1×1 box with `clip: rect(0 0 0 0)` — so it
+passes that check while being imperceptible. The test now measures the box.
+`display: none` would fail the predicate and be the wrong thing to ship: a field
+that is not rendered is not filled by the automation it exists to catch.
+
+## Performance, in a browser
+
+`npm run perf:lab` — Lighthouse CI, per §14.1's Performance row.
+
+```sh
+npm run build && npx next start -p 3100 &
+CHROME_PATH='D:\playwright-browsers\chromium-1243\chrome-win64\chrome.exe' npm run perf:lab
+```
+
+`budget.json` carries **only what `check:perf` defers** — the three `timings`
+and the image weight. The size budgets stay where they are measured from the
+build in brotli, because two gates asserting the same number in different units
+is how they come to disagree.
+
+Measured, 3 runs per URL, mobile emulation with simulated throttling:
+
+| URL | LCP | CLS | TBT | images |
+|---|---:|---:|---:|---:|
+| `/en` | 1,089 ms | 0 | 150 ms | 118 KB |
+| `/en/contact` | 966 ms | 0 | 156 ms | — |
+| `/en/platform/technology` | 875 ms | 0 | 46 ms | — |
+| **budget** | **< 2,000 ms** | **< 0.1** | **< 200 ms** | **< 250 KB** |
+
+Every one met, with LCP at roughly half its budget and CLS at zero — which is
+`next/font` doing what §9.3 bought it for. **These are lab numbers against a
+local origin**: no network latency and no CDN, so they are optimistic against
+production, and §17 condition 3 also wants CrUX field data after 28 days. The
+budget assertion was broken to check it fires — LCP budget set to 100 ms,
+reported `found: 1133.991` and exited 1.
+
+### Two costs of this, both worth knowing before you rely on it
+
+**The runner is unreliable on Windows.** Roughly every other Lighthouse
+invocation dies in `chrome-launcher`'s teardown with
+`EPERM, Permission denied: …\lighthouse.NNNNN` — `rmSync` on the temp profile
+directory before Chrome has released it. It happens *after* the audit, so it
+costs the run rather than corrupting a number. Tried and did not fix it:
+Playwright's isolated Chromium instead of the system one, and moving `TEMP` to a
+project-local path. Expected to be Windows-only, since it is Windows file
+locking, but **that is unverified here** — the fix is to run it on CI. Re-run if
+it bites.
+
+**It adds 10 dev-only advisories.** `@lhci/cli` pulls `lighthouse` →
+`puppeteer-core` → `extract-zip`/`tmp`/`uuid`/`inquirer`: 7 high, 1 moderate,
+2 low. `npm audit --omit=dev` still reports **0**, so nothing reaches
+production, and CI has no audit step to break. Recorded rather than waved
+through — the alternative is moving Lighthouse to CI-only.
+
 ### Three things the harness had to learn, each by being wrong
 
 - **Only the homepage is a two-tree port.** The first draft of
@@ -740,6 +825,19 @@ fix (`--muted`, 4.83:1) is a DESIGN.md decision — see `../TASKS.md`.
   kept reporting as broken because the origin was three builds old.
   `tools/e2e/global-setup.ts` now refuses to run unless the served page
   contains `.next/BUILD_ID`. Broken both ways to check it fires.
+- **`requestAnimationFrame` is throttled in a page that is not visible.**
+  `settle()` yielded on rAF, and Playwright gives every test its own page, so
+  under `fullyParallel` most are not visible and the scroll loop stalled: two
+  tests failed with "Test timeout of 30000ms exceeded" in a full run while
+  passing alone. It yields on `setTimeout` now. It also re-read
+  `document.body.scrollHeight` each iteration while the document was growing,
+  so the bound moved as the loop ran — read once and capped.
+- **A different two tests failed each run, which is what identified it as
+  contention.** 112 full-page axe scans at the default worker count, on a
+  machine also running `next start`, timed out somewhere. `timeout: 60_000` and
+  `workers: 4` fixed it and the suite got *faster* (2.5 min, from 3.7).
+  `retries: 0` stays: a retry would have hidden this, and a suite that is green
+  on the second attempt is not green.
 
 ## Accessibility
 

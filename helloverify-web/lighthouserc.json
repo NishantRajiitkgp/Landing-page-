@@ -1,0 +1,33 @@
+{
+  "ci": {
+    "collect": {
+      "url": [
+        "http://localhost:3100/en",
+        "http://localhost:3100/en/contact",
+        "http://localhost:3100/en/platform/technology",
+        "http://localhost:3100/en/resources/blog/what-30-minutes-actually-means"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "preset": "desktop",
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 390,
+          "height": 844,
+          "deviceScaleFactor": 2,
+          "disabled": false
+        },
+        "throttlingMethod": "simulate",
+        "budgetsPath": "./budget.json"
+      }
+    },
+    "assert": {
+      "budgetsFile": "./budget.json"
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci"
+    }
+  }
+}
