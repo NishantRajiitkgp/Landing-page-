@@ -463,11 +463,45 @@ today something renders a page**.
   at 4.83:1. Accepted in the sweep with its measurement, exactly as `--faint`
   is, so the finding is visible rather than silent.
 
-**Still to do in this part:** Lighthouse CI for the three `timings` budgets and
-the image-weight budget; E2E for form submission and navigation; and a decision
-on whether Playwright runs in CI, which means a browser download in the
-pipeline — the README's argument against putting one in the header-check suite
-does not automatically apply to a suite whose whole purpose is a browser.
+**Also done (22 Sep):** the lead form end to end, and Lighthouse CI.
+
+- `tools/e2e/contact-form.spec.ts` — 7 tests over the seam no unit can reach: a
+  Server Action invoked by a real POST, `useActionState` rendering the result,
+  and the browser's own constraint validation deciding whether the POST happens
+  at all. It pins that an empty submit makes **no POST**, that a server field
+  error comes back *associated* (`aria-invalid`, `aria-describedby`) and not
+  merely visible, that typing survives a rejection, and that the `<select>`
+  keeps its choice — the regression `key={state.token}` exists for, now guarded.
+  **Nothing leaves the machine:** `zohoConfig()` returns null without the three
+  `ZOHO_*` variables and there is no `.env` here, so the CRM sink is null. That
+  is a property of the environment, not of the test — pointing this suite at an
+  origin that has credentials would file real leads.
+- **Lighthouse CI, budgets met.** `budget.json` carries only what `check:perf`
+  defers — the three `timings` plus image weight — because two gates asserting
+  one number in different units is how they come to disagree. Measured, 3 runs
+  per URL, mobile emulation: homepage LCP **1,089 ms** against a 2,000 ms
+  budget, CLS **0**, TBT **150 ms** against 200, images **118 KB** against 250.
+  Broken to check it fires: LCP budget at 100 ms reported `found: 1133.991` and
+  exited 1. These are **lab** numbers against a local origin — no latency, no
+  CDN, so optimistic — and condition 3 also wants CrUX field data after 28 days.
+
+**Two costs of Lighthouse, for you to weigh:**
+
+1. **It is unreliable on Windows.** Roughly every other invocation dies in
+   `chrome-launcher`'s teardown with `EPERM` on its temp profile directory,
+   *after* the audit — so it costs the run, not the numbers. Playwright's
+   isolated Chromium and a project-local `TEMP` both failed to fix it. Expected
+   to be Windows-only file locking; unverified, because verifying it means
+   running it on Linux CI.
+2. **It adds 10 dev-only advisories** (7 high) through `lighthouse` →
+   `puppeteer-core`. `npm audit --omit=dev` is still **0**, and CI has no audit
+   step, so nothing is broken and nothing reaches production. The alternative is
+   moving Lighthouse to CI-only.
+
+**Still to do in this part:** navigation E2E; and a decision on whether
+Playwright runs in CI, which means a ~115 MB browser download in the pipeline —
+the README's argument against putting one in the header-check suite does not
+automatically apply to a suite whose whole purpose is a browser.
 
 - ~~**`@axe-core/playwright`** for the two rules jsdom cannot run~~ — **done**,
   and it was three rules, not two: `color-contrast` as well as `target-size`
@@ -501,6 +535,19 @@ next person will hit them too:**
    the origin was three builds old. `tools/e2e/global-setup.ts` now refuses to
    run unless the served page contains `.next/BUILD_ID`; broken both ways to
    check it fires. `reuseExistingServer` is worth the speed, but not unguarded.
+   It has since caught a second stale server in ordinary use.
+4. **`requestAnimationFrame` is throttled in a page that is not visible.**
+   `settle()` yielded on rAF, and every Playwright test gets its own page, so
+   under `fullyParallel` most are not visible and the scroll loop stalled — two
+   tests timed out at 30s in a full run while passing alone. It yields on
+   `setTimeout` now, reads `scrollHeight` once instead of re-reading a growing
+   document, and caps its steps.
+5. **A *different* two tests failed each run, which is what identified this as
+   contention** rather than a page defect. 112 full-page axe scans at the
+   default worker count, alongside `next start`, timed out somewhere.
+   `timeout: 60_000` and `workers: 4` fixed it and the suite got **faster** —
+   2.5 minutes, down from 3.7. `retries: 0` stays: a retry would have hidden
+   this, and a suite that is green on the second attempt is not green.
 
 ---
 

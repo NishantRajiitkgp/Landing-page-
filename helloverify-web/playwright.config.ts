@@ -46,6 +46,23 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: 0,
+
+  /** 60s, not the 30s default, and a worker cap — both from measured flakiness
+   *  rather than caution.
+   *
+   *  A full-page axe scan is slow, and there are 112 of them across two
+   *  projects. At Playwright's default worker count (half the cores) on a
+   *  machine also running `next start`, two tests per run were timing out in
+   *  `settle()` — a DIFFERENT two each time, which is what told us it was
+   *  contention and not a page. `/en/governments/manpower-education` and
+   *  `/en/checks/driving-licence` each failed in one run and passed on their
+   *  own.
+   *
+   *  `retries: 0` stays deliberately. A retry would have hidden this instead of
+   *  surfacing it, and a suite that is green on the second attempt is not
+   *  green. */
+  timeout: 60_000,
+  workers: process.env.CI ? 2 : 4,
   reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
 
   use: {
