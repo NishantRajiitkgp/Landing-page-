@@ -1056,22 +1056,65 @@ pages into 56 per-request renders and blind every one of those checks — in ord
 to remove `'unsafe-inline'` from a site that ships no third-party script and no
 inline handler of its own.
 
-So `script-src` keeps `'unsafe-inline'`, §17's box stays open, and the
-production contract reports it as a named deviation rather than asserting it
-away. Measured, what is actually inline: 7 blocks on a typical page — 4 are
-Next's `self.__next_f.push(...)` flight payload, 3 are the §8.2 JSON-LD graph.
+Measured, what is actually inline: **425 blocks across 58 pages**, 2 to 17 per
+page — the `self.__next_f.push(...)` flight payload plus the §8.2 JSON-LD graph.
 All first-party, all emitted by the build. §9.4 measures **zero third-party
 origins** site-wide.
 
-Two ways to close it, both real work rather than config:
+### So the hashes come from the build instead
 
-1. **Post-build hash injection.** Compute each page's inline-script hashes after
-   `next build` and rewrite a per-page `<meta http-equiv>` CSP. Preserves static
-   rendering. Costs a post-processing step, and `frame-ancestors` must stay in
-   the HTTP header because `<meta>` ignores it.
-2. **Accept dynamic rendering** for the nonce, and rebuild the gates around a
-   running server instead of the build output. That is a much larger change than
-   it sounds, and it trades away §5.
+`tools/ci/inject-csp.mjs` runs as part of `npm run build`. For every prerendered
+page it computes the SHA-256 of every inline script and writes, immediately
+after `<head>`, a `<meta http-equiv="Content-Security-Policy">` carrying
+`script-src 'self'` plus exactly those hashes — **nothing else**, so §13's
+"single CSP source" still holds for every other directive.
+
+A nonce needs a request. A hash does not: it can be computed after the build,
+from the bytes that will actually be served.
+
+**The header keeps `'unsafe-inline'`, and the policy is still strict.** That is
+the load-bearing claim, so it was measured in a browser rather than reasoned
+about — `tools/e2e/csp.spec.ts`, and a throwaway probe before it:
+
+| Header | Document `<meta>` | Inline script |
+|---|---|---|
+| `'self' 'unsafe-inline'` | *(none)* | runs |
+| `'self' 'unsafe-inline'` | `script-src 'self'` | **refused** |
+| `'self' 'unsafe-inline'` | `'self' 'sha256-…'` | runs |
+
+Multiple policies are each enforced and a script must satisfy all of them, so
+the **effective** policy is the intersection: hash-only. The spec suite proves
+it on the real site too, including that an inline script whose hash is *not*
+listed is actually refused — without that last check everything above would pass
+equally well if the browser were ignoring the meta.
+
+**Why the header cannot also be narrowed.** The hashes are per page and every
+one changes on every build, because the flight payload embeds the build id and
+the chunk names. `headers()` in `next.config.ts` is evaluated before any page is
+rendered, so it cannot know them; the union across 58 pages is 258 distinct
+hashes, roughly 14 KB on every response.
+
+**So §17 condition 11 is met in enforcement and not in its wording.** The
+enforced policy has no inline latitude; the header still contains the token. The
+contract suite reports exactly that, and no longer says "box open" as though
+nothing had changed. Closing it literally means per-request headers from
+middleware over a build-time manifest — which cannot exist before the build that
+produces the hashes.
+
+`frame-ancestors` stays in the HTTP header regardless, because `<meta>` ignores
+it.
+
+### The gate was broken three ways
+
+`npm run check:csp` now proves each page lists the **right** hashes for the
+bytes beside it, which matters because a wrong hash is silent — the page still
+paints, and only hydration is gone.
+
+| # | Mutation | Result |
+|---|---|---|
+| U1 | the injector never runs (metas stripped) | caught — 58 pages, named |
+| U2 | a script added to one page after its hashes were computed | caught — one missing hash *and* one stale |
+| U3 | `'unsafe-inline'` smuggled into the meta | caught — and the 17 now-unhashed scripts too |
 
 ### Dependency scanning
 

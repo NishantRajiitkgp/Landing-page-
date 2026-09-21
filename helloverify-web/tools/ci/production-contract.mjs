@@ -181,6 +181,9 @@ console.log("\nNo secrets in shipped JS (AUDIT E1)");
 console.log("\nSecurity headers (AUDIT E2, §13)");
 {
   const res = await fetch(`${origin()}/en`);
+  // The body too: since Part 7 the policy is delivered in two places, and the
+  // document half is the half that is strict.
+  const html = await res.text();
   const ref = res.headers.get("referrer-policy");
   check(
     "Referrer-Policy is strict-origin-when-cross-origin (§8.4)",
@@ -212,12 +215,34 @@ console.log("\nSecurity headers (AUDIT E2, §13)");
   // prerendered page (its own docs, content-security-policy.md:181), and this
   // site is 56 static pages by design (\u00a75, \u00a717). See next.config.ts.
   const scriptSrc = csp.match(/script-src ([^;]*)/)?.[1] ?? "";
+
+  // The document's own policy narrows script-src to hashes, so the ENFORCED
+  // policy is the intersection of the two and has no inline latitude. Measured
+  // in a real browser - tools/e2e/csp.spec.ts - because "policies intersect"
+  // is the load-bearing claim and a header read alone cannot show it.
+  const metaCsp = html.match(
+    /<meta data-csp-hashes[^>]*content="([^"]*)"[^>]*>/,
+  )?.[1] ?? "";
+  const hashes = (metaCsp.match(/'sha256-[A-Za-z0-9+/=]{44}'/g) ?? []).length;
+
+  check("document narrows script-src by hash", hashes > 0, `${hashes} sha256 hashes`);
+  check(
+    "that narrowing carries no 'unsafe-inline' of its own",
+    metaCsp !== "" && !metaCsp.includes("unsafe-inline"),
+    metaCsp.slice(0, 60) + "...",
+  );
+
   if (scriptSrc.includes("unsafe-inline")) {
+    // Reported, still, because \u00a717 condition 11 is about the token and the
+    // token is there. But the deviation is now a much narrower one than it was,
+    // and saying "box open" without saying that would overstate it.
     warn(
-      "CSP script-src still allows 'unsafe-inline' (\u00a717 box open)",
-      "A nonce requires per-request rendering, which would make all 56 static pages " +
-        "dynamic and blind every build-output gate. Closing it needs a post-build " +
-        "hash-injection step - see README known gaps.",
+      "CSP script-src header retains 'unsafe-inline' (\u00a717 condition 11, literally)",
+      `The header cannot be narrowed: the hashes are per page - ${hashes} on this one - ` +
+        "and headers() is evaluated before any page is rendered. Each document carries its " +
+        "own hash-based script-src, and the enforced policy is the intersection, so an " +
+        "unlisted inline script is refused. Closing the header too needs per-request " +
+        "headers from middleware over a build-time manifest.",
     );
   } else {
     check("CSP script-src has no 'unsafe-inline'", true, scriptSrc.trim());
