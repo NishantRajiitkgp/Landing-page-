@@ -1283,16 +1283,28 @@ correct code gets disabled, so the negative tests matter as much as the others.
   that cannot authenticate would be AUDIT G2 in a new file. Branch protection,
   required checks and the one-long-lived-branch rule are repo settings, not
   files — still to be turned on.
-- **§14.2's last three steps are not wired**: E2E on preview, axe, Lighthouse CI.
-  All need a browser or a preview deployment. The `todo` job in `ci.yml` lists
-  them so the gap shows in the PR checks rather than only in a doc.
+- ~~**§14.2's last three steps are not wired**~~ — **wired**, as a separate
+  `browser` job: E2E, page-level axe, and Lighthouse CI. Separate from `verify`
+  because it installs a ~115 MB Chromium and takes minutes, and a typo in a unit
+  test should not wait for that; both are required checks, so nothing merges on
+  the fast one alone. The Lighthouse step carries `continue-on-error` for one
+  stated reason — it dies roughly every other run on Windows in
+  `chrome-launcher`'s teardown, and this job is the first chance to see whether
+  that is Windows-only. If it proves reliable, the line comes off.
+
+  §14.2's locale-switching and RTL rows stay in `todo`: `routing.locales`
+  declares `en` only, so there is no second locale to switch to.
 - **`tools/test` is still excluded from `tsconfig.json`**, so the tests
   themselves are not typechecked. Harmless now that Vitest runs them — it was
   listed as a gap when nothing did.
-- **`script-src` still allows `'unsafe-inline'` — §17's CSP box is open.** The
-  nonce §13 specifies cannot be used on a statically prerendered site (Next's
-  own docs; see the section above for the two ways to close it). Every other CSP
-  directive is strict, and `style-src` is hash-pinned rather than relaxed.
+- **`script-src` has no inline latitude in enforcement; the HEADER still
+  contains `'unsafe-inline'`.** Each page carries a `<meta>` policy listing the
+  hashes of its own inline scripts, and the enforced policy is the intersection
+  of the two — measured in a browser, see the CSP section above. The header
+  cannot be narrowed because the hashes are per page and change every build,
+  and `headers()` runs before any page is rendered. §17 condition 11 is
+  therefore met in substance and not in its wording, which is recorded rather
+  than rounded off: a header scanner will still flag the token.
 - **No pre-commit secret-scanning hook.** §13 asks for one alongside the CI
   grep. `npm run check:secrets` exists and runs in `check:all`; the git hook is
   repo tooling, which is out of scope while the move to Azure is pending.

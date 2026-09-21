@@ -4,9 +4,11 @@
 #   typecheck -> lint -> unit + component -> build (assert: 0 dynamic routes)
 #   -> E2E on preview -> axe -> Lighthouse CI
 #
-# The first four run here today. The last three need a browser and a preview
-# deployment and belong with §12 (accessibility) — see the `todo` job at the
-# bottom, which documents them rather than pretending they run.
+# All of it runs here now except the deploy. The browser half is a separate
+# `browser` job rather than more steps on `verify`: it installs a ~115 MB
+# Chromium and takes minutes, and there is no reason a typo in a unit test
+# should wait for it. Both are required checks, so nothing merges on the fast
+# one alone.
 #
 # WHY THIS FILE EXISTS AT ALL. Until now every gate in this repo was manual: four
 # build-output checkers, a 823-assertion redirect probe, a production contract
@@ -104,15 +106,84 @@ jobs:
       - name: Production contract (§14.3)
         run: npm run contract http://localhost:3100
 
-  # Not a real job — a record of what §14.2 asks for that is not wired up, so
-  # that the gap is visible in the PR checks list rather than only in a doc.
+  # §14.2's last three steps: E2E, page-level axe, and Lighthouse CI. Separate
+  # from `verify` because of the browser download, and because these are the
+  # slow ones.
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: helloverify-web/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      # Chromium only. The suite pins one browser deliberately: these are
+      # accessibility and performance measurements, and a number that moves with
+      # whichever browser the runner happened to have is not a measurement.
+      # `--with-deps` installs the shared libraries the headless build needs on
+      # a bare runner.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+
+      # Playwright starts its own `next start`: `reuseExistingServer` is false
+      # when CI is set, so it will not silently adopt a stale server. The
+      # BUILD_ID guard in tools/e2e/global-setup.ts is the backstop.
+      - name: E2E, and axe in a browser
+        run: npm run test:e2e
+
+      # §9.1's `timings` budgets, which cannot be measured from build output.
+      # Needs its own server because Playwright's only lives for the test run.
+      #
+      # `continue-on-error` for one reason, stated so it is not mistaken for
+      # indifference: this step dies roughly every other run on Windows in
+      # chrome-launcher's teardown (EPERM removing its temp profile, AFTER the
+      # audit). It is expected to be a Windows-only file-locking problem and
+      # this job is the first chance to find out. If it proves reliable here,
+      # remove this line and let it gate.
+      - name: Lighthouse budgets (§9.1 timings)
+        continue-on-error: true
+        run: |
+          npx next start -p 3100 > "$RUNNER_TEMP/lh-server.log" 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf -o /dev/null http://localhost:3100/en && break
+            sleep 1
+          done
+          npm run perf:lab
+
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-reports
+          path: |
+            helloverify-web/playwright-report/
+            helloverify-web/test-results/
+            helloverify-web/.lighthouseci/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # Still not wired up, and visible in the checks list rather than only in a
+  # doc. Deployment needs GCP credentials and the Cloud Run service to exist
+  # (§3.6); adding a job that cannot authenticate would repeat AUDIT G2.
+  #
+  # The hi/ar rows §14.2 asks for are deferred with Part 9 — `routing.locales`
+  # declares `en` only, so there is no second locale to switch to or mirror.
   todo:
     runs-on: ubuntu-latest
     steps:
       - name: Not yet implemented
         run: |
-          echo "BUILD-SPEC 14.2 steps still missing, all needing a browser or a preview deploy:"
-          echo "  - E2E on preview        (Playwright: locale switching, RTL, form submission)"
-          echo "  - axe                   (@axe-core/playwright, every route, all locales) - section 12"
-          echo "  - Lighthouse CI         (the three timings budgets deferred from section 9.1)"
+          echo "BUILD-SPEC 14.2, still missing:"
           echo "  - deploy on merge       (needs GCP credentials and the Cloud Run service)"
+          echo "  - E2E: locale switching and RTL   (needs hi/ar copy - TASKS.md Part 9)"

@@ -436,7 +436,7 @@ before writing a new one — that is the second time a unit already existed.
 
 ---
 
-## Part 6 — The browser layer · **in progress (21 Sep 2026)**
+## Part 6 — The browser layer · **DONE (22 Sep 2026)**
 
 Unlocks four §17 conditions at once, and is the single biggest remaining gap in
 verification. Everything before it read static output or HTTP headers; **as of
@@ -520,11 +520,24 @@ account for the script budget. It also proves its own instrument with a
 `pushState` first, because `toBeUndefined()` would otherwise pass even if the
 sentinel were never set.
 
-**Still to do in this part:** a decision on whether Playwright runs in CI, which
-means a ~115 MB browser download in the pipeline — the README's argument against
-putting one in the header-check suite does not automatically apply to a suite
-whose whole purpose is a browser. **This is the last thing in Part 6, and it is
-yours.**
+**Answered and done (22 Sep): Playwright runs in CI.** A separate `browser`
+job, not more steps on `verify` — it installs a ~115 MB Chromium and takes
+minutes, and a typo in a unit test should not wait for that. Both are required
+checks, so nothing merges on the fast one alone. Chromium only and pinned:
+these are accessibility and performance measurements, and a number that moves
+with whichever browser the runner happened to have is not a measurement.
+
+Verified by running the CI code path locally rather than by reading the YAML —
+`CI=true npx playwright test` makes `reuseExistingServer` false, so Playwright
+starts its own server instead of adopting whatever is on the port. 162 passed.
+
+The Lighthouse step carries `continue-on-error`, and the reason is stated in the
+file so it is not mistaken for indifference: it dies roughly every other run on
+Windows in `chrome-launcher`'s teardown, and this job is the first chance to
+find out whether that is Windows-only. If it proves reliable on Linux, the line
+comes off and it gates.
+
+**Part 6 is done.**
 
 - ~~**`@axe-core/playwright`** for the two rules jsdom cannot run~~ — **done**,
   and it was three rules, not two: `color-contrast` as well as `target-size`
