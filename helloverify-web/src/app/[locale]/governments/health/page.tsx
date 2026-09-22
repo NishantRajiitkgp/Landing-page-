@@ -58,8 +58,22 @@ export default async function Page({
         <><b>20M+</b> checks at the primary source</>,
         <><span className="dot" /> ISO 27001 · GDPR</>,
       ]}
-      verifyHead={<>A clinician is<br />four questions.</>}
-      verifyLede="Green means the answer usually lands within the hour. Degrees and council records go to the institution itself and come back in days — with the registrar named."
+      /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
+         Each `*Head` is now the question a licensing official types and each
+         `*Lede` is a self-contained answer of 35-45 words that names health
+         authorities and clinicians rather than saying "green means" or "this
+         check" — a lede that points outside itself is unciteable once an
+         engine lifts it off the page (§11a.2 rule 3). The template owns the
+         `k` eyebrows ("What we verify", "How it works", "Turnaround &
+         coverage", "Compliance & security") and they are untouched.
+
+         Every figure below is already on this page: the times come from the
+         `lanes` pills and the `rows` table beneath each block, and the sources
+         ("the medical council", "the university registrar") are the `src`
+         column verbatim. Nothing new is asserted about a clinician or an
+         institution. */
+      verifyHead="What does a health authority verify before licensing a clinician?"
+      verifyLede="A health authority verifies three things about a clinician: identity, qualification and standing. Identity, criminal and watchlist checks return in 15 to 30 minutes; council registration takes two days at the medical council and a medical degree three days at the university registrar."
       lanes={[
         {
           gt: "01 — Identity",
@@ -92,16 +106,16 @@ export default async function Page({
           ],
         },
       ]}
-      stepsHead={<>From application<br />to licence decision.</>}
-      stepsLede="The authority never chases a document. Applicants upload from their own phone, wherever they are, and the file arrives complete."
+      stepsHead="How does a health authority verify applicant documents?"
+      stepsLede="A health authority verifies clinician documents in four steps: the applicant photographs them on a phone and consents, HelloVerify AI locates the issuing institution in about a second, the university registrar and medical council confirm directly, and one dated file per applicant follows."
       steps={[
         { n: "01 · The applicant", t: "Submit", p: "Documents photographed on a phone, consent captured, quality checked before upload." },
         { n: "02 · HelloVerify AI", t: "Read", p: "Every field extracted and the issuing institution identified — in about a second." },
         { n: "03 · The institution", t: "Confirm", p: "The university registrar and the medical council confirm directly. Not a database that resembles them." },
         { n: "04 · The authority", t: "Decide", p: "One file per applicant, each result carrying its source and date, ready for the licensing decision." },
       ]}
-      tableHead={<>Times, and who<br />confirms them.</>}
-      tableLede="Measured from submission to result. Where an institution answers only on paper, the file says so — and says how long that route takes."
+      tableHead="How long does clinician verification take?"
+      tableLede="Clinician verification takes 15 minutes for identity and a global database screen, 30 minutes for a criminal record, two days for council registration, and three days for a medical degree at the university registrar or a disciplinary record on the council's register."
       rows={[
         { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
         { nm: "Criminal record", sub: "court & police databases", tm: "30 min", fast: true, src: "court records" },
@@ -111,8 +125,8 @@ export default async function Page({
         { nm: "Disciplinary record", sub: "sanctions, suspensions, conditions", tm: "3 days", src: "the council's register" },
       ]}
       tableNote={<>Times shown are from submission to result · qualifications verified in the country of issue — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></>}
-      complianceHead={<>Patient safety<br />starts here.</>}
-      complianceLede="Health records are the most sensitive data a person has. Consent is captured per applicant, retention is bounded, and every access is logged."
+      complianceHead="How is clinician data protected during verification?"
+      complianceLede="Health records are the most sensitive data a person has, so clinician verification runs under independently audited ISO 27001 certification and GDPR-aligned handling: consent captured per applicant, bounded retention, and every access logged. HelloVerify is a PBSA member."
       faqHead={<>From licensing<br />boards.</>}
       faqs={[
         {

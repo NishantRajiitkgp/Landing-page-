@@ -101,11 +101,31 @@ export default async function MomCaseStudy({
 
       {/* the story */}
       <div className="wrap sec3">
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2), 42 words. Both `sec-head` blocks
+            on this page were headings with NO lede — the shape `SecHead.tsx`
+            documents as one of the 21 it deliberately does not own — so the
+            answer had nowhere to live and a `.lede` is added in the same
+            markup `SecHead` emits (`marginBottom: 8`). Converting the heading
+            alone would have left a question with no answer beside it, which is
+            the one thing §11a.2 cannot do without.
+
+            The answer is angled at the appeal risk rather than repeating the
+            prose below it: the first paragraph already enumerates the degree,
+            the employment record and the identity document, and a lede that
+            restated it verbatim would be duplication rather than a summary.
+            Both halves — "thousands of kilometres away" and the accept/reject
+            error pair — are this page's own hero sub and second paragraph. */}
         <div className="sec-head">
           <div>
             <div className="k">The problem</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Paper from<br />everywhere.</h2>
+            <h2 className="h2" style={{ marginTop: 12 }}>Why does a work-pass decision need primary-source verification?</h2>
           </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            A work-pass decision rests on credentials issued thousands of kilometres away.
+            Accepting one in error puts an unqualified person into a regulated job; rejecting
+            one in error keeps a qualified person out and invites an appeal the ministry must
+            defend with evidence.
+          </p>
         </div>
         <div className="body3 prose3">
           <p>
@@ -166,11 +186,24 @@ export default async function MomCaseStudy({
 
       {/* what a ministry gets */}
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
+        {/* ANSWER BLOCK (§11a.2), 45 words, and a `.lede` added for the same
+            reason as the block above. This one DOES restate the four cards
+            below it, which is the exemplar's shape on
+            `/business/employee-verification` ("Re-verify at four moments…"
+            names the four cards under it): an engine lifting the block gets
+            the whole answer, and a reader gets the cards. Nothing here is new
+            — the four are the `Steps` items verbatim. */}
         <div className="sec-head">
           <div>
             <div className="k">What a ministry gets</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Four things,<br />in the contract.</h2>
+            <h2 className="h2" style={{ marginTop: 12 }}>What does a ministry get from primary-source credential verification?</h2>
           </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            A ministry gets four things in the contract: each credential confirmed with its
+            issuing institution, named and dated; unverifiable reported as unverifiable with
+            the route tried; parallel processing and twelve hours of office coverage holding
+            turnaround at intake volume; and an auditable trail per applicant.
+          </p>
         </div>
         <Steps
           items={[

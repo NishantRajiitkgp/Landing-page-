@@ -70,9 +70,21 @@ export default async function PlatformHub({
       </div>
 
       <div className="wrap sec3">
-        <SecHead k="Three layers" h={<>How an answer<br />gets made.</>}>
-          The interesting part isn't the model. It's what happens after it — reaching a registrar
-          in another country and coming back with something you can defend.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). The only H2 on this hub, so it
+            carries the query a technical or procurement reader arrives with.
+            The lede is the whole answer in 41 words and names the platform's
+            three layers rather than "the interesting part" and "what happens
+            after it", which pointed outside the block (§11a.2 rule 3).
+
+            The three layers are the hero's own sentence and the three cards
+            below; 1.2 s, 120+ countries and six offices are the strip above.
+            Deliberately silent on the certifications the strip lists: that
+            list is owned by `lib/content/company.ts` and
+            `/platform/security-compliance`, and gated by `check:llms`. */}
+        <SecHead k="Three layers" h="How does the HelloVerify platform work?">
+          The HelloVerify platform has three layers: a pipeline that reads a document in 1.2
+          seconds and reaches the issuer that holds the record, controls that keep personal data
+          safe, and a network of six offices, twelve hours apart, covering 120+ countries.
         </SecHead>
         <div className="body3 paths3">
           <AppLink href="/platform/technology" className="cell ph span3">

@@ -173,6 +173,40 @@ export default async function AboutPage({
               <p className="p">Information security management, independently audited.</p>
             </div>
           </div>
+          {/* ISO/IEC 27701 and SOC 2 (BUILD-SPEC §11a.3, §11a.4). Added here in
+              the same change as `lib/content/company.ts`, because TASKS 2b makes
+              that pairing the rule: this page is the reviewed credentials list,
+              so a claim in the entity or in `llms.txt` that is not also on this
+              page is a claim with no reviewed source.
+
+              EVIDENCE, and it is weaker than the four cards around it: published
+              on the existing site at `public/llms.txt:67` ("ISO/IEC 27001 and
+              ISO/IEC 27701 certified") and `src/config/seo.ts:50` ("ISO 27001 &
+              SOC 2 compliance"), confirmed by the owner 22 Sep 2026. No
+              certificate, audit report, auditor name or badge image exists in
+              either repo for either one — see the long note on `CREDENTIALS` in
+              `lib/content/company.ts`, and update both if one is produced.
+
+              The wording is the old site's, not a tidier version of it: "ISO/IEC
+              27701" (not "ISO 27701") and "compliant" for SOC 2, which is an
+              attestation report rather than a certificate. The tiles are
+              typographic plates rather than badges for the same reason — neither
+              repo holds a certification mark for either standard, and drawing
+              one would assert more than the evidence does. */}
+          <div className="cert">
+            <Image src="/img/iso-27701.jpg" alt="ISO/IEC 27701" width={CERT_BOX} height={CERT_BOX} />
+            <div>
+              <div className="h">ISO/IEC 27701 certified</div>
+              <p className="p">Privacy information management, extending ISO 27001 to personal data.</p>
+            </div>
+          </div>
+          <div className="cert">
+            <Image src="/img/soc2.jpg" alt="SOC 2" width={CERT_BOX} height={CERT_BOX} />
+            <div>
+              <div className="h">SOC 2 compliant</div>
+              <p className="p">Service-organisation controls for security, availability and confidentiality.</p>
+            </div>
+          </div>
           <div className="cert">
             <Image src="/img/pbsa.jpg" alt="PBSA" width={CERT_BOX} height={CERT_BOX} />
             <div>

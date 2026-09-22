@@ -98,9 +98,21 @@ export default async function TechnologyPage({
 
       {/* the pipeline */}
       <div className="wrap sec3">
-        <SecHead k="The pipeline" h={<>Four stages,<br />one request.</>}>
-          You post a document and a list of checks. Everything after that is ours, and every
-          stage records what it did.
+        {/* ANSWER BLOCKS (BUILD-SPEC §11a.2). All four statement headings on
+            this page become the questions a technical evaluator types, and each
+            lede becomes the self-contained answer — 43, 43, 41 and 43 words in
+            order. Each names the pipeline, the request or the API rather than
+            "everything after that" or "the shapes shown", which point outside
+            the block and cannot be lifted (§11a.2 rule 3).
+
+            Every figure is already on this page: 1.2 s and 33 check types in
+            the strip above, the four stages in the `Steps` list below, five
+            endpoints in `api3`, eight integrations in `intg3`. */}
+        <SecHead k="The pipeline" h="How does the verification pipeline work?">
+          You post one document and a list of checks. HelloVerify then runs four stages: an
+          on-device capture quality gate, field extraction and forgery checks in about 1.2
+          seconds, routing to the office that issued the document, and a signed result delivered
+          by webhook.
         </SecHead>
         <Steps
           items={[
@@ -114,8 +126,11 @@ export default async function TechnologyPage({
 
       {/* request / response */}
       <div className="wrap sec3">
-        <SecHead k="Shape of it" h={<>One POST,<br />one webhook.</>}>
-          Illustrative shapes — the published reference is issued with sandbox credentials.
+        <SecHead k="Shape of it" h="What does a verification request look like?">
+          A verification is one POST to /v1/verifications carrying the candidate, the check types
+          and a callback URL. Completion arrives as a verification.completed webhook naming the
+          result, the source and the timestamp. The shapes shown are illustrative; the published
+          reference ships with sandbox credentials.
         </SecHead>
         <div className="body3" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 22 }}>
           <div className="code3">
@@ -162,9 +177,10 @@ export default async function TechnologyPage({
 
       {/* endpoints */}
       <div className="wrap sec3" id="api">
-        <SecHead k="Endpoints" h={<>Small surface,<br />on purpose.</>}>
-          Five endpoints cover every product on this site. Check types are parameters, not
-          separate integrations.
+        <SecHead k="Endpoints" h="Which endpoints does the HelloVerify API expose?">
+          Five endpoints cover every HelloVerify product: start a verification, read one back,
+          submit a batch for a hiring drive, list the available check types, and fetch the signed
+          evidence behind a result. All 33 check types are parameters, not separate integrations.
         </SecHead>
         <div className="body3 api3">
           <div className="e">
@@ -197,9 +213,11 @@ export default async function TechnologyPage({
 
       {/* integration options */}
       <div className="wrap sec3">
-        <SecHead k="Ways to integrate" h={<>However deep<br />you want to go.</>}>
-          From a link you paste into an email to a full API integration with results posted back
-          into your ATS.
+        <SecHead k="Ways to integrate" h="How can we integrate HelloVerify?">
+          HelloVerify integrates eight ways: REST API, webhooks, bulk CSV upload, a hosted
+          capture page, the WhatsApp candidate flow, ATS connectors, SSO/SAML, and a console for
+          non-technical teams. That spans a link pasted into an email to results posted straight
+          back into your ATS.
         </SecHead>
         <div className="body3 intg3">
           <span className="svc">REST API</span>

@@ -123,9 +123,21 @@ export default async function CertifierPage({
 
       {/* what we check */}
       <div className="wrap sec3">
-        <SecHead k="What we check" h={<>The company,<br />and its people.</>}>
-          A vendor is a legal entity and the humans behind it. Certifier checks both — and keeps
-          checking, because licences expire and directors change.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). 44 words, and it names Certifier
+            rather than "a vendor check", so it still identifies the product
+            once an engine quotes it away from this page (§11a.2 rule 3). Every
+            check and every time is a `.pl3` chip in the two lanes below.
+
+            "Directors & GST" is named WITHOUT its turnaround, on purpose. The
+            chip below says 3 days, agreeing with `lib/content/checks.ts` and
+            with /business/enterprise; the homepage says 2 (TASKS.md, Part 5).
+            A sentence built to be quoted off the page is the worst place to
+            pick one of those by accident. */}
+        <SecHead k="What we check" h="What does vendor due diligence check?">
+          Certifier checks a vendor as a legal entity and as the people behind it: trade
+          licence in two days, directors and GST, credit and global-database screening in 15
+          minutes, plus identity, promoter criminal history and a financial assessment.
+          Licences expire, so it keeps checking.
         </SecHead>
         <div className="body3 lanes3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
           <div>
@@ -153,9 +165,21 @@ export default async function CertifierPage({
 
       {/* the two packages */}
       <div className="wrap sec3" id="packages">
-        <SecHead k="Packages" h={<>Two receipts,<br />most vendors covered.</>}>
-          Licence risk before onboarding; financial risk before the big order. Both end in a
-          certified vendor profile your whole team can cite.
+        {/* ANSWER BLOCK (§11a.2). 40 words: the two package cards below, their
+            four-check counts, their "ready in 2 days" and the strip's
+            "Registry-confirmed, not self-declared".
+
+            The per-package check lists are NOT enumerated here. The licence
+            package's four lines include "Defaulting directors" under a
+            two-day promise while the lane above it prices Directors & GST at
+            three days — the same disagreement as the block before this one, so
+            the answer states the package's turnaround and not which check
+            inside it carries it. */}
+        <SecHead k="Packages" h="What is in a vendor due diligence package?">
+          Certifier ships two four-check vendor packages: trade licence risk, before you sign
+          a supplier, and vendor financial risk, before the first big order. Both are
+          registry-confirmed rather than self-declared, and both end in a certified vendor
+          profile in two days.
         </SecHead>
         <div className="body3 rack3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))", maxWidth: 900 }}>
           <div className="rc">
@@ -206,7 +230,11 @@ export default async function CertifierPage({
         <div className="sec-head">
           <div>
             <div className="k">How it works</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>You send a list.<br />We send certainty.</h2>
+            {/* Question-shaped H2, no lede added (§11a.2) — this band is a bare
+                `sec-head` that has never carried one, and the three `Steps`
+                cards below are the answer. Same call as /checks/[check]'s two
+                lede-less bands. */}
+            <h2 className="h2" style={{ marginTop: 12 }}>How does vendor due diligence work?</h2>
           </div>
         </div>
         <Steps

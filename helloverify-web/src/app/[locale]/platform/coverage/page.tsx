@@ -142,9 +142,18 @@ export default async function CoveragePage({
 
       {/* offices */}
       <div className="wrap sec3">
-        <SecHead k="Six offices" h={<>Twelve hours apart,<br />on purpose.</>}>
-          A request filed at night in one place is picked up in the morning somewhere else. That
-          overlap is why turnaround is measured in hours rather than business days.
+        {/* ANSWER BLOCKS (BUILD-SPEC §11a.2). Three statement headings become
+            the questions a procurement reader types, and each lede becomes the
+            answer at 45, 42 and 45 words. Each names the offices, the country
+            times or coverage rather than "that overlap" and "coverage here",
+            which point outside the block (§11a.2 rule 3).
+
+            Offices and hours are the `off3` cards below and the strip above
+            (21 of 24 hours); every country time is a `REGIONS` entry. */}
+        <SecHead k="Six offices" h="Where are HelloVerify's offices?">
+          HelloVerify works from six offices — Manila, Singapore, Noida, Dubai, Cairo and New
+          York — each open 09–18 local, which puts someone at a desk for 21 of 24 hours. A
+          request filed at night in one place is picked up in the morning elsewhere.
         </SecHead>
         <div className="body3 off3">
           <div className="o3"><b>Manila</b><span>09–18 local</span></div>
@@ -158,10 +167,16 @@ export default async function CoveragePage({
 
       {/* countries */}
       <div className="wrap sec3" id="countries">
-        <SecHead k="Country times" h={<>How long it takes,<br />where it's issued.</>}>
-          Indicative times for source-confirmed checks. Digital registries answer in minutes;
-          where a registrar works on paper, the estimate says days — and we say which it is
-          before you order.
+        {/* The countries quoted are the ones carrying a RANGE in `REGIONS`.
+            The three "Today, 4:00 PM" entries are deliberately not restated:
+            they are a live desk-time display, and turning one into "same day"
+            in a citeable sentence would be an interpretation, not a fact on
+            this page. */}
+        <SecHead k="Country times" h="How long does verification take in each country?">
+          HelloVerify's indicative times for source-confirmed checks vary by country: India 15
+          minutes to 3 days, the United States, Germany and Saudi Arabia 1–3 days, Nigeria 3–6
+          days. Digital registries answer in minutes; where a registrar works on paper, the
+          estimate says days.
         </SecHead>
         <div className="body3 reg3">
           {REGIONS.map((g) => (
@@ -186,9 +201,11 @@ export default async function CoveragePage({
 
       {/* how coverage works */}
       <div className="wrap sec3">
-        <SecHead k="What coverage means" h={<>Not a logo<br />on a map.</>}>
-          Plenty of vendors claim global coverage and mean a database licence. Coverage here means
-          somebody can reach the office that holds the record.
+        <SecHead k="What coverage means" h="What does global coverage actually mean?">
+          Coverage at HelloVerify means someone can reach the office that holds the record — a
+          court, a university, a transport authority — in the country that issued the document,
+          not a database licence. If nobody can, the report says unverifiable and names the
+          route tried.
         </SecHead>
         <Steps
           items={[

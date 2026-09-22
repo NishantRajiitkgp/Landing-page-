@@ -713,15 +713,21 @@ people skip. Together they are the complete rule set; neither alone is.
 block, so the name is existing copy rather than invented. Desktop never showed
 it: the samples fit, so nothing scrolls.
 
-**A colour below AA that no gate could see.** `#7D796F`, the placeholder text of
-the homepage's mock contact form, measures **3.95:1** on paper where 4.5:1 is
-required, on five nodes. It is hard-coded in `app/design.css` on `.inp` at both
-breakpoints. Three gates all miss it by construction: `hv/no-color-literal` is
-an ESLint rule and reads TypeScript, not stylesheets; `check:tokens`, which did
-read files as text, was removed in Part 4 as redundant with it; and
-`check:contrast` walks the **token table**, so a colour that is not a token is
-invisible to it. Accepted with its measurement alongside `--faint`, because the
-fix (`--muted`, 4.83:1) is a DESIGN.md decision — see `../TASKS.md`.
+**A colour below AA that no gate could see — now fixed.** `#7D796F`, the
+placeholder text of the homepage's mock contact form, measured **3.95:1** on
+paper where 4.5:1 is required, on five nodes. Three gates all miss it by
+construction: `hv/no-color-literal` is an ESLint rule and reads TypeScript, not
+stylesheets; `check:tokens`, which did read files as text, was removed in Part 4
+as redundant with it; and `check:contrast` walks the **token table**, so a
+colour that is not a token is invisible to it. It was accepted with its
+measurement alongside `--faint` while the fix was an open DESIGN.md decision;
+that decision was taken on 22 Sep and the colour is now `var(--muted)`
+(**4.83:1**) in all four declarations that carried it — `app/design.css` `.inp`
+at both breakpoints, and `app/pages.css` on the real form's `::placeholder` and
+empty-`<select>` rules, which the sweep never named. `#7d796f` is out of
+`ACCEPTED_FG`, so it fails the sweep if it returns. **The missing gate is still
+missing:** nothing reads the stylesheets for colour, and the nine artboards
+`build-css.py` generates from still carry the literal.
 
 ### Navigation
 
@@ -1338,12 +1344,27 @@ correct code gets disabled, so the negative tests matter as much as the others.
   plausibly in the first viewport. Also worth knowing: in Next 16.3.5 `priority`
   emits a `<link rel="preload" as="image">` and drops `loading="lazy"`, but does
   **not** put `fetchpriority="high"` on the `<img>` as §9.2 assumes.
-- **Two certification claims in the old site are unconfirmed and not emitted.**
-  Its `llms.txt` claims **ISO/IEC 27701** and its `seo.ts` claims **SOC 2**.
-  Neither appears on this site's `/about`, which is the reviewed credentials
-  list, so neither is in the entity or in `llms.txt` — and `check-llms.mjs`
-  fails the build if either reappears. If they are real, add them to
-  `lib/content/company.ts` and to `/about` together.
+- **ISO/IEC 27701 and SOC 2 are now published, on testimony rather than on a
+  certificate.** Confirmed real by the owner on 22 Sep 2026 and published
+  "according to the old site", so the old site's own spelling governs:
+  **ISO/IEC 27701** (`public/llms.txt:67`, "ISO/IEC 27001 and ISO/IEC 27701
+  certified") and **SOC 2** (`src/config/seo.ts:50`, "ISO 27001 & SOC 2
+  compliance") — hence "compliant" for SOC 2, which ends in an attestation
+  report rather than a certificate. They are on `/about`, on
+  `/platform/security-compliance`, in `CREDENTIALS` and in `llms.txt`; 27701 is
+  also a `Certification` on the `Organization` node and SOC 2 deliberately is
+  not. **The remaining gap is the evidence, not the publication.** Neither repo
+  holds a certificate, an audit report, an auditor name or even a badge image
+  for either one, which is why the two `.cert` tiles are typographic plates and
+  why neither appears in the artefact table a reviewer can order from. If a
+  certificate or SOC 2 report is produced, cite it on `CREDENTIALS` in
+  `lib/content/company.ts` and add it to `ARTEFACTS`.
+- **`check-llms.mjs` no longer denies two names; it allows only the reviewed
+  list.** The old gate rejected the literal strings `27701` and `SOC 2`, so it
+  would have passed ISO 9001, SOC 1, HIPAA or FedRAMP. It now extracts every
+  certification-shaped token from `llms.txt` and fails on any whose standard is
+  not named in `CREDENTIALS` — adding a claim to the reviewed list is the only
+  way to publish one.
 - **The old site's live JSON-LD names the wrong head office.** It says Mumbai;
   the confirmed answer is Noida. Worth fixing on the old site too while it is
   still serving, since that schema is what Google has indexed.

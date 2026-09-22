@@ -102,11 +102,67 @@ design's third text tier is not achievable at AA on this paper.
 - Either way it changes DESIGN.md. `tools/a11y/check-contrast.mjs` carries it as
   an explicit ACCEPTED entry meanwhile.
 
-**2b. ISO/IEC 27701 and SOC 2.** The old site claims both (its `llms.txt` and
+**2b. ISO/IEC 27701 and SOC 2.** ~~The old site claims both (its `llms.txt` and
 `seo.ts` respectively); neither is on this site's reviewed credentials list, so
-neither is published and the build fails if either reappears. If they are real,
-add them to `lib/content/company.ts` **and** `/about` together. If they are not,
-the old site is claiming them today and should stop.
+neither is published and the build fails if either reappears.~~ **ANSWERED
+(both real) and DONE, 22 Sep** — published "according to the old site", so the
+old site's own wording governs.
+
+**The exact strings, and where they are published today**, in
+`D:\Projects\Application Frontend HV`:
+
+- `public/llms.txt:67` — "ISO/IEC 27001 and ISO/IEC 27701 certified", generated
+  by `scripts/generate-seo-files.mjs:180`. So **"ISO/IEC 27701"**, not
+  "ISO 27701".
+- `src/config/seo.ts:50` — "…20M+ verifications with ISO 27001 & SOC 2
+  compliance." So **"SOC 2"**, and **"compliance"** rather than "certified" —
+  which is also the technically correct word, since a SOC 2 engagement ends in
+  an auditor's attestation report and not in a certificate. Published here as
+  "SOC 2 compliant".
+
+Changed together, as the rule requires: `lib/content/company.ts` (`CREDENTIALS`,
+which `llms.txt` emits verbatim), `/about` (two new `.cert` cards),
+`/platform/security-compliance` (two new `CERTS` rows, with the status word
+explicit), and `lib/seo/schema/organization.ts` — where 27701 becomes a second
+`Certification` and **SOC 2 deliberately does not**, because there is no
+issuing body to name in `issuedBy` and modelling an attestation as a
+certificate is the overstatement that node's `memberOf`/`hasCertification`
+split exists to prevent.
+
+**The gate was rewritten rather than relaxed.** `check-llms.mjs` rejected the
+two literal strings `"27701"` and `"SOC 2"`, which made it exactly as good as
+that list was long — ISO 9001, SOC 1, HIPAA or FedRAMP would all have shipped
+silently. It now derives an **allowlist from `CREDENTIALS`**: every
+certification-shaped token in `llms.txt` must name a standard that appears on
+the reviewed list, so adding a line to that array is the only way to publish a
+claim. Exercised against 13 cases before and after (`ISO 9001`, `SOC 1`,
+`SOC 3`, `HIPAA`, `PCI-DSS`, `FedRAMP`, `HITRUST`, `TISAX`, `ISO/IEC 42001`,
+`ISO 22301` all rejected; years, prices and a bare "ISO" all silent). The one
+case the old denylist caught and a shape check would not — "ISO 9001 **and
+27701** certified", where the second standard carries no prefix, which is how
+`public/cms/en/educationAuthorities.base.json:126` writes it — is handled by
+distributing the prefix across the conjunction before scanning.
+
+**The evidence is weaker than everything else on that list, and is recorded as
+such** in a comment on `CREDENTIALS`, on both pages and on the entity: "the
+previous site published them and the owner confirmed", with no certificate,
+audit report, auditor name or badge image in either repo. Consequences, so that
+the weakness is visible rather than asserted: the two `.cert` tiles are
+typographic plates rather than badges (drawing a mark nobody issued us would
+claim more than the evidence does), and neither line is in the
+`/platform/security-compliance` artefact table, because promising a reviewer a
+document nobody has seen is the precise overstatement that page says it does not
+make. **If a certificate or a SOC 2 report is produced, replace that paragraph
+with a citation of it** — issuer, scope, date — and add the artefacts.
+
+**Not changed, and it now under-claims:** the homepage's
+`components/sections/Compliance.tsx` lists ISO 27001, GDPR, PBSA and NSR and
+does not carry the two new lines. It also already disagrees with
+`/platform/security-compliance` on GDPR — "GDPR compliant" there against
+"GDPR — aligned" here, which is the exact distinction that page's standfirst
+says it does not blur. Adding cards there changes homepage bytes against a
+460 KB ceiling and a measured LCP, so it wants its own commit with the
+measurement in it.
 
 **2c. The live site's schema names the wrong city.** ~~The old
 `StructuredData.tsx` says Mumbai; confirmed answer is Noida.~~ **ANSWERED
@@ -444,8 +500,10 @@ before writing a new one — that is the second time a unit already existed.
   literals: 119 → 0" over `src/**/*.tsx` and said so; the stylesheets were never
   in scope. `app/design.css` holds **228** colour literals and `app/pages.css`
   **36**. Most are artwork or are token values written out longhand (`#FFFFFF`
-  ×81, `#1B6B4A` ×40, `#CFCAC0` ×30), but `#7D796F` is neither — it is UI colour
-  that is not a token and fails AA at 3.95:1, and it shipped. The coverage was
+  ×81, `#1B6B4A` ×40, `#CFCAC0` ×30), but `#7D796F` was neither — it was UI
+  colour that is not a token and failed AA at 3.95:1, and it shipped. (That one
+  instance is **fixed**, 22 Sep, in all four declarations; the missing gate is
+  not, so this finding stands.) The coverage was
   lost in Part 4: `check:tokens` read files as text and was removed as redundant
   with `hv/no-color-literal`, which is an ESLint rule and cannot see CSS —
   exactly the reasoning that kept `check:logical`, not applied to colour. Note
@@ -481,12 +539,33 @@ today something renders a page**.
   390px and were not keyboard-reachable (WCAG 2.1.1). They now carry
   `tabIndex={0}` and a `role="region"` named from the header above each block.
   Desktop never showed it — the samples fit, so nothing scrolls.
-- **Needs a decision, and it is a THIRD colour problem, not Part 2a:**
-  `#7D796F` measures **3.95:1** on paper where 4.5:1 is required, on five nodes
-  — the placeholder text of the homepage's mock contact form, hard-coded in
-  `app/design.css` on `.inp` at both breakpoints. `--muted` (#6F6B62) would pass
-  at 4.83:1. Accepted in the sweep with its measurement, exactly as `--faint`
-  is, so the finding is visible rather than silent.
+- ~~**Needs a decision, and it is a THIRD colour problem, not Part 2a:**~~
+  **ANSWERED (use `--muted`) and DONE, 22 Sep.** `#7D796F` measured **3.95:1**
+  on paper where 4.5:1 is required, on five nodes — the placeholder text of the
+  homepage's mock contact form, hard-coded in `app/design.css` on `.inp` at
+  both breakpoints. Now `var(--muted)` (#6F6B62, **4.83:1**) at both, and
+  `#7d796f` is out of `ACCEPTED_FG` in `tools/e2e/a11y.spec.ts`, so the colour
+  reappearing anywhere fails the sweep rather than being tolerated.
+
+  **Checking it found two more nodes than the finding named.** `app/pages.css`
+  carried the same literal twice — `input.inp::placeholder` and
+  `select.inp:invalid` / `option[value=""]` — and those are the **real** contact
+  form, not the homepage mock. Both changed. **Why the sweep named only the mock
+  is NOT verified here** — no browser was run, since builds are centralised
+  while several agents share this tree — but the likely reason is that axe's
+  `color-contrast` rule reads an element's own text and cannot see a
+  `::placeholder`. If that is right, the real form's placeholders were failing
+  AA with nothing able to report them, and the five-node count understated the
+  defect. Worth confirming on the next `test:e2e` run.
+
+  **And the premise about the generator is out of date.** `design-src/artboards/`
+  IS present and git-tracked (9 `.dc.html` boards plus `canvas.json`), contrary
+  to this file and to `build-css.py`'s own docstring. All nine still carry
+  `color: #7D796F` on `.inp`, so re-running the generator would silently
+  reintroduce this — a second hazard alongside its undoing of the logical-CSS
+  conversion, and unlike that one no gate catches it. Recorded in the
+  `design.css` comment; the artboards were left alone, since they are the
+  verbatim canvas capture and editing them is a separate decision.
 
 **Also done (22 Sep):** the lead form end to end, and Lighthouse CI.
 
@@ -571,9 +650,10 @@ comes off and it gates.
   forward if those feel hairy.
 
 **Acceptance:** §17 conditions 3 and 12 close; `check:a11y` stops listing three
-rules as unrunnable. Condition 12 is now met for `en` with two accepted
-foregrounds; it stays open until those are decided and until `hi`/`ar` exist
-(Part 9), since it reads "all three locales".
+rules as unrunnable. Condition 12 is now met for `en` with **one** accepted
+foreground — `--faint`, Part 2a; `#7D796F` was the other and is fixed rather
+than accepted (above). It stays open until that one is decided and until
+`hi`/`ar` exist (Part 9), since it reads "all three locales".
 
 **Three things the harness had to learn, each by being wrong — kept because the
 next person will hit them too:**
@@ -649,8 +729,8 @@ meta (caught, plus the 17 scripts it orphaned).
 
 ---
 
-## Part 8 — The content pass · **two pages done as a pattern (22 Sep 2026);
-awaiting your review before the rest**
+## Part 8 — The content pass · **answer blocks DONE (22 Sep 2026); HowTo open**
+
 
 §17 conditions 17 and 18, and §11a.2.
 
@@ -699,15 +779,47 @@ re-broken afterwards to confirm they fire. This is the third distinct
 manifestation of the heredoc trap in the "How we work" rules above, and the only
 one so far that produced a *silently useless check* rather than a broken file.
 
+**All 19 commercial pages done (22 Sep 2026)**, the remaining 17 in one parallel
+pass: `business/` (hub, smb, enterprise, certifier, customer-kyc),
+`governments/` (hub + 4 + the MOM case study), `individuals/` (hub + 3),
+`platform/` (hub + 3). **60 answer blocks**, every one measured at 36–45 words
+by script rather than by eye.
+
+Three calls worth keeping, because they are the ones a second pass would
+otherwise re-litigate:
+
+- **Placeholder prices stay out of answer blocks.** `/business/smb` (₹349/₹999)
+  and `/individuals/hellov` (₹499/₹799) both publish prices the `.pricenote`
+  marks as "pending commercial sign-off". An answer block is designed to be read
+  AWAY from its page, so the disclaimer does not travel with the figure and an
+  engine would cite an unsigned price as fact. Both pages answer how they are
+  priced — per candidate, per person, not by subscription — and the cards keep
+  the numbers with the disclaimer intact. The two pages were written by
+  different passes and initially disagreed; `hellov` was rewritten to match.
+- **No certification name appears in any answer block**, including on the three
+  pages that render credential cards. Credentials are owned by `CREDENTIALS` in
+  `lib/content/company.ts` and gated by `check:llms`; restating them in prose
+  would be a fourth surface to keep in step.
+- **`/platform/security-compliance`'s "Certifications & memberships" heading was
+  deliberately NOT converted.** The obvious question is "which certifications do
+  you hold", and no answer to it avoids restating the reviewed list. It carries
+  a comment saying so.
+
 **Still to do:**
 
-- The remaining commercial pages: `business/` (hub, smb, enterprise, certifier,
-  customer-kyc), `governments/` (hub + 4), `individuals/` (hub + 3),
-  `platform/` (hub + 3).
 - **`HowTo` schema** on the process sections. §11a.3 rates "how does background
   verification work" a top query shape, and `chrome/Steps.tsx` now renders every
   one of those sections from a record list — so the schema can be emitted from
-  the same data rather than restated, the way `FaqSection` already does.
+  the same data rather than restated, the way `FaqSection` already does. Several
+  of those sections now carry exactly that question as their H2, so the pairing
+  is ready.
+- **One answer block restates a contradicted promise, and it needs 2a-style
+  resolution rather than rewording.** `/business/smb`'s block says the
+  blue-collar package is ready "in 30 minutes" — the card's own headline — and
+  that package contains Registration certificate, which `/business/enterprise`
+  prices at 60 min. The block names no per-check time, but the package promise
+  implies one. Softening it would make the answer vague without making the site
+  consistent; the fix is to settle the turnaround disagreement below.
 
 ---
 
@@ -832,10 +944,18 @@ Deliberately deferred. Everything here waits on the move off GitHub.
   message catalogue and zod-on-client to protect this budget. The number may
   predate the framework choice, in which case the budget should move rather than
   the code. Worth attributing properly before promising anything.
-- **`tools/port/build-css.py` cannot run** — `design-src/artboards/` is not in
-  this tree, so `design.css` is maintained in place despite its generated-file
-  header. If the artboards return, re-running it undoes the logical-CSS
-  conversion; `check:logical` catches that.
+- **`tools/port/build-css.py` must not be re-run, and the stated reason is
+  wrong.** Both this file and the script's own docstring said it *cannot* run
+  because `design-src/artboards/` is not in this tree. Measured 22 Sep:
+  the directory **is** there and git-tracked — nine `.dc.html` boards and
+  `canvas.json`, which is every input `sheet()` opens. So `design.css` is
+  maintained in place by choice, not by impossibility, and the generated-file
+  header is a live hazard rather than a dead one. Two things it would undo:
+  the logical-CSS conversion, which `check:logical` catches, and the `.inp`
+  contrast fix, which **no gate catches** — the boards still carry
+  `color: #7D796F`. Either fix the boards and re-run with
+  `logical-css.py --write`, or delete the script; leaving it runnable with a
+  false "cannot run" note is the worst of the three.
 - **The four old blog posts redirect by subject, not by content** (IA §9).
   Porting them is strictly better; the targets are one line to change.
 - **`/support/track` has no destination** — the only entry left in

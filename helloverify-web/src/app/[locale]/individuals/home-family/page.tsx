@@ -58,8 +58,16 @@ export default async function Page({
         <><b>WhatsApp</b> — no app to install</>,
         <><span className="dot" /> they consent first, always</>,
       ]}
-      verifyHead={<>Three things<br />worth knowing.</>}
-      verifyLede="Who they actually are, what the courts say, and whether the address they gave you is real. All three usually come back inside half an hour."
+      /* ANSWER BLOCKS (BUILD-SPEC §11a.2). `VerticalPage` renders each of these
+         four head/lede pairs as the section's H2 and lede, so the conversion is
+         a prop change rather than markup: statement heading becomes the
+         question a family types, lede becomes the self-contained answer at 43,
+         39, 41 and 41 words. Each names the household check rather than "all
+         three" or "the whole thing", which pointed outside the block and made
+         it unciteable (§11a.2 rule 3).
+         Every figure is one of this page's own `lanes` pills or `rows`. */
+      verifyHead="What does a background check on a nanny or driver cover?"
+      verifyLede="A HelloVerify household check covers three things: identity with a photo match, the criminal and global-database record, and whether the address given is real. Identity takes 15 minutes, driving licence and criminal record 30 minutes each; a previous household employer takes two days."
       laneCols={3}
       lanes={[
         {
@@ -89,15 +97,15 @@ export default async function Page({
           ],
         },
       ]}
-      stepsHead={<>Before the<br />first day.</>}
-      stepsLede="The whole thing happens in a WhatsApp conversation, usually while you're still deciding."
+      stepsHead="How do I check a nanny or driver before they start?"
+      stepsLede="A HelloVerify home-and-family check runs in a WhatsApp conversation: you photograph the person's document, they consent on their own phone after seeing exactly what is being checked, and the report returns to the same chat in about 30 minutes."
       steps={[
         { n: "01 · You", t: "Send a photo", p: "Message HelloV and photograph their document. Takes about a minute." },
         { n: "02 · Them", t: "They agree", p: "They get a message showing exactly what's being checked, and consent on their own phone." },
         { n: "03 · The report", t: "You know", p: "Plain language, sources named, back in the same chat — usually in about 30 minutes." },
       ]}
-      tableHead={<>What takes<br />how long.</>}
-      tableLede="Measured from upload to report. Household checks are deliberately the fast ones — the decision is usually being made this week."
+      tableHead="How long does a nanny or driver background check take?"
+      tableLede="Most HelloVerify household checks finish inside 30 minutes, measured from upload to report: identity and a global database screen in 15 minutes, driving licence, criminal record and current address in 30. Only a previous household employer is slow, at two days."
       rows={[
         { nm: "Identity", sub: "name, DOB, photo match", tm: "15 min", fast: true, src: "issuing registry" },
         { nm: "Global database screen", sub: "watchlists, adverse media", tm: "15 min", fast: true, src: "global databases" },
@@ -107,8 +115,14 @@ export default async function Page({
         { nm: "Previous employment", sub: "household or agency reference", tm: "2 days", src: "the previous employer" },
       ]}
       tableNote="Times shown are from upload to report · all checks require the person's consent"
-      complianceHead={<>Fair to them,<br />too.</>}
-      complianceLede="The person you're checking is usually looking for work. They see what's being verified, consent to it, and the documents don't live with us forever."
+      /* This section renders `VerticalPage`'s certification cards, so the
+         answer deliberately says nothing about which credentials are held:
+         that list lives in `lib/content/company.ts` and on
+         `/platform/security-compliance`, and `check:llms` gates it. Restating
+         it in a lede on six vertical pages is how those copies drift. The
+         answer takes the consent-and-retention half, as the old lede did. */
+      complianceHead="Is verification fair to the person being checked?"
+      complianceLede="The person being checked is usually looking for work: they see exactly what is being verified, consent to it, and their documents are held under retention limits rather than forever. A verified record is also portable proof for the next family."
       faqHead={<>From families.</>}
       faqs={[
         {

@@ -3,8 +3,9 @@
  *  detail page. That is a procurement blocker for the ministry buyer. This page
  *  exists to be sent to a security reviewer.
  *
- *  Status language is deliberate: "certified" vs "aligned" vs "targeting" are
- *  different claims, and are not blurred here. Items awaiting sign-off say so. */
+ *  Status language is deliberate: "certified" vs "compliant" vs "aligned" vs
+ *  "targeting" are different claims, and are not blurred here. Items awaiting
+ *  sign-off say so. */
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
@@ -27,12 +28,45 @@ export async function generateMetadata({
   return pageMetadata(locale, "/platform/security-compliance");
 }
 
+/** The certifications and memberships, and they MUST agree with
+ *  `lib/content/company.ts`'s `CREDENTIALS` (BUILD-SPEC §11a.3 — the entity is
+ *  one entity, and two pages of the same site holding different certifications
+ *  is worse for a procurement reviewer than either page alone). `/about` is the
+ *  reviewed list and this page is its long form: every line there appears here
+ *  with its status word made explicit.
+ *
+ *  ISO/IEC 27701 and SOC 2 were added 22 Sep 2026. Their evidence is NOT of the
+ *  same kind as the other four, and the status column is where that shows:
+ *  published on the existing site at `public/llms.txt:67` and
+ *  `src/config/seo.ts:50` respectively, confirmed by the owner 22 Sep 2026, and
+ *  that is the whole of it — neither repo holds a certificate, a report, an
+ *  auditor name or a badge for either. So neither line offers an artefact "on
+ *  request" the way ISO 27001 does, and neither is in the `ARTEFACTS` table
+ *  below: promising a reviewer a document nobody has seen is exactly the
+ *  overstatement the section standfirst says we do not make. **If a certificate
+ *  or a SOC 2 report is produced, cite it here and add it to `ARTEFACTS`.**
+ *
+ *  Wording is the old site's own, deliberately: "ISO/IEC 27701" rather than
+ *  "ISO 27701", and SOC 2 is "compliant" rather than "certified" because a SOC 2
+ *  engagement ends in an attestation report, not a certificate. */
 const CERTS = [
   {
     img: "/img/iso.jpg",
     alt: "ISO 27001",
     h: "ISO 27001 — certified",
     p: "Information security management, independently audited. Certificate and scope statement available on request.",
+  },
+  {
+    img: "/img/iso-27701.jpg",
+    alt: "ISO/IEC 27701",
+    h: "ISO/IEC 27701 — certified",
+    p: "Privacy information management: the extension of ISO 27001 that governs how personal data is handled, as controller and as processor.",
+  },
+  {
+    img: "/img/soc2.jpg",
+    alt: "SOC 2",
+    h: "SOC 2 — compliant",
+    p: "Service-organisation controls for security, availability and confidentiality. Compliant rather than certified — a SOC 2 engagement produces an attestation report, not a certificate.",
   },
   {
     img: "/img/gdpr.jpg",
@@ -149,9 +183,18 @@ export default async function SecurityCompliancePage({
 
       {/* certifications */}
       <div className="wrap sec3">
+        {/* NOT CONVERTED, deliberately (BUILD-SPEC §11a.2). "which
+            certifications do you hold" is the obvious question here, and no
+            answer to it can avoid restating the credentials list — which
+            `CERTS` above owns, `lib/content/company.ts` restates for the
+            machine-readable surfaces, and `npm run check:llms` gates. Writing
+            it a third time in a lede is how the three come to disagree, and the
+            list moved as recently as 22 Sep (two lines added, with a status
+            caveat in the comment above). The other four sections on this page
+            are converted; this one stays a statement until the list settles. */}
         <SecHead k="Certifications &amp; memberships" h={<>What we hold,<br />stated precisely.</>}>
-          Certified, aligned and member are three different claims. We don't blur them — a
-          reviewer who catches a vendor overstating one stops trusting the rest.
+          Certified, compliant, aligned and member are four different claims. We don't blur
+          them — a reviewer who catches a vendor overstating one stops trusting the rest.
         </SecHead>
         <div className="body3 certs3">
           {CERTS.map((c) => (
@@ -168,9 +211,17 @@ export default async function SecurityCompliancePage({
 
       {/* how data is handled */}
       <div className="wrap sec3">
-        <SecHead k="Data protection" h={<>Someone's passport<br />is not "data".</>}>
-          Every verification handles the most sensitive documents a person owns. These are the
-          controls that apply to all of them, on every plan.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2), 45 words, composed from the four
+            `Steps` cards directly below. The heading is the question a security
+            reviewer types and the answer names the controls rather than saying
+            "these are the controls", which is unciteable once lifted off the
+            page (§11a.2 rule 3). No certification is named: that list belongs
+            to `CERTS` and `company.ts` and is gated by `check:llms`. */}
+        <SecHead k="Data protection" h="How is candidate data protected?">
+          Four controls apply to every HelloVerify verification, on every plan: consent on the
+          person's own device per verification, TLS in transit and encryption at rest with keys
+          held separately, role-based access scoped to the verification with an audit log, and
+          retention bounded by your DPA.
         </SecHead>
         <Steps
           items={[
@@ -184,9 +235,15 @@ export default async function SecurityCompliancePage({
 
       {/* residency & sub-processors */}
       <div className="wrap sec3">
-        <SecHead k="Residency &amp; sub-processors" h={<>Where the data<br />actually sits.</>}>
-          Verification is cross-border by nature: a check runs where the document was issued.
-          What stays local, what moves, and who touches it is documented rather than assumed.
+        {/* 45 words, every row of the table below and nothing else. "where is
+            data stored" is one of §11a.3's procurement query shapes, so the
+            heading is that question verbatim rather than "Where the data
+            actually sits", which reads as a label and not as an answer. */}
+        <SecHead k="Residency &amp; sub-processors" h="Where is verification data stored?">
+          Candidate documents and verification results sit in the region of your contract, with
+          India and EU regions available. The source confirmation itself runs in the country that
+          issued the document, because that is where the record is. Sub-processors are registered
+          and listed in the DPA.
         </SecHead>
         <div className="body3 tbl3">
           <div className="hd">
@@ -223,10 +280,16 @@ export default async function SecurityCompliancePage({
 
       {/* accessibility */}
       <div className="wrap sec3">
-        <SecHead k="Accessibility" h={<>A procurement<br />requirement now.</>}>
-          European Accessibility Act enforcement has been active since June 2025, and EN 301 549
-          makes WCAG 2.2 AA the presumed standard. Public bodies increasingly require a
-          conformance statement in the tender itself.
+        {/* 43 words. The heading asks for the STATUS rather than "are you
+            conformant", because the honest answer is "being built to, statement
+            in progress" — the `ARTEFACTS` row above says "In progress" and the
+            prose below says the same. A question shaped as "is this site WCAG
+            2.2 AA conformant?" would invite an engine to lift a yes that this
+            page does not claim. */}
+        <SecHead k="Accessibility" h="What is your accessibility conformance status?">
+          The HelloVerify site is being built to WCAG 2.2 Level AA, and the claim is checked on
+          every build: an axe-core audit runs across all 56 pages, blocking on any critical or
+          serious violation. The formal conformance statement and VPAT are in progress.
         </SecHead>
         <div className="body3 prose3">
           <p>
@@ -264,9 +327,17 @@ export default async function SecurityCompliancePage({
 
       {/* artefacts */}
       <div className="wrap sec3" id="artefacts">
-        <SecHead k="Artefacts" h={<>What we can<br />send you.</>}>
-          Ask for any of these by name. Most arrive within two working days; anything under NDA
-          needs the NDA first, which we'll send the same day.
+        {/* 42 words. Four of the six `ARTEFACTS` rows are named; the ISO 27001
+            certificate row and the accessibility statement are deliberately
+            not, the first because naming it would restate a credential from
+            the list `check:llms` gates and `company.ts` owns, the second
+            because its status is "In progress" and the block above already
+            says so. The table itself is unchanged and lists all six. */}
+        <SecHead k="Artefacts" h="What can you send a security reviewer?">
+          HelloVerify sends artefacts by name: the DPA with its international transfer terms, the
+          security whitepaper, the penetration-test summary under NDA, and the sub-processor
+          register. Most arrive within two working days; anything under NDA needs the NDA, which
+          goes out the same day.
         </SecHead>
         <div className="body3 art3">
           {ARTEFACTS.map((a) => (

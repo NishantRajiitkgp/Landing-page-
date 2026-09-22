@@ -136,9 +136,18 @@ export default async function HelloVPage({
 
       {/* the chat, and who people check */}
       <div className="wrap sec3">
-        <SecHead k="In one conversation" h={<>It happens<br />in WhatsApp.</>}>
-          No download, no dashboard, no password to forget. The same app you already use to
-          send photos of everything else.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). Question-shaped H2, and a lede
+            that answers it in 43 words while naming HelloV and the four people
+            families check — "the same app you already use" pointed at something
+            outside the block and could not be lifted (§11a.2 rule 3).
+
+            The four subjects and the 30-minute figure are the `when3` cards
+            directly below, and the strip above carries the turnaround. The two
+            blocks after this one measure 44 words each. */}
+        <SecHead k="In one conversation" h="Can I run a background check over WhatsApp?">
+          Yes. HelloV runs entirely inside WhatsApp — no download, no dashboard, no password.
+          Families use it before hiring a driver, a maid or nanny, before handing a tenant the
+          keys, and before believing someone they met online. Each check takes about 30 minutes.
         </SecHead>
         <div className="body3 split3">
           <div>
@@ -173,9 +182,26 @@ export default async function HelloVPage({
 
       {/* plans */}
       <div className="wrap sec3" id="plans">
-        <SecHead k="Plans" h={<>Two plans.<br />One receipt.</>}>
-          Pay per person, not per month. Everything runs in parallel, so the report is only as
-          slow as its slowest check.
+        {/* "how much does a background check cost" is a top consumer query
+            (§11a.3), so the price belongs in the answer rather than only in the
+            cards. Both figures and both check counts are the two `rc` cards
+            below and the strip above; nothing new is claimed. Note the
+            NO PRICE FIGURES IN THIS BLOCK, deliberately. The `pricenote`
+            directly below still says the prices are placeholders pending
+            commercial sign-off, and an answer block is designed to be read
+            AWAY from its page — so the disclaimer does not travel with the
+            number, and an engine would cite an unsigned price as fact. The
+            question therefore asks how HelloV is priced, which the plan model
+            answers truthfully, rather than what it costs. The cards below still
+            show the current figures with their disclaimer intact.
+
+            Same call `/business/smb` made for its ₹349/₹999 packages, so the
+            two pages agree. Revisit both together once prices are signed off.
+            39 words. */}
+        <SecHead k="Plans" h="How is a HelloV background check priced?">
+          HelloV is priced per person rather than by subscription, with two plans. Basic covers
+          driving licence, criminal record and current address. Advanced adds identity with photo
+          match and a global database screen. Both return a report in 30 minutes.
         </SecHead>
         <div className="body3 rack3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))", maxWidth: 900 }}>
           <div className="rc">
@@ -235,9 +261,10 @@ export default async function HelloVPage({
 
       {/* consent */}
       <div className="wrap sec3">
-        <SecHead k="The rule" h={<>You can't check<br />someone secretly.</>}>
-          That isn't a limitation we added reluctantly — it's the line between verification and
-          surveillance, and it's the law.
+        <SecHead k="The rule" h="Is it legal to check someone yourself?">
+          Yes — with consent, which is the law rather than a HelloV policy. The person receives a
+          message showing exactly what will be checked and consents on their own phone; without
+          that no check runs and you aren't charged. Documents are deleted on schedule.
         </SecHead>
         <Steps
           items={[
