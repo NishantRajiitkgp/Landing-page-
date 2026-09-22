@@ -49,7 +49,13 @@ export default async function CheckPage({
       closing={{
         heading: (
           <>
-            Run a {c.name.toLowerCase()} check <em>this week.</em>
+            {/* "the", and the name verbatim. This read "Run a
+                {c.name.toLowerCase()} check" on all twelve pages until
+                `tools/test/answer-blocks.test.ts` was written and failed on
+                it — "Run a identity check" and "Run a directors & gst check".
+                Pre-existing, and found by a test written for the answer
+                blocks rather than by reading the pages again. */}
+            Run the {c.name} check <em>this week.</em>
           </>
         ),
         sub: `Confirmed with ${c.source}, typically in ${c.time}.`,
@@ -76,9 +82,53 @@ export default async function CheckPage({
         </div>
       </div>
 
+      {/* THE ANSWER BLOCK (BUILD-SPEC §11a.2). Question-shaped H2, and the
+          answer immediately below it in ~35 words, self-contained: it names the
+          check rather than saying "this check", so it still means something
+          when an engine extracts it away from this page.
+
+          Every value comes from `lib/content/checks.ts` - the same catalogue
+          the strip above and the `Service` node are built from - so the
+          citeable sentence and the page cannot disagree. Nothing here is new
+          copy; it is reviewed copy in a shape that survives extraction.
+
+          COVERAGE IS ITS OWN CLAUSE, not "across {countries}", because the
+          twelve values do not all fit that frame: `global-database` reads
+          "Global", so "across Global" is broken English on one of the twelve.
+          Checked against all of them rather than the two that read nicely.
+
+          TWO MORE THINGS ONE TEMPLATE FOR TWELVE PAGES GOT WRONG, both caught
+          by reading the rendered output rather than the source:
+
+          - `c.name.toLowerCase()` turned "Directors & GST" into
+            "directors & gst". The name is used VERBATIM now; three of the
+            twelve carry an acronym or a proper noun that a lower-casing helper
+            cannot know about.
+          - "a {name} check" reads "a Identity check" on three of them.
+            The article is "the" throughout instead, which is grammatical for
+            all twelve names without a vowel test that would itself be wrong
+            for the next one added.
+
+          `tools/test/answer-blocks.test.ts` asserts both, so adding a check to
+          the catalogue cannot reintroduce them. */}
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <div>
+            <div className="k">In short</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>
+              How long does {c.name} verification take?
+            </h2>
+          </div>
+          <p className="lede" style={{ marginBottom: 8 }}>
+            {c.name} is confirmed against {c.source}, with a typical turnaround of {c.time}.
+            {" "}Coverage: {c.countries}. {c.answers}
+          </p>
+        </div>
+      </div>
+
       {/* what you get */}
       <div className="wrap sec3">
-        <SecHead k="What comes back" h="In the report.">
+        <SecHead k="What comes back" h={`What is in the ${c.name} report?`}>
           Every field carries the source that confirmed it and the date it was confirmed.
         </SecHead>
         <div className="body3 cloud3">
@@ -96,7 +146,9 @@ export default async function CheckPage({
         <div className="sec-head">
           <div>
             <div className="k">What it can't tell you</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>The limit<br />of this check.</h2>
+            <h2 className="h2" style={{ marginTop: 12 }}>
+              What can the {c.name} check not confirm?
+            </h2>
           </div>
         </div>
         <div className="body3 prose3">
@@ -114,7 +166,7 @@ export default async function CheckPage({
         <div className="sec-head">
           <div>
             <div className="k">Who orders it</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Usually for.</h2>
+            <h2 className="h2" style={{ marginTop: 12 }}>Who needs this check?</h2>
           </div>
         </div>
         <div className="body3 intg3">
@@ -130,7 +182,9 @@ export default async function CheckPage({
           <div className="sec-head">
             <div>
               <div className="k">Related</div>
-              <h2 className="h2" style={{ marginTop: 12 }}>Usually ordered<br />together.</h2>
+              <h2 className="h2" style={{ marginTop: 12 }}>
+                Which checks are usually ordered with it?
+              </h2>
             </div>
           </div>
           <div className="body3 idx3">

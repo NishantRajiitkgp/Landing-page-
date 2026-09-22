@@ -118,9 +118,22 @@ export default async function EmployeeVerificationPage({
 
       {/* what we check */}
       <div className="wrap sec3">
-        <SecHead k="What we check" h={<>Work history,<br />from the record.</>}>
-          Digital first: provident-fund records answer in an hour. Where an employer must be
-          called, we call — and the report says who picked up.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). The heading is the question, the
+            lede is the whole answer in ~40 words, and it names re-verification
+            rather than saying "this" — a block that says "this process" is
+            unciteable once an engine lifts it off the page (§11a.2 rule 3).
+
+            Every number here is already on this page: the chip list below
+            carries the per-check times, and the strip above carries the 60-min
+            digital employment figure. Deliberately NOT naming entitlement to
+            work's turnaround, which is one side of the three-way disagreement
+            TASKS.md carries between the catalogue, this page and the homepage.
+            A citeable sentence is the worst place to pick a side by accident. */}
+        <SecHead k="What we check" h="What does employee re-verification check?">
+          Employee re-verification covers digital employment, moonlighting, entitlement to
+          work, a criminal refresh and current address. Provident-fund and court records
+          answer digitally — digital employment in 60 minutes. Where a former employer has
+          to be called, HelloVerify calls, and the report names who picked up.
         </SecHead>
         <div className="body3 cloud3" style={{ marginTop: 40 }}>
           <span className="pl3 fast"><span className="d" />Digital employment<span className="t">60 min</span></span>
@@ -135,9 +148,11 @@ export default async function EmployeeVerificationPage({
 
       {/* when to re-verify */}
       <div className="wrap sec3" id="when">
-        <SecHead k="When it matters" h={<>Four moments<br />worth a second look.</>}>
-          A check is a snapshot. These are the moments the picture changes — and the ones
-          auditors ask about.
+        <SecHead k="When it matters" h="When should you re-verify an employee?">
+          Re-verify at four moments: joining, a role change into finance, security or
+          childcare-adjacent work, an annual refresh across the workforce, and after an
+          incident. A check is a snapshot of the day it ran, and these are the four points
+          where the picture changes — and the ones auditors ask about.
         </SecHead>
         <div className="body3 when3">
           <div className="w">
@@ -165,9 +180,11 @@ export default async function EmployeeVerificationPage({
 
       {/* how it works */}
       <div className="wrap sec3">
-        <SecHead k="How it works" h="Quiet by design.">
-          Employees consent once on their own phone; after that, refreshes run without
-          interrupting anyone's day.
+        <SecHead k="How it works" h="How does re-verification work without disrupting staff?">
+          Employees consent once on their own phone. After that, re-verification runs from a
+          roster upload or an HRMS sync, checks statutory and court records digitally, and
+          reports only the changes — a new court record, a second employer — rather than
+          every clean result. Nobody fills in a form again.
         </SecHead>
         <Steps
           items={[
