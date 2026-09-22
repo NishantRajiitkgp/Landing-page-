@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
 
-import { SIZES_WHY, tint } from "@/lib/img";
+import { SIZES_WHY, noteInk, tint } from "@/lib/img";
 
 /** Why governments work with us.
  *
@@ -66,7 +66,12 @@ function WhyCard({ mob }: { mob?: boolean }) {
       {" "}
       <div className="light"></div>
       <Image className="pimg" src={PHOTO} alt="" fill sizes={SIZES_WHY} />
-      <div className="note" style={{ top: "18%", color: "rgba(255,255,255,0.4)" }}>
+      {/* The caption is inverted because THIS photograph's tint is dark
+          (`#8C8C7A`, relative luminance 0.2574) - a per-photograph fact, so it
+          sits beside the tint in `lib/img.ts` rather than as a literal here.
+          The literal was one of six `rgba()` values that `hv/no-color-literal`
+          could not see before 22 Sep 2026. */}
+      <div className="note" style={{ top: "18%", color: noteInk(PHOTO) }}>
         photo · licensing officer at a counter, natural light
       </div>
       {" "}

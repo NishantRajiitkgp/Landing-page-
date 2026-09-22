@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Fragment } from "react";
 import Image from "next/image";
 
-import { SIZES_CCARD, tint } from "@/lib/img";
+import { SIZES_CCARD, noteInk, tint } from "@/lib/img";
 
 /** International coverage.
  *
@@ -136,8 +136,12 @@ function CountryCard({ c, mob = false, wide = false }: { c: Country; mob?: boole
         {gap}
         <div className="light"></div>
         <Image className="pimg" src={c.src} alt="" fill sizes={SIZES_CCARD} />
+        {/* All five country tints are dark (relative luminance 0.140-0.243), so
+            all five captions invert. Keyed by image in `lib/img.ts` beside the
+            tint that causes it; it was an `rgba()` literal here, invisible to
+            `hv/no-color-literal` until 22 Sep 2026. */}
         {!mob && (
-          <div className="note" style={{ top: "22%", color: "rgba(255,255,255,0.45)" }}>
+          <div className="note" style={{ top: "22%", color: noteInk(c.src) }}>
             {c.note}
           </div>
         )}

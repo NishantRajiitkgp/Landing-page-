@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { SIZES_FEATURE, tint } from "@/lib/img";
+import { SIZES_FEATURE, noteInk, tint } from "@/lib/img";
 /** Contact form. */
 
 export function Contact() {
@@ -16,7 +16,12 @@ export function Contact() {
               </div>
               <Image className="pimg" src="/img/23-closing.jpg" alt="" fill sizes={SIZES_FEATURE} />
               {' '}
-              <div className="note" style={{ top: '26%', color: 'rgba(255,255,255,0.35)' }}>
+              {/* Inverted because `/img/23-closing.jpg`'s tint is dark
+                  (`#6B6E5B`, relative luminance 0.1503); the 0.35 alpha is this
+                  board's own and is kept per photograph in `lib/img.ts` rather
+                  than unified with the other two values, which would change
+                  what six tiles render. */}
+              <div className="note" style={{ top: '26%', color: noteInk("/img/23-closing.jpg") }}>
                 photo · warm, people at work
               </div>
               {' '}
@@ -33,6 +38,31 @@ export function Contact() {
                   {' '}beginning.
                 </h2>
                 {' '}
+                {/* THE ONLY SUPPRESSION OF `hv/no-color-literal` IN `src/`, and
+                    the only lint suppression of any kind - so it is a decision
+                    waiting on you, not a style choice.
+
+                    Extending the rule past hex (22 Sep 2026) surfaced six
+                    whole-value `rgba()` literals. Five were the `.ph .note`
+                    caption and went to `PLACEHOLDER_NOTE` in `lib/img.ts`,
+                    where a per-photograph colour belongs. This one is none of
+                    the three documented exemptions: it is body copy on the
+                    closing band - UI colour, read by a human - and the palette
+                    has no translucent white tier to send it to. `var(--white)`
+                    is #FFFFFF at full opacity and would visibly change this
+                    paragraph, so substituting it would be a design change
+                    smuggled in as a lint fix.
+
+                    Adding a token is a DESIGN.md decision (§2.1), and TASKS
+                    Part 3 settled the precedent: four new tokens, not
+                    seventeen. One occurrence in the whole codebase is thin
+                    evidence for a new tier, so it is recorded rather than
+                    guessed. Two ways out if you want it gone: a translucent
+                    white token, or `color: var(--white)` with `opacity` on this
+                    paragraph - identical rendering here, since the element
+                    paints nothing but its own text, but that is a claim that
+                    wants a screenshot before anyone relies on it. */}
+                {/* eslint-disable-next-line hv/no-color-literal */}
                 <p style={{ margin: '20px 0 0', fontSize: '18px', lineHeight: '1.45', color: 'rgba(255,255,255,0.82)', maxWidth: '460px' }}>
                   Take the first step. We'll handle the rest.
                 </p>

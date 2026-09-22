@@ -1,9 +1,40 @@
 /* Tailwind without preflight: the ported canvas stylesheet assumes UA defaults
    (notably line-height: normal), and preflight's own resets fight it. Utilities
    and theme stay available for anything built outside the canvas. */
+/* `source("../")` restricts candidate detection to `src/` — this file lives in
+   `src/app/`, so the path resolves against that (BUILD-SPEC §9.1, TASKS.md
+   Part 5).
+
+   WHY: Tailwind v4 auto-detects sources from the project root and does not
+   exclude `tools/`. Measured — one bare word in a COMMENT in
+   `tools/port/html-identity.mjs` (the CSS property between `border` and
+   `box-shadow`) generated a real 165-byte `.outline` rule into `chunks/*.css`
+   on every one of 58 pages and moved the chunk hash, 121,921 → 122,086 bytes.
+   Re-measured with this file's own harness on 22 Sep 2026: a throwaway
+   `tools/port/_tw-bait.mjs` carrying `subpixel-antialiased` in a comment moved
+   the generated stylesheet 171,034 → 171,133 bytes and emitted the rule; with
+   the clause below, the same file changes nothing. Every build script in
+   `tools/` that quotes markup or names a CSS property is otherwise a source of
+   phantom utilities, and `check:perf` measures the total without questioning
+   what is in it.
+
+   It goes on the UTILITIES import, not the theme one: `tailwindcss/utilities.css`
+   is literally `@tailwind utilities;`, and `source(…)` is read off that at-rule
+   (`node_modules/tailwindcss/dist/lib.mjs` — the `@tailwind utilities` branch
+   reads `source(…)` and stores `{base: sourceBase ?? base, pattern}`; an
+   `@import`'s trailing condition is desugared to `@media source(…)`, whose
+   handler re-attaches it to the `@tailwind utilities` node with
+   `sourceBase` set to THIS file's directory). Putting it on the theme import
+   would be silently inert.
+
+   REJECTED: `@source not "../../tools"`. Both mechanisms are in 4.3.3, but a
+   denylist is only as good as its length — `design-src/`, `messages/`,
+   `public/` and any future sibling would each need adding, and the failure mode
+   is silent extra CSS rather than an error. An allowlist of `src/` states the
+   rule instead of enumerating the exceptions. */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
+@import "tailwindcss/utilities.css" layer(utilities) source("../");
 
 @import "./design.css";
 @import "./pages.css";

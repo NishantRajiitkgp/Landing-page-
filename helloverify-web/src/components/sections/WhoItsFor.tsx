@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Fragment } from "react";
 import Image from "next/image";
 
-import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE, tint } from "@/lib/img";
+import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE, noteInk, tint } from "@/lib/img";
 
 /** Who it is for - the audience bento.
  *
@@ -35,8 +35,6 @@ import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE, tint } from "@/lib/img";
 type Cell = {
   readonly src: string;
   readonly note: string;
-  /** The one caption drawn at 40% white rather than the default. */
-  readonly dimNote?: boolean;
   readonly tag: ReactNode;
   /** Mobile's shorter tag, where it has one. */
   readonly mobTag?: ReactNode;
@@ -80,7 +78,6 @@ const CELLS: readonly Cell[] = [
   {
     src: "/img/13-factory-floor.jpg",
     note: "photo · factory floor",
-    dimNote: true,
     tag: "Vendors · Certifier",
     from: "from 2 days",
     h: "Know who you buy from",
@@ -108,6 +105,16 @@ function BentoCell({ c, mob = false }: { c: Cell; mob?: boolean }) {
   const gap = mob ? null : " ";
   const span =
     c.span === "row" ? { gridRow: "span 2" } : c.span === "col" ? { gridColumn: "span 2" } : {};
+  /** Replaces the `dimNote` field, which is deleted. The caption on the factory
+   *  cell was white at 40% because `/img/13-factory-floor.jpg`'s tint is dark
+   *  (`#6E6C63`, relative luminance 0.1494) - a fact about the photograph, so it
+   *  is keyed by photograph in `lib/img.ts` beside the tint itself. `dimNote`
+   *  restated that fact as card data, where it could disagree with the picture,
+   *  and its value was an `rgba()` literal that `hv/no-color-literal` could not
+   *  see until it was extended past hex on 22 Sep 2026. Measured before the
+   *  move: of these six images only the factory floor is dark enough to invert,
+   *  so the rendered result is unchanged. */
+  const noteColour = noteInk(c.src);
   return (
     <div className="cell ph" style={mob ? { background: tint(c.src) } : { ...span, background: tint(c.src) }}>
       {gap}
@@ -125,7 +132,7 @@ function BentoCell({ c, mob = false }: { c: Cell; mob?: boolean }) {
           artboard rather than by design, and the mobile cell does not get one
           now that it has a picture. */}
       {!mob && (
-        <div className="note" {...(c.dimNote ? { style: { color: "rgba(255,255,255,0.4)" } } : {})}>
+        <div className="note" {...(noteColour !== undefined ? { style: { color: noteColour } } : {})}>
           {c.note}
         </div>
       )}
