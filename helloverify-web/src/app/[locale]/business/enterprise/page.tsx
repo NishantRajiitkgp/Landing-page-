@@ -175,9 +175,21 @@ export default async function EnterprisePage({
 
       {/* what we verify */}
       <div className="wrap sec3">
-        <SecHead k="What we verify" h={<>33 checks.<br />Three questions.</>}>
-          Green means the answer usually lands within the hour. The rest go to a registrar
-          or a court, and come back in days — with the source named.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). 42 words. The three questions are
+            the LANES records' own `gh` fields, the four times are their pills,
+            and "33 checks" is the old heading and the button below.
+
+            Deliberately silent on three pills' turnarounds — Entitlement to
+            work, Registration certificate and Directors & GST. TASKS.md
+            measures a three-way disagreement on each between
+            `lib/content/checks.ts`, `sections/Checks.tsx` and THIS file, and a
+            block written to be quoted away from the page is the worst place to
+            settle it by accident. The four named here agree everywhere. */}
+        <SecHead k="What we verify" h="What does an enterprise background check include?">
+          HelloVerify's enterprise catalogue runs 33 checks against three questions: who the
+          candidate is, what they have done, and what is on file. Identity answers in 15
+          minutes, criminal records in 30, digital employment in 60; education takes three
+          days at the registrar.
         </SecHead>
         <div className="body3 lanes3">
           {LANES.map((l) => (
@@ -203,9 +215,13 @@ export default async function EnterprisePage({
 
       {/* how it works */}
       <div className="wrap sec3">
-        <SecHead k="How it works" h={<>One upload.<br />Then we get to work.</>}>
-          Candidates upload over WhatsApp or a link — no app, no account. Everything runs in
-          parallel, so a package is only as slow as its slowest check.
+        {/* ANSWER BLOCK (§11a.2). 42 words, built from the four `Steps` records
+            below plus this band's own "no app, no account". */}
+        <SecHead k="How it works" h="How does enterprise background verification work?">
+          Enterprise verification starts with one upload: the candidate photographs documents
+          over WhatsApp or a link, with no app and no account. HelloVerify's AI reads every
+          field, the request goes to the issuer, and the report reaches your ATS with each
+          source named.
         </SecHead>
         <Steps
           items={[
@@ -219,9 +235,17 @@ export default async function EnterprisePage({
 
       {/* turnaround & coverage */}
       <div className="wrap sec3" id="turnaround">
-        <SecHead k="Turnaround &amp; coverage" h={<>Times we'll put<br />in the contract.</>}>
-          Measured from upload to report. Where the issuer is offline, the report says so —
-          and says how long the paper route takes.
+        {/* ANSWER BLOCK (§11a.2). 42 words, and every time is a ROWS record
+            rendered in the table immediately below — same six checks, same
+            order — so the quotable sentence and the table cannot drift. The
+            120+ countries figure is the table's own footnote. None of the
+            three disputed checks appears in ROWS, so nothing had to be left
+            out here. */}
+        <SecHead k="Turnaround &amp; coverage" h="How long does an enterprise background check take?">
+          Enterprise turnaround is measured from upload to report: identity and PAN in 15
+          minutes, driving licence and criminal records in 30, digital employment in 60,
+          employment in two days, education in three — across 120+ countries, and stated in
+          the contract HelloVerify signs.
         </SecHead>
         <div className="body3 tbl3">
           <div className="hd">
@@ -242,9 +266,20 @@ export default async function EnterprisePage({
 
       {/* compliance & security */}
       <div className="wrap sec3">
-        <SecHead k="Compliance &amp; security" h={<>The unexciting part,<br />done properly.</>}>
-          Every check involves someone's most personal documents. Consent comes first,
-          retention has limits, and all of it is auditable.
+        {/* ANSWER BLOCK (§11a.2). 44 words, from the four `.cert` cards below
+            and the closing step's "auditable trail".
+
+            The NSR card is NOT folded in. It reads "National Skills Registry /
+            India's registry of verified IT and ITeS professionals" — a
+            description of the registry, where the ISO, GDPR and PBSA cards
+            each state HelloVerify's own standing. Turning a logo into
+            "HelloVerify is on the NSR" would be a new credential claim, and
+            §11a.2 does not license one; credentials are Part 2b's surface. */}
+        <SecHead k="Compliance &amp; security" h="How does HelloVerify handle data protection and compliance?">
+          HelloVerify is ISO 27001 certified and independently audited, GDPR compliant —
+          consent, retention limits and the right to be forgotten in every workflow — and a
+          member of the PBSA, the screening industry's global standards body. Every check
+          begins with consent and leaves an auditable trail.
         </SecHead>
         <div className="body3 certs3">
           <div className="cert">

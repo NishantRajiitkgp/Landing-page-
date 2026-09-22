@@ -120,9 +120,19 @@ export default async function CustomerKycPage({
 
       {/* what we verify */}
       <div className="wrap sec3">
-        <SecHead k="What we verify" h={<>The person,<br />then the record.</>}>
-          Identity resolves in minutes; risk screens run beside it. You choose the depth per
-          signup tier — a browser needs less than a seller of medical devices.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). 44 words, every time a `.pl3` chip
+            in the two lanes below. It names customer KYC rather than "this
+            check", so the sentence still says what it is about once an engine
+            quotes it off the page (§11a.2 rule 3).
+
+            The selfie match keeps its own clause — the chip says "seconds",
+            not 15 minutes, and folding it into the identity group would
+            overstate the group or understate the match. */}
+        <SecHead k="What we verify" h="What does customer KYC verify at signup?">
+          HelloVerify's customer KYC confirms the person first — identity, PAN and age in 15
+          minutes, a selfie-to-face match in seconds — then screens the record: global
+          database and credit in 15 minutes, criminal in 30, trade licence in two days. Depth
+          is set per signup tier.
         </SecHead>
         <div className="body3 lanes3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
           <div>
@@ -151,9 +161,13 @@ export default async function CustomerKycPage({
 
       {/* how it fits the flow */}
       <div className="wrap sec3">
-        <SecHead k="In your flow" h={<>Three ways in,<br />one decision out.</>}>
-          However the documents arrive, you get one webhook back: verified, failed, or needs a
-          human — with the evidence attached.
+        {/* ANSWER BLOCK (§11a.2). 44 words, from the three `Steps` records
+            below and this band's own three verdicts. */}
+        <SecHead k="In your flow" h="How does KYC verification fit into our signup flow?">
+          Customer KYC reaches HelloVerify three ways: an API call from your own UI, a
+          HelloVerify-hosted capture page, or a WhatsApp link for sellers and partners who
+          sign up by phone. Each returns one webhook — verified, failed, or needs a human —
+          with the evidence attached.
         </SecHead>
         <Steps
           items={[
@@ -166,9 +180,15 @@ export default async function CustomerKycPage({
 
       {/* privacy stance */}
       <div className="wrap sec3">
-        <SecHead k="Compliance &amp; privacy" h={<>Their data.<br />Handled like it.</>}>
-          KYC touches the most personal documents your customers own. That's a responsibility
-          before it's a feature.
+        {/* ANSWER BLOCK (§11a.2). 43 words, from the two `.cert` cards below
+            plus the FAQ above them, which is where the DPA retention schedule
+            and the zero-retention option are already stated in reviewed copy —
+            this restates neither figure, it collects them. */}
+        <SecHead k="Compliance &amp; privacy" h="How does HelloVerify handle customer KYC data?">
+          A HelloVerify KYC check begins with the customer's consent, before any capture, with
+          scope and retention stated in plain language. Documents are encrypted in transit and
+          at rest, deleted on the DPA's retention schedule, and stored nowhere if you bring
+          your own storage.
         </SecHead>
         <div className="body3 certs3">
           <div className="cert">

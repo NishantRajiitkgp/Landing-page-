@@ -112,9 +112,21 @@ export default async function BusinessHub({
 
       {/* the five paths */}
       <div className="wrap sec3">
-        <SecHead k="Five ways in" h="Start where it hurts.">
-          Hiring at scale, a first employee, a customer you've never met, or a supplier
-          three borders away — each gets its own pipeline on the same platform.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). Question-shaped H2, and the lede
+            is the whole answer in 43 words — it names HelloVerify and the five
+            products rather than saying "each of these", so it still answers
+            the question once an engine lifts it off the page (§11a.2 rule 3).
+
+            Every fact is already in the PATHS list rendered directly below:
+            the SLA, "from 30 min", "at signup" and Certifier's two days are
+            that list's own `from` and `p` fields. The closing clause is the
+            next section's lede verbatim ("what changes is only which checks
+            run"), so the hub cannot drift from the pipeline it describes. */}
+        <SecHead k="Five ways in" h="Which background verification product does your business need?">
+          HelloVerify runs five business pipelines on one platform: enterprise BGV with an
+          SLA, SMB packages from 30 minutes, employee re-verification, customer KYC at
+          signup, and Certifier vendor due diligence in two days. One upload, one report —
+          what changes is only which checks run.
         </SecHead>
         <div className="body3 paths3">
           {PATHS.map((c) => (
@@ -139,8 +151,15 @@ export default async function BusinessHub({
 
       {/* how it runs + receipt proof */}
       <div className="wrap sec3">
-        <SecHead k="One pipeline" h={<>Upload once.<br />We do the rest.</>}>
-          The same four stages behind every product — what changes is only which checks run.
+        {/* ANSWER BLOCK (§11a.2). 40 words, composed from the four `Steps`
+            records below rather than paraphrased, so the citeable sentence and
+            the rendered steps cannot disagree. §11a.3 rates "how does
+            background verification work" a top query shape and this hub is
+            the page that should answer it. */}
+        <SecHead k="One pipeline" h="How does background verification work?">
+          Every HelloVerify check runs the same four stages: the candidate photographs the
+          document, AI captures each field and finds the issuing office, the request goes to
+          that issuer, and one report comes back with the source named beside every result.
         </SecHead>
         <Steps
           items={[
@@ -154,8 +173,15 @@ export default async function BusinessHub({
 
       {/* integrations */}
       <div className="wrap sec3">
-        <SecHead k="Integrate once" h="Fits the tools you hire with.">
-          Candidates upload over WhatsApp or a link; results come back wherever your team already works.
+        {/* ANSWER BLOCK (§11a.2). 39 words. The six integrations are named
+            verbatim from the `.svc` chips below — "ATS integrations", not
+            "ATS connectors" — because an answer block that renames what the
+            page lists is two facts where there should be one. */}
+        <SecHead k="Integrate once" h="How does HelloVerify integrate with our hiring tools?">
+          HelloVerify integrates through a REST API, webhooks, bulk CSV upload, ATS
+          integrations and SSO/SAML. Candidates upload over WhatsApp or a link, and results
+          come back wherever your hiring team already works — the same pipeline whichever
+          business product you buy.
         </SecHead>
         <div className="body3 intg3">
           <span className="svc">REST API</span>

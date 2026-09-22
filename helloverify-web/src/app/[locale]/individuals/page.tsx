@@ -112,9 +112,21 @@ export default async function IndividualsHub({
       </div>
 
       <div className="wrap sec3">
-        <SecHead k="What people check" h={<>For the moment you<br />need to trust someone.</>}>
-          A new driver for the school run. A tenant for the upstairs flat. Your own documents
-          before a visa interview. Same pipeline, same sources.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). The heading is now the question a
+            family actually types, and the lede is the whole answer in 42 words
+            — it names HelloVerify and the people being checked rather than
+            saying "the same pipeline", which is unciteable once an engine lifts
+            the block off the page (§11a.2 rule 3).
+
+            Every noun here is already on this page: the four `PATHS` cards name
+            the driver, the tenant, the buyer and the business partner, the
+            nanny comes from the Home & family card, the visa interview from the
+            old lede, and "30 min for most checks" from the strip above. The
+            three blocks on this page measure 42, 42 and 36 words. */}
+        <SecHead k="What people check" h="Who can I run a background check on?">
+          HelloVerify checks anyone you are about to trust: a driver for the school run, a
+          nanny, a tenant, a buyer, a business partner — or your own documents before a visa
+          interview. Most checks come back in about 30 minutes, over WhatsApp.
         </SecHead>
         <div className="body3 paths3">
           {PATHS.map((c) => (
@@ -138,8 +150,10 @@ export default async function IndividualsHub({
       </div>
 
       <div className="wrap sec3">
-        <SecHead k="How it works" h={<>Three steps,<br />one chat.</>}>
-          No app, no account, no forms. If you can send a photo on WhatsApp, you can run a check.
+        <SecHead k="How it works" h="How do I run a background check from my phone?">
+          You message HelloV on WhatsApp and photograph the person's document; they consent on
+          their own phone. HelloVerify then asks the transport authority, court or registry that
+          issued it, and the plain-language report returns to the same chat — no app, no account.
         </SecHead>
         <Steps
           items={[
@@ -151,9 +165,10 @@ export default async function IndividualsHub({
       </div>
 
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <SecHead k="Your responsibility, and ours" h={<>Consent isn't<br />a formality.</>}>
-          You can't check someone behind their back, and we won't help you try. The person being
-          verified consents on their own phone first — every time.
+        <SecHead k="Your responsibility, and ours" h="Can I check someone without telling them?">
+          No. Every HelloVerify check needs the consent of the person being verified, given on
+          their own phone before anything runs — every time. You can't check someone behind their
+          back, and HelloVerify won't help you try.
         </SecHead>
         <div className="body3 certs3">
           <div className="cert">

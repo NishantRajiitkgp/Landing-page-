@@ -58,8 +58,22 @@ export default async function Page({
         <><b>20M+</b> checks at the primary source</>,
         <><span className="dot" /> ISO 27001 · GDPR</>,
       ]}
-      verifyHead={<>The entity,<br />and its humans.</>}
-      verifyLede="Company filings and screening return quickly; director histories and financial assessments take days, because they're assembled from several registries."
+      /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
+         Each `*Head` is the question a licensing authority types and each
+         `*Lede` a self-contained answer of 35-45 words naming the business and
+         the authority, rather than "Company filings and screening return
+         quickly" — "quickly" is not a number and the sentence names no
+         subject, so it cannot be cited once lifted (§11a.2 rule 3). The
+         template owns the `k` eyebrows and they are untouched.
+
+         Times and sources are the `lanes` pills and the `rows` table on this
+         page. **"Directors & GST" is deliberately quoted nowhere**, although
+         it is a 3-day pill and a 3-day row here: TASKS.md records that check
+         as disputed between `lib/content/checks.ts` and enterprise (3 days)
+         and the homepage (2 days), and a citeable sentence is the worst place
+         to pick a side by accident. */
+      verifyHead="What does a licensing authority verify about a business?"
+      verifyLede="A licensing authority verifies the entity, the people behind it and the risk on record. Credit, identity and watchlist screens return in 15 minutes, a criminal record in 30; trade licence, company registration, defaulting directors and financial assessment each take two days."
       lanes={[
         {
           gt: "01 — The entity",
@@ -91,16 +105,16 @@ export default async function Page({
           ],
         },
       ]}
-      stepsHead={<>From application<br />to licence, evidenced.</>}
-      stepsLede="Applicants submit once. The authority receives a profile that states what was checked, where, and when it expires."
+      stepsHead="How does a licensing authority verify a company and its directors?"
+      stepsLede="Company documents and director identities arrive through a link or the authority's portal. HelloVerify AI parses the filings and resolves registration numbers, then licence registers, company registries, courts and credit bureaus each confirm the facts they hold. The authority receives a certified entity profile."
       steps={[
         { n: "01 · The applicant", t: "File", p: "Company documents and director identities submitted through a link or your own portal." },
         { n: "02 · HelloVerify AI", t: "Read", p: "Filings parsed, registration numbers resolved, the holding registry identified automatically." },
         { n: "03 · The registries", t: "Confirm", p: "Licence registers, company registries, courts and credit bureaus — each fact checked where it is filed." },
         { n: "04 · The authority", t: "Decide", p: "A certified entity profile with sources, dates, and renewal reminders before anything goes stale." },
       ]}
-      tableHead={<>Times, and the<br />registry behind them.</>}
-      tableLede="Measured from filing to result. Entity checks are quoted in days because several registries must agree before a profile is certified."
+      tableHead="How long does business and trade licence verification take?"
+      tableLede="Business verification returns credit and global database screens in 15 minutes and a director or promoter criminal record in 30 minutes. Two days confirm a trade licence at the licence register and a financial assessment from tax and filing records."
       rows={[
         { nm: "Credit screen", sub: "ratings, defaults, exposure", tm: "15 min", fast: true, src: "credit bureaus" },
         { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", fast: true, src: "global databases" },
@@ -110,8 +124,8 @@ export default async function Page({
         { nm: "Directors & GST", sub: "beneficial owners, disqualifications", tm: "3 days", src: "the company registry" },
       ]}
       tableNote={<>Times shown are from filing to result · company records verified in the country of registration — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></>}
-      complianceHead={<>Enforcement-grade<br />evidence.</>}
-      complianceLede="A licensing refusal can be appealed. Every fact in a profile carries its source, its date and the artefact behind it — built to hold up."
+      complianceHead="Does a verification profile hold up on appeal?"
+      complianceLede="A licensing refusal can be appealed, so every fact in a HelloVerify entity profile carries its source, its date and the artefact behind it. Security management is ISO 27001 certified and independently audited, handling is GDPR-aligned, and HelloVerify is a PBSA member."
       faqHead={<>From licensing<br />authorities.</>}
       faqs={[
         {

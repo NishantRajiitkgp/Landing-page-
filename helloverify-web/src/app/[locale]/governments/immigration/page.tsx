@@ -58,8 +58,22 @@ export default async function Page({
         <><b>6</b> offices across twelve hours</>,
         <><span className="dot" /> ISO 27001 · GDPR</>,
       ]}
-      verifyHead={<>The applicant,<br />and their paper trail.</>}
-      verifyLede="Screening runs in minutes; anything needing a foreign registrar or employer comes back in days — with the office that answered named in the file."
+      /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
+         Each `*Head` is now the question an immigration official types and
+         each `*Lede` a self-contained answer of 35-45 words naming visa
+         applicants and the authority, rather than opening on "Screening" with
+         no subject — a lede that depends on the heading above it stops being
+         an answer the moment an engine lifts it away (§11a.2 rule 3). The
+         template owns the `k` eyebrows and they are untouched.
+
+         Times and sources come from the `lanes` pills and the `rows` table on
+         this page. One is deliberately absent: **entitlement to work**, whose
+         turnaround TASKS.md records as disputed three ways between
+         `lib/content/checks.ts`, the homepage and the enterprise page. It is a
+         pill in lane 02 here, but a citeable sentence is the worst place to
+         pick a side of that disagreement by accident. */
+      verifyHead="What does an immigration authority verify about a visa applicant?"
+      verifyLede="An immigration authority verifies three things about a visa applicant: identity, the grounds they qualify on, and what the record says. Identity, watchlist and credit screens return in 15 minutes; education, employment and trade licences are confirmed abroad in two or three days."
       lanes={[
         {
           gt: "01 — Identity",
@@ -93,16 +107,16 @@ export default async function Page({
           ],
         },
       ]}
-      stepsHead={<>One applicant file,<br />four borders away.</>}
-      stepsLede="Applicants submit from their own country on their own phone. Every check runs where the document lives, and the file assembles itself."
+      stepsHead="How are a visa applicant's documents verified in the country that issued them?"
+      stepsLede="A visa applicant submits documents through a one-time link on any phone, with consent. HelloVerify AI runs forgery checks and returns identity and watchlist screens in minutes, then a HelloVerify team in the issuing country confirms each record with the registrar or employer holding it."
       steps={[
         { n: "01 · The applicant", t: "Submit", p: "A one-time link, consent, and photographs of the documents — no appointment, no courier." },
         { n: "02 · HelloVerify AI", t: "Screen", p: "Fields extracted, forgery checks run, identity and watchlist screens returned in minutes." },
         { n: "03 · In-country", t: "Confirm", p: "Our team in the issuing country confirms with the registrar, employer or authority that holds the record." },
         { n: "04 · The authority", t: "Decide", p: "A single file per applicant — each result with its source, date and evidence attached." },
       ]}
-      tableHead={<>Times that hold<br />across borders.</>}
-      tableLede="Measured from submission to result. Screening is immediate; source confirmation depends on the foreign institution, and the file always says which one."
+      tableHead="How long does visa applicant verification take?"
+      tableLede="Visa applicant verification returns identity, passport and global database screens in 15 minutes and a criminal record in 30. Digital employment, confirmed from provident-fund records, takes 60 minutes; employment two days at the employer's HR; education three days at the university registrar."
       rows={[
         { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
         { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", fast: true, src: "global databases" },
@@ -112,8 +126,8 @@ export default async function Page({
         { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
       ]}
       tableNote={<>Times shown are from submission to result · documents verified in the country of issue — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></>}
-      complianceHead={<>Applicant data,<br />handled lawfully.</>}
-      complianceLede="Cross-border verification means cross-border data. Consent is captured per applicant, transfers are documented, and retention is bounded by the DPA."
+      complianceHead="How is cross-border applicant data handled lawfully?"
+      complianceLede="Cross-border verification means cross-border data, so HelloVerify captures consent per applicant, documents every transfer, and bounds retention in the data processing agreement. Handling is GDPR-aligned and security management is ISO 27001 certified, independently audited. HelloVerify is also a PBSA member."
       faqHead={<>From immigration<br />departments.</>}
       faqs={[
         {

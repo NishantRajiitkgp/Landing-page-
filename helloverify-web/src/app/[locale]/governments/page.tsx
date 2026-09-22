@@ -128,9 +128,21 @@ export default async function GovernmentsHub({
 
       {/* the four verticals */}
       <div className="wrap sec3">
-        <SecHead k="Four mandates" h={<>Whatever you license,<br />we verify.</>}>
-          The same primary-source pipeline, tuned to four kinds of authority — each with its
-          own registries, its own documents, its own law.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). The heading is the question an
+            official types; the lede is the whole answer in 39 words, and it
+            names HelloVerify and the four mandates rather than opening on "the
+            same primary-source pipeline" — a lede whose subject is "the same"
+            is unciteable the moment an engine lifts it off the page (§11a.2
+            rule 3).
+
+            Every fact is already on this page: the four kinds of authority are
+            the cards immediately below, and 120+ countries is the trust strip
+            above. `k` is left as the eyebrow it was. */}
+        <SecHead k="Four mandates" h="What does HelloVerify verify for government authorities?">
+          HelloVerify covers four kinds of authority: health, immigration, manpower and
+          education, and trade and business. One primary-source pipeline confirms medical
+          credentials, visa documents, work-pass qualifications and trade licences with the
+          issuer that holds each record, across 120+ reachable countries.
         </SecHead>
         <div className="body3 paths3">
           {VERTICALS.map((c) => (
@@ -155,9 +167,16 @@ export default async function GovernmentsHub({
 
       {/* why governments — the five reasons from the homepage canvas */}
       <div className="wrap sec3">
-        <SecHead k="Why governments work with us" h={<>Reasons that survive<br />a tender committee.</>}>
-          Procurement doesn't buy stories. Each of these has an artefact behind it —
-          an audit report, a named workflow, a conformance statement.
+        {/* ANSWER BLOCK (§11a.2), 43 words. The five countries are the
+            "Governments we work with" block above — Singapore's Ministry of
+            Manpower, India, Saudi Arabia, the UAE and European authorities —
+            restated rather than invented, because this is a claim about real
+            government clients and a wrong one is worse than a bland heading. */}
+        <SecHead k="Why governments work with us" h="Why do governments choose HelloVerify?">
+          Governments choose HelloVerify because every fact is confirmed with the issuer
+          rather than a proxy database, one platform covers people and businesses,
+          authorities in India, Saudi Arabia, the UAE, Singapore and Europe already work
+          with HelloVerify, and every result carries an auditable trail.
         </SecHead>
         <div className="body3" style={{ maxWidth: 760 }}>
           <div className="rz">
@@ -200,9 +219,16 @@ export default async function GovernmentsHub({
 
       {/* procurement readiness */}
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <SecHead k="Procurement-ready" h={<>The file your<br />committee asks for.</>}>
-          Certifications, data residency, sub-processors, accessibility conformance — one page,
-          every artefact requestable.
+        {/* ANSWER BLOCK (§11a.2), 38 words. "What artefacts do you have" is
+            the procurement-shaped query, so the answer lists them by name —
+            the four cert cards below plus the three artefacts the old lede
+            already named. The Ministry of Manpower reference is the mom.jpg
+            card below, not a new claim. */}
+        <SecHead k="Procurement-ready" h="What procurement artefacts does HelloVerify provide?">
+          A procurement review gets one page carrying every HelloVerify artefact: ISO 27001
+          certification, independently audited, GDPR-aligned data handling, PBSA membership,
+          data residency, sub-processors and accessibility conformance. Work-pass verification
+          in production with Singapore's Ministry of Manpower is the reference.
         </SecHead>
         <div className="body3 certs3">
           <div className="cert">

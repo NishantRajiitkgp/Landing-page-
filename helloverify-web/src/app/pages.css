@@ -448,10 +448,17 @@
 /* The canvas drew .inp as a styled div. These are real controls now: make them
    fill their grid cell, keep the paper field look, and strip UA chrome. */
 input.inp, select.inp, textarea.inp { width: 100%; display: block; font-family: var(--sans); color: var(--ink); appearance: none; -webkit-appearance: none; }
-input.inp::placeholder, textarea.inp::placeholder { color: #7D796F; }
+/* var(--muted), not the canvas's #7D796F: 3.95:1 on --paper fails AA's 4.5:1,
+   --muted (#6F6B62) measures 4.83:1. These are the REAL contact form's
+   placeholders, where design.css's .inp is only the homepage mock, so the same
+   literal had to go in both files - and this pair is the one a user types into.
+   The WCAG placeholder exemption DESIGN.md leaned on does not apply once the
+   colour is free: it excuses a low-contrast placeholder whose information is
+   repeated in the label, not a low-contrast placeholder for its own sake. */
+input.inp::placeholder, textarea.inp::placeholder { color: var(--muted); }
 textarea.inp { min-height: 96px; line-height: 1.5; }
 select.inp { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'><path d='M1 1l5 5 5-5' stroke='%236F6B62' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat: no-repeat; background-position: right 16px center; padding-inline-end: 40px; }
-select.inp:invalid, select.inp option[value=""] { color: #7D796F; }
+select.inp:invalid, select.inp option[value=""] { color: var(--muted); }
 .inp:focus-visible, .btn:focus-visible, a:focus-visible, summary:focus-visible, .seg:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
 .ct3 .seg { cursor: pointer; }
 .ct3 .seg:hover { border-color: var(--ink); }

@@ -13,7 +13,13 @@
  *       `COMPANY_DEFINITION` in `lib/content/company.ts`, and the note there
  *       about why it is assembled from already-reviewed sentences.
  *    3. "Includes the hard numbers." `COMPANY_FACTS`, `OFFICES`,
- *       `CREDENTIALS` — checked against the rendered `/en/about`.
+ *       `CREDENTIALS`. `COMPANY_FACTS` is checked value-by-value against the
+ *       rendered `/en/about`; `CREDENTIALS` is checked the other way round —
+ *       `tools/seo/check-llms.mjs` derives its allowed-certification set from
+ *       that array and fails on any certification named here and not on it, so
+ *       a claim cannot reach a crawler without being on the reviewed list.
+ *       Neither is a substring match of the other's prose, which is why the
+ *       pairing with `/about` is a rule (TASKS 2b) rather than a grep.
  *    4. "Lists key pages with a one-line description each." Every route, with
  *       the description from `lib/seo/copy.ts` — the same string that page's
  *       `<meta name="description">` carries. This is the requirement that

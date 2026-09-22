@@ -157,9 +157,32 @@ export default async function SmbPage({
 
       {/* pricing rack */}
       <div className="wrap sec3">
-        <SecHead k="Packages &amp; pricing" h={<>One receipt.<br />No surprises.</>}>
-          A fixed set of checks with one turnaround. Everything runs in parallel, so a package
-          is only as slow as its slowest check.
+        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). 44 words, every figure taken from
+            the PACKS records rendered below — three packages, their turnarounds,
+            per-candidate pricing — plus the trust strip's "No subscription" and
+            "GST invoice on every order".
+
+            TWO THINGS DELIBERATELY LEFT OUT, and the reason is that an answer
+            block is read AWAY from the page:
+
+            - The rupee figures. They are placeholders pending commercial
+              sign-off, and the `.pricenote` below says so — but a block built
+              to survive extraction leaves that disclaimer behind, so a
+              citeable "₹349" would become a firm price the moment an engine
+              lifts it. The heading therefore asks what you can buy, not what
+              it costs.
+            - The blue-collar package's check list. It contains "Registration
+              certificate", whose turnaround TASKS.md measures as 30 min on the
+              homepage and 60 min on /business/enterprise, and which is not in
+              the catalogue at all. Naming it inside this package's 30 minutes
+              would settle that in a sentence built to be quoted, so the answer
+              gives the package's turnaround and not its contents. The
+              white-collar list has no such conflict and is named in full. */}
+        <SecHead k="Packages &amp; pricing" h="What background check packages can a small business buy?">
+          HelloVerify's SMB packages cover three hiring shapes, priced per candidate: a
+          blue-collar hire in 30 minutes, a white-collar hire — education, employment,
+          moonlighting and current address — in three days, and a driver package in 30
+          minutes. No subscription, and a GST invoice on every order.
         </SecHead>
         <div className="body3 rack3">
           {PACKS.map((p) => (
@@ -196,8 +219,13 @@ export default async function SmbPage({
 
       {/* build your own */}
       <div className="wrap sec3">
-        <SecHead k="À la carte" h="Or build your own.">
-          Every check can be bought alone inside the app — same sources, same report.
+        {/* ANSWER BLOCK (§11a.2). 44 words. The times are the `.pl3` chips
+            below and the count is the button's own "All 33 checks"; nothing
+            here is new copy. */}
+        <SecHead k="À la carte" h="Can I buy a single background check?">
+          Any of HelloVerify's 33 checks can be bought on its own inside the app, at the same
+          sources and in the same report as a package. Identity and PAN return in 15 minutes,
+          criminal and current address in 30, and education in three days.
         </SecHead>
         <div className="body3 cloud3" style={{ marginTop: 36 }}>
           <span className="pl3 fast"><span className="d" />Identity<span className="t">15 min</span></span>
@@ -217,7 +245,13 @@ export default async function SmbPage({
         <div className="sec-head">
           <div>
             <div className="k">How it works</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Three steps.<br />No training required.</h2>
+            {/* Question-shaped H2 with NO lede added (§11a.2). This band has
+                never carried one — it is a bare `sec-head`, not a `SecHead` —
+                and the three `Steps` cards below already read as the answer.
+                Same call made on /checks/[check] for its two lede-less bands:
+                converting the heading is copy, adding a paragraph where the
+                design has none is a layout change. */}
+            <h2 className="h2" style={{ marginTop: 12 }}>How does a small-business background check work?</h2>
           </div>
         </div>
         <Steps

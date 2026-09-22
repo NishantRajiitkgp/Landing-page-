@@ -30,30 +30,33 @@ import { settle } from "./settle";
  *  `target-size` (WCAG 2.2 AA, 2.5.8) is about hit areas rather than colour and
  *  has never been measured anywhere in this repo before.
  *
- *  ## Two accepted failures, both decisions rather than silence
+ *  ## One accepted failure, a decision rather than silence
  *
- *  1. **`--faint` (#a29e94)** at 2.43:1 on paper and 2.67:1 on white, where
- *     4.5:1 is required. This is TASKS.md Part 2a, already carried as an
- *     explicit ACCEPTED entry in `tools/a11y/check-contrast.mjs` with its
- *     measurement. Mirrored here rather than re-decided.
+ *  **`--faint` (#a29e94)** at 2.43:1 on paper and 2.67:1 on white, where 4.5:1
+ *  is required. This is TASKS.md Part 2a, already carried as an explicit
+ *  ACCEPTED entry in `tools/a11y/check-contrast.mjs` with its measurement.
+ *  Mirrored here rather than re-decided.
  *
- *  2. **`#7d796f`** at 3.95:1 on paper, five nodes, homepage only - and this
- *     one the browser layer FOUND. It is the placeholder text of the homepage's
- *     mock contact form, hard-coded in `app/design.css` on `.inp` at both
- *     breakpoints. Nothing could have caught it: `hv/no-color-literal` is an
- *     ESLint rule and reads TypeScript, not stylesheets; `check:tokens`, which
- *     did read files as text, was removed in Part 4 as redundant with it; and
- *     `check:contrast` walks the TOKEN TABLE, so a colour that is not a token
- *     is invisible to it by construction. Fixing it is a DESIGN.md decision of
- *     the same kind as Part 2a - `--muted` (#6f6b62) would pass at 4.83:1 - so
- *     it is accepted here with its number and handed over, not quietly
- *     repainted.
+ *  There were two. **`#7d796f`** - 3.95:1 on paper, five nodes, homepage only,
+ *  and the one the browser layer FOUND - is **fixed, not accepted**: the `.inp`
+ *  placeholder now takes `var(--muted)` (#6f6b62, 4.83:1) at both breakpoints
+ *  in `app/design.css`, and in `app/pages.css` on the real form's
+ *  `::placeholder` and empty-`<select>` rules, which carried the same literal.
+ *  It is out of the accepted set, so the colour reappearing anywhere now fails
+ *  this run - which is the whole point of removing it rather than leaving a
+ *  satisfied entry behind. Why no static gate saw it in the first place is
+ *  worth keeping: `hv/no-color-literal` is an ESLint rule and reads TypeScript,
+ *  not stylesheets; `check:tokens`, which did read files as text, was removed
+ *  in Part 4 as redundant with it; and `check:contrast` walks the TOKEN TABLE,
+ *  so a colour that is not a token is invisible to it by construction. Nothing
+ *  reads the stylesheets for colour yet, so that gap is still open even though
+ *  this instance of it is closed.
  *
  *  Anything else, on any of the three rules, fails the run.
  *
  *  ## Determinism
  *
- *  Both the accepted sets are reported, not asserted, and the reason is
+ *  The accepted set is reported, not asserted, and the reason is
  *  measured: repeated scans of the homepage returned between 70 and 74 faint
  *  nodes, because some faint text sits inside panels whose final keyframe is
  *  partly transparent and axe counts only what is painted. The BLOCKING set was
@@ -65,7 +68,7 @@ import { settle } from "./settle";
 /** Foregrounds knowingly below their threshold, lower-cased as axe reports
  *  them. An entry is a DECISION, visible in the diff - not a way to make the
  *  scan quiet. Nothing goes here without a measurement and a sentence above. */
-const ACCEPTED_FG = new Set(["#a29e94", "#7d796f"]);
+const ACCEPTED_FG = new Set(["#a29e94"]);
 const RULES = ["color-contrast", "target-size", "scrollable-region-focusable"];
 
 // `process.cwd()` rather than `import.meta.url`: Playwright transpiles specs to
@@ -104,7 +107,7 @@ test.describe("axe, in a browser", () => {
       if (accepted.length) {
         test.info().annotations.push({
           type: "accepted",
-          description: `${accepted.length} node(s) on a known-accepted foreground (TASKS.md Part 2a, and the .inp placeholder)`,
+          description: `${accepted.length} node(s) on a known-accepted foreground (--faint, TASKS.md Part 2a)`,
         });
       }
 

@@ -329,8 +329,24 @@
       .cert .p { margin-top: 5px; font-size: 14px; line-height: 1.5; color: var(--muted); }
 
       /* Form */
+      /* .inp's placeholder colour is var(--muted), NOT the canvas's #7D796F.
+         That literal measures 3.95:1 on --paper where AA requires 4.5:1 - found
+         by the axe-in-a-browser sweep (TASKS.md Part 6) on five homepage nodes,
+         and invisible to every static gate: check:contrast walks the TOKEN
+         table, so a colour that is not a token cannot be in its scope.
+         --muted (#6F6B62) is the same text tier to the eye and measures 4.83:1.
+         Rejected alternative: enlarge the field text past the large-text
+         threshold where 3:1 applies, as Part 2a weighs for --faint - a 16px
+         form field cannot become 24px without redrawing the form.
+         Hand-edited despite the generated-file header at the top of this file,
+         which is what the project already does for every other change here.
+         All nine artboards still carry `color: #7D796F` on .inp, so re-running
+         tools/port/build-css.py WOULD reintroduce this failure - the same
+         hazard as its undoing of the logical-CSS conversion, and unlike that
+         one, no gate catches it. Fix the artboards too if they are ever the
+         source again. */
       .fld-l { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-      .inp { margin-top: 8px; height: 52px; padding: 0 16px; border-radius: 12px; border: 1px solid #D8D3C9; background: #F6F4EF; display: flex; align-items: center; justify-content: space-between; font-size: 16px; color: #7D796F; }
+      .inp { margin-top: 8px; height: 52px; padding: 0 16px; border-radius: 12px; border: 1px solid #D8D3C9; background: #F6F4EF; display: flex; align-items: center; justify-content: space-between; font-size: 16px; color: var(--muted); }
       .inp.fill { color: var(--ink); }
       .seg { height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #CFCAC0; font-size: 13px; color: #3D3B35; display: inline-flex; align-items: center; }
       .seg.on { border-color: var(--ink); color: var(--ink); font-weight: 500; }
@@ -710,7 +726,11 @@
       .cert .h { font-size: 15.5px; font-weight: 500; } .cert .p { margin-top: 3px; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
 
       .fld-l { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-      .inp { margin-top: 6px; height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #D8D3C9; background: #F6F4EF; display: flex; align-items: center; justify-content: space-between; font-size: 15px; color: #7D796F; } .inp.fill { color: var(--ink); }
+      /* var(--muted) rather than the canvas's #7D796F - see the .inp comment in
+         the desktop block above. Both breakpoints carried the literal, and the
+         sweep runs at 390px as well as 1440px, so fixing one would have left
+         the failure on the tree that mobile actually paints. */
+      .inp { margin-top: 6px; height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #D8D3C9; background: #F6F4EF; display: flex; align-items: center; justify-content: space-between; font-size: 15px; color: var(--muted); } .inp.fill { color: var(--ink); }
       .seg { height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #CFCAC0; font-size: 12.5px; color: #3D3B35; display: inline-flex; align-items: center; } .seg.on { border-color: var(--ink); color: var(--ink); font-weight: 500; }
 
       .fcol { display: flex; flex-direction: column; gap: 10px; padding: 18px 0; border-top: 1px solid var(--hair); }

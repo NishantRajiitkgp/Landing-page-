@@ -24,7 +24,7 @@
  */
 import { readFile } from "node:fs/promises";
 
-import { COMPANY_FACTS, CONTACT, SAME_AS } from "../../src/lib/content/company.ts";
+import { COMPANY_FACTS, CONTACT, CREDENTIALS, SAME_AS } from "../../src/lib/content/company.ts";
 import { LEGACY_ROUTES, LEGACY_LOCALES } from "../../src/lib/seo/legacy-urls.ts";
 import { htmlPages, decodeEntities } from "./build-output.mjs";
 
@@ -259,12 +259,74 @@ if (!aboutFile) {
   if (txt.includes("linkedin.com/in/")) {
     problems.push("links a personal LinkedIn profile rather than the company page");
   }
-  // Claims the reviewed /about credentials list does not support. The old site
-  // asserted both; neither is evidenced here (see lib/content/company.ts).
-  for (const overclaim of ["27701", "SOC 2"]) {
-    if (txt.includes(overclaim)) {
-      problems.push(`unevidenced certification claim: ${overclaim}`);
+  // ------------------------------------------- unevidenced certification claims
+  // The point of this check has never been those two names — it is that a
+  // certification in llms.txt must have a reviewed source. It used to be a
+  // denylist of the two the old site over-claimed ("27701", "SOC 2"), which
+  // made it exactly as good as that list was long: ISO 9001, SOC 1, HIPAA or
+  // FedRAMP could have been added to a page and shipped to a crawler with
+  // nothing complaining. (ISO 9001 is not hypothetical — the old site's
+  // `public/cms/en/educationAuthorities.base.json:126` claims "ISO 9001 and
+  // 27701 certified", a third standard nobody has confirmed.)
+  //
+  // So it is now an ALLOWLIST DERIVED FROM THE REVIEWED LIST: every
+  // certification-shaped token in llms.txt must also appear in
+  // `CREDENTIALS` in lib/content/company.ts, which is the array `/about`
+  // renders and the owner signs off. 27701 and SOC 2 pass today because they
+  // were added there on 22 Sep 2026 (published on the existing site at
+  // `public/llms.txt:67` and `src/config/seo.ts:50`, confirmed by the owner);
+  // anything else still fails, and the way to make a new claim pass is to put
+  // it on the reviewed list, which is the behaviour we wanted all along.
+  //
+  // Both directions matter and only this one is checked here: a claim in
+  // llms.txt with no reviewed source is a lie to a crawler, whereas a reviewed
+  // credential absent from llms.txt is only under-selling. The pairing with
+  // `/about` is enforced by the rule in TASKS 2b and by the comment on
+  // `CREDENTIALS`, not by a grep — the page states these as prose, not as the
+  // array's strings.
+  {
+    /** Certification-shaped claims, by SHAPE rather than by name, so a standard
+     *  nobody has thought of is caught too: any ISO/IEC standard number, any
+     *  SOC report, and the named frameworks a screening buyer asks for. The
+     *  digits are required — a bare "ISO" is a word, not a claim. */
+    const CERT_CLAIM =
+      /\bISO(?:\/IEC)?[\s-]?\d{4,5}(?:[\s-]?\d)?\b|\bSOC[\s-]?[123]\b|\bHIPAA\b|\bPCI[\s-]?DSS\b|\bFedRAMP\b|\bTISAX\b|\bIRAP\b|\bC5\b|\bCyber Essentials\b|\bStarAudit\b|\bHITRUST\b|\bESSENTIAL EIGHT\b/gi;
+
+    /** "ISO/IEC 27701", "ISO 27701" and "iso-27701" are one claim written three
+     *  ways. The allowlist is keyed on the claim, not the spelling — which
+     *  spelling gets PUBLISHED is settled by the reviewed list itself (it says
+     *  "ISO/IEC 27701", after the old site). */
+    const key = (s) => s.replace(/\/IEC/i, "").replace(/[\s-]+/g, " ").trim().toUpperCase();
+
+    /** "ISO 27001 and 27701 certified" names TWO standards and the second one
+     *  carries no prefix — which is how the old site writes it
+     *  (`public/cms/en/educationAuthorities.base.json:126` is "ISO 9001 and
+     *  27701"). The old denylist matched the bare number and this shape check
+     *  would not, so the prefix is distributed across the conjunction first,
+     *  repeatedly, because the run can be longer than two. Scanning for bare
+     *  4–5 digit numbers instead was rejected: llms.txt is full of years and
+     *  figures, and a gate that flags "2018 founded" gets switched off. */
+    let scan = txt;
+    for (let pass = 0; pass < 8; pass++) {
+      const next = scan.replace(
+        /\b(ISO(?:\/IEC)?[\s-]?\d{4,5})(\s*(?:and|&|,|\/)\s*)(?=\d{4,5}\b)/gi,
+        "$1$2ISO ",
+      );
+      if (next === scan) break;
+      scan = next;
     }
+
+    const reviewed = new Set((CREDENTIALS.join("\n").match(CERT_CLAIM) ?? []).map(key));
+    for (const claim of new Set(scan.match(CERT_CLAIM) ?? [])) {
+      if (!reviewed.has(key(claim))) {
+        problems.push(
+          `unevidenced certification claim: ${claim} — not on the reviewed ` +
+            `credentials list in lib/content/company.ts (which allows: ` +
+            `${[...reviewed].join(", ") || "none"})`,
+        );
+      }
+    }
+    note.push(`certification claims in llms.txt, all on the reviewed list: ${reviewed.size}`);
   }
   if (problems.length) {
     fail(

@@ -2,29 +2,32 @@
 
     python tools/port/build-css.py
 
-TWO THINGS TO KNOW BEFORE RUNNING THIS.
+THREE THINGS TO KNOW BEFORE RUNNING THIS.
 
-1. It cannot run in this tree. It reads design-src/artboards/*.dc.html, and that
-   directory is not checked in - the first open() fails. design.css is therefore
-   maintained in place despite the "regenerate rather than hand-tuning" header
-   it writes, and that header is now a description of intent rather than of a
-   working path.
+1. Do not run it. It DOES run - this docstring said for a long time that it
+   could not, because design-src/artboards/ was not checked in and the first
+   open() would fail; measured 22 Sep 2026, the directory is present and
+   git-tracked with all nine boards and canvas.json, i.e. every input sheet()
+   opens. So design.css is maintained in place by choice, and the "regenerate
+   rather than hand-tuning" header this script writes into it is a hazard
+   rather than an instruction. Points 2 and 3 are what it would cost.
 
-2. If the artboards are restored and this IS re-run, it will emit the canvas
-   stylesheet verbatim - which means physical left/right properties, undoing the
-   RTL conversion (BUILD-SPEC 12, section 7). Follow it immediately with:
+2. It emits the canvas stylesheet verbatim - which means physical left/right
+   properties, undoing the RTL conversion (BUILD-SPEC 12, section 7). Follow it
+   immediately with:
 
        python tools/port/logical-css.py --write
 
-   
-> helloverify-web@0.1.0 check:logical
-> node tools/a11y/check-logical-css.mjs
+   check:logical fails the build if that is forgotten, so this is a reminder
+   rather than the safeguard.
 
-stylesheets scanned: 3
-rules: 12 inline-axis properties (block axis and paint positioning are out of scope)
-
-PASS - no physical inline properties; the stylesheets can mirror fails the build if that is forgotten, so this is a
-   reminder rather than the safeguard.
+3. It would also undo the .inp contrast fix, and NOTHING would catch that.
+   All nine boards carry `color: #7D796F` on .inp; that measures 3.95:1 on
+   --paper where AA requires 4.5:1, and design.css now uses var(--muted)
+   (4.83:1) at both breakpoints instead. No gate reads the stylesheets for
+   colour - check:contrast walks the token table, so a non-token colour is out
+   of its scope by construction - so this one comes back silently. Fix the
+   boards first if they are ever the source again.
 
 The desktop (Main/Desktop2-4) and mobile (Mobile1-5) boards each carry one
 complete stylesheet. Both are copied verbatim except for the edits listed in

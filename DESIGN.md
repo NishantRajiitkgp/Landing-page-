@@ -45,7 +45,7 @@ Defined once in `src/app/design.css` as custom properties. Never introduce a hex
 **Rules.**
 - **Green is a verdict, not a theme.** It marks what is verified, live, fast, or concluded — dots, ticks, totals, zones, the now-line. A page should read ~95% ink/paper with green landing only where something has been *proven*. Never green backgrounds for whole sections, never green headlines.
 - **Red exists only inside the logo.** In a verification product red reads as "failed check" (canvas annotation). Failure states, if ever needed, get ink + language, not red.
-- **`--faint` fails AA (2.43:1) by design** — it is for *redundant decorative* meta only (k-labels that repeat the adjacent H2, axis labels, watermarks). Any text a reader must be able to read uses `--muted` or darker. Form placeholder `#7D796F` (3.95:1) is acceptable only because the label above it carries the information (WCAG placeholder exemption); never rely on a placeholder alone.
+- **`--faint` fails AA (2.43:1) by design** — it is for *redundant decorative* meta only (k-labels that repeat the adjacent H2, axis labels, watermarks). Any text a reader must be able to read uses `--muted` or darker. **Form placeholders are `--muted`** (4.83:1). They were `#7D796F` (3.95:1), excused by the WCAG placeholder exemption because the label above carries the information — that stood while the colour was the canvas's, and once the alternative was a token that passes, an exemption was no reason to keep failing. Changed 22 Sep 2026 in `design.css` (`.inp`, both breakpoints) and `pages.css` (`::placeholder`, empty `<select>`). Never rely on a placeholder alone regardless.
 - Buttons: white on ink = 18.44:1; white on green = 6.46:1. Both pass.
 
 ### 2.2 Type

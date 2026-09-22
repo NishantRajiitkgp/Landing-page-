@@ -166,17 +166,48 @@ export const ORGANIZATION: WithContext<Organization> = {
     alternateName: "PBSA",
   },
 
-  /** ISO 27001 is the one claim on `/about` that is an audited certification
-   *  rather than a membership or a client relationship. NSR is a registry
-   *  HelloVerify participates in and MOM is a customer, so neither belongs
-   *  here. `certificationIdentification` is omitted: the certificate number is
-   *  not stated anywhere in this repo, and inventing one would make the claim
-   *  checkable and wrong. */
-  hasCertification: {
-    "@type": "Certification",
-    name: "ISO/IEC 27001",
-    issuedBy: { "@type": "Organization", name: "International Organization for Standardization" },
-  },
+  /** The claims on `/about` that are audited certifications rather than
+   *  memberships or client relationships. NSR is a registry HelloVerify
+   *  participates in and MOM is a customer, so neither belongs here.
+   *  `certificationIdentification` is omitted on both: the certificate numbers
+   *  are not stated anywhere in this repo, and inventing one would make the
+   *  claim checkable and wrong.
+   *
+   *  ISO/IEC 27701 joined this node on 22 Sep 2026, with `/about` and
+   *  `lib/content/company.ts`, because §11a.3 requires the entity to say what
+   *  the page says — a certification card on `/about` that the `Organization`
+   *  node omits is the same inconsistency as the reverse, just quieter. Its
+   *  evidence is stated in full on `CREDENTIALS` in `lib/content/company.ts`
+   *  and is weaker than 27001's: published on the existing site at
+   *  `public/llms.txt:67`, confirmed by the owner 22 Sep 2026, with no
+   *  certificate on file. If one is produced, cite it there and consider
+   *  `certificationIdentification` here.
+   *
+   *  SOC 2 is deliberately NOT here even though it is now on `/about`. A SOC 2
+   *  engagement ends in an auditor's attestation report, not a certificate
+   *  issued by a standards body, and there is no issuer to name in `issuedBy`
+   *  — modelling it as a `Certification` would be a machine-readable
+   *  overstatement of exactly the kind this node's `memberOf`/`hasCertification`
+   *  split exists to avoid. It reaches crawlers through `llms.txt`'s prose,
+   *  where the word "compliant" travels with it. */
+  hasCertification: [
+    {
+      "@type": "Certification",
+      name: "ISO/IEC 27001",
+      issuedBy: {
+        "@type": "Organization",
+        name: "International Organization for Standardization",
+      },
+    },
+    {
+      "@type": "Certification",
+      name: "ISO/IEC 27701",
+      issuedBy: {
+        "@type": "Organization",
+        name: "International Organization for Standardization",
+      },
+    },
+  ],
 };
 
 export const WEBSITE: WithContext<WebSite> = {

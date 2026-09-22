@@ -59,8 +59,20 @@ export default async function Page({
         <><b>3 days</b> for a registrar-confirmed degree</>,
         <><span className="dot" /> your documents, your report</>,
       ]}
-      verifyHead={<>What an embassy<br />will ask about.</>}
-      verifyLede="Identity and records come back quickly. Degrees and employment go to the institution itself — which is exactly the part that derails applications."
+      /* ANSWER BLOCKS (BUILD-SPEC §11a.2). Four head/lede pairs, which
+         `VerticalPage` renders as the section H2 and lede: each heading is now
+         the question an applicant types, each lede a self-contained answer at
+         42, 45, 43 and 43 words that names visa screening rather than saying
+         "all three" or "the whole thing" (§11a.2 rule 3).
+
+         Numbers come from this page's own strip, `lanes` and `rows`. One is
+         deliberately absent: entitlement to work carries no turnaround here,
+         because its time is one side of the three-way disagreement TASKS.md
+         records between `lib/content/checks.ts`, the homepage and the
+         enterprise page — a citeable sentence is the worst place to pick a
+         side by accident. Same omission as `/business/employee-verification`. */
+      verifyHead="Which documents should I check before a visa application?"
+      verifyLede="HelloVerify's visa screening covers the documents an embassy questions: passport and identity, your criminal and global-database record, and above all the degree and employment claims you are relying on. Identity and passport confirm in 15 minutes; a registrar-confirmed degree takes three days."
       lanes={[
         {
           gt: "01 — Identity",
@@ -92,15 +104,15 @@ export default async function Page({
           ],
         },
       ]}
-      stepsHead={<>Screen first.<br />Then apply.</>}
-      stepsLede="The goal isn't a certificate to submit — it's knowing which document will fail, while there's still time to fix it."
+      stepsHead="How do I check my own documents before applying for a visa?"
+      stepsLede="Upload your own documents to HelloVerify by photographing them on your phone — no appointment, no agent, no courier. Each is confirmed with the institution that issued it, in the country it came from, and the report says which claims will fail before you file."
       steps={[
         { n: "01 · You", t: "Upload", p: "Photograph your documents on your phone. No appointment, no agent, no courier." },
         { n: "02 · HelloVerify", t: "Check", p: "Each document confirmed with the institution that issued it, in the country it came from." },
         { n: "03 · Your report", t: "Fix", p: "You see which claims confirm cleanly and which won't — with the reason, before you file." },
       ]}
-      tableHead={<>What takes<br />how long.</>}
-      tableLede="Measured from upload to result. Education and employment are the slow ones, and the ones most often questioned — start with those."
+      tableHead="How long does visa document screening take?"
+      tableLede="HelloVerify measures visa screening from upload to result: identity, passport and a global database screen in 15 minutes, a criminal record in 30, and digital employment in 60 minutes from provident-fund records. Education is the slow one at three days, employment at two."
       rows={[
         { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
         { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", fast: true, src: "global databases" },
@@ -110,8 +122,12 @@ export default async function Page({
         { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
       ]}
       tableNote={<>Times shown are from upload to result · documents verified in the country of issue — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></>}
-      complianceHead={<>Your documents,<br />your report.</>}
-      complianceLede="Nothing is shared with an embassy, an employer or an agent unless you send it. The report is yours."
+      /* As on `/individuals/home-family`, this section renders the template's
+         certification cards and the answer stays off that subject: which
+         credentials are held is owned by `lib/content/company.ts` and
+         `/platform/security-compliance`, and gated by `check:llms`. */
+      complianceHead="Who sees my screening report?"
+      complianceLede="Only you. A HelloVerify screening report is not shared with an embassy, an employer or an agent unless you send it yourself. The documents you upload are held under retention limits, and the same evidence often satisfies a new employer's background check later."
       faqHead={<>From applicants.</>}
       faqs={[
         {

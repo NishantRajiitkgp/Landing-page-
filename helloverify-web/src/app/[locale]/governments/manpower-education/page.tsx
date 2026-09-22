@@ -58,8 +58,26 @@ export default async function Page({
         <><b>3 days</b> degree at the registrar</>,
         <><span className="dot" /> ISO 27001 · GDPR · PBSA</>,
       ]}
-      verifyHead={<>A work pass<br />is a claim stack.</>}
-      verifyLede="Identity and records resolve within the hour. Degrees, diplomas and trade certifications go to the issuing institution — and come back named."
+      /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
+         Each `*Head` is the question a manpower ministry types and each
+         `*Lede` a self-contained answer of 35-45 words naming work passes and
+         the ministry, rather than "Identity and records resolve within the
+         hour" — which is true and unciteable, because nothing in it says what
+         is being verified (§11a.2 rule 3). The template owns the `k` eyebrows
+         and they are untouched.
+
+         Times and sources are the `lanes` pills and the `rows` table on this
+         page. **Entitlement to work's 60 minutes is deliberately not quoted**
+         in any of the four answers, although it is a pill and a table row
+         here: TASKS.md records that turnaround as disputed three ways between
+         `lib/content/checks.ts`, the homepage and the enterprise page, and a
+         citeable sentence is the worst place to pick a side by accident.
+
+         Singapore's Ministry of Manpower is named only where the page already
+         names it (the strip, the `secondary` link and the FAQ) — a wrong claim
+         about a government client is worse than a bland heading. */
+      verifyHead="What does a manpower ministry verify before issuing a work pass?"
+      verifyLede="Before issuing a work pass, a ministry verifies identity, credentials and records. Identity and a global database screen take 15 minutes, a criminal record 30; employment is confirmed with the employer in two days, education or trade certification with the issuing institution in three."
       lanes={[
         {
           gt: "01 — Identity",
@@ -92,16 +110,16 @@ export default async function Page({
           ],
         },
       ]}
-      stepsHead={<>Built with a ministry,<br />running at ministry scale.</>}
-      stepsLede="The authority sets the rules; the pipeline enforces them. Officers see exceptions, not five thousand clean files."
+      stepsHead="How does work-pass verification run at ministry scale?"
+      stepsLede="Work-pass verification captures documents in the worker's origin country before travel, with consent. HelloVerify AI locates the issuing institution, the registrar, board or employer confirms in-country, and results land in the ministry's work-pass workflow with exceptions flagged for an officer."
       steps={[
         { n: "01 · The worker", t: "Submit", p: "Documents captured on a phone in the origin country, with consent, before travel." },
         { n: "02 · HelloVerify AI", t: "Read", p: "Fields extracted, forgery checks run, the issuing institution located automatically." },
         { n: "03 · The institution", t: "Confirm", p: "The registrar, board or employer confirms directly — in the country that holds the record." },
         { n: "04 · The ministry", t: "Decide", p: "Results land in the work-pass workflow, with exceptions flagged for an officer to judge." },
       ]}
-      tableHead={<>Times a ministry<br />can plan around.</>}
-      tableLede="Measured from submission to result. Institution-confirmed checks are quoted in days because that's how long an honest answer takes."
+      tableHead="How long does work-pass credential verification take?"
+      tableLede="Work-pass credential verification returns identity in 15 minutes, a criminal record in 30, and digital employment from provident-fund records in 60. Employment is confirmed with the employer's HR in two days; education and trade certification with the issuing institution in three."
       rows={[
         { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
         { nm: "Criminal record", sub: "court & police databases", tm: "30 min", fast: true, src: "court records" },
@@ -111,8 +129,8 @@ export default async function Page({
         { nm: "Education & trade certification", sub: "qualification, year, institution", tm: "3 days", src: "the issuing institution" },
       ]}
       tableNote={<>Times shown are from submission to result · credentials verified in the country of issue — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></>}
-      complianceHead={<>A ministry's<br />standard of care.</>}
-      complianceLede="Worker data crosses borders before the worker does. Consent, transfer documentation and bounded retention are part of the workflow, not an addendum."
+      complianceHead="How is foreign worker data protected in a ministry workflow?"
+      complianceLede="Worker data crosses borders before the worker does, so HelloVerify captures consent in the origin country, documents each transfer, and bounds retention. Security management is ISO 27001 certified and independently audited, handling is GDPR-aligned, and HelloVerify is a PBSA member."
       faqHead={<>From manpower<br />ministries.</>}
       faqs={[
         {
