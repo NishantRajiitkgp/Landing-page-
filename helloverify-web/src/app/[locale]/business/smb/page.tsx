@@ -254,7 +254,10 @@ export default async function SmbPage({
             <h2 className="h2" style={{ marginTop: 12 }}>How does a small-business background check work?</h2>
           </div>
         </div>
+        {/* HowTo (§17 condition 18): `name` is this band's own `<h2>`, so the
+            node and the heading are the same string. */}
         <Steps
+          name="How does a small-business background check work?"
           items={[
           { n: "01 · Two minutes", t: "Pick & pay", p: "Choose a package, pay per candidate. No subscription, no minimum order." },
           { n: "02 · The candidate", t: "One link", p: "They get a WhatsApp link, photograph their documents, and consent on their own phone." },

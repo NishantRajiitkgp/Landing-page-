@@ -186,7 +186,10 @@ export default async function EmployeeVerificationPage({
           reports only the changes — a new court record, a second employer — rather than
           every clean result. Nobody fills in a form again.
         </SecHead>
+        {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
+            so the node and the heading are the same string. */}
         <Steps
+          name="How does re-verification work without disrupting staff?"
           items={[
           { n: "01 · One CSV or API call", t: "Enroll", p: "Upload the roster or sync from your HRMS. Each employee gets a consent link." },
           { n: "02 · On schedule", t: "Verify", p: "Checks run digitally against provident-fund, court and registry records. Humans handle the exceptions." },

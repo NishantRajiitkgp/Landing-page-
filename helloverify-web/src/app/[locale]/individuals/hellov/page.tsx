@@ -266,7 +266,16 @@ export default async function HelloVPage({
           message showing exactly what will be checked and consents on their own phone; without
           that no check runs and you aren't charged. Documents are deleted on schedule.
         </SecHead>
+        {/* HowTo (§17 condition 18), and the weakest name of the eight: this
+            band's `<h2>` is a yes/no legal question rather than a task, where
+            the other seven are "how does X work". It is still the right one
+            to use — the three cards ARE the sequence that answers it (consent,
+            then the check, then deletion), and the alternative was inventing
+            "How consent works", a string that appears nowhere on the page and
+            that the gate's verbatim check would reject. Reconsider if a
+            process-shaped heading is ever written for this band. */}
         <Steps
+          name="Is it legal to check someone yourself?"
           items={[
           { n: "01", t: "They agree", p: "The person receives a message, sees exactly what will be checked, and consents on their own phone." },
           { n: "02", t: "We check", p: "Only the checks they agreed to, only at the authority that issued the document." },

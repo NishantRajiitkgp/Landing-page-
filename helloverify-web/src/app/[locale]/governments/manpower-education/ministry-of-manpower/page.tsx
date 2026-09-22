@@ -205,6 +205,12 @@ export default async function MomCaseStudy({
             turnaround at intake volume; and an auditable trail per applicant.
           </p>
         </div>
+        {/* NO `name`, so NO HowTo (§17 condition 18). The band's own lede says
+            what these four are — "four things in the contract" — and they are
+            deliverables, not steps: source proof, honest gaps, scale and an
+            appeal-ready trail all hold at once and in no order. The `01`–`04`
+            is the strip's ornament, which is exactly why `howto.ts` does not
+            read `n`. Carried in `check-schema.mjs`'s HOWTO_NOT_A_SEQUENCE. */}
         <Steps
           items={[
           { n: "01", t: "Source proof", p: "Each credential confirmed with its issuing institution, named and dated in the file." },

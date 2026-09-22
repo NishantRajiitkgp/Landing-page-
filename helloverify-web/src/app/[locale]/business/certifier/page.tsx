@@ -237,7 +237,10 @@ export default async function CertifierPage({
             <h2 className="h2" style={{ marginTop: 12 }}>How does vendor due diligence work?</h2>
           </div>
         </div>
+        {/* HowTo (§17 condition 18): `name` is this band's own `<h2>`, so the
+            node and the heading are the same string. See `chrome/Steps.tsx`. */}
         <Steps
+          name="How does vendor due diligence work?"
           items={[
           { n: "01 · Procurement", t: "The list", p: "Vendor names and GST numbers — a CSV or an API call from your procurement system." },
           { n: "02 · The registries", t: "The digging", p: "Licence registers, ministry records, courts, credit bureaus — each fact confirmed where it's filed." },

@@ -207,6 +207,16 @@ export default async function CoveragePage({
           not a database licence. If nobody can, the report says unverifiable and names the
           route tried.
         </SecHead>
+        {/* NO `name`, so NO HowTo (§17 condition 18). This strip is not a
+            sequence anyone performs: the band's `<h2>` is "What does global
+            coverage actually mean?" and its lede answers "coverage … means
+            someone can reach the office that holds the record" — a definition,
+            and the three cards are the properties that definition has, not
+            steps in order. A HowTo named with a "what does X mean" question
+            would be instructions for an unstated task, which is the
+            mis-citation `lib/seo/schema/howto.ts` refuses a placeholder name
+            to avoid. `check-schema.mjs` carries this page in
+            HOWTO_NOT_A_SEQUENCE so the decision fails loudly if it changes. */}
         <Steps
           items={[
           { n: "01", t: "In-country", p: "The check runs where the document was issued, by people who know that registry's process and language." },

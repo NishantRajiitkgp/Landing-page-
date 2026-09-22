@@ -114,7 +114,10 @@ export default async function TechnologyPage({
           seconds, routing to the office that issued the document, and a signed result delivered
           by webhook.
         </SecHead>
+        {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
+            so the node and the heading are the same string. */}
         <Steps
+          name="How does the verification pipeline work?"
           items={[
           { n: "01 · Capture", t: "Quality gate", p: "Edges, glare, focus and resolution checked on-device before upload — bad captures never enter the queue." },
           { n: "02 · Extract", t: "Read & verify", p: "Fields extracted, template and fonts matched against the issuer's known series, security features and face compared." },

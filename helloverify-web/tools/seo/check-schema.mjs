@@ -14,6 +14,12 @@
  *      they render. This re-reads the rendered `<nav>` and `<summary>` text out
  *      of the HTML and compares them item for item — the only artefact that
  *      proves the two agree.
+ *    - `HowTo` is the same claim about the process strips (§17 condition 18):
+ *      `chrome/Steps.tsx` emits the node from the `items` it renders, and this
+ *      re-reads the rendered `.t`/`.p` cards and compares them step for step.
+ *      It also holds the list of WHICH strips are a HowTo, because four of the
+ *      eighteen deliberately are not and "whatever the build emitted" is not a
+ *      record of that decision.
  *    - §8.2 names two January 2026 Google deprecations not to implement. An
  *      instruction in a spec is remembered until it is not; `QAPage` or
  *      `SearchAction` appearing anywhere in any graph fails the build.
@@ -42,6 +48,7 @@ const ALLOWED_TYPES = new Set([
   "BreadcrumbList",
   "BlogPosting",
   "FAQPage",
+  "HowTo",
 ]);
 
 /** Retired by Google in January 2026 (§8.2). Matched as substrings of the raw
@@ -66,6 +73,47 @@ const SERVICE_PAGES = new Set([
   "/en/governments/trade",
   "/en/individuals/immigration",
   "/en/individuals/home-family",
+]);
+
+/** Which process strips are a `HowTo` (§17 condition 18). Same argument as
+ *  `SERVICE_PAGES`: this is a decision per band, so it is written where a diff
+ *  shows it changing rather than inferred from what the build emitted.
+ *
+ *  A page renders a strip when `chrome/Steps.tsx` is called, and it emits the
+ *  node only when that call was given a `name`. Eighteen pages render one —
+ *  twelve call `Steps` directly, six through `templates/VerticalPage.tsx` —
+ *  and every one of the eighteen must be in exactly one of these two sets, so
+ *  a NEW strip is a failed build until somebody states which it is. */
+const HOWTO_PAGES = new Set([
+  "/en/business",
+  "/en/business/enterprise",
+  "/en/business/smb",
+  "/en/business/employee-verification",
+  "/en/business/certifier",
+  "/en/individuals",
+  "/en/individuals/hellov",
+  "/en/platform/technology",
+  // the six built on VerticalPage, from its `stepsHead`
+  "/en/governments/health",
+  "/en/governments/immigration",
+  "/en/governments/manpower-education",
+  "/en/governments/trade",
+  "/en/individuals/home-family",
+  "/en/individuals/immigration",
+]);
+
+/** The four strips that are NOT instructions, with the reason on each. A
+ *  numbered strip is not automatically a sequence, and three of these four
+ *  carry a how-shaped or question-shaped heading, which is what makes them
+ *  tempting. Each page's `<Steps>` call carries the same note. */
+const HOWTO_NOT_A_SEQUENCE = new Map([
+  ["/en/business/customer-kyc", "three mutually exclusive routes (\"02 · Or redirect\"), not steps"],
+  ["/en/platform/coverage", "a definition of coverage and its properties, not a process"],
+  ["/en/platform/security-compliance", "four controls that apply concurrently, not in order"],
+  [
+    "/en/governments/manpower-education/ministry-of-manpower",
+    "four deliverables — \"four things in the contract\" — not steps",
+  ],
 ]);
 
 const failures = [];
@@ -130,6 +178,40 @@ function visibleCrumbs(html) {
   return rungs;
 }
 
+/** Every numbered process strip on the page, as the reader sees it: one array
+ *  of `{ n, t, p }` cards per strip, in document order.
+ *
+ *  Matched as the WHOLE card — `<div><div class="n">…</div><div class="t">…
+ *  </div><p class="p">…</p></div>` — and required to sit immediately after the
+ *  strip's own opening tag, then immediately after the previous card. Two
+ *  cheaper shapes were rejected by measurement rather than by taste:
+ *  `class="t"` and `class="p"` are NOT unique to this strip (`/business/smb`
+ *  alone renders eight `<span class="t">30 min</span>` pills), so harvesting
+ *  the classes separately the way `visibleFaqs` can would mix a pill's
+ *  turnaround into a step's name; and matching the strip container's closing
+ *  `</div>` cannot be done with a regex, because the cards nest divs inside
+ *  it. Contiguity gives the same bound without counting tags, and it is exact:
+ *  anything rendered between two cards ends the strip and shortens it, which
+ *  fails the comparison below rather than passing silently. */
+function visibleSteps(html) {
+  const CARD =
+    /<div><div class="n">([\s\S]*?)<\/div><div class="t">([\s\S]*?)<\/div><p class="p">([\s\S]*?)<\/p><\/div>/g;
+  const strips = [];
+  for (const open of html.matchAll(/<div class="body3 steps3"[^>]*>/g)) {
+    const cards = [];
+    let at = open.index + open[0].length;
+    CARD.lastIndex = at;
+    let m;
+    while ((m = CARD.exec(html)) !== null && m.index === at) {
+      cards.push({ n: decodeEntities(m[1]), t: decodeEntities(m[2]), p: decodeEntities(m[3]) });
+      at = CARD.lastIndex;
+      CARD.lastIndex = at;
+    }
+    strips.push(cards);
+  }
+  return strips;
+}
+
 function visibleFaqs(html) {
   const qs = [...html.matchAll(/<summary>([\s\S]*?)<span class="m">/g)].map((m) =>
     decodeEntities(m[1]),
@@ -142,7 +224,8 @@ const orgBlocks = new Map(); // serialised Organization -> [paths]
 const entityProblems = [];
 const siteBlocks = new Map();
 let pagesWithGraph = 0;
-const counts = { Service: 0, FAQPage: 0, BlogPosting: 0, BreadcrumbList: 0 };
+const counts = { Service: 0, FAQPage: 0, BlogPosting: 0, BreadcrumbList: 0, HowTo: 0 };
+let stepCards = 0;
 
 const badJson = [];
 const badType = [];
@@ -150,6 +233,7 @@ const deprecated = [];
 const missingOrg = [];
 const crumbMismatch = [];
 const faqMismatch = [];
+const howToProblems = [];
 const serviceProblems = [];
 const blogProblems = [];
 const danglingRefs = [];
@@ -318,6 +402,78 @@ for (const [path, file] of pageFiles) {
     }
   }
 
+  // --- HowTo vs the visible process strip
+  //
+  // Three separate claims, because each fails differently: that the page made
+  // a decision at all (it is in one of the two sets), that the decision is
+  // what the build emitted, and that the emitted steps are the rendered cards
+  // verbatim. Only the third is FAQ's check; the first two exist because a
+  // missing node is invisible — `Steps` without a `name` renders exactly the
+  // same strip and says nothing.
+  const strips = visibleSteps(html);
+  stepCards += strips.reduce((n, cards) => n + cards.length, 0);
+  const howtoBlocks = raw.filter((b) => b.includes('"@type":"HowTo"'));
+  const howto = byType.get("HowTo");
+  const expectHowTo = HOWTO_PAGES.has(path);
+  const skipped = HOWTO_NOT_A_SEQUENCE.has(path);
+
+  if (expectHowTo && skipped) {
+    howToProblems.push(`${path}: in HOWTO_PAGES and HOWTO_NOT_A_SEQUENCE at once`);
+  }
+  if (strips.length && !expectHowTo && !skipped) {
+    howToProblems.push(
+      `${path}: renders ${strips.length} process strip(s) and is in neither ` +
+        `HOWTO_PAGES nor HOWTO_NOT_A_SEQUENCE — decide which, and say why`,
+    );
+  }
+  if (!strips.length && (expectHowTo || skipped)) {
+    howToProblems.push(`${path}: listed here as a process strip, renders none`);
+  }
+  if (howtoBlocks.length > 1) {
+    howToProblems.push(`${path}: ${howtoBlocks.length} HowTo nodes; a band is one sequence`);
+  }
+  if (expectHowTo !== Boolean(howto)) {
+    howToProblems.push(
+      `${path}: expected HowTo ${expectHowTo}, found ${Boolean(howto)}` +
+        (skipped ? ` (HOWTO_NOT_A_SEQUENCE: ${HOWTO_NOT_A_SEQUENCE.get(path)})` : ""),
+    );
+  } else if (howto) {
+    const problems = [];
+    const steps = [].concat(howto.step ?? []);
+
+    // A HowTo with a placeholder name is worse than none (see the header of
+    // lib/seo/schema/howto.ts), so "has a name" is not enough: it has to be a
+    // name the reader can see. `visibleText` drops <script> bodies, so the
+    // node cannot satisfy this with its own copy of the string — the only way
+    // to pass is for the band's heading to actually say it.
+    if (!howto.name) problems.push("no name");
+    else if (!visibleText(html).includes(howto.name)) {
+      problems.push(`name is nowhere in the rendered text: ${JSON.stringify(howto.name)}`);
+    }
+    if (steps.length < 2) {
+      problems.push(`${steps.length} step(s) — a sequence needs at least two`);
+    }
+    for (const s of steps) {
+      if (s["@type"] !== "HowToStep") problems.push(`step @type ${s["@type"]}`);
+      if (!s.name || !s.text) problems.push(`step missing name or text: ${JSON.stringify(s)}`);
+    }
+
+    // The FAQ gate's whole idea, applied to the strip: one of the rendered
+    // strips must equal the marked-up steps card for card, in order, in the
+    // same words. Comparing against every strip rather than the first is what
+    // makes this survive a page growing a second one.
+    const rendered = strips.map((cards) => cards.map((c) => ({ name: c.t, text: c.p })));
+    const want = steps.map((s) => ({ name: s.name, text: s.text }));
+    if (!rendered.some((r) => JSON.stringify(r) === JSON.stringify(want))) {
+      problems.push(
+        `no rendered strip matches the marked-up steps` +
+          `\n        markup:  ${JSON.stringify(rendered)}` +
+          `\n        json-ld: ${JSON.stringify(want)}`,
+      );
+    }
+    if (problems.length) howToProblems.push(`${path}: ${problems.join("; ")}`);
+  }
+
   // --- Service
   const svc = byType.get("Service");
   if (SERVICE_PAGES.has(path) !== Boolean(svc)) {
@@ -425,6 +581,14 @@ if (faqMismatch.length) {
     `the marked-up question and answer must both be visible, verbatim:\n      ${faqMismatch.join("\n      ")}`,
   );
 }
+if (howToProblems.length) {
+  fail(
+    `${howToProblems.length} HowTo problem(s)`,
+    `§17 condition 18: every marked-up step must be a rendered card, in the\n      ` +
+      `same words, and every process strip must be a stated decision:\n      ` +
+      howToProblems.join("\n      "),
+  );
+}
 if (serviceProblems.length) {
   fail(`${serviceProblems.length} Service problem(s)`, serviceProblems.join("\n      "));
 }
@@ -437,12 +601,18 @@ console.log("");
 note.push(`Organization block variants: ${orgBlocks.size} (must be 1)`);
 note.push(`BreadcrumbList: ${counts.BreadcrumbList}   FAQPage: ${counts.FAQPage}`);
 note.push(`Service: ${counts.Service}   BlogPosting: ${counts.BlogPosting}`);
+note.push(
+  `HowTo: ${counts.HowTo} of ${HOWTO_PAGES.size + HOWTO_NOT_A_SEQUENCE.size} strips ` +
+    `(${HOWTO_NOT_A_SEQUENCE.size} are not sequences), ${stepCards} step cards read`,
+);
 for (const n of note) console.log(`  - ${n}`);
 console.log("");
 
 if (failures.length === 0) {
   console.log(
-    "PASS - the emitted graph matches the pages it describes, the Organization\n       entity is identical everywhere, and no retired schema is in use",
+    "PASS - the emitted graph matches the pages it describes, every FAQ answer\n" +
+      "       and process step is on the page verbatim, the Organization entity is\n" +
+      "       identical everywhere, and no retired schema is in use",
   );
   process.exit(0);
 }
