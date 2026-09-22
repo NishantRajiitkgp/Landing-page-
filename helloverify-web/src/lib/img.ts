@@ -118,3 +118,60 @@ export function tint(src: string): string {
   }
   return value;
 }
+
+/** The placeholder CAPTION colour, for the photographs whose tint is too dark
+ *  for the default one. Same category as `PLACEHOLDER_TINT` above, and here
+ *  for the same reason - it is a fact about one photograph, not palette.
+ *
+ *  `design.css` gives `.ph .note` `rgba(21,20,15,0.45)` at both breakpoints:
+ *  dark ink at 45%, legible on a light tint and not on a dark one. Ten tiles
+ *  inverted it to translucent white in an inline `style` prop, and those
+ *  literals are what extended `hv/no-color-literal` past hex on 22 Sep 2026 -
+ *  six occurrences across five components, all of them this caption.
+ *
+ *  **Keyed by image because the tint is what decides it, measured rather than
+ *  asserted.** Relative luminance of every tint that inverts the caption is
+ *  <= 0.2574 (`#8C8C7A`, licensing officer) and of every tint that keeps the
+ *  default is >= 0.4213 (`#CFA58E`, rider) - a clean gap with no photograph in
+ *  it. The call sites previously each carried their own trigger for the same
+ *  fact (`p.live` in PeopleStrip, a `dimNote` field in WhoItsFor, nothing at
+ *  all in the other three), so the colour and its cause could drift apart.
+ *
+ *  **The three alpha values are the artboards' own and are NOT unified.** 0.4
+ *  on the two mid tints and the bento, 0.45 on the five country cards, 0.35 on
+ *  the closing band. Collapsing them to one number would change what six tiles
+ *  render, which is a DESIGN.md decision and not a lint fix; they are recorded
+ *  per photograph instead, which is byte-faithful. Every entry here is the
+ *  value that image already rendered - no photograph rendered a caption at two
+ *  different values, checked across all five components before the move.
+ */
+const PLACEHOLDER_NOTE: Record<string, string> = {
+  /** `sections/Why.tsx`, one tile. */
+  "/img/09-licensing-officer.jpg": "rgba(255,255,255,0.4)",
+  /** `sections/PeopleStrip.tsx`, the live card at both breakpoints. */
+  "/img/05-warehouse-pune.jpg": "rgba(255,255,255,0.4)",
+  /** `sections/WhoItsFor.tsx`, the one bento cell that carried `dimNote`. */
+  "/img/13-factory-floor.jpg": "rgba(255,255,255,0.4)",
+  /** `sections/International.tsx`, all five country cards. */
+  "/img/16-united-kingdom.jpg": "rgba(255,255,255,0.45)",
+  "/img/17-philippines.jpg": "rgba(255,255,255,0.45)",
+  "/img/18-uae.jpg": "rgba(255,255,255,0.45)",
+  "/img/19-singapore.jpg": "rgba(255,255,255,0.45)",
+  "/img/20-egypt.jpg": "rgba(255,255,255,0.45)",
+  /** `sections/Contact.tsx`, the desktop closing band. */
+  "/img/23-closing.jpg": "rgba(255,255,255,0.35)",
+};
+
+/** `noteInk("/img/05-warehouse-pune.jpg")` -> its caption colour, or
+ *  `undefined` where `design.css`'s default dark caption is the right one.
+ *
+ *  Undefined rather than throwing, which is the opposite of `tint()` above and
+ *  deliberate: a missing tint is always a defect, whereas most photographs
+ *  legitimately have no entry here - 14 of the 23 keep the default. Callers
+ *  must therefore leave the `style` prop off entirely rather than pass
+ *  `undefined` through it where the markup never had one; see the flight-payload
+ *  note in `sections/Packages.tsx`.
+ */
+export function noteInk(src: string): string | undefined {
+  return PLACEHOLDER_NOTE[src];
+}

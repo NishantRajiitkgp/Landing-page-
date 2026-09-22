@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
 
-import { SIZES_PERSON, tint } from "@/lib/img";
+import { SIZES_PERSON, noteInk, tint } from "@/lib/img";
 
 /** Drifting strip of verified people; the track is duplicated so the loop is
  *  seamless.
@@ -123,6 +123,21 @@ const MOBILE: readonly Person[] = [
 ];
 
 function PersonCard({ p }: { p: Person }) {
+  /** Was `p.live ? { color: "rgba(255,255,255,0.4)" } : undefined` inline - the
+   *  `rgba()` that TASKS Part 5 carried as the hole in `hv/no-color-literal`,
+   *  which matched hex only and is extended as of 22 Sep 2026.
+   *
+   *  `p.live` was the wrong cause as well as the wrong place. The caption
+   *  inverts because `/img/05-warehouse-pune.jpg`'s tint is dark (`#6E6C63`,
+   *  relative luminance 0.1494) and not because that card is the live one; the
+   *  two coincided on exactly one of the eight photographs. Keyed by photograph
+   *  now, beside the tint in `lib/img.ts`, so a reshuffle of which card is live
+   *  cannot leave a white caption on a pale tile. The ternary keeps its
+   *  `undefined` branch rather than becoming a spread: both render the same
+   *  HTML, but they differ in the flight payload (see the note in
+   *  `sections/Packages.tsx`), and this change is a colour move, not a payload
+   *  one. */
+  const noteColour = noteInk(p.src);
   return (
     <div
       className="person ph"
@@ -131,7 +146,7 @@ function PersonCard({ p }: { p: Person }) {
       <div className="light"></div>
       <Image className="pimg" src={p.src} alt="" fill sizes={SIZES_PERSON} loading="eager" />
       {p.note !== undefined && (
-        <div className="note" style={p.live ? { color: "rgba(255,255,255,0.4)" } : undefined}>
+        <div className="note" style={noteColour !== undefined ? { color: noteColour } : undefined}>
           {p.note}
         </div>
       )}
