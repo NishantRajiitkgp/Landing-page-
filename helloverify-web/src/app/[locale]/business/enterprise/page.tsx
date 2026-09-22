@@ -41,7 +41,14 @@ const LANES: { gt: string; gh: string; pills: { n: string; t: string; fast?: boo
       { n: "Passport", t: "15 min", fast: true },
       { n: "Age", t: "15 min", fast: true },
       { n: "Driving licence", t: "30 min", fast: true },
-      { n: "Registration certificate", t: "60 min", fast: true },
+      // 30 min, not 60. This page was the only surface saying 60 min;
+      // `sections/Checks.tsx` says 30 min. The old site defines this check
+      // as "a vehicle's registration details, including ownership and
+      // registration status" (`public/cms/en/employees.base.json`), i.e.
+      // the RTO record - the SAME authority as Driving licence, which the
+      // catalogue rates 30 min and fast. Two checks against one registry
+      // cannot differ by 2x.
+      { n: "Registration certificate", t: "30 min", fast: true },
     ],
   },
   {
@@ -179,12 +186,14 @@ export default async function EnterprisePage({
             the LANES records' own `gh` fields, the four times are their pills,
             and "33 checks" is the old heading and the button below.
 
-            Deliberately silent on three pills' turnarounds — Entitlement to
-            work, Registration certificate and Directors & GST. TASKS.md
-            measures a three-way disagreement on each between
-            `lib/content/checks.ts`, `sections/Checks.tsx` and THIS file, and a
-            block written to be quoted away from the page is the worst place to
-            settle it by accident. The four named here agree everywhere. */}
+            Still deliberately silent on three pills' turnarounds — Entitlement
+            to work, Registration certificate and Directors & GST — even though
+            all three now AGREE across every surface as of 22 Sep 2026. The
+            reason has changed rather than gone: two of the three are not in
+            `lib/content/checks.ts` at all, so their agreement rests on two
+            pages matching rather than on a canonical entry, and a sentence
+            written to be quoted away from the page should rest on the stronger
+            of the two. Add them to the catalogue and these can be named. */}
         <SecHead k="What we verify" h="What does an enterprise background check include?">
           HelloVerify's enterprise catalogue runs 33 checks against three questions: who the
           candidate is, what they have done, and what is on file. Identity answers in 15

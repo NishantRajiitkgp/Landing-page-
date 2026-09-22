@@ -46,7 +46,23 @@ const CHECKS: Record<string, Check> = {
   rc: { name: "Registration certificate", at: "14%", time: "30 min" },
   digitalEmployment: { name: "Digital employment", at: "26%", time: "60 min" },
   moonlighting: { name: "Moonlighting", at: "26%", time: "60 min" },
-  entitlement: { name: "Entitlement to work", at: "62%", time: "24 hrs" },
+  // 60 min and fast, not 24 hrs and slow. This page was the only surface
+  // saying 24 hrs; `business/enterprise` says 60 min and fast.
+  //
+  // The tie-break is the old site's own per-check catalogue
+  // (`public/cms/en/bgvSmb.base.json` in the previous repo), which states a
+  // Mode for all 32 of its checks - and that taxonomy maps onto speed
+  // consistently across every one of them. Database, Document, Digital and
+  // Online checks answer in 15-60 min (Address "Digital" 30 min, Credit and
+  // Global Database "Database" 15 min); anything needing a third party to
+  // reply takes days (Employment "Email/Database" 2 days, Education
+  // "Database/Email" 3 days).
+  //
+  // "Right/Eligibility to work" is listed there as Mode: Database/Document -
+  // no third party in the loop - so it belongs with the fast checks. 26% is
+  // the 60-min stop, and `STOPS` supplies the duration, the delay and the
+  // `fast` class from the position alone.
+  entitlement: { name: "Entitlement to work", at: "26%", time: "60 min" },
   employment: { name: "Employment", at: "78%", time: "2 days" },
   education: { name: "Education", at: "92%", time: "3 days" },
   credit: { name: "Credit", at: "4%", time: "15 min" },
@@ -109,11 +125,20 @@ const BUCKETS: readonly Bucket[] = [
     k: "Identity, documents, records",
     ids: ["identity", "pan", "passport", "age", "credit", "globalDatabase", "licence", "rc", "criminal", "currentAddress"],
   },
-  { big: "60 min", k: "Provident-fund records", ids: ["digitalEmployment", "moonlighting"] },
+  // Entitlement to work joined this bucket when its turnaround was
+  // corrected, so the label had to widen: it is a visa and
+  // work-authorisation record, not a provident-fund one, and a bucket
+  // labelled only "Provident-fund records" would now be describing two of
+  // its three chips.
+  {
+    big: "60 min",
+    k: "Provident-fund and work-authorisation records",
+    ids: ["digitalEmployment", "moonlighting", "entitlement"],
+  },
   {
     big: "1–3 days",
     k: "Confirmed with a registrar, employer or authority",
-    ids: ["entitlement", "employment", "education", "tradeLicence", "directorsGst"],
+    ids: ["employment", "education", "tradeLicence", "directorsGst"],
   },
 ];
 

@@ -62,7 +62,22 @@ export default defineConfig({
    *  surfacing it, and a suite that is green on the second attempt is not
    *  green. */
   timeout: 60_000,
-  workers: process.env.CI ? 2 : 4,
+
+  /** 2 workers, down from 4, and this is the third time this number has moved.
+   *
+   *  The history is the argument. At Playwright's default it was two `settle()`
+   *  timeouts per run; at 4 workers with a 60s test timeout it was one failure
+   *  per run — `/en/governments/manpower-education`, then `/en/contact`'s
+   *  hydration poll, then `/en/business`'s link scan — a DIFFERENT test each
+   *  time, every one of them passing on its own. That pattern is contention,
+   *  not a defect, and raising timeouts only moved which test lost the race.
+   *
+   *  So the fix is to stop the race rather than extend it. 166 tests over two
+   *  projects, each rendering a full page and some running an axe scan, on one
+   *  machine also serving `next start`: two workers costs a few minutes and
+   *  buys a suite whose result means something. A gate that fails once per run
+   *  for no reason is a gate people learn to re-run, and then to ignore. */
+  workers: 2,
   reporter: process.env.CI ? [["github"], ["list"]] : [["list"]],
 
   use: {
