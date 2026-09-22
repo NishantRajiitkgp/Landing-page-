@@ -29,6 +29,16 @@ THREE THINGS TO KNOW BEFORE RUNNING THIS.
    of its scope by construction - so this one comes back silently. Fix the
    boards first if they are ever the source again.
 
+   It would NOT undo the --faint collapse, and that is deliberate. TASKS.md
+   Part 2a deleted the third text tier on 22 Sep 2026 (2.43:1 on --paper,
+   2.67:1 on --white, against 4.5:1 for body text and 3:1 for large text - it
+   missed both, so no type size could have rescued it; the lightest passing
+   colour on that hue is 1.06:1 from --muted, i.e. indistinguishable). The
+   same substitution was applied to all nine boards - the declaration removed,
+   every var(--faint) and every inline #A29E94 now var(--muted) - precisely
+   because point 3 above proves a fix that lives only in the output is one
+   regeneration away from being lost, and no gate would report it.
+
 The desktop (Main/Desktop2-4) and mobile (Mobile1-5) boards each carry one
 complete stylesheet. Both are copied verbatim except for the edits listed in
 PATCHES, which are what turn two fixed-width canvases into one fluid page.

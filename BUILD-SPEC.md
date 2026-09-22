@@ -942,12 +942,18 @@ Classical rank tracking will not show this. Required from day one:
 >    gradients, photographs, scrims, all of which this design uses heavily. A
 >    token table has no such gaps. `#007AFF` is gone and its return fails the
 >    build.
-> 3. **The table's "Known live failure" is now `--faint`, not `#007AFF`.** It
->    measures **2.43:1** — worse than the 4.02:1 this section flags — and is used
->    as text in 40 selectors at 10.5–12px. The lightest passing value is 1.06:1
->    from `--muted`, i.e. indistinguishable, so the third text tier is not
->    achievable at AA on this paper. That is a DESIGN.md decision and is carried
->    as an explicit, measured exception rather than silently changed.
+> 3. ~~**The table's "Known live failure" is now `--faint`, not `#007AFF`.**~~
+>    **There is no known live text failure as of 22 Sep 2026.** `--faint`
+>    measured **2.43:1** — worse than the 4.02:1 this section flags — and was
+>    used as text in 40 `design.css` selectors and 29 in `pages.css` at
+>    10.5–12px, 180 rendered nodes on the homepage alone. TASKS.md Part 2a
+>    **deleted the token**: 2.43:1 is below the 3:1 large-text threshold as well,
+>    so enlarging the labels could not have passed it, and the lightest passing
+>    colour on that hue measures 1.06:1 from `--muted` — indistinguishable. The
+>    third text tier was not achievable at AA on this paper at any size, so every
+>    use now reads `var(--muted)` (4.83:1 on paper, 5.31:1 on white), the nine
+>    artboards included. `check-contrast.mjs` carries **no** accepted exceptions
+>    and `a11y.spec.ts` has no accepted-foreground set.
 > 4. **The canvas shipped no focus style, no skip link and no
 >    `prefers-reduced-motion`** — none of which is visible in a static mockup, so
 >    none survived the port. All three are now in `globals.css`, deliberately not

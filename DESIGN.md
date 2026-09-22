@@ -35,8 +35,8 @@ Defined once in `src/app/design.css` as custom properties. Never introduce a hex
 | *(panel)* | `#FBFAF6` | Inset panels inside white cards | — | — |
 | `--ink` | `#15140F` | Headlines, body, primary buttons | **16.78:1** | ✅ AAA |
 | *(soft ink)* | `#3D3B35` | Nav links, ledes, secondary body | **10.19:1** | ✅ AAA |
-| `--muted` | `#6F6B62` | Captions, supporting copy | **4.83:1** | ✅ AA |
-| `--faint` | `#A29E94` | k-labels, decorative meta ONLY | 2.43:1 | ❌ — see rule below |
+| `--muted` | `#6F6B62` | Captions, supporting copy, k-labels, axis and meta text | **4.83:1** | ✅ AA (5.31:1 on white) |
+| ~~`--faint`~~ | ~~`#A29E94`~~ | **REMOVED 22 Sep 2026** — 2.43:1, see rule below | 2.43:1 | ❌ |
 | `--hair` | `#E3DFD6` | Hairline rules, borders | — | — |
 | *(dash)* | `#EAE6DC` / `#D8D3C9` | Dashed separators (receipts, ledgers) | — | — |
 | `--green` | `#1B6B4A` | THE accent: verified, live, time, totals | **5.88:1** | ✅ AA (6.46:1 on white) |
@@ -45,7 +45,8 @@ Defined once in `src/app/design.css` as custom properties. Never introduce a hex
 **Rules.**
 - **Green is a verdict, not a theme.** It marks what is verified, live, fast, or concluded — dots, ticks, totals, zones, the now-line. A page should read ~95% ink/paper with green landing only where something has been *proven*. Never green backgrounds for whole sections, never green headlines.
 - **Red exists only inside the logo.** In a verification product red reads as "failed check" (canvas annotation). Failure states, if ever needed, get ink + language, not red.
-- **`--faint` fails AA (2.43:1) by design** — it is for *redundant decorative* meta only (k-labels that repeat the adjacent H2, axis labels, watermarks). Any text a reader must be able to read uses `--muted` or darker. **Form placeholders are `--muted`** (4.83:1). They were `#7D796F` (3.95:1), excused by the WCAG placeholder exemption because the label above carries the information — that stood while the colour was the canvas's, and once the alternative was a token that passes, an exemption was no reason to keep failing. Changed 22 Sep 2026 in `design.css` (`.inp`, both breakpoints) and `pages.css` (`::placeholder`, empty `<select>`). Never rely on a placeholder alone regardless.
+- **There are two text tiers, not three. `--faint` was removed, and the reason is arithmetic rather than taste.** It measured **2.43:1** on `--paper` and **2.67:1** on white. AA (1.4.3) asks 4.5:1 for body text and 3:1 for large text — `--faint` failed **both**, so the "make the labels bigger" route was never open to it: no type size passes 2.43:1. Darkening it did not work either. The lightest colour on that hue reaching 4.5:1 is `#726F68` (4.56:1), and it measures **1.06:1** against `--muted` (`#6F6B62`) — the same colour to the eye. (Earlier notes named `#716F68`; it measures 4.58:1 and 1.06:1 from `--muted`, so it is a fraction darker and the conclusion is identical either way.) A tier a reader cannot distinguish from the tier above it is not a tier, so it was deleted rather than nudged: every k-label, axis label, receipt header, table header and watermark now takes **`--muted`** (4.83:1 / 5.31:1). Applied 22 Sep 2026 across `design.css` (40 `var()` uses, 2 longhand `#A29E94` backgrounds, both `:root` declarations removed), `pages.css` (29), four `.tsx` style props (8) and all nine artboards in `design-src/artboards/`, so a regeneration cannot bring it back. `tools/a11y/check-contrast.mjs` no longer carries an accepted exception — it has none. *If a lighter meta tier is ever wanted again, it cannot be colour: use size, weight, letter-spacing or position, because the paper leaves no room below `--muted`.*
+- **Form placeholders are `--muted`** (4.83:1). They were `#7D796F` (3.95:1), excused by the WCAG placeholder exemption because the label above carries the information — that stood while the colour was the canvas's, and once the alternative was a token that passes, an exemption was no reason to keep failing. Changed 22 Sep 2026 in `design.css` (`.inp`, both breakpoints) and `pages.css` (`::placeholder`, empty `<select>`). Never rely on a placeholder alone regardless.
 - Buttons: white on ink = 18.44:1; white on green = 6.46:1. Both pass.
 
 ### 2.2 Type
@@ -161,7 +162,7 @@ Site chrome for ALL inner pages — per IA §2 the nav becomes audience-first:
 ```
 ┌ NAV: [logo]  Governments Business Individuals Platform Resources   [EN] [Talk to sales] ┐
 │ utility links About / Support move to footer + contact                                  │
-├ BREADCRUMB (mono, faint→muted, "/" separators) — inner pages only                       │
+├ BREADCRUMB (mono, muted, "/" separators in muted too) — inner pages only                │
 │ …page…                                                                                  │
 ├ CLOSING CTA BAND (photo + form or single CTA — shared component)                        │
 └ FOOTER (canvas footer, link columns re-grouped to the new IA)                           ┘
@@ -194,7 +195,7 @@ H1 + lede → proof strip (numbers/named clients in that segment) → **vertical
 2. The homepage's generated files stay generated (`tools/port/*`); do not hand-edit `sections/*` for homepage sections.
 3. Every new colour/size decision lands in this document first.
 4. All pages static (`BUILD-SPEC` G5); no client JS for design-phase pages.
-5. Accessibility floor: WCAG 2.2 AA — text ≥ 4.5:1 (only `--faint` decorative meta and placeholders exempt per §2.1), focus-visible rings (ink 2px offset 2px) on all interactive elements, `alt` on every content image, one `h1` per page, landmarks (`header/main/footer/nav`).
+5. Accessibility floor: WCAG 2.2 AA — text ≥ 4.5:1, **with no exemptions**: the one that existed (`--faint`, decorative meta) was removed with the token on 22 Sep 2026, and placeholders are `--muted` rather than excused (§2.1). Focus-visible rings (ink 2px offset 2px) on all interactive elements, `alt` on every content image, one `h1` per page, landmarks (`header/main/footer/nav`).
 
 ---
 

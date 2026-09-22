@@ -724,10 +724,22 @@ measurement alongside `--faint` while the fix was an open DESIGN.md decision;
 that decision was taken on 22 Sep and the colour is now `var(--muted)`
 (**4.83:1**) in all four declarations that carried it — `app/design.css` `.inp`
 at both breakpoints, and `app/pages.css` on the real form's `::placeholder` and
-empty-`<select>` rules, which the sweep never named. `#7d796f` is out of
-`ACCEPTED_FG`, so it fails the sweep if it returns. **The missing gate is still
-missing:** nothing reads the stylesheets for colour, and the nine artboards
-`build-css.py` generates from still carry the literal.
+empty-`<select>` rules, which the sweep never named.
+
+**`ACCEPTED_FG` in `tools/e2e/a11y.spec.ts` is now gone rather than empty**, and
+so is the accepted/blocking split that consulted it: `--faint` was the last
+entry and Part 2a removed the token (below), `#7d796f` came out when it was
+fixed, so every violation the sweep finds fails the run. Deleting the mechanism
+rather than leaving `new Set([])` also removed the flaky half of that test — the
+accepted count was annotated and not asserted precisely because repeated
+homepage scans returned 70–74 `--faint` nodes, and there is nothing left to
+annotate.
+
+**The missing gate is still missing:** nothing reads the stylesheets for colour.
+The nine artboards `build-css.py` generates from still carry `#7D796F` on
+`.inp`, so a regeneration would silently undo *that* fix — the `--faint`
+collapse was applied to the boards as well for exactly this reason, and is the
+one of the two that a regeneration cannot reverse.
 
 ### Navigation
 
@@ -932,7 +944,18 @@ photographs, scrims, of which this design has many.
 | `--ink` | 10px | 16.78 | 4.5 | ok |
 | `--muted` | 10px | 4.83 | 4.5 | ok |
 | `--green` | 10px | 5.88 | 4.5 | ok |
-| `--faint` | 10px | **2.43** | 4.5 | **accepted, see gaps** |
+
+**That table used to have a fourth row, and the gate used to have an ACCEPTED
+list.** `--faint` (`#A29E94`) sat at **2.43:1** against a 4.5:1 requirement.
+TASKS.md Part 2a closed it on 22 Sep 2026 by removing the token — it also
+missed the 3:1 large-text threshold, so enlarging the labels could not have
+passed it, and the lightest colour on that hue which does reach 4.5:1 measures
+**1.06:1 against `--muted`**, i.e. the same colour to the eye. There was no
+third text tier to save. `ACCEPTED` is now empty and stays empty: a satisfied
+entry left in place reads as a live exception and would excuse the colour's
+return, which is the one thing the gate exists to stop. Re-broken to prove it
+still bites — a new failing token, `--faint` reintroduced with a usage, and
+`#007AFF` as a token all exit 1; a new *passing* token exits 0.
 
 `#007AFF` — the failure §12 names, 4.02:1, used 455× on the old site — is
 **gone**, and the checker fails the build if it returns.
@@ -1256,15 +1279,24 @@ correct code gets disabled, so the negative tests matter as much as the others.
 
 ## Known gaps
 
-- **`--faint` is 2.43:1 and is the one remaining WCAG AA text failure.** It is
-  used as text in 40 selectors, all 10.5–12px uppercase labels (chart axes,
-  table headers, totals), so the threshold is 4.5:1. The lightest value that
-  passes is `#716F68`, which measures **1.06:1 against `--muted`** — visually
-  the same colour. So the design's third text tier is not achievable at AA on
-  this paper: closing it means collapsing `--faint` into `--muted`, or enlarging
-  40 label styles. Both are DESIGN.md decisions, so the checker carries it as an
-  explicit ACCEPTED entry with the measurement rather than changing the design
-  unasked. **This is the §17 box still open.**
+- ~~**`--faint` is 2.43:1 and is the one remaining WCAG AA text failure.**~~
+  **CLOSED 22 Sep 2026 — the token was removed.** It measured **2.43:1** on
+  paper and **2.67:1** on white, used as text in 40 `design.css` selectors and
+  29 in `pages.css`, all 10.5–12px uppercase labels (chart axes, table headers,
+  receipt totals) — **180 nodes on the homepage alone**, measured in a browser,
+  not the "40 selectors" that count of selectors implies. Both routes out were
+  measured before choosing: enlarging the labels could **never** have worked,
+  because 2.43:1 is below the 3:1 large-text threshold as well as the 4.5:1
+  body one; and darkening it to the lightest passing colour on that hue
+  (`#726F68`, 4.56:1) lands **1.06:1 from `--muted`** — the same colour to the
+  eye. So the third text tier was not achievable at AA on this paper at any
+  size and not distinguishable at any passing value, and it is gone rather
+  than nudged. Every use now reads `var(--muted)` (4.83:1 / 5.31:1), including
+  in the nine artboards, so `build-css.py` cannot reintroduce it. Neither gate
+  carries an exception any more: `check:contrast`'s `ACCEPTED` list is empty and
+  `a11y.spec.ts`'s `ACCEPTED_FG` is deleted. **§17 condition 12's "one accepted
+  foreground" clause is closed for `en`;** it stays open only for the `hi`/`ar`
+  locales, which do not exist yet (Part 9).
 - **RTL is half done: the CSS can mirror, but nothing has rendered it.** The
   192 physical inline declarations are converted and lint-enforced (above), so
   the mechanical blocker is gone. What remains needs actual Arabic: no `ar`
@@ -1344,27 +1376,49 @@ correct code gets disabled, so the negative tests matter as much as the others.
   plausibly in the first viewport. Also worth knowing: in Next 16.3.5 `priority`
   emits a `<link rel="preload" as="image">` and drops `loading="lazy"`, but does
   **not** put `fetchpriority="high"` on the `<img>` as §9.2 assumes.
-- **ISO/IEC 27701 and SOC 2 are now published, on testimony rather than on a
-  certificate.** Confirmed real by the owner on 22 Sep 2026 and published
-  "according to the old site", so the old site's own spelling governs:
-  **ISO/IEC 27701** (`public/llms.txt:67`, "ISO/IEC 27001 and ISO/IEC 27701
-  certified") and **SOC 2** (`src/config/seo.ts:50`, "ISO 27001 & SOC 2
+- **ISO/IEC 27701, SOC 2 and ISO 9001 are now published, on testimony rather
+  than on a certificate.** All three confirmed real by the owner on 22 Sep 2026
+  and published "according to the old site", so the old site's own spelling
+  governs: **ISO/IEC 27701** (`public/llms.txt:67`, "ISO/IEC 27001 and ISO/IEC
+  27701 certified"), **SOC 2** (`src/config/seo.ts:50`, "ISO 27001 & SOC 2
   compliance") — hence "compliant" for SOC 2, which ends in an attestation
-  report rather than a certificate. They are on `/about`, on
-  `/platform/security-compliance`, in `CREDENTIALS` and in `llms.txt`; 27701 is
-  also a `Certification` on the `Organization` node and SOC 2 deliberately is
-  not. **The remaining gap is the evidence, not the publication.** Neither repo
-  holds a certificate, an audit report, an auditor name or even a badge image
-  for either one, which is why the two `.cert` tiles are typographic plates and
-  why neither appears in the artefact table a reviewer can order from. If a
-  certificate or SOC 2 report is produced, cite it on `CREDENTIALS` in
-  `lib/content/company.ts` and add it to `ARTEFACTS`.
+  report rather than a certificate — and **ISO 9001**
+  (`public/cms/en/educationAuthorities.base.json:126`, "HelloVerify is ISO 9001
+  and 27701 certified and GDPR compliant"), hence "certified" and no `/IEC`.
+  ISO 9001 was found by writing the `check:llms` rewrite, which used it as its
+  worked example of a claim the old denylist would have missed, and confirmed
+  afterwards — the gate found the claim before anyone asked about it. All three
+  are on `/about`, on `/platform/security-compliance`, in `CREDENTIALS` and in
+  `llms.txt`; 27701 and ISO 9001 are also `Certification` entries on the
+  `Organization` node and SOC 2 deliberately is not, having no issuing body to
+  name. **The remaining gap is the evidence, not the publication.** Neither repo
+  holds a certificate, an audit report or an auditor name for any of the three,
+  which is why the three `.cert` tiles are typographic plates and why none
+  appears in the artefact table a reviewer can order from. If a certificate or
+  SOC 2 report is produced, cite it on `CREDENTIALS` in `lib/content/company.ts`
+  and add it to `ARTEFACTS`.
+- **The old site's `ISO_9001_1.png` is not an ISO 9001 badge.** It is a generic
+  blue ISO roundel captioned **27001** — 27001 artwork under a wrong filename —
+  and `public/cms/{en,hi,ar}/globals.base.json:51,55` use that one file for both
+  slots of a two-badge strip while the real TÜV SÜD "ISO 27001" mark beside it
+  (`ISO_27001_1.png`) is referenced nowhere. So nothing was ported:
+  `/img/iso-9001.jpg` is a typographic plate like 27701's. Two things worth
+  fixing on the old site while it still serves: the duplicated badge slot, and
+  a credentials strip that shows 27001 twice and 9001 never, under a filename
+  saying the opposite. The TÜV SÜD mark is separately
+  interesting — it is the only trace in either repo of WHICH body certified
+  anything, and `issuedBy` on all three `Certification` entries currently says
+  "International Organization for Standardization", which is consistent but not
+  strictly correct (ISO publishes standards; accredited bodies certify).
 - **`check-llms.mjs` no longer denies two names; it allows only the reviewed
   list.** The old gate rejected the literal strings `27701` and `SOC 2`, so it
   would have passed ISO 9001, SOC 1, HIPAA or FedRAMP. It now extracts every
   certification-shaped token from `llms.txt` and fails on any whose standard is
   not named in `CREDENTIALS` — adding a claim to the reviewed list is the only
-  way to publish one.
+  way to publish one. **Demonstrated, not asserted:** publishing ISO 9001 on
+  22 Sep needed no edit to the gate at all. One line on `CREDENTIALS` moved it
+  from rejected to allowed, the shape pattern was untouched, and HIPAA, SOC 1,
+  ISO 22301, ISO/IEC 42001 and FedRAMP are still rejected afterwards.
 - **The old site's live JSON-LD names the wrong head office.** It says Mumbai;
   the confirmed answer is Noida. Worth fixing on the old site too while it is
   still serving, since that schema is what Google has indexed.

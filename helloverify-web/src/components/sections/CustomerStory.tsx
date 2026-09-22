@@ -16,7 +16,7 @@ export function CustomerStory() {
                 <span className="k">
                   Customer story
                 </span>
-                <span className="mono" style={{ padding: '3px 8px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--faint)', fontSize: '10.5px' }}>
+                <span className="mono" style={{ padding: '3px 8px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--muted)', fontSize: '10.5px' }}>
                   SAMPLE — REPLACE
                 </span>
               </div>
@@ -51,7 +51,7 @@ export function CustomerStory() {
               <div style={{ paddingBottom: '24px', borderBottom: '1px solid var(--hair)' }}>
                 <div className="serif" style={{ fontSize: '56px', lineHeight: '1', letterSpacing: '-0.03em' }}>
                   1,600
-                  <span style={{ color: 'var(--faint)' }}>
+                  <span style={{ color: 'var(--muted)' }}>
                     +
                   </span>
                 </div>
@@ -63,7 +63,7 @@ export function CustomerStory() {
               <div style={{ padding: '24px 0', borderBottom: '1px solid var(--hair)' }}>
                 <div className="serif" style={{ fontSize: '44px', lineHeight: '1', letterSpacing: '-0.03em' }}>
                   5 days{' '}
-                  <span style={{ color: 'var(--faint)' }}>
+                  <span style={{ color: 'var(--muted)' }}>
                     to
                   </span>
                   {' '}30 min
@@ -96,7 +96,7 @@ export function CustomerStory() {
             <span className="k">
               Customer story
             </span>
-            <span className="mono" style={{ padding: '2px 7px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--faint)', fontSize: '10px' }}>
+            <span className="mono" style={{ padding: '2px 7px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--muted)', fontSize: '10px' }}>
               SAMPLE
             </span>
           </div>

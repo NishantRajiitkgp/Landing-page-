@@ -35,20 +35,34 @@ export async function generateMetadata({
  *  reviewed list and this page is its long form: every line there appears here
  *  with its status word made explicit.
  *
- *  ISO/IEC 27701 and SOC 2 were added 22 Sep 2026. Their evidence is NOT of the
- *  same kind as the other four, and the status column is where that shows:
- *  published on the existing site at `public/llms.txt:67` and
- *  `src/config/seo.ts:50` respectively, confirmed by the owner 22 Sep 2026, and
- *  that is the whole of it — neither repo holds a certificate, a report, an
- *  auditor name or a badge for either. So neither line offers an artefact "on
- *  request" the way ISO 27001 does, and neither is in the `ARTEFACTS` table
- *  below: promising a reviewer a document nobody has seen is exactly the
- *  overstatement the section standfirst says we do not make. **If a certificate
- *  or a SOC 2 report is produced, cite it here and add it to `ARTEFACTS`.**
+ *  ISO/IEC 27701, SOC 2 and ISO 9001 were added 22 Sep 2026. Their evidence is
+ *  NOT of the same kind as the other four rows, and the status column is where
+ *  that shows: published on the existing site at `public/llms.txt:67`,
+ *  `src/config/seo.ts:50` and `public/cms/en/educationAuthorities.base.json:126`
+ *  respectively, confirmed by the owner 22 Sep 2026, and that is the whole of it
+ *  — neither repo holds a certificate, a report or an auditor name for any of
+ *  them. So none of the three offers an artefact "on request" the way ISO 27001
+ *  does, and none is in the `ARTEFACTS` table below: promising a reviewer a
+ *  document nobody has seen is exactly the overstatement the section standfirst
+ *  says we do not make. **If a certificate or a SOC 2 report is produced, cite
+ *  it here and add it to `ARTEFACTS`.**
  *
  *  Wording is the old site's own, deliberately: "ISO/IEC 27701" rather than
- *  "ISO 27701", and SOC 2 is "compliant" rather than "certified" because a SOC 2
- *  engagement ends in an attestation report, not a certificate. */
+ *  "ISO 27701", SOC 2 is "compliant" rather than "certified" because a SOC 2
+ *  engagement ends in an attestation report and not a certificate, and ISO 9001
+ *  is "certified" with no `/IEC` — which is both what the old site writes and
+ *  the correct designation, ISO 9001 being an ISO standard rather than a joint
+ *  ISO/IEC one.
+ *
+ *  THE STANDFIRST'S COUNT IS UNCHANGED at four claim types. ISO 9001 is
+ *  "certified", which is already one of them, so "Certified, compliant, aligned
+ *  and member" still enumerates this table exactly — checked rather than
+ *  assumed, because that sentence is a count of the rows below it and a fifth
+ *  status word would make it wrong. What ISO 9001 does change is the SCOPE
+ *  spread: it is the only row that is not about security, privacy or data
+ *  protection, so its copy says what a QMS certificate covers and, explicitly,
+ *  what it does not. A procurement reviewer who reads "ISO 9001" as a security
+ *  control has been misled by the company it keeps here, not by the claim. */
 const CERTS = [
   {
     img: "/img/iso.jpg",
@@ -67,6 +81,12 @@ const CERTS = [
     alt: "SOC 2",
     h: "SOC 2 — compliant",
     p: "Service-organisation controls for security, availability and confidentiality. Compliant rather than certified — a SOC 2 engagement produces an attestation report, not a certificate.",
+  },
+  {
+    img: "/img/iso-9001.jpg",
+    alt: "ISO 9001",
+    h: "ISO 9001 — certified",
+    p: "Quality management systems: how service delivery is documented, measured and improved. It certifies the management system, not the outcome of any individual verification — and unlike everything else on this list, it is not an information-security, privacy or data-protection standard.",
   },
   {
     img: "/img/gdpr.jpg",
@@ -189,7 +209,7 @@ export default async function SecurityCompliancePage({
             `CERTS` above owns, `lib/content/company.ts` restates for the
             machine-readable surfaces, and `npm run check:llms` gates. Writing
             it a third time in a lede is how the three come to disagree, and the
-            list moved as recently as 22 Sep (two lines added, with a status
+            list moved as recently as 22 Sep (three lines added, with a status
             caveat in the comment above). The other four sections on this page
             are converted; this one stays a statement until the list settles. */}
         <SecHead k="Certifications &amp; memberships" h={<>What we hold,<br />stated precisely.</>}>

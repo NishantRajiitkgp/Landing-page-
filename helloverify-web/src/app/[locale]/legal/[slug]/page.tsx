@@ -82,7 +82,7 @@ export default async function LegalPage({
                 {x.body ? (
                   x.body.map((t, i) => <p key={i}>{t}</p>)
                 ) : (
-                  <p style={{ color: "var(--faint)", fontFamily: "var(--mono)", fontSize: 12.5 }}>
+                  <p style={{ color: "var(--muted)", fontFamily: "var(--mono)", fontSize: 12.5 }}>
                     [ Section text pending legal review ]
                   </p>
                 )}
