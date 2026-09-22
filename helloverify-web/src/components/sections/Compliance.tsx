@@ -1,6 +1,14 @@
-import Image from "next/image";
-import { CERT_BOX } from "@/lib/img";
-/** Certifications and compliance. */
+import { CertCard } from "@/components/chrome/CertCard";
+/** Certifications and compliance.
+ *
+ *  The cards come from `CREDENTIAL_MARKS` in `lib/content/company.ts` via
+ *  `chrome/CertCard.tsx`. Before that, this file hand-wrote eight of them and
+ *  was the site's worst credentials outlier: four credentials where `/about`
+ *  and `/platform/security-compliance` carry seven, "GDPR compliant" where
+ *  the procurement page says "GDPR — aligned" under a standfirst calling
+ *  those two different claims, and two different PBSA headings between its own
+ *  `.dsk` and `.mob` blocks. Measured 22 Sep 2026; the table carries the
+ *  full census. */
 
 export function Compliance() {
   return (
@@ -24,53 +32,22 @@ export function Compliance() {
             {' '}
             <div>
               {' '}
-              <div className="cert" style={{ borderTopColor: 'transparent', paddingTop: '4px' }}>
-                <Image src="/img/iso.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-                <div>
-                  <div className="h">
-                    ISO 27001 certified
-                  </div>
-                  <div className="p">
-                    Information security management, independently audited.
-                  </div>
-                </div>
-              </div>
+              {/* FOUR OF THE EIGHT MARKS, and the subset is deliberate rather
+                  than stale (BUILD-SPEC §11a.3, TASKS 2b). ISO/IEC 27701,
+                  SOC 2 and ISO 9001 joined the reviewed list on 22 Sep 2026
+                  and are NOT added here: this is the homepage, three more
+                  cards is homepage bytes against a 460 KB ceiling and a
+                  measured 1,089 ms LCP, and TASKS 2b says that wants its own
+                  commit with the measurement in it. What has changed is that
+                  the four are now NAMED — the count is a choice a reader can
+                  see and re-take, not 8 copies of markup nobody diffed. */}
+              <CertCard id="iso27001" style={{ borderTopColor: 'transparent', paddingTop: '4px' }} />
               {' '}
-              <div className="cert">
-                <Image src="/img/gdpr.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-                <div>
-                  <div className="h">
-                    GDPR compliant
-                  </div>
-                  <div className="p">
-                    Consent, retention limits and the right to be forgotten, built into every workflow.
-                  </div>
-                </div>
-              </div>
+              <CertCard id="gdpr" />
               {' '}
-              <div className="cert">
-                <Image src="/img/pbsa.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-                <div>
-                  <div className="h">
-                    Professional Background Screening Association
-                  </div>
-                  <div className="p">
-                    Member of the global standards body for the screening industry.
-                  </div>
-                </div>
-              </div>
+              <CertCard id="pbsa" />
               {' '}
-              <div className="cert">
-                <Image src="/img/nsr.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-                <div>
-                  <div className="h">
-                    National Skills Registry
-                  </div>
-                  <div className="p">
-                    India's registry of verified IT and ITeS professionals.
-                  </div>
-                </div>
-              </div>
+              <CertCard id="nsr" />
               {' '}
             </div>
             {' '}
@@ -91,53 +68,23 @@ export function Compliance() {
           {' '}
           <div style={{ marginTop: '24px' }}>
             {' '}
-            <div className="cert">
-              <Image src="/img/iso.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-              <div>
-                <div className="h">
-                  ISO 27001 certified
-                </div>
-                <div className="p">
-                  Information security management, independently audited.
-                </div>
-              </div>
-            </div>
+            {/* Same four ids as `.dsk` above, which is the point: these are
+                separate markup (only the homepage is a two-tree port, Part 6)
+                and before this they disagreed — `.dsk` headed the PBSA card
+                "Professional Background Screening Association" and `.mob`
+                headed it "PBSA member". Two glosses stay shortened, because
+                this column is narrower and Part 5 measured that question per
+                file rather than assuming it. */}
+            <CertCard id="iso27001" />
             {' '}
-            <div className="cert">
-              <Image src="/img/gdpr.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-              <div>
-                <div className="h">
-                  GDPR compliant
-                </div>
-                <div className="p">
-                  Consent, retention limits and the right to be forgotten.
-                </div>
-              </div>
-            </div>
+            <CertCard
+              id="gdpr"
+              gloss="Consent, retention limits and the right to be forgotten."
+            />
             {' '}
-            <div className="cert">
-              <Image src="/img/pbsa.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-              <div>
-                <div className="h">
-                  PBSA member
-                </div>
-                <div className="p">
-                  The global standards body for screening.
-                </div>
-              </div>
-            </div>
+            <CertCard id="pbsa" gloss="The global standards body for screening." />
             {' '}
-            <div className="cert">
-              <Image src="/img/nsr.jpg" alt="" width={CERT_BOX} height={CERT_BOX} />
-              <div>
-                <div className="h">
-                  National Skills Registry
-                </div>
-                <div className="p">
-                  India's registry of verified IT and ITeS professionals.
-                </div>
-              </div>
-            </div>
+            <CertCard id="nsr" />
             {' '}
           </div>
           {' '}

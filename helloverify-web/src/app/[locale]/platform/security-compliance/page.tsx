@@ -3,16 +3,24 @@
  *  detail page. That is a procurement blocker for the ministry buyer. This page
  *  exists to be sent to a security reviewer.
  *
- *  Status language is deliberate: "certified" vs "compliant" vs "aligned" vs
- *  "targeting" are different claims, and are not blurred here. Items awaiting
- *  sign-off say so. */
+ *  Status language is deliberate: "certified", "compliant", "aligned" and
+ *  "member" are four different claims and are not blurred here. Items awaiting
+ *  sign-off say so.
+ *
+ *  THIS SENTENCE USED TO NAME A FOURTH WORD THAT DOES NOT EXIST — "targeting"
+ *  — where the section standfirst below says "member". Measured 22 Sep 2026:
+ *  "targeting" appears nowhere else in `src/`, on this page or any other, so
+ *  the file's own header and its own standfirst disagreed about what the four
+ *  claims ARE while the page argued that the distinction matters. The four are
+ *  now `CredentialStatus` in `lib/content/company.ts` and the type is the
+ *  count. */
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { FaqSection } from "@/components/chrome/FaqSection";
 import type { Faq } from "@/lib/seo/schema/faq";
-import Image from "next/image";
-import { CERT_BOX } from "@/lib/img";
+import { CertCards } from "@/components/chrome/CertCard";
+import type { CredentialId } from "@/lib/content/company";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
@@ -28,85 +36,77 @@ export async function generateMetadata({
   return pageMetadata(locale, "/platform/security-compliance");
 }
 
-/** The certifications and memberships, and they MUST agree with
- *  `lib/content/company.ts`'s `CREDENTIALS` (BUILD-SPEC §11a.3 — the entity is
- *  one entity, and two pages of the same site holding different certifications
- *  is worse for a procurement reviewer than either page alone). `/about` is the
- *  reviewed list and this page is its long form: every line there appears here
- *  with its status word made explicit.
+/** THE PROCUREMENT-LENGTH GLOSSES for this page's credential cards, and only
+ *  those. The cards themselves — the logo, the credential's name and its
+ *  status word — come from `CREDENTIAL_MARKS` in `lib/content/company.ts`,
+ *  which is the reviewed list, and are rendered by `chrome/CertCard.tsx` in
+ *  its `dash` form: "ISO 27001 — certified".
  *
- *  ISO/IEC 27701, SOC 2 and ISO 9001 were added 22 Sep 2026. Their evidence is
- *  NOT of the same kind as the other four rows, and the status column is where
- *  that shows: published on the existing site at `public/llms.txt:67`,
- *  `src/config/seo.ts:50` and `public/cms/en/educationAuthorities.base.json:126`
- *  respectively, confirmed by the owner 22 Sep 2026, and that is the whole of it
- *  — neither repo holds a certificate, a report or an auditor name for any of
- *  them. So none of the three offers an artefact "on request" the way ISO 27001
- *  does, and none is in the `ARTEFACTS` table below: promising a reviewer a
- *  document nobody has seen is exactly the overstatement the section standfirst
- *  says we do not make. **If a certificate or a SOC 2 report is produced, cite
- *  it here and add it to `ARTEFACTS`.**
+ *  THIS PAGE USED TO HOLD ITS OWN COPY of all seven, and that is how it came
+ *  to disagree with the other eight surfaces (BUILD-SPEC §11a.3 — the entity
+ *  is one entity, and two pages of the same site holding different
+ *  certifications is worse for a procurement reviewer than either page
+ *  alone). The full census is on `CREDENTIAL_MARKS`; the two that mattered
+ *  here are below.
  *
- *  Wording is the old site's own, deliberately: "ISO/IEC 27701" rather than
- *  "ISO 27701", SOC 2 is "compliant" rather than "certified" because a SOC 2
- *  engagement ends in an attestation report and not a certificate, and ISO 9001
- *  is "certified" with no `/IEC` — which is both what the old site writes and
- *  the correct designation, ISO 9001 being an ISO standard rather than a joint
- *  ISO/IEC one.
+ *  EVERY GLOSS IS OVERRIDDEN, WHICH IS WHY THE OVERRIDE EXISTS. Seven of
+ *  seven run longer than the one-liners the section pages use, because this
+ *  is the page a security reviewer is sent: each card has to say what the
+ *  artefact IS and whether it can be ordered ("Certificate and scope
+ *  statement available on request", "DPA available"). The name and the status
+ *  word are not overridable and must not be — those are claims about the
+ *  company and are identical wherever they appear. Length is editorial;
+ *  claims are not.
  *
- *  THE STANDFIRST'S COUNT IS UNCHANGED at four claim types. ISO 9001 is
- *  "certified", which is already one of them, so "Certified, compliant, aligned
- *  and member" still enumerates this table exactly — checked rather than
- *  assumed, because that sentence is a count of the rows below it and a fifth
- *  status word would make it wrong. What ISO 9001 does change is the SCOPE
- *  spread: it is the only row that is not about security, privacy or data
- *  protection, so its copy says what a QMS certificate covers and, explicitly,
- *  what it does not. A procurement reviewer who reads "ISO 9001" as a security
- *  control has been misled by the company it keeps here, not by the claim. */
-const CERTS = [
-  {
-    img: "/img/iso.jpg",
-    alt: "ISO 27001",
-    h: "ISO 27001 — certified",
-    p: "Information security management, independently audited. Certificate and scope statement available on request.",
-  },
-  {
-    img: "/img/iso-27701.jpg",
-    alt: "ISO/IEC 27701",
-    h: "ISO/IEC 27701 — certified",
-    p: "Privacy information management: the extension of ISO 27001 that governs how personal data is handled, as controller and as processor.",
-  },
-  {
-    img: "/img/soc2.jpg",
-    alt: "SOC 2",
-    h: "SOC 2 — compliant",
-    p: "Service-organisation controls for security, availability and confidentiality. Compliant rather than certified — a SOC 2 engagement produces an attestation report, not a certificate.",
-  },
-  {
-    img: "/img/iso-9001.jpg",
-    alt: "ISO 9001",
-    h: "ISO 9001 — certified",
-    p: "Quality management systems: how service delivery is documented, measured and improved. It certifies the management system, not the outcome of any individual verification — and unlike everything else on this list, it is not an information-security, privacy or data-protection standard.",
-  },
-  {
-    img: "/img/gdpr.jpg",
-    alt: "GDPR",
-    h: "GDPR — aligned",
-    p: "Lawful basis, consent capture, retention limits, erasure and subject-access handling built into every workflow. DPA available.",
-  },
-  {
-    img: "/img/pbsa.jpg",
-    alt: "PBSA",
-    h: "PBSA — member",
-    p: "Member of the Professional Background Screening Association, the global standards body for the screening industry.",
-  },
-  {
-    img: "/img/nsr.jpg",
-    alt: "NSR",
-    h: "NSR — empanelled",
-    p: "India's National Skills Registry, the registry of verified IT and ITeS professionals.",
-  },
-];
+ *  "NSR — EMPANELLED" WAS A FIFTH STATUS WORD, and it is gone. The standfirst
+ *  below reads "Certified, compliant, aligned and member are four different
+ *  claims" — a COUNT of the rows in this table — and this row made it five.
+ *  Worse, it was a claim the reviewed list deliberately does not make:
+ *  `CREDENTIALS` gives NSR no status word at all, because NSR is a registry
+ *  HelloVerify participates in rather than an accreditation, and the note
+ *  there says so. The other six `.cert` surfaces all headed that card
+ *  "National Skills Registry", so this page was alone. Measured 22 Sep 2026.
+ *  The count is now a type — `CredentialStatus` in `lib/content/company.ts`
+ *  is a union of exactly those four words — so a fifth cannot reach a card
+ *  without editing a line whose comment points back at this sentence.
+ *
+ *  That correction is also why the 22 Sep note about the standfirst's count
+ *  needed revisiting. It concluded the count was still right because ISO 9001
+ *  is "certified", one of the four — which was true of ISO 9001 and missed
+ *  that NSR had introduced a fifth word in the same table. Checking the new
+ *  row is not the same as checking the table.
+ *
+ *  ISO/IEC 27701, SOC 2 AND ISO 9001 rest on weaker evidence than ISO 27001,
+ *  PBSA and NSR, and the note that states that in full — sources, dates, and
+ *  what to do if a certificate is produced — is on `CREDENTIALS` rather than
+ *  restated here. One consequence is a property of THIS page and stays: none
+ *  of the three is in `ARTEFACTS` below, because promising a reviewer a
+ *  document nobody has seen is exactly the overstatement the standfirst says
+ *  we do not make. **If a certificate or a SOC 2 report is produced, cite it
+ *  on `CREDENTIALS` and add it to `ARTEFACTS`.**
+ *
+ *  ISO 9001'S SCOPE IS THE OTHER THING THE GLOSS HAS TO CARRY. It is the only
+ *  row here that is not about security, privacy or data protection, so its
+ *  copy says what a QMS certificate covers and, explicitly, what it does not.
+ *  A procurement reviewer who reads "ISO 9001" as a security control has been
+ *  misled by the company it keeps on this page, not by the claim. */
+const CERT_IDS = ["iso27001", "iso27701", "soc2", "iso9001", "gdpr", "pbsa", "nsr"] as const;
+
+const CERT_GLOSSES: Partial<Record<CredentialId, string>> = {
+  iso27001:
+    "Information security management, independently audited. Certificate and scope statement available on request.",
+  iso27701:
+    "Privacy information management: the extension of ISO 27001 that governs how personal data is handled, as controller and as processor.",
+  soc2:
+    "Service-organisation controls for security, availability and confidentiality. Compliant rather than certified — a SOC 2 engagement produces an attestation report, not a certificate.",
+  iso9001:
+    "Quality management systems: how service delivery is documented, measured and improved. It certifies the management system, not the outcome of any individual verification — and unlike everything else on this list, it is not an information-security, privacy or data-protection standard.",
+  gdpr:
+    "Lawful basis, consent capture, retention limits, erasure and subject-access handling built into every workflow. DPA available.",
+  pbsa:
+    "Member of the Professional Background Screening Association, the global standards body for the screening industry.",
+  nsr: "India's National Skills Registry, the registry of verified IT and ITeS professionals.",
+};
 
 const ARTEFACTS = [
   { t: "ISO 27001 certificate & scope", p: "The certificate, the statement of applicability, and the audit body.", s: "On request", req: true },
@@ -206,26 +206,18 @@ export default async function SecurityCompliancePage({
         {/* NOT CONVERTED, deliberately (BUILD-SPEC §11a.2). "which
             certifications do you hold" is the obvious question here, and no
             answer to it can avoid restating the credentials list — which
-            `CERTS` above owns, `lib/content/company.ts` restates for the
-            machine-readable surfaces, and `npm run check:llms` gates. Writing
-            it a third time in a lede is how the three come to disagree, and the
-            list moved as recently as 22 Sep (three lines added, with a status
-            caveat in the comment above). The other four sections on this page
-            are converted; this one stays a statement until the list settles. */}
+            `CREDENTIAL_MARKS` in `lib/content/company.ts` now owns for the
+            cards as well as for the machine-readable surfaces, and which
+            `npm run check:llms` gates. Writing it again in a lede is how the
+            copies come to disagree, which they measurably did across nine
+            files before 22 Sep. The other four sections on this page are
+            converted; this one stays a statement. */}
         <SecHead k="Certifications &amp; memberships" h={<>What we hold,<br />stated precisely.</>}>
           Certified, compliant, aligned and member are four different claims. We don't blur
           them — a reviewer who catches a vendor overstating one stops trusting the rest.
         </SecHead>
         <div className="body3 certs3">
-          {CERTS.map((c) => (
-            <div className="cert" key={c.alt}>
-              <Image src={c.img} alt={c.alt} width={CERT_BOX} height={CERT_BOX} />
-              <div>
-                <div className="h">{c.h}</div>
-                <p className="p">{c.p}</p>
-              </div>
-            </div>
-          ))}
+          <CertCards ids={CERT_IDS} form="dash" glosses={CERT_GLOSSES} />
         </div>
       </div>
 
@@ -236,13 +228,22 @@ export default async function SecurityCompliancePage({
             reviewer types and the answer names the controls rather than saying
             "these are the controls", which is unciteable once lifted off the
             page (§11a.2 rule 3). No certification is named: that list belongs
-            to `CERTS` and `company.ts` and is gated by `check:llms`. */}
+            to `CREDENTIAL_MARKS` in `company.ts` and is gated by
+            `check:llms`. */}
         <SecHead k="Data protection" h="How is candidate data protected?">
           Four controls apply to every HelloVerify verification, on every plan: consent on the
           person's own device per verification, TLS in transit and encryption at rest with keys
           held separately, role-based access scoped to the verification with an audit log, and
           retention bounded by your DPA.
         </SecHead>
+        {/* NO `name`, so NO HowTo (§17 condition 18). The band's own lede says
+            what these four are — "four controls apply to every HelloVerify
+            verification, on every plan" — so they hold concurrently rather
+            than in sequence, and consent, encryption, least privilege and
+            bounded retention are not things a reader performs one after
+            another. The heading is a how-question, which is what makes this
+            the tempting one to mark up and the reason the decision is written
+            down: `check-schema.mjs` carries it in HOWTO_NOT_A_SEQUENCE. */}
         <Steps
           items={[
           { n: "01 · Lawful basis", t: "Consent first", p: "The person being verified consents on their own device before capture, per verification — not once, forever." },

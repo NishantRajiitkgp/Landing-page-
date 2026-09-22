@@ -172,6 +172,196 @@ export const CREDENTIALS: readonly string[] = [
   "Backed by Y Combinator",
 ];
 
+/** The four status words, and there are exactly four on purpose.
+ *
+ *  `/platform/security-compliance`'s section standfirst reads "Certified,
+ *  compliant, aligned and member are four different claims. We don't blur
+ *  them — a reviewer who catches a vendor overstating one stops trusting the
+ *  rest." That sentence is a COUNT of the rows below it, so this union is the
+ *  type that makes the count true: a fifth word cannot reach a card without
+ *  editing this line, and whoever edits it has to go and read that standfirst.
+ *
+ *  It is not hypothetical. `/platform/security-compliance` shipped a fifth —
+ *  "NSR — empanelled" — which contradicted its own standfirst and claimed a
+ *  standing `CREDENTIALS` deliberately does not claim (see the note above: NSR
+ *  is a registry HelloVerify participates in, not an accreditation). Measured
+ *  22 Sep 2026, fixed in the same change as this type.
+ */
+export type CredentialStatus = "certified" | "compliant" | "aligned" | "member";
+
+/** One `.cert` card: the logo, the heading and the one line under it. */
+export type CredentialMark = {
+  /** The logo, from `/public/img`. */
+  readonly img: string;
+  /** The credential, spelled as `CREDENTIALS` above spells it. */
+  readonly name: string;
+  /** The reviewed status word, or absent where the reviewed list claims none —
+   *  NSR and the Ministry of Manpower reference. Absent is a claim too: it is
+   *  the claim that this is participation rather than accreditation. */
+  readonly status?: CredentialStatus;
+  /** `alt` where it should not be the name: NSR's logo is the three letters,
+   *  and the MOM card's heading names no ministry. Defaults to `name`. */
+  readonly alt?: string;
+  /** Joiner between name and status on the plain heading. Only GDPR needs it:
+   *  "GDPR-aligned" is a compound adjective, and `CREDENTIALS` writes it that
+   *  way too ("GDPR-aligned data protection practices"). Defaults to a space. */
+  readonly sep?: string;
+  /** Scope words after the status on the plain heading, again GDPR only:
+   *  "GDPR-aligned" alone reads as a fragment where "ISO 27001 certified"
+   *  does not. Never rendered in the `dash` form, which sets the status word
+   *  off by itself on purpose. */
+  readonly scope?: string;
+  /** The default one-liner. Taken from this credential's own tail in
+   *  `CREDENTIALS` above wherever it has one, so the card and the crawler say
+   *  the same words rather than two paraphrases of them. Overridable per
+   *  surface — see `components/chrome/CertCard.tsx` for why. */
+  readonly gloss: string;
+};
+
+/** THE SAME CREDENTIALS, IN THE SHAPE THE PAGES RENDER THEM (BUILD-SPEC
+ *  §11a.3, §4 rule 2). `CREDENTIALS` above is prose for a crawler reading a
+ *  bullet list; this is the `.cert` card. The two are renderings of one list,
+ *  not two lists.
+ *
+ *  WHY THIS EXISTS: the cards were hand-written **29 times across 9 files** and
+ *  they had drifted. Measured 22 Sep 2026, before this table:
+ *
+ *  - The homepage (`components/sections/Compliance.tsx`) showed **four**
+ *    credentials where `/about` and `/platform/security-compliance` showed
+ *    **seven**. The three lines added on 22 Sep (TASKS 2b) reached the two
+ *    pages that rule names and stopped there.
+ *  - The homepage said **"GDPR compliant"**, and so did `/business/enterprise`
+ *    — on the card AND in its answer block — against "GDPR — aligned" on
+ *    `/platform/security-compliance`, whose standfirst says in so many words
+ *    that it does not blur those two. Two surfaces blurred them.
+ *  - PBSA had two headings: "PBSA member" on five surfaces and "Professional
+ *    Background Screening Association" on two. The homepage **disagreed with
+ *    itself** — `.dsk` and `.mob` are separate markup (§17 condition 22, and
+ *    the Part 6 finding that only the homepage is a two-tree port), and each
+ *    block had its own answer.
+ *  - NSR carried a fifth status word on one surface: see `CredentialStatus`.
+ *  - The two seven-card pages were not the same seven: `/about` has no GDPR
+ *    card and `/platform/security-compliance` has no Ministry of Manpower
+ *    card. Both gaps are recorded in TASKS and deliberately NOT closed here —
+ *    which cards a page shows is an editorial choice about that page, and this
+ *    task was scoped to make the surfaces agree on what each card SAYS.
+ *
+ *  SO NAME AND STATUS COME FROM HERE, AND THE GLOSS COMES FROM HERE BY
+ *  DEFAULT. Nine files cannot disagree about a string none of them holds.
+ *
+ *  THE INVARIANT AGAINST `CREDENTIALS`, measured rather than asserted: the
+ *  CLAIM a mark makes — `name` + `sep` + `status`, or just `name` where there
+ *  is no status — is a substring of exactly one `CREDENTIALS` entry. Checked
+ *  22 Sep 2026 by importing both and matching: **7 of 8, one match each**, with
+ *  `mom` the one miss and expected (its heading "In production with a ministry"
+ *  paraphrases a line that names the ministry in full, and carries no status
+ *  word either way).
+ *
+ *  It is the claim and not the whole heading, because measuring the heading is
+ *  what the first attempt did and GDPR failed it: the plain heading is
+ *  "GDPR-aligned data handling" and the reviewed line is "GDPR-aligned data
+ *  protection practices". Both are the same claim with different scope words
+ *  after it, which is exactly why `scope` is a separate field from `status` —
+ *  the status word is the reviewed part and has to match; the words that follow
+ *  it are copy for the medium.
+ *
+ *  **NOTHING GATES THAT INVARIANT**, and that is worth saying plainly rather
+ *  than leaving as a comfortable assumption. `tools/seo/check-llms.mjs` checks
+ *  `llms.txt` against `CREDENTIALS`; no check reads this table. The reason the
+ *  drift above took months to notice is that it was spread over nine files, and
+ *  that failure mode is now gone — a wrong status word here is wrong on one
+ *  screen, in one record, in the file a reviewer reads for credentials. That is
+ *  a much smaller hazard, not a closed one.
+ *
+ *  DERIVING `CREDENTIALS` FROM THESE RECORDS WAS TRIED AND REJECTED. Five of
+ *  its ten lines are not `name status — gloss` shaped ("GDPR-aligned data
+ *  protection practices", "Primary source verification with auditable,
+ *  forgery-protected reports", "Backed by Y Combinator"), and the mechanical
+ *  transform that fits the other five — lowercase the gloss's first letter —
+ *  breaks on "India's" and on PBSA's "Member of…". `lib/seo/llms.ts` emits that
+ *  array verbatim and `check-llms.mjs` derives its allowlist from it, so its
+ *  bytes are reviewed copy for a crawler, not a rendering of a card.
+ */
+export const CREDENTIAL_MARKS = {
+  iso27001: {
+    img: "/img/iso.jpg",
+    name: "ISO 27001",
+    status: "certified",
+    gloss: "Information security management, independently audited.",
+  },
+  iso27701: {
+    img: "/img/iso-27701.jpg",
+    name: "ISO/IEC 27701",
+    status: "certified",
+    gloss: "Privacy information management, extending ISO 27001 to personal data.",
+  },
+  soc2: {
+    img: "/img/soc2.jpg",
+    name: "SOC 2",
+    status: "compliant",
+    gloss: "Service-organisation controls for security, availability and confidentiality.",
+  },
+  iso9001: {
+    img: "/img/iso-9001.jpg",
+    name: "ISO 9001",
+    status: "certified",
+    gloss:
+      "Quality management systems, covering how service delivery is documented, measured and improved.",
+  },
+  gdpr: {
+    img: "/img/gdpr.jpg",
+    name: "GDPR",
+    status: "aligned",
+    sep: "-",
+    scope: " data handling",
+    gloss: "Consent, retention limits and the right to be forgotten, in every workflow.",
+  },
+  pbsa: {
+    img: "/img/pbsa.jpg",
+    name: "PBSA",
+    status: "member",
+    gloss: "The global standards body for the screening industry.",
+  },
+  nsr: {
+    img: "/img/nsr.jpg",
+    name: "National Skills Registry",
+    alt: "NSR",
+    gloss: "India's registry of verified IT and ITeS professionals.",
+  },
+  mom: {
+    img: "/img/mom.jpg",
+    name: "In production with a ministry",
+    alt: "Ministry of Manpower, Singapore",
+    gloss: "Work-pass credential verification with Singapore's Ministry of Manpower.",
+  },
+} as const satisfies Record<string, CredentialMark>;
+
+/** Which card, named at the call site. Every surface lists the ids it shows,
+ *  the way `components/sections/Checks.tsx` names the check ids it shows rather
+ *  than deriving one view's order from the other's (Part 5). A subset is a
+ *  legitimate editorial choice — `/governments` leads with the artefacts a
+ *  ministry asks for and does not show India's NSR — and naming the ids makes
+ *  each page's choice explicit instead of implicit in 29 copies of markup. */
+export type CredentialId = keyof typeof CREDENTIAL_MARKS;
+
+/** The card heading, in the two forms the site uses, both built from `name` and
+ *  `status` so no surface can pair a credential with a status the reviewed list
+ *  does not give it.
+ *
+ *  `plain` is what eight surfaces render. `dash` is
+ *  `/platform/security-compliance`'s, and it is a real difference rather than a
+ *  formatting whim: that page exists to be read by a procurement reviewer, its
+ *  heading is "What we hold, stated precisely", and setting the status word off
+ *  with an em dash is what "precisely" means there. It drops `scope` for the
+ *  same reason — "GDPR — aligned" is the claim; "data handling" is scope the
+ *  gloss beside it already states.
+ */
+export function certHeading(m: CredentialMark, form: "plain" | "dash" = "plain"): string {
+  if (!m.status) return m.name;
+  if (form === "dash") return `${m.name} — ${m.status}`;
+  return `${m.name}${m.sep ?? " "}${m.status}${m.scope ?? ""}`;
+}
+
 /** What HelloVerify sells, ported verbatim from the old `llms.txt`'s "Core
  *  services" block.
  *
