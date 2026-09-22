@@ -9,6 +9,7 @@ import { FaqSection } from "@/components/chrome/FaqSection";
 import type { Faq } from "@/lib/seo/schema/faq";
 import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
+import { CertCard } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
@@ -169,6 +170,14 @@ export default async function CustomerKycPage({
           sign up by phone. Each returns one webhook — verified, failed, or needs a human —
           with the evidence attached.
         </SecHead>
+        {/* NO `name`, so NO HowTo (§17 condition 18). These three cards are
+            mutually exclusive routes, not steps: the strip says so itself —
+            "02 · Or redirect", "03 · Or async", and the band's own lede reads
+            "reaches HelloVerify three ways". A `HowTo` `step` array is an
+            ordered sequence a reader performs all of, so marking up a choice
+            of three as a sequence of three would tell an engine to do all
+            three in order. Carried in `check-schema.mjs`'s
+            HOWTO_NOT_A_SEQUENCE. */}
         <Steps
           items={[
           { n: "01 · Embed", t: "API", p: "Your UI, our pipeline. Send the document image, get structured fields and a verdict back." },
@@ -191,6 +200,20 @@ export default async function CustomerKycPage({
           your own storage.
         </SecHead>
         <div className="body3 certs3">
+          {/* NOT A CREDENTIAL CARD, and deliberately left hand-written. It is
+              `.cert` markup around a STANCE — the heading is a promise about
+              how this product behaves, not a claim about what HelloVerify
+              holds — and it borrows `gdpr.jpg` as illustration. It names no
+              credential and carries no status word, so there is nothing here
+              for `CREDENTIAL_MARKS` to own, and routing it through
+              `CertCard` would need a `heading` override, which is the one
+              prop that component refuses to have. Same judgement as
+              `chrome/SecHead.tsx`: 49 identical blocks shared, 21 left alone
+              because they were not the same shape. Measured across the 40 cards
+              the nine surfaces rendered, three are this shape — this one and
+              the two on `/individuals`. Note the card immediately below is NOT
+              one of them, so this is a per-card judgement and not a per-file
+              one. */}
           <div className="cert">
             <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />
             <div>
@@ -198,13 +221,15 @@ export default async function CustomerKycPage({
               <p className="p">The customer consents before capture; scope and retention are stated in plain language.</p>
             </div>
           </div>
-          <div className="cert">
-            <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">ISO 27001 certified</div>
-              <p className="p">Documents encrypted in transit and at rest; deletion on schedule, verifiable on request.</p>
-            </div>
-          </div>
+          {/* This one IS a credential card — heading "ISO 27001 certified",
+              a name and a status word — so it comes from the table, with a
+              gloss of its own: on this page the ISO logo is carrying the
+              encryption-and-deletion promise the answer block above states,
+              not the generic audit line. */}
+          <CertCard
+            id="iso27001"
+            gloss="Documents encrypted in transit and at rest; deletion on schedule, verifiable on request."
+          />
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">

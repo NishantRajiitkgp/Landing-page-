@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import Image from "next/image";
-import { CERT_BOX, SIZES_PATH_SPAN3 } from "@/lib/img";
+import { SIZES_PATH_SPAN3 } from "@/lib/img";
+import { CertCards } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
@@ -231,37 +232,35 @@ export default async function GovernmentsHub({
           in production with Singapore's Ministry of Manpower is the reference.
         </SecHead>
         <div className="body3 certs3">
-          <div className="cert">
-            <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">ISO 27001 certified</div>
-              <p className="p">Information security management, independently audited.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">GDPR-aligned data handling</div>
-              <p className="p">Consent, retention limits, the right to be forgotten — in every workflow.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/pbsa.jpg" alt="PBSA" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">PBSA member</div>
-              <p className="p">The global standards body for the screening industry.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/mom.jpg" alt="Ministry of Manpower, Singapore" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">In production with a ministry</div>
-              <p className="p">
-                Work-pass credential verification with Singapore's Ministry of Manpower —{" "}
-                <AppLink href="/governments/manpower-education/ministry-of-manpower" style={{ fontWeight: 500 }}>read the story →</AppLink>
-              </p>
-            </div>
-          </div>
+          {/* FOUR OF THE EIGHT MARKS, and the SUBSET is the editorial point
+              of this page rather than an oversight: a ministry asks for the
+              security certification, the data-protection stance, the industry
+              membership and a reference that another ministry is already
+              live. India's National Skills Registry is on the homepage and on
+              every vertical page and is deliberately not here — it answers a
+              question an Indian employer asks, not one a licensing authority
+              does. Naming the ids is what makes that a choice a reader can
+              see; four copies of markup did not.
+
+              Headings and status words come from `CREDENTIAL_MARKS` in
+              `lib/content/company.ts` (BUILD-SPEC §11a.3). This page was
+              already right on the one that mattered — "GDPR-aligned data
+              handling", against the homepage's "GDPR compliant" — which is
+              why that is the wording the table carries. */}
+          <CertCards
+            ids={["iso27001", "gdpr", "pbsa", "mom"]}
+            glosses={{
+              /* Per-page, because the link text differs from the same card on
+                 `/about` ("the story →" there). Genuinely per-page copy, so
+                 it is not folded — the PeopleStrip judgement from Part 5. */
+              mom: (
+                <>
+                  Work-pass credential verification with Singapore's Ministry of Manpower —{" "}
+                  <AppLink href="/governments/manpower-education/ministry-of-manpower" style={{ fontWeight: 500 }}>read the story →</AppLink>
+                </>
+              ),
+            }}
+          />
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-line btn-sm">Security &amp; compliance, in full</AppLink>

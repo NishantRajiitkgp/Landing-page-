@@ -155,7 +155,10 @@ export default async function IndividualsHub({
           their own phone. HelloVerify then asks the transport authority, court or registry that
           issued it, and the plain-language report returns to the same chat — no app, no account.
         </SecHead>
+        {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
+            so the node and the heading are the same string. */}
         <Steps
+          name="How do I run a background check from my phone?"
           items={[
           { n: "01 · You", t: "Send a photo", p: "Message HelloV on WhatsApp and photograph the person's document. They consent on their own phone." },
           { n: "02 · Us", t: "We check the source", p: "Not a database of copies — the transport authority, the court, the registry that issued it." },
@@ -171,6 +174,30 @@ export default async function IndividualsHub({
           back, and HelloVerify won't help you try.
         </SecHead>
         <div className="body3 certs3">
+          {/* NEITHER OF THESE IS A CREDENTIAL CARD, and both are deliberately
+              left hand-written rather than driven from `CREDENTIAL_MARKS` in
+              `lib/content/company.ts` (BUILD-SPEC §11a.3). They are `.cert`
+              markup around a STANCE — "They consent, then we check",
+              "Documents deleted on schedule" are promises to the person being
+              checked, under a heading that asks "Can I check someone without
+              telling them?" — and they borrow `gdpr.jpg` and `iso.jpg` as
+              illustration. Neither names a credential in its heading and
+              neither carries a status word, so there is nothing here for the
+              table to own, and both would need the `heading` override
+              `chrome/CertCard.tsx` refuses to have.
+
+              Same judgement as `chrome/SecHead.tsx`, which shared 49 identical
+              blocks and left 21 alone because they were not the same shape.
+              Measured across the 40 cards the nine surfaces rendered on 22 Sep
+              2026: 37 are credential cards and three are this shape — these two
+              and the GDPR card on `/business/customer-kyc`.
+
+              The second gloss DOES name a credential ("ISO 27001 certified
+              storage"), and it is left as prose because it agrees with the
+              reviewed list. It is worth knowing it is there: it is a status
+              word this consumer page states in copy that no table governs, the
+              same exposure as the answer blocks on `/business/enterprise` and
+              `/governments`. */}
           <div className="cert">
             <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />
             <div>

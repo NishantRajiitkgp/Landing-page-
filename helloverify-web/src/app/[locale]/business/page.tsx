@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import Image from "next/image";
-import { CERT_BOX, SIZES_PATH_SPAN2, SIZES_PATH_SPAN3 } from "@/lib/img";
+import { SIZES_PATH_SPAN2, SIZES_PATH_SPAN3 } from "@/lib/img";
+import { CertCards } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
@@ -161,7 +162,12 @@ export default async function BusinessHub({
           document, AI captures each field and finds the issuing office, the request goes to
           that issuer, and one report comes back with the source named beside every result.
         </SecHead>
+        {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`.
+            §11a.3 rates this exact question a top query shape and this hub is
+            the page that answers it, so it is the one HowTo on the site that
+            was asked for by name. */}
         <Steps
+          name="How does background verification work?"
           items={[
           { n: "01", t: "Upload", p: "Photograph the document. Edges, glare and focus are checked before the shutter fires." },
           { n: "02", t: "Read", p: "AI captures every field, checks the document against itself, and finds the office that issued it." },
@@ -199,24 +205,28 @@ export default async function BusinessHub({
 
       {/* compliance hand-off */}
       <div className="wrap sec3" style={{ paddingBottom: 40 }}>
+        {/* TWO OF THE EIGHT MARKS, and a subset is the right answer here: this
+            is a hub page's compliance hand-off, two cards wide by design, and
+            its job is to point at `/platform/security-compliance` rather than
+            to restate the list. Both glosses are per-page and stay so — this
+            buyer is the one who asks for reports under NDA, and the PBSA card
+            ends in the link the whole band exists for. What is NOT per-page is
+            the heading or the status word; those come from `CREDENTIAL_MARKS`
+            in `lib/content/company.ts` now (BUILD-SPEC §11a.3). */}
         <div className="certs3 hair-top" style={{ marginTop: 0 }}>
-          <div className="cert">
-            <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">ISO 27001 certified</div>
-              <p className="p">Information security management, independently audited. Reports available under NDA.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/pbsa.jpg" alt="PBSA" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">PBSA member</div>
-              <p className="p">
-                Member of the global standards body for the screening industry.{" "}
-                <AppLink href="/platform/security-compliance" style={{ fontWeight: 500 }}>Security &amp; compliance →</AppLink>
-              </p>
-            </div>
-          </div>
+          <CertCards
+            ids={["iso27001", "pbsa"]}
+            glosses={{
+              iso27001:
+                "Information security management, independently audited. Reports available under NDA.",
+              pbsa: (
+                <>
+                  Member of the global standards body for the screening industry.{" "}
+                  <AppLink href="/platform/security-compliance" style={{ fontWeight: 500 }}>Security &amp; compliance →</AppLink>
+                </>
+              ),
+            }}
+          />
         </div>
       </div>
     </PageShell>

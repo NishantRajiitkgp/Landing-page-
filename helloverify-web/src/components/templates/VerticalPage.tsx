@@ -6,8 +6,7 @@
 import { PageShell } from "@/components/chrome/PageShell";
 import { FaqSection } from "@/components/chrome/FaqSection";
 import type { ClosingCta } from "@/components/chrome/ClosingCta";
-import Image from "next/image";
-import { CERT_BOX } from "@/lib/img";
+import { CertCards } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
 import type { Crumb } from "@/lib/seo/schema/breadcrumbs";
 import type { Faq } from "@/lib/seo/schema/faq";
@@ -56,12 +55,20 @@ export type VerticalContent = {
   closing: React.ComponentProps<typeof ClosingCta>;
 };
 
-const CERTS = [
-  { img: "/img/iso.jpg", alt: "ISO 27001", h: "ISO 27001 certified", p: "Information security management, independently audited." },
-  { img: "/img/gdpr.jpg", alt: "GDPR", h: "GDPR-aligned data handling", p: "Consent, retention limits and the right to be forgotten, in every workflow." },
-  { img: "/img/pbsa.jpg", alt: "PBSA", h: "PBSA member", p: "Member of the global standards body for the screening industry." },
-  { img: "/img/nsr.jpg", alt: "NSR", h: "National Skills Registry", p: "India's registry of verified IT and ITeS professionals." },
-];
+/** The four credentials every vertical page shows, and this array WAS the four
+ *  cards — copy, status words and all — until 22 Sep 2026.
+ *
+ *  It was the closest thing the site had to a source, which is exactly why it
+ *  is worth recording that it still drifted from the other eight surfaces: it
+ *  said "GDPR-aligned data handling" where the homepage said "GDPR compliant"
+ *  and `/platform/security-compliance` said "GDPR — aligned", and it glossed
+ *  PBSA "Member of the global standards body…" where `/about` and
+ *  `/governments` used the reviewed list's own tail, "The global standards body
+ *  for the screening industry." Driving four of nine files from a local array is
+ *  not a source; it is a fifth copy with better ergonomics. The records live in
+ *  `CREDENTIAL_MARKS` in `lib/content/company.ts` now, and only the choice of
+ *  WHICH four is a property of this template. */
+const CERT_IDS = ["iso27001", "gdpr", "pbsa", "nsr"] as const;
 
 /** Async only to resolve the locale for the Service node's absolute URLs —
  *  the same `getLocale()` call `PageShell` and `AppLink` already make, and
@@ -136,7 +143,19 @@ export async function VerticalPage(c: VerticalContent) {
           </div>
           {c.stepsLede && <p className="lede" style={{ marginBottom: 8 }}>{c.stepsLede}</p>}
         </div>
-        <Steps items={c.steps} />
+        {/* HowTo (§17 condition 18): the heading above is the node's name, so
+            all six vertical pages emit one from the `steps` they already
+            render, with no second string to keep in step.
+            `typeof` rather than a cast or a narrowed `stepsHead: string`,
+            because `stepsHead` is `ReactNode` for the same reason
+            `FaqSection`'s `head` is — reviewed headings elsewhere carry a
+            `<br />` the design depends on — and a heading that is not a plain
+            string cannot be stated verbatim in JSON-LD. All six are strings
+            today (measured: six `stepsHead="How …"` literals), so all six
+            emit; one written as JSX would silently emit none, which is why
+            `check-schema.mjs` lists the six pages that must have the node
+            rather than counting whatever the build produced. */}
+        <Steps items={c.steps} name={typeof c.stepsHead === "string" ? c.stepsHead : undefined} />
       </div>
 
       {/* turnaround & coverage */}
@@ -180,15 +199,7 @@ export async function VerticalPage(c: VerticalContent) {
           </p>
         </div>
         <div className="body3 certs3">
-          {CERTS.map((x) => (
-            <div className="cert" key={x.alt}>
-              <Image src={x.img} alt={x.alt} width={CERT_BOX} height={CERT_BOX} />
-              <div>
-                <div className="h">{x.h}</div>
-                <p className="p">{x.p}</p>
-              </div>
-            </div>
-          ))}
+          <CertCards ids={CERT_IDS} />
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">

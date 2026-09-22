@@ -5,7 +5,8 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { YCBadge } from "@/components/brand/YCBadge";
 import Image from "next/image";
-import { CERT_BOX, SIZES_PATH_SPAN2 } from "@/lib/img";
+import { SIZES_PATH_SPAN2 } from "@/lib/img";
+import { CertCards } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
@@ -166,86 +167,55 @@ export default async function AboutPage({
           A verification company that cannot evidence its own claims is telling on itself.
         </SecHead>
         <div className="body3 certs3">
-          <div className="cert">
-            <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">ISO 27001 certified</div>
-              <p className="p">Information security management, independently audited.</p>
-            </div>
-          </div>
-          {/* ISO/IEC 27701, SOC 2 and ISO 9001 (BUILD-SPEC §11a.3, §11a.4).
-              Added here in the same change as `lib/content/company.ts`, because
-              TASKS 2b makes that pairing the rule: this page is the reviewed
-              credentials list, so a claim in the entity or in `llms.txt` that is
-              not also on this page is a claim with no reviewed source.
+          {/* SEVEN OF THE EIGHT MARKS. This is the credentials page, so it is
+              the surface that shows the reviewed list in full (BUILD-SPEC
+              §11a.3, TASKS 2b: a claim in the entity or in `llms.txt` that is
+              not also on this page is a claim with no reviewed source).
 
-              EVIDENCE, and it is weaker than the four cards around it: published
-              on the existing site at `public/llms.txt:67` ("ISO/IEC 27001 and
-              ISO/IEC 27701 certified"), `src/config/seo.ts:50` ("ISO 27001 &
-              SOC 2 compliance") and, for ISO 9001,
-              `public/cms/en/educationAuthorities.base.json:126` ("HelloVerify is
-              ISO 9001 and 27701 certified and GDPR compliant"). All three
-              confirmed by the owner 22 Sep 2026. No certificate, audit report or
-              auditor name exists in either repo for any of them — see the long
-              note on `CREDENTIALS` in `lib/content/company.ts`, and update both
-              if one is produced.
+              GDPR IS THE ONE MISSING, AND IT IS A REAL GAP rather than a
+              subset decision. `CREDENTIALS` carries "GDPR-aligned data
+              protection practices" and `/platform/security-compliance`
+              renders the card; this page never had it. Found 22 Sep 2026
+              while converting all nine `.cert` surfaces — the two
+              seven-card pages turned out to be different sevens, this one
+              short a GDPR card and that one short the Ministry of Manpower
+              card. Adding it is a decision about what this page SHOWS, not a
+              fix to what a card SAYS, which is what this change was scoped
+              to; it is carried in TASKS instead of taken here.
 
-              The wording is the old site's, not a tidier version of it: "ISO/IEC
-              27701" (not "ISO 27701"), "compliant" for SOC 2, which is an
-              attestation report rather than a certificate, and "ISO 9001"
-              without `/IEC`, which is also its correct designation. All three
-              tiles are typographic plates rather than badges — no repo holds a
-              certification mark for any of them, and drawing one would assert
-              more than the evidence does. ISO 9001 looked like the exception
-              (the old site references an `ISO_9001_1.png`) and is not: that file
-              is a blue ISO roundel captioned **27001**, so it is 27001 artwork
-              under a wrong filename, and captioning it "ISO 9001" here would
-              publish a picture of a different standard. */}
-          <div className="cert">
-            <Image src="/img/iso-27701.jpg" alt="ISO/IEC 27701" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">ISO/IEC 27701 certified</div>
-              <p className="p">Privacy information management, extending ISO 27001 to personal data.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/soc2.jpg" alt="SOC 2" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">SOC 2 compliant</div>
-              <p className="p">Service-organisation controls for security, availability and confidentiality.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/iso-9001.jpg" alt="ISO 9001" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">ISO 9001 certified</div>
-              <p className="p">Quality management systems, covering how service delivery is documented, measured and improved.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/pbsa.jpg" alt="PBSA" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">PBSA member</div>
-              <p className="p">The global standards body for the screening industry.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/nsr.jpg" alt="NSR" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">National Skills Registry</div>
-              <p className="p">India&apos;s registry of verified IT and ITeS professionals.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/mom.jpg" alt="Ministry of Manpower, Singapore" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">In production with a ministry</div>
-              <p className="p">
-                Work-pass credential verification with Singapore&apos;s Ministry of Manpower —{" "}
-                <AppLink href="/governments/manpower-education/ministry-of-manpower" style={{ fontWeight: 500 }}>the story →</AppLink>
-              </p>
-            </div>
-          </div>
+              The ids are named rather than mapped from the table wholesale,
+              so a credential added to `CREDENTIAL_MARKS` cannot appear on a
+              page nobody re-read. That failure mode is not hypothetical in
+              the other direction: the three lines added on 22 Sep reached
+              this page and `/platform/security-compliance` and none of the
+              other seven, which is the bug this conversion fixed.
+
+              Evidence for ISO/IEC 27701, SOC 2 and ISO 9001 is weaker than
+              for the cards around them, and the note that says so in full is
+              on `CREDENTIALS` in `lib/content/company.ts`. It is deliberately
+              NOT restated here: restating the credentials is what produced
+              the four disagreeing surfaces in the first place, and the same
+              applies to the reasoning behind them. Two consequences are
+              properties of this markup and so stay with it — all three tiles
+              are typographic plates rather than badges, because neither repo
+              holds a certification mark for any of them, and none of the
+              three is in `/platform/security-compliance`'s artefact table. */}
+          <CertCards
+            ids={["iso27001", "iso27701", "soc2", "iso9001", "pbsa", "nsr", "mom"]}
+            glosses={{
+              /* The only per-page gloss here: this card ends in a link into
+                 the case study, and the link text differs from the same card
+                 on `/governments` ("read the story →"). Genuinely per-page
+                 copy, so it is not folded — the PeopleStrip judgement from
+                 Part 5. */
+              mom: (
+                <>
+                  Work-pass credential verification with Singapore&apos;s Ministry of Manpower —{" "}
+                  <AppLink href="/governments/manpower-education/ministry-of-manpower" style={{ fontWeight: 500 }}>the story →</AppLink>
+                </>
+              ),
+            }}
+          />
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-line btn-sm">Security &amp; compliance, in full</AppLink>

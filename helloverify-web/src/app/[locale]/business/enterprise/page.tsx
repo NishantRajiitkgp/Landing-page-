@@ -7,8 +7,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { FaqSection } from "@/components/chrome/FaqSection";
 import type { Faq } from "@/lib/seo/schema/faq";
-import Image from "next/image";
-import { CERT_BOX } from "@/lib/img";
+import { CertCards } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
@@ -232,7 +231,10 @@ export default async function EnterprisePage({
           field, the request goes to the issuer, and the report reaches your ATS with each
           source named.
         </SecHead>
+        {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
+            so the node and the heading are the same string. */}
         <Steps
+          name="How does enterprise background verification work?"
           items={[
           { n: "01 · Candidate's phone", t: "Upload", p: "Photograph the document. Edges, glare and focus are checked before the shutter fires." },
           { n: "02 · HelloVerify AI", t: "Read", p: "Every field extracted, the document checked against itself, the issuing office located — in about a second." },
@@ -275,8 +277,24 @@ export default async function EnterprisePage({
 
       {/* compliance & security */}
       <div className="wrap sec3">
-        {/* ANSWER BLOCK (§11a.2). 44 words, from the four `.cert` cards below
-            and the closing step's "auditable trail".
+        {/* ANSWER BLOCK (§11a.2). 45 words, from the four `.cert` cards below
+            and the closing step's "auditable trail". Counted with
+            `split(/\s+/)`, the convention `tools/test/answer-blocks.test.ts`
+            uses; the note here previously read 44, which is the same sentence
+            counted without its two em dashes, and both numbers sit inside
+            that test's 25-70 band either way.
+
+            IT SAID "GDPR COMPLIANT" UNTIL 22 SEP 2026, which made it the
+            second prose surface blurring the distinction
+            `/platform/security-compliance`'s standfirst says it does not
+            blur — the card beside it said the same, and the homepage said it
+            too. The reviewed word is "aligned" (`CREDENTIALS` writes
+            "GDPR-aligned data protection practices"), so the claim here is
+            now the reviewed one. Worth noting for the next answer block: the
+            Part 8 rule that no certification name appears in an answer block
+            was already broken on this page and on `/governments` before that
+            rule was written down, which is exactly why a status word in prose
+            can drift with nothing to catch it.
 
             The NSR card is NOT folded in. It reads "National Skills Registry /
             India's registry of verified IT and ITeS professionals" — a
@@ -285,40 +303,21 @@ export default async function EnterprisePage({
             "HelloVerify is on the NSR" would be a new credential claim, and
             §11a.2 does not license one; credentials are Part 2b's surface. */}
         <SecHead k="Compliance &amp; security" h="How does HelloVerify handle data protection and compliance?">
-          HelloVerify is ISO 27001 certified and independently audited, GDPR compliant —
+          HelloVerify is ISO 27001 certified and independently audited, GDPR-aligned —
           consent, retention limits and the right to be forgotten in every workflow — and a
           member of the PBSA, the screening industry's global standards body. Every check
           begins with consent and leaves an auditable trail.
         </SecHead>
+        {/* The same four as the homepage and the six vertical pages, from
+            `CREDENTIAL_MARKS` in `lib/content/company.ts`. Two of the four
+            were outliers before 22 Sep 2026: this page headed the PBSA card
+            "Professional Background Screening Association" where five other
+            surfaces said "PBSA member", and it was the SECOND surface saying
+            "GDPR compliant" where the procurement page says "GDPR —
+            aligned" (the homepage was the other). Glosses are all defaults
+            here — nothing on this page needs its own length. */}
         <div className="body3 certs3">
-          <div className="cert">
-            <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">ISO 27001 certified</div>
-              <p className="p">Information security management, independently audited.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">GDPR compliant</div>
-              <p className="p">Consent, retention limits and the right to be forgotten, built into every workflow.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/pbsa.jpg" alt="PBSA" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">Professional Background Screening Association</div>
-              <p className="p">Member of the global standards body for the screening industry.</p>
-            </div>
-          </div>
-          <div className="cert">
-            <Image src="/img/nsr.jpg" alt="NSR" width={CERT_BOX} height={CERT_BOX} />
-            <div>
-              <div className="h">National Skills Registry</div>
-              <p className="p">India's registry of verified IT and ITeS professionals.</p>
-            </div>
-          </div>
+          <CertCards ids={["iso27001", "gdpr", "pbsa", "nsr"]} />
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">
