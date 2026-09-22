@@ -6,16 +6,32 @@
  *  shape `components/brand/Tick.tsx` found for the confirmation tick, which was
  *  inlined 87 times.
  *
- *  TWO VARIANTS ARE DELIBERATELY LEFT ALONE, because collapsing them would
- *  change output rather than structure:
+ *  **The six copies that carried no `aria-hidden` are now three**, and the
+ *  three that are left are deferred by ownership rather than by choice
+ *  (22 Sep 2026). Found by the shared path data `M3 8h10M9 4l4 4-4 4`: 13
+ *  inline copies remain in `src/`, and exactly 6 of them had lost the
+ *  attribute — three in `app/[locale]/platform/page.tsx`, one each in
+ *  `business/`, `governments/` and `individuals/page.tsx`. The first three are
+ *  `<Arrow />` now; the other three are in files another agent holds.
  *
- *  - **Six copies carry no `aria-hidden`.** They are otherwise identical. That
- *    is an accessibility inconsistency, not a formatting one — a decorative SVG
- *    with no label and no `aria-hidden` is announced as an unnamed graphic — so
- *    it is a carried finding in TASKS.md and a fix of its own, not a silent
- *    side effect of an extraction. `check:a11y` does not currently catch it.
- *  - **The 14px copies** in the section components are a different size and
- *    stay inline until something needs them shared.
+ *  Shared rather than patched: adding `aria-hidden` to a copy fixes one
+ *  instance, and the next paste loses it again. All six were attribute-for-
+ *  attribute identical to this component, in the same order, so the swap emits
+ *  the same bytes — that identity is why replacement was available at all.
+ *
+ *  **The defect was latent, not audible, and that is worth recording rather
+ *  than being re-discovered:** all six sit inside `<span className="go"
+ *  aria-hidden="true">`, and `aria-hidden` hides the whole subtree, so nothing
+ *  announced them. The finding's premise ("announced as an unnamed graphic")
+ *  holds for a bare arrow in general and did not hold for these. `check:a11y`
+ *  cannot see either way — jsdom axe has no rule that fires on an unlabelled
+ *  decorative `<svg>` — so neither the defect nor its mitigation is gated.
+ *
+ *  **The 14px copies still stay inline** — `sections/Checks.tsx`,
+ *  `International.tsx`, `Packages.tsx`. They differ in `width`/`height` (14,
+ *  not 16), which this component takes no prop for, and all three already
+ *  carry `aria-hidden`, so there is nothing to fix and adding a size prop for
+ *  three call sites would be a wider change than the defect asked for.
  */
 export function Arrow() {
   return (

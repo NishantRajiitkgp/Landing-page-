@@ -96,8 +96,17 @@ export default async function PlatformHub({
               <div className="h">Technology &amp; APIs</div>
               <div className="p">How documents are read, how issuers are reached, and how to wire it all into your systems.</div>
             </div>
+            {/* All three `.go` arrows on this page were inline copies of
+                `brand/Arrow.tsx` missing its `aria-hidden` — 3 of the 6 such
+                copies TASKS Part 5 carried (§4 rule 2, §17 condition 22). They
+                are shared rather than patched, so the attribute cannot go
+                missing again. The defect was latent here and not audible: the
+                `.go` span already carries `aria-hidden="true"`, which hides the
+                whole subtree, so no screen reader announced these three. The
+                other three, on `/business`, `/governments` and `/individuals`,
+                sit in the same `.go` span and are the same fix. */}
             <span className="go" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <Arrow />
             </span>
           </AppLink>
           <AppLink href="/platform/security-compliance" className="cell ph span3">
@@ -110,7 +119,7 @@ export default async function PlatformHub({
               <div className="p">Certifications, data residency, sub-processors, accessibility conformance — the file your committee asks for.</div>
             </div>
             <span className="go" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <Arrow />
             </span>
           </AppLink>
           <AppLink href="/platform/coverage" className="cell ph span3">
@@ -123,7 +132,7 @@ export default async function PlatformHub({
               <div className="p">Where a document can be confirmed with the authority that issued it — and how long it takes there.</div>
             </div>
             <span className="go" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <Arrow />
             </span>
           </AppLink>
         </div>

@@ -1,5 +1,11 @@
 import Image from "next/image";
 import { SIZES_MARK, tint } from "@/lib/img";
+// "Read the story" carried an inline copy of `brand/Arrow.tsx`, identical
+// attribute for attribute and in order, `aria-hidden` included - no defect
+// here, and the swap emits the same bytes. Shared because an inline copy is
+// what the next paste starts from: three of the six copies TASKS Part 5
+// carried had dropped `aria-hidden` that way. §4 rule 2, §17 condition 22.
+import { Arrow } from "@/components/brand/Arrow";
 /** Customer story. */
 
 export function CustomerStory() {
@@ -76,10 +82,7 @@ export function CustomerStory() {
               <div style={{ paddingTop: '24px' }}>
                 <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '15px', fontWeight: '500' }}>
                   Read the story{' '}
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    </path>
-                  </svg>
+                  <Arrow />
                 </a>
               </div>
               {' '}
