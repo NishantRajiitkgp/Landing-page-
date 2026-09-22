@@ -13,10 +13,14 @@
  *  background it cannot resolve (gradients, images, transparency), which on a
  *  design like this one is a lot of text. A token table has no such gaps.
  *
- *  It reads `design.css` and `pages.css`, which are GENERATED from the canvas by
- *  `tools/port/build-css.py` and carry a "do not hand-edit" header. That is
- *  precisely why the check reads them rather than a hand-kept list: the numbers
- *  come from whatever the generator last emitted.
+ *  It reads `design.css` and `pages.css` rather than a hand-kept list, so the
+ *  numbers come from the bytes that ship. Both carry a "generated, do not
+ *  hand-edit" header from `tools/port/build-css.py`, and in practice both are
+ *  maintained in place — the generator's inputs are present (measured 22 Sep
+ *  2026: nine boards in `design-src/artboards/`), so a regeneration would
+ *  overwrite hand-fixes. Part 2a's token collapse was therefore applied to the
+ *  boards as well, which is the only reason this gate cannot be undone by
+ *  re-running the generator.
  *
  *  Run any time — it needs no build:
  *      node tools/a11y/check-contrast.mjs
@@ -33,23 +37,26 @@ const AA_LARGE = 3.0;
  *  and the reason. An entry here is a DECISION, visible in the diff — not a way
  *  to make the gate quiet.
  *
- *  Nothing may be added without a number and a sentence. */
-const ACCEPTED = [
-  {
-    token: "faint",
-    on: "paper",
-    measured: 2.43,
-    reason:
-      "40 selectors use --faint as text, all 10.5-12px mono labels (eyebrows, " +
-      "axis labels, table headers), so the threshold is 4.5:1 and the gap is " +
-      "large. The lightest value that passes is #716F68 — which measures 1.06:1 " +
-      "against --muted (#6F6B62), i.e. visually the same colour. So the design's " +
-      "third text tier is not achievable at AA on this paper: closing it means " +
-      "either collapsing --faint into --muted or enlarging 40 label styles. " +
-      "Both are DESIGN.md decisions. This is the site's one remaining AA text " +
-      "failure and it is the §17 box that is still open.",
-  },
-];
+ *  Nothing may be added without a number and a sentence.
+ *
+ *  IT IS EMPTY, AND EMPTY IS THE POINT. Every token this gate parses now meets
+ *  its WCAG 2.2 AA threshold. There was one entry, `--faint` at 2.43:1 on
+ *  --paper (2.67:1 on --white) against a 4.5:1 requirement; TASKS.md Part 2a
+ *  answered it on 22 Sep 2026 by collapsing the token into --muted (4.83:1 /
+ *  5.31:1), and the entry came out with it. A satisfied entry left behind is
+ *  worse than no entry: it reads as a live exception, and the next failing
+ *  token on that hue would look like it was already covered.
+ *
+ *  Two things the entry recorded, kept because they are the reason the tier is
+ *  gone rather than darkened: --faint failed the LARGE-text threshold too
+ *  (2.43:1 against 3:1), so enlarging the labels — the other option Part 2a
+ *  weighed — could never have passed; and the lightest colour on that hue
+ *  which does reach 4.5:1 is #726F68, which measures 1.06:1 against --muted,
+ *  i.e. the same colour to the eye. There was no third text tier to save.
+ *
+ *  So this list should stay empty. Adding to it is allowed and is sometimes
+ *  right, but it is a design decision with a number attached, not a fix. */
+const ACCEPTED = [];
 
 // ─────────────────────────────────────────────────────────── colour maths
 const srgb = (c) => {

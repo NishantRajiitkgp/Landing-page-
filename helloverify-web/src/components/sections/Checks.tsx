@@ -58,7 +58,17 @@ const CHECKS: Record<string, Check> = {
   // the `&amp;`, and React emits those five text nodes with `<!-- -->`
   // separators between them. A plain string would collapse them to one -
   // different bytes for the same pixels.
-  directorsGst: { name: <>Directors{" "}&amp;{" "}GST</>, at: "78%", time: "2 days" },
+  // 3 days and 92%, not 2 days and 78%. The homepage was the only surface
+  // saying 2 days: `lib/content/checks.ts` - which its own header calls the
+  // canonical catalogue behind `/checks/[check]` - says 3 days, and
+  // `business/enterprise` says 3 days. A page contradicting the catalogue it
+  // is meant to summarise is a bug by construction, so the outlier moved.
+  //
+  // `at` has to move with the time or the pin lands on the wrong axis mark:
+  // 78% is the 2-day stop and 92% is the 3-day one, and `STOPS` supplies the
+  // matching duration and delay, so this is the only field to change. It
+  // stays in the 1-3 days bucket on mobile, so no bucket membership changes.
+  directorsGst: { name: <>Directors{" "}&amp;{" "}GST</>, at: "92%", time: "3 days" },
 };
 
 type Lane = { readonly k: ReactNode; readonly t: string; readonly zone?: string; readonly ids: readonly string[] };

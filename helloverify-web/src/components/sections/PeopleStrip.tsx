@@ -193,7 +193,7 @@ export function PeopleStrip() {
           <span>
             Hires, tenants, drivers, suppliers, nannies. Anyone you need to trust.
           </span>{" "}
-          <span className="mono" style={{ color: "var(--faint)" }}>
+          <span className="mono" style={{ color: "var(--muted)" }}>
             Times shown are from upload to report
           </span>{" "}
         </div>

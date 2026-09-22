@@ -197,7 +197,7 @@ export function Consumer() {
               {" "}
               <Plans style={{ marginTop: "36px", display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "16px", maxWidth: "600px" }} />
               {" "}
-              <p className="mono" style={{ margin: "14px 0 0", color: "var(--faint)" }}>
+              <p className="mono" style={{ margin: "14px 0 0", color: "var(--muted)" }}>
                 Prices are placeholders. Home staff, tenant and nanny packages priced the same way.
               </p>
               {" "}
@@ -230,7 +230,7 @@ export function Consumer() {
           {" "}
           {/* Shorter than the desktop note, and a 12px top margin rather than
               14px. Both measured, not assumed symmetrical. */}
-          <p className="mono" style={{ margin: "12px 0 0", color: "var(--faint)" }}>
+          <p className="mono" style={{ margin: "12px 0 0", color: "var(--muted)" }}>
             Prices are placeholders.
           </p>
           {" "}

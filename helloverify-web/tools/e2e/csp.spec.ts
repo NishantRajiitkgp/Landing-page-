@@ -44,9 +44,20 @@ for (const path of PAGES) {
     // Hydration is the observable consequence. `window.next` is set by the
     // App Router's client runtime, which only exists if the flight payload
     // executed — so this fails if any hash is wrong.
+    //
+    // 30s, not 10s, and from a measured flake rather than caution: `/en/contact`
+    // failed this poll once in a full parallel run and passed on its own. It is
+    // the heaviest page to hydrate — the only Client Component in the set — and
+    // four workers plus `next start` on one machine is enough to miss 10s. The
+    // same contention that took the suite's own timeout from 30s to 60s.
+    //
+    // A longer budget does not weaken the assertion: a wrong hash means the
+    // payload never executes, so `window.next` stays undefined however long
+    // this waits. The timeout only decides how patient it is, not what it
+    // proves.
     await expect
       .poll(() => page.evaluate(() => typeof (window as unknown as { next?: unknown }).next), {
-        timeout: 10_000,
+        timeout: 30_000,
       })
       .toBe("object");
 

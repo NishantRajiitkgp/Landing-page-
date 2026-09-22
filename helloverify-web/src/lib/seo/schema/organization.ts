@@ -169,9 +169,9 @@ export const ORGANIZATION: WithContext<Organization> = {
   /** The claims on `/about` that are audited certifications rather than
    *  memberships or client relationships. NSR is a registry HelloVerify
    *  participates in and MOM is a customer, so neither belongs here.
-   *  `certificationIdentification` is omitted on both: the certificate numbers
-   *  are not stated anywhere in this repo, and inventing one would make the
-   *  claim checkable and wrong.
+   *  `certificationIdentification` is omitted on all three: the certificate
+   *  numbers are not stated anywhere in this repo, and inventing one would make
+   *  the claim checkable and wrong.
    *
    *  ISO/IEC 27701 joined this node on 22 Sep 2026, with `/about` and
    *  `lib/content/company.ts`, because §11a.3 requires the entity to say what
@@ -189,7 +189,31 @@ export const ORGANIZATION: WithContext<Organization> = {
    *  — modelling it as a `Certification` would be a machine-readable
    *  overstatement of exactly the kind this node's `memberOf`/`hasCertification`
    *  split exists to avoid. It reaches crawlers through `llms.txt`'s prose,
-   *  where the word "compliant" travels with it. */
+   *  where the word "compliant" travels with it.
+   *
+   *  ISO 9001 IS HERE, and the reasoning that kept SOC 2 out does not reach it.
+   *  SOC 2 was excluded for a structural reason and not a documentary one: an
+   *  attestation report has no issuing body, so `issuedBy` would have to be
+   *  invented or dropped. ISO 9001 is a certification against a published ISO
+   *  standard, audited by a certification body, exactly like 27001 and 27701 —
+   *  the `Certification` type fits it, and the weakness in our evidence is about
+   *  WHETHER we hold it, which is a `CREDENTIALS` question for the reviewed list
+   *  and not a question about which schema.org type models it. Excluding it
+   *  would say "this is not the kind of thing that gets certified", which is
+   *  false, while saying nothing at all about the evidence.
+   *
+   *  `issuedBy` is "International Organization for Standardization" on all
+   *  three, which is CONSISTENT rather than correct, and the difference is worth
+   *  stating. ISO writes the standards; it does not issue certificates —
+   *  accredited bodies do. For 27001 there is now a hint of who: the old repo
+   *  holds `public/assets/aboutus/ISO_27001_1.png`, a TÜV SÜD mark reading
+   *  "ISO 27001", which it references nowhere. That is the only trace of a
+   *  certification body in either repo, it covers one of the three, and it is a
+   *  logo rather than a certificate. Naming TÜV SÜD on 27001 alone would leave
+   *  three entries with two different answers to the same field on the strength
+   *  of an unreferenced image, so all three keep the standards body until a
+   *  certificate names the auditor — at which point `issuedBy` should become
+   *  the accredited body, per standard, and this paragraph should go. */
   hasCertification: [
     {
       "@type": "Certification",
@@ -202,6 +226,18 @@ export const ORGANIZATION: WithContext<Organization> = {
     {
       "@type": "Certification",
       name: "ISO/IEC 27701",
+      issuedBy: {
+        "@type": "Organization",
+        name: "International Organization for Standardization",
+      },
+    },
+    {
+      /** "ISO 9001", not "ISO/IEC 9001" — the quality-management standard is
+       *  ISO's alone, unlike 27001 and 27701 which are joint ISO/IEC. Also the
+       *  spelling the old site publishes, so the two agree by luck rather than
+       *  by compromise. */
+      "@type": "Certification",
+      name: "ISO 9001",
       issuedBy: {
         "@type": "Organization",
         name: "International Organization for Standardization",

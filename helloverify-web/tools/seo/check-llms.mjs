@@ -265,18 +265,32 @@ if (!aboutFile) {
   // denylist of the two the old site over-claimed ("27701", "SOC 2"), which
   // made it exactly as good as that list was long: ISO 9001, SOC 1, HIPAA or
   // FedRAMP could have been added to a page and shipped to a crawler with
-  // nothing complaining. (ISO 9001 is not hypothetical — the old site's
+  // nothing complaining. (ISO 9001 was never hypothetical — the old site's
   // `public/cms/en/educationAuthorities.base.json:126` claims "ISO 9001 and
-  // 27701 certified", a third standard nobody has confirmed.)
+  // 27701 certified", and writing this check is what surfaced it.)
   //
   // So it is now an ALLOWLIST DERIVED FROM THE REVIEWED LIST: every
   // certification-shaped token in llms.txt must also appear in
   // `CREDENTIALS` in lib/content/company.ts, which is the array `/about`
-  // renders and the owner signs off. 27701 and SOC 2 pass today because they
-  // were added there on 22 Sep 2026 (published on the existing site at
-  // `public/llms.txt:67` and `src/config/seo.ts:50`, confirmed by the owner);
-  // anything else still fails, and the way to make a new claim pass is to put
-  // it on the reviewed list, which is the behaviour we wanted all along.
+  // renders and the owner signs off. 27701, SOC 2 and ISO 9001 pass today
+  // because they were added there on 22 Sep 2026 (published on the existing
+  // site at `public/llms.txt:67`, `src/config/seo.ts:50` and
+  // `public/cms/en/educationAuthorities.base.json:126`, all confirmed by the
+  // owner); anything else still fails, and the way to make a new claim pass is
+  // to put it on the reviewed list, which is the behaviour we wanted all along.
+  //
+  // ISO 9001 IS THE CASE THAT PROVES IT, and it is worth recording that this
+  // file needed no edit to publish it. The claim above used ISO 9001 as the
+  // worked example of what the old denylist missed; the owner then confirmed
+  // the standard is real, and adding ONE line to `CREDENTIALS` was the whole
+  // change — the pattern below was not touched and nothing was weakened.
+  // Measured both ways before and after that line existed: the credential block
+  // llms.ts emits, the old site's "ISO 9001 and 27701" conjunction and a
+  // three-way "ISO 27001, 9001 and 27701" all fail without it and pass with it,
+  // while HIPAA, SOC 1, ISO 22301, ISO/IEC 42001 and FedRAMP are still rejected
+  // and years, prices and a bare "ISO" are still silent. That is the shape
+  // check doing its job in the direction it was designed for: catch by default,
+  // permit only via the reviewed list.
   //
   // Both directions matter and only this one is checked here: a claim in
   // llms.txt with no reviewed source is a lie to a crawler, whereas a reviewed
