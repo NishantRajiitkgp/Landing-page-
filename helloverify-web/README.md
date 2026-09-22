@@ -342,6 +342,7 @@ builder per node kind and `src/components/seo/JsonLd.tsx` renders them.
 | `WebSite` | same | 56 |
 | `BreadcrumbList` | the `crumbs` prop `PageShell` already renders | 47 |
 | `FAQPage` | the `Faq[]` `FaqSection` already renders | 15 |
+| `HowTo` + `HowToStep` | the `Step[]` `Steps` already renders as the numbered strip | 14 of 18 strips |
 | `Service` + `areaServed` (+ `OfferCatalog` on the two package pages) | a `ServiceFacts` const per vertical page | 12 |
 | `BlogPosting` | the `POSTS` record the page already renders | 2 |
 
@@ -362,6 +363,26 @@ on the day it was written and drift at the first copy edit. Instead:
   56 emitted pages are identical to the pre-refactor build with `<script>`
   bodies stripped, and the 56th differs only in `/en/contact`'s `$ACTION_KEY`,
   a per-build Server Action hash.
+- `Steps` builds `HowTo` from the `items` it renders as the numbered strip, the
+  same shape for the same reason (§17 condition 18). The step record is
+  `{ n, t, p }`: `t` is the `HowToStep.name` and `p` its `text`, while **`n` is
+  deliberately unused** — it is a counter that `step`'s array order already
+  states, plus a per-card ornament ("01 · Candidate's phone") that is not the
+  step's name. The one thing a strip cannot see is the heading above it, so the
+  band's own `<h2>` copy is passed as `name`, and **no name means no node**: a
+  `HowTo` named after the eyebrow would be instructions for an unstated task.
+  **Four of the eighteen strips get no node**, because a numbered strip is not
+  automatically a sequence: `/business/customer-kyc` lists three mutually
+  exclusive routes ("02 · Or redirect"), `/platform/coverage` defines coverage
+  rather than describing a process, `/platform/security-compliance` lists four
+  controls that apply concurrently, and the Ministry of Manpower case study
+  lists four deliverables ("four things in the contract"). Each of the four says
+  so at its `<Steps>` call and `check-schema.mjs` carries the same four with
+  their reasons, so a strip that is in neither list fails the build.
+  Google retired the HowTo **rich result** in 2023; this node earns its place
+  under §11a.3 — an engine asked "how does background verification work" gets
+  an ordered, typed sequence rather than inferring one from prose — and not
+  under §8.2's rich-result column.
 - `Service.description` is `COPY.description`, the reviewed meta description.
 - Each vertical page states its route **once**, as `const PATH`, used by both
   `pageMetadata` and its `ServiceFacts`. §8.2 adds no new chance to name the
@@ -372,13 +393,17 @@ every `@type` is one §8.2's table authorises; exactly one `Organization` and on
 `WebSite` per page and **byte-identical across all 56** (§11a.3); every `@id`
 reference resolves; the `BreadcrumbList` equals the visible `<nav>` trail item
 for item; every `FAQPage` question and answer appears verbatim in the rendered
-`<summary>`/`<p class="a">`; `Service.@id` is that page's own canonical plus a
+`<summary>`/`<p class="a">`; every `HowTo` has a name that appears in the page's
+own rendered text, at least two steps, and a step list equal card for card to
+one of the strips rendered on that page — plus, because a missing node is
+invisible, that each of the 18 pages rendering a strip is in exactly one of
+`HOWTO_PAGES` and `HOWTO_NOT_A_SEQUENCE`; `Service.@id` is that page's own canonical plus a
 fragment and its offers name things the page shows; `BlogPosting.headline`
 equals the visible `<h1>` and its `datePublished` equals the `POSTS` record. It
 also fails the build on `QAPage` or `SearchAction` anywhere — §8.2's two January
 2026 Google deprecations, enforced rather than remembered.
 
-### The gate was broken thirteen ways
+### The gate was broken eighteen ways
 
 | # | Mutation | Result |
 |---|---|---|
@@ -395,6 +420,23 @@ also fails the build on `QAPage` or `SearchAction` anywhere — §8.2's two Janu
 | M1 | the same regression written as `{ ...ORGANIZATION, slogan }` | caught by **tsc**, not the gate — `WithContext<Organization>` is a union, so TS2698 |
 | M6 | `SearchAction` carrying Google's `query-input` | caught by **tsc**, not the gate — `query-input` is not a schema.org property |
 | M10 | the JSON-LD `<` escaping removed | **no-op** — byte-identical output |
+| M13 | a step's sentence reworded on the page but not in the `HowTo` | caught |
+| M14 | a node rendered between two step cards (the parser's contiguity bound) | caught — the strip reads as 1 card, not 3 |
+| M15 | the strip's container class renamed | caught — 0 strips, so the page is listed as a strip and renders none |
+| M16 | every `HowTo` removed from the build | caught — all 14 `HOWTO_PAGES` named |
+| M17 | a `<span class="t">30 min</span>` pill beside a strip | **no-op by design** — 9 pills on `/business/smb`, 0 harvested; the parser matches whole cards |
+
+**M13–M17 were measured differently, and it is worth saying how**, because four
+agents share this tree and a rebuild is centralised. M16 is the real gate,
+unmodified, run against the build output that predates the node: it printed
+`HowTo: 0 of 18 strips (4 are not sequences), 63 step cards read` and named all
+fourteen pages that owe one, while every other section of the graph still
+passed — which is what proves the new decision lists, the strip parser and the
+report path all execute. M13–M15 and M17 mutate that emitted HTML **in memory**
+and run the same parser and comparison over it; they are not a `next build`.
+The 63 step cards the parser finds equal the 63 written in the source (41 across
+the twelve pages that call `Steps` directly, 22 across the six built on
+`VerticalPage`), and the 18 strips it finds are 18 pages with one strip each.
 
 M1 and M6 are recorded as compiler catches rather than counted as gate coverage:
 each is a real defence, but neither exercises the assertion it was aimed at.
@@ -601,7 +643,8 @@ build, which is how it surfaced. A gate that has never failed is not evidence.
 npm test            # 100 assertions, Vitest
 npm run typecheck
 npm run build
-npm run check:all   # static, sitemap, schema, llms, budgets, secrets
+npm run check:all   # 11 gates: static, sitemap, schema, llms, budgets,
+                    # secrets, axe, contrast, css-colour, logical, csp
 npm run contract http://localhost:3100   # §14.3, against a running origin
 ```
 
@@ -735,11 +778,13 @@ accepted count was annotated and not asserted precisely because repeated
 homepage scans returned 70–74 `--faint` nodes, and there is nothing left to
 annotate.
 
-**The missing gate is still missing:** nothing reads the stylesheets for colour.
-The nine artboards `build-css.py` generates from still carry `#7D796F` on
-`.inp`, so a regeneration would silently undo *that* fix — the `--faint`
-collapse was applied to the boards as well for exactly this reason, and is the
-one of the two that a regeneration cannot reverse.
+**The missing gate exists now — `npm run check:css-color`.** See "Colour in the
+stylesheets" below. It reproduces the 3.95:1 figure itself, from the bytes, and
+it also reads the nine artboards `build-css.py` generates from, which still
+carry `#7D796F` on `.inp`: a regeneration would silently undo *that* fix, and
+the hazard is now reported with a file and a line and capped at the 9 that
+exist. (The `--faint` collapse was applied to the boards as well for exactly
+this reason, and is the one of the two that a regeneration cannot reverse.)
 
 ### Navigation
 
@@ -1035,6 +1080,126 @@ writes. That header is now a statement of intent, not a working path — and if
 the artboards ever return, re-running it emits the canvas stylesheet verbatim
 and undoes this conversion. It carries a warning saying so; `check:logical` is
 the actual safeguard.
+
+### Colour in the stylesheets
+
+```sh
+npm run check:css-color                 # the gate #7D796F got past
+node tools/a11y/check-css-color.mjs --census   # re-print the measured table
+```
+
+Three gates missed `#7D796F` by construction, and the reason is one sentence:
+**nothing read the stylesheets for colour.** `hv/no-color-literal` is an ESLint
+rule over TypeScript; `check:tokens` did read files as text and Part 4 deleted
+it as redundant with that rule — which is where the coverage was lost, since
+Part 4 kept `check:logical` on the grounds that "it reads the stylesheets, which
+ESLint cannot" and did not apply the same reasoning to colour; and
+`check:contrast` walks the token table, so a colour that is not a token is
+invisible to it.
+
+**The 264 literals TASKS.md counted are 442**, and the classification is what
+decided what to fail on — a gate that flags 442 things gets switched off.
+`rgba()` was more than a third of the colour in these files and no gate had
+ever counted it; normalising it to `#RRGGBBAA` is what let it be compared
+against the palette at all.
+
+| class | count |
+|---|---:|
+| inside a comment — blanked, not scanned | 11 |
+| `:root` custom-property declarations | 19 |
+| token value written longhand, **text** | 44 |
+| token value + an alpha, **text** | 23 |
+| token value written longhand, surface | 141 |
+| token value + an alpha, surface | 128 |
+| not a token, surface (near-ink, gradients, tints, rules) | 76 |
+| **not a token, text** | **0** |
+
+The last row is the point: `#7D796F`'s class is empty. Every text colour in
+these stylesheets resolves to a declared token — 67 of them spelled out instead
+of `var(--x)`, none of them off-palette — so the gate's one zero-tolerance rule
+is one the code passes, and 442 literals produce **0 failures**.
+
+**One hard rule, plus a ratchet.** A text colour must resolve to a token, with
+no exemption list, and the failure carries the measured ratio against `--paper`,
+`--white` and `--ink` rather than only a tidiness complaint. Everything else is
+recorded in `BASELINE` with a count and a reason: a colour that is not in the
+table fails, and a recorded group that **grows** fails. So the 336 longhand uses
+are debt that cannot spread rather than 336 red lines. A count coming in *under*
+its record is not a failure — it prints "lower it to N", because a gate that
+fails on an improvement is the definition of one that gets disabled.
+
+**Two things the parser had to do, both found by measuring.** Comments are
+blanked character-for-character (line numbers stay true): 11 of the remaining
+literals sit inside the WHY comments that record their own removal, `#7D796F`
+×4 among them, so a gate reading raw text fails on its own documentation and
+the obvious "fix" is to delete the reasoning. `url()` is blanked too — that
+removes **zero** literals today, worth stating rather than leaving as implied
+coverage, because `select.inp`'s chevron writes its `--muted` stroke
+percent-encoded (`%236F6B62`) where a `#` regex never saw it.
+
+**Broken ten ways.** Six must fail, four must not:
+
+| mutation | expected | got |
+|---|---|---|
+| `#7D796F` back on `.inp` | fail | exit 1, "3.95:1 on --paper … 4.5:1 for body text" |
+| a new rule written with `var()` | pass | exit 0 |
+| `color: #6F6B62` — `--muted`'s own value, longhand | fail | exit 1, "Either use `var(--muted)`" |
+| `rgba(255,255,255,0.6)` → `0.61` | pass (no-op) | exit 0 |
+| `#7D796F` as `rgba(125,121,111,0.95)` | fail | exit 1 — the form no other gate reads |
+| a 69th longhand `#FFFFFF` surface | fail | exit 1, "68 recorded, 69 found" |
+| `background: #ABCDEF` | fail | exit 1 |
+| the failing colour named in a comment | pass | exit 0 |
+| a 10th non-token text colour in the artboards | fail | exit 1 |
+| one longhand `#3D3B35` converted to `var()` | pass + note | exit 0, "lower it to 9" |
+
+The fourth is a deliberate no-op and is recorded as one: alpha is collapsed to a
+`+a` flag, because keeping it made the table 90 rows (`--ink` at 12 different
+alphas, `--green` at 11, `--white` at 11) and made those rows
+rounding-sensitive, for a distinction that has nothing to do with whether the
+colour came from the palette. The first mutation also found a defect in the
+gate's own wording — the second rule was offering "or add it to `BASELINE` with
+a reason" for a non-token *text* colour, which is advice that does not exist.
+
+### Tailwind scans only `src/`
+
+`src/app/globals.css` now reads
+`@import "tailwindcss/utilities.css" layer(utilities) source("../")`.
+
+Tailwind v4 auto-detects sources from the project root, and that sweep includes
+`tools/`. Measured in Part 5: one bare word in a **comment** in
+`tools/port/html-identity.mjs` generated a real 165-byte `.outline` rule into
+`chunks/*.css` on every one of 58 pages and moved the chunk hash, 121,921 →
+122,086 bytes. Every script in `tools/` that quotes markup or names a CSS
+property is a source of phantom utilities, and `check:perf` measures the total
+without questioning what is in it.
+
+**The mechanism was confirmed from the installed package, not from memory** —
+`node_modules/tailwindcss/dist/lib.mjs`, 4.3.3. The `@tailwind utilities` branch
+reads a `source(…)` parameter off that at-rule and stores
+`{base: sourceBase ?? base, pattern}`; an `@import`'s trailing condition is
+desugared to `@media source(…)`, whose handler re-attaches it to the
+`@tailwind utilities` node with `sourceBase` set to the importing file's
+directory. `tailwindcss/utilities.css` is literally `@tailwind utilities;`, so
+the clause has to go on **that** import — on the theme import it is silently
+inert. `@source not "…"`, `@source inline(…)` and `source(none)` are in the same
+file; the denylist form was rejected because it is only as good as its length
+(`design-src/`, `messages/`, `public/` would each need adding) and its failure
+mode is extra CSS rather than an error.
+
+**Re-proved the way the original finding was proved.** A throwaway
+`tools/port/_tw-bait.mjs` carrying `subpixel-antialiased` in a comment moved the
+generated stylesheet 171,034 → 171,133 bytes and emitted the rule; with
+`source("../")` the same file changes nothing. Beyond the bait it removed five
+more phantoms — `.flex-wrap`, `.text-wrap`, `.transition`, `.ease-in-out`,
+`.ease-out`, all CSS keywords picked out of `design-src/artboards/*.dc.html` —
+for 675 → 669 selectors and −1,242 bytes unminified, with **zero** real
+selectors lost. CSS files inside the import graph are not scanned as content:
+`design.css` declares `text-wrap: balance` in `src/` and `.text-wrap` still
+disappeared.
+
+Measured with `@tailwindcss/postcss` driven directly, which is the plugin
+`postcss.config.mjs` names — not with `next build`. **The shipped `chunks/*.css`
+and its hash still want one real build to confirm.**
 
 ## Security headers
 
@@ -1397,6 +1562,57 @@ correct code gets disabled, so the negative tests matter as much as the others.
   appears in the artefact table a reviewer can order from. If a certificate or
   SOC 2 report is produced, cite it on `CREDENTIALS` in `lib/content/company.ts`
   and add it to `ARTEFACTS`.
+- **Nine surfaces render credential cards, and until 22 Sep 2026 they disagreed
+  with each other.** The sentence above names `/about` and
+  `/platform/security-compliance` because those are where the reviewed list is
+  published in full — but `.cert` cards were hand-written **29 times across 9
+  files** (31 `className="cert"` sites, **40 cards rendered**), and the copies
+  had drifted. Measured from `git show HEAD:` across all nine:
+
+  | | measured at HEAD |
+  |---|---|
+  | homepage `Compliance.tsx` | **4** credentials, against 7 on `/about` and 7 on `/platform/security-compliance` |
+  | GDPR status word | **"compliant"** on the homepage and `/business/enterprise` (card and answer block); **"aligned"** on `/platform/security-compliance`, `/governments` and `VerticalPage` |
+  | distinct headings on `gdpr.jpg` | **5** |
+  | distinct headings on `iso.jpg` | **3** |
+  | NSR on `/platform/security-compliance` | **"empanelled"** — a fifth status word under a standfirst that counts four |
+  | the two 7-card pages | **different sevens** — `/about` has no GDPR card, `/platform/security-compliance` no Ministry of Manpower card |
+
+  "GDPR compliant" is the one that mattered, because
+  `/platform/security-compliance`'s own standfirst reads "Certified, compliant,
+  aligned and member are four different claims. We don't blur them" — and two
+  surfaces blurred exactly those two. The reviewed word is "aligned"
+  (`CREDENTIALS` publishes "GDPR-aligned data protection practices").
+
+  **The fix is one table, not one component.** `CREDENTIAL_MARKS` in
+  `lib/content/company.ts` holds the logo, the credential's name and its status
+  word; `components/chrome/CertCard.tsx` renders it and has **no `heading`
+  prop**, so a page cannot state a claim of its own. The gloss IS overridable
+  and the reasoning is argued in that file: a procurement page needs three
+  sentences per card and a 390px column needs a fragment, which is the
+  `SecHead` judgement (share the identical majority, leave the different shape
+  alone) and the Part 5 per-file breakpoint measurement, not a rule. Three of
+  the 40 cards are `.cert` markup around a *stance* rather than a credential —
+  "Consent first, always" on `/business/customer-kyc`, two on `/individuals` —
+  and stay hand-written, each with a comment saying why. **29 hand-written
+  blocks → 3.**
+
+  **The four status words are a TypeScript union**, so the standfirst's count is
+  enforced by `tsc` rather than by a reader. Broken four ways to confirm it
+  fires — an unknown credential id, `"empanelled"`, `"targeting"` and a
+  `heading` override are all rejected; a correct call is silent.
+
+  **What is NOT fixed, and both are deliberate.** Which cards a page shows is
+  editorial and was left alone: the homepage still shows four (three more cards
+  is homepage bytes against the 460 KB ceiling and the measured 1,089 ms LCP —
+  its own commit, with the measurement in it), and the two seven-card pages are
+  still different sevens. The table **is** now gated against `CREDENTIALS`,
+  by `tools/test/credentials.test.ts`: each mark's claim must appear in exactly
+  one `CREDENTIALS` line, the Ministry of Manpower card excepted by name with
+  its reason (its card is deliberately unattributed because it renders on pages
+  where the named ministry is the reader), plus an assertion that the exception
+  is still needed. The four status words are counted there too. So the 29-copy
+  failure mode is gone and a wrong word in the one record now fails a test.
 - **The old site's `ISO_9001_1.png` is not an ISO 9001 badge.** It is a generic
   blue ISO roundel captioned **27001** — 27001 artwork under a wrong filename —
   and `public/cms/{en,hi,ar}/globals.base.json:51,55` use that one file for both

@@ -53,7 +53,7 @@ Before finishing any part:
 
 ```sh
 cd helloverify-web
-npm run build && npm run check:all   # 10 gates
+npm run build && npm run check:all   # 11 gates
 npm test                             # 100 assertions
 npm run typecheck
 ```
@@ -156,8 +156,10 @@ declarations across the nine artboards.** Nothing in `src/` still names
 entry below), so `tools/port/build-css.py` runs, and it regenerates `design.css`
 from `Main.dc.html` and `Mobile.dc.html` verbatim. Leaving the boards alone
 would have made this fix exactly as durable as nobody running that script — and
-**no gate reads the stylesheets for colour**, so the reintroduction would have
-been silent, the same hazard the `.inp` `#7D796F` fix still carries. Only the
+**no gate read the stylesheets for colour**, so the reintroduction would have
+been silent — the same hazard the `.inp` `#7D796F` fix carried until
+`check:css-color` landed later the same day, which now reports that literal in
+all nine boards. Only the
 colour token was touched in the boards; they are otherwise the verbatim capture.
 
 **Both gates lost their exception rather than having it satisfied.**
@@ -279,12 +281,36 @@ with a citation of it** — issuer, scope, date — and add the artefacts.
 
 **Not changed, and it now under-claims:** the homepage's
 `components/sections/Compliance.tsx` lists ISO 27001, GDPR, PBSA and NSR and
-does not carry the three new lines. It also already disagrees with
+does not carry the three new lines. ~~It also already disagrees with
 `/platform/security-compliance` on GDPR — "GDPR compliant" there against
 "GDPR — aligned" here, which is the exact distinction that page's standfirst
-says it does not blur. Adding cards there changes homepage bytes against a
+says it does not blur.~~ Adding cards there changes homepage bytes against a
 460 KB ceiling and a measured LCP, so it wants its own commit with the
 measurement in it.
+
+**The GDPR half is FIXED (22 Sep 2026)** — see the `.cert` finding in Part 5,
+which drove every card on the site from one table. The homepage was not the
+only surface saying "GDPR compliant": `/business/enterprise` said it on its card
+AND in its answer block, so the count was two card surfaces and one prose
+surface, not one. All now read the reviewed "aligned".
+
+**The four-versus-seven half is deliberately still open, and is now a choice
+rather than a leftover.** The homepage names the four ids it shows and carries a
+comment saying why it is four, so re-taking the decision is reading one list. The
+reason not to take it here is unchanged and is this paragraph's: three more cards
+is homepage bytes against a 460 KB ceiling and a measured 1,089 ms LCP, and no
+build could be run while four agents shared the tree.
+
+**Two gaps that this file did not know about, found while making the surfaces
+agree.** Both are "which cards does this page show", so both are editorial and
+neither was taken:
+
+- **`/about` has no GDPR card.** It renders seven and GDPR is not among them,
+  even though `CREDENTIALS` carries it and this file calls `/about` the reviewed
+  credentials list.
+- **`/platform/security-compliance` has no Ministry of Manpower card.** It also
+  renders seven — so the two seven-card pages are different sevens, each short
+  one card the other has.
 
 **2c. The live site's schema names the wrong city.** ~~The old
 `StructuredData.tsx` says Mumbai; confirmed answer is Noida.~~ **ANSWERED
@@ -589,22 +615,62 @@ before writing a new one — that is the second time a unit already existed.
   more in `blocks/HelloVPhone.tsx` as `.lic chat`. Sharing it across the two
   would touch a file marked `lint-collisions: canvas-verbatim`, so it wants its
   own commit and its own diff of the two inner blocks first.
-- **Tailwind v4 scans `tools/`, so a word in a build script ships CSS.** The
-  new harness used the bare word for the CSS property between `border` and
-  `box-shadow` in a comment; Tailwind's extractor read it as a candidate and
-  generated a real 165-byte `.outline` rule into `chunks/*.css` on every page,
-  moving the chunk hash. Measured by removing the file and rebuilding: 122,086
-  bytes back to 121,921. The comment was reworded, but the exposure is general —
-  every script in `tools/` that quotes markup is a source of phantom utilities,
-  and `check:perf` measures the total without questioning what is in it. The fix
-  is to restrict Tailwind's source globs to `src/`; it is not in the refactor
-  commit because it is a build-config change, not a split.
-- **Six arrow SVGs carry no `aria-hidden`.** They are otherwise identical to
-  the 19 that `brand/Arrow.tsx` now owns. A decorative SVG with no label and no
-  `aria-hidden` is announced as an unnamed graphic, so this is an accessibility
-  defect rather than a formatting one and wants its own commit. `check:a11y`
-  does not catch it — jsdom axe has no rule that fires here — which is worth
-  knowing on its own.
+- ~~**Tailwind v4 scans `tools/`, so a word in a build script ships CSS.**~~
+  **DONE in source, pending one build (22 Sep 2026).** The new harness used the
+  bare word for the CSS property between `border` and `box-shadow` in a comment;
+  Tailwind's extractor read it as a candidate and generated a real 165-byte
+  `.outline` rule into `chunks/*.css` on every page, moving the chunk hash.
+  Measured by removing the file and rebuilding: 122,086 bytes back to 121,921.
+
+  `src/app/globals.css` now reads
+  `@import "tailwindcss/utilities.css" layer(utilities) source("../")`.
+  **The mechanism was read out of the installed package, not recalled** —
+  `node_modules/tailwindcss/dist/lib.mjs`, 4.3.3: the `@tailwind utilities`
+  branch reads a `source(…)` parameter off that at-rule, and an `@import`'s
+  trailing condition is desugared to `@media source(…)`, whose handler
+  re-attaches it with `sourceBase` set to the importing file's directory. It has
+  to go on the **utilities** import — `tailwindcss/utilities.css` is literally
+  `@tailwind utilities;`, and on the theme import the clause is silently inert.
+  `@source not "…"` is in the same file and was rejected: a denylist is only as
+  good as its length (`design-src/`, `messages/`, `public/`), and its failure
+  mode is extra CSS rather than an error.
+
+  **Re-proved the way the original was proved**, with `@tailwindcss/postcss`
+  driven directly rather than `next build`: a throwaway `tools/port/_tw-bait.mjs`
+  carrying `subpixel-antialiased` in a comment moved the generated stylesheet
+  171,034 → 171,133 bytes and emitted the rule; with the clause, the same file
+  changes nothing. It removed five further phantoms beyond the bait —
+  `.flex-wrap`, `.text-wrap`, `.transition`, `.ease-in-out`, `.ease-out`, all
+  CSS keywords picked out of `design-src/artboards/*.dc.html` — for 675 → 669
+  selectors and −1,242 bytes unminified, and **zero** real selectors lost. CSS
+  files inside the import graph are not scanned as content: `design.css`
+  declares `text-wrap: balance` inside `src/` and `.text-wrap` still went.
+
+  **Still wanted from a central build:** the shipped `chunks/*.css` byte count
+  and its hash. The plugin is the one `postcss.config.mjs` names, so the
+  mechanism is measured; the emitted chunk is not.
+- ~~**Six arrow SVGs carry no `aria-hidden`.**~~ **Three fixed, three deferred
+  by ownership (22 Sep 2026), and the premise was wrong.** Found by the shared
+  path data: 13 inline copies in `src/`, exactly 6 missing the attribute —
+  three in `platform/page.tsx`, one each in `business/`, `governments/` and
+  `individuals/page.tsx`. The first three are `<Arrow />` now; the other three
+  are held by other agents and are the identical one-line change.
+
+  **Replaced rather than patched**, because adding the attribute fixes one copy
+  and the next paste loses it again. All six were attribute-for-attribute
+  identical to `brand/Arrow.tsx` in the same order, so the swap emits the same
+  bytes; the two 16px copies that already *had* the attribute
+  (`sections/Hero.tsx`, `sections/CustomerStory.tsx`) went the same way for the
+  same reason. The three 14px copies (`Checks`, `International`, `Packages`)
+  stay inline: they differ in `width`/`height`, which `Arrow` takes no prop
+  for, and all three already carry `aria-hidden`.
+
+  **The defect was latent, not audible.** All six sit inside `<span
+  className="go" aria-hidden="true">`, which hides the whole subtree, so no
+  screen reader announced them — "announced as an unnamed graphic" is true of a
+  bare arrow in general and was not true of these. `check:a11y` cannot see
+  either the defect or the mitigation, so this was never gated and still is
+  not; the fix is durable through the shared component instead.
 - ~~**The same check has three different turnaround times across the site.**~~
   **RESOLVED (22 Sep 2026), from the old site's own data.** All three checks now
   agree on every surface.
@@ -647,27 +713,208 @@ before writing a new one — that is the second time a unit already existed.
   would also publish two new `/checks/[check]` pages. That needs an owner, not
   an inference, so it is deliberately left. The enterprise page's answer block
   stays silent on all three turnarounds for exactly this reason, and says so.
-- **`.cert` cards are written out 28 times across 9 files**, and only
-  `security-compliance` drives them from an array. They are NOT all the same:
-  the ISO 27001 logo carries five different headings and GDPR four, so this is
-  not a lift-and-share like `SecHead`. It also touches the credentials surface
-  that Part 2b is blocked on, so it waits for 2b.
-- **No gate reads the stylesheets for colour.** Part 3 measured "UI colour
-  literals: 119 → 0" over `src/**/*.tsx` and said so; the stylesheets were never
-  in scope. `app/design.css` holds **228** colour literals and `app/pages.css`
-  **36**. Most are artwork or are token values written out longhand (`#FFFFFF`
-  ×81, `#1B6B4A` ×40, `#CFCAC0` ×30), but `#7D796F` was neither — it was UI
-  colour that is not a token and failed AA at 3.95:1, and it shipped. (That one
-  instance is **fixed**, 22 Sep, in all four declarations; the missing gate is
-  not, so this finding stands.) The coverage was
-  lost in Part 4: `check:tokens` read files as text and was removed as redundant
-  with `hv/no-color-literal`, which is an ESLint rule and cannot see CSS —
-  exactly the reasoning that kept `check:logical`, not applied to colour. Note
-  `design.css` carries a generated-file header and its generator cannot run
-  (see the open questions below), so this is not a simple find-and-replace.
-- **`hv/no-color-literal` only matches hex.** `rgba(255,255,255,0.4)` in a style
-  prop slips through — found in PeopleStrip's live card. Worth extending the
-  rule to `rgb()`/`rgba()`/`hsl()` when convenient.
+- ~~**`.cert` cards are written out 28 times across 9 files**, and only
+  `security-compliance` drives them from an array.~~ **DONE (22 Sep 2026), and
+  it was a live correctness bug on a compliance claim, not a refactor.** Name
+  and status word now come from `CREDENTIAL_MARKS` in `lib/content/company.ts`
+  and render through `components/chrome/CertCard.tsx`. **29 hand-written blocks
+  → 3**, the three being genuinely not this shape (below).
+
+  **Four counts in the sentence above were wrong, and the corrections are the
+  point rather than pedantry.** Re-measured from `git show HEAD:` on all nine
+  files:
+
+  - **29 hand-written blocks, not 28**, plus two array-driven surfaces, so 31
+    `className="cert"` sites and **40 cards rendered**.
+  - **TWO surfaces already drove them from an array**, not one:
+    `security-compliance` AND `templates/VerticalPage.tsx`. That matters,
+    because `VerticalPage`'s array was the thing that looked most like a source
+    and had still drifted — it glossed PBSA "Member of the global standards
+    body…" where `/about` used the reviewed list's own tail. Four files fed from
+    a local array is a fifth copy with better ergonomics, not a source.
+  - **The ISO 27001 logo carried THREE headings, not five**, and **GDPR carried
+    FIVE, not four**. The two numbers were swapped, and the swap flattered the
+    situation: GDPR is the credential whose status word is the claim this site
+    says it does not blur, and it was the worst-drifted of the eight.
+  - **"Not a lift-and-share like `SecHead`" was the wrong conclusion drawn from
+    the right observation.** The headings differ because three of the 40 cards
+    are not credential cards at all — `.cert` markup around a stance, reusing
+    `gdpr.jpg`/`iso.jpg` as illustration ("Consent first, always", "They
+    consent, then we check", "Documents deleted on schedule"). Set those aside
+    and the other 37 are the same shape. So it was exactly a `SecHead`: share
+    the identical majority, leave the minority that is a different shape, and
+    say which is which at each site. All three are still hand-written and each
+    carries a comment saying why. The trap they set is that one of them sat
+    directly beside a real credential card — `/business/customer-kyc` renders a
+    stance card and an "ISO 27001 certified" card in the same container — so
+    "this page is not credential cards" would have been the wrong call at file
+    granularity. It is a per-card judgement.
+
+  **What was actually wrong, measured:** the homepage showed four credentials
+  against seven on `/about` and `/platform/security-compliance`; the homepage
+  and `/business/enterprise` both said "GDPR compliant" where the reviewed word
+  is "aligned" (and enterprise said it in prose too); the homepage's `.dsk` and
+  `.mob` blocks disagreed with each other on the PBSA heading; and
+  `/platform/security-compliance` had given NSR a **fifth status word,
+  "empanelled"**, contradicting its own standfirst's count of four and claiming
+  a standing `CREDENTIALS` deliberately withholds. Two smaller ones on the same
+  page: its file header named `"targeting"` as the fourth claim type where the
+  standfirst says "member" and nothing renders "targeting", and the 22 Sep note
+  concluding the count was "checked rather than assumed" had checked the new row
+  (ISO 9001) rather than the table.
+
+  **The four status words are a type now** — `CredentialStatus` in
+  `lib/content/company.ts` — so the standfirst's count is enforced by `tsc`.
+  Broken four ways to confirm it fires, in a probe file compiled outside the
+  repo so nothing was written into a tree three other agents were using: an
+  unknown id, `"empanelled"`, `"targeting"`, and a `heading` override are all
+  rejected; a correct call is silent.
+
+  **Not closed, deliberately:** which cards each page shows. `/about` has no
+  GDPR card, `/platform/security-compliance` has no MOM card, and the homepage
+  still shows four — all three are recorded in Part 2b. ~~And nothing gates the table against `CREDENTIALS`.~~
+  **CLOSED the same day** by `tools/test/credentials.test.ts` (29 assertions):
+  the claim each mark makes is now asserted to appear in exactly one
+  `CREDENTIALS` line, with `mom` excepted **by name and with its reason** in
+  the test rather than by loosening the assertion for all eight. A second
+  assertion guards the exception itself, so if `/about`'s line is ever rewritten
+  to match the card, the stale exemption fails instead of standing as a licence
+  for the two lists to disagree. The four-status-word count is asserted too —
+  that is the one a fifth word (`NSR - empanelled`) had already slipped past,
+  on the very page whose standfirst counts four.
+
+  Both were measured facts with nothing holding them, which is the state this
+  repo has been bitten by before: true the day they are written, silently false
+  at the first edit. **Broken to prove they hold** — GDPR reverted to
+  "compliant" and a fifth status word reintroduced; each fails the named
+  assertion and nothing else.
+- ~~**No gate reads the stylesheets for colour.**~~ **DONE (22 Sep 2026)** —
+  `npm run check:css-color`, `tools/a11y/check-css-color.mjs`, wired into
+  `check:all` (now 11 gates; CI runs `check:all`, so the YAML is untouched).
+  The coverage was lost in Part 4: `check:tokens` read files as text and was
+  removed as redundant with `hv/no-color-literal`, which is an ESLint rule and
+  cannot see CSS — exactly the reasoning that kept `check:logical`, not applied
+  to colour.
+
+  **The count was wrong, and measuring it is what decided the gate's shape.**
+  228 + 36 = 264 counted hex only. Re-measured: **267 hex and 175 in functional
+  notation, 442 in all** — `rgba()` was more than a third of the colour in these
+  files and nothing had ever counted it. Normalising it to `#RRGGBBAA` is what
+  let it be compared against the palette:
+
+  | class | count |
+  |---|---:|
+  | inside a comment — blanked, not scanned | 11 |
+  | `:root` custom-property declarations | 19 |
+  | token value written longhand, **text** | 44 |
+  | token value + an alpha, **text** | 23 |
+  | token value written longhand, surface | 141 |
+  | token value + an alpha, surface | 128 |
+  | not a token, surface (near-ink, gradients, tints, rules) | 76 |
+  | **not a token, text** | **0** |
+
+  The last row is the point: `#7D796F`'s class is **empty**. Every text colour in
+  these stylesheets resolves to a declared token — 67 spelled out instead of
+  `var(--x)`, none off-palette — so the one zero-tolerance rule is one the code
+  passes today, and 442 literals produce **0 failures**. A gate that flags 442
+  things gets switched off.
+
+  **One hard rule, plus a ratchet.** A text colour must resolve to a token, no
+  exemption list, and the failure carries the measured ratio against `--paper`,
+  `--white` and `--ink` — it reproduces 3.95:1 itself, from the bytes.
+  Everything else is recorded in `BASELINE` with a count and a reason: an
+  unrecorded colour fails, and a recorded group that **grows** fails, so the 336
+  longhand uses are debt that cannot spread rather than 336 red lines. A count
+  coming in *under* its record prints "lower it to N" and does not fail — a gate
+  that fails on an improvement is the definition of one that gets disabled.
+
+  **The generator's inputs are in scope too, which closes the silent half of the
+  open question below.** The nine boards are scored against the *shipped*
+  palette rather than their own `:root` (which pre-dates Part 3's four added
+  tokens, and scoring them against themselves reports 220 "non-token" text
+  colours, 219 of which are current palette values spelled out). Measured that
+  way the answer is one colour: `color: #7D796F` on `.inp`, nine times, one per
+  board. Reported with file and line and **capped at 9** rather than failed —
+  they are input, not shipped bytes, so it is a latent hazard and not a live
+  defect. Fix the boards and the cap goes to 0.
+
+  **Two things the parser had to do, both found by measuring.** Comments are
+  blanked character-for-character so line numbers stay true: 11 of the remaining
+  literals sit inside the WHY comments that record their own removal, `#7D796F`
+  ×4 among them, so a gate reading raw text fails on its own documentation and
+  the obvious "fix" is to delete the reasoning. `url()` is blanked too, and that
+  removes **zero** literals today — stated rather than left as implied coverage,
+  because `select.inp`'s chevron writes its `--muted` stroke percent-encoded
+  (`%236F6B62`), which a `#` regex never saw.
+
+  **Broken ten ways — six must fail, four must not.** `#7D796F` back on `.inp`
+  → exit 1 with "3.95:1 on --paper"; `color: #6F6B62`, `--muted`'s own value
+  longhand → exit 1, "Either use `var(--muted)`"; the same colour as
+  `rgba(125,121,111,0.95)` → exit 1, the form no other gate reads; a 69th
+  longhand `#FFFFFF` surface → exit 1, "68 recorded, 69 found"; `#ABCDEF` on a
+  background → exit 1; a 10th non-token text colour in the boards → exit 1. And
+  silent where it must be: a new rule written with `var()` → exit 0; the failing
+  colour named in a comment → exit 0; one longhand `#3D3B35` converted to
+  `var()` → exit 0 plus "lower it to 9". The tenth is a **deliberate no-op**,
+  recorded as one: `rgba(255,255,255,0.6)` → `0.61` changes nothing, because
+  alpha is collapsed to a `+a` flag — keeping it made the table 90 rows
+  (`--ink` at 12 alphas, `--green` at 11, `--white` at 11) and made them
+  rounding-sensitive, for a distinction that has nothing to do with whether the
+  colour came from the palette. The first mutation also found a defect in the
+  gate's own wording: rule 2 was offering "or add it to `BASELINE` with a
+  reason" for a non-token *text* colour, which is advice that does not exist.
+
+  **Not fixed, deliberately: the 336 longhand uses.** `color: #FFFFFF` →
+  `color: var(--white)` is mechanical and is the same duplication Part 3 removed
+  from `src/**/*.tsx`. It is left because `design.css` is regenerated from
+  `design-src/artboards/` — inputs present and git-tracked — so a rewrite of the
+  output that is not also a rewrite of the nine boards is one `python` away from
+  being undone, silently. That is a stylesheet-and-artboard change with its own
+  diff, not a tooling change. Rule 3 holds the line until someone does it.
+- ~~**`hv/no-color-literal` only matches hex.**~~ **DONE (22 Sep 2026)** —
+  `rgb()`, `rgba()`, `hsl()` and `hsla()` now match, in both the legacy comma
+  and the modern space/slash forms. It found **6 whole-value literals across 5
+  files**, and all six were one thing: the `.ph .note` placeholder caption.
+
+  **Five went to `lib/img.ts`, the exemption they belong in**, as
+  `PLACEHOLDER_NOTE` keyed by photograph — because the photograph is what
+  decides them. Measured, not asserted: every tint whose caption inverts to
+  white has relative luminance ≤ 0.2574 and every tint that keeps
+  `design.css`'s dark default is ≥ 0.4213, a clean gap with no photograph in
+  it. That also removed two restatements of the same fact — `p.live` in
+  `PeopleStrip` and a `dimNote` field in `WhoItsFor`, now deleted — either of
+  which could have disagreed with the picture. The three alpha values (0.4,
+  0.45, 0.35) are the artboards' own and are **not** unified: that would change
+  what six tiles render, which is a DESIGN.md decision, so they are recorded
+  per photograph and the change is byte-faithful.
+
+  **No new tokens were created.** One literal is left and it is a real
+  decision for you: `rgba(255,255,255,0.82)` on the closing band's copy in
+  `sections/Contact.tsx` is UI colour with nowhere to go — the palette has no
+  translucent white tier, and `var(--white)` at full opacity would visibly
+  change the paragraph. It carries the repo's **only lint suppression**, with
+  the reasoning and two ways out beside it. One occurrence is thin evidence for
+  a new tier (Part 3: four new tokens, not seventeen).
+
+  **Both patterns are anchored, deliberately.** A value must BE a colour, so a
+  colour inside a longer value is still missed — 5 more in `Contact.tsx`, all
+  scrim gradients and text shadows over a photograph, exactly as
+  `linear-gradient(#FFFFFF, #000000)` has always passed. The gap is shared with
+  hex rather than introduced, and those five are effects, which is a DESIGN.md
+  question. Measured and recorded rather than missed.
+
+  Broken five ways, through the real config with `npx eslint`: the reported
+  `rgba()` restored to PeopleStrip → **fires**; a flag's `fill="rgb(200 16 46)"`
+  → **silent**, so the artwork exemption covers functional notation too; the
+  same value one expression deep as `fill={wide ? … : …}` → **fires twice**, so
+  the direct-parent strictness survives the extension; ten near-misses in one
+  style object (`rgba`, `rgb(255,255,255` unclosed, `translate(10,20)`,
+  `grayscale(0.4)`, a shadow, a gradient, `rgb(red,green,blue)`,
+  `notrgb(1,2,3)`) → **all silent**; `hsl(200deg 50% 50% / 0.4)` and
+  `rgb(255 255 255)` in their place → **both fire**. Plus 32 cases through
+  ESLint's `Linter` against the rule module. The harness proved its own
+  liveness first: its initial run reported zero for every case *including hex*,
+  which was a config error in the harness and not a silent rule.
 
 ---
 
@@ -719,7 +966,9 @@ today something renders a page**.
   to this file and to `build-css.py`'s own docstring. All nine still carry
   `color: #7D796F` on `.inp`, so re-running the generator would silently
   reintroduce this — a second hazard alongside its undoing of the logical-CSS
-  conversion, and unlike that one no gate catches it. Recorded in the
+  conversion, and at the time no gate caught it — `check:css-color` now does,
+  naming all nine boards with a line number, and fails if a tenth appears.
+  Recorded in the
   `design.css` comment; the artboards were left alone, since they are the
   verbatim canvas capture and editing them is a separate decision. **That
   decision was taken for the other colour, 22 Sep:** Part 2a's `--faint`
@@ -894,7 +1143,7 @@ meta (caught, plus the 17 scripts it orphaned).
 
 ---
 
-## Part 8 — The content pass · **answer blocks DONE (22 Sep 2026); HowTo open**
+## Part 8 — The content pass · **answer blocks and `HowTo` DONE in source (22 Sep 2026); one answer block waits on a turnaround decision**
 
 
 §17 conditions 17 and 18, and §11a.2.
@@ -970,14 +1219,68 @@ otherwise re-litigate:
   you hold", and no answer to it avoids restating the reviewed list. It carries
   a comment saying so.
 
+**`HowTo` DONE (22 Sep 2026), §17 condition 18** — `lib/seo/schema/howto.ts`
+plus one optional `name` prop on `chrome/Steps.tsx`, which emits the node from
+the `items` it already renders, exactly as `FaqSection` emits `FAQPage`.
+**14 nodes on 14 pages, from 63 step cards nobody retyped.** Eight pages name it
+at the `<Steps>` call; the six vertical pages take it from `VerticalPage`'s
+`stepsHead`, which is the `<h2>` above the strip.
+
+Five things worth carrying:
+
+- **The mapping is `t` → `name`, `p` → `text`, and `n` is deliberately unused.**
+  `n` carries a counter, which `step`'s array order already states and which
+  `HowToStep.position` would state a second time, plus a per-card ornament that
+  is not the step's name — "01 · Candidate's phone", "02 · HelloVerify AI".
+  Folding it in would emit "01 · Candidate's phone Upload", a string that
+  appears nowhere on the page and that the new gate rejects on its own terms.
+- **Four of the eighteen strips are NOT a HowTo, and a numbered strip is not
+  evidence that it is one.** `/business/customer-kyc` lists three mutually
+  exclusive routes — the strip says so itself, "02 · **Or** redirect", and its
+  lede says "three ways" — so marking it up as a sequence would tell an engine
+  to do all three in order. `/platform/coverage` answers "what does global
+  coverage actually mean", a definition whose cards are its properties.
+  `/platform/security-compliance` says "four controls apply to every
+  verification", i.e. concurrently. The Ministry of Manpower case study lists
+  "four things in the contract" — deliverables. The last two are the tempting
+  ones: both headings are how-shaped.
+- **A nameless node is worse than none**, so `howTo()` returns `null` without a
+  name or with fewer than two steps rather than borrowing the band's eyebrow
+  ("How it works") — instructions for an unstated task is the mis-citation
+  §11a.3 exists to prevent. Because a missing node is *invisible* (a `Steps`
+  call without `name` renders a byte-identical strip), `check-schema.mjs` holds
+  both lists and fails if a strip is in neither, rather than counting what the
+  build happened to emit.
+- **The homepage's own process section is deliberately not one, and it is the
+  interesting exclusion.** `components/sections/HowItWorks.tsx` does not use
+  `Steps` — it is the two-tree port — and its per-stage paragraph (`cap`) is a
+  **desktop-only** field, the same finding Part 5 recorded about that file's
+  caption row. So a `HowTo` there would mark up text that a reader at 390px
+  never sees, which is the one thing this pairing exists to prevent. Its `<h2>`
+  is also a statement, "One upload. Then we get to work.", so there is no
+  question to name it with. `/business` carries the same four stages, in
+  `Steps`, under "How does background verification work?" — that is where the
+  node lives.
+- **Google retired the HowTo rich result in 2023**, so this is a §11a.3
+  retrieval node and not an §8.2 rich-result one. Stated as the reason it is
+  shaped for extraction rather than as a finding — nothing in this repo can
+  measure Google's SERP behaviour. Condition 18 asks for the node by name and
+  the whole cost is one array read twice, so "do not emit it" was refused.
+
+**Verified as far as a shared tree allows, and the gap is stated rather than
+papered over.** The unmodified gate was run against the build output that
+predates the node: `HowTo: 0 of 18 strips (4 are not sequences), 63 step cards
+read`, all 14 owed pages named, every other section of the graph still green —
+so the decision lists, the strip parser and the report path all execute. Four
+further mutations (a step reworded on the page only; a node spliced between two
+cards; the container class renamed; nine `<span class="t">` pills beside a
+strip) were run over that emitted HTML in memory: caught, caught, caught, and
+correctly ignored. **No `next build`, `tsc` or `npm test` was run** — four
+agents share this tree and builds collide — so condition 18 closes on the next
+central run, not here.
+
 **Still to do:**
 
-- **`HowTo` schema** on the process sections. §11a.3 rates "how does background
-  verification work" a top query shape, and `chrome/Steps.tsx` now renders every
-  one of those sections from a record list — so the schema can be emitted from
-  the same data rather than restated, the way `FaqSection` already does. Several
-  of those sections now carry exactly that question as their H2, so the pairing
-  is ready.
 - **One answer block restates a contradicted promise, and it needs 2a-style
   resolution rather than rewording.** `/business/smb`'s block says the
   blue-collar package is ready "in 30 minutes" — the card's own headline — and
@@ -1117,8 +1420,9 @@ Deliberately deferred. Everything here waits on the move off GitHub.
   maintained in place by choice, not by impossibility, and the generated-file
   header is a live hazard rather than a dead one. Two things it would undo:
   the logical-CSS conversion, which `check:logical` catches, and the `.inp`
-  contrast fix, which **no gate catches** — the boards still carry
-  `color: #7D796F`. Either fix the boards and re-run with
+  contrast fix, which **`check:css-color` now catches** (it scores the boards
+  against the shipped palette and reports the nine `color: #7D796F` on `.inp`,
+  capped at nine) — the boards still carry it. Either fix the boards and re-run with
   `logical-css.py --write`, or delete the script; leaving it runnable with a
   false "cannot run" note is the worst of the three.
 
@@ -1128,7 +1432,8 @@ Deliberately deferred. Everything here waits on the move off GitHub.
   the collapse instead of reversing it. Only the colour token was touched — the
   boards are otherwise still the verbatim capture, and the script was **not**
   run. So the list of things a regeneration would undo is now two, not three,
-  and the `.inp` literal is the only silent one left.
+  and the `.inp` literal is the only one left — no longer silent: it is what
+  `check:css-color`'s artboard section exists to report.
 - **The four old blog posts redirect by subject, not by content** (IA §9).
   Porting them is strictly better; the targets are one line to change.
 - **`/support/track` has no destination** — the only entry left in

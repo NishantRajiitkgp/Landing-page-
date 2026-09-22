@@ -10,7 +10,7 @@ import { defineConfig, devices } from "@playwright/test";
  *
  *  ## It runs against the BUILD, not against `next dev`
  *
- *  `next start` serves exactly the artefact the ten gates already measured, so
+ *  `next start` serves exactly the artefact the eleven gates already measured, so
  *  a Playwright failure and a `check:*` failure are talking about the same
  *  bytes. `next dev` would not be: it serves unminified, unbundled modules
  *  through a different pipeline, and a performance number taken from it would
