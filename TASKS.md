@@ -605,16 +605,48 @@ before writing a new one — that is the second time a unit already existed.
   defect rather than a formatting one and wants its own commit. `check:a11y`
   does not catch it — jsdom axe has no rule that fires here — which is worth
   knowing on its own.
-- **The same check has three different turnaround times across the site.**
-  `lib/content/checks.ts` is the canonical catalogue behind `/checks/[check]`,
-  and two other places restate it: `sections/Checks.tsx` and
-  `business/enterprise/page.tsx`. Measured disagreements — Directors & GST is
-  3 days in the catalogue and on enterprise but **2 days** on the homepage;
-  Registration certificate is 30 min on the homepage and **60 min** on
-  enterprise; Entitlement to work is 24 hrs and slow on the homepage but
-  **60 min and fast** on enterprise. Two of those are not in the catalogue at
-  all. This needs an answer before the three can be driven from one list, and
-  the homepage currently contradicts a page on the same site.
+- ~~**The same check has three different turnaround times across the site.**~~
+  **RESOLVED (22 Sep 2026), from the old site's own data.** All three checks now
+  agree on every surface.
+
+  The tie-break was not a guess. The old site publishes a **Mode** for all 32
+  checks in its per-check catalogue (`public/cms/en/bgvSmb.base.json`), and that
+  taxonomy maps onto speed consistently across every one of them: Database,
+  Document, Digital and Online answer in 15–60 min (Address "Digital" 30 min,
+  Credit and Global Database "Database" 15 min), while anything needing a third
+  party to reply takes days (Employment "Email/Database" 2 days, Education
+  "Database/Email" 3 days).
+
+  - **Entitlement to work → 60 min, fast.** Listed there as
+    "Right/Eligibility to work — Mode: Database/Document", so no third party is
+    in the loop. The homepage's 24 hrs was the outlier; it moved to the 60-min
+    stop, out of the "1–3 days" bucket and into the 60-min one — whose label
+    widened to "Provident-fund and work-authorisation records", because it was
+    then describing two of its three chips.
+  - **Registration certificate → 30 min, fast.** The old site defines it as
+    "a **vehicle's** registration details, including ownership and registration
+    status" — the RTO record, the *same authority* as Driving licence, which
+    the catalogue rates 30 min. Two checks against one registry cannot differ
+    by 2×. The enterprise page's 60 min was the outlier.
+  - **Directors & GST → 3 days.** The catalogue and the enterprise page already
+    agreed; the homepage's 2 days was the outlier and moved to the 3-day axis
+    stop.
+
+  **`/business/smb`'s package promise is now correct rather than optimistic.**
+  The blue-collar package is PAN (15 min), Registration certificate (30),
+  Driving licence (30) and Criminal record (30) — slowest 30 — so "ready in 30
+  minutes" holds. That promise sits in an answer block, which is why it was
+  worth settling rather than softening.
+
+  **Still not fixed: there is no single source for two of the three.** Neither
+  Registration certificate nor Entitlement to work is in
+  `lib/content/checks.ts`, so their agreement rests on two pages matching rather
+  than on a canonical entry, and nothing would catch them drifting again.
+  Adding them means writing a full catalogue entry each — `answers`, `fields`,
+  `caveat`, `usedBy`, `countries` — which is reviewed product copy, and it
+  would also publish two new `/checks/[check]` pages. That needs an owner, not
+  an inference, so it is deliberately left. The enterprise page's answer block
+  stays silent on all three turnarounds for exactly this reason, and says so.
 - **`.cert` cards are written out 28 times across 9 files**, and only
   `security-compliance` drives them from an array. They are NOT all the same:
   the ISO 27001 logo carries five different headings and GDPR four, so this is
