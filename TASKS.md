@@ -94,7 +94,7 @@ Not done here, deliberately: no push, no branch strategy, no pipeline.
 
 ---
 
-## Part 2 — Apply the three open decisions
+## Part 2 — Apply the three open decisions · **DONE (22 Sep 2026)** — all three answered by the owner and applied
 
 Each needs an answer first; none is more than an hour of work once answered.
 
@@ -1148,7 +1148,7 @@ meta (caught, plus the 17 scripts it orphaned).
 
 ---
 
-## Part 8 — The content pass · **answer blocks and `HowTo` DONE in source (22 Sep 2026); one answer block waits on a turnaround decision**
+## Part 8 — The content pass · **DONE (22 Sep 2026)** — answer blocks on all 19 commercial pages, `HowTo` emitted and gate-verified on a central build, and the one answer block that waited on a turnaround decision is settled
 
 
 §17 conditions 17 and 18, and §11a.2.
@@ -1417,21 +1417,30 @@ Deliberately deferred. Everything here waits on the move off GitHub.
   `canvas.json`, which is every input `sheet()` opens. So `design.css` is
   maintained in place by choice, not by impossibility, and the generated-file
   header is a live hazard rather than a dead one. Two things it would undo:
-  the logical-CSS conversion, which `check:logical` catches, and the `.inp`
-  contrast fix, which **`check:css-color` now catches** (it scores the boards
-  against the shipped palette and reports the nine `color: #7D796F` on `.inp`,
-  capped at nine) — the boards still carry it. Either fix the boards and re-run with
-  `logical-css.py --write`, or delete the script; leaving it runnable with a
-  false "cannot run" note is the worst of the three.
+  the logical-CSS conversion, which `check:logical` catches, and and the `.inp`
+  contrast fix — **and as of 22 Sep the boards no longer carry either colour
+  problem.** `check:css-color` was written to report the nine
+  `color: #7D796F` on `.inp` and cap them at nine; the boards were then fixed
+  in the same session, so its `BOARD_CAP` is now `{}` and an entry there reads
+  as a regression rather than a tolerance. Verified byte-level: one occurrence
+  per board replaced with `var(--muted)`, CRLF pair counts unchanged
+  (609/603/541/580/509/440/482/503/453), and the gate broken by reintroducing
+  the literal into `Main.dc.html` — reported with file and line, exit 1.
+
+  So **the only thing a regeneration would now undo is the logical-CSS
+  conversion**, which `check:logical` catches. The choice is unchanged and
+  still owed: re-run with `logical-css.py --write`, or delete the script.
+  Leaving it runnable under a false "cannot run" note is still the worst of the
+  three, and that note is the part nobody has fixed.
 
   **Part 2a took the "fix the boards" half for its own change** (22 Sep): the
   `--faint` declaration is out of all nine boards and every `var(--faint)` and
   inline `#A29E94` in them now reads `var(--muted)`, so regeneration reproduces
   the collapse instead of reversing it. Only the colour token was touched — the
   boards are otherwise still the verbatim capture, and the script was **not**
-  run. So the list of things a regeneration would undo is now two, not three,
-  and the `.inp` literal is the only one left — no longer silent: it is what
-  `check:css-color`'s artboard section exists to report.
+  run. The `.inp` literal that this left behind was closed later the
+  same day, above — so a regeneration would undo one thing, not three, and it
+  is the one a gate has always caught.
 - **The four old blog posts redirect by subject, not by content** (IA §9).
   Porting them is strictly better; the targets are one line to change.
 - **`/support/track` has no destination** — the only entry left in
