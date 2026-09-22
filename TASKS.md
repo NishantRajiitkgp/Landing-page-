@@ -4,8 +4,13 @@ The remaining work on the helloverify.com rebuild, in the order it should be
 done. One part per sitting: say **"next"** to move to the following part.
 
 Status as measured on **22 September 2026**, branch `feat/leads-api-zoho`.
-BUILD-SPEC §17 defines done as 24 conditions — **9 met, 10 partly met, 5 not
-started**. Condition 22 closed with Part 5. Condition 11 is now met in
+BUILD-SPEC §17 defines done as 24 conditions — **10 met, 9 partly met, 5 not
+started**. Condition 22 closed with Part 5. **Condition 18 closed on 22 Sep**
+— the `HowTo` node is emitted and `check:schema` verifies it against the
+rendered cards on a central build, which is the run the agent round could not
+do for itself; it moves from partly met, since `FAQPage`, `Service`,
+`Organization` and `BreadcrumbList` were already green and `HowTo` was the one
+missing type. Condition 11 is now met in
 enforcement and open in the header's wording — see Part 7, which is deliberate
 and measured rather than unfinished. Conditions 3 and 12 moved to partly met
 with Part 6: the lab half is measured, the field half needs a deployment and
@@ -1276,32 +1281,25 @@ further mutations (a step reworded on the page only; a node spliced between two
 cards; the container class renamed; nine `<span class="t">` pills beside a
 strip) were run over that emitted HTML in memory: caught, caught, caught, and
 correctly ignored. **No `next build`, `tsc` or `npm test` was run** — four
-agents share this tree and builds collide — so condition 18 closes on the next
-central run, not here.
+agents share this tree and builds collide — so condition 18 was left to close
+on the next central run.
+
+**That run has since happened, and it is what closed 18.** On the build all
+four agents' work landed in: `check:all` 11/11 with `check:schema` reading the
+emitted `HowTo` nodes against the rendered cards, `tsc --noEmit` clean, `lint`
+clean, 285 unit tests, 162 Playwright passed / 4 skipped with no flakes, 823
+redirect and 29 contract assertions. 58 pages, 442 CSP hashes.
 
 **Still to do:**
 
-- **One answer block restates a contradicted promise, and it needs 2a-style
-  resolution rather than rewording.** `/business/smb`'s block says the
-  blue-collar package is ready "in 30 minutes" — the card's own headline — and
-  that package contains Registration certificate, which `/business/enterprise`
-  prices at 60 min. The block names no per-check time, but the package promise
-  implies one. Softening it would make the answer vague without making the site
-  consistent; the fix is to settle the turnaround disagreement below.
-
----
-
-## Part 9 — The `hi` and `ar` locales
-
-§17 conditions 7 and 15. Routing is live and every URL carries its locale;
-`routing.locales` declares `en` only, because §7 makes a missing translation a
-build error and declaring a locale without copy would publish an English route
-tree under `/hi` and `/ar`.
-
-- Blocked on **translated copy**. The old repo has real Devanagari and Arabic
-  content to port.
-- The copy table (`lib/seo/copy.ts`) was built for this — translating is now
-  keying one table by locale, not hunting 32 literals across the app.
+- ~~**One answer block restates a contradicted promise.**~~ **RESOLVED** by the
+  turnaround settlement below, which is what this bullet said the fix had to
+  be. `/business/smb`'s block promises the blue-collar package "in 30 minutes";
+  that package is PAN (15 min), Registration certificate (30), Driving licence
+  (30) and Criminal record (30), so the slowest is 30 and the promise holds.
+  Registration certificate's conflicting 60 min on `/business/enterprise` was
+  the outlier and moved, settled from the old site's own Mode taxonomy rather
+  than by softening the block into vagueness.
 - **RTL:** the CSS can mirror (192 physical properties converted, lint-enforced)
   but no page has ever rendered with `dir="rtl"`. Expect residue — icons and
   arrows pointing the wrong way, and the six paint-positioning values the
