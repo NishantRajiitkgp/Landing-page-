@@ -1,5 +1,12 @@
 /** Hero - Verified at the source, in minutes. */
 import { YCBadge } from "@/components/brand/YCBadge";
+// The ghost button's arrow was an inline copy of `brand/Arrow.tsx`, identical
+// attribute for attribute in both elements and in their order, `aria-hidden`
+// included - so this one carried no defect and the swap emits the same bytes.
+// Shared anyway: an inline copy is the template the next one gets pasted from,
+// and three of the six copies TASKS Part 5 carried had lost the attribute that
+// way. §4 rule 2, §17 condition 22.
+import { Arrow } from "@/components/brand/Arrow";
 
 export function Hero() {
   return (
@@ -43,10 +50,7 @@ export function Hero() {
                 See all 33 checks
               </span>
               {' '}
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                </path>
-              </svg>
+              <Arrow />
               {' '}
             </a>
             {' '}
