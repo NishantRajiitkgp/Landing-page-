@@ -649,19 +649,65 @@ meta (caught, plus the 17 scripts it orphaned).
 
 ---
 
-## Part 8 — The content pass
+## Part 8 — The content pass · **two pages done as a pattern (22 Sep 2026);
+awaiting your review before the rest**
 
-§17 conditions 17 and 18, and §11a.2. Fifteen pages carry real FAQ blocks, lifted
-to data so markup and schema cannot drift. What has not happened is a systematic
-pass over body copy:
+§17 conditions 17 and 18, and §11a.2.
 
-- **Question-shaped `H2`s with ~40-word answer blocks** on every commercial page,
-  per §11a.2's answer-block pattern — self-contained, no orphan pronouns.
-- **`HowTo` schema** on the process sections, once those sections are shaped for
-  it. §11a.3 rates "how does background verification work" a top query shape.
+**The pattern, on two deliberately different shapes.** Review these two and the
+remaining pages follow the same rule; correct the voice here and it costs two
+files rather than fifteen.
 
-This is a copy review, not a refactor. It needs a writer, and the answer blocks
-are the single highest-leverage thing left for AI citation.
+1. **`/checks/[check]` — one template, twelve pages.** A new question-shaped H2
+   (`How long does {name} verification take?`) with a ~40-word answer composed
+   entirely from `lib/content/checks.ts`: source, turnaround, coverage and the
+   catalogue's own `answers` sentence. Three statement headings became the
+   questions people type — "In the report." → "What is in the {name} report?",
+   "The limit of this check." → "What can the {name} check not confirm?",
+   "Usually for." → "Who needs this check?"
+2. **`/business/employee-verification` — hand-written prose.** Three answer
+   blocks, each built from numbers already on the page.
+
+**No new facts were invented.** Every figure comes from the catalogue or from
+the same page's own chips and strip. One was deliberately left out: entitlement
+to work's turnaround, because it is one side of the three-way disagreement
+carried below, and a citeable sentence is the worst place to pick a side by
+accident.
+
+**Generating twelve pages from one template produced two grammar bugs, and a
+third was already there.** All three were invisible in the source and obvious in
+the rendered output:
+
+- `c.name.toLowerCase()` rendered "Directors & GST" as "directors & gst"
+- "a {name} check" read "a Identity check" on three of the twelve
+- **pre-existing**: the closing CTA had said "Run a {name} check" — with both
+  faults — on all twelve pages since it was written. Found by the new test, not
+  by reading the pages.
+
+The article is `the` throughout rather than an a/an test, which would itself be
+wrong for the next name added. `tools/test/answer-blocks.test.ts` asserts both,
+plus that every interpolated field is non-empty and every answer is 25–70 words:
+100 → 237 assertions.
+
+**And that test was briefly worthless, which is worth recording.** Its article
+assertion was written through a shell heredoc as `/\ba \${c.name}/`, and the
+heredoc turned `\b` into a literal **0x08 backspace byte**. The regex then
+looked for a backspace and matched nothing, so the guard passed the very
+mutation it existed to catch. Found by printing `repr()` of the line. Both
+assertions are plain `includes()` now — nothing to escape — and both were
+re-broken afterwards to confirm they fire. This is the third distinct
+manifestation of the heredoc trap in the "How we work" rules above, and the only
+one so far that produced a *silently useless check* rather than a broken file.
+
+**Still to do:**
+
+- The remaining commercial pages: `business/` (hub, smb, enterprise, certifier,
+  customer-kyc), `governments/` (hub + 4), `individuals/` (hub + 3),
+  `platform/` (hub + 3).
+- **`HowTo` schema** on the process sections. §11a.3 rates "how does background
+  verification work" a top query shape, and `chrome/Steps.tsx` now renders every
+  one of those sections from a record list — so the schema can be emitted from
+  the same data rather than restated, the way `FaqSection` already does.
 
 ---
 
