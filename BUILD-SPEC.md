@@ -1066,7 +1066,10 @@ HelloVerify sells to ministries. **An accessibility conformance statement is a s
 > Measured: of 382 literals, **194 are SVG artwork** (flags, the wordmark, the
 > YC badge), **57 were per-photograph placeholder tints**, and only **119 were
 > UI colour**. The rule is now read as "no colour literal in UI code", enforced
-> by `npm run check:tokens`, with two documented exemptions: SVG artwork, and
+> by the `hv/no-color-literal` ESLint rule (`npm run lint`) — this said
+> `npm run check:tokens` until 22 Sep, and Part 4 deleted that script when it
+> replaced the regex with an AST rule — with two documented exemptions: SVG
+> artwork, and
 > the OG card, which Satori renders without a CSSOM and so cannot resolve a
 > custom property.
 >

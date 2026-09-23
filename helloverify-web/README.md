@@ -879,8 +879,21 @@ Measured, 3 runs per URL, mobile emulation with simulated throttling:
 | `/en/platform/technology` | 875 ms | 0 | 46 ms | — |
 | **budget** | **< 2,000 ms** | **< 0.1** | **< 200 ms** | **< 250 KB** |
 
-Every one met, with LCP at roughly half its budget and CLS at zero — which is
-`next/font` doing what §9.3 bought it for. **These are lab numbers against a
+**Three of four met; TBT did not.** Corrected 22 Sep: the table above is a
+passing run, and `.lighthouseci/assertion-results.json` — the authoritative
+record — holds `total-blocking-time expected 200, actual 231, passed false` on
+`/en`, with `/en/contact` at 249 ms. lhci's own `manifest.json` marks the
+231 ms run `isRepresentativeRun: true`. LCP is met with room (783-1228 ms
+across all 15 stored runs) and CLS is **0 in every run** — which is
+`next/font` doing what §9.3 bought it for.
+
+**And none of these was a mobile measurement.** `lighthouserc.json` carried
+`preset: "desktop"` alongside `formFactor: "mobile"`; the preset wins on
+throttling, so every number here was taken at `cpuSlowdownMultiplier: 1`.
+§17 condition 3 asks for mobile. The preset is removed as of 22 Sep and
+**these figures are therefore stale rather than wrong** — they must be
+re-taken with `npm run perf:lab`, and TBT will worsen under mobile's 4x
+CPU slowdown, not improve. **These are lab numbers against a
 local origin**: no network latency and no CDN, so they are optimistic against
 production, and §17 condition 3 also wants CrUX field data after 28 days. The
 budget assertion was broken to check it fires — LCP budget set to 100 ms,
@@ -1320,11 +1333,18 @@ answering 200, all gates green. **`npm audit` now reports 0 vulnerabilities.**
 ## Design tokens
 
 ```sh
-npm run check:tokens
+npm run lint      # hv/no-color-literal
 ```
 
 §17 condition 21 asks for zero hex literals outside the theme. There were
-**382**. There are now **5**, and all five are a documented exemption.
+**382**. There are now **199**, and every one is a documented exemption — 194
+in SVG artwork and 5 OG-card constants, which is what the table below says and
+what this sentence said wrong until 22 Sep. `npm run check:tokens` is NOT the
+command: Part 4 replaced it with the ESLint rule and deleted the script, as this
+file records twice further down. BUILD-SPEC §17's own wording still says
+"outside `@theme`", which no longer describes the architecture either — there is
+no `@theme` block anywhere; the tokens are plain `:root` custom properties in
+`app/design.css`.
 
 | | was | now |
 |---|---:|---:|
@@ -1461,14 +1481,19 @@ correct code gets disabled, so the negative tests matter as much as the others.
   carries an exception any more: `check:contrast`'s `ACCEPTED` list is empty and
   `a11y.spec.ts`'s `ACCEPTED_FG` is deleted. **§17 condition 12's "one accepted
   foreground" clause is closed for `en`;** it stays open only for the `hi`/`ar`
-  locales, which do not exist yet (Part 9).
-- **RTL is half done: the CSS can mirror, but nothing has rendered it.** The
-  192 physical inline declarations are converted and lint-enforced (above), so
-  the mechanical blocker is gone. What remains needs actual Arabic: no `ar`
-  locale ships (§7), so no page has ever been rendered with `dir="rtl"`, and
-  the visual pass §12 asks for cannot happen until it does. Expect the usual
-  residue when it lands — icons and arrows that point the wrong way, and the six
-  paint-positioning values the converter deliberately left alone.
+  locales, which do not exist yet (Part 9b).
+- **RTL renders now, and the residue this bullet predicted was real.** TASKS.md
+  Part 9 (22 Sep): `tools/e2e/rtl.spec.ts` serves every one of the 56 routes
+  with `dir="rtl"` rewritten into the document before the browser parses it,
+  and **112 tests pass** across both breakpoints. It found, and Part 9 fixed,
+  18 asymmetric four-value `padding`/`margin` shorthands, 12 inline-axis
+  `translateX` values, 5 `transform-origin: left`, and one
+  `background-position`. **The "192" figure was wrong twice over**: the
+  converter's own breakdown sums to 197 in the two stylesheets, and 192 never
+  included the 77 `style={{ }}` declarations `hv/logical-css` found separately.
+  What is still owed is the half geometry cannot see — which way an SVG arrow
+  points, and which way a sheen sweeps — plus Arabic typography, which needs
+  the locale. All of that is Part 9b.
 - **No manual keyboard or screen-reader pass.** §12 asks for one across all 8
   templates before cutover. Automated tooling finds roughly a third of real
   barriers; it cannot tell you a focus order is confusing.
@@ -1712,10 +1737,14 @@ correct code gets disabled, so the negative tests matter as much as the others.
   `src/lib/seo/legacy-urls.ts`) — so shipping a locale means removing it from
   that list in the same change that adds it to `routing.ts`, or the new pages
   redirect away from themselves.
-- **RTL is not done.** §7 requires logical CSS properties. There are 165
-  physical ones in the generated `design.css` and 32 in `pages.css`. Fixing the
-  generated file means teaching `tools/port/build-css.py` to emit logical
-  properties — not hand-editing its output.
+- ~~**RTL is not done.** There are 165 physical properties in `design.css` and
+  32 in `pages.css`.~~ **Stale since Part 3/4 and removed 22 Sep.** It had sat
+  ~250 lines below a newer bullet in this same list that said the opposite;
+  both were present-tense. The conversion happened, `check:logical` enforces
+  it, and Part 9 has now rendered the result — see the RTL bullet above. The
+  point it made that still stands: the stylesheets are generated, so
+  `tools/port/build-css.py` would drop the conversion on a regeneration. That
+  is the one live item in "Known open questions" in TASKS.md.
 - No CMS.
 - **The contact form is wired end to end; Zoho credentials are not set.** The
   form posts to a Server Action (`src/app/contact/actions.ts`) which validates
@@ -1736,12 +1765,20 @@ correct code gets disabled, so the negative tests matter as much as the others.
   wait for real content rather than shipping templated stubs (IA §7 quality gate).
 - Accessibility conformance statement / VPAT is in progress, stated as such on
   `/platform/security-compliance`.
-- **Fonts are the remaining G2 breach.** 410 KB across 5 woff2 on the homepage,
-  against a 60 KB budget — 56% of the page. Newsreader accounts for 358 KB of it
-  (a two-axis variable face in two styles), and 85 KB of that is a latin-ext file
-  pulled in by the two `₹` characters in the placeholder pricing alone. The fix
-  is BUILD-SPEC §9.3: self-host via `next/font/local`, subset to the glyphs the
-  design uses. Not yet done.
+- **Fonts: the subsetting happened, the budget is still breached, and the tool
+  that did it can no longer run.** The §9.3 fix landed — `next/font/local` with
+  four self-hosted subset faces, not five, and **242 KB on disk rather than the
+  410 KB this bullet claimed until 22 Sep** (16,640 / 23,528 / 109,692 / 97,864
+  bytes). `check:perf` measures the worst page at **241.9 KB against a 245 KB
+  ceiling and the 60 KB §9.1 budget**: 3.1 KB of headroom, still 4x over spec.
+  And **`npm run build:fonts` exits 1.** `subset-fonts.mjs`'s `FACES` matches
+  four `next/font/google` content hashes that no longer exist in
+  `.next/static/media` — the four files there are byte-identical to
+  `src/fonts/*.woff2`, because the layout reads the subsets now. The unsubset
+  sources are not in the tree, so the glyph census cannot be re-run and glyphs
+  cannot be added back. That blocks `hi`/`ar`, whose scripts no shipped face
+  covers at all, and its docstring still instructs a double build that cannot
+  work. Same hazard class as `tools/port/build-css.py`.
 - No tablet artboard exists; 1080px and below uses the mobile board in a 720px
   centred column.
 - Copy is verbatim from the canvas, including everything its "READ ME FIRST"
