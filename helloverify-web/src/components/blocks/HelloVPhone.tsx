@@ -3,8 +3,12 @@
  *  Every class here is a canvas class, defined at both breakpoints — checked.
  *  lint-collisions: canvas-verbatim */
 import { Tick } from "@/components/brand/Tick";
+import { copy } from "@/lib/copy/request";
+import { BLOCKS } from "@/lib/copy/blocks";
 
-export function HelloVPhone() {
+export async function HelloVPhone() {
+  const t = (await copy(BLOCKS)).helloVPhone;
+
   return (
     <div className="phone2">
       {' '}
@@ -18,12 +22,12 @@ export function HelloVPhone() {
           {' '}
           <div>
             <div className="cnm">
-              HelloV
+              {t.name}
             </div>
             <div className="cst2">
               <span className="dot live">
               </span>
-              online · WhatsApp
+              {t.status}
             </div>
           </div>
           {' '}
@@ -32,33 +36,33 @@ export function HelloVPhone() {
         <div className="cmsgs">
           {' '}
           <div className="b in" style={{ animation: 'm1 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-            Hi Priya — who are we verifying today?
+            {t.msgs.m1.text}
             <span className="ts">
-              09:12
+              {t.msgs.m1.ts}
             </span>
           </div>
           {' '}
           <div className="b out" style={{ animation: 'm2 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-            A driver for the school run. Advanced please.
+            {t.msgs.m2.text}
             <span className="ts">
-              09:13
+              {t.msgs.m2.ts}
             </span>
           </div>
           {' '}
           <div className="b in" style={{ animation: 'm3 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-            Send a photo of his driving licence, front and back.
+            {t.msgs.m3.text}
             <span className="ts">
-              09:13
+              {t.msgs.m3.ts}
             </span>
           </div>
           {' '}
           <div className="b out img" style={{ animation: 'm4 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
             <div className="lic chat" style={{  }}>
               <span className="lt">
-                Driving licence
+                {t.licence.title}
               </span>
               <span className="lr">
-                IND
+                {t.licence.region}
               </span>
               <div className="face">
               </div>
@@ -74,7 +78,7 @@ export function HelloVPhone() {
               </div>
             </div>
             <span className="ts">
-              09:15
+              {t.msgs.m4.ts}
             </span>
           </div>
           {' '}
@@ -88,13 +92,13 @@ export function HelloVPhone() {
           </div>
           {' '}
           <div className="b in" style={{ animation: 'm5 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-            Read in 1.2 s ·{' '}
+            {t.msgs.m5.lead}{' '}
             <b>
-              MH12 •••• 3391
+              {t.msgs.m5.plate}
             </b>
-            , valid till 2031. Checking with RTO Pune and the courts now.
+            {t.msgs.m5.tail}
             <span className="ts">
-              09:15
+              {t.msgs.m5.ts}
             </span>
           </div>
           {' '}
@@ -111,34 +115,34 @@ export function HelloVPhone() {
             {' '}
             <div className="rh">
               <span className="rv">
-                Verified
+                {t.report.verdict}
               </span>
               <span className="rt">
-                27 min
+                {t.report.elapsed}
               </span>
             </div>
             {' '}
             <div className="rr">
               <Tick />
-              Driving licence · valid
+              {t.report.rows.licence}
             </div>
             {' '}
             <div className="rr">
               <Tick />
-              Criminal record · none found
+              {t.report.rows.criminal}
             </div>
             {' '}
             <div className="rr">
               <Tick />
-              Current address · confirmed
+              {t.report.rows.address}
             </div>
             {' '}
             <div className="rf">
-              Report PDF · 2 pages
+              {t.report.file}
             </div>
             {' '}
             <span className="ts">
-              09:42
+              {t.msgs.m6.ts}
             </span>
             {' '}
           </div>
