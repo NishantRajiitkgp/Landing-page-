@@ -1,0 +1,794 @@
+# TASKS.md Part 11 - the port of .github/workflows/ci.yml to Azure Pipelines,
+# plus the two things that workflow never had: a deploy, and a rollback.
+#
+# Part 11's framing is the whole reason this is a small file: "Every gate in this
+# repo is a plain npm script, so only the YAML wrapper changes." Nothing below
+# reimplements a check. The gates are `typecheck`, `lint`, `test`, `check:static`,
+# `check:all` (11 gates), `probe:redirects`, `contract`, `test:e2e` and
+# `perf:lab`, exactly as ci.yml runs them and in the same order.
+#
+# THIS FILE DOES NOT REPLACE ci.yml YET. Until the repo actually moves, GitHub
+# Actions is the pipeline that runs and this one is dormant: an Azure DevOps
+# pipeline only exists once someone creates it in a project and points it at this
+# path, so committing the file changes nothing about today's PR checks. The two
+# do not race, because they cannot both be attached to the same repository host.
+# At the move: create the pipeline, set the branch policy in the checklist at the
+# bottom of this file, watch one green run on a PR, then delete
+# .github/workflows/ci.yml in its own commit. Deleting it first would leave the
+# repo with no automated gate at all for however long the Azure setup takes, and
+# "no gate for a bit" is how AUDIT G2 happened.
+#
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# THE TWO RECORDED DEFECTS THIS PORT DOES NOT CARRY FORWARD
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# 1. ci.yml's `todo` job (its last 12 lines) is a step that echoes the fact that
+#    the deploy does not exist. That was honest when the alternative was a deploy
+#    job that could not authenticate, but it is still a pipeline that does not
+#    deploy - AUDIT G2 in a politer form. The Release stage below is a real
+#    deploy. It is gated on credentials existing rather than on a comment: with
+#    the variable group absent the stage fails loudly at the first `gcloud` call,
+#    which is a different and better failure than quietly printing "not yet
+#    implemented" on every green run.
+#
+# 2. ci.yml line 154 is `continue-on-error: true` on the Lighthouse step, with
+#    the reason stated: the step "dies roughly every other run on Windows in
+#    chrome-launcher's teardown (EPERM removing its temp profile, AFTER the
+#    audit)". The consequence is that §9.1's `timings` budgets - LCP, INP, TBT,
+#    the only budgets that cannot be read out of build output - have never once
+#    gated a merge, and §17 condition 3 is a mobile Core Web Vitals condition.
+#    That flag is NOT ported. The failure it was tolerating is a Windows
+#    file-locking problem in a temp-profile delete; every agent below is
+#    `ubuntu-latest`, where the EPERM cannot occur. ci.yml's own comment asked
+#    for exactly this: "If it proves reliable here, remove this line and let it
+#    gate." Note what this means in practice, because it is not free: TBT is
+#    ALREADY FAILING on mobile - .lighthouseci/assertion-results.json records
+#    `total-blocking-time expected 200, actual 231` on /en and 249 ms on
+#    /en/contact - so the first run of this pipeline goes red on the Lighthouse
+#    step. That is the budget working. The fix is the TBT, or a signed-off change
+#    to budget.json; it is not this flag.
+#
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# AUTOMATED DEPLOY ON MERGE - AND WHY THERE IS NO `trigger: none` HERE
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# AUDIT G2 is the old repo's Azure pipeline carrying `trigger: none`: a CI config
+# that had to be started by hand, and therefore was not. BUILD-SPEC §14.4 is
+# explicit - "Automated deploy on merge to `main`. No `trigger: none` (AUDIT G2)"
+# - and Part 11 repeats it. So: `trigger` names `main`, `pr` names `main`, and
+# the Release stage runs on a merge with no human in the loop.
+#
+# REJECTED, deliberately: an `environment:` with a manual approval check on the
+# deploy job. It is the idiomatic Azure DevOps way to guard a production deploy,
+# and it would reintroduce precisely the property AUDIT G2 describes - a release
+# that waits for someone to click. The control that replaces it is the rollback
+# below: the deploy is automatic, and an automatic contract run takes it back out
+# if the released origin is wrong. A second reason, smaller but real: output
+# variables are addressed differently in `deployment` jobs than in plain `job`s,
+# and that is not a difference anyone can verify without a run - see the note on
+# the release-state artifact in the Release stage.
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  # ci.yml's `concurrency: cancel-in-progress: true`, which Azure spells as a
+  # property of the PR trigger. Stated explicitly rather than left to the default
+  # because the equivalent behaviour on `main` is `trigger.batch`, and that one is
+  # deliberately OFF: cancelling a run on main mid-Release would abandon a deploy
+  # somewhere between the traffic shift and the contract check, which is the one
+  # window in which nothing is watching the released origin.
+  autoCancel: true
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  # `npm ci` writes its cache here rather than wherever the tracked
+  # helloverify-web/.npmrc points. Measured, because it is not what it looks
+  # like: that file's bytes are
+  #     b'allow-scripts=\ncache=D:\\Caches\npm\n'
+  # - somebody wrote `cache=D:\Caches\npm` through a tool that ate the `\n`, so
+  # the committed config is `cache=D:\Caches` followed by a junk line `pm`. On a
+  # Linux agent npm resolves that to a literal `./D:\Caches` directory, which
+  # works and caches nothing across runs. Setting NPM_CONFIG_CACHE overrides the
+  # project .npmrc for the pipeline. The .npmrc itself is the owner's to fix or
+  # delete - a machine-specific absolute cache path belongs in a user-level
+  # .npmrc, not in the repo.
+  - name: NPM_CONFIG_CACHE
+    value: $(Pipeline.Workspace)/.npm
+
+  # Reported by `npm ci`, and it is the number the pipeline is developed against:
+  # @types/node is pinned ^24 and vitest 5 requires >=22.
+  - name: NODE_VERSION
+    value: 24.x
+
+  # Every deploy value lives in one variable group so that none of them is
+  # guessed here. See "VALUES THE OWNER MUST SUPPLY" at the foot of this file.
+  # The name is an obvious placeholder and will not resolve: a run fails at
+  # "variable group not found" rather than deploying somewhere unintended.
+  - group: REPLACE__hv_release_variable_group
+
+stages:
+  # ───────────────────────────────────────────────────────────────────────────
+  # The ci.yml port. Two jobs, for the reason ci.yml gives: the browser half
+  # installs a ~115 MB Chromium and takes minutes, "and there is no reason a typo
+  # in a unit test should wait for it".
+  #
+  # One difference from GitHub that is worth knowing before reading the branch
+  # policy: an Azure DevOps build-validation policy is attached to a PIPELINE,
+  # not to a job. On GitHub these were two required checks; here one required
+  # check covers both jobs, and a failure in either fails the pipeline and blocks
+  # the merge.
+  # ───────────────────────────────────────────────────────────────────────────
+  - stage: Verify
+    displayName: Verify (BUILD-SPEC 14.2)
+    jobs:
+      - job: verify
+        displayName: Typecheck, lint, unit, build, build-output gates
+        timeoutInMinutes: 20
+        steps:
+          # Azure has no equivalent of ci.yml's `defaults.run.working-directory`,
+          # so `workingDirectory: helloverify-web` is repeated on every script
+          # step below. It is the single largest difference between the two
+          # files. Omitting it on one step does not fail loudly - it runs npm in
+          # the repo root, where there is no package.json, and the error names
+          # the missing file rather than the missing line.
+          - checkout: self
+            fetchDepth: 1
+
+          - task: NodeTool@0
+            displayName: Node $(NODE_VERSION)
+            inputs:
+              versionSpec: $(NODE_VERSION)
+
+          - task: Cache@2
+            displayName: Restore npm cache
+            inputs:
+              key: 'npm | "$(Agent.OS)" | helloverify-web/package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)"
+              path: $(NPM_CONFIG_CACHE)
+
+          # `npm ci` also runs the `prepare` script, which installs the
+          # pre-commit secret hook into this clone. Pointless on an agent and
+          # deliberately not special-cased: an installer that behaves differently
+          # in CI is an installer nobody has tested. It exits 0 on anything it
+          # does not understand, so it cannot fail an install.
+          - script: npm ci
+            displayName: Install
+            workingDirectory: helloverify-web
+
+          - script: npm run typecheck
+            displayName: Typecheck
+            workingDirectory: helloverify-web
+
+          # §14.2's "lint (incl. token + logical-property rules)". Both custom
+          # rules live in tools/eslint/ and run as errors: hv/no-color-literal
+          # and hv/logical-css.
+          - script: npm run lint
+            displayName: Lint
+            workingDirectory: helloverify-web
+
+          - script: npm test
+            displayName: Unit tests
+            workingDirectory: helloverify-web
+
+          - script: npm run build
+            displayName: Build
+            workingDirectory: helloverify-web
+
+          # §14.2's "build (assert: 0 dynamic routes)". Run as its own named step
+          # even though `check:all` runs the same script as its first gate, and
+          # ci.yml does the same. The duplication buys a named red step in the
+          # run summary for the failure that matters most: a route that silently
+          # becomes dynamic loses the prerendered HTML that all nine build-output
+          # gates and every SEO assertion in this repo read, and would otherwise
+          # surface months later as a latency regression. The cost is about a
+          # second.
+          - script: npm run check:static
+            displayName: Assert zero dynamic routes
+            workingDirectory: helloverify-web
+
+          # The 11 gates: sitemap/canonical/hreflang, the JSON-LD graph,
+          # llms.txt, §9.1's size budgets, the client-bundle secret grep, axe,
+          # contrast, the colour-literal and logical-property CSS checks, and the
+          # CSP check.
+          - script: npm run check:all
+            displayName: SEO, performance, a11y and secret gates (11)
+            workingDirectory: helloverify-web
+
+          # Not in ci.yml, because it did not exist: the staged/tracked-source
+          # half of the secret scan. `check:secrets` greps `.next/static`, which
+          # is the right place to catch a leak that shipped; it cannot catch a
+          # credential committed into a file that no client bundle imports. This
+          # runs the same scanner the pre-commit hook runs, over every tracked
+          # text file, so a commit made with the hook uninstalled or with
+          # `--no-verify` is still caught before merge.
+          - script: npm run check:secrets:source
+            displayName: Secret scan (tracked source)
+            workingDirectory: helloverify-web
+
+          # §6.3 and §14.3 against a real server. `next start` is not a
+          # deployment, so four of the contract suite's assertions degrade to
+          # warnings here - see the Release stage, which is where they are
+          # actually enforced. `&` alone would end with the step, so the server
+          # is disowned and the loop polls for it.
+          - script: |
+              set -euo pipefail
+              npx next start -p 3100 > "$(Agent.TempDirectory)/server.log" 2>&1 &
+              for i in $(seq 1 60); do
+                curl -sf -o /dev/null http://localhost:3100/en && exit 0
+                sleep 1
+              done
+              echo "server did not start"; cat "$(Agent.TempDirectory)/server.log"; exit 1
+            displayName: Start the built site
+            workingDirectory: helloverify-web
+
+          - script: npm run probe:redirects http://localhost:3100
+            displayName: Redirect probe (823 assertions, §6.3)
+            workingDirectory: helloverify-web
+
+          - script: npm run contract http://localhost:3100
+            displayName: Production contract, local run (§14.3)
+            workingDirectory: helloverify-web
+
+      - job: browser
+        displayName: E2E, page axe, Lighthouse budgets
+        timeoutInMinutes: 30
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: NodeTool@0
+            displayName: Node $(NODE_VERSION)
+            inputs:
+              versionSpec: $(NODE_VERSION)
+
+          - task: Cache@2
+            displayName: Restore npm cache
+            inputs:
+              key: 'npm | "$(Agent.OS)" | helloverify-web/package-lock.json'
+              restoreKeys: |
+                npm | "$(Agent.OS)"
+              path: $(NPM_CONFIG_CACHE)
+
+          - script: npm ci
+            displayName: Install
+            workingDirectory: helloverify-web
+
+          # Chromium only, and pinned on purpose: these are accessibility and
+          # performance MEASUREMENTS, and a number that moves with whichever
+          # browser the agent happened to have is not a measurement.
+          # `--with-deps` installs the shared libraries the headless build needs.
+          - script: npx playwright install --with-deps chromium
+            displayName: Install Chromium
+            workingDirectory: helloverify-web
+
+          - script: npm run build
+            displayName: Build
+            workingDirectory: helloverify-web
+
+          # Playwright starts its own `next start`: `reuseExistingServer` is
+          # false when CI is set, so it will not adopt a stale server. The
+          # BUILD_ID guard in tools/e2e/global-setup.ts is the backstop.
+          #
+          # CI=true is set explicitly. Azure sets TF_BUILD, not CI, and
+          # playwright.config.ts branches on process.env.CI - without this the
+          # config would take its local-development path on the agent, which is
+          # the branch that retries nothing and reuses a running server.
+          - script: npm run test:e2e
+            displayName: E2E, and axe in a browser (56 routes)
+            workingDirectory: helloverify-web
+            env:
+              CI: 'true'
+
+          # §9.1's `timings` budgets, which cannot be read out of build output.
+          # Needs its own server because Playwright's only lives for the test
+          # run, and on port 3100 specifically: lighthouserc.json hard-codes four
+          # http://localhost:3100 URLs.
+          #
+          # No continueOnError. See defect 2 at the top of this file - this is
+          # the line whose absence is the point of the port.
+          - script: |
+              set -euo pipefail
+              npx next start -p 3100 > "$(Agent.TempDirectory)/lh-server.log" 2>&1 &
+              for i in $(seq 1 60); do
+                curl -sf -o /dev/null http://localhost:3100/en && break
+                sleep 1
+              done
+              npm run perf:lab
+            displayName: Lighthouse budgets (§9.1 timings, mobile)
+            workingDirectory: helloverify-web
+
+          # Three directories, one artifact. PublishPipelineArtifact@1 takes a
+          # single path and has no equivalent of upload-artifact's
+          # `if-no-files-found: ignore`, so they are collected first with `cp -r
+          # ... || true`: on a green run there may be no test-results/ at all,
+          # and a publish task that fails because the tests left nothing behind
+          # would turn a passing run red.
+          - script: |
+              set -uo pipefail
+              mkdir -p "$(Build.ArtifactStagingDirectory)/reports"
+              cp -r playwright-report "$(Build.ArtifactStagingDirectory)/reports/" 2>/dev/null || true
+              cp -r test-results     "$(Build.ArtifactStagingDirectory)/reports/" 2>/dev/null || true
+              cp -r .lighthouseci    "$(Build.ArtifactStagingDirectory)/reports/" 2>/dev/null || true
+              exit 0
+            displayName: Collect the reports
+            condition: always()
+            workingDirectory: helloverify-web
+
+          - task: PublishPipelineArtifact@1
+            displayName: Keep the reports
+            condition: always()
+            inputs:
+              targetPath: $(Build.ArtifactStagingDirectory)/reports
+              artifact: browser-reports
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # RELEASE - deploy, then the §14.3 contract against the DEPLOYED origin, then
+  # rollback if that contract fails (§17 condition 24).
+  #
+  # Runs on a merge to main and on nothing else. A PR build validation compiles
+  # and skips this whole stage, so a fork or a PR author cannot reach the
+  # credentials: `Build.Reason` is `PullRequest` for a policy build and
+  # `IndividualCI` for the push that follows the merge.
+  #
+  # WHY THE CONTRACT MUST NOT RUN AGAINST LOCALHOST HERE, which is the single
+  # most important line in this stage. tools/ci/production-contract.mjs:44-50:
+  #
+  #     const LOCAL = /^https?:\/\/(localhost|127\.0\.0\.1)/.test(BASE);
+  #
+  # and four assertions are gated on it - HTML compression (:63), JS compression
+  # (:80), `immutable` on hashed assets (:89) and the apex 308 (:143). Against a
+  # local URL each one WARNS instead of failing. Those four are AUDIT A1, A3 and
+  # A4: the compression finding §11a.5 calls "the single highest-leverage GEO
+  # action available", the apex domain that is currently a hard connection
+  # failure, and the cache headers the old pipeline claimed to have fixed. §14.3
+  # exists because "the old pipeline claimed to fix the /index.html redirect and
+  # the immutable cache headers. Neither landed, and nothing noticed for months."
+  # Handing this suite a localhost URL post-deploy would reproduce that exactly:
+  # a green check that was structurally incapable of going red. The URL is
+  # therefore $(PUBLIC_ORIGIN) - the www hostname in front of the CDN, not the
+  # run.app URL, because `immutable` and brotli are properties of the load
+  # balancer and not of the container.
+  # ───────────────────────────────────────────────────────────────────────────
+  - stage: Release
+    displayName: Deploy, contract, rollback
+    dependsOn: Verify
+    # One line rather than a folded block, because a folded condition is
+    # evaluated as a string with newlines in it and that is a property of the
+    # expression parser nobody should be relying on for the gate that decides
+    # whether a PR build can reach production credentials.
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'), ne(variables['Build.Reason'], 'PullRequest'))
+    jobs:
+      - job: deploy
+        displayName: Deploy a no-traffic revision, then shift traffic
+        timeoutInMinutes: 30
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: NodeTool@0
+            displayName: Node $(NODE_VERSION)
+            inputs:
+              versionSpec: $(NODE_VERSION)
+
+          - script: npm ci
+            displayName: Install
+            workingDirectory: helloverify-web
+
+          # The Google Cloud CLI is NOT on the Microsoft-hosted ubuntu image.
+          # Stated as a fact worth checking rather than a certainty - image
+          # contents change, which is why the step is idempotent: if gcloud is
+          # already there it prints its version and stops. Without this step the
+          # deploy fails at "gcloud: command not found", which reads like a
+          # broken pipeline rather than a missing tool.
+          #
+          # REJECTED: a self-hosted agent with the SDK baked in, which is how
+          # this normally ends up and is faster. It needs an agent pool to exist
+          # first, and a pool is a resource nobody has provisioned yet.
+          - script: |
+              set -euo pipefail
+              if command -v gcloud > /dev/null 2>&1; then gcloud --version | head -1; exit 0; fi
+              curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+                | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+              echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+                | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list > /dev/null
+              sudo apt-get update -qq
+              sudo apt-get install -y -qq google-cloud-cli
+              gcloud --version | head -1
+            displayName: Ensure the Google Cloud CLI is present
+
+          # Service-account key from the variable group, written to a file and
+          # removed at the end of the job.
+          #
+          # REJECTED: workload identity federation, which is the right answer and
+          # is not written here because it cannot be written blind. Azure DevOps
+          # issues OIDC tokens for its own Azure service connections; federating
+          # those into GCP needs a workload-identity pool and provider created
+          # against the ADO issuer, and the issuer URL and audience are
+          # per-organisation values. Guessing them produces a pipeline that fails
+          # at `gcloud auth login --cred-file` with an error about a malformed
+          # configuration, which is a worse starting point than a key file the
+          # owner can replace in one step. Recorded in the values table as the
+          # first thing to change once access exists.
+          - script: |
+              set -euo pipefail
+              printf '%s' "$GCP_SA_KEY" > "$(Agent.TempDirectory)/gcp-key.json"
+              gcloud auth activate-service-account --key-file="$(Agent.TempDirectory)/gcp-key.json"
+              gcloud config set project "$(GCP_PROJECT_ID)"
+              gcloud config set run/region "$(GCP_REGION)"
+            displayName: Authenticate to GCP
+            env:
+              # Secret variables are NOT injected into the environment
+              # automatically - this mapping is required, and its absence is a
+              # silent empty string rather than an error.
+              GCP_SA_KEY: $(GCP_SA_KEY)
+
+          # Recorded BEFORE anything is deployed, and published as an artifact
+          # immediately, because it is the only input the rollback job has.
+          #
+          # REJECTED: an output variable (`isOutput=true`) read by the rollback
+          # job. It is the documented mechanism and it is one expression-syntax
+          # mistake away from an empty string, the addressing differs between
+          # plain and `deployment` jobs, and an empty string here means the
+          # rollback silently rolls back to nothing. A file in an artifact is the
+          # same in both job types, survives a re-run of the rollback job alone,
+          # and can be read by a human afterwards to see what the pipeline
+          # thought the last good revision was.
+          #
+          # `--format=json` and jq rather than a gcloud `--format=value(...)`
+          # filter: `status.traffic` is a list and the serving revision is the
+          # entry at 100 percent, which is a filter gcloud's format language
+          # expresses badly and jq expresses exactly. On the very first deploy
+          # there is no such entry and this writes NONE, which the rollback job
+          # treats as "nothing to roll back to" and says so.
+          - script: |
+              set -euo pipefail
+              mkdir -p "$(Build.ArtifactStagingDirectory)/release-state"
+              PREV=$(gcloud run services describe "$(CLOUD_RUN_SERVICE)" --format=json 2>/dev/null \
+                | jq -r '[.status.traffic[]? | select(.percent == 100) | .revisionName] | first // "NONE"')
+              echo "${PREV}" > "$(Build.ArtifactStagingDirectory)/release-state/previous-revision.txt"
+              echo "previous serving revision: ${PREV}"
+            displayName: Record the revision serving traffic now
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish the rollback target
+            inputs:
+              targetPath: $(Build.ArtifactStagingDirectory)/release-state
+              artifact: release-state
+
+          # `--no-traffic --tag candidate` is the shape of this deploy, and it is
+          # what makes the rollback cheap rather than heroic: the new revision
+          # gets a URL of its own and zero percent of production, so the release
+          # can be inspected before a single visitor reaches it. Rolling back is
+          # then a traffic pointer moving back to a revision that never stopped
+          # existing - no rebuild, no redeploy, seconds rather than minutes.
+          #
+          # `--source` builds with Cloud Build and Google's Node buildpack rather
+          # than from a Dockerfile, because there is no Dockerfile in this repo
+          # and inventing one would mean inventing a base image and a Node major.
+          # TWO ASSUMPTIONS HERE THAT NOBODY HAS RUN, both in the values table:
+          # the buildpack must choose Node 24 (package.json declares no
+          # `engines.node`, so it will pick its own default), and `next start`
+          # must be the start command it infers and must honour Cloud Run's
+          # $PORT. If either is wrong the fix is a Dockerfile, which is a
+          # 20-line file, not a redesign of this stage.
+          - script: |
+              set -euo pipefail
+              gcloud run deploy "$(CLOUD_RUN_SERVICE)" \
+                --source helloverify-web \
+                --no-traffic \
+                --tag candidate \
+                --quiet
+            displayName: Deploy (no traffic, tagged candidate)
+
+          - script: |
+              set -euo pipefail
+              CANDIDATE=$(gcloud run services describe "$(CLOUD_RUN_SERVICE)" --format=json \
+                | jq -r '[.status.traffic[]? | select(.tag == "candidate") | .url] | first // ""')
+              if [ -z "${CANDIDATE}" ]; then
+                echo "the candidate tag has no URL - refusing to shift traffic"; exit 1
+              fi
+              echo "candidate: ${CANDIDATE}"
+              echo "##vso[task.setvariable variable=CANDIDATE_URL]${CANDIDATE}"
+            displayName: Resolve the candidate URL
+
+          # The pre-traffic gate is the REDIRECT PROBE, not the contract suite,
+          # and the distinction is measured rather than stylistic. The probe's
+          # 823 assertions are all application-level - legacy path in, 308 and a
+          # Location header out - and every one of them is true of a bare Cloud
+          # Run revision. The contract suite is not: :146 fetches
+          # `https://helloverify.com/` LITERALLY, whatever BASE was, so running
+          # it here would assert the apex domain against a revision URL that has
+          # no DNS relationship to it. Running the app-level half now means a
+          # broken redirect table never reaches a visitor at all.
+          - script: npm run probe:redirects "$(CANDIDATE_URL)"
+            displayName: Redirect probe against the candidate revision
+            workingDirectory: helloverify-web
+
+          - script: |
+              set -euo pipefail
+              gcloud run services update-traffic "$(CLOUD_RUN_SERVICE)" \
+                --to-latest \
+                --remove-tags candidate \
+                --quiet
+            displayName: Shift 100 percent of traffic to the new revision
+
+          - script: rm -f "$(Agent.TempDirectory)/gcp-key.json"
+            displayName: Remove the key file
+            condition: always()
+
+      # ─────────────────────────────────────────────────────────────────────
+      # §14.3, for real: the live origin, after the release. This job failing is
+      # the single event that triggers the rollback.
+      # ─────────────────────────────────────────────────────────────────────
+      - job: contract
+        displayName: Production contract against the released origin
+        dependsOn: deploy
+        timeoutInMinutes: 15
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: NodeTool@0
+            displayName: Node $(NODE_VERSION)
+            inputs:
+              versionSpec: $(NODE_VERSION)
+
+          - script: npm ci
+            displayName: Install
+            workingDirectory: helloverify-web
+
+          # A CDN in front of a just-deployed revision can serve the previous
+          # HTML for a few seconds. The contract asserts headers and statuses
+          # rather than content, so this is a short settle rather than a poll
+          # loop for a specific build id - and it is 20 seconds, not two minutes,
+          # because a contract that waits long enough to hide a bad deploy is not
+          # a contract.
+          - script: sleep 20
+            displayName: Let the edge settle
+
+          # §17 condition 24, and the exit code that drives everything below it:
+          # production-contract.mjs ends in `process.exit(report())`, and
+          # report() returns 1 if any assertion failed and 0 otherwise. Warnings
+          # do not fail it. So THIS step's exit code is the rollback trigger -
+          # there is no separate signal to keep in sync.
+          #
+          # READ THIS BEFORE THE FIRST RELEASE. Against any non-local origin the
+          # apex assertion at :143-150 is enforced, and §17 condition 5 -
+          # `helloverify.com` 308s to `www.helloverify.com` - is load-balancer
+          # and DNS configuration that does not exist yet. Part 11 says so: "The
+          # contract suite already asserts it and will catch its absence at
+          # cutover." It will catch it here, by rolling the release back. That is
+          # the correct behaviour and it is also an ordering requirement:
+          # configure apex -> www BEFORE the first run of this stage, which is
+          # step 2 of BUILD-SPEC §15 Phase 4 ("Fix the apex domain - this is
+          # DNS/LB work, do it before cutover"). There is deliberately no flag to
+          # switch the assertion off; a rollback you can silence is not a
+          # rollback.
+          - script: npm run contract "$(PUBLIC_ORIGIN)"
+            displayName: Production contract (§14.3) - failure triggers rollback
+            workingDirectory: helloverify-web
+
+      # ─────────────────────────────────────────────────────────────────────
+      # ROLLBACK. `condition: failed()` with both jobs as dependencies, so it
+      # runs when the contract fails AND when the deploy job itself fails - a
+      # deploy that dies after the traffic shift leaves production on an
+      # unverified revision, which is the same problem.
+      #
+      # Idempotent in the case where nothing needed undoing: if the deploy failed
+      # before the traffic shift, traffic is still on the recorded revision and
+      # `update-traffic --to-revisions=<that>=100` is a no-op.
+      # ─────────────────────────────────────────────────────────────────────
+      - job: rollback
+        displayName: Roll traffic back to the last verified revision
+        dependsOn:
+          - deploy
+          - contract
+        condition: failed()
+        timeoutInMinutes: 15
+        steps:
+          - checkout: self
+            fetchDepth: 1
+
+          - task: NodeTool@0
+            displayName: Node $(NODE_VERSION)
+            inputs:
+              versionSpec: $(NODE_VERSION)
+
+          - script: npm ci
+            displayName: Install
+            workingDirectory: helloverify-web
+
+          - task: DownloadPipelineArtifact@2
+            displayName: Fetch the rollback target
+            inputs:
+              artifact: release-state
+              path: $(Pipeline.Workspace)/release-state
+
+          # Same install as the deploy job. Repeated rather than factored into a
+          # template: a `steps` template is a second file to keep in step with
+          # this one, and the thing that must never fail for want of a missing
+          # tool is the rollback.
+          - script: |
+              set -euo pipefail
+              if command -v gcloud > /dev/null 2>&1; then gcloud --version | head -1; exit 0; fi
+              curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+                | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+              echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+                | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list > /dev/null
+              sudo apt-get update -qq
+              sudo apt-get install -y -qq google-cloud-cli
+              gcloud --version | head -1
+            displayName: Ensure the Google Cloud CLI is present
+
+          - script: |
+              set -euo pipefail
+              printf '%s' "$GCP_SA_KEY" > "$(Agent.TempDirectory)/gcp-key.json"
+              gcloud auth activate-service-account --key-file="$(Agent.TempDirectory)/gcp-key.json"
+              gcloud config set project "$(GCP_PROJECT_ID)"
+              gcloud config set run/region "$(GCP_REGION)"
+            displayName: Authenticate to GCP
+            env:
+              GCP_SA_KEY: $(GCP_SA_KEY)
+
+          # NONE means the failing release was the first one this service ever
+          # had, so there is no known-good revision to return to. The job fails
+          # rather than papering over it: the right action then is a human
+          # looking at a service that has never served a verified request, not an
+          # automated traffic move to a revision nobody chose.
+          - script: |
+              set -euo pipefail
+              PREV=$(cat "$(Pipeline.Workspace)/release-state/previous-revision.txt")
+              echo "rolling back to: ${PREV}"
+              if [ "${PREV}" = "NONE" ] || [ -z "${PREV}" ]; then
+                echo "no previous revision was serving traffic - nothing to roll back to."
+                echo "the service is live on an unverified revision and needs a human."
+                exit 1
+              fi
+              gcloud run services update-traffic "$(CLOUD_RUN_SERVICE)" \
+                --to-revisions="${PREV}=100" \
+                --quiet
+            displayName: Shift traffic back
+
+          - script: sleep 20
+            displayName: Let the edge settle
+
+          # The rollback is not finished when the traffic pointer moves; it is
+          # finished when the origin passes the suite that rejected the release.
+          # Re-running it here is what distinguishes "rolled back" from "rolled
+          # back and still broken" - the second is the case where the failure was
+          # never in the application at all (an expired certificate, the apex
+          # redirect, a CDN rule) and no revision will fix it.
+          - script: npm run contract "$(PUBLIC_ORIGIN)"
+            displayName: Re-run the contract - did the rollback restore a good origin
+            workingDirectory: helloverify-web
+
+          - script: rm -f "$(Agent.TempDirectory)/gcp-key.json"
+            displayName: Remove the key file
+            condition: always()
+
+          # The run stays red whatever happens here. A successful rollback is not
+          # a successful release, and a green tick on a run that rolled back is
+          # how a rollback becomes routine and then invisible.
+          - script: |
+              echo "This release was rolled back. The run is failed on purpose."
+              exit 1
+            displayName: Fail the run - a rollback is not a success
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VALUES THE OWNER MUST SUPPLY
+#
+# All of these live in the variable group named at the top of `variables`. None
+# of them is guessed anywhere in this file; every placeholder is spelled
+# REPLACE__ or is a variable reference that will not resolve until the group
+# exists.
+#
+#   Name                  What it is                       Why nothing here guesses it
+#   ──────────────────────────────────────────────────────────────────────────────
+#   (the group name)      Azure DevOps library variable    Per-project. Placeholder:
+#                         group holding the rest           REPLACE__hv_release_variable_group
+#   GCP_PROJECT_ID        GCP project the service lives    Unique per org; a wrong value
+#                         in                               deploys nowhere or somewhere else
+#   GCP_REGION            Cloud Run region                 A data-residency decision
+#                                                          (§18 decision 2), not a default
+#   CLOUD_RUN_SERVICE     Cloud Run service name           Does not exist yet - BUILD-SPEC
+#                                                          §15 Phase 0
+#   GCP_SA_KEY            SECRET. Service-account JSON      Mark it secret in the group.
+#                         key with run.admin +             Replace with workload identity
+#                         cloudbuild.builds.editor +       federation when the pool exists
+#                         iam.serviceAccountUser
+#   PUBLIC_ORIGIN         The full https origin the        Must be the www host in front of
+#                         contract runs against, e.g.      the CDN. A run.app URL here
+#                         https://www.<the live host>       silently un-tests AUDIT A1/A4
+#
+# NOT a variable, and blocking:
+#
+#   apex -> www 308       §17 condition 5. LB + DNS work. The contract asserts it
+#                         against a hardcoded https://helloverify.com (:146) and will
+#                         roll back every release until it exists. Do it first.
+#   engines.node          package.json declares none, so Cloud Build's Node buildpack
+#                         picks its own major. Either add one or add a Dockerfile.
+#   NEXT_SERVER_ACTIONS_ENCRYPTION_KEY
+#                         Not a pipeline variable - a Cloud Run service env var, and
+#                         .env.example is explicit about why it cannot be skipped:
+#                         "Cloud Run runs more than one container as soon as it scales,
+#                         and an action reference encrypted by instance A must be
+#                         decryptable by instance B". Unset, the contact form fails on
+#                         whichever container did not render the page. `openssl rand
+#                         -base64 32`, once per environment, identical across instances.
+#   serverActions.allowedOrigins
+#                         next.config.ts, not here. If the load balancer rewrites Host,
+#                         every form submission returns a CSRF failure and nothing in
+#                         this pipeline would notice: the contract suite asserts headers
+#                         and statuses, and E2E runs against a local server where the
+#                         hop does not happen. Verify against the real LB at cutover.
+#
+#
+# BRANCH POLICY - the checklist, because it is configured in a UI and therefore
+# has no diff. Azure DevOps: Repos > Branches > main > Branch policies.
+#
+#   1. Require a minimum number of reviewers: 1, "allow requestors to approve
+#      their own changes" OFF for anyone but a solo owner.
+#      WHY: §14.4 - "Branch protection: PR required, checks required, no direct
+#      pushes to main". A branch policy of any kind is what makes main
+#      unpushable; this is the one that turns a push into a PR.
+#
+#   2. Build validation: this pipeline, trigger Automatic, policy requirement
+#      REQUIRED, build expiration "Immediately when main is updated".
+#      WHY: "Optional" is a check that reports and does not block, which is the
+#      class of control AUDIT G2 is about. The expiration setting is the part
+#      that is easy to miss: without it a green run from before someone else's
+#      merge still counts, and the merge commit nobody tested is the one that
+#      breaks main.
+#
+#   3. Check for linked work items: OFF.
+#      WHY: there is no work-item tracking on this project, so ON blocks every
+#      merge on a field nobody fills in. A policy that is routinely overridden
+#      trains people to use the override.
+#
+#   4. Check for comment resolution: ON, required.
+#      WHY: cheap, and the failure mode it prevents is a review comment about a
+#      published price or a legal page being merged past rather than answered.
+#
+#   5. Limit merge types: squash merge only.
+#      WHY: §14.4 asks for Conventional Commits and notes the old history is
+#      '"resolve this issue" x3'. Squash makes the PR title the commit message,
+#      which is the only place a convention can actually be enforced.
+#
+#   6. Automatically included reviewers: add one for helloverify-web/src/lib/seo/**,
+#      src/lib/content/legal/** and next.config.ts.
+#      WHY: the redirect table, the legal copy and the CSP are the three places
+#      where a change is syntactically fine and commercially or legally wrong.
+#      Every gate in this repo passes on a wrong-but-valid redirect target.
+#
+#   7. ONE long-lived branch. main is the default branch; "delete source branch"
+#      checked by default on completion; no `develop`, no `release/*`, no
+#      branches named backup.
+#      WHY: AUDIT G4 - the old repo has three branches called "backup". They are
+#      not backups, they are three divergent answers to "what is deployed". This
+#      repo currently has exactly one besides main (feat/leads-api-zoho, a live
+#      feature branch), and that is the state to hold.
+#
+#   8. Repository permissions: "Force push (rewrite history and delete
+#      branches)" DENY for Contributors on main, and Bypass policies DENY for
+#      everyone who is not the project administrator.
+#      WHY: branch policies are enforced on the server but a bypass permission
+#      makes them advisory, and a force push to main erases the history that the
+#      required checks ran against.
+#
+#   9. On the GitHub side, for as long as .github/workflows/ci.yml is the
+#      pipeline that runs: Settings > Branches > main - require a pull request,
+#      require the `verify` and `browser` checks, require branches to be up to
+#      date, and disallow force pushes. Same reasons, different UI. Remove after
+#      the move, together with the workflow.
+# ─────────────────────────────────────────────────────────────────────────────

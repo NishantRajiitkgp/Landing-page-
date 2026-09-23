@@ -9,7 +9,6 @@
       ],
       "numberOfRuns": 3,
       "settings": {
-        "preset": "desktop",
         "formFactor": "mobile",
         "screenEmulation": {
           "mobile": true,

@@ -79,9 +79,17 @@ function pages(root) {
 
 /** The build id is substituted literally, with each side's own id, rather than
  *  by a pattern — a page that merely looks like it contains an id cannot be
- *  blanked by accident. */
+ *  blanked by accident.
+ *
+ *  The CSP meta goes out here, before either question is asked, because it is
+ *  neither markup nor payload - see CSP_META below. Putting it in `markupOf`
+ *  instead was measured and rejected: the markup verdict came out right (58 of
+ *  58 identical across the three condition-22 splits) but the meta stayed in
+ *  the raw comparison, so all 58 pages fell into the payload bucket and
+ *  "0 of 58 also byte-identical in the flight payload" was true whether or not
+ *  a single payload had moved. */
 function read(path, buildId) {
-  return readFileSync(path, "utf8").split(buildId).join("<BUILD_ID>");
+  return readFileSync(path, "utf8").split(buildId).join("<BUILD_ID>").replace(CSP_META, "<CSP>");
 }
 
 /** A RUN of adjacent push scripts collapses to ONE token, not one each.
@@ -93,6 +101,32 @@ function read(path, buildId) {
  *  exists to remove payload facts. Replacing each script with its own token
  *  leaked the count back in, and would have failed every future split on it. */
 const PUSH = /(?:<script>self\.__next_f\.push\(.*?\)<\/script>)+/gs;
+
+/** The per-page CSP meta, which is a hash of the scripts above.
+ *
+ *  Part 7's `tools/ci/inject-csp.mjs` writes `<meta data-csp-hashes
+ *  http-equiv="Content-Security-Policy">` carrying the SHA-256 of every inline
+ *  script on the page -- and the flight payload is one of those scripts. So the
+ *  meta is a pure function of the bytes `PUSH` exists to remove, and leaving it
+ *  in made this tool report a markup difference on EVERY page for any change at
+ *  all. Measured on the three §17 condition-22 splits: `0 of 58 pages
+ *  byte-identical in markup`, all 58 the same byte length as before, and every
+ *  first difference inside this attribute. The tool had silently stopped
+ *  working when Part 7 landed, because nothing ran it afterwards.
+ *
+ *  NOT a loss of coverage, which is why normalising it is the right answer here
+ *  and was the wrong answer for the stylesheet hash above. A wrong meta is
+ *  `check:csp`'s job and it is a far better check than this one: it recomputes
+ *  each page's hashes from the bytes beside them and fails on a stale or
+ *  missing one. This tool asks a different question -- did the markup move --
+ *  and the meta is not markup anyone wrote.
+ *
+ *  Broken deliberately after adding it: with the meta normalised, changing one
+ *  visible word in a split file still fails the run and names the page, so the
+ *  normalisation removes a derived field rather than the signal.
+ */
+const CSP_META = /<meta data-csp-hashes [^>]*>/g;
+
 const markupOf = (html) => html.replace(PUSH, "<PUSH>");
 
 /** The emitted stylesheet, whose name is a hash of its contents.
@@ -107,7 +141,15 @@ const markupOf = (html) => html.replace(PUSH, "<PUSH>");
  *  split changes no classes, so a moved stylesheet hash is itself a regression
  *  and fails the run. Normalising it and moving on would have hidden exactly
  *  the mutation that found it. */
-const CSS_CHUNK = /\/_next\/static\/chunks\/[a-z0-9]+\.css/g;
+/** `[A-Za-z0-9_-]+`, not `[a-z0-9]+`. Next emits chunk names containing `-`
+ *  and `_`, and the narrower class silently matched one side of a comparison
+ *  and not the other: measured 23 Sep, the stylesheet moved
+ *  `3fcm-v_zu-br-.css` -> `201be97f9ffw9.css`, only the second matched, so
+ *  `blindCss` neutralised the new name and left the old one in place and this
+ *  tool reported `2 of 62 pages byte-identical in markup` for a change that
+ *  never touched markup. A false regression on the one run where a real one
+ *  was plausible; the same bug narrowed slightly would report a false pass. */
+const CSS_CHUNK = /\/_next\/static\/chunks\/[A-Za-z0-9_-]+\.css/g;
 const stylesheets = (html) => new Set(html.match(CSS_CHUNK) ?? []);
 
 /** The emitted client chunks, whose names are hashes of their contents.
@@ -119,7 +161,7 @@ const stylesheets = (html) => new Set(html.match(CSS_CHUNK) ?? []);
  *  so re-chunking it changes what the browser downloads even when the markup is
  *  identical to the byte. That gets said out loud once and acknowledged with
  *  `--allow-script`, rather than normalised away where nobody would see it. */
-const JS_CHUNK = /\/_next\/static\/chunks\/[a-z0-9]+\.js/g;
+const JS_CHUNK = /\/_next\/static\/chunks\/[A-Za-z0-9_-]+\.js/g;
 const scripts = (html) => new Set(html.match(JS_CHUNK) ?? []);
 
 function snapshot(dir) {
@@ -156,9 +198,21 @@ function compare(dir, allowPayload, allowScript) {
   const missing = before.filter((p) => !after.includes(p));
   const extra = after.filter((p) => !before.includes(p));
 
-  // Read once, so the stylesheet can be compared across the whole build before
-  // any page is judged on it.
-  const pair = new Map();
+  /** Pass one: the chunk names only, then throw the documents away.
+   *
+   *  The stylesheet and script sets have to be known across the WHOLE build
+   *  before any single page is judged, which is why this pass exists. It used
+   *  to keep every pair in a `Map` for pass two to reuse -- 62 x 2 documents
+   *  live at once, each also regex-scanned, with the intermediates in the same
+   *  heap. Measured 23 Sep after the copy layer landed: V8 aborted with
+   *  `# Fatal error in , line 0`, no stack and no page named, which reads as
+   *  "the build is broken" rather than "this tool needs more memory".
+   *  `--max-old-space-size=8192` completed the identical comparison at
+   *  62 of 62.
+   *
+   *  So the documents are dropped here and re-read in pass two. That is double
+   *  the I/O on files the OS has just cached, against a peak heap that no
+   *  longer scales with the page count. */
   const cssBefore = new Set();
   const cssAfter = new Set();
   const jsBefore = new Set();
@@ -167,7 +221,6 @@ function compare(dir, allowPayload, allowScript) {
     if (missing.includes(rel)) continue;
     const a = read(join(dir, rel), oldId);
     const b = read(join(APP, rel), newId);
-    pair.set(rel, [a, b]);
     for (const s of stylesheets(a)) cssBefore.add(s);
     for (const s of stylesheets(b)) cssAfter.add(s);
     for (const s of scripts(a)) jsBefore.add(s);
@@ -186,7 +239,8 @@ function compare(dir, allowPayload, allowScript) {
   const payloadDiff = [];
   for (const rel of before) {
     if (missing.includes(rel)) continue;
-    let [a, b] = pair.get(rel);
+    // Re-read rather than cache; see the note on pass one.
+    let [a, b] = [read(join(dir, rel), oldId), read(join(APP, rel), newId)];
     if (cssMoved) [a, b] = [blindCss(a), blindCss(b)];
     if (jsMoved) [a, b] = [blindJs(a), blindJs(b)];
     if (a === b) continue;

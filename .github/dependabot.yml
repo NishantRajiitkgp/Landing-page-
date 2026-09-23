@@ -1,0 +1,139 @@
+# TASKS.md Part 11: "Dependabot, and a pre-commit secret-scanning hook".
+#
+# WHY THIS FILE IS IN .github/ WHEN PART 11 IS THE MOVE TO AZURE. Two reasons,
+# and the first is the one that decided it: this file works TODAY, on the host
+# the repo is actually on, and Part 11 has no date. A dependabot config written
+# for a platform the repo has not moved to yet updates nothing for however long
+# the move takes.
+#
+# The second is that it survives the move rather than being thrown away. Azure
+# DevOps has no native Dependabot; the route people take is the
+# dependabot-azure-devops extension, which reads this same v2 schema from this
+# same path. That is a third-party extension and the owner should confirm the
+# behaviour before relying on it - what is certain is that writing the config in
+# the v2 schema is the portable choice either way, and an `npm outdated` job in
+# azure-pipelines.yml would be neither portable nor a pull request.
+#
+# REJECTED: a scheduled pipeline running `npm audit --audit-level=high` as a
+# gate. It reports, it does not upgrade, and the thing that keeps dependencies
+# current is a pull request that has already run the 11 gates against the new
+# version. `npm audit` also only knows about advisories, and most of what wants
+# updating here has no CVE.
+
+version: 2
+
+updates:
+  # ── The application ────────────────────────────────────────────────────────
+  - package-ecosystem: npm
+    # NOT the repo root. package.json lives one level down and Dependabot
+    # resolves this path literally: pointed at "/" it finds no manifest and
+    # opens no PRs, silently, which is the failure mode this comment exists to
+    # prevent.
+    directory: /helloverify-web
+    schedule:
+      interval: weekly
+      day: monday
+    # Every PR runs the full pipeline: typecheck, lint, 100 unit tests, a build,
+    # 11 build-output gates, a 823-assertion redirect probe, the contract suite,
+    # 56 routes of Playwright and axe, and three Lighthouse runs. Ten
+    # simultaneous dependency PRs is over an hour of agent time for changes
+    # nobody has asked for, and the queue is what makes people stop reading them.
+    open-pull-requests-limit: 5
+    commit-message:
+      # §14.4: Conventional Commits. Dependabot's default prefix is "build(deps)"
+      # only when it detects the convention from history, and this repo's history
+      # is 49 commits old - stating it removes the guess.
+      prefix: fix
+      prefix-development: chore
+      include: scope
+
+    groups:
+      # next, react, react-dom and eslint-config-next move together or not at
+      # all. All four are pinned to EXACT versions in package.json - next
+      # 16.3.5, react and react-dom 19.2.8 - which is deliberate: React 19 and
+      # the App Router runtime are one unit, and a PR that bumps react without
+      # next produces a peer-dependency conflict or, worse, a build that works
+      # and a hydration mismatch that only shows up in the browser job. One PR
+      # for the set means the gates judge the combination that would actually
+      # ship.
+      framework:
+        patterns:
+          - next
+          - react
+          - react-dom
+          - '@types/react'
+          - '@types/react-dom'
+          - eslint-config-next
+
+      # The measurement tools. Grouped separately because a change here can
+      # change a NUMBER without changing the site, and that needs reading
+      # differently from an application change: a Lighthouse or axe-core update
+      # that moves TBT or adds a rule is a new measurement, not a regression, and
+      # §17's conditions are stated against measured values.
+      measurement:
+        patterns:
+          - '@lhci/cli'
+          - '@playwright/test'
+          - axe-core
+          - '@axe-core/playwright'
+          - vitest
+
+      # Everything else that is not the framework or a measurement tool.
+      tooling:
+        dependency-type: development
+        exclude-patterns:
+          - '@lhci/cli'
+          - '@playwright/test'
+          - axe-core
+          - '@axe-core/playwright'
+          - vitest
+          - '@types/react'
+          - '@types/react-dom'
+          - eslint-config-next
+
+    ignore:
+      # @types/node is pinned ^24 to match the Node the project is developed
+      # against and the version azure-pipelines.yml installs. A major bump here
+      # is a decision about the runtime, taken with the pipeline and the Cloud
+      # Run image in the same change - not a dependency PR.
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
+      # Tailwind v4 is a token-layer commitment: DESIGN.md's `@theme` block,
+      # both custom ESLint rules (hv/no-color-literal, hv/logical-css) and the
+      # contrast gates all read v4's output. A v5 PR would be red in ways that
+      # have nothing to teach.
+      - dependency-name: tailwindcss
+        update-types: [version-update:semver-major]
+      - dependency-name: '@tailwindcss/postcss'
+        update-types: [version-update:semver-major]
+
+  # ── GitHub Actions, for as long as there is a workflow to update ───────────
+  # .github/workflows/ci.yml pins actions/checkout@v4, actions/setup-node@v4 and
+  # actions/upload-artifact@v4 by major tag. Those tags move, so this is not
+  # about features - it is about the day one of them stops working on the runner
+  # image and the only signal is every PR going red at once.
+  #
+  # This entry is the one thing in this file that becomes dead on the move to
+  # Azure, and it dies with the workflow: delete both in the same commit.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 2
+    commit-message:
+      prefix: ci
+      include: scope
+
+# NOT CONFIGURED, and each for a reason rather than an omission:
+#
+#   pip - tools/port/*.py import nothing outside the standard library. There is
+#         no requirements.txt to update, and adding an ecosystem with no manifest
+#         produces a Dependabot error on every run.
+#   docker - there is no Dockerfile (see azure-pipelines.yml: the Cloud Run
+#         deploy uses `--source` and Google's Node buildpack). If a Dockerfile is
+#         added to pin the Node major, add the ecosystem in the same commit: an
+#         unpatched base image is the one dependency nothing else in this repo
+#         would ever notice.
+#   security-updates-only on a separate schedule - Dependabot already opens
+#         security PRs regardless of the interval above, and a second entry for
+#         the same directory splits the groups.

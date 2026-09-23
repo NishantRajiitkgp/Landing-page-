@@ -217,6 +217,20 @@ for (const [path, entry] of sitemapEntries) {
   for (const tag of ["og:image", "og:site_name", "og:type", "og:title", "og:description"]) {
     if (!meta(html, tag)) problems.push(`${tag} missing`);
   }
+  // og:locale is the one social tag whose VALUE this file can verify, because
+  // the locale is the first segment of the path. It is checked because it was
+  // wrong-by-design until 23 Sep 2026: the root layout carried a static
+  // `metadata` export with a literal `locale: "en"`, which no gate could
+  // distinguish from a correct answer while `routing.locales` was `["en"]`.
+  // It is now generated from `params` (`routing.ts#openGraphLocales`), and
+  // this line is what would have caught the literal on the first /hi page
+  // rather than on the first shared link.
+  const ogLocale = meta(html, "og:locale");
+  const pathLocale = path.split("/")[1];
+  if (ogLocale !== pathLocale) {
+    problems.push(`og:locale ${JSON.stringify(ogLocale)} != path locale ${JSON.stringify(pathLocale)}`);
+  }
+
   // `og:url` is optional here (nothing emits it) but it is a second canonical
   // to any scraper that prefers it, so if it ever appears it must agree.
   const ogUrl = meta(html, "og:url");

@@ -1,0 +1,36 @@
+#!/bin/sh
+# TASKS.md Part 11's pre-commit secret scan. Installed by
+# tools/git-hooks/install.mjs, which npm's `prepare` script runs on every
+# `npm install` and `npm ci` - so it arrives with the dependencies rather than in
+# a README step somebody skips.
+#
+# WHY THIS FILE DOES ALMOST NOTHING. It is four lines of work because the only
+# hook anybody keeps is a fast one. The full gate set - typecheck, 100 unit
+# tests, a build, 11 build-output checks, 823 redirect assertions, 56 routes of
+# Playwright - is minutes, and a pre-commit hook that costs minutes gets
+# `--no-verify`d on the second day and is then load-bearing in nobody's workflow.
+# All of that runs in azure-pipelines.yml, where minutes are free and nothing can
+# skip it. This hook takes about a second, and it is here for the one class of
+# mistake that CI cannot undo: a credential that has entered the history.
+#
+# FAILS CLOSED. `set -e` plus no fallback if node is missing: a hook that cannot
+# run its scanner must stop the commit, not wave it through. The opposite - "node
+# not found, skipping" - is the shape of a check that is silently off on the one
+# machine where it mattered.
+set -e
+
+# The repository root, whatever it is called and wherever it is checked out.
+# `cd` to it and then into the package, rather than assuming the hook's own
+# location: Git runs hooks from the top of the working tree, but that is
+# documented behaviour worth not depending on when the alternative is one
+# command.
+cd "$(git rev-parse --show-toplevel)/helloverify-web"
+
+if ! command -v node > /dev/null 2>&1; then
+  echo "pre-commit: node is not on PATH, so the secret scan cannot run." >&2
+  echo "            Install Node 24 - the version package.json is built against - and retry." >&2
+  echo "            To commit anyway you must say so: git commit --no-verify" >&2
+  exit 1
+fi
+
+node tools/ci/scan-source-secrets.mjs --staged

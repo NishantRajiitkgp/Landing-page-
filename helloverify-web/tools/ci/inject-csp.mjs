@@ -63,6 +63,33 @@ import { createHash } from "node:crypto";
 import { readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+/** GA4's script origin, admitted to the meta only when the tag is actually on
+ *  the page — mirroring `next.config.ts`'s `const ga = …` exactly.
+ *
+ *  WITHOUT THIS, GA4 CANNOT RUN. Measured by building with
+ *  `NEXT_PUBLIC_GA_MEASUREMENT_ID` set: the header gains the origin
+ *  (`next.config.ts:103`) but this meta did not, and a document's effective
+ *  policy is the INTERSECTION of the two — the same property Part 7 relies on
+ *  to argue condition 11 is met in enforcement. The remote tag was refused on
+ *  every page while the header said it was allowed.
+ *
+ *  Read from the environment at build time for the reason `next.config.ts`
+ *  gives for doing the same: the tag is baked in at build time, so the policy
+ *  and the page cannot disagree about whether GA exists. With the id unset
+ *  this is empty and the meta is byte-identical to before — verified: 544
+ *  hashes and the same policy string on a build without the id.
+ *
+ *  DUPLICATED FROM `next.config.ts`, NOT IMPORTED, and gated by
+ *  `tools/test/csp-origins.test.ts`. That file is TypeScript compiled by Next;
+ *  this is plain `.mjs` run by node afterwards, and the config is the one file
+ *  whose failure mode is "nothing builds". `lib/seo/legacy-urls.ts` sets the
+ *  precedent — `SERVED_LOCALES` is a hand-kept mirror "duplicated rather than
+ *  imported so this module stays loadable from next.config.ts" — and the
+ *  answer there was a drift check rather than an import. */
+const GA_ORIGINS = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+  ? ["https://www.googletagmanager.com"]
+  : [];
+
 const APP = ".next/server/app";
 
 /** Marks our own tag so a second run replaces rather than stacks. */
@@ -110,7 +137,7 @@ for (const file of pages(APP)) {
   // Only `script-src`. Every other directive stays in the one header
   // `next.config.ts` defines — §13's "single CSP source, no duplicated
   // copies". Two places declaring `img-src` is how they come to disagree.
-  const policy = ["script-src 'self'", ...unique].join(" ");
+  const policy = ["script-src 'self'", ...unique, ...GA_ORIGINS].join(" ");
   const tag = `<meta ${MARK} http-equiv="Content-Security-Policy" content="${policy}">`;
 
   const at = head.index + head[0].length;
