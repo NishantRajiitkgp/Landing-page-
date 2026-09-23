@@ -1,5 +1,14 @@
-import type { ReactNode } from "react";
 import { Fragment } from "react";
+
+import { Arrow } from "@/components/brand/Arrow";
+import { copy } from "@/lib/copy/request";
+import {
+  SECTIONS,
+  type AxisStop,
+  type BucketId,
+  type CheckId,
+  type LaneId,
+} from "@/lib/copy/sections";
 
 /** The 33-check catalogue, plotted against turnaround time.
  *
@@ -35,17 +44,20 @@ const STOPS = {
 } as const;
 
 type Stop = keyof typeof STOPS;
-type Check = { readonly name: ReactNode; readonly at: Stop; readonly time: string };
 
-const CHECKS: Record<string, Check> = {
-  identity: { name: "Identity", at: "4%", time: "15 min" },
-  pan: { name: "PAN", at: "4%", time: "15 min" },
-  passport: { name: "Passport", at: "4%", time: "15 min" },
-  age: { name: "Age", at: "4%", time: "15 min" },
-  licence: { name: "Driving licence", at: "14%", time: "30 min" },
-  rc: { name: "Registration certificate", at: "14%", time: "30 min" },
-  digitalEmployment: { name: "Digital employment", at: "26%", time: "60 min" },
-  moonlighting: { name: "Moonlighting", at: "26%", time: "60 min" },
+/** Every check, and the only thing about it that is not words: where its
+ *  pin lands. The name and the turnaround are `lib/copy/sections`'
+ *  `checks.items`, keyed by these same ids - the vocabulary the two views
+ *  already referenced each other by, so the migration invented no keys. */
+const CHECKS: Record<CheckId, Stop> = {
+  identity: "4%",
+  pan: "4%",
+  passport: "4%",
+  age: "4%",
+  licence: "14%",
+  rc: "14%",
+  digitalEmployment: "26%",
+  moonlighting: "26%",
   // 60 min and fast, not 24 hrs and slow. This page was the only surface
   // saying 24 hrs; `business/enterprise` says 60 min and fast.
   //
@@ -62,18 +74,19 @@ const CHECKS: Record<string, Check> = {
   // no third party in the loop - so it belongs with the fast checks. 26% is
   // the 60-min stop, and `STOPS` supplies the duration, the delay and the
   // `fast` class from the position alone.
-  entitlement: { name: "Entitlement to work", at: "26%", time: "60 min" },
-  employment: { name: "Employment", at: "78%", time: "2 days" },
-  education: { name: "Education", at: "92%", time: "3 days" },
-  credit: { name: "Credit", at: "4%", time: "15 min" },
-  globalDatabase: { name: "Global database", at: "4%", time: "15 min" },
-  criminal: { name: "Criminal", at: "14%", time: "30 min" },
-  currentAddress: { name: "Current address", at: "14%", time: "30 min" },
-  tradeLicence: { name: "Trade licence", at: "78%", time: "2 days" },
-  // A `ReactNode`, not a string: the artboard exporter split the title around
-  // the `&amp;`, and React emits those five text nodes with `<!-- -->`
-  // separators between them. A plain string would collapse them to one -
-  // different bytes for the same pixels.
+  entitlement: "26%",
+  employment: "78%",
+  education: "92%",
+  credit: "4%",
+  globalDatabase: "4%",
+  criminal: "14%",
+  currentAddress: "14%",
+  tradeLicence: "78%",
+  // Its name is a `ReactNode` and not a string, and it stayed one when it
+  // moved: the artboard exporter split the title around the `&amp;`, and
+  // React emits those five text nodes with `<!-- -->` separators between
+  // them. A plain string would collapse them to one - different bytes for
+  // the same pixels. See `checks.items.directorsGst` in `lib/copy/sections`.
   // 3 days and 92%, not 2 days and 78%. The homepage was the only surface
   // saying 2 days: `lib/content/checks.ts` - which its own header calls the
   // canonical catalogue behind `/checks/[check]` - says 3 days, and
@@ -84,45 +97,38 @@ const CHECKS: Record<string, Check> = {
   // 78% is the 2-day stop and 92% is the 3-day one, and `STOPS` supplies the
   // matching duration and delay, so this is the only field to change. It
   // stays in the 1-3 days bucket on mobile, so no bucket membership changes.
-  directorsGst: { name: <>Directors{" "}&amp;{" "}GST</>, at: "92%", time: "3 days" },
+  directorsGst: "92%",
 };
 
-type Lane = { readonly k: ReactNode; readonly t: string; readonly zone?: string; readonly ids: readonly string[] };
+type Lane = { readonly k: LaneId; readonly zone?: true; readonly ids: readonly CheckId[] };
 
+/** The three lanes in order, and which checks each plots. The heading and
+ *  the subtitle are `lib/copy/sections`' `checks.lanes`. `zone` is a FLAG
+ *  rather than the caption itself: only the first lane carries one, and a
+ *  shared leaf plus a boolean keeps `lanes` a square table - that file's
+ *  header argues the trade-off against the ragged alternative. */
 const LANES: readonly Lane[] = [
+  { k: "l1", zone: true, ids: ["identity", "pan", "passport", "age", "licence", "rc"] },
+  { k: "l2", ids: ["digitalEmployment", "moonlighting", "entitlement", "employment", "education"] },
   {
-    k: "01 — Identity",
-    t: "Who they are",
-    zone: "an hour or less",
-    ids: ["identity", "pan", "passport", "age", "licence", "rc"],
-  },
-  {
-    k: <>02 — Work{" "}&amp;{" "}education</>,
-    t: "What they've done",
-    ids: ["digitalEmployment", "moonlighting", "entitlement", "employment", "education"],
-  },
-  {
-    k: <>03 — Records{" "}&amp;{" "}risk</>,
-    t: "What's on file",
+    k: "l3",
     ids: ["credit", "globalDatabase", "criminal", "currentAddress", "tradeLicence", "directorsGst"],
   },
 ];
 
 /** The four labelled stops on the axis, and the four tick marks under each
- *  plot - the same four positions, which is why they are one list. */
-const AXIS: readonly (readonly [Stop, string])[] = [
-  ["4%", "15 min"],
-  ["26%", "1 hour"],
-  ["62%", "1 day"],
-  ["92%", "3 days"],
-];
+ *  plot - the same four positions, which is why they are one list. The
+ *  labels are keyed BY POSITION in `lib/copy/sections`, so a label and the
+ *  tick it sits over cannot come apart. */
+const AXIS: readonly AxisStop[] = ["4%", "26%", "62%", "92%"];
 
-type Bucket = { readonly big: string; readonly k: string; readonly ids: readonly string[] };
+type Bucket = { readonly k: BucketId; readonly ids: readonly CheckId[] };
 
+/** The three mobile buckets in order. Both strings each one shows - the
+ *  big italic time and the `k` line under it - are in `lib/copy/sections`. */
 const BUCKETS: readonly Bucket[] = [
   {
-    big: "15–30 min",
-    k: "Identity, documents, records",
+    k: "fast",
     ids: ["identity", "pan", "passport", "age", "credit", "globalDatabase", "licence", "rc", "criminal", "currentAddress"],
   },
   // Entitlement to work joined this bucket when its turnaround was
@@ -130,42 +136,30 @@ const BUCKETS: readonly Bucket[] = [
   // work-authorisation record, not a provident-fund one, and a bucket
   // labelled only "Provident-fund records" would now be describing two of
   // its three chips.
-  {
-    big: "60 min",
-    k: "Provident-fund and work-authorisation records",
-    ids: ["digitalEmployment", "moonlighting", "entitlement"],
-  },
-  {
-    big: "1–3 days",
-    k: "Confirmed with a registrar, employer or authority",
-    ids: ["employment", "education", "tradeLicence", "directorsGst"],
-  },
+  { k: "hour", ids: ["digitalEmployment", "moonlighting", "entitlement"] },
+  { k: "slow", ids: ["employment", "education", "tradeLicence", "directorsGst"] },
 ];
 
-const ARROW = (
-  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
+async function Plot({ lane }: { lane: Lane }) {
+  const t = (await copy(SECTIONS)).checks;
 
-function Plot({ lane }: { lane: Lane }) {
   return (
     <div className="plot">
       <div className="sweep"></div>
-      <div className="zone">{lane.zone !== undefined && <span>{lane.zone}</span>}</div>
-      {AXIS.map(([at]) => (
+      <div className="zone">{lane.zone !== undefined && <span>{t.zone}</span>}</div>
+      {AXIS.map((at) => (
         <i className="tk" key={at} style={{ insetInlineStart: at }}></i>
       ))}
       {lane.ids.map((id) => {
-        const c = CHECKS[id];
-        const s = STOPS[c.at];
+        const at = CHECKS[id];
+        const s = STOPS[at];
         return (
           <div className="prow" key={id}>
-            <i className={s.fast ? "lead fast" : "lead"} style={{ width: c.at, animationDuration: s.dur }}></i>
-            <span className={s.fast ? "pin fast" : "pin r"} style={{ insetInlineStart: c.at, animationDelay: s.delay }}>
+            <i className={s.fast ? "lead fast" : "lead"} style={{ width: at, animationDuration: s.dur }}></i>
+            <span className={s.fast ? "pin fast" : "pin r"} style={{ insetInlineStart: at, animationDelay: s.delay }}>
               <span className="d"></span>
-              {c.name}
-              <span className="t">{c.time}</span>
+              {t.items[id].name}
+              <span className="t">{t.items[id].time}</span>
             </span>
           </div>
         );
@@ -174,7 +168,9 @@ function Plot({ lane }: { lane: Lane }) {
   );
 }
 
-export function Checks() {
+export async function Checks() {
+  const t = (await copy(SECTIONS)).checks;
+
   return (
     <>
       <div className="dsk">
@@ -183,13 +179,13 @@ export function Checks() {
           <div className="sec-head">
             {" "}
             <h2 className="h2">
-              33 checks.
+              {t.headingA}
               <br />
-              Most take minutes.
+              {t.headingB}
             </h2>
             {" "}
             <p className="lede" style={{ marginBottom: "8px" }}>
-              Each check sits where it finishes. Green is an hour or less. The rest go to a registrar or a court and come back in days.
+              {t.lede}
             </p>
             {" "}
           </div>
@@ -201,9 +197,9 @@ export function Checks() {
               <span></span>
               {" "}
               <div className="axis">
-                {AXIS.map(([at, label]) => (
+                {AXIS.map((at) => (
                   <span key={at} style={{ insetInlineStart: at }}>
-                    {label}
+                    {t.axis[at]}
                   </span>
                 ))}
               </div>
@@ -217,8 +213,8 @@ export function Checks() {
                 <div className="lane" {...(i > 0 ? { style: { marginTop: "56px" } } : {})}>
                   {" "}
                   <div className="g">
-                    <div className="k">{lane.k}</div>
-                    <div className="t">{lane.t}</div>
+                    <div className="k">{t.lanes[lane.k].k}</div>
+                    <div className="t">{t.lanes[lane.k].t}</div>
                   </div>
                   {" "}
                   <Plot lane={lane} />
@@ -240,12 +236,12 @@ export function Checks() {
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", paddingTop: "24px", borderTop: "1px solid var(--hair)" }}>
                 {" "}
                 <span style={{ fontSize: "15px", color: "var(--muted)" }}>
-                  Plus 16 more — Cyber Identity, Know Your Contact, Financial Assessment, Promoter Criminal History and others.
+                  {t.more}
                 </span>
                 {" "}
                 <a href="#" className="btn btn-line" style={{ height: "44px", padding: "0 20px", fontSize: "15px" }}>
-                  All 33 checks{" "}
-                  {ARROW}
+                  {t.all}{" "}
+                  <Arrow size="14" />
                 </a>
                 {" "}
               </div>
@@ -259,9 +255,9 @@ export function Checks() {
       <div className="mob">
         <div className="wrap sec hair-top">
           {" "}
-          <h2 className="h2">33 checks. Most take minutes.</h2>
+          <h2 className="h2">{t.headingMob}</h2>
           {" "}
-          <p className="lede">Grouped by how long you wait, from upload to report.</p>
+          <p className="lede">{t.ledeMob}</p>
           {" "}
           <div style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "28px" }}>
             {BUCKETS.map((b, i) => (
@@ -270,15 +266,15 @@ export function Checks() {
                 <div className="bucket">
                   <div className="bk">
                     <span className="serif" style={{ fontStyle: "italic", fontSize: "28px", lineHeight: "1" }}>
-                      {b.big}
+                      {t.buckets[b.k].big}
                     </span>
-                    <span className="k">{b.k}</span>
+                    <span className="k">{t.buckets[b.k].k}</span>
                   </div>
                   <div className="cloud">
                     {b.ids.map((id) => (
-                      <span className={STOPS[CHECKS[id].at].fast ? "pl fast" : "pl"} key={id}>
+                      <span className={STOPS[CHECKS[id]].fast ? "pl fast" : "pl"} key={id}>
                         <span className="d"></span>
-                        {CHECKS[id].name}
+                        {t.items[id].name}
                       </span>
                     ))}
                   </div>
@@ -290,7 +286,7 @@ export function Checks() {
           {/* Desktop's footer is a sentence and a bordered rule; mobile's is a
               full-width button and no sentence. Measured, not assumed. */}
           <a href="#" className="btn btn-line full" style={{ marginTop: "28px" }}>
-            All 33 checks
+            {t.all}
           </a>
           {" "}
         </div>

@@ -2,6 +2,8 @@ import { Fragment } from "react";
 import Image from "next/image";
 
 import { SIZES_PERSON, noteInk, tint } from "@/lib/img";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS, type PersonSrcDsk, type PersonSrcMob } from "@/lib/copy/sections";
 
 /** Drifting strip of verified people; the track is duplicated so the loop is
  *  seamless.
@@ -18,15 +20,22 @@ import { SIZES_PERSON, noteInk, tint } from "@/lib/img";
  *  caption entirely. Collapsing them would have meant inventing a shared string.
  */
 
-type Person = {
-  readonly src: string;
-  readonly w: number;
-  readonly h: number;
+/** The words on a card. Handed down from `Track` rather than looked up in
+ *  `PersonCard`, because the two tracks read two different tables and only
+ *  the caller knows which: `note` exists on the desktop table and on no row
+ *  of the mobile one. */
+type Words = {
   readonly role: string;
   readonly city: string;
   readonly chip: string;
   /** Desktop only - the small caption over the photograph. */
   readonly note?: string;
+};
+
+type Person<S extends string> = {
+  readonly src: S;
+  readonly w: number;
+  readonly h: number;
   /** The one card mid-check: a pulsing dot, and a dimmed caption where there is
    *  one to dim. Both breakpoints show it. */
   readonly live?: boolean;
@@ -35,94 +44,30 @@ type Person = {
   readonly progress?: boolean;
 };
 
-const DESKTOP: readonly Person[] = [
-  { src: "/img/01-rider-bengaluru.jpg", w: 300, h: 420,
-    role: "Delivery rider",
-    city: "Bengaluru",
-    chip: "Driving licence · 30 min",
-    note: "photo · delivery rider",
-  },
-  { src: "/img/02-nurse-abudhabi.jpg", w: 340, h: 470,
-    role: "Nurse",
-    city: "Abu Dhabi",
-    chip: "Degree · 3 days",
-    note: "photo · nurse",
-  },
-  { src: "/img/03-engineer-manila.jpg", w: 290, h: 390,
-    role: "Software engineer",
-    city: "Manila",
-    chip: "Employment · 60 min",
-    note: "photo · engineer",
-  },
-  { src: "/img/04-nanny-gurugram.jpg", w: 320, h: 440,
-    role: "Nanny",
-    city: "Gurugram",
-    chip: "Criminal · 30 min",
-    note: "photo · nanny",
-  },
-  { src: "/img/05-warehouse-pune.jpg", w: 300, h: 400,
-    role: "Warehouse associate",
-    city: "Pune · identity check, 00:41 elapsed",
-    chip: "Reading Aadhaar…",
-    note: "photo · warehouse",
-    live: true,
-    progress: true,
-  },
-  { src: "/img/06-supplier-cairo.jpg", w: 330, h: 460,
-    role: "Textile supplier",
-    city: "Cairo",
-    chip: "Trade licence · 2 days",
-    note: "photo · supplier",
-  },
-  { src: "/img/07-tenant-singapore.jpg", w: 290, h: 410,
-    role: "Tenant",
-    city: "Singapore",
-    chip: "Identity · 15 min",
-    note: "photo · tenant",
-  },
-  { src: "/img/08-cfo-london.jpg", w: 310, h: 430,
-    role: "Chief financial officer",
-    city: "London",
-    chip: "Global database · 15 min",
-    note: "photo · executive",
-  },
+/** The two tracks: which photographs, at what box. The role, the city and the
+ *  chip are keyed by photograph in `lib/copy/sections`, in TWO tables rather
+ *  than one - see the header, and that file's note on the same decision. */
+const DESKTOP: readonly Person<PersonSrcDsk>[] = [
+  { src: "/img/01-rider-bengaluru.jpg", w: 300, h: 420 },
+  { src: "/img/02-nurse-abudhabi.jpg", w: 340, h: 470 },
+  { src: "/img/03-engineer-manila.jpg", w: 290, h: 390 },
+  { src: "/img/04-nanny-gurugram.jpg", w: 320, h: 440 },
+  { src: "/img/05-warehouse-pune.jpg", w: 300, h: 400, live: true, progress: true },
+  { src: "/img/06-supplier-cairo.jpg", w: 330, h: 460 },
+  { src: "/img/07-tenant-singapore.jpg", w: 290, h: 410 },
+  { src: "/img/08-cfo-london.jpg", w: 310, h: 430 },
 ];
 
-const MOBILE: readonly Person[] = [
-  { src: "/img/01-rider-bengaluru.jpg", w: 200, h: 270,
-    role: "Delivery rider",
-    city: "Bengaluru",
-    chip: "Licence · 30 min",
-  },
-  { src: "/img/02-nurse-abudhabi.jpg", w: 220, h: 300,
-    role: "Nurse",
-    city: "Abu Dhabi",
-    chip: "Degree · 3 days",
-  },
-  { src: "/img/03-engineer-manila.jpg", w: 190, h: 250,
-    role: "Software engineer",
-    city: "Manila",
-    chip: "Employment · 60 min",
-  },
-  { src: "/img/04-nanny-gurugram.jpg", w: 200, h: 280,
-    role: "Nanny",
-    city: "Gurugram",
-    chip: "Criminal · 30 min",
-  },
-  { src: "/img/05-warehouse-pune.jpg", w: 200, h: 260,
-    role: "Warehouse associate",
-    city: "Pune · 00:41 elapsed",
-    chip: "Reading Aadhaar…",
-    live: true,
-  },
-  { src: "/img/06-supplier-cairo.jpg", w: 210, h: 290,
-    role: "Textile supplier",
-    city: "Cairo",
-    chip: "Trade licence · 2 days",
-  },
+const MOBILE: readonly Person<PersonSrcMob>[] = [
+  { src: "/img/01-rider-bengaluru.jpg", w: 200, h: 270 },
+  { src: "/img/02-nurse-abudhabi.jpg", w: 220, h: 300 },
+  { src: "/img/03-engineer-manila.jpg", w: 190, h: 250 },
+  { src: "/img/04-nanny-gurugram.jpg", w: 200, h: 280 },
+  { src: "/img/05-warehouse-pune.jpg", w: 200, h: 260, live: true },
+  { src: "/img/06-supplier-cairo.jpg", w: 210, h: 290 },
 ];
 
-function PersonCard({ p }: { p: Person }) {
+function PersonCard({ p, w, loading }: { p: Person<string>; w: Words; loading: "eager" | "lazy" }) {
   /** Was `p.live ? { color: "rgba(255,255,255,0.4)" } : undefined` inline - the
    *  `rgba()` that TASKS Part 5 carried as the hole in `hv/no-color-literal`,
    *  which matched hex only and is extended as of 22 Sep 2026.
@@ -144,20 +89,20 @@ function PersonCard({ p }: { p: Person }) {
       style={{ width: `${p.w}px`, height: `${p.h}px`, background: tint(p.src) }}
     >
       <div className="light"></div>
-      <Image className="pimg" src={p.src} alt="" fill sizes={SIZES_PERSON} loading="eager" />
-      {p.note !== undefined && (
+      <Image className="pimg" src={p.src} alt="" fill sizes={SIZES_PERSON} loading={loading} />
+      {w.note !== undefined && (
         <div className="note" style={noteColour !== undefined ? { color: noteColour } : undefined}>
-          {p.note}
+          {w.note}
         </div>
       )}
       <div className="scrim"></div>
       <div className="chip">
         <span className={p.live ? "dot live" : "dot"}></span>
-        {p.chip}
+        {w.chip}
       </div>
       <div className="who">
-        <div className="role">{p.role}</div>
-        <div className="city">{p.city}</div>
+        <div className="role">{w.role}</div>
+        <div className="city">{w.city}</div>
         {p.progress && (
           <div className="progress">
             <span></span>
@@ -170,27 +115,44 @@ function PersonCard({ p }: { p: Person }) {
 
 /** The track, doubled. Each card is preceded by a space and the run ends with
  *  one, exactly as the hand-written markup did - those are real text nodes
- *  between inline-block cards, not formatting. */
-function Track({ people }: { people: readonly Person[] }) {
+ *  between inline-block cards, not formatting.
+ *
+ *  THE SECOND COPY LOADS LAZILY. It exists only so `drift`'s -50% wraps
+ *  seamlessly, so it is off-screen at load by construction - and Lighthouse's
+ *  first genuine mobile run named one of its cards as the homepage's LCP
+ *  element, at `left -621, right -401`, with LCP 5,042 ms against a 2,000 ms
+ *  budget. The largest contentful paint was an image nobody could see.
+ *
+ *  The visible half stays eager on purpose: the strip animates from first
+ *  paint, and a lazy first card pops in under the reader's eye. */
+function Track<S extends string>({
+  people,
+  words,
+}: {
+  people: readonly Person<S>[];
+  words: Readonly<Record<S, Words>>;
+}) {
   return (
     <div className="track">
       {[...people, ...people].map((p, i) => (
         <Fragment key={i}>
           {" "}
-          <PersonCard p={p} />
+          <PersonCard p={p} w={words[p.src]} loading={i < people.length ? "eager" : "lazy"} />
         </Fragment>
       ))}{" "}
     </div>
   );
 }
 
-export function PeopleStrip() {
+export async function PeopleStrip() {
+  const t = (await copy(SECTIONS)).peopleStrip;
+
   return (
     <>
       <div className="dsk">
         <div className="rise d6" style={{ padding: "40px 0 8px", overflow: "hidden" }}>
           {" "}
-          <Track people={DESKTOP} />{" "}
+          <Track people={DESKTOP} words={t.dsk} />{" "}
         </div>{" "}
         {/* Desktop only - the mobile block is the track alone. */}
         <div
@@ -206,17 +168,17 @@ export function PeopleStrip() {
         >
           {" "}
           <span>
-            Hires, tenants, drivers, suppliers, nannies. Anyone you need to trust.
+            {t.strip}
           </span>{" "}
           <span className="mono" style={{ color: "var(--muted)" }}>
-            Times shown are from upload to report
+            {t.times}
           </span>{" "}
         </div>
       </div>
       <div className="mob">
         <div style={{ padding: "12px 0 0", overflow: "hidden" }}>
           {" "}
-          <Track people={MOBILE} />{" "}
+          <Track people={MOBILE} words={t.mob} />{" "}
         </div>
       </div>
     </>

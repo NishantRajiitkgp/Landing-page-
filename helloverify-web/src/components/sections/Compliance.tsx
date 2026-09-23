@@ -1,4 +1,6 @@
 import { CertCard } from "@/components/chrome/CertCard";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS } from "@/lib/copy/sections";
 /** Certifications and compliance.
  *
  *  The cards come from `CREDENTIAL_MARKS` in `lib/content/company.ts` via
@@ -10,7 +12,9 @@ import { CertCard } from "@/components/chrome/CertCard";
  *  `.dsk` and `.mob` blocks. Measured 22 Sep 2026; the table carries the
  *  full census. */
 
-export function Compliance() {
+export async function Compliance() {
+  const t = (await copy(SECTIONS)).compliance;
+
   return (
     <>
       <div className="dsk">
@@ -21,11 +25,11 @@ export function Compliance() {
             <div>
               {' '}
               <h2 className="h2" style={{ fontSize: '56px' }}>
-                The unexciting part, done properly.
+                {t.heading}
               </h2>
               {' '}
               <p className="lede" style={{ marginTop: '24px', maxWidth: '420px' }}>
-                Every check involves someone's most personal documents. Consent comes first, retention has limits, and all of it is audited by people whose job is to be unimpressed.
+                {t.lede}
               </p>
               {' '}
             </div>
@@ -59,11 +63,11 @@ export function Compliance() {
         <div className="wrap sec hair-top">
           {' '}
           <h2 className="h2">
-            The unexciting part, done properly.
+            {t.heading}
           </h2>
           {' '}
           <p className="lede">
-            Consent comes first, retention has limits, and all of it is audited by people whose job is to be unimpressed.
+            {t.ledeMob}
           </p>
           {' '}
           <div style={{ marginTop: '24px' }}>
@@ -79,10 +83,10 @@ export function Compliance() {
             {' '}
             <CertCard
               id="gdpr"
-              gloss="Consent, retention limits and the right to be forgotten."
+              gloss={t.glossGdpr}
             />
             {' '}
-            <CertCard id="pbsa" gloss="The global standards body for screening." />
+            <CertCard id="pbsa" gloss={t.glossPbsa} />
             {' '}
             <CertCard id="nsr" />
             {' '}

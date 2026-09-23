@@ -1,6 +1,9 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment } from "react";
 
+import { Arrow } from "@/components/brand/Arrow";
 import { Tick } from "@/components/brand/Tick";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS, type PackId, type PackLineId } from "@/lib/copy/sections";
 
 /** Packages, drawn as receipts.
  *
@@ -30,88 +33,30 @@ import { Tick } from "@/components/brand/Tick";
  */
 
 type Pack = {
-  /** The right-hand half of the header rule; the left is always "Package". */
-  readonly hd: string;
-  /** A `ReactNode`, not a string, for the two titles the artboard exporter
-   *  split around an `&amp;`. React emits `Visa<!-- --> <!-- -->&amp;…` for
-   *  those — five text nodes with hydration separators between them — and a
-   *  plain "Visa & healthcare" would collapse them to one. Different bytes for
-   *  the same pixels, and this refactor is required to change neither. */
-  readonly tt: ReactNode;
-  readonly sub: string;
-  /** Same reason as `tt`: "Credit &amp; company" is four nodes, not one. */
-  readonly lines: readonly ReactNode[];
-  readonly ready: string;
-  readonly who: string;
+  readonly k: PackId;
+  /** Which lines this card lists, and in what order. The words are one flat
+   *  table in `lib/copy/sections` — including the two the artboard exporter
+   *  split around an `&amp;`, which are still `ReactNode` leaves there. React
+   *  emits `Visa<!-- --> <!-- -->&amp;…` for those: five text nodes with
+   *  hydration separators between them, where a plain "Visa & healthcare"
+   *  would collapse them to one. Different bytes for the same pixels, and
+   *  neither this refactor nor that move was allowed to change either. */
+  readonly lines: readonly PackLineId[];
   /** The one consumer package sells directly; the other five link to a page.
    *  The button's size is not here — see the header note. */
   readonly buy?: boolean;
 };
 
+/** The six cards in desktop order, and the only two things about one that are
+ *  not words: which lines it lists, and whether it sells. Everything a reader
+ *  sees is `lib/copy/sections`' `packages`. */
 const PACKS: readonly Pack[] = [
-  {
-    hd: "Enterprise · SMB",
-    tt: "Blue-collar hire",
-    sub: "Drivers, riders, warehouse, security",
-    lines: ["PAN card", "Registration certificate", "Driving licence", "Criminal record"],
-    ready: "30 minutes",
-    who: "One upload from the candidate",
-  },
-  {
-    hd: "Enterprise · SMB",
-    tt: "White-collar hire",
-    sub: "Corporate, tech, finance, healthcare",
-    lines: ["Education", "Employment", "Moonlighting", "Current address"],
-    ready: "3 days",
-    who: "Registrar-confirmed",
-  },
-  {
-    hd: "Consumer · HelloV",
-    tt: "Driver",
-    sub: "For families and small fleets",
-    lines: ["Driving licence", "Criminal record", "Current address"],
-    ready: "30 minutes",
-    who: "Also as Basic, without address",
-    buy: true,
-  },
-  {
-    hd: "Vendors · Certifier",
-    tt: "Trade licence risk",
-    sub: "Before you sign a supplier",
-    lines: [
-      "Trade licence",
-      "Defaulting directors",
-      "Criminal records",
-      <>Credit{" "}&amp;{" "}company</>,
-    ],
-    ready: "2 days",
-    who: "Certified vendor profile",
-  },
-  {
-    hd: "Vendors · Certifier",
-    tt: "Vendor financial risk",
-    sub: "Before the first purchase order",
-    lines: [
-      "Financial assessment",
-      "GST screening",
-      "Credit checks",
-      "Promoter criminal history",
-    ],
-    ready: "2 days",
-    who: "Certified vendor profile",
-  },
-  {
-    hd: "Premium services",
-    tt: <>Visa{" "}&amp;{" "}healthcare</>,
-    sub: "Applicants and licensing bodies",
-    lines: [
-      "Application form filling",
-      "Document pre-screening",
-      "Primary source verification",
-    ],
-    ready: "3 days",
-    who: "Submission-ready file",
-  },
+  { k: "blueCollar", lines: ["pan", "rc", "licence", "criminal"] },
+  { k: "whiteCollar", lines: ["education", "employment", "moonlighting", "address"] },
+  { k: "driver", lines: ["licence", "criminal", "address"], buy: true },
+  { k: "tradeRisk", lines: ["tradeLicence", "directors", "criminalRecords", "credit"] },
+  { k: "vendorRisk", lines: ["financial", "gst", "creditChecks", "promoter"] },
+  { k: "visaHealth", lines: ["form", "prescreen", "primary"] },
 ];
 
 /** Mobile carries three of the six, and not the first three: Driver sits
@@ -119,7 +64,9 @@ const PACKS: readonly Pack[] = [
  *  are behind the link under the rack. */
 const MOBILE: readonly Pack[] = [PACKS[0], PACKS[2], PACKS[1]];
 
-function PackCard({ p, mob = false }: { p: Pack; mob?: boolean }) {
+async function PackCard({ p, mob = false }: { p: Pack; mob?: boolean }) {
+  const t = (await copy(SECTIONS)).packages;
+  const pk = t.packs[p.k];
   // See the header note: the desktop card separates every row with a real space
   // text node, the mobile card separates only some of them.
   const gap = mob ? null : " ";
@@ -127,20 +74,20 @@ function PackCard({ p, mob = false }: { p: Pack; mob?: boolean }) {
     <div className="rc">
       {" "}
       <div className="hd">
-        <span>Package</span>
-        <span>{p.hd}</span>
+        <span>{t.package}</span>
+        <span>{pk.hd}</span>
       </div>
       {gap}
-      <div className="tt">{p.tt}</div>
+      <div className="tt">{pk.tt}</div>
       {gap}
-      <div className="sub">{p.sub}</div>
+      <div className="sub">{pk.sub}</div>
       {gap}
       <div className="sep"></div>
       {" "}
       {p.lines.map((l, i) => (
         <div className="ln" key={i}>
           <Tick />
-          <span>{l}</span>
+          <span>{t.lines[l]}</span>
         </div>
       ))}
       {" "}
@@ -157,22 +104,30 @@ function PackCard({ p, mob = false }: { p: Pack; mob?: boolean }) {
             separates adjacent text nodes with `<!-- -->` for hydration — nine
             cards, nine extra comments, 72 bytes the hand-written markup did not
             emit. The template literal is a single child and a single text
-            node. */}
-        <span className="lb">{`${p.lines.length} checks · ready in`}</span>
-        <span className="v">{p.ready}</span>
+            node.
+
+            THE INTERPOLATION IS WHY `tot` IS A FUNCTION LEAF and not a
+            string. A leaf of `" checks · ready in"` concatenated here would
+            carry edge whitespace, which `tools/test/copy.test.ts` §3 rejects
+            because it is invisible in review; two leaves would be two
+            children again. A function keeps the sentence whole and lets a
+            locale put the number anywhere in it — the third leaf shape
+            `lib/copy`'s header lists. */}
+        <span className="lb">{t.tot(p.lines.length)}</span>
+        <span className="v">{pk.ready}</span>
       </div>
       {gap}
       <div className="bc"></div>
       {" "}
       <div className="act">
-        <span className="who">{p.who}</span>
+        <span className="who">{pk.who}</span>
         {p.buy ? (
           <a
             href="#"
             className="btn btn-ink btn-sm"
             style={{ height: mob ? "34px" : "36px" }}
           >
-            Buy now
+            {t.buy}
           </a>
         ) : (
           <a
@@ -186,16 +141,8 @@ function PackCard({ p, mob = false }: { p: Pack; mob?: boolean }) {
               ? { style: { display: "inline-flex", alignItems: "center", gap: "6px" } }
               : {})}
           >
-            Explore{" "}
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path
-                d="M3 8h10M9 4l4 4-4 4"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            {t.explore}{" "}
+            <Arrow size="14" />
           </a>
         )}
       </div>
@@ -228,7 +175,9 @@ function Rack({
   );
 }
 
-export function Packages() {
+export async function Packages() {
+  const t = (await copy(SECTIONS)).packages;
+
   return (
     <>
       <div className="dsk">
@@ -237,13 +186,13 @@ export function Packages() {
           <div className="sec-head">
             {" "}
             <h2 className="h2">
-              Or take a package.
+              {t.headingA}
               <br />
-              One upload, one answer.
+              {t.headingB}
             </h2>
             {" "}
             <p className="lede" style={{ marginBottom: "8px" }}>
-              A fixed set of checks with one turnaround. Everything runs in parallel, so a package is only as slow as its slowest check.
+              {t.lede}
             </p>
             {" "}
           </div>
@@ -265,11 +214,11 @@ export function Packages() {
         <div className="wrap sec hair-top">
           {" "}
           <h2 className="h2">
-            Or take a package. One upload, one answer.
+            {t.headingMob}
           </h2>
           {" "}
           <p className="lede">
-            A fixed set of checks with one turnaround — as fast as its slowest check.
+            {t.ledeMob}
           </p>
           {" "}
           <Rack
@@ -282,9 +231,7 @@ export function Packages() {
               subset at all. PeopleStrip's regression was exactly this: an
               extraction that read the repeated track and not what followed it. */}
           <a href="#" className="btn btn-line full" style={{ marginTop: "34px" }}>
-            Trade licence, vendor risk{" "}
-            &amp;
-            {" "}premium packages
+            {t.more}
           </a>
           {" "}
         </div>

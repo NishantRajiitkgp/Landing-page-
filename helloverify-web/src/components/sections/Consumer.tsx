@@ -2,6 +2,8 @@ import { Fragment } from "react";
 
 import { HelloVPhone } from "@/components/blocks/HelloVPhone";
 import { Tick } from "@/components/brand/Tick";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS, type PlanId, type PlanLineId, type ServiceId } from "@/lib/copy/sections";
 
 /** HelloV - the consumer side.
  *
@@ -28,78 +30,71 @@ import { Tick } from "@/components/brand/Tick";
  *  has a leading and trailing space text node on desktop and none on mobile.
  */
 
-/** Same eight, same order, at both breakpoints. */
-const SERVICES = [
-  "Driver",
-  "Home staff",
-  "Tenant",
-  "Nanny",
-  "Verify anyone",
-  "Cyber identity",
-  "Know the identity",
-  "Know your contact",
-] as const;
+/** Same eight, same order, at both breakpoints. The words are in
+ *  `lib/copy/sections`; this is the order, which is not copy. */
+const SERVICES: readonly ServiceId[] = [
+  "driver",
+  "homeStaff",
+  "tenant",
+  "nanny",
+  "verifyAnyone",
+  "cyberIdentity",
+  "knowIdentity",
+  "knowContact",
+];
 
 type Plan = {
   /** The ink-coloured card. Also decides the tick tone - the brand green does
    *  not carry on it, which is why `Tick` has a `light` tone at all. */
   readonly dark?: boolean;
-  readonly name: string;
-  readonly most?: string;
-  readonly price: string;
-  readonly lines: readonly string[];
+  readonly k: PlanId;
+  /** The "Most chosen" flash. A FLAG, not the words: which card is flashed is
+   *  a choice about the card and the words are one shared leaf, which is also
+   *  what keeps `plans` a square table - see `lib/copy/sections`' header on
+   *  ragged rows, and `blocks/LeadMock.tsx`'s `on` for the same shape. */
+  readonly most?: true;
+  readonly lines: readonly PlanLineId[];
   /** The excluded line, ticked muted. DESKTOP ONLY - see the header note. */
-  readonly dimmed?: string;
-  readonly ready: string;
-  readonly cta: string;
+  readonly dimmed?: PlanLineId;
 };
 
+/** Which lines each card lists, and in what order. The three line strings are
+ *  one flat table in `lib/copy/sections`: they are the same three checks in
+ *  both cards, so what differs between the plans is membership, not words. */
 const PLANS: readonly Plan[] = [
-  {
-    name: "Driver · Basic",
-    price: "499",
-    lines: ["Driving licence check", "Criminal record check"],
-    dimmed: "Current address check",
-    ready: "Ready in 30 min",
-    cta: "Buy Basic",
-  },
-  {
-    dark: true,
-    name: "Driver · Advanced",
-    most: "Most chosen",
-    price: "799",
-    lines: ["Driving licence check", "Criminal record check", "Current address check"],
-    ready: "Ready in 30 min",
-    cta: "Buy Advanced",
-  },
+  { k: "basic", lines: ["licence", "criminal"], dimmed: "address" },
+  { dark: true, k: "advanced", most: true, lines: ["licence", "criminal", "address"] },
 ];
 
-function PlanCard({ p, mob = false }: { p: Plan; mob?: boolean }) {
+async function PlanCard({ p, mob = false }: { p: Plan; mob?: boolean }) {
+  const t = (await copy(SECTIONS)).consumer;
+  const c = t.plans[p.k];
+
   return (
     <div className={p.dark ? "plan dark" : "plan"}>
       {" "}
       <div className="ph1">
-        <span className="pn">{p.name}</span>
-        {p.most !== undefined && <span className="most">{p.most}</span>}
+        <span className="pn">{c.name}</span>
+        {p.most !== undefined && <span className="most">{t.most}</span>}
       </div>
       {" "}
       <div className="pp">
-        <span className="cur">₹</span>
-        {p.price}
-        <span className="per">per check</span>
+        <span className="cur">{t.currency}</span>
+        {c.price}
+        <span className="per">{t.per}</span>
       </div>
       {" "}
       <div className="pl">
         {p.lines.map((l, i) => (
           <div key={i}>
             <Tick tone={p.dark ? "light" : "green"} />
-            {l}
+            {t.checkLines[l]}
           </div>
         ))}
         {!mob && p.dimmed !== undefined && (
           <div className="dim">
             <Tick tone="muted" />
-            {p.dimmed}
+            {t.checkLines[p.dimmed]}
           </div>
         )}
       </div>
@@ -107,7 +102,7 @@ function PlanCard({ p, mob = false }: { p: Plan; mob?: boolean }) {
       <div className="pf">
         <span className="rd">
           <span className="dot"></span>
-          {p.ready}
+          {c.ready}
         </span>
       </div>
       {" "}
@@ -121,14 +116,15 @@ function PlanCard({ p, mob = false }: { p: Plan; mob?: boolean }) {
           ...(p.dark ? { background: "var(--white)", color: "var(--ink)" } : {}),
         }}
       >
-        {p.cta}
+        {c.cta}
       </a>
       {" "}
     </div>
   );
 }
 
-function Services({ mob, style }: { mob?: boolean; style: React.CSSProperties }) {
+async function Services({ mob, style }: { mob?: boolean; style: React.CSSProperties }) {
+  const t = (await copy(SECTIONS)).consumer;
   // Desktop opens and closes the row with a real space text node; mobile does
   // not. Neither has one between the chips.
   const gap = mob ? null : " ";
@@ -137,7 +133,7 @@ function Services({ mob, style }: { mob?: boolean; style: React.CSSProperties })
       {gap}
       {SERVICES.map((s, i) => (
         <span className="svc" key={i}>
-          {s}
+          {t.services[s]}
         </span>
       ))}
       {gap}
@@ -171,7 +167,9 @@ function Phone({ mob }: { mob?: boolean }) {
   );
 }
 
-export function Consumer() {
+export async function Consumer() {
+  const t = (await copy(SECTIONS)).consumer;
+
   return (
     <>
       <div className="dsk">
@@ -181,16 +179,16 @@ export function Consumer() {
             {" "}
             <div>
               {" "}
-              <div className="k">Consumer · HelloV</div>
+              <div className="k">{t.k}</div>
               {" "}
               <h2 className="h2" style={{ marginTop: "18px", fontSize: "60px" }}>
-                Verify anyone.
+                {t.headingA}
                 <br />
-                From your phone, in 30 minutes.
+                {t.headingB}
               </h2>
               {" "}
               <p className="lede" style={{ marginTop: "22px", maxWidth: "480px" }}>
-                Send a photo of the document over WhatsApp. We do the rest and message you back with the report.
+                {t.lede}
               </p>
               {" "}
               <Services style={{ marginTop: "24px", display: "flex", flexWrap: "wrap", gap: "8px" }} />
@@ -198,7 +196,7 @@ export function Consumer() {
               <Plans style={{ marginTop: "36px", display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "16px", maxWidth: "600px" }} />
               {" "}
               <p className="mono" style={{ margin: "14px 0 0", color: "var(--muted)" }}>
-                Prices are placeholders. Home staff, tenant and nanny packages priced the same way.
+                {t.note}
               </p>
               {" "}
             </div>
@@ -212,14 +210,14 @@ export function Consumer() {
       <div className="mob">
         <div className="wrap sec hair-top">
           {" "}
-          <div className="k">Consumer · HelloV</div>
+          <div className="k">{t.k}</div>
           {" "}
           <h2 className="h2" style={{ marginTop: "12px" }}>
-            Verify anyone. From your phone, in 30 minutes.
+            {t.headingMob}
           </h2>
           {" "}
           <p className="lede">
-            Send a photo of the document over WhatsApp. We message you back with the report.
+            {t.ledeMob}
           </p>
           {" "}
           <Services mob style={{ marginTop: "18px", display: "flex", flexWrap: "wrap", gap: "6px" }} />
@@ -231,7 +229,7 @@ export function Consumer() {
           {/* Shorter than the desktop note, and a 12px top margin rather than
               14px. Both measured, not assumed symmetrical. */}
           <p className="mono" style={{ margin: "12px 0 0", color: "var(--muted)" }}>
-            Prices are placeholders.
+            {t.noteMob}
           </p>
           {" "}
         </div>

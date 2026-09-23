@@ -1,6 +1,10 @@
 /** Built on trust. Proven by numbers. */
+import { copy } from "@/lib/copy/request";
+import { SECTIONS } from "@/lib/copy/sections";
 
-export function Numbers() {
+export async function Numbers() {
+  const t = (await copy(SECTIONS)).numbers;
+
   return (
     <>
       <div className="dsk">
@@ -8,12 +12,12 @@ export function Numbers() {
           {' '}
           <div className="sec-head">
             <h2 className="h2">
-              Built on trust.
+              {t.headingA}
               <br />
-              Proven by numbers.
+              {t.headingB}
             </h2>
             <p className="lede" style={{ marginBottom: '8px' }}>
-              Every figure here is a real count, not a target.
+              {t.lede}
             </p>
           </div>
           {' '}
@@ -22,56 +26,56 @@ export function Numbers() {
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.1s' }}>
-                  20M
+                  {t.figures.checks.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.18s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                checks completed since 2018, every one at the primary source.
+                {t.figures.checks.l}
               </div>
             </div>
             {' '}
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.2s' }}>
-                  2,000
+                  {t.figures.clients.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.28s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                enterprise clients globally, from fleets to health ministries.
+                {t.figures.clients.l}
               </div>
             </div>
             {' '}
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.3s' }}>
-                  120
+                  {t.figures.countries.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.38s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                countries where we can reach the issuing authority.
+                {t.figures.countries.l}
               </div>
             </div>
             {' '}
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.4s' }}>
-                  33
+                  {t.figures.catalogue.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.48s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                verification checks, from a driving licence to a director's default history.
+                {t.figures.catalogue.l}
               </div>
             </div>
             {' '}
@@ -83,7 +87,7 @@ export function Numbers() {
         <div className="wrap" style={{ paddingTop: '80px', paddingBottom: '72px' }}>
           {' '}
           <h2 className="h2">
-            Built on trust. Proven by numbers.
+            {t.headingMob}
           </h2>
           {' '}
           <div style={{ marginTop: '40px', display: 'grid', gridTemplateColumns: '1fr', gap: '36px' }}>
@@ -91,56 +95,56 @@ export function Numbers() {
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.1s' }}>
-                  20M
+                  {t.figures.checks.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.18s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                checks completed since 2018, every one at the primary source.
+                {t.figures.checks.l}
               </div>
             </div>
             {' '}
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.2s' }}>
-                  2,000
+                  {t.figures.clients.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.28s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                enterprise clients globally, from fleets to health ministries.
+                {t.figures.clients.l}
               </div>
             </div>
             {' '}
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.3s' }}>
-                  120
+                  {t.figures.countries.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.38s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                countries where we can reach the issuing authority.
+                {t.figures.countries.l}
               </div>
             </div>
             {' '}
             <div>
               <div className="big">
                 <span className="in" style={{ animationDelay: '0.4s' }}>
-                  33
+                  {t.figures.catalogue.v}
                 </span>
                 <span className="sfx in" style={{ animationDelay: '0.48s' }}>
-                  +
+                  {t.plus}
                 </span>
               </div>
               <div className="big-l">
-                verification checks, from a driving licence to a director's default history.
+                {t.figures.catalogue.l}
               </div>
             </div>
             {' '}

@@ -2,7 +2,10 @@ import type { ReactNode } from "react";
 import { Fragment } from "react";
 import Image from "next/image";
 
+import { Arrow } from "@/components/brand/Arrow";
 import { SIZES_CCARD, noteInk, tint } from "@/lib/img";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS, type CountrySrc, type StatId } from "@/lib/copy/sections";
 
 /** International coverage.
  *
@@ -28,13 +31,7 @@ import { SIZES_CCARD, noteInk, tint } from "@/lib/img";
  */
 
 type Country = {
-  readonly src: string;
-  readonly name: string;
-  /** The caption over the photograph. Desktop only — see the header note. */
-  readonly note: string;
-  /** Rendered in order against the fixed labels For / Checks / Ready in. */
-  readonly stats: readonly [string, string, string];
-  readonly by: string;
+  readonly src: CountrySrc;
   /** The flag's children only; the `<svg>` wrapper is identical on all five. */
   readonly flag: ReactNode;
 };
@@ -42,10 +39,6 @@ type Country = {
 const COUNTRIES: readonly Country[] = [
   {
     src: "/img/16-united-kingdom.jpg",
-    name: "United Kingdom",
-    note: "photo · London street",
-    stats: ["Drivers", "2", "30 min"],
-    by: "Today, 4:12 PM",
     flag: (
       <>
         <rect width="30" height="20" fill="#012169" />
@@ -60,10 +53,6 @@ const COUNTRIES: readonly Country[] = [
   },
   {
     src: "/img/17-philippines.jpg",
-    name: "Philippines",
-    note: "photo · Manila, jeepney",
-    stats: ["Drivers", "3", "30 min"],
-    by: "Today, 4:12 PM",
     flag: (
       <>
         <rect width="30" height="10" fill="#0038A8" />
@@ -75,10 +64,6 @@ const COUNTRIES: readonly Country[] = [
   },
   {
     src: "/img/18-uae.jpg",
-    name: "United Arab Emirates",
-    note: "photo · Dubai skyline",
-    stats: ["House help", "3", "24 hrs"],
-    by: "Tomorrow, 9:00 AM",
     flag: (
       <>
         <rect width="30" height="6.7" fill="#00732F" />
@@ -90,10 +75,6 @@ const COUNTRIES: readonly Country[] = [
   },
   {
     src: "/img/19-singapore.jpg",
-    name: "Singapore",
-    note: "photo · Singapore campus",
-    stats: ["Graduates", "1", "3 days"],
-    by: "Fri, 19 Sep",
     flag: (
       <>
         <rect width="30" height="10" fill="#EF3340" />
@@ -105,10 +86,6 @@ const COUNTRIES: readonly Country[] = [
   },
   {
     src: "/img/20-egypt.jpg",
-    name: "Egypt",
-    note: "photo · Cairo rooftops",
-    stats: ["Tenants", "3", "30 min"],
-    by: "Today, 4:12 PM",
     flag: (
       <>
         <rect width="30" height="6.7" fill="#CE1126" />
@@ -120,9 +97,15 @@ const COUNTRIES: readonly Country[] = [
   },
 ];
 
-const STAT_LABELS = ["For", "Checks", "Ready in"] as const;
+/** The three fixed labels, in the order every card renders them. The words
+ *  are `lib/copy/sections`' `international.statLabels` and each country's
+ *  three values are keyed by these SAME ids, so a label and its value
+ *  cannot come apart - which a positional tuple could not promise. */
+const STATS: readonly StatId[] = ["audience", "count", "ready"];
 
-function CountryCard({ c, mob = false, wide = false }: { c: Country; mob?: boolean; wide?: boolean }) {
+async function CountryCard({ c, mob = false, wide = false }: { c: Country; mob?: boolean; wide?: boolean }) {
+  const t = (await copy(SECTIONS)).international;
+  const country = t.countries[c.src];
   // Six whitespace text nodes the desktop card has and the mobile one does not.
   // See the header note: these are output, not formatting.
   const gap = mob ? null : " ";
@@ -142,7 +125,7 @@ function CountryCard({ c, mob = false, wide = false }: { c: Country; mob?: boole
             `hv/no-color-literal` until 22 Sep 2026. */}
         {!mob && (
           <div className="note" style={{ top: "22%", color: noteInk(c.src) }}>
-            {c.note}
+            {country.note}
           </div>
         )}
         {gap}
@@ -158,15 +141,15 @@ function CountryCard({ c, mob = false, wide = false }: { c: Country; mob?: boole
             </span>
           </div>
           {gap}
-          <div className="cn">{c.name}</div>
+          <div className="cn">{country.name}</div>
           {gap}
           <div className="crule"></div>
           {gap}
           <div className="cst">
-            {c.stats.map((v, i) => (
+            {STATS.map((k, i) => (
               <div key={i}>
-                <span>{STAT_LABELS[i]}</span>
-                <b>{v}</b>
+                <span>{t.statLabels[k]}</span>
+                <b>{country.stats[k]}</b>
               </div>
             ))}
           </div>
@@ -176,8 +159,8 @@ function CountryCard({ c, mob = false, wide = false }: { c: Country; mob?: boole
       </div>
       {" "}
       <div className="cby">
-        <span>Report ready by</span>
-        <b>{c.by}</b>
+        <span>{t.readyBy}</span>
+        <b>{country.by}</b>
       </div>
       {" "}
     </div>
@@ -207,7 +190,9 @@ function Grid({
   );
 }
 
-export function International() {
+export async function International() {
+  const t = (await copy(SECTIONS)).international;
+
   return (
     <>
       <div className="dsk">
@@ -216,13 +201,13 @@ export function International() {
           <div className="sec-head">
             {" "}
             <h2 className="h2">
-              Verified in 120 countries.
+              {t.headingA}
               <br />
-              With a time you can plan around.
+              {t.headingB}
             </h2>
             {" "}
             <p className="lede" style={{ marginBottom: "8px" }}>
-              Local sources — the same courts, registries and licensing bodies a local employer would call. Start now and the report lands by the time shown.
+              {t.lede}
             </p>
             {" "}
           </div>
@@ -242,20 +227,12 @@ export function International() {
           <div style={{ marginTop: "28px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "14px", color: "var(--muted)" }}>
             {" "}
             <span>
-              Criminal records are checked across Supreme, High and District Courts and tribunals. Times are from upload, in your local time.
+              {t.courts}
             </span>
             {" "}
             <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontWeight: "500", color: "var(--ink)" }}>
-              All countries{" "}
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                <path
-                  d="M3 8h10M9 4l4 4-4 4"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+              {t.all}{" "}
+              <Arrow size="14" />
             </a>
             {" "}
           </div>
@@ -268,7 +245,7 @@ export function International() {
           {/* No `lede` here. The desktop block carries one and this one never
               has — accounted for rather than assumed symmetrical. */}
           <h2 className="h2">
-            Verified in 120 countries. With a time you can plan around.
+            {t.headingMob}
           </h2>
           {" "}
           <Grid

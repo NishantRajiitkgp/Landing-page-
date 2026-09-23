@@ -1,6 +1,8 @@
 import { Fragment } from "react";
 
 import { PANELS } from "@/components/blocks/HowItWorksPanels";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS, type StepId } from "@/lib/copy/sections";
 
 /** How a verification runs, end to end.
  *
@@ -22,56 +24,41 @@ import { PANELS } from "@/components/blocks/HowItWorksPanels";
  */
 
 type Step = {
-  readonly label: string;
-  readonly sub: string;
+  readonly k: StepId;
   /** Desktop only: where the node sits on the horizontal track. */
   readonly at: string;
-  /** Desktop only: the caption card's paragraph under the stage. */
-  readonly cap: string;
 };
 
+/** The order, and the only field that is not words. The label, the `sub` and
+ *  the desktop caption are `lib/copy/sections`' `howItWorks.steps`, keyed by
+ *  the same four ids - which is what now holds the three places a step name
+ *  is rendered to one string. */
 const STEPS: readonly Step[] = [
-  {
-    label: "Upload",
-    sub: "09:40 · candidate's phone",
-    at: "14.25%",
-    cap: "Photograph the document. Edges, glare and focus are checked before the shutter fires.",
-  },
-  {
-    label: "Read",
-    sub: "1.2 s · HelloVerify AI",
-    at: "38.08%",
-    cap: "AI captures every field, checks the document against itself, and finds the office that issued it.",
-  },
-  {
-    label: "Confirm",
-    sub: "RTO Karnataka · the source",
-    at: "61.9%",
-    cap: "The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one.",
-  },
-  {
-    label: "Report",
-    sub: "10:10 · shared with HR",
-    at: "85.75%",
-    cap: "One report, with the source named beside every result.",
-  },
+  { k: "upload", at: "14.25%" },
+  { k: "read", at: "38.08%" },
+  { k: "confirm", at: "61.9%" },
+  { k: "report", at: "85.75%" },
 ];
 
 /** The clock above the track. Mobile sets it static and lets the rule stretch;
  *  the times either side are the same. */
-function Clock({ mob }: { mob?: boolean }) {
+async function Clock({ mob }: { mob?: boolean }) {
+  const t = (await copy(SECTIONS)).howItWorks;
+
   return (
     <div className="clock" {...(mob ? { style: { position: "static", marginTop: "24px" } } : {})}>
-      <span>09:40</span>
+      <span>{t.clock.start}</span>
       <span className="tr" {...(mob ? { style: { flex: "1" } } : {})}>
         <i></i>
       </span>
-      <span>10:10</span>
+      <span>{t.clock.end}</span>
     </div>
   );
 }
 
-export function HowItWorks() {
+export async function HowItWorks() {
+  const t = (await copy(SECTIONS)).howItWorks;
+
   return (
     <>
       <div className="dsk">
@@ -80,13 +67,13 @@ export function HowItWorks() {
           <div className="sec-head">
             {" "}
             <h2 className="h2">
-              One upload.
+              {t.headingA}
               <br />
-              Then we get to work.
+              {t.headingB}
             </h2>
             {" "}
             <p className="lede" style={{ marginBottom: "8px" }}>
-              A driving licence in Bengaluru, start to finish. Thirty minutes, on loop.
+              {t.lede}
             </p>
             {" "}
           </div>
@@ -102,16 +89,16 @@ export function HowItWorks() {
             <div className="pk"></div>
             {" "}
             {STEPS.map((s, i) => (
-              <Fragment key={s.label}>
+              <Fragment key={t.steps[s.k].label}>
                 <div className="node" style={{ insetInlineStart: s.at, animationName: `node${i}` }}></div>
                 {" "}
               </Fragment>
             ))}
             {STEPS.map((s) => (
-              <Fragment key={s.label}>
+              <Fragment key={t.steps[s.k].label}>
                 <div className="stlbl" style={{ insetInlineStart: s.at }}>
-                  <b>{s.label}</b>
-                  <span>{s.sub}</span>
+                  <b>{t.steps[s.k].label}</b>
+                  <span>{t.steps[s.k].sub}</span>
                 </div>
                 {" "}
               </Fragment>
@@ -131,15 +118,15 @@ export function HowItWorks() {
               at the last panel and has no caption cards at all. */}
           <div style={{ marginTop: "48px", display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "40px" }}>
             {STEPS.map((s, i) => (
-              <Fragment key={s.label}>
+              <Fragment key={t.steps[s.k].label}>
                 {" "}
                 <div className="cap">
                   {/* 01-04, derived: the caption order matched the track order
                       in every copy, so a stored number would only be somewhere
                       for the two to disagree. */}
                   <div className="n">{`0${i + 1}`}</div>
-                  <div className="t">{s.label}</div>
-                  <p className="p">{s.cap}</p>
+                  <div className="t">{t.steps[s.k].label}</div>
+                  <p className="p">{t.steps[s.k].cap}</p>
                 </div>
               </Fragment>
             ))}{" "}
@@ -150,10 +137,10 @@ export function HowItWorks() {
       <div className="mob">
         <div className="wrap sec hair-top">
           {" "}
-          <h2 className="h2">One upload. Then we get to work.</h2>
+          <h2 className="h2">{t.headingMob}</h2>
           {" "}
           <p className="lede">
-            A driving licence in Bengaluru, start to finish. Thirty minutes, on loop.
+            {t.lede}
           </p>
           {" "}
           <Clock mob />
@@ -166,15 +153,15 @@ export function HowItWorks() {
             {STEPS.map((s, i) => {
               const Panel = PANELS[i];
               return (
-                <Fragment key={s.label}>
+                <Fragment key={t.steps[s.k].label}>
                   {" "}
                   <div className="stn2">
                     {" "}
                     <div className="node" style={{ animationName: `node${i}` }}></div>
                     {" "}
                     <div className="stlbl2">
-                      <b>{s.label}</b>
-                      <span>{s.sub}</span>
+                      <b>{t.steps[s.k].label}</b>
+                      <span>{t.steps[s.k].sub}</span>
                     </div>
                     {" "}
                     <Panel />

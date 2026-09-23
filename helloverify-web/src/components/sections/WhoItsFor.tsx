@@ -1,8 +1,9 @@
-import type { ReactNode } from "react";
 import { Fragment } from "react";
 import Image from "next/image";
 
 import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE, noteInk, tint } from "@/lib/img";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS, type CellSrc } from "@/lib/copy/sections";
 
 /** Who it is for - the audience bento.
  *
@@ -33,73 +34,26 @@ import { SIZES_BENTO_NARROW, SIZES_BENTO_WIDE, noteInk, tint } from "@/lib/img";
  */
 
 type Cell = {
-  readonly src: string;
-  readonly note: string;
-  readonly tag: ReactNode;
-  /** Mobile's shorter tag, where it has one. */
-  readonly mobTag?: ReactNode;
-  readonly from: string;
-  readonly h: ReactNode;
+  readonly src: CellSrc;
   /** Desktop's bento shape. Mobile is a single column and ignores it. */
   readonly span?: "row" | "col";
 };
 
+/** The order and the bento shape. Everything a reader sees - the caption, the
+ *  tag, the mobile tag, the `from` and the heading - is keyed by photograph in
+ *  `lib/copy/sections`, which is where the sixth cell's shorter mobile tag now
+ *  lives too. */
 const CELLS: readonly Cell[] = [
-  {
-    src: "/img/10-ministry-hall.jpg",
-    note: "photo · ministry hall",
-    tag: <>Governments{" "}&amp;{" "}authorities</>,
-    mobTag: "Governments",
-    from: "from 3 days",
-    h: (
-      <>
-        Licences, visas
-        <br />
-        and permits
-      </>
-    ),
-    span: "row",
-  },
-  {
-    src: "/img/11-office-first-day.jpg",
-    note: "photo · office, first day",
-    tag: <>Enterprise{" "}&amp;{" "}SMB · BGV</>,
-    from: "from 30 min",
-    h: "Every hire, white-collar and blue",
-    span: "col",
-  },
-  {
-    src: "/img/12-phone-signup.jpg",
-    note: "photo · phone, signup",
-    tag: <>KYC · Trust{" "}&amp;{" "}Safety</>,
-    from: "15 min",
-    h: "Customers, verified at signup",
-  },
-  {
-    src: "/img/13-factory-floor.jpg",
-    note: "photo · factory floor",
-    tag: "Vendors · Certifier",
-    from: "from 2 days",
-    h: "Know who you buy from",
-  },
-  {
-    src: "/img/14-visa-counter.jpg",
-    note: "photo · visa counter",
-    tag: "Premium services",
-    from: "assisted",
-    h: "Visas and healthcare credentials",
-  },
-  {
-    src: "/img/15-home-doorway.jpg",
-    note: "photo · home, doorway",
-    tag: "Consumer · HelloV",
-    from: "30 min",
-    h: "The people in your home",
-    span: "col",
-  },
+  { src: "/img/10-ministry-hall.jpg", span: "row" },
+  { src: "/img/11-office-first-day.jpg", span: "col" },
+  { src: "/img/12-phone-signup.jpg" },
+  { src: "/img/13-factory-floor.jpg" },
+  { src: "/img/14-visa-counter.jpg" },
+  { src: "/img/15-home-doorway.jpg", span: "col" },
 ];
 
-function BentoCell({ c, mob = false }: { c: Cell; mob?: boolean }) {
+async function BentoCell({ c, mob = false }: { c: Cell; mob?: boolean }) {
+  const cell = (await copy(SECTIONS)).whoItsFor.cells[c.src];
   // Desktop separates the photograph, the tag pair and the body with real
   // space text nodes; the mobile cell has none of them.
   const gap = mob ? null : " ";
@@ -133,16 +87,16 @@ function BentoCell({ c, mob = false }: { c: Cell; mob?: boolean }) {
           now that it has a picture. */}
       {!mob && (
         <div className="note" {...(noteColour !== undefined ? { style: { color: noteColour } } : {})}>
-          {c.note}
+          {cell.note}
         </div>
       )}
       <div className="scrim"></div>
       {gap}
-      <div className="tag">{mob && c.mobTag !== undefined ? c.mobTag : c.tag}</div>
-      <div className="from">{c.from}</div>
+      <div className="tag">{mob && "mobTag" in cell ? cell.mobTag : cell.tag}</div>
+      <div className="from">{cell.from}</div>
       {gap}
       <div className="body">
-        <div className="h">{c.h}</div>
+        <div className="h">{cell.h}</div>
       </div>
       {gap}
     </div>
@@ -165,7 +119,9 @@ function Bento({ mob, style }: { mob?: boolean; style: React.CSSProperties }) {
   );
 }
 
-export function WhoItsFor() {
+export async function WhoItsFor() {
+  const t = (await copy(SECTIONS)).whoItsFor;
+
   return (
     <>
       <div className="dsk">
@@ -174,13 +130,13 @@ export function WhoItsFor() {
           <div className="sec-head">
             {" "}
             <h2 className="h2">
-              For the moment you
+              {t.headingA}
               <br />
-              need to trust someone.
+              {t.headingB}
             </h2>
             {" "}
             <p className="lede" style={{ marginBottom: "8px" }}>
-              A health ministry licensing ten thousand nurses and a family hiring one nanny need the same thing: a real answer, quickly. Same platform, different door.
+              {t.lede}
             </p>
             {" "}
           </div>
@@ -194,7 +150,7 @@ export function WhoItsFor() {
           {" "}
           {/* No `sec-head` and no lede. The desktop block carries a paragraph
               this one has never had - accounted for, not assumed symmetrical. */}
-          <h2 className="h2">For the moment you need to trust someone.</h2>
+          <h2 className="h2">{t.headingMob}</h2>
           {" "}
           <Bento mob style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "12px" }} />
           {" "}
