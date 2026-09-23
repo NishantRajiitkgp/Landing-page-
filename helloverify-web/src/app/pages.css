@@ -108,7 +108,7 @@
                     58% { top: 92%; opacity: 0; } 64% { opacity: 1; } 96% { top: 8%; opacity: 1; } 100% { top: 8%; opacity: 0; } }
 .d2cap { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px;
          font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.d2cap .chip2 { display: inline-flex; align-items: center; gap: 7px; height: 26px; padding: 0 10px 0 9px;
+.d2cap .chip2 { display: inline-flex; align-items: center; gap: 7px; height: 26px; padding-block: 0; padding-inline: 9px 10px;
                 border-radius: 999px; background: #FFFFFF; border: 1px solid var(--hair); }
 .d2h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
        font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
@@ -190,7 +190,7 @@
 .lanes3 .lgt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 .lanes3 .lgh { margin-top: 8px; font-family: var(--serif); font-size: 28px; line-height: 1.05; letter-spacing: -0.02em; }
 .cloud3 { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
-.pl3 { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px 0 10px; border-radius: 999px; background: #FFFFFF; border: 1px solid var(--hair); font-size: 13.5px; font-weight: 500; white-space: nowrap; }
+.pl3 { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding-block: 0; padding-inline: 10px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid var(--hair); font-size: 13.5px; font-weight: 500; white-space: nowrap; }
 .pl3 .d { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); flex: 0 0 auto; }
 .pl3.fast .d { background: var(--green); }
 .pl3 .t { font-family: var(--mono); font-size: 11px; color: var(--muted); font-weight: 400; }
@@ -464,6 +464,16 @@ input.inp, select.inp, textarea.inp { width: 100%; display: block; font-family: 
 input.inp::placeholder, textarea.inp::placeholder { color: var(--muted); }
 textarea.inp { min-height: 96px; line-height: 1.5; }
 select.inp { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'><path d='M1 1l5 5 5-5' stroke='%236F6B62' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat: no-repeat; background-position: right 16px center; padding-inline-end: 40px; }
+/* The chevron is a background image, and CSS has no logical
+   `background-position`. `padding-inline-end: 40px` above already moves the
+   space it sits in, so without this the arrow stays on the right while the
+   gap opens on the left. Found by rendering, not reading: `check:logical`
+   matches property names and `background-position` is on its own declared
+   exemption list (paint positioning), so no gate could have reported it.
+   REJECTED: a native `<select>` appearance, which flips on its own - the
+   canvas specifies this chevron and dropping it is a design change, not an
+   RTL fix. */
+[dir="rtl"] select.inp { background-position: left 16px center; }
 select.inp:invalid, select.inp option[value=""] { color: var(--muted); }
 .inp:focus-visible, .btn:focus-visible, a:focus-visible, summary:focus-visible, .seg:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
 .ct3 .seg { cursor: pointer; }

@@ -39,6 +39,84 @@
 @import "./design.css";
 @import "./pages.css";
 
+/* Direction (BUILD-SPEC §7, §17 condition 15).
+
+   Two things the inline-axis logical properties cannot express, so they are
+   tokens instead of a `[dir="rtl"]` block per rule:
+
+   - `--flip` is the sign of a horizontal `translateX`. `translateX(-50%)`
+     centres an element on an anchor placed with `inset-inline-start`, and that
+     is a LEFTWARD shift only while the inline axis runs left to right; mirrored
+     it has to shift right. Same for the marquee `drift` keyframe. Measured on
+     the homepage before this existed: `.pin.r` and the `.axis` tick labels were
+     pushed outside the viewport at both 1440px and 390px, and
+     `tools/e2e/rtl.spec.ts` named them.
+   - `--origin-x` is `transform-origin`'s inline edge. `transform-origin` takes
+     no logical keyword at all, and every one of the five uses here grows a bar
+     from the inline start with `scaleX`.
+
+   REJECTED: `[dir="rtl"]` overrides beside each rule. Fourteen of them, in a
+   stylesheet generated from the artboards, each one a second place to edit when
+   an offset changes - and `tools/port/build-css.py` would drop all fourteen on
+   a regeneration while these two declarations are a single line to re-add.
+
+   REJECTED: `scale(-1, 1)` on a wrapper. It mirrors glyphs and images too. */
+:root {
+  --flip: 1;
+  --origin-x: left;
+}
+
+[dir="rtl"] {
+  --flip: -1;
+  --origin-x: right;
+}
+
+/* The forward arrow, mirrored (BUILD-SPEC §7, §17 condition 15).
+
+   `components/brand/Arrow.tsx` draws a RIGHT-pointing arrow, `M3 8h10M9 4l4
+   4-4 4` in a 16-unit box, at 32 call sites. A "next" arrow that still points
+   right in Arabic points backwards. `tools/e2e/rtl.spec.ts` renders all 56
+   routes mirrored and passes, and states why it cannot reach this half:
+   geometry cannot see which way a path points.
+
+   SELECTED BY ITS DRAWING RATHER THAN BY A CLASS, which is the whole reason
+   the selector reads like this. Putting a `class` on the `<svg>` would move the
+   emitted HTML at every one of those call sites, and `tools/port/html-identity.mjs`
+   is the gate that forbids it; `:has()` keyed on `d` adds no attribute, so the
+   LTR bytes do not move. It also catches any copy still written out by hand,
+   so this does not depend on the de-duplication staying finished. `:has()` is
+   already load-bearing here - `.ph:has(.pimg)` in `design.css`,
+   `.seg:has(input:checked)` in `pages.css`.
+
+   THE DOWNWARD CHEVRONS ARE DELIBERATELY NOT INCLUDED: `blocks/LeadMock.tsx`'s
+   `M3 4.5l3 3 3-3` and the `select.inp` chevron in `pages.css`
+   (`M1 1l5 5 5-5`) point along the block axis, and RTL flips the inline axis
+   only - the same scope `tools/a11y/check-logical-css.mjs` sets for the
+   stylesheets. A rule broad enough to catch every icon would have mirrored
+   both of those, and a caret that points at the menu below it points there in
+   Arabic too.
+
+   REJECTED: emitting a mirrored `d` per direction from the component. Three
+   reasons, heaviest first. The only RTL harness that exists rewrites
+   `dir="ltr"` in the SERVED bytes, after React has already chosen a `d`, so a
+   per-direction path is invisible to the one test that could check it.
+   `Arrow` is a leaf with no locale prop at 32 call sites, so the direction
+   would have to be threaded through all of them or a context added. And a
+   second path is a second drawing to keep in step with the first.
+
+   REJECTED: `scaleX(-1)` under a `[dir="rtl"]` selector. It works, but
+   `--flip` is the token Part 9 introduced for exactly this sign and
+   `check:logical` polices its use - a second spelling of one idea is a second
+   thing to find later. Under LTR this evaluates to `scaleX(1)`, the identity,
+   and transforms never affect layout, so no LTR box moves either way.
+
+   No `transform-origin` here: the initial 50% 50% is the arrow's own centre in
+   either candidate reference box, because the 16-unit `viewBox` maps onto a
+   square box at 16px and at 14px alike. The mirror lands on itself. */
+svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) {
+  transform: scaleX(var(--flip));
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    Accessibility primitives (BUILD-SPEC §12).
    Not design decisions — the three WCAG 2.2 AA obligations the ported canvas
@@ -92,8 +170,11 @@
   outline-offset: 2px;
   border-radius: 2px;
 }
-/* On the ink-coloured surfaces the ink outline is invisible; flip it. */
-:where(.btn-ink, .close2, .scrim) :where(a, button):focus-visible {
+/* On the ink-coloured surfaces the ink outline is invisible; flip it.
+   `.ckb` joined the list when the consent bar did: it is the fourth ink
+   surface, and it carries the only link on the site that sits directly on
+   ink rather than inside a button. */
+:where(.btn-ink, .close2, .scrim, .ckb) :where(a, button):focus-visible {
   outline-color: var(--paper);
 }
 
@@ -128,3 +209,105 @@
 .tick-light { color: var(--green-light); }
 .tick-inverse { color: var(--white); }
 .tick-off { color: var(--tick-off); }
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Cookie consent (components/chrome/ConsentBanner.tsx; BUILD-SPEC §11a.5,
+   §12, §17 conditions 3, 12 and 19).
+
+   BOTH ELEMENTS ARE HIDDEN UNTIL THE BOOT SCRIPT SAYS OTHERWISE, and the
+   default matters more than either visible state. `<html>` carries no
+   `data-hv-consent` when script is off, when the inline script was refused by
+   the CSP, or when it threw — and in all three cases nothing here renders,
+   which is the same direction Consent Mode fails in (`denied`). A bar whose
+   buttons cannot work is worse than no bar.
+
+   The attribute is written by a parser-blocking script that runs BEFORE these
+   elements are parsed, so neither ever toggles after first paint. That is the
+   §17 condition 3 argument: CLS is 0.000 on every measured page and an
+   element revealed after layout would move content. In flow rather than
+   `position: fixed` for a different reason — see the component header; a
+   fixed bar covers the controls under it, for Playwright and for a person.
+
+   REJECTED: the `hidden` attribute instead of these two rules. jsdom does not
+   load the external stylesheet, so `tools/a11y/check-axe.mjs` audits this
+   markup either way — but `hidden` is in the HTML, and axe skips it. The bar
+   would then be the one component on the site that no accessibility gate ever
+   looks at.
+   ───────────────────────────────────────────────────────────────────────── */
+.ckb,
+.ckr {
+  display: none;
+}
+[data-hv-consent="ask"] .ckb {
+  display: block;
+}
+[data-hv-consent="set"] .ckr {
+  display: block;
+}
+
+/* Full-bleed band, 1440px column inside it — the same shape `.page` and
+   `.wrap` give every other section, so the bar's text lines up with the nav
+   below it at both artboard widths. */
+.ckb {
+  background: var(--ink);
+  color: var(--paper);
+}
+.ckb-in {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-block: 16px;
+  padding-inline: clamp(24px, 8.334vw, 120px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.ckb-c {
+  flex: 1 1 22rem;
+  min-inline-size: 0;
+}
+.ckb-s {
+  margin-block: 0 4px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+}
+.ckb-t {
+  margin-block: 0;
+  max-inline-size: 68ch;
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--paper);
+}
+/* `a { color: #15140F }` in design.css would paint this ink on ink. Underlined
+   as well as recoloured: it is the only link in the bar and it must not depend
+   on colour alone to be findable (1.4.1). */
+.ckb-a,
+.ckb-a:hover {
+  color: var(--white);
+  text-decoration: underline;
+}
+.ckb-b {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+/* The bar itself takes focus when reopened. The shared ring above is
+   `var(--ink)`, invisible here, and a positive offset would draw it outside a
+   full-bleed element where nothing can see it. */
+.ckb:focus-visible {
+  outline: 2px solid var(--paper);
+  outline-offset: -4px;
+}
+
+.ckr {
+  border-block-start: 1px solid var(--hair);
+}
+.ckr-in {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-block: 14px;
+  padding-inline: clamp(24px, 8.334vw, 120px);
+}
