@@ -1,6 +1,7 @@
 import Script from "next/script";
 
 import { AI_REFERRER_HOSTS } from "@/lib/analytics/ai-referrers";
+import { consentRestoreSnippet } from "@/lib/analytics/consent";
 
 /** GA4, wired and inert (BUILD-SPEC §11a.5, TASKS.md Part 10).
  *
@@ -23,13 +24,36 @@ import { AI_REFERRER_HOSTS } from "@/lib/analytics/ai-referrers";
  *     performance". Setting an analytics cookie while the policy says nothing
  *     about it is not defensible, and the `Organization` node's `areaServed`
  *     includes the UK.
- *  2. **There is no consent UI**, so Consent Mode is initialised with
- *     `analytics_storage: "denied"` — the only correct default without one.
- *     GA4 then sends cookieless pings and stores nothing until something calls
- *     `gtag('consent','update',…)`. Nothing does yet; a banner is a design
- *     decision. Consequence worth knowing before the id goes in: with consent
- *     denied the reports are modelled rather than counted, so Part 10's
- *     AI-referral numbers will be directional until a banner exists.
+ *  2. ~~There is no consent UI~~ **CLOSED.**
+ *     `components/chrome/ConsentBanner.tsx` now renders a bar on all 60 pages
+ *     that carry this layout, and drives the four signals below through
+ *     `lib/analytics/consent.ts` — which both files import, so neither can
+ *     rename a signal without the other. Consent Mode still initialises
+ *     `denied`, because that is what "before the visitor has answered" means;
+ *     `consentRestoreSnippet()` below re-applies a STORED grant immediately
+ *     after the default, and a live click reaches `window.gtag` directly.
+ *     Ordering is the only subtlety and it is handled in that module: the
+ *     banner's boot script never pushes a stored decision, so `default`
+ *     always precedes `update` whichever of the two scripts runs first.
+ *
+ *  3. **THIS TAG CANNOT RUN UNDER THE ENFORCED CSP TODAY**, which is a third
+ *     blocker and was not known when the two above were written. Read from
+ *     `node_modules/next/dist/client/script.js`: with `appDir` set,
+ *     `strategy="afterInteractive"` returns `null` from render and creates
+ *     the element in a `useEffect`. So neither `<Script>` below is in the
+ *     prerendered HTML, `tools/ci/inject-csp.mjs` never sees `ga4-init` to
+ *     hash it, and the per-page `<meta>` it writes is `script-src 'self'`
+ *     plus hashes — no `https://www.googletagmanager.com`, whatever the
+ *     header in `next.config.ts` allows, because the effective policy is the
+ *     intersection of the two. Setting the measurement id therefore buys a
+ *     refused inline script and a refused remote script.
+ *
+ *     Not fixed here, deliberately: the inline half is one line (a raw
+ *     `<script dangerouslySetInnerHTML>`, which the consent bar already uses
+ *     for exactly this reason), but the remote half needs `inject-csp.mjs` to
+ *     carry the GA origin into the meta, and that file is the CSP gate's own
+ *     implementation. Recorded so that turning GA on is not attempted without
+ *     it.
  *
  *  ## The referrer is classified IN THE BROWSER, and that is not a preference
  *
@@ -71,9 +95,17 @@ export function Analytics() {
         {[
           "window.dataLayer=window.dataLayer||[];",
           "function gtag(){dataLayer.push(arguments)}",
-          // Consent Mode v2 defaults - denied until a banner says otherwise.
+          // Consent Mode v2 defaults - denied until the banner says otherwise.
           "gtag('consent','default',{'analytics_storage':'denied','ad_storage':'denied',",
           "'ad_user_data':'denied','ad_personalization':'denied'});",
+          /** A decision made on an earlier visit, re-applied. Generated from
+           *  `lib/analytics/consent.ts` rather than restated, so the key, the
+           *  record version and the four signal names have exactly one
+           *  definition — the same reason `HOSTS_JSON` is generated above.
+           *  It emits an `update` only for a stored grant: `denied` is what
+           *  the line above already said, and repeating it would cost bytes
+           *  on 60 pages to change nothing. */
+          consentRestoreSnippet(),
           "gtag('js',new Date());",
           // Same matching rule as classifyReferrer(): exact host, or a
           // subdomain of it, so www.perplexity.ai matches and

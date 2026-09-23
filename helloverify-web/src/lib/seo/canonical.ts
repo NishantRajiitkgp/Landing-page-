@@ -24,8 +24,43 @@
 import { hasLocale } from "next-intl";
 
 import { routing } from "@/lib/i18n/routing";
+import { localeContractDrift } from "@/lib/seo/legacy-urls";
 import { allRoutes, localePath } from "@/lib/seo/routes";
 import { absoluteUrl } from "@/lib/seo/site";
+
+/** THE THIRD GUARD, and the one that runs before any page is rendered.
+ *
+ *  `lib/seo/legacy-urls.ts` keeps `SERVED_LOCALES` and `DEFAULT_LOCALE` as
+ *  deliberate copies of `routing.locales` and `routing.defaultLocale` — it
+ *  must stay loadable from `next.config.ts`, where `@/` does not resolve, so it
+ *  cannot import the originals. Something has to compare them, and it has to be
+ *  a module that sees both.
+ *
+ *  THIS FILE, and not `lib/i18n/routing.ts`, for one measured reason: `proxy.ts`
+ *  imports `routing.ts`, so putting the check there would pull the 13.9 KB
+ *  legacy table (4.9 KB with comments stripped) into the middleware bundle to
+ *  run a comparison of two string arrays. This module is reached by all 32
+ *  pages through `pageMetadata` and by `llms.ts` and the schema graph, it is
+ *  server-only, and it is therefore evaluated in every `next build` and in no
+ *  client or edge bundle.
+ *
+ *  Rejected: a lint rule. The two lists are values, not syntax, and a rule that
+ *  parses array literals out of two files breaks the first time either is
+ *  written with a spread or a constant.
+ *
+ *  Rejected: the test alone. `tools/test/locales.test.ts` does assert this, and
+ *  it is the file that proves the guard can fail — but `npm test` is a separate
+ *  command from `npm run build`, and the failure this defends against ships a
+ *  build that looks entirely correct. Both, therefore: throw here, prove it
+ *  there.
+ */
+const LOCALE_DRIFT = localeContractDrift(routing.locales, routing.defaultLocale);
+if (LOCALE_DRIFT.length > 0) {
+  throw new Error(
+    `The locale lists have drifted — see lib/seo/legacy-urls.ts#localeContractDrift:\n  - ` +
+      LOCALE_DRIFT.join("\n  - "),
+  );
+}
 
 /** Built once per build. `allRoutes()` already throws on a duplicate path, so
  *  this set is the full route manifest with no further checking. */

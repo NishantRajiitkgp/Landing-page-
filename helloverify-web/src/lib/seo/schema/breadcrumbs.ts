@@ -80,7 +80,22 @@ export function breadcrumbList(
    *  not take it as a crumb, so it is prepended here to match what the page
    *  actually shows. If that component ever stops rendering Home, this list
    *  gains a phantom first item — which is exactly the disagreement
-   *  `check-schema.mjs` compares the two for. */
+   *  `check-schema.mjs` compares the two for.
+   *
+   *  THE LABEL IS NOW ALSO `chrome.breadcrumb.home` IN `lib/copy/chrome.en`,
+   *  and this literal is deliberately NOT `pick(CHROME, locale).breadcrumb
+   *  .home` yet. It could be — `pick()` is pure and takes the `locale` this
+   *  function already has — but it would make a schema builder that
+   *  `tools/ci/assert-static.mjs` loads through a hand-written bare-Node
+   *  resolve hook depend on a `.tsx` module, to change nothing: `en` is the
+   *  only served locale, so both sides are the string "Home". The swap is one
+   *  line and it belongs to whoever declares the second locale, which is the
+   *  "Known couplings" note in `lib/copy/index.ts`.
+   *
+   *  It is not left on trust. `tools/test/copy.test.ts` calls this function
+   *  and asserts `itemListElement[0].name` equals that dictionary leaf, so
+   *  editing either side alone fails `npm test` rather than failing
+   *  `check:schema` on 31 inner pages after a build. */
   const trail: Crumb[] = [{ label: "Home", href: "/" }, ...crumbs];
 
   const items: ListItem[] = [];
