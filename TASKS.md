@@ -2018,7 +2018,8 @@ left is a GCP project, a DNS record and an Azure DevOps organisation.
   `check-css-color.mjs` and `check-contrast.mjs` read those boards and this
   file records their CRLF pair counts as evidence; the binaries are named
   explicitly rather than left to content-sniffing.
-- Dependabot at `.github/dependabot.yml`, and a pre-commit secret scanner
+- Dependabot was added and then removed (owner wants `main` as the only
+  branch; its update PRs each open one). A pre-commit secret scanner
   (`tools/ci/scan-source-secrets.mjs` + `tools/git-hooks/`) installed by a
   `prepare` script with **no network fetch** — husky and `pre-commit` were
   rejected for being a download. Three bugs its own tests found are recorded
