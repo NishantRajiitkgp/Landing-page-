@@ -5,6 +5,8 @@ import type { ServiceFacts } from "@/lib/seo/schema/service";
 import { VerticalPage } from "@/components/templates/VerticalPage";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { INDIVIDUALS } from "@/lib/copy/individuals";
+import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -25,7 +27,8 @@ export async function generateMetadata({
  *  `description` is this page's own reviewed description, read from the copy
  *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
  *  title, the meta description, the Service node and llms.txt cannot drift
- *  apart. */
+ *  apart. `name` and `serviceType` stay here rather than in the dictionary —
+ *  see `lib/copy/individuals.en.tsx`. */
 const SERVICE: ServiceFacts = {
   path: PATH,
   name: "Visa and immigration document screening",
@@ -43,22 +46,21 @@ export default async function Page({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  /** As on `/individuals/home-family`: a `VerticalPage` client, so its copy is
+   *  props and the order of every list, each href and `fast` stay here. */
+  const t = await copy(INDIVIDUALS);
+  const c = t.immigration;
 
   return (
     <VerticalPage
       service={SERVICE}
-      crumbs={[{ label: "Individuals", href: "/individuals" }, { label: "Visa & immigration" }]}
-      eyebrow="Individuals · Visa & immigration screening"
-      h1={<>Find the problem <em>before the embassy does.</em></>}
-      sub="A visa refusal over an unverifiable degree costs the fee, the wait and sometimes the job offer. Screen your own documents first, at the same sources an authority would use."
-      primary={{ label: "Screen my documents", href: "https://app.helloverify.com" }}
-      secondary={{ label: "See what gets checked", href: "#turnaround" }}
-      strip={[
-        <><b>120+</b> countries of documents</>,
-        <><b>Same</b> sources an authority uses</>,
-        <><b>3 days</b> for a registrar-confirmed degree</>,
-        <><span className="dot" /> your documents, your report</>,
-      ]}
+      crumbs={[{ label: t.crumb, href: "/individuals" }, { label: c.crumb }]}
+      eyebrow={c.eyebrow}
+      h1={c.h1}
+      sub={c.sub}
+      primary={{ label: c.primary, href: "https://app.helloverify.com" }}
+      secondary={{ label: c.secondary, href: "#turnaround" }}
+      strip={[c.strip.countries, c.strip.sources, c.strip.degree, c.strip.yours]}
       /* ANSWER BLOCKS (BUILD-SPEC §11a.2). Four head/lede pairs, which
          `VerticalPage` renders as the section H2 and lede: each heading is now
          the question an applicant types, each lede a self-contained answer at
@@ -71,86 +73,69 @@ export default async function Page({
          records between `lib/content/checks.ts`, the homepage and the
          enterprise page — a citeable sentence is the worst place to pick a
          side by accident. Same omission as `/business/employee-verification`. */
-      verifyHead="Which documents should I check before a visa application?"
-      verifyLede="HelloVerify's visa screening covers the documents an embassy questions: passport and identity, your criminal and global-database record, and above all the degree and employment claims you are relying on. Identity and passport confirm in 15 minutes; a registrar-confirmed degree takes three days."
+      verifyHead={c.verifyHead}
+      verifyLede={c.verifyLede}
       lanes={[
         {
-          gt: "01 — Identity",
-          gh: "Your documents",
+          ...c.lanes.documents,
           pills: [
-            { n: "Identity", t: "15 min", fast: true },
-            { n: "Passport", t: "15 min", fast: true },
-            { n: "Age", t: "15 min", fast: true },
-            { n: "Current address", t: "30 min", fast: true },
+            { ...c.pills.identity, fast: true },
+            { ...c.pills.passport, fast: true },
+            { ...c.pills.age, fast: true },
+            { ...c.pills.currentAddress, fast: true },
           ],
         },
         {
-          gt: "02 — Your claims",
-          gh: "What you're relying on",
+          ...c.lanes.claims,
           pills: [
-            { n: "Education", t: "3 days" },
-            { n: "Employment", t: "2 days" },
-            { n: "Digital employment", t: "60 min", fast: true },
-            { n: "Entitlement to work", t: "60 min", fast: true },
+            { ...c.pills.education },
+            { ...c.pills.employment },
+            { ...c.pills.digitalEmployment, fast: true },
+            { ...c.pills.entitlementToWork, fast: true },
           ],
         },
         {
-          gt: "03 — Your record",
-          gh: "What they'll find",
+          ...c.lanes.record,
           pills: [
-            { n: "Criminal", t: "30 min", fast: true },
-            { n: "Global database", t: "15 min", fast: true },
-            { n: "Credit", t: "15 min", fast: true },
+            { ...c.pills.criminal, fast: true },
+            { ...c.pills.globalDatabase, fast: true },
+            { ...c.pills.credit, fast: true },
           ],
         },
       ]}
-      stepsHead="How do I check my own documents before applying for a visa?"
-      stepsLede="Upload your own documents to HelloVerify by photographing them on your phone — no appointment, no agent, no courier. Each is confirmed with the institution that issued it, in the country it came from, and the report says which claims will fail before you file."
-      steps={[
-        { n: "01 · You", t: "Upload", p: "Photograph your documents on your phone. No appointment, no agent, no courier." },
-        { n: "02 · HelloVerify", t: "Check", p: "Each document confirmed with the institution that issued it, in the country it came from." },
-        { n: "03 · Your report", t: "Fix", p: "You see which claims confirm cleanly and which won't — with the reason, before you file." },
-      ]}
-      tableHead="How long does visa document screening take?"
-      tableLede="HelloVerify measures visa screening from upload to result: identity, passport and a global database screen in 15 minutes, a criminal record in 30, and digital employment in 60 minutes from provident-fund records. Education is the slow one at three days, employment at two."
+      stepsHead={c.stepsHead}
+      stepsLede={c.stepsLede}
+      steps={[c.steps.upload, c.steps.check, c.steps.fix]}
+      tableHead={c.tableHead}
+      tableLede={c.tableLede}
       rows={[
-        { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
-        { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", fast: true, src: "global databases" },
-        { nm: "Criminal record", sub: "court & police databases", tm: "30 min", fast: true, src: "court records" },
-        { nm: "Digital employment", sub: "contribution-backed work history", tm: "60 min", fast: true, src: "provident fund records" },
-        { nm: "Employment", sub: "role, tenure, exit remarks", tm: "2 days", src: "the employer's HR" },
-        { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
+        { ...c.rows.identity, fast: true },
+        { ...c.rows.globalDatabase, fast: true },
+        { ...c.rows.criminal, fast: true },
+        { ...c.rows.digitalEmployment, fast: true },
+        { ...c.rows.employment },
+        { ...c.rows.education },
       ]}
-      tableNote={<>Times shown are from upload to result · documents verified in the country of issue — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></>}
+      /* The one function leaf in this namespace: the sentence ends in a link
+         whose href and inline style the page owns, so the leaf takes the node
+         and may put it anywhere a locale needs it. The text child still ends
+         in a space before the node, which is why the leaf is written on one
+         line — see `lib/copy/individuals.en.tsx`. */
+      tableNote={c.tableNote(
+        <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>{c.globalCoverage}</AppLink>,
+      )}
       /* As on `/individuals/home-family`, this section renders the template's
          certification cards and the answer stays off that subject: which
          credentials are held is owned by `lib/content/company.ts` and
          `/platform/security-compliance`, and gated by `check:llms`. */
-      complianceHead="Who sees my screening report?"
-      complianceLede="Only you. A HelloVerify screening report is not shared with an embassy, an employer or an agent unless you send it yourself. The documents you upload are held under retention limits, and the same evidence often satisfies a new employer's background check later."
-      faqHead={<>From applicants.</>}
-      faqs={[
-        {
-          q: "Will an embassy accept your report?",
-          a: "Treat it as preparation, not a substitute. Authorities run their own verification — the point of screening first is to discover a problem while you can still correct it, rather than after a refusal.",
-        },
-        {
-          q: "My university has closed. Now what?",
-          a: "Closed institutions usually transfer records to a successor body or a state authority, and we check there. If no record survives anywhere, the report says unverifiable rather than failed — a distinction that matters when you explain it to a consulate.",
-        },
-        {
-          q: "Can you check documents from a country I've left?",
-          a: "Yes — that's the normal case. The check runs in the country that issued the document, through our own offices and partner network across 120+ countries.",
-        },
-        {
-          q: "Does this help with the employer's checks too?",
-          a: "Often, yes. The same evidence that satisfies a consulate usually satisfies a new employer's background check, and you already know what it will say.",
-        },
-      ]}
+      complianceHead={c.complianceHead}
+      complianceLede={c.complianceLede}
+      faqHead={c.faqHead}
+      faqs={[c.faqs.accept, c.faqs.closed, c.faqs.abroad, c.faqs.employer]}
       closing={{
-        heading: <>Fix the paperwork <em>while you still can.</em></>,
-        sub: "Screen your documents before the application fee is spent.",
-        ctaLabel: "Screen my documents",
+        heading: c.closing.heading,
+        sub: c.closing.sub,
+        ctaLabel: c.closing.ctaLabel,
         ctaHref: "https://app.helloverify.com",
         img: "/img/14-visa-counter.jpg",
       }}

@@ -7,13 +7,14 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { FaqSection } from "@/components/chrome/FaqSection";
-import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { Tick } from "@/components/brand/Tick";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
 import { Steps } from "@/components/chrome/Steps";
+import { BUSINESS } from "@/lib/copy/business";
+import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -30,32 +31,6 @@ export async function generateMetadata({
   return pageMetadata(locale, PATH);
 }
 
-
-/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
- *  matching `FAQPage` node from the same array — Google requires the two to
- *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
-const FAQS: Faq[] = [
-  {
-    q: "Does the vendor have to cooperate?",
-    a:
-      "Mostly no — registries, courts and bureaus answer without the vendor's involvement. Where a document must come from the vendor, they get the same one-link upload flow candidates use.",
-  },
-  {
-    q: "What does \"certified\" mean here?",
-    a:
-      "Every fact in the profile carries its source and check date. Certification isn't our opinion of the vendor — it's proof that each claim was verified at the registry that holds it.",
-  },
-  {
-    q: "Can this run on our whole vendor base?",
-    a:
-      "Yes — batches run in parallel, so a thousand vendors take days, not quarters. Renewals re-run automatically before a licence or rating goes stale.",
-  },
-  {
-    q: "International suppliers too?",
-    a:
-      "120+ countries, checked in-country: an Egyptian textile supplier's trade licence is confirmed in Cairo, not translated from a scan.",
-  },
-];
 
 /** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
  *  `description` is this page's own reviewed description, read from the copy
@@ -79,34 +54,26 @@ export default async function CertifierPage({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(BUSINESS);
+  const c = t.certifier;
 
   return (
     <PageShell
-      crumbs={[{ label: "Business", href: "/business" }, { label: "Vendor due diligence" }]}
+      crumbs={[{ label: t.crumb, href: "/business" }, { label: c.crumb }]}
       closing={{
-        heading: (
-          <>
-            Sign the supplier, <em>not the risk.</em>
-          </>
-        ),
-        sub: "Send us the vendor list before the quarter closes.",
+        heading: c.closing.heading,
+        sub: c.closing.sub,
         img: "/img/06-supplier-cairo.jpg",
       }}
     >
       <div className="wrap hero3">
-        <div className="k">Business · Vendor due diligence — Certifier</div>
-        <h1 className="h1">
-          Know who <em>you buy from.</em>
-        </h1>
-        <p className="sub">
-          Before the first purchase order: is the trade licence real, who are the directors,
-          what do the courts and credit bureaus say? Certifier answers from the registry, not
-          the vendor's brochure.
-        </p>
+        <div className="k">{c.hero.k}</div>
+        <h1 className="h1">{c.hero.h1}</h1>
+        <p className="sub">{c.hero.sub}</p>
         <div className="hrow">
-          <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
+          <AppLink href="/contact" className="btn btn-ink">{c.hero.cta}</AppLink>
           <a href="#packages" className="btn btn-ghost">
-            <span>See the two packages</span>
+            <span>{c.hero.packages}</span>
             <Arrow />
           </a>
         </div>
@@ -114,10 +81,10 @@ export default async function CertifierPage({
 
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>2 days</b> to a certified profile</span>
-          <span className="it"><b>Registry</b>-confirmed, not self-declared</span>
-          <span className="it"><b>120+</b> countries of suppliers</span>
-          <span className="it"><span className="dot" /> renewal reminders built in</span>
+          <span className="it">{c.strip.profile}</span>
+          <span className="it">{c.strip.registry}</span>
+          <span className="it">{c.strip.countries}</span>
+          <span className="it">{c.strip.renewals}</span>
         </div>
       </div>
 
@@ -133,31 +100,33 @@ export default async function CertifierPage({
             with /business/enterprise; the homepage says 2 (TASKS.md, Part 5).
             A sentence built to be quoted off the page is the worst place to
             pick one of those by accident. */}
-        <SecHead k="What we check" h="What does vendor due diligence check?">
-          Certifier checks a vendor as a legal entity and as the people behind it: trade
-          licence in two days, directors and GST, credit and global-database screening in 15
-          minutes, plus identity, promoter criminal history and a financial assessment.
-          Licences expire, so it keeps checking.
+        <SecHead k={c.whatWeCheck.k} h={c.whatWeCheck.h}>
+          {c.whatWeCheck.lede}
         </SecHead>
         <div className="body3 lanes3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
           <div>
-            <div className="lgt">01 — The entity</div>
-            <div className="lgh">On paper</div>
+            <div className="lgt">{c.lanes.entity.lgt}</div>
+            <div className="lgh">{c.lanes.entity.lgh}</div>
+            {/* Each chip keeps its three children — the `.d` dot, the name,
+                the `.t` time — so these are two text-node swaps apiece.
+                `Directors &amp; GST` becomes a plain `&` in the dictionary:
+                JSX decoded the entity before React saw it, and a string leaf
+                spelling `&amp;` would emit `&amp;amp;`. */}
             <div className="cloud3">
-              <span className="pl3"><span className="d" />Trade licence<span className="t">2 days</span></span>
-              <span className="pl3"><span className="d" />Directors &amp; GST<span className="t">3 days</span></span>
-              <span className="pl3 fast"><span className="d" />Credit<span className="t">15 min</span></span>
-              <span className="pl3 fast"><span className="d" />Global database<span className="t">15 min</span></span>
+              <span className="pl3"><span className="d" />{c.chips.tradeLicence.n}<span className="t">{c.chips.tradeLicence.t}</span></span>
+              <span className="pl3"><span className="d" />{c.chips.directorsGst.n}<span className="t">{c.chips.directorsGst.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.credit.n}<span className="t">{c.chips.credit.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.globalDatabase.n}<span className="t">{c.chips.globalDatabase.t}</span></span>
             </div>
           </div>
           <div>
-            <div className="lgt">02 — The people</div>
-            <div className="lgh">Behind it</div>
+            <div className="lgt">{c.lanes.people.lgt}</div>
+            <div className="lgh">{c.lanes.people.lgh}</div>
             <div className="cloud3">
-              <span className="pl3 fast"><span className="d" />Identity<span className="t">15 min</span></span>
-              <span className="pl3 fast"><span className="d" />Criminal<span className="t">30 min</span></span>
-              <span className="pl3"><span className="d" />Promoter criminal history<span className="t">2 days</span></span>
-              <span className="pl3"><span className="d" />Financial assessment<span className="t">2 days</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.identity.n}<span className="t">{c.chips.identity.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.criminal.n}<span className="t">{c.chips.criminal.t}</span></span>
+              <span className="pl3"><span className="d" />{c.chips.promoter.n}<span className="t">{c.chips.promoter.t}</span></span>
+              <span className="pl3"><span className="d" />{c.chips.financial.n}<span className="t">{c.chips.financial.t}</span></span>
             </div>
           </div>
         </div>
@@ -175,51 +144,57 @@ export default async function CertifierPage({
             three days — the same disagreement as the block before this one, so
             the answer states the package's turnaround and not which check
             inside it carries it. */}
-        <SecHead k="Packages" h="What is in a vendor due diligence package?">
-          Certifier ships two four-check vendor packages: trade licence risk, before you sign
-          a supplier, and vendor financial risk, before the first big order. Both are
-          registry-confirmed rather than self-declared, and both end in a certified vendor
-          profile in two days.
+        <SecHead k={c.packagesBand.k} h={c.packagesBand.h}>
+          {c.packagesBand.lede}
         </SecHead>
         <div className="body3 rack3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))", maxWidth: 900 }}>
+          {/* The six words both cards share are ONE leaf each (`card.*`),
+              read twice. These are two instances of one card shape, so a
+              locale translating "Package" differently on the second would
+              have a bug, not a choice — the opposite case to
+              `chrome.nav.logoHome` / `chrome.footer.logoHome`, which are
+              duplicated precisely because they are two different controls.
+              Unlike `/business/smb`, the check count and the turnaround are
+              literals in this markup rather than derived from the list, so
+              `card.readyIn` is a plain string and not a function leaf. */}
           <div className="rc">
-            <div className="hd"><span>Package</span><span>Vendors · Certifier</span></div>
-            <div className="tt">Trade licence risk</div>
-            <div className="sub">Before you sign a supplier</div>
+            <div className="hd"><span>{c.card.label}</span><span>{c.card.vendors}</span></div>
+            <div className="tt">{c.packs.licence.tt}</div>
+            <div className="sub">{c.packs.licence.sub}</div>
             <div className="sep" />
-            <div className="ln"><Tick /><span>Trade licence</span></div>
-            <div className="ln"><Tick /><span>Defaulting directors</span></div>
-            <div className="ln"><Tick /><span>Criminal records</span></div>
-            <div className="ln"><Tick /><span>Credit &amp; company</span></div>
+            <div className="ln"><Tick /><span>{c.packs.licence.lines.tradeLicence}</span></div>
+            <div className="ln"><Tick /><span>{c.packs.licence.lines.defaultingDirectors}</span></div>
+            <div className="ln"><Tick /><span>{c.packs.licence.lines.criminalRecords}</span></div>
+            <div className="ln"><Tick /><span>{c.packs.licence.lines.creditCompany}</span></div>
             <div className="sep" />
             <div className="ready">
-              <span className="lb">4 checks · ready in</span>
-              <span className="v">2 days</span>
+              <span className="lb">{c.card.readyIn}</span>
+              <span className="v">{c.card.ready}</span>
             </div>
             <div className="bc" />
             <div className="buy">
-              <span className="who">Certified vendor profile</span>
-              <AppLink href="/contact" className="btn btn-ink btn-sm">Talk to sales</AppLink>
+              <span className="who">{c.card.who}</span>
+              <AppLink href="/contact" className="btn btn-ink btn-sm">{c.card.cta}</AppLink>
             </div>
           </div>
           <div className="rc">
-            <div className="hd"><span>Package</span><span>Vendors · Certifier</span></div>
-            <div className="tt">Vendor financial risk</div>
-            <div className="sub">Before the first big order</div>
+            <div className="hd"><span>{c.card.label}</span><span>{c.card.vendors}</span></div>
+            <div className="tt">{c.packs.financial.tt}</div>
+            <div className="sub">{c.packs.financial.sub}</div>
             <div className="sep" />
-            <div className="ln"><Tick /><span>Financial assessment</span></div>
-            <div className="ln"><Tick /><span>GST screening</span></div>
-            <div className="ln"><Tick /><span>Credit checks</span></div>
-            <div className="ln"><Tick /><span>Promoter criminal history</span></div>
+            <div className="ln"><Tick /><span>{c.packs.financial.lines.financialAssessment}</span></div>
+            <div className="ln"><Tick /><span>{c.packs.financial.lines.gstScreening}</span></div>
+            <div className="ln"><Tick /><span>{c.packs.financial.lines.creditChecks}</span></div>
+            <div className="ln"><Tick /><span>{c.packs.financial.lines.promoterCriminal}</span></div>
             <div className="sep" />
             <div className="ready">
-              <span className="lb">4 checks · ready in</span>
-              <span className="v">2 days</span>
+              <span className="lb">{c.card.readyIn}</span>
+              <span className="v">{c.card.ready}</span>
             </div>
             <div className="bc" />
             <div className="buy">
-              <span className="who">Certified vendor profile</span>
-              <AppLink href="/contact" className="btn btn-ink btn-sm">Talk to sales</AppLink>
+              <span className="who">{c.card.who}</span>
+              <AppLink href="/contact" className="btn btn-ink btn-sm">{c.card.cta}</AppLink>
             </div>
           </div>
         </div>
@@ -229,28 +204,28 @@ export default async function CertifierPage({
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">How it works</div>
+            <div className="k">{c.howItWorks.k}</div>
             {/* Question-shaped H2, no lede added (§11a.2) — this band is a bare
                 `sec-head` that has never carried one, and the three `Steps`
                 cards below are the answer. Same call as /checks/[check]'s two
                 lede-less bands. */}
-            <h2 className="h2" style={{ marginTop: 12 }}>How does vendor due diligence work?</h2>
+            <h2 className="h2" style={{ marginTop: 12 }}>{c.howItWorks.h}</h2>
           </div>
         </div>
         {/* HowTo (§17 condition 18): `name` is this band's own `<h2>`, so the
             node and the heading are the same string. See `chrome/Steps.tsx`. */}
         <Steps
-          name="How does vendor due diligence work?"
-          items={[
-          { n: "01 · Procurement", t: "The list", p: "Vendor names and GST numbers — a CSV or an API call from your procurement system." },
-          { n: "02 · The registries", t: "The digging", p: "Licence registers, ministry records, courts, credit bureaus — each fact confirmed where it's filed." },
-          { n: "03 · Two days later", t: "The profile", p: "A certified profile per vendor: what was checked, where, what was found — and when it expires." },
-          ]}
+          name={c.howItWorks.h}
+          items={[c.steps.list, c.steps.digging, c.steps.profile]}
         />
       </div>
 
-      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
-      <FaqSection head={<>From procurement.</>} faqs={FAQS} />
+      {/* FAQ — markup and FAQPage node both from the same records (see
+          FaqSection). The order is structure and stays here. */}
+      <FaqSection
+        head={c.faqHead}
+        faqs={[c.faqs.cooperate, c.faqs.certified, c.faqs.wholeBase, c.faqs.international]}
+      />
 
       <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>

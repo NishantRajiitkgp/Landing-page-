@@ -8,6 +8,8 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
+import { PLATFORM } from "@/lib/copy/platform";
+import { copy } from "@/lib/copy/request";
 
 export async function generateMetadata({
   params,
@@ -28,44 +30,43 @@ export default async function PlatformHub({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  // Words in `lib/copy/platform`, structure here. The page was already
+  // `async` for `params`, so this adds no Server Component boundary and
+  // cannot move a flight row — the hazard `lib/copy/index.ts`'s fourth
+  // corollary describes.
+  const t = await copy(PLATFORM);
 
   return (
     <PageShell
-      crumbs={[{ label: "Platform" }]}
+      crumbs={[{ label: t.crumb }]}
       closing={{
-        heading: (
-          <>
-            Ask us the hard questions. <em>We have files for them.</em>
-          </>
-        ),
-        sub: "Security reviews, DPAs, conformance statements — usually within two working days.",
+        heading: t.hub.closing.heading,
+        sub: t.hub.closing.sub,
       }}
     >
       <div className="wrap hero3">
-        <div className="k">Platform</div>
-        <h1 className="h1">
-          The machine <em>under the answer.</em>
-        </h1>
-        <p className="sub">
-          Every result on this site rests on three things: a pipeline that reads documents and
-          reaches issuers, controls that keep personal data safe, and a network that covers the
-          countries those documents come from.
-        </p>
+        <div className="k">{t.hub.hero.k}</div>
+        <h1 className="h1">{t.hub.hero.h1}</h1>
+        <p className="sub">{t.hub.hero.sub}</p>
         <div className="hrow">
-          <AppLink href="/platform/security-compliance" className="btn btn-ink">Security &amp; compliance</AppLink>
+          <AppLink href="/platform/security-compliance" className="btn btn-ink">{t.hub.hero.cta}</AppLink>
           <AppLink href="/platform/technology" className="btn btn-ghost">
-            <span>See the technology</span>
+            <span>{t.hub.hero.seeTech}</span>
             <Arrow />
           </AppLink>
         </div>
       </div>
 
       <div className="wrap">
+        {/* Each item is `<b>figure</b> tail` — two children, so ONE rich-text
+            leaf rather than two string leaves. `{t.a}{t.b}` would put two
+            adjacent text children where one sits today and React's SSR writes
+            `<!-- -->` between those (`lib/copy/index.ts`, byte identity). */}
         <div className="strip3">
-          <span className="it"><b>1.2 s</b> to read a document</span>
-          <span className="it"><b>120+</b> countries reachable</span>
-          <span className="it"><b>6</b> offices, twelve hours apart</span>
-          <span className="it"><span className="dot" /> ISO 27001 · GDPR · PBSA · NSR</span>
+          <span className="it">{t.hub.strip.read}</span>
+          <span className="it">{t.hub.strip.countries}</span>
+          <span className="it">{t.hub.strip.offices}</span>
+          <span className="it">{t.hub.strip.certs}</span>
         </div>
       </div>
 
@@ -80,21 +81,24 @@ export default async function PlatformHub({
             below; 1.2 s, 120+ countries and six offices are the strip above.
             Deliberately silent on the certifications the strip lists: that
             list is owned by `lib/content/company.ts` and
-            `/platform/security-compliance`, and gated by `check:llms`. */}
-        <SecHead k="Three layers" h="How does the HelloVerify platform work?">
-          The HelloVerify platform has three layers: a pipeline that reads a document in 1.2
-          seconds and reaches the issuer that holds the record, controls that keep personal data
-          safe, and a network of six offices, twelve hours apart, covering 120+ countries.
+            `/platform/security-compliance`, and gated by `npm run check:llms`. */}
+        <SecHead k={t.hub.layers.k} h={t.hub.layers.h}>
+          {t.hub.layers.lede}
         </SecHead>
+        {/* The three cards are written out LONGHAND, as they were: the hrefs,
+            images and grid spans differ and none of them is copy, so there is
+            no repeated unit to drive from a list and no `key=` to preserve.
+            Only the four words per card moved, keyed by destination —
+            `chrome.footer.links`' shape. */}
         <div className="body3 paths3">
           <AppLink href="/platform/technology" className="cell ph span3">
             <Image className="pimg" src="/img/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />
             <div className="scrim" />
-            <span className="tag">Technology</span>
-            <span className="from">API &amp; pipeline</span>
+            <span className="tag">{t.hub.paths["/platform/technology"].tag}</span>
+            <span className="from">{t.hub.paths["/platform/technology"].from}</span>
             <div className="body">
-              <div className="h">Technology &amp; APIs</div>
-              <div className="p">How documents are read, how issuers are reached, and how to wire it all into your systems.</div>
+              <div className="h">{t.hub.paths["/platform/technology"].h}</div>
+              <div className="p">{t.hub.paths["/platform/technology"].p}</div>
             </div>
             {/* All three `.go` arrows on this page were inline copies of
                 `brand/Arrow.tsx` missing its `aria-hidden` — 3 of the 6 such
@@ -104,7 +108,7 @@ export default async function PlatformHub({
                 `.go` span already carries `aria-hidden="true"`, which hides the
                 whole subtree, so no screen reader announced these three. The
                 other three, on `/business`, `/governments` and `/individuals`,
-                sit in the same `.go` span and are the same fix. */}
+                sit in the same `.go` span and are `<Arrow />` now too. */}
             <span className="go" aria-hidden="true">
               <Arrow />
             </span>
@@ -112,11 +116,11 @@ export default async function PlatformHub({
           <AppLink href="/platform/security-compliance" className="cell ph span3">
             <Image className="pimg" src="/img/09-licensing-officer.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />
             <div className="scrim" />
-            <span className="tag">Security &amp; compliance</span>
-            <span className="from">procurement</span>
+            <span className="tag">{t.hub.paths["/platform/security-compliance"].tag}</span>
+            <span className="from">{t.hub.paths["/platform/security-compliance"].from}</span>
             <div className="body">
-              <div className="h">Security &amp; compliance</div>
-              <div className="p">Certifications, data residency, sub-processors, accessibility conformance — the file your committee asks for.</div>
+              <div className="h">{t.hub.paths["/platform/security-compliance"].h}</div>
+              <div className="p">{t.hub.paths["/platform/security-compliance"].p}</div>
             </div>
             <span className="go" aria-hidden="true">
               <Arrow />
@@ -125,11 +129,11 @@ export default async function PlatformHub({
           <AppLink href="/platform/coverage" className="cell ph span3">
             <Image className="pimg" src="/img/19-singapore.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />
             <div className="scrim" />
-            <span className="tag">Coverage</span>
-            <span className="from">120+ countries</span>
+            <span className="tag">{t.hub.paths["/platform/coverage"].tag}</span>
+            <span className="from">{t.hub.paths["/platform/coverage"].from}</span>
             <div className="body">
-              <div className="h">Global coverage</div>
-              <div className="p">Where a document can be confirmed with the authority that issued it — and how long it takes there.</div>
+              <div className="h">{t.hub.paths["/platform/coverage"].h}</div>
+              <div className="p">{t.hub.paths["/platform/coverage"].p}</div>
             </div>
             <span className="go" aria-hidden="true">
               <Arrow />

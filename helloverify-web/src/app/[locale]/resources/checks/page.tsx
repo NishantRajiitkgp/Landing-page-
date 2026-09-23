@@ -5,6 +5,8 @@ import { PageShell } from "@/components/chrome/PageShell";
 import { CHECKS, CHECK_GROUPS } from "@/lib/content/checks";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { RESOURCES } from "@/lib/copy/resources";
+import { copy } from "@/lib/copy/request";
 
 export async function generateMetadata({
   params,
@@ -25,36 +27,32 @@ export default async function ChecksIndex({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  /** Only the shell. The group headings and every row — name, `answers`,
+   *  `time`, `source` — are `lib/content/checks.ts`, which is a catalogue and
+   *  not copy; see `lib/copy/resources.en.tsx`. */
+  const t = await copy(RESOURCES);
+  const d = t.checks;
 
   return (
     <PageShell
-      crumbs={[{ label: "Resources", href: "/resources" }, { label: "Check library" }]}
+      crumbs={[{ label: t.crumb, href: "/resources" }, { label: d.crumb }]}
       closing={{
-        heading: (
-          <>
-            Need a check <em>that isn't listed?</em>
-          </>
-        ),
-        sub: "We run more than we've documented. Ask, and we'll tell you the real timeline.",
+        heading: d.closing.heading,
+        sub: d.closing.sub,
       }}
     >
       <div className="wrap hero3">
-        <div className="k">Resources · Check library</div>
-        <h1 className="h1">
-          What each check <em>actually answers.</em>
-        </h1>
-        <p className="sub">
-          Not a feature list. Each entry states the question the check answers, who confirms it,
-          how long that takes, and — the part vendors skip — what it cannot tell you.
-        </p>
+        <div className="k">{d.hero.k}</div>
+        <h1 className="h1">{d.hero.h1}</h1>
+        <p className="sub">{d.hero.sub}</p>
       </div>
 
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>33</b> checks offered</span>
-          <span className="it"><b>{CHECKS.length}</b> documented here</span>
-          <span className="it"><b>15 min</b> fastest turnaround</span>
-          <span className="it"><span className="dot" /> green = usually within the hour</span>
+          <span className="it">{d.strip.offered}</span>
+          <span className="it">{d.strip.documented(CHECKS.length)}</span>
+          <span className="it">{d.strip.fastest}</span>
+          <span className="it">{d.strip.green}</span>
         </div>
       </div>
 
@@ -85,11 +83,7 @@ export default async function ChecksIndex({
       })}
 
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <div className="pricenote">
-          Times are measured from upload to report and assume the issuer responds normally · the
-          remaining checks in the catalogue of 33 are documented as their pages are written, rather
-          than published as templated stubs
-        </div>
+        <div className="pricenote">{d.note}</div>
       </div>
     </PageShell>
   );

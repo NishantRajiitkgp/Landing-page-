@@ -5,6 +5,8 @@ import type { ServiceFacts } from "@/lib/seo/schema/service";
 import { VerticalPage } from "@/components/templates/VerticalPage";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { GOVERNMENTS, type Lanes, type Rows } from "@/lib/copy/governments";
+import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -33,6 +35,54 @@ const SERVICE: ServiceFacts = {
   serviceType: "Credential verification",
 };
 
+/** Which lanes, which pills, in which order, and which render `.fast` —
+ *  structure, and it stays. The names and the times are
+ *  `lib/copy/governments`'s, keyed by `LaneKey<"health">` and
+ *  `PillKey<"health">`, so a lane or a pill added without copy is TS2322 on
+ *  this array in every locale at once. `fast` is a CSS class, not a word. The
+ *  shape is `LANES` on `/business/enterprise`, for the reason
+ *  `lib/copy/index.ts` argues under "Where the keys come from". */
+const LANES: Lanes<"health"> = [
+  {
+    k: "identity",
+    pills: [
+      { p: "identity", fast: true },
+      { p: "passport", fast: true },
+      { p: "age", fast: true },
+      { p: "currentAddress", fast: true },
+    ],
+  },
+  {
+    k: "qualification",
+    pills: [
+      { p: "medicalDegree" },
+      { p: "postGraduate" },
+      { p: "councilRegistration" },
+      { p: "internship" },
+    ],
+  },
+  {
+    k: "standing",
+    pills: [
+      { p: "globalDatabase", fast: true },
+      { p: "criminal", fast: true },
+      { p: "employmentHistory" },
+      { p: "disciplinary" },
+    ],
+  },
+];
+
+/** Same split as `LANES`: the six rows' order and their `.fast` flag here,
+ *  their four strings in the dictionary under the same keys. */
+const ROWS: Rows<"health"> = [
+  { k: "identity", fast: true },
+  { k: "criminal", fast: true },
+  { k: "globalDatabase", fast: true },
+  { k: "councilRegistration" },
+  { k: "medicalDegree" },
+  { k: "disciplinary" },
+];
+
 export default async function Page({
   params,
 }: {
@@ -43,21 +93,18 @@ export default async function Page({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(GOVERNMENTS);
+  const d = t.health;
 
   return (
     <VerticalPage
       service={SERVICE}
-      crumbs={[{ label: "Governments", href: "/governments" }, { label: "Health authorities" }]}
-      eyebrow="Governments · Health authorities"
-      h1={<>No one practises <em>on an unchecked degree.</em></>}
-      sub="Medical degrees, council registrations, licences and practice history — confirmed with the university and the council that issued them, in the country they were issued in."
-      secondary={{ label: "See turnaround times", href: "#turnaround" }}
-      strip={[
-        <><b>120+</b> countries of qualifications</>,
-        <><b>3 days</b> degree at the registrar</>,
-        <><b>20M+</b> checks at the primary source</>,
-        <><span className="dot" /> ISO 27001 · GDPR</>,
-      ]}
+      crumbs={[{ label: t.crumb, href: "/governments" }, { label: d.crumb }]}
+      eyebrow={d.eyebrow}
+      h1={d.h1}
+      sub={d.sub}
+      secondary={{ label: d.secondary, href: "#turnaround" }}
+      strip={[d.strip.countries, d.strip.degree, d.strip.checks, d.strip.certs]}
       /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
          Each `*Head` is now the question a licensing official types and each
          `*Lede` is a self-contained answer of 35-45 words that names health
@@ -65,90 +112,41 @@ export default async function Page({
          check" — a lede that points outside itself is unciteable once an
          engine lifts it off the page (§11a.2 rule 3). The template owns the
          `k` eyebrows ("What we verify", "How it works", "Turnaround &
-         coverage", "Compliance & security") and they are untouched.
+         coverage", "Compliance & security") and they are untouched — they are
+         `templates.bands` in the copy layer, not this page's.
 
          Every figure below is already on this page: the times come from the
          `lanes` pills and the `rows` table beneath each block, and the sources
          ("the medical council", "the university registrar") are the `src`
          column verbatim. Nothing new is asserted about a clinician or an
          institution. */
-      verifyHead="What does a health authority verify before licensing a clinician?"
-      verifyLede="A health authority verifies three things about a clinician: identity, qualification and standing. Identity, criminal and watchlist checks return in 15 to 30 minutes; council registration takes two days at the medical council and a medical degree three days at the university registrar."
-      lanes={[
-        {
-          gt: "01 — Identity",
-          gh: "Who they are",
-          pills: [
-            { n: "Identity", t: "15 min", fast: true },
-            { n: "Passport", t: "15 min", fast: true },
-            { n: "Age", t: "15 min", fast: true },
-            { n: "Current address", t: "30 min", fast: true },
-          ],
-        },
-        {
-          gt: "02 — Qualification",
-          gh: "What they trained in",
-          pills: [
-            { n: "Medical degree", t: "3 days" },
-            { n: "Post-graduate specialty", t: "3 days" },
-            { n: "Council registration", t: "2 days" },
-            { n: "Internship completion", t: "3 days" },
-          ],
-        },
-        {
-          gt: "03 — Standing",
-          gh: "Whether they may practise",
-          pills: [
-            { n: "Global database", t: "15 min", fast: true },
-            { n: "Criminal", t: "30 min", fast: true },
-            { n: "Employment history", t: "2 days" },
-            { n: "Disciplinary record", t: "3 days" },
-          ],
-        },
-      ]}
-      stepsHead="How does a health authority verify applicant documents?"
-      stepsLede="A health authority verifies clinician documents in four steps: the applicant photographs them on a phone and consents, HelloVerify AI locates the issuing institution in about a second, the university registrar and medical council confirm directly, and one dated file per applicant follows."
-      steps={[
-        { n: "01 · The applicant", t: "Submit", p: "Documents photographed on a phone, consent captured, quality checked before upload." },
-        { n: "02 · HelloVerify AI", t: "Read", p: "Every field extracted and the issuing institution identified — in about a second." },
-        { n: "03 · The institution", t: "Confirm", p: "The university registrar and the medical council confirm directly. Not a database that resembles them." },
-        { n: "04 · The authority", t: "Decide", p: "One file per applicant, each result carrying its source and date, ready for the licensing decision." },
-      ]}
-      tableHead="How long does clinician verification take?"
-      tableLede="Clinician verification takes 15 minutes for identity and a global database screen, 30 minutes for a criminal record, two days for council registration, and three days for a medical degree at the university registrar or a disciplinary record on the council's register."
-      rows={[
-        { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
-        { nm: "Criminal record", sub: "court & police databases", tm: "30 min", fast: true, src: "court records" },
-        { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", fast: true, src: "global databases" },
-        { nm: "Council registration", sub: "licence number, status, expiry", tm: "2 days", src: "the medical council" },
-        { nm: "Medical degree", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
-        { nm: "Disciplinary record", sub: "sanctions, suspensions, conditions", tm: "3 days", src: "the council's register" },
-      ]}
-      tableNote={<>Times shown are from submission to result · qualifications verified in the country of issue — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></>}
-      complianceHead="How is clinician data protected during verification?"
-      complianceLede="Health records are the most sensitive data a person has, so clinician verification runs under independently audited ISO 27001 certification and GDPR-aligned handling: consent captured per applicant, bounded retention, and every access logged. HelloVerify is a PBSA member."
-      faqHead={<>From licensing<br />boards.</>}
-      faqs={[
-        {
-          q: "Can you verify qualifications earned abroad?",
-          a: "Yes — that's the common case. A nurse trained in Manila and applying in Abu Dhabi has her degree confirmed with the Philippine institution that issued it, by our team in that country. 120+ countries are reachable through the same pipeline.",
-        },
-        {
-          q: "What if the issuing institution is slow or offline?",
-          a: "The file shows the request as pending with a date and the route being used — courier, in-person, or official channel — rather than silently stalling. Authorities see exactly where each applicant stands.",
-        },
-        {
-          q: "Do you detect forged medical degrees?",
-          a: "Document forensics run first — template, fonts, security features — but a clean forgery still fails the source check, because the registrar simply has no record of the graduate. That's the point of verifying at the source.",
-        },
-        {
-          q: "Can this run at national volume?",
-          a: "Yes. The pipeline is parallel, so a licensing round of ten thousand applicants runs at the same per-file speed as one. Six offices across twelve time zones keep the queue moving overnight.",
-        },
-      ]}
+      verifyHead={d.verifyHead}
+      verifyLede={d.verifyLede}
+      lanes={LANES.map((l) => ({
+        ...d.lanes[l.k],
+        pills: l.pills.map((p) => ({ ...d.pills[p.p], fast: p.fast })),
+      }))}
+      stepsHead={d.stepsHead}
+      stepsLede={d.stepsLede}
+      steps={[d.steps.submit, d.steps.read, d.steps.confirm, d.steps.decide]}
+      tableHead={d.tableHead}
+      tableLede={d.tableLede}
+      rows={ROWS.map((r) => ({ ...d.rows[r.k], fast: r.fast }))}
+      /* `note` is a FUNCTION leaf taking the anchor — the shape
+         `lib/copy/index.ts` describes for a sentence wrapping something the
+         component owns. A plain string would have had to end in a space to
+         keep the byte, and an edge-whitespace leaf is what
+         `tools/test/copy.test.ts` §3 rejects. */
+      tableNote={d.note(
+        <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>{t.coverageLink}</AppLink>,
+      )}
+      complianceHead={d.complianceHead}
+      complianceLede={d.complianceLede}
+      faqHead={d.faqHead}
+      faqs={[d.faqs.abroad, d.faqs.offline, d.faqs.forgery, d.faqs.volume]}
       closing={{
-        heading: <>Every licence you issue, <em>backed by proof.</em></>,
-        sub: "Tell us the licensing round and the volume. We'll scope a pilot.",
+        heading: d.closing.heading,
+        sub: d.closing.sub,
         img: "/img/02-nurse-abudhabi.jpg",
       }}
     />

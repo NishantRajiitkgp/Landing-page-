@@ -10,6 +10,8 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { blogPosting } from "@/lib/seo/schema/blog";
 import { getLocale } from "next-intl/server";
+import { RESOURCES } from "@/lib/copy/resources";
+import { copy } from "@/lib/copy/request";
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }));
@@ -40,29 +42,34 @@ export default async function PostPage({
    *  Same server-side accessor `PageShell` uses two lines below. */
   const locale = await getLocale();
 
+  /** The page SHELL's words. Everything the article itself says — title,
+   *  standfirst, byline, section headings, paragraphs, quotes — is
+   *  `lib/content/posts.ts`, which is a catalogue of four verbatim-ported
+   *  articles and deliberately not copy. See `lib/copy/resources.en.tsx`. */
+  const r = await copy(RESOURCES);
+  const c = r.post;
+
   const more = POSTS.filter((x) => x.slug !== p.slug);
 
   return (
     <PageShell
       crumbs={[
-        { label: "Resources", href: "/resources" },
-        { label: "Blog", href: "/resources/blog" },
+        { label: r.crumb, href: "/resources" },
+        { label: r.blog.crumb, href: "/resources/blog" },
         { label: p.category },
       ]}
       closing={{
-        heading: (
-          <>
-            Questions this raises? <em>Ask them.</em>
-          </>
-        ),
-        sub: "We would rather answer awkward questions than avoid them.",
+        heading: c.closing.heading,
+        sub: c.closing.sub,
       }}
     >
       <article className="wrap sec3" style={{ paddingTop: 44 }}>
         <div className="post3">
-          <div className="meta">
-            {p.category} · {formatDate(p.date)} · {p.readMins} min read
-          </div>
+          {/* Six children — three catalogue values and three runs of the
+              page's own connective text — so this is ONE fragment leaf rather
+              than five, and the `<!-- -->`s React writes between them land
+              where they did. */}
+          <div className="meta">{c.meta(p.category, formatDate(p.date), p.readMins)}</div>
           <h1>{p.title}</h1>
           <p className="standfirst">{p.standfirst}</p>
           <div className="byline">
@@ -73,8 +80,8 @@ export default async function PostPage({
             </div>
           </div>
 
-          <nav className="toc" aria-label="On this page">
-            <div className="tk">On this page</div>
+          <nav className="toc" aria-label={c.onThisPage}>
+            <div className="tk">{c.onThisPage}</div>
             <ol>
               {p.sections.map((s) => (
                 <li key={s.id}>
@@ -106,7 +113,7 @@ export default async function PostPage({
       {more.length > 0 && (
         <div className="wrap sec3" style={{ paddingBottom: 20 }}>
           <div className="k" style={{ display: "flex", alignItems: "center", gap: 14 }}>
-            Read next
+            {c.readNext}
             <span style={{ flex: 1, height: 1, background: "var(--hair)" }} />
           </div>
           <div className="idx3" style={{ marginTop: 18 }}>
@@ -116,7 +123,7 @@ export default async function PostPage({
                   {x.title}
                   <small>{x.standfirst}</small>
                 </span>
-                <span className="xt">{x.readMins} min</span>
+                <span className="xt">{r.row.min(x.readMins)}</span>
                 <span className="xs">{formatDate(x.date)}</span>
                 <span className="xa">→</span>
               </AppLink>

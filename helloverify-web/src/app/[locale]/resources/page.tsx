@@ -7,6 +7,8 @@ import { COUNTRIES } from "@/lib/content/countries";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
+import { RESOURCES } from "@/lib/copy/resources";
+import { copy } from "@/lib/copy/request";
 
 export async function generateMetadata({
   params,
@@ -27,69 +29,66 @@ export default async function ResourcesHub({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(RESOURCES);
+  const c = t.hub;
 
   return (
     <PageShell
-      crumbs={[{ label: "Resources" }]}
+      crumbs={[{ label: t.crumb }]}
       closing={{
-        heading: (
-          <>
-            Can't find your check <em>or your country?</em>
-          </>
-        ),
-        sub: "Ask us directly — the answer is usually yes, with a caveat worth hearing.",
+        heading: c.closing.heading,
+        sub: c.closing.sub,
       }}
     >
       <div className="wrap hero3">
-        <div className="k">Resources</div>
-        <h1 className="h1">
-          How verification <em>actually works.</em>
-        </h1>
-        <p className="sub">
-          What each check answers, how long it takes where, and the vocabulary the industry uses
-          carelessly. Written to be useful before you buy anything.
-        </p>
+        <div className="k">{c.hero.k}</div>
+        <h1 className="h1">{c.hero.h1}</h1>
+        <p className="sub">{c.hero.sub}</p>
       </div>
 
       <div className="wrap sec3" style={{ paddingTop: 60 }}>
         <div className="rcard3">
           <AppLink href="/resources/checks">
-            <div className="rk">Library</div>
-            <div className="rt3">The check library</div>
-            <p className="rp">Every check: what it answers, who confirms it, how long it takes, and what it cannot tell you.</p>
-            <div className="rm">{CHECKS.length} checks documented →</div>
+            <div className="rk">{c.cards.checks.k}</div>
+            <div className="rt3">{c.cards.checks.t}</div>
+            <p className="rp">{c.cards.checks.p}</p>
+            {/* Two children, not one: the count and the words either side of
+                the `<!-- -->` React writes between them. `m` is a function
+                leaf returning a fragment for exactly that reason — see
+                `lib/copy/resources.en.tsx`. */}
+            <div className="rm">{c.cards.checks.m(CHECKS.length)}</div>
           </AppLink>
           <AppLink href="/resources/countries">
-            <div className="rk">Guides</div>
-            <div className="rt3">Country guides</div>
-            <p className="rp">What verification is like in a given country — the registries, the timelines, the local trap.</p>
-            <div className="rm">{COUNTRIES.length} countries documented →</div>
+            <div className="rk">{c.cards.countries.k}</div>
+            <div className="rt3">{c.cards.countries.t}</div>
+            <p className="rp">{c.cards.countries.p}</p>
+            <div className="rm">{c.cards.countries.m(COUNTRIES.length)}</div>
           </AppLink>
           <AppLink href="/resources/glossary">
-            <div className="rk">Reference</div>
-            <div className="rt3">Glossary</div>
-            <p className="rp">Attestation, screening, primary source, adverse media — terms used loosely, defined precisely.</p>
-            <div className="rm">Plain definitions →</div>
+            <div className="rk">{c.cards.glossary.k}</div>
+            <div className="rt3">{c.cards.glossary.t}</div>
+            <p className="rp">{c.cards.glossary.p}</p>
+            <div className="rm">{c.cards.glossary.m}</div>
           </AppLink>
         </div>
       </div>
 
       <div className="wrap sec3">
-        <SecHead k="Writing" h="From the blog.">
-          Occasional, specific, and written by people who run these checks rather than a content team.
+        <SecHead k={c.blog.k} h={c.blog.h}>
+          {c.blog.lede}
         </SecHead>
         <div className="body3 rcard3">
           <AppLink href="/resources/blog/primary-source-vs-database">
-            <div className="rk">Verification · 6 min</div>
-            <div className="rt3">Primary source vs. database</div>
-            <p className="rp">Why two products that look identical on a feature list give you completely different answers.</p>
-            <div className="rm">Read →</div>
+            <div className="rk">{c.blog.featured.k}</div>
+            <div className="rt3">{c.blog.featured.t}</div>
+            <p className="rp">{c.blog.featured.p}</p>
+            <div className="rm">{c.blog.featured.m}</div>
           </AppLink>
           <AppLink href="/resources/blog">
-            <div className="rk">Index</div>
-            <div className="rt3">All writing</div>
-            <p className="rp">Everything we've published, newest first.</p>
-            <div className="rm">Browse →</div>
+            <div className="rk">{c.blog.all.k}</div>
+            <div className="rt3">{c.blog.all.t}</div>
+            <p className="rp">{c.blog.all.p}</p>
+            <div className="rm">{c.blog.all.m}</div>
           </AppLink>
         </div>
       </div>

@@ -6,12 +6,13 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { FaqSection } from "@/components/chrome/FaqSection";
-import type { Faq } from "@/lib/seo/schema/faq";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
 import { Steps } from "@/components/chrome/Steps";
+import { BUSINESS } from "@/lib/copy/business";
+import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -27,32 +28,6 @@ export async function generateMetadata({
   const { locale } = await params;
   return pageMetadata(locale, PATH);
 }
-
-/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
- *  matching `FAQPage` node from the same array — Google requires the two to
- *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
-const FAQS: Faq[] = [
-  {
-    q: "Is re-verifying existing employees even legal?",
-    a:
-      "Yes, with consent — which the flow captures per run, not as a blanket signature from five years ago. Scope is limited to what the role justifies, and employees can see what was checked.",
-  },
-  {
-    q: "What is a \"digital employment\" check?",
-    a:
-      "Work history reconstructed from provident-fund contribution records — employer names, overlaps and gaps — confirmed at the source in about an hour, without calling anyone's current employer.",
-  },
-  {
-    q: "Can it detect moonlighting?",
-    a:
-      "Concurrent PF contributions from a second employer show up in the same 60-minute check. The report shows the overlap period, not an accusation — what you do with it is policy.",
-  },
-  {
-    q: "Will employees be contacted?",
-    a:
-      "Only for consent, on their own phone. Digital checks never touch their employer or colleagues; manual employment checks do, and are marked clearly before you order one.",
-  },
-];
 
 /** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
  *  `description` is this page's own reviewed description, read from the copy
@@ -76,32 +51,22 @@ export default async function EmployeeVerificationPage({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(BUSINESS);
+  const c = t.employeeVerification;
 
   return (
     <PageShell
-      crumbs={[{ label: "Business", href: "/business" }, { label: "Employee verification" }]}
-      closing={{
-        heading: (
-          <>
-            The people you already trust, <em>on the record.</em>
-          </>
-        ),
-        sub: "Roll out re-verification without disrupting a single shift.",
-      }}
+      crumbs={[{ label: t.crumb, href: "/business" }, { label: c.crumb }]}
+      closing={{ heading: c.closing.heading, sub: c.closing.sub }}
     >
       <div className="wrap hero3">
-        <div className="k">Business · Employee verification</div>
-        <h1 className="h1">
-          Know your workforce. <em>Still.</em>
-        </h1>
-        <p className="sub">
-          Verification isn't only for new hires. Contractors, gig fleets and staff moving into
-          sensitive roles — re-verified in the background, from provident-fund records to courts.
-        </p>
+        <div className="k">{c.hero.k}</div>
+        <h1 className="h1">{c.hero.h1}</h1>
+        <p className="sub">{c.hero.sub}</p>
         <div className="hrow">
-          <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
+          <AppLink href="/contact" className="btn btn-ink">{c.hero.cta}</AppLink>
           <a href="#when" className="btn btn-ghost">
-            <span>When to re-verify</span>
+            <span>{c.hero.when}</span>
             <Arrow />
           </a>
         </div>
@@ -109,10 +74,10 @@ export default async function EmployeeVerificationPage({
 
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>60 min</b> digital employment check</span>
-          <span className="it"><b>EPFO</b>-backed work history</span>
-          <span className="it"><b>Zero</b> forms for the employee</span>
-          <span className="it"><span className="dot" /> consent captured every run</span>
+          <span className="it">{c.strip.digital}</span>
+          <span className="it">{c.strip.epfo}</span>
+          <span className="it">{c.strip.zero}</span>
+          <span className="it">{c.strip.consent}</span>
         </div>
       </div>
 
@@ -129,77 +94,71 @@ export default async function EmployeeVerificationPage({
             work's turnaround, which is one side of the three-way disagreement
             TASKS.md carries between the catalogue, this page and the homepage.
             A citeable sentence is the worst place to pick a side by accident. */}
-        <SecHead k="What we check" h="What does employee re-verification check?">
-          Employee re-verification covers digital employment, moonlighting, entitlement to
-          work, a criminal refresh and current address. Provident-fund and court records
-          answer digitally — digital employment in 60 minutes. Where a former employer has
-          to be called, HelloVerify calls, and the report names who picked up.
+        <SecHead k={c.whatWeCheck.k} h={c.whatWeCheck.h}>
+          {c.whatWeCheck.lede}
         </SecHead>
         <div className="body3 cloud3" style={{ marginTop: 40 }}>
-          <span className="pl3 fast"><span className="d" />Digital employment<span className="t">60 min</span></span>
-          <span className="pl3 fast"><span className="d" />Moonlighting<span className="t">60 min</span></span>
-          <span className="pl3 fast"><span className="d" />Entitlement to work<span className="t">60 min</span></span>
-          <span className="pl3 fast"><span className="d" />Criminal refresh<span className="t">30 min</span></span>
-          <span className="pl3 fast"><span className="d" />Current address<span className="t">30 min</span></span>
-          <span className="pl3"><span className="d" />Employment (manual)<span className="t">2 days</span></span>
-          <span className="pl3"><span className="d" />Education<span className="t">3 days</span></span>
+          {/* Each chip keeps its three children — the `.d` dot, the name, the
+              `.t` time — so these are two text-node swaps apiece. */}
+          <span className="pl3 fast"><span className="d" />{c.chips.digitalEmployment.n}<span className="t">{c.chips.digitalEmployment.t}</span></span>
+          <span className="pl3 fast"><span className="d" />{c.chips.moonlighting.n}<span className="t">{c.chips.moonlighting.t}</span></span>
+          <span className="pl3 fast"><span className="d" />{c.chips.entitlementToWork.n}<span className="t">{c.chips.entitlementToWork.t}</span></span>
+          <span className="pl3 fast"><span className="d" />{c.chips.criminalRefresh.n}<span className="t">{c.chips.criminalRefresh.t}</span></span>
+          <span className="pl3 fast"><span className="d" />{c.chips.currentAddress.n}<span className="t">{c.chips.currentAddress.t}</span></span>
+          <span className="pl3"><span className="d" />{c.chips.employmentManual.n}<span className="t">{c.chips.employmentManual.t}</span></span>
+          <span className="pl3"><span className="d" />{c.chips.education.n}<span className="t">{c.chips.education.t}</span></span>
         </div>
       </div>
 
       {/* when to re-verify */}
       <div className="wrap sec3" id="when">
-        <SecHead k="When it matters" h="When should you re-verify an employee?">
-          Re-verify at four moments: joining, a role change into finance, security or
-          childcare-adjacent work, an annual refresh across the workforce, and after an
-          incident. A check is a snapshot of the day it ran, and these are the four points
-          where the picture changes — and the ones auditors ask about.
+        <SecHead k={c.whenItMatters.k} h={c.whenItMatters.h}>
+          {c.whenItMatters.lede}
         </SecHead>
         <div className="body3 when3">
           <div className="w">
-            <div className="wt">Joining</div>
-            <p className="wp">The baseline: identity, work history and records confirmed before access is granted.</p>
-            <span className="wm">same day</span>
+            <div className="wt">{c.when.joining.wt}</div>
+            <p className="wp">{c.when.joining.wp}</p>
+            <span className="wm">{c.when.joining.wm}</span>
           </div>
           <div className="w">
-            <div className="wt">Role change</div>
-            <p className="wp">Moving into finance, security or childcare-adjacent work triggers the checks that role demands.</p>
-            <span className="wm">60 min</span>
+            <div className="wt">{c.when.roleChange.wt}</div>
+            <p className="wp">{c.when.roleChange.wp}</p>
+            <span className="wm">{c.when.roleChange.wm}</span>
           </div>
           <div className="w">
-            <div className="wt">Annual refresh</div>
-            <p className="wp">Criminal and moonlighting refresh across the workforce, batched so HR does nothing manually.</p>
-            <span className="wm">runs overnight</span>
+            <div className="wt">{c.when.annual.wt}</div>
+            <p className="wp">{c.when.annual.wp}</p>
+            <span className="wm">{c.when.annual.wm}</span>
           </div>
           <div className="w">
-            <div className="wt">Incident</div>
-            <p className="wp">A targeted re-run with an auditable trail, ready for legal the same day.</p>
-            <span className="wm">30 min</span>
+            <div className="wt">{c.when.incident.wt}</div>
+            <p className="wp">{c.when.incident.wp}</p>
+            <span className="wm">{c.when.incident.wm}</span>
           </div>
         </div>
       </div>
 
       {/* how it works */}
       <div className="wrap sec3">
-        <SecHead k="How it works" h="How does re-verification work without disrupting staff?">
-          Employees consent once on their own phone. After that, re-verification runs from a
-          roster upload or an HRMS sync, checks statutory and court records digitally, and
-          reports only the changes — a new court record, a second employer — rather than
-          every clean result. Nobody fills in a form again.
+        <SecHead k={c.howItWorks.k} h={c.howItWorks.h}>
+          {c.howItWorks.lede}
         </SecHead>
         {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
-            so the node and the heading are the same string. */}
+            so the node and the heading are the same string — now ONE leaf read
+            twice rather than two identical literals a translation could part. */}
         <Steps
-          name="How does re-verification work without disrupting staff?"
-          items={[
-          { n: "01 · One CSV or API call", t: "Enroll", p: "Upload the roster or sync from your HRMS. Each employee gets a consent link." },
-          { n: "02 · On schedule", t: "Verify", p: "Checks run digitally against provident-fund, court and registry records. Humans handle the exceptions." },
-          { n: "03 · Only the changes", t: "Alert", p: "You hear about the deltas — a new court record, a second employer — not five hundred clean results." },
-          ]}
+          name={c.howItWorks.h}
+          items={[c.steps.enroll, c.steps.verify, c.steps.alert]}
         />
       </div>
 
-      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
-      <FaqSection head={<>Fair questions.</>} faqs={FAQS} />
+      {/* FAQ — markup and FAQPage node both from the same records (see
+          FaqSection). The order is structure and stays here. */}
+      <FaqSection
+        head={c.faqHead}
+        faqs={[c.faqs.legal, c.faqs.digital, c.faqs.moonlighting, c.faqs.contacted]}
+      />
 
       <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>

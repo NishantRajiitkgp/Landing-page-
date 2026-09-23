@@ -6,13 +6,17 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { FaqSection } from "@/components/chrome/FaqSection";
-import type { Faq } from "@/lib/seo/schema/faq";
 import { CertCards } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
 import { Steps } from "@/components/chrome/Steps";
+import { Lanes, type Lane } from "@/components/chrome/Lanes";
+import { CheckTable, type Row } from "@/components/chrome/CheckTable";
+import { BUSINESS, type LaneKey, type PillKey, type RowKey } from "@/lib/copy/business";
+import { copy } from "@/lib/copy/request";
+import { FAQ_ORDER } from "./content";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -30,16 +34,22 @@ export async function generateMetadata({
 }
 
 
-const LANES: { gt: string; gh: string; pills: { n: string; t: string; fast?: boolean }[] }[] = [
+/** Which pills, in which order, and which render `.fast` — structure, and it
+ *  stays. The names and the times are `lib/copy/business`'s, keyed by
+ *  `LaneKey` and `PillKey`, so a lane or a pill added without copy is TS2322
+ *  on this array in every locale at once. `fast` is a CSS class, not a word,
+ *  which is why it did not go with them. The shape is
+ *  `chrome/SiteFooter.tsx`'s `COLS`, for the reason `lib/copy/index.ts`
+ *  argues under "Where the keys come from". */
+const LANES: readonly { k: LaneKey; pills: readonly { p: PillKey; fast?: boolean }[] }[] = [
   {
-    gt: "01 — Identity",
-    gh: "Who they are",
+    k: "identity",
     pills: [
-      { n: "Identity", t: "15 min", fast: true },
-      { n: "PAN", t: "15 min", fast: true },
-      { n: "Passport", t: "15 min", fast: true },
-      { n: "Age", t: "15 min", fast: true },
-      { n: "Driving licence", t: "30 min", fast: true },
+      { p: "identity", fast: true },
+      { p: "pan", fast: true },
+      { p: "passport", fast: true },
+      { p: "age", fast: true },
+      { p: "drivingLicence", fast: true },
       // 30 min, not 60. This page was the only surface saying 60 min;
       // `sections/Checks.tsx` says 30 min. The old site defines this check
       // as "a vehicle's registration details, including ownership and
@@ -47,72 +57,41 @@ const LANES: { gt: string; gh: string; pills: { n: string; t: string; fast?: boo
       // the RTO record - the SAME authority as Driving licence, which the
       // catalogue rates 30 min and fast. Two checks against one registry
       // cannot differ by 2x.
-      { n: "Registration certificate", t: "30 min", fast: true },
+      { p: "registrationCertificate", fast: true },
     ],
   },
   {
-    gt: "02 — Work & education",
-    gh: "What they've done",
+    k: "work",
     pills: [
-      { n: "Digital employment", t: "60 min", fast: true },
-      { n: "Moonlighting", t: "60 min", fast: true },
-      { n: "Entitlement to work", t: "60 min", fast: true },
-      { n: "Employment", t: "2 days" },
-      { n: "Education", t: "3 days" },
+      { p: "digitalEmployment", fast: true },
+      { p: "moonlighting", fast: true },
+      { p: "entitlementToWork", fast: true },
+      { p: "employment" },
+      { p: "education" },
     ],
   },
   {
-    gt: "03 — Records & risk",
-    gh: "What's on file",
+    k: "records",
     pills: [
-      { n: "Credit", t: "15 min", fast: true },
-      { n: "Global database", t: "15 min", fast: true },
-      { n: "Criminal", t: "30 min", fast: true },
-      { n: "Current address", t: "30 min", fast: true },
-      { n: "Trade licence", t: "2 days" },
-      { n: "Directors & GST", t: "3 days" },
+      { p: "credit", fast: true },
+      { p: "globalDatabase", fast: true },
+      { p: "criminal", fast: true },
+      { p: "currentAddress", fast: true },
+      { p: "tradeLicence" },
+      { p: "directorsGst" },
     ],
   },
 ];
 
-const ROWS: { nm: string; sub: string; tm: string; fast?: boolean; src: string }[] = [
-  { nm: "Identity & PAN", sub: "name, DOB, number, validity", tm: "15 min", fast: true, src: "issuing registry" },
-  { nm: "Driving licence", sub: "class, validity, endorsements", tm: "30 min", fast: true, src: "state transport authority" },
-  { nm: "Criminal record", sub: "court & police databases", tm: "30 min", fast: true, src: "court records" },
-  { nm: "Digital employment", sub: "EPFO-backed work history", tm: "60 min", fast: true, src: "provident fund records" },
-  { nm: "Employment", sub: "role, tenure, exit remarks", tm: "2 days", src: "the employer's HR" },
-  { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
-];
-
-/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
- *  matching `FAQPage` node from the same array — Google requires the two to
- *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
-const FAQS: Faq[] = [
-  {
-    q: "How fast is \"fast\" at real volume?",
-    a:
-      "The times on this page hold at volume because the pipeline is parallel — a thousand driving licences take about as long as one. Identity-class checks come back in 15–60 minutes; anything that needs a registrar or a court is quoted in days, and the SLA we sign reflects your actual mix of checks.",
-  },
-  {
-    q: "What does \"confirmed at the source\" actually mean?",
-    a:
-      "No proxy databases as the final word. A degree is confirmed with the university registrar, a licence with the issuing authority, employment with the employer or provident-fund records. The report names the source beside every result.",
-  },
-  {
-    q: "How do candidates submit documents?",
-    a:
-      "Over WhatsApp or a one-time link — no app to install, no account to create. Consent is captured first, and the capture flow checks focus, edges and glare before upload.",
-  },
-  {
-    q: "Can this plug into our ATS?",
-    a:
-      "Yes — REST API and webhooks, bulk CSV for batch drives, and connectors for common ATS platforms. Results post back automatically; your recruiters never leave their queue.",
-  },
-  {
-    q: "What happens when a check fails?",
-    a:
-      "The report shows exactly what didn't match and where it was checked, with the evidence attached. Candidates get a dispute path, and re-verification after a correction is free.",
-  },
+/** Same split as `LANES`: the six rows' order and their `.fast` flag here,
+ *  their four strings in the dictionary under the same keys. */
+const ROWS: readonly { k: RowKey; fast?: boolean }[] = [
+  { k: "identityPan", fast: true },
+  { k: "drivingLicence", fast: true },
+  { k: "criminal", fast: true },
+  { k: "digitalEmployment", fast: true },
+  { k: "employment" },
+  { k: "education" },
 ];
 
 /** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
@@ -137,33 +116,30 @@ export default async function EnterprisePage({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(BUSINESS);
+  const lanes: Lane[] = LANES.map((l) => ({
+    ...t.enterprise.lanes[l.k],
+    pills: l.pills.map((p) => ({ ...t.enterprise.pills[p.p], fast: p.fast })),
+  }));
+  const rows: Row[] = ROWS.map((r) => ({ ...t.enterprise.rows[r.k], fast: r.fast }));
 
   return (
     <PageShell
-      crumbs={[{ label: "Business", href: "/business" }, { label: "Enterprise BGV" }]}
+      crumbs={[{ label: t.crumb, href: "/business" }, { label: t.enterprise.crumb }]}
       closing={{
-        heading: (
-          <>
-            Four hundred riders a week? <em>Before lunch.</em>
-          </>
-        ),
-        sub: "Tell us your volume and your roles. You'll have a pilot running this week.",
+        heading: t.enterprise.closing.heading,
+        sub: t.enterprise.closing.sub,
       }}
     >
       {/* hero */}
       <div className="wrap hero3">
-        <div className="k">Business · Enterprise BGV</div>
-        <h1 className="h1">
-          Verification that keeps up <em>with hiring.</em>
-        </h1>
-        <p className="sub">
-          High-volume background checks with an SLA. AI reads every document, our team
-          confirms with the issuer, and your ATS gets the answer back — from 15 minutes.
-        </p>
+        <div className="k">{t.enterprise.hero.k}</div>
+        <h1 className="h1">{t.enterprise.hero.h1}</h1>
+        <p className="sub">{t.enterprise.hero.sub}</p>
         <div className="hrow">
-          <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
+          <AppLink href="/contact" className="btn btn-ink">{t.enterprise.hero.cta}</AppLink>
           <a href="#turnaround" className="btn btn-ghost">
-            <span>See turnaround times</span>
+            <span>{t.enterprise.hero.turnaround}</span>
             <Arrow />
           </a>
         </div>
@@ -172,10 +148,16 @@ export default async function EnterprisePage({
       {/* trust strip */}
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>2,000+</b> enterprise clients</span>
-          <span className="it"><b>20M+</b> checks, every one at the source</span>
-          <span className="it"><b>1,600+</b> riders verified a month, one client</span>
-          <span className="it"><span className="dot" /> ISO 27001 · PBSA</span>
+          {/* Each item is `<b>figure</b> tail` — two children, and one
+              rich-text leaf rather than two string leaves, because
+              `{t.a}{t.b}` puts two adjacent text children where one sits
+              today and React's SSR separates those with `<!-- -->`. Measured
+              with `renderToString` before the move: Fragment-wrapping an
+              element-plus-text pair is byte-identical; joining them is not. */}
+          <span className="it">{t.enterprise.strip.clients}</span>
+          <span className="it">{t.enterprise.strip.checks}</span>
+          <span className="it">{t.enterprise.strip.riders}</span>
+          <span className="it">{t.enterprise.strip.certs}</span>
         </div>
       </div>
 
@@ -193,31 +175,12 @@ export default async function EnterprisePage({
             pages matching rather than on a canonical entry, and a sentence
             written to be quoted away from the page should rest on the stronger
             of the two. Add them to the catalogue and these can be named. */}
-        <SecHead k="What we verify" h="What does an enterprise background check include?">
-          HelloVerify's enterprise catalogue runs 33 checks against three questions: who the
-          candidate is, what they have done, and what is on file. Identity answers in 15
-          minutes, criminal records in 30, digital employment in 60; education takes three
-          days at the registrar.
+        <SecHead k={t.enterprise.verify.k} h={t.enterprise.verify.h}>
+          {t.enterprise.verify.lede}
         </SecHead>
-        <div className="body3 lanes3">
-          {LANES.map((l) => (
-            <div key={l.gt}>
-              <div className="lgt">{l.gt}</div>
-              <div className="lgh">{l.gh}</div>
-              <div className="cloud3">
-                {l.pills.map((p) => (
-                  <span key={p.n} className={`pl3${p.fast ? " fast" : ""}`}>
-                    <span className="d" />
-                    {p.n}
-                    <span className="t">{p.t}</span>
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        <Lanes lanes={lanes} />
         <div style={{ marginTop: 36 }}>
-          <AppLink href="/resources/checks" className="btn btn-line btn-sm">All 33 checks</AppLink>
+          <AppLink href="/resources/checks" className="btn btn-line btn-sm">{t.enterprise.allChecks}</AppLink>
         </div>
       </div>
 
@@ -225,21 +188,20 @@ export default async function EnterprisePage({
       <div className="wrap sec3">
         {/* ANSWER BLOCK (§11a.2). 42 words, built from the four `Steps` records
             below plus this band's own "no app, no account". */}
-        <SecHead k="How it works" h="How does enterprise background verification work?">
-          Enterprise verification starts with one upload: the candidate photographs documents
-          over WhatsApp or a link, with no app and no account. HelloVerify's AI reads every
-          field, the request goes to the issuer, and the report reaches your ATS with each
-          source named.
+        <SecHead k={t.enterprise.howItWorks.k} h={t.enterprise.howItWorks.h}>
+          {t.enterprise.howItWorks.lede}
         </SecHead>
         {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
-            so the node and the heading are the same string. */}
+            so the node and the heading are the same string — now ONE leaf read
+            twice rather than two identical literals, so a translation cannot
+            break the equality `check-schema.mjs` compares per page. */}
         <Steps
-          name="How does enterprise background verification work?"
+          name={t.enterprise.howItWorks.h}
           items={[
-          { n: "01 · Candidate's phone", t: "Upload", p: "Photograph the document. Edges, glare and focus are checked before the shutter fires." },
-          { n: "02 · HelloVerify AI", t: "Read", p: "Every field extracted, the document checked against itself, the issuing office located — in about a second." },
-          { n: "03 · The source", t: "Confirm", p: "The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one." },
-          { n: "04 · Your ATS", t: "Report", p: "One report, the source named beside every result, with an auditable trail behind it." },
+            t.enterprise.steps.upload,
+            t.enterprise.steps.read,
+            t.enterprise.steps.confirm,
+            t.enterprise.steps.report,
           ]}
         />
       </div>
@@ -252,27 +214,20 @@ export default async function EnterprisePage({
             120+ countries figure is the table's own footnote. None of the
             three disputed checks appears in ROWS, so nothing had to be left
             out here. */}
-        <SecHead k="Turnaround &amp; coverage" h="How long does an enterprise background check take?">
-          Enterprise turnaround is measured from upload to report: identity and PAN in 15
-          minutes, driving licence and criminal records in 30, digital employment in 60,
-          employment in two days, education in three — across 120+ countries, and stated in
-          the contract HelloVerify signs.
+        <SecHead k={t.enterprise.turnaroundBand.k} h={t.enterprise.turnaroundBand.h}>
+          {t.enterprise.turnaroundBand.lede}
         </SecHead>
-        <div className="body3 tbl3">
-          <div className="hd">
-            <span>Check</span>
-            <span>Turnaround</span>
-            <span>Confirmed with</span>
-          </div>
-          {ROWS.map((r) => (
-            <div className="r" key={r.nm}>
-              <span className="nm">{r.nm}<small>{r.sub}</small></span>
-              <span className={`tm${r.fast ? " fast" : ""}`}>{r.tm}</span>
-              <span className="src">{r.src}</span>
-            </div>
-          ))}
-          <div className="note">Times shown are from upload to report · 120+ countries via the same pipeline — see <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink></div>
-        </div>
+        {/* `note` is a FUNCTION leaf taking the anchor, which is the shape
+            `lib/copy/index.ts` describes for a sentence wrapping something the
+            component owns — here an href and an inline style. A plain string
+            would have had to end in a space to keep the byte, and an
+            edge-whitespace leaf is what `tools/test/copy.test.ts` §3 rejects. */}
+        <CheckTable
+          rows={rows}
+          note={t.enterprise.note(
+            <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>{t.enterprise.noteLink}</AppLink>,
+          )}
+        />
       </div>
 
       {/* compliance & security */}
@@ -302,11 +257,8 @@ export default async function EnterprisePage({
             each state HelloVerify's own standing. Turning a logo into
             "HelloVerify is on the NSR" would be a new credential claim, and
             §11a.2 does not license one; credentials are Part 2b's surface. */}
-        <SecHead k="Compliance &amp; security" h="How does HelloVerify handle data protection and compliance?">
-          HelloVerify is ISO 27001 certified and independently audited, GDPR-aligned —
-          consent, retention limits and the right to be forgotten in every workflow — and a
-          member of the PBSA, the screening industry's global standards body. Every check
-          begins with consent and leaves an auditable trail.
+        <SecHead k={t.enterprise.compliance.k} h={t.enterprise.compliance.h}>
+          {t.enterprise.compliance.lede}
         </SecHead>
         {/* The same four as the homepage and the six vertical pages, from
             `CREDENTIAL_MARKS` in `lib/content/company.ts`. Two of the four
@@ -321,14 +273,19 @@ export default async function EnterprisePage({
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">
-            <span>Security &amp; compliance, in full — DPA, residency, conformance</span>
+            <span>{t.enterprise.securityInFull}</span>
             <Arrow />
           </AppLink>
         </div>
       </div>
 
-      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
-      <FaqSection head={<>Asked before<br />every pilot.</>} faqs={FAQS} />
+      {/* FAQ — markup and FAQPage node both from the SAME array (see
+          FaqSection). The five questions are `business.enterprise.faqs`; the
+          order they are asked in is `./content`, which is structure. */}
+      <FaqSection
+        head={t.enterprise.faqHead}
+        faqs={FAQ_ORDER.map((k) => t.enterprise.faqs[k])}
+      />
 
       <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>

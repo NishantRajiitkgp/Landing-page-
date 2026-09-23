@@ -15,6 +15,8 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { getLocale } from "next-intl/server";
 import { Arrow } from "@/components/brand/Arrow";
 import { Steps, type Step } from "@/components/chrome/Steps";
+import { TEMPLATES } from "@/lib/copy/templates";
+import { copy } from "@/lib/copy/request";
 
 export type Pill = { n: string; t: string; fast?: boolean };
 export type Lane = { gt: string; gh: string; pills: Pill[] };
@@ -75,6 +77,10 @@ const CERT_IDS = ["iso27001", "gdpr", "pbsa", "nsr"] as const;
  *  static because every page calls `setRequestLocale` (BUILD-SPEC §5). */
 export async function VerticalPage(c: VerticalContent) {
   const locale = await getLocale();
+  // Words in `lib/copy/templates`, structure here. Two awaits and one
+  // `getLocale()`: next-intl caches that call per request, so `copy()`
+  // re-uses the resolution the line above already paid for.
+  const t = await copy(TEMPLATES);
 
   return (
     <PageShell crumbs={c.crumbs} closing={c.closing}>
@@ -84,7 +90,7 @@ export async function VerticalPage(c: VerticalContent) {
         <h1 className="h1">{c.h1}</h1>
         <p className="sub">{c.sub}</p>
         <div className="hrow">
-          <AppLink href={c.primary?.href ?? "/contact"} className="btn btn-ink">{c.primary?.label ?? "Talk to sales"}</AppLink>
+          <AppLink href={c.primary?.href ?? "/contact"} className="btn btn-ink">{c.primary?.label ?? t.talkToSales}</AppLink>
           {c.secondary && (
             <AppLink href={c.secondary.href} className="btn btn-ghost">
               <span>{c.secondary.label}</span>
@@ -107,7 +113,7 @@ export async function VerticalPage(c: VerticalContent) {
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">What we verify</div>
+            <div className="k">{t.bands.verify}</div>
             <h2 className="h2" style={{ marginTop: 12 }}>{c.verifyHead}</h2>
           </div>
           <p className="lede" style={{ marginBottom: 8 }}>{c.verifyLede}</p>
@@ -138,7 +144,7 @@ export async function VerticalPage(c: VerticalContent) {
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">How it works</div>
+            <div className="k">{t.bands.steps}</div>
             <h2 className="h2" style={{ marginTop: 12 }}>{c.stepsHead}</h2>
           </div>
           {c.stepsLede && <p className="lede" style={{ marginBottom: 8 }}>{c.stepsLede}</p>}
@@ -162,16 +168,16 @@ export async function VerticalPage(c: VerticalContent) {
       <div className="wrap sec3" id="turnaround">
         <div className="sec-head">
           <div>
-            <div className="k">Turnaround &amp; coverage</div>
+            <div className="k">{t.bands.table}</div>
             <h2 className="h2" style={{ marginTop: 12 }}>{c.tableHead}</h2>
           </div>
           <p className="lede" style={{ marginBottom: 8 }}>{c.tableLede}</p>
         </div>
         <div className="body3 tbl3">
           <div className="hd">
-            <span>Check</span>
-            <span>Turnaround</span>
-            <span>Confirmed with</span>
+            <span>{t.table.check}</span>
+            <span>{t.table.turnaround}</span>
+            <span>{t.table.confirmedWith}</span>
           </div>
           {c.rows.map((r) => (
             <div className="r" key={r.nm}>
@@ -188,14 +194,13 @@ export async function VerticalPage(c: VerticalContent) {
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">Compliance &amp; security</div>
+            <div className="k">{t.bands.compliance}</div>
             <h2 className="h2" style={{ marginTop: 12 }}>
-              {c.complianceHead ?? (<>The unexciting part,<br />done properly.</>)}
+              {c.complianceHead ?? t.compliance.head}
             </h2>
           </div>
           <p className="lede" style={{ marginBottom: 8 }}>
-            {c.complianceLede ??
-              "Every check involves someone's most personal documents. Consent comes first, retention has limits, and all of it is auditable."}
+            {c.complianceLede ?? t.compliance.lede}
           </p>
         </div>
         <div className="body3 certs3">
@@ -203,7 +208,7 @@ export async function VerticalPage(c: VerticalContent) {
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">
-            <span>Security &amp; compliance, in full — DPA, residency, conformance</span>
+            <span>{t.securityInFull}</span>
             <Arrow />
           </AppLink>
         </div>

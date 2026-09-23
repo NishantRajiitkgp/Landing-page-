@@ -9,6 +9,8 @@ import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
 import { Steps } from "@/components/chrome/Steps";
+import { INDIVIDUALS, type IndividualsPathKey } from "@/lib/copy/individuals";
+import { copy } from "@/lib/copy/request";
 
 export async function generateMetadata({
   params,
@@ -19,43 +21,16 @@ export async function generateMetadata({
   return pageMetadata(locale, "/individuals");
 }
 
-const PATHS = [
-  {
-    href: "/individuals/hellov",
-    span: "span3",
-    img: "/img/12-phone-signup.jpg",
-    tag: "HelloV",
-    from: "30 minutes",
-    h: "Verify anyone",
-    p: "A driver, a maid, a tenant, a date. Send a photo of the document over WhatsApp — the report comes back to the same chat.",
-  },
-  {
-    href: "/individuals/immigration",
-    span: "span3",
-    img: "/img/14-visa-counter.jpg",
-    tag: "Visa & immigration",
-    from: "before you file",
-    h: "Screen your own papers",
-    p: "Find the problem in your documents before an embassy does — and before the application fee is spent.",
-  },
-  {
-    href: "/individuals/home-family",
-    span: "span3",
-    img: "/img/15-home-doorway.jpg",
-    tag: "Home & family",
-    from: "30 minutes",
-    h: "The people in your home",
-    p: "Nannies, drivers, cooks, carers, tutors. The people you trust with your children and your keys.",
-  },
-  {
-    href: "/individuals/hellov",
-    span: "span3",
-    img: "/img/07-tenant-singapore.jpg",
-    tag: "Tenants & deals",
-    from: "30 minutes",
-    h: "Before you hand over keys",
-    p: "A tenant, a buyer, a business partner — identity and record checked before money or property moves.",
-  },
+/** The four path cards' STRUCTURE — where each goes, which image it carries,
+ *  how wide it sits. The words are `individuals.hub.paths`, keyed by `k`, and
+ *  `IndividualsPathKey` makes a fifth card added without a label TS2322 right
+ *  here. `k` rather than the href because two of the four point at the same
+ *  route, which is the note `lib/copy/individuals.en.tsx` records. */
+const PATHS: readonly { k: IndividualsPathKey; href: string; span: string; img: string }[] = [
+  { k: "hellov", href: "/individuals/hellov", span: "span3", img: "/img/12-phone-signup.jpg" },
+  { k: "immigration", href: "/individuals/immigration", span: "span3", img: "/img/14-visa-counter.jpg" },
+  { k: "homeFamily", href: "/individuals/home-family", span: "span3", img: "/img/15-home-doorway.jpg" },
+  { k: "tenants", href: "/individuals/hellov", span: "span3", img: "/img/07-tenant-singapore.jpg" },
 ];
 
 export default async function IndividualsHub({
@@ -68,35 +43,28 @@ export default async function IndividualsHub({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(INDIVIDUALS);
+  const c = t.hub;
 
   return (
     <PageShell
-      crumbs={[{ label: "Individuals" }]}
+      crumbs={[{ label: t.crumb }]}
       closing={{
-        heading: (
-          <>
-            Trust is lovely. <em>Proof is better.</em>
-          </>
-        ),
-        sub: "One photo, thirty minutes, and you know.",
-        ctaLabel: "Start a check",
+        heading: c.closing.heading,
+        sub: c.closing.sub,
+        ctaLabel: c.closing.ctaLabel,
         ctaHref: "https://app.helloverify.com",
         img: "/img/15-home-doorway.jpg",
       }}
     >
       <div className="wrap hero3">
-        <div className="k">For individuals &amp; families</div>
-        <h1 className="h1">
-          Verify anyone. <em>From your phone.</em>
-        </h1>
-        <p className="sub">
-          The same verification ministries use, for the people in your life. Send a photo of the
-          document over WhatsApp, and the report comes back to the same chat — often in half an hour.
-        </p>
+        <div className="k">{c.hero.k}</div>
+        <h1 className="h1">{c.hero.h1}</h1>
+        <p className="sub">{c.hero.sub}</p>
         <div className="hrow">
-          <a href="https://app.helloverify.com" className="btn btn-ink">Start a check</a>
+          <a href="https://app.helloverify.com" className="btn btn-ink">{c.hero.cta}</a>
           <AppLink href="/individuals/hellov" className="btn btn-ghost">
-            <span>See plans &amp; prices</span>
+            <span>{c.hero.plans}</span>
             <Arrow />
           </AppLink>
         </div>
@@ -104,10 +72,10 @@ export default async function IndividualsHub({
 
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>30 min</b> for most checks</span>
-          <span className="it"><b>No</b> app to install</span>
-          <span className="it"><b>20M+</b> checks since 2018</span>
-          <span className="it"><span className="dot" /> consent-first, always</span>
+          <span className="it">{c.strip.thirtyMin}</span>
+          <span className="it">{c.strip.noApp}</span>
+          <span className="it">{c.strip.since2018}</span>
+          <span className="it">{c.strip.consent}</span>
         </div>
       </div>
 
@@ -123,55 +91,50 @@ export default async function IndividualsHub({
             nanny comes from the Home & family card, the visa interview from the
             old lede, and "30 min for most checks" from the strip above. The
             three blocks on this page measure 42, 42 and 36 words. */}
-        <SecHead k="What people check" h="Who can I run a background check on?">
-          HelloVerify checks anyone you are about to trust: a driver for the school run, a
-          nanny, a tenant, a buyer, a business partner — or your own documents before a visa
-          interview. Most checks come back in about 30 minutes, over WhatsApp.
+        <SecHead k={c.whatPeopleCheck.k} h={c.whatPeopleCheck.h}>
+          {c.whatPeopleCheck.lede}
         </SecHead>
         <div className="body3 paths3">
-          {PATHS.map((c) => (
-            <AppLink key={c.h} href={c.href} className={`cell ph ${c.span}`}>
-              <Image className="pimg" src={c.img} alt="" fill sizes={SIZES_PATH_SPAN3} />
-              <div className="scrim" />
-              <span className="tag">{c.tag}</span>
-              <span className="from">{c.from}</span>
-              <div className="body">
-                <div className="h">{c.h}</div>
-                <div className="p">{c.p}</div>
-              </div>
-              <span className="go" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            </AppLink>
-          ))}
+          {PATHS.map((x) => {
+            /** The card's words. `key={p.h}` is the same string it was before
+                this page joined the copy layer — third corollary in
+                `lib/copy/index.ts`, asserted in `copy.test.ts` §13. */
+            const p = c.paths[x.k];
+            return (
+              <AppLink key={p.h} href={x.href} className={`cell ph ${x.span}`}>
+                <Image className="pimg" src={x.img} alt="" fill sizes={SIZES_PATH_SPAN3} />
+                <div className="scrim" />
+                <span className="tag">{p.tag}</span>
+                <span className="from">{p.from}</span>
+                <div className="body">
+                  <div className="h">{p.h}</div>
+                  <div className="p">{p.p}</div>
+                </div>
+                <span className="go" aria-hidden="true">
+                  <Arrow />
+                </span>
+              </AppLink>
+            );
+          })}
         </div>
       </div>
 
       <div className="wrap sec3">
-        <SecHead k="How it works" h="How do I run a background check from my phone?">
-          You message HelloV on WhatsApp and photograph the person's document; they consent on
-          their own phone. HelloVerify then asks the transport authority, court or registry that
-          issued it, and the plain-language report returns to the same chat — no app, no account.
+        <SecHead k={c.howItWorks.k} h={c.howItWorks.h}>
+          {c.howItWorks.lede}
         </SecHead>
         {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
-            so the node and the heading are the same string. */}
+            so the node and the heading are the same string — now ONE leaf read
+            twice rather than two identical literals a translation could part. */}
         <Steps
-          name="How do I run a background check from my phone?"
-          items={[
-          { n: "01 · You", t: "Send a photo", p: "Message HelloV on WhatsApp and photograph the person's document. They consent on their own phone." },
-          { n: "02 · Us", t: "We check the source", p: "Not a database of copies — the transport authority, the court, the registry that issued it." },
-          { n: "03 · The chat", t: "The report", p: "A plain-language result with the source named, back in the same conversation." },
-          ]}
+          name={c.howItWorks.h}
+          items={[c.steps.you, c.steps.us, c.steps.chat]}
         />
       </div>
 
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <SecHead k="Your responsibility, and ours" h="Can I check someone without telling them?">
-          No. Every HelloVerify check needs the consent of the person being verified, given on
-          their own phone before anything runs — every time. You can't check someone behind their
-          back, and HelloVerify won't help you try.
+        <SecHead k={c.consent.k} h={c.consent.h}>
+          {c.consent.lede}
         </SecHead>
         <div className="body3 certs3">
           {/* NEITHER OF THESE IS A CREDENTIAL CARD, and both are deliberately
@@ -199,17 +162,17 @@ export default async function IndividualsHub({
               same exposure as the answer blocks on `/business/enterprise` and
               `/governments`. */}
           <div className="cert">
-            <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />
+            <Image src="/img/gdpr.jpg" alt={c.certs.consent.alt} width={CERT_BOX} height={CERT_BOX} />
             <div>
-              <div className="h">They consent, then we check</div>
-              <p className="p">The person sees what is being verified and agrees to it before anything runs.</p>
+              <div className="h">{c.certs.consent.h}</div>
+              <p className="p">{c.certs.consent.p}</p>
             </div>
           </div>
           <div className="cert">
-            <Image src="/img/iso.jpg" alt="ISO 27001" width={CERT_BOX} height={CERT_BOX} />
+            <Image src="/img/iso.jpg" alt={c.certs.retention.alt} width={CERT_BOX} height={CERT_BOX} />
             <div>
-              <div className="h">Documents deleted on schedule</div>
-              <p className="p">ISO 27001 certified storage, encrypted, with retention limits — not kept forever.</p>
+              <div className="h">{c.certs.retention.h}</div>
+              <p className="p">{c.certs.retention.p}</p>
             </div>
           </div>
         </div>
