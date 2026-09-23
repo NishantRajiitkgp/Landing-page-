@@ -25,21 +25,31 @@
  *  `lib/seo/schema/faq.ts` for why that restriction is the point.
  */
 import { JsonLd } from "@/components/seo/JsonLd";
+import { CHROME } from "@/lib/copy/chrome";
+import { copy } from "@/lib/copy/request";
 import { faqPage, type Faq } from "@/lib/seo/schema/faq";
 
-export function FaqSection({
+/** ONLY THE EYEBROW IS IN `lib/copy/chrome`. The questions and answers are
+ *  `Faq` records the fifteen calling pages own, and they are page copy: they
+ *  belong to whichever `app/[locale]/**` namespace takes that route subtree,
+ *  not to `chrome`. Moving them here would put fifteen pages' editorial in
+ *  the component directory's dictionary and give one translator the whole
+ *  site. */
+export async function FaqSection({
   head,
   faqs,
 }: {
   head: React.ReactNode;
   faqs: readonly Faq[];
 }) {
+  const t = (await copy(CHROME)).faq;
+
   return (
     <>
       <div className="wrap sec3" style={{ paddingBottom: 30 }}>
         <div className="sec-head" style={{ marginBottom: 44 }}>
           <div>
-            <div className="k">Questions</div>
+            <div className="k">{t.kicker}</div>
             <h2 className="h2" style={{ marginTop: 12 }}>{head}</h2>
           </div>
         </div>
