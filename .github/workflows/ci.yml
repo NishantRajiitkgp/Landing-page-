@@ -78,7 +78,7 @@ jobs:
       # latency regression months later. The Proxy/middleware line is expected
       # and is excluded by matching the route-table marker specifically.
       - name: Assert zero dynamic routes
-        run: node tools/ci/assert-static.mjs
+        run: npm run check:static
 
       # The four build-output gates: sitemap/canonical/hreflang, the JSON-LD
       # graph, llms.txt, the §9.1 performance budgets, and the client-bundle
@@ -181,6 +181,10 @@ jobs:
   # declares `en` only, so there is no second locale to switch to or mirror.
   todo:
     runs-on: ubuntu-latest
+    # No checkout here, so the workflow-level helloverify-web directory does not exist.
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: Not yet implemented
         run: |
