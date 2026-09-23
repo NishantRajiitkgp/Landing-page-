@@ -7,6 +7,8 @@ import Image from "next/image";
 import { SIZES_FULL } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { RESOURCES } from "@/lib/copy/resources";
+import { copy } from "@/lib/copy/request";
 
 export async function generateMetadata({
   params,
@@ -27,38 +29,33 @@ export default async function BlogIndex({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(RESOURCES);
+  const c = t.blog;
 
   const [lead, ...rest] = POSTS;
   return (
     <PageShell
-      crumbs={[{ label: "Resources", href: "/resources" }, { label: "Blog" }]}
+      crumbs={[{ label: t.crumb, href: "/resources" }, { label: c.crumb }]}
       closing={{
-        heading: (
-          <>
-            Something you want <em>written about?</em>
-          </>
-        ),
-        sub: "We write what people actually ask us in sales calls.",
+        heading: c.closing.heading,
+        sub: c.closing.sub,
       }}
     >
       <div className="wrap hero3">
-        <div className="k">Resources · Blog</div>
-        <h1 className="h1">
-          Written by people who <em>run the checks.</em>
-        </h1>
-        <p className="sub">
-          Occasional and specific. No thought leadership, no listicles about the future of hiring —
-          just the things we end up explaining twice a week anyway.
-        </p>
+        <div className="k">{c.hero.k}</div>
+        <h1 className="h1">{c.hero.h1}</h1>
+        <p className="sub">{c.hero.sub}</p>
       </div>
 
-      {/* lead post */}
+      {/* lead post — every word inside it is `lib/content/posts.ts`, which is a
+          catalogue and not copy (see `lib/copy/resources.en.tsx`). The only
+          leaf here is the connective " min read" beside `lead.readMins`. */}
       <div className="wrap sec3" style={{ paddingTop: 64 }}>
         <AppLink href={`/resources/blog/${lead.slug}`} className="cell ph" style={{ display: "block", minHeight: 380 }}>
           <Image className="pimg" src="/img/09-licensing-officer.jpg" alt="" fill sizes={SIZES_FULL} priority />
           <div className="scrim" />
           <span className="tag">{lead.category}</span>
-          <span className="from">{lead.readMins} min read</span>
+          <span className="from">{c.readMins(lead.readMins)}</span>
           <div className="body">
             <div className="h">{lead.title}</div>
             <div className="p">{lead.standfirst}</div>
@@ -69,7 +66,7 @@ export default async function BlogIndex({
       {/* the rest */}
       <div className="wrap sec3" style={{ paddingTop: 72, paddingBottom: 20 }}>
         <div className="k" style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          More writing
+          {c.more}
           <span style={{ flex: 1, height: 1, background: "var(--hair)" }} />
         </div>
         <div className="idx3" style={{ marginTop: 18 }}>
@@ -79,7 +76,7 @@ export default async function BlogIndex({
                 {p.title}
                 <small>{p.standfirst}</small>
               </span>
-              <span className="xt">{p.readMins} min</span>
+              <span className="xt">{t.row.min(p.readMins)}</span>
               <span className="xs">{formatDate(p.date)}</span>
               <span className="xa">→</span>
             </AppLink>

@@ -7,6 +7,11 @@ import { PageShell } from "@/components/chrome/PageShell";
 import { CHECKS, getCheck } from "@/lib/content/checks";
 import { AppLink } from "@/components/chrome/AppLink";
 import { SecHead } from "@/components/chrome/SecHead";
+/** `CHECKS_COPY`, not `CHECKS`: the catalogue above already owns that name in
+ *  this file, and the two are deliberately different things — see the
+ *  boundary note in `lib/copy/checks.en.tsx`. */
+import { CHECKS_COPY } from "@/lib/copy/checks";
+import { copy } from "@/lib/copy/request";
 
 export function generateStaticParams() {
   return CHECKS.map((c) => ({ check: c.slug }));
@@ -38,47 +43,41 @@ export default async function CheckPage({
   if (!c) notFound();
 
   const related = CHECKS.filter((x) => x.group === c.group && x.slug !== c.slug).slice(0, 4);
+  const t = await copy(CHECKS_COPY);
 
   return (
     <PageShell
       crumbs={[
-        { label: "Resources", href: "/resources" },
-        { label: "Check library", href: "/resources/checks" },
+        { label: t.crumbs.resources, href: "/resources" },
+        { label: t.crumbs.library, href: "/resources/checks" },
         { label: c.name },
       ]}
       closing={{
-        heading: (
-          <>
-            {/* "the", and the name verbatim. This read "Run a
-                {c.name.toLowerCase()} check" on all twelve pages until
-                `tools/test/answer-blocks.test.ts` was written and failed on
-                it — "Run a identity check" and "Run a directors & gst check".
-                Pre-existing, and found by a test written for the answer
-                blocks rather than by reading the pages again. */}
-            Run the {c.name} check <em>this week.</em>
-          </>
-        ),
-        sub: `Confirmed with ${c.source}, typically in ${c.time}.`,
+        /* "the", and the name verbatim — the note that was a JSX comment
+           inside this fragment moved with the fragment, to
+           `lib/copy/checks.en.tsx#closing.heading`. */
+        heading: t.closing.heading(c.name),
+        sub: t.closing.sub(c.source, c.time),
       }}
     >
       {/* hero */}
       <div className="wrap hero3">
-        <div className="k">Check · {c.group}</div>
-        <h1 className="h1">{c.name} verification</h1>
+        <div className="k">{t.hero.kicker(c.group)}</div>
+        <h1 className="h1">{t.hero.h1(c.name)}</h1>
         <p className="sub">{c.answers}</p>
         <div className="hrow">
-          <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
-          <a href="https://app.helloverify.com" className="btn btn-line">Buy a single check</a>
+          <AppLink href="/contact" className="btn btn-ink">{t.hero.talkToSales}</AppLink>
+          <a href="https://app.helloverify.com" className="btn btn-line">{t.hero.buy}</a>
         </div>
       </div>
 
       {/* verdict strip — the facts, up top */}
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>{c.time}</b> typical turnaround</span>
-          <span className="it">confirmed with <b>{c.source}</b></span>
+          <span className="it">{t.strip.turnaround(c.time)}</span>
+          <span className="it">{t.strip.confirmedWith(c.source)}</span>
           <span className="it"><b>{c.countries}</b></span>
-          {c.fast && <span className="it"><span className="dot" /> usually within the hour</span>}
+          {c.fast && <span className="it">{t.strip.fast}</span>}
         </div>
       </div>
 
@@ -114,23 +113,18 @@ export default async function CheckPage({
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">In short</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>
-              How long does {c.name} verification take?
-            </h2>
+            <div className="k">{t.answer.kicker}</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>{t.answer.h2(c.name)}</h2>
           </div>
           <p className="lede" style={{ marginBottom: 8 }}>
-            {c.name} is confirmed against {c.source}, with a typical turnaround of {c.time}.
-            {" "}Coverage: {c.countries}. {c.answers}
+            {t.answer.lede(c.name, c.source, c.time, c.countries, c.answers)}
           </p>
         </div>
       </div>
 
       {/* what you get */}
       <div className="wrap sec3">
-        <SecHead k="What comes back" h={`What is in the ${c.name} report?`}>
-          Every field carries the source that confirmed it and the date it was confirmed.
-        </SecHead>
+        <SecHead k={t.fields.kicker} h={t.fields.h(c.name)}>{t.fields.lede}</SecHead>
         <div className="body3 cloud3">
           {c.fields.map((f) => (
             <span className={`pl3${c.fast ? " fast" : ""}`} key={f}>
@@ -145,19 +139,13 @@ export default async function CheckPage({
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">What it can't tell you</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>
-              What can the {c.name} check not confirm?
-            </h2>
+            <div className="k">{t.caveat.kicker}</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>{t.caveat.h2(c.name)}</h2>
           </div>
         </div>
         <div className="body3 prose3">
           <p>{c.caveat}</p>
-          <div className="aside">
-            A result is one of three things, never a score: <em>verified</em> — the source confirmed
-            it; <em>not verified</em> — the source has no such record; <em>unverifiable</em> — the
-            source could not be reached, and the report names the route tried.
-          </div>
+          <div className="aside">{t.caveat.aside}</div>
         </div>
       </div>
 
@@ -165,8 +153,8 @@ export default async function CheckPage({
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">Who orders it</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>Who needs this check?</h2>
+            <div className="k">{t.who.kicker}</div>
+            <h2 className="h2" style={{ marginTop: 12 }}>{t.who.h2}</h2>
           </div>
         </div>
         <div className="body3 intg3">
@@ -181,10 +169,8 @@ export default async function CheckPage({
         <div className="wrap sec3" style={{ paddingBottom: 20 }}>
           <div className="sec-head">
             <div>
-              <div className="k">Related</div>
-              <h2 className="h2" style={{ marginTop: 12 }}>
-                Which checks are usually ordered with it?
-              </h2>
+              <div className="k">{t.related.kicker}</div>
+              <h2 className="h2" style={{ marginTop: 12 }}>{t.related.h2}</h2>
             </div>
           </div>
           <div className="body3 idx3">
@@ -201,7 +187,7 @@ export default async function CheckPage({
             ))}
           </div>
           <div style={{ marginTop: 32 }}>
-            <AppLink href="/resources/checks" className="btn btn-line btn-sm">The whole check library</AppLink>
+            <AppLink href="/resources/checks" className="btn btn-line btn-sm">{t.related.all}</AppLink>
           </div>
         </div>
       )}

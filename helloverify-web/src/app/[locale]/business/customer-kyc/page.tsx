@@ -6,7 +6,6 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { FaqSection } from "@/components/chrome/FaqSection";
-import type { Faq } from "@/lib/seo/schema/faq";
 import Image from "next/image";
 import { CERT_BOX } from "@/lib/img";
 import { CertCard } from "@/components/chrome/CertCard";
@@ -15,6 +14,8 @@ import { setRequestLocale } from "next-intl/server";
 import { SecHead } from "@/components/chrome/SecHead";
 import { Arrow } from "@/components/brand/Arrow";
 import { Steps } from "@/components/chrome/Steps";
+import { BUSINESS } from "@/lib/copy/business";
+import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
@@ -30,32 +31,6 @@ export async function generateMetadata({
   const { locale } = await params;
   return pageMetadata(locale, PATH);
 }
-
-/** The FAQ copy, stated once. `<FaqSection>` renders it and emits the
- *  matching `FAQPage` node from the same array — Google requires the two to
- *  say the same words (BUILD-SPEC §8.2, and `lib/seo/schema/faq.ts`). */
-const FAQS: Faq[] = [
-  {
-    q: "How much friction does this add to signup?",
-    a:
-      "The capture flow takes under a minute on a phone, and identity verdicts return in minutes. Most platforms gate features, not signup — the account exists immediately, the risky action waits for the verdict.",
-  },
-  {
-    q: "Can we tier the checks by risk?",
-    a:
-      "Yes — per API call. A buyer might get identity only; a seller adds criminal and global database; a high-value partner adds trade licence and directors. One integration, any mix.",
-  },
-  {
-    q: "What do we store, and what do you store?",
-    a:
-      "You receive the verdict and the fields you asked for. Documents stay in HelloVerify's encrypted store on the retention schedule in the DPA — or zero-retention if you bring your own storage.",
-  },
-  {
-    q: "Does this work outside India?",
-    a:
-      "Yes — 120+ countries through the same API, with the check running in the country that issued the document. See global coverage for the country-by-country picture.",
-  },
-];
 
 /** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
  *  `description` is this page's own reviewed description, read from the copy
@@ -79,32 +54,22 @@ export default async function CustomerKycPage({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  const t = await copy(BUSINESS);
+  const c = t.customerKyc;
 
   return (
     <PageShell
-      crumbs={[{ label: "Business", href: "/business" }, { label: "Customer KYC" }]}
-      closing={{
-        heading: (
-          <>
-            Trust at signup, <em>not after the loss.</em>
-          </>
-        ),
-        sub: "One API call between a stranger and a customer.",
-      }}
+      crumbs={[{ label: t.crumb, href: "/business" }, { label: c.crumb }]}
+      closing={{ heading: c.closing.heading, sub: c.closing.sub }}
     >
       <div className="wrap hero3">
-        <div className="k">Business · Trust &amp; safety</div>
-        <h1 className="h1">
-          Customers, verified <em>at signup.</em>
-        </h1>
-        <p className="sub">
-          Marketplaces, rentals, lending, care platforms — verify the person behind the account
-          before the first transaction, not after the first complaint.
-        </p>
+        <div className="k">{c.hero.k}</div>
+        <h1 className="h1">{c.hero.h1}</h1>
+        <p className="sub">{c.hero.sub}</p>
         <div className="hrow">
-          <AppLink href="/contact" className="btn btn-ink">Talk to sales</AppLink>
+          <AppLink href="/contact" className="btn btn-ink">{c.hero.cta}</AppLink>
           <AppLink href="/platform/technology" className="btn btn-ghost">
-            <span>See the API</span>
+            <span>{c.hero.api}</span>
             <Arrow />
           </AppLink>
         </div>
@@ -112,10 +77,10 @@ export default async function CustomerKycPage({
 
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>15 min</b> identity check</span>
-          <span className="it"><b>In-flow</b> — API or hosted page</span>
-          <span className="it"><b>120+</b> countries, same pipeline</span>
-          <span className="it"><span className="dot" /> consent-first, GDPR-clean</span>
+          <span className="it">{c.strip.identity}</span>
+          <span className="it">{c.strip.inFlow}</span>
+          <span className="it">{c.strip.countries}</span>
+          <span className="it">{c.strip.consent}</span>
         </div>
       </div>
 
@@ -129,32 +94,31 @@ export default async function CustomerKycPage({
             The selfie match keeps its own clause — the chip says "seconds",
             not 15 minutes, and folding it into the identity group would
             overstate the group or understate the match. */}
-        <SecHead k="What we verify" h="What does customer KYC verify at signup?">
-          HelloVerify's customer KYC confirms the person first — identity, PAN and age in 15
-          minutes, a selfie-to-face match in seconds — then screens the record: global
-          database and credit in 15 minutes, criminal in 30, trade licence in two days. Depth
-          is set per signup tier.
+        <SecHead k={c.whatWeVerify.k} h={c.whatWeVerify.h}>
+          {c.whatWeVerify.lede}
         </SecHead>
         <div className="body3 lanes3" style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
           <div>
-            <div className="lgt">01 — Identity</div>
-            <div className="lgh">Are they who they claim?</div>
+            <div className="lgt">{c.lanes.identity.lgt}</div>
+            <div className="lgh">{c.lanes.identity.lgh}</div>
+            {/* Each chip keeps its three children — the `.d` dot, the name,
+                the `.t` time — so these are two text-node swaps apiece. */}
             <div className="cloud3">
-              <span className="pl3 fast"><span className="d" />Identity<span className="t">15 min</span></span>
-              <span className="pl3 fast"><span className="d" />PAN<span className="t">15 min</span></span>
-              <span className="pl3 fast"><span className="d" />Face vs. selfie<span className="t">seconds</span></span>
-              <span className="pl3 fast"><span className="d" />Age<span className="t">15 min</span></span>
-              <span className="pl3 fast"><span className="d" />Current address<span className="t">30 min</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.identity.n}<span className="t">{c.chips.identity.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.pan.n}<span className="t">{c.chips.pan.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.face.n}<span className="t">{c.chips.face.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.age.n}<span className="t">{c.chips.age.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.currentAddress.n}<span className="t">{c.chips.currentAddress.t}</span></span>
             </div>
           </div>
           <div>
-            <div className="lgt">02 — Risk</div>
-            <div className="lgh">Should they be here?</div>
+            <div className="lgt">{c.lanes.risk.lgt}</div>
+            <div className="lgh">{c.lanes.risk.lgh}</div>
             <div className="cloud3">
-              <span className="pl3 fast"><span className="d" />Global database<span className="t">15 min</span></span>
-              <span className="pl3 fast"><span className="d" />Criminal<span className="t">30 min</span></span>
-              <span className="pl3 fast"><span className="d" />Credit<span className="t">15 min</span></span>
-              <span className="pl3"><span className="d" />Trade licence<span className="t">2 days</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.globalDatabase.n}<span className="t">{c.chips.globalDatabase.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.criminal.n}<span className="t">{c.chips.criminal.t}</span></span>
+              <span className="pl3 fast"><span className="d" />{c.chips.credit.n}<span className="t">{c.chips.credit.t}</span></span>
+              <span className="pl3"><span className="d" />{c.chips.tradeLicence.n}<span className="t">{c.chips.tradeLicence.t}</span></span>
             </div>
           </div>
         </div>
@@ -164,11 +128,8 @@ export default async function CustomerKycPage({
       <div className="wrap sec3">
         {/* ANSWER BLOCK (§11a.2). 44 words, from the three `Steps` records
             below and this band's own three verdicts. */}
-        <SecHead k="In your flow" h="How does KYC verification fit into our signup flow?">
-          Customer KYC reaches HelloVerify three ways: an API call from your own UI, a
-          HelloVerify-hosted capture page, or a WhatsApp link for sellers and partners who
-          sign up by phone. Each returns one webhook — verified, failed, or needs a human —
-          with the evidence attached.
+        <SecHead k={c.inFlow.k} h={c.inFlow.h}>
+          {c.inFlow.lede}
         </SecHead>
         {/* NO `name`, so NO HowTo (§17 condition 18). These three cards are
             mutually exclusive routes, not steps: the strip says so itself —
@@ -178,13 +139,7 @@ export default async function CustomerKycPage({
             of three as a sequence of three would tell an engine to do all
             three in order. Carried in `check-schema.mjs`'s
             HOWTO_NOT_A_SEQUENCE. */}
-        <Steps
-          items={[
-          { n: "01 · Embed", t: "API", p: "Your UI, our pipeline. Send the document image, get structured fields and a verdict back." },
-          { n: "02 · Or redirect", t: "Hosted flow", p: "A HelloVerify-hosted capture page in your colours — consent, capture and quality checks handled." },
-          { n: "03 · Or async", t: "WhatsApp", p: "For sellers and partners who sign up by phone — the same link flow candidates use." },
-          ]}
-        />
+        <Steps items={[c.steps.api, c.steps.hosted, c.steps.whatsapp]} />
       </div>
 
       {/* privacy stance */}
@@ -193,11 +148,8 @@ export default async function CustomerKycPage({
             plus the FAQ above them, which is where the DPA retention schedule
             and the zero-retention option are already stated in reviewed copy —
             this restates neither figure, it collects them. */}
-        <SecHead k="Compliance &amp; privacy" h="How does HelloVerify handle customer KYC data?">
-          A HelloVerify KYC check begins with the customer's consent, before any capture, with
-          scope and retention stated in plain language. Documents are encrypted in transit and
-          at rest, deleted on the DPA's retention schedule, and stored nowhere if you bring
-          your own storage.
+        <SecHead k={c.compliance.k} h={c.compliance.h}>
+          {c.compliance.lede}
         </SecHead>
         <div className="body3 certs3">
           {/* NOT A CREDENTIAL CARD, and deliberately left hand-written. It is
@@ -215,10 +167,10 @@ export default async function CustomerKycPage({
               one of them, so this is a per-card judgement and not a per-file
               one. */}
           <div className="cert">
-            <Image src="/img/gdpr.jpg" alt="GDPR" width={CERT_BOX} height={CERT_BOX} />
+            <Image src="/img/gdpr.jpg" alt={c.stance.alt} width={CERT_BOX} height={CERT_BOX} />
             <div>
-              <div className="h">Consent first, always</div>
-              <p className="p">The customer consents before capture; scope and retention are stated in plain language.</p>
+              <div className="h">{c.stance.h}</div>
+              <p className="p">{c.stance.p}</p>
             </div>
           </div>
           {/* This one IS a credential card — heading "ISO 27001 certified",
@@ -226,21 +178,25 @@ export default async function CustomerKycPage({
               gloss of its own: on this page the ISO logo is carrying the
               encryption-and-deletion promise the answer block above states,
               not the generic audit line. */}
-          <CertCard
-            id="iso27001"
-            gloss="Documents encrypted in transit and at rest; deletion on schedule, verifiable on request."
-          />
+          <CertCard id="iso27001" gloss={c.isoGloss} />
         </div>
         <div style={{ marginTop: 32 }}>
           <AppLink href="/platform/security-compliance" className="btn btn-ghost btn-sm">
-            <span>Security &amp; compliance, in full</span>
+            <span>{c.securityInFull}</span>
             <Arrow />
           </AppLink>
         </div>
       </div>
 
-      {/* FAQ — markup and FAQPage node both from FAQS (see FaqSection). */}
-      <FaqSection head={<>From trust &amp;<br />safety teams.</>} faqs={FAQS} />
+      {/* FAQ — markup and FAQPage node both from the same records (see
+          FaqSection). The `head` leaf keeps its `&amp;` VERBATIM: in a JSX
+          leaf the entity is decoded by JSX exactly as it was here, so copying
+          the markup is what preserves the byte. It is only a STRING leaf that
+          must spell the bare `&` — see `lib/copy/index.ts`. */}
+      <FaqSection
+        head={c.faqHead}
+        faqs={[c.faqs.friction, c.faqs.tiering, c.faqs.storage, c.faqs.international]}
+      />
 
       <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>

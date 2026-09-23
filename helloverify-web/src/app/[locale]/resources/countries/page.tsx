@@ -5,6 +5,8 @@ import { PageShell } from "@/components/chrome/PageShell";
 import { COUNTRIES, REGIONS } from "@/lib/content/countries";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
+import { RESOURCES } from "@/lib/copy/resources";
+import { copy } from "@/lib/copy/request";
 
 export async function generateMetadata({
   params,
@@ -25,36 +27,33 @@ export default async function CountriesIndex({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
+  /** Only the shell. The region headings and every row — name, summary,
+   *  turnaround, office — are `lib/content/countries.ts`, which is a
+   *  catalogue and not copy; see `lib/copy/resources.en.tsx`. `d`, not `c`:
+   *  the two `.map()`s below already bind `c` to a country record. */
+  const t = await copy(RESOURCES);
+  const d = t.countries;
 
   return (
     <PageShell
-      crumbs={[{ label: "Resources", href: "/resources" }, { label: "Country guides" }]}
+      crumbs={[{ label: t.crumb, href: "/resources" }, { label: d.crumb }]}
       closing={{
-        heading: (
-          <>
-            Your country <em>not here yet?</em>
-          </>
-        ),
-        sub: "We reach 120+. Ask about yours and we'll tell you what's genuinely possible.",
+        heading: d.closing.heading,
+        sub: d.closing.sub,
       }}
     >
       <div className="wrap hero3">
-        <div className="k">Resources · Country guides</div>
-        <h1 className="h1">
-          Verification is <em>local.</em>
-        </h1>
-        <p className="sub">
-          A document is only properly verified where it was issued — so the process, the timeline
-          and the pitfalls change with the border. These are the countries we have written up so far.
-        </p>
+        <div className="k">{d.hero.k}</div>
+        <h1 className="h1">{d.hero.h1}</h1>
+        <p className="sub">{d.hero.sub}</p>
       </div>
 
       <div className="wrap">
         <div className="strip3">
-          <span className="it"><b>120+</b> countries reachable</span>
-          <span className="it"><b>{COUNTRIES.length}</b> guides written</span>
-          <span className="it"><b>6</b> offices</span>
-          <span className="it"><span className="dot" /> in-country, in language</span>
+          <span className="it">{d.strip.reachable}</span>
+          <span className="it">{d.strip.written(COUNTRIES.length)}</span>
+          <span className="it">{d.strip.offices}</span>
+          <span className="it">{d.strip.inCountry}</span>
         </div>
       </div>
 
@@ -72,10 +71,16 @@ export default async function CountriesIndex({
                 <AppLink className="x3" href={`/countries/${c.slug}`} key={c.slug}>
                   <span className="xn">
                     {c.name}
+                    {/* The catalogue value with its full stop re-attached, left
+                        in the page for the reason `lib/copy/countries.en.tsx`
+                        gives on the country page that does the same: a
+                        terminal full stop on a value the dictionary does not
+                        own is punctuation, and the alternative is a leaf whose
+                        entire content is ".". */}
                     <small>{c.summary.split(".")[0]}.</small>
                   </span>
                   <span className="xt">{c.turnaround}</span>
-                  <span className="xs">{c.office ? `office in ${c.office}` : "partner network"}</span>
+                  <span className="xs">{c.office ? d.officeIn(c.office) : d.partnerNetwork}</span>
                   <span className="xa">→</span>
                 </AppLink>
               ))}
@@ -86,9 +91,8 @@ export default async function CountriesIndex({
 
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
         <div className="pricenote">
-          Guides are written where we have something specific to say · the remaining countries are
-          listed with indicative times on{" "}
-          <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>global coverage</AppLink>
+          {d.note}{" "}
+          <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>{d.globalCoverage}</AppLink>
         </div>
       </div>
     </PageShell>

@@ -9,6 +9,8 @@ import Image from "next/image";
 import { SIZES_SIDE } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { SecHead } from "@/components/chrome/SecHead";
+import { CONTACT } from "@/lib/copy/contact";
+import { copy } from "@/lib/copy/request";
 
 export async function generateMetadata({
   params,
@@ -25,30 +27,22 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const t = await copy(CONTACT);
 
   return (
     <PageShell
-      crumbs={[{ label: "Contact" }]}
+      crumbs={[{ label: t.crumb }]}
       closing={{
-        heading: (
-          <>
-            Prefer to just <em>see it working?</em>
-          </>
-        ),
-        sub: "Ask for a walkthrough with your own sample documents.",
-        ctaLabel: "Request a walkthrough",
+        heading: t.closing.heading,
+        sub: t.closing.sub,
+        ctaLabel: t.closing.ctaLabel,
         img: "/img/11-office-first-day.jpg",
       }}
     >
       <div className="wrap hero3">
-        <div className="k">Contact</div>
-        <h1 className="h1">
-          Talk to a person <em>who runs checks.</em>
-        </h1>
-        <p className="sub">
-          Not a queue. Tell us what you need verified, for whom, and roughly how many — you will
-          get a real answer, including when the honest answer is that something takes days.
-        </p>
+        <div className="k">{t.hero.kicker}</div>
+        <h1 className="h1">{t.hero.h1}</h1>
+        <p className="sub">{t.hero.sub}</p>
       </div>
 
       {/* the form */}
@@ -58,10 +52,8 @@ export default async function ContactPage({
             <Image className="pimg" src="/img/23-closing.jpg" alt="" fill sizes={SIZES_SIDE} priority />
             <div className="scrim" />
             <div className="body">
-              <div className="h">
-                Every great journey deserves a <em>verified</em> beginning.
-              </div>
-              <p className="p">Take the first step. We&apos;ll handle the rest.</p>
+              <div className="h">{t.side.h}</div>
+              <p className="p">{t.side.p}</p>
             </div>
           </div>
 
@@ -71,61 +63,55 @@ export default async function ContactPage({
 
       {/* other routes in */}
       <div className="wrap sec3">
-        <SecHead k="Other ways in" h={<>Depending on<br />who you are.</>}>
-          Sales, support, security reviews and individual purchases go to different places —
-          here is which is which.
-        </SecHead>
+        <SecHead k={t.ways.kicker} h={t.ways.heading}>{t.ways.lede}</SecHead>
         <div className="body3 art3">
           <div className="a3">
             <div>
-              <div className="t3">Buying a single check as an individual</div>
-              <p className="p3">You don&apos;t need us at all — HelloV runs in WhatsApp and takes about a minute to start.</p>
+              <div className="t3">{t.ways.rows.individual.t}</div>
+              <p className="p3">{t.ways.rows.individual.p}</p>
             </div>
             <span className="s3">
-              <AppLink href="/individuals/hellov" style={{ color: "inherit" }}>HelloV →</AppLink>
+              <AppLink href="/individuals/hellov" style={{ color: "inherit" }}>{t.ways.rows.individual.link}</AppLink>
             </span>
           </div>
           <div className="a3">
             <div>
-              <div className="t3">Small business, ready to buy</div>
-              <p className="p3">Prices are public and you can start without talking to anyone.</p>
+              <div className="t3">{t.ways.rows.smb.t}</div>
+              <p className="p3">{t.ways.rows.smb.p}</p>
             </div>
             <span className="s3">
-              <AppLink href="/business/smb" style={{ color: "inherit" }}>SMB packages →</AppLink>
+              <AppLink href="/business/smb" style={{ color: "inherit" }}>{t.ways.rows.smb.link}</AppLink>
             </span>
           </div>
           <div className="a3">
             <div>
-              <div className="t3">Security review, DPA or questionnaire</div>
-              <p className="p3">Artefacts are listed with their status; most are sent within two working days.</p>
+              <div className="t3">{t.ways.rows.security.t}</div>
+              <p className="p3">{t.ways.rows.security.p}</p>
             </div>
             <span className="s3">
-              <AppLink href="/platform/security-compliance" style={{ color: "inherit" }}>Compliance pack →</AppLink>
+              <AppLink href="/platform/security-compliance" style={{ color: "inherit" }}>{t.ways.rows.security.link}</AppLink>
             </span>
           </div>
           <div className="a3">
             <div>
-              <div className="t3">Existing customer needing support</div>
-              <p className="p3">Use the form above and pick your service — support enquiries are routed, not queued behind sales.</p>
+              <div className="t3">{t.ways.rows.support.t}</div>
+              <p className="p3">{t.ways.rows.support.p}</p>
             </div>
-            <span className="s3 req">Same working day</span>
+            <span className="s3 req">{t.ways.rows.support.link}</span>
           </div>
         </div>
       </div>
 
       {/* offices */}
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <SecHead k="Offices" h={<>Six of them,<br />twelve hours apart.</>}>
-          Someone is at a desk for 21 of every 24 hours, which is why a request filed at night is
-          usually answered by morning somewhere.
-        </SecHead>
+        <SecHead k={t.offices.kicker} h={t.offices.heading}>{t.offices.lede}</SecHead>
         <div className="body3 offices3">
-          <div className="o"><b>Noida</b><span>India · 09–18 IST<br />Head office</span></div>
-          <div className="o"><b>Manila</b><span>Philippines · 09–18 PHT</span></div>
-          <div className="o"><b>Singapore</b><span>Singapore · 09–18 SGT</span></div>
-          <div className="o"><b>Dubai</b><span>UAE · 09–18 GST</span></div>
-          <div className="o"><b>Cairo</b><span>Egypt · 09–18 EET</span></div>
-          <div className="o"><b>New York</b><span>United States · 09–18 ET</span></div>
+          <div className="o"><b>{t.offices.list.noida.city}</b><span>{t.offices.list.noida.hours}</span></div>
+          <div className="o"><b>{t.offices.list.manila.city}</b><span>{t.offices.list.manila.hours}</span></div>
+          <div className="o"><b>{t.offices.list.singapore.city}</b><span>{t.offices.list.singapore.hours}</span></div>
+          <div className="o"><b>{t.offices.list.dubai.city}</b><span>{t.offices.list.dubai.hours}</span></div>
+          <div className="o"><b>{t.offices.list.cairo.city}</b><span>{t.offices.list.cairo.hours}</span></div>
+          <div className="o"><b>{t.offices.list.newYork.city}</b><span>{t.offices.list.newYork.hours}</span></div>
         </div>
       </div>
     </PageShell>
