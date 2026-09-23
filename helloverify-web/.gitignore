@@ -43,6 +43,17 @@ next-env.d.ts
 # ...except the documented contract, which is not a secret.
 !.env.example
 
+# Python bytecode from tools/port/*.py. The scripts are run directly, so this
+# only appears when one is imported or byte-compiled - which happened on
+# 22 Sep and produced two untracked .pyc a commit would have swept up.
+#
+# NOTE: four .pyc are ALREADY TRACKED in tools/port/__pycache__ (extract,
+# h2jsx, imgprops, mkcomp) from an earlier commit. This rule does not untrack
+# them - `git rm --cached` would, and that is a deliberate deletion for the
+# owner to make, not a side effect of an ignore rule.
+__pycache__/
+*.pyc
+
 # Playwright
 /test-results/
 /playwright-report/

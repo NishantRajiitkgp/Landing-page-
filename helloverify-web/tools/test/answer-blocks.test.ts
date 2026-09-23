@@ -66,10 +66,21 @@ for (const c of CHECKS) {
  *  is fine, the template was wrong — and a check that cannot fail is worse than
  *  no check. These read the template and fail if either mistake comes back.
  */
-const PAGE_SOURCE = readFileSync(
-  new URL("../../src/app/[locale]/checks/[check]/page.tsx", import.meta.url),
-  "utf8",
-);
+/** TWO FILES SINCE THE COPY LAYER, and this is a repair rather than an
+ *  extension. Both sentences these assertions police — "Run the {name} check"
+ *  and the answer block's lede — moved out of the page and into
+ *  `lib/copy/checks.en.tsx` when `app/[locale]/checks/**` was migrated. The
+ *  assertions kept passing, which is the dangerous kind of passing: the
+ *  strings they look for were no longer in the file they read, so a
+ *  reintroduced `a ${name}` in the dictionary would have gone unnoticed.
+ *  Found by asking what the guard still asserts after the move rather than by
+ *  it turning red; re-broken below against both files. */
+const PAGE_SOURCE = [
+  "../../src/app/[locale]/checks/[check]/page.tsx",
+  "../../src/lib/copy/checks.en.tsx",
+]
+  .map((p) => readFileSync(new URL(p, import.meta.url), "utf8"))
+  .join("\n");
 
 /** Comments stripped before matching. Without this the assertions below fail
  *  on the comments that DOCUMENT the bugs they look for, which is a test that
@@ -81,10 +92,13 @@ const PAGE = PAGE_SOURCE.split("\n")
   .replace(/\{\/\*[\s\S]*?\*\/\}/g, "")
   .replace(/\/\*[\s\S]*?\*\//g, "");
 
+/** `name.toLowerCase()`, not `c.name.toLowerCase()`: the dictionary leaf takes
+ *  the name as a parameter called `name`, so the page's spelling is only one
+ *  of the two the mistake can now wear. The shorter substring catches both. */
 check(
   "the template never lower-cases the check name",
-  !PAGE.includes("c.name.toLowerCase()"),
-  "c.name.toLowerCase() would render \"directors & gst\"",
+  !PAGE.includes("name.toLowerCase()"),
+  "name.toLowerCase() would render \"directors & gst\"",
 );
 
 check(
@@ -99,8 +113,24 @@ check(
    *
    * Substring checks have nothing to escape and nothing for a transform or
    * a shell to corrupt. Both assertions were re-broken afterwards. */
-  !PAGE.includes("a ${c.name}") && !PAGE.includes("a {c.name}"),
+  /* Four spellings since the move, not two: the leaf's parameter is `name`,
+   * so `a {name}` in the dictionary is the same bug as `a {c.name}` was in
+   * the page. All four are substrings for the reason above. */
+  !PAGE.includes("a ${c.name}") &&
+    !PAGE.includes("a {c.name}") &&
+    !PAGE.includes("a ${name}") &&
+    !PAGE.includes("a {name}"),
   "\"a Identity check\" is wrong on three of the twelve",
+);
+
+/** THE MOVE ITSELF, held by an assertion so the repair above cannot quietly
+ *  come undone. If the two sentences ever leave `checks.en.tsx` — folded back
+ *  into the page, or into a third module — the substring guards go vacuous
+ *  again in silence. This one goes red instead, and names the file to add. */
+check(
+  "the two policed sentences are still in the sources this test reads",
+  PAGE.includes("Run the {name} check") && PAGE.includes("Coverage: {countries}."),
+  { page: PAGE.length },
 );
 
 /** Names that would break an "a/an" article, so the reason for "the" is

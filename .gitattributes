@@ -1,0 +1,115 @@
+# Line endings. TASKS.md Part 11 left this open: "core.autocrlf=true with no
+# .gitattributes means a fresh clone checks out CRLF - and line endings measurably
+# change the emitted HTML here. The fix is `* text=auto eol=lf`; it was not added
+# because it changes checkout behaviour for everyone."
+#
+# It is added now, and this is the measurement that decided it.
+#
+# `git ls-files --eol` over the whole repo, 22 Sep 2026:
+#
+#     202  i/lf    w/lf
+#      53  i/lf    w/crlf
+#      43  i/-text w/-text
+#       5  i/none  w/none     (five empty .svg left over from create-next-app)
+#
+# EVERY text file is ALREADY LF IN THE INDEX. That is the fact that makes this
+# file safe: `text=auto eol=lf` renormalises nothing in history and produces no
+# content diff. It changes only what a checkout writes, which is exactly the
+# defect. The 53 CRLF files are CRLF because this machine has core.autocrlf=true
+# and nothing overrode it; the same commit checked out on the Linux CI agent gets
+# LF for all 53. The emitted HTML is therefore a function of who cloned the repo.
+#
+# The 53, for the record: README.md, design/canvas.json, the ten files in
+# helloverify-web/design-src/artboards/, src/components/sections/Packages.tsx, and
+# 40 files under tools/port/ (six .py and 34 jsx/*.txt).
+#
+# WHY NO SHELL CHECK EVER CAUGHT THIS, which is the part worth carrying forward:
+# on src/components/sections/Packages.tsx - the single CRLF file in src/ - Git Bash
+# `grep -c $'\r'` and `cat -A` both report ZERO carriage returns. Only
+# `git ls-files --eol` and Python opened with newline="" can see them. Every
+# EOL assertion in this repo is shell-based and is therefore blind to this class
+# of problem (TASKS.md "Demo readiness", defect 3).
+#
+# REJECTED: fix Packages.tsx by hand and skip this file. It corrects one file on
+# one machine and leaves the next clone free to reintroduce all 53.
+#
+# WHAT A DEVELOPER SEES after this lands: nothing, until they next check a file
+# out. `git add --renormalize .` is a no-op here because the index is already LF;
+# the 52 files that are CRLF on disk (all but the artboards, pinned below) stay
+# CRLF on disk until a fresh clone or an explicit re-checkout writes them again.
+# They do NOT appear as modified in the meantime, because with `text` set Git
+# normalises CRLF to LF before comparing against the index.
+#
+# Measured, not assumed: `git status --short` was captured with this file present
+# and again with it renamed away, and the two outputs differ by exactly one line
+# - the name of this file in the untracked list. Zero working-tree diffs.
+
+# The default for everything Git decides is text. eol=lf rather than plain
+# `text=auto` because `text=auto` alone defers to core.autocrlf, which is the
+# setting that produced the mess above.
+* text=auto eol=lf
+
+# ── Never normalise these ────────────────────────────────────────────────────
+# `text=auto` already sniffs binaries by content, and it got all 43 right here.
+# They are named anyway: a blanket CRLF rewrite over src/ has already corrupted
+# src/app/favicon.ico and the four .woff2 faces once, and content-sniffing is
+# the kind of heuristic that is right until the day a font begins with printable
+# bytes. The subset faces in src/fonts/ are build inputs for §9.2's font
+# pipeline; a single flipped byte in one is a broken glyph on every page.
+#
+# `binary` is the macro for `-text -diff`, and it WINS over the `* ... eol=lf`
+# above even though `git check-attr eol` still answers "lf" for these paths: the
+# eol attribute is only consulted when `text` is set. Checked rather than
+# trusted - `git ls-files --eol` reports
+#     i/-text w/-text attr/-text    helloverify-web/src/app/favicon.ico
+#     i/-text w/-text attr/-text    helloverify-web/src/fonts/newsreader-roman.woff2
+# and `attr/-text` is Git saying it will not convert them.
+*.ico   binary
+*.woff2 binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.webp  binary
+*.avif  binary
+*.pdf   binary
+*.xlsx  binary
+*.pyc   binary
+
+# ── The design-canvas capture, which is legitimately CRLF ────────────────────
+# helloverify-web/design-src/artboards/ is a verbatim export from the design
+# canvas, and it is a live build input rather than reference material:
+# tools/a11y/check-css-color.mjs and tools/a11y/check-contrast.mjs read it (both
+# are in `npm run check:all`), and tools/port/{extract,build-css,build-sections,
+# logical-css}.py open it directly.
+#
+# Its CRLF pair counts are recorded per board in TASKS.md - 609/603/541/580/509/
+# 440/482/503/453 - and were used as the byte-level evidence that Part 2a's
+# colour-token edit changed one occurrence per file and nothing else. Under
+# `eol=lf` those numbers would be zero on a Linux agent and nine non-zero here,
+# which is the same non-determinism this file exists to remove, pointed the other
+# way. `eol=crlf` makes the recorded state true on every platform including CI.
+#
+# Note this is the CURRENT state of the checkout, not a change: these ten files
+# are already i/lf w/crlf. The index stays LF; only the checkout is pinned.
+#
+# design/ at the repo root is the same kind of capture but is read by nothing
+# (`grep -rn` over tools/ finds zero references), so it takes the LF default -
+# which also settles the one file there that is inconsistent today,
+# design/canvas.json, CRLF beside nine LF siblings.
+helloverify-web/design-src/artboards/** text eol=crlf
+
+# ── Files whose EOL is not ours to choose ────────────────────────────────────
+# A .sh or a Git hook with CRLF fails on Linux with "bad interpreter: no such
+# file or directory", which is a confusing way to learn about line endings. The
+# `*` rule above already covers them; they are pinned explicitly because
+# tools/git-hooks/pre-commit is the one file in this repo whose breakage would be
+# silent in the direction that matters - a hook Git cannot execute does not warn,
+# it simply does not scan.
+*.sh                                text eol=lf
+helloverify-web/tools/git-hooks/*   text eol=lf
+
+# ── Diff behaviour ───────────────────────────────────────────────────────────
+# Lockfile conflicts are resolved by re-running `npm install`, never by hand-
+# merging 445,000 lines. `-diff` keeps it out of review diffs; it stays fully
+# versioned.
+helloverify-web/package-lock.json   -diff linguist-generated=true

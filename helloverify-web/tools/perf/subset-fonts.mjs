@@ -115,6 +115,63 @@ const text = [...chars].sort().join("");
 console.log(`glyph census: ${chars.size} characters across the prerendered pages\n`);
 
 const media = await readdir(new URL(".next/static/media/", root));
+
+/** Refuse when `.next/static/media` holds this script's own OUTPUT.
+ *
+ *  THE PIPELINE REVERSED, and the failure it produced pointed the wrong way.
+ *  This script was written when `layout.tsx` used `next/font/google`, so the
+ *  build emitted the full Google faces into `.next/static/media` and this read
+ *  them, subset them, and wrote `src/fonts/`. §9.3 then moved the layout to
+ *  `next/font/local` reading `src/fonts/` -- so the build now emits copies of
+ *  the SUBSETS into that same directory, under `next/font/local`'s naming
+ *  (`newsreader_roman-s.p.<hash>.woff2`) rather than the content hashes in
+ *  `FACES`. Measured: the four files there are byte-identical to the four in
+ *  `src/fonts/`.
+ *
+ *  The old message read "no source font matching /^d38f3bca7db33566-s\.p\./
+ *  ... Run `npm run build` first, or the font hashes changed." A build had
+ *  been run and no hash had changed, so the only repair it suggested was to
+ *  update the regexes -- and THAT IS THE DESTRUCTIVE ONE. `subsetFont` only
+ *  removes glyphs, so pointing this at the subsets re-subsets them, narrowing
+ *  the face permanently on every run against a census that shrinks whenever
+ *  copy is cut. `check:perf` measures bytes and would call it an improvement.
+ *
+ *  Recovery, which needs the network and is therefore not automated here:
+ *  restore `next/font/google` in `app/[locale]/layout.tsx`, `npm run build` to
+ *  re-download the full faces, run this, then put `next/font/local` back --
+ *  the double build the header above already describes, with an extra step.
+ *  Vendoring the unsubset sources under `design-src/fonts/` would end this for
+ *  good and is the open decision. */
+const subsets = await Promise.all(
+  FACES.map(async (face) => {
+    try {
+      return await readFile(new URL(`src/fonts/${face.out}`, root));
+    } catch {
+      return null;
+    }
+  }),
+);
+const shipped = subsets.filter((b) => b !== null).map((b) => b.length);
+const mediaFonts = media.filter((f) => f.endsWith(".woff2"));
+if (mediaFonts.length > 0 && shipped.length === FACES.length) {
+  const sizes = await Promise.all(
+    mediaFonts.map(async (f) => (await readFile(new URL(`.next/static/media/${f}`, root))).length),
+  );
+  const allAreSubsets = sizes.every((n) => shipped.includes(n));
+  if (allAreSubsets) {
+    console.log("FAIL - .next/static/media holds this script's OUTPUT, not its input.");
+    console.log("       The layout loads src/fonts/ via next/font/local (§9.3), so the");
+    console.log("       build copies the SUBSET faces there. Re-running would subset an");
+    console.log("       already-subset face and narrow it permanently - subsetFont only");
+    console.log("       removes glyphs. Do NOT 'fix' this by updating the FACES regexes.");
+    console.log("       Recovery needs the unsubset sources; see the note above this check.");
+    console.log(
+      `       Matched by size: ${mediaFonts.length} face(s) in media, all equal to a file in src/fonts/.`,
+    );
+    process.exit(1);
+  }
+}
+
 await mkdir(new URL("src/fonts/", root), { recursive: true });
 
 let before = 0;
