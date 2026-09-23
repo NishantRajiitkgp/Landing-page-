@@ -6,9 +6,48 @@ import { SIZES_MARK, tint } from "@/lib/img";
 // what the next paste starts from: three of the six copies TASKS Part 5
 // carried had dropped `aria-hidden` that way. §4 rule 2, §17 condition 22.
 import { Arrow } from "@/components/brand/Arrow";
-/** Customer story. */
+import { copy } from "@/lib/copy/request";
+import { SECTIONS } from "@/lib/copy/sections";
+/** Customer story — WITHHELD until there is a real one.
+ *
+ * The markup below quotes a "Head of Fleet Operations" at a "Quick-commerce
+ * company, Bengaluru" who does not exist, beside a stock headshot, under a
+ * "SAMPLE — REPLACE" pill the visitor can read. It is the only fabricated
+ * attributed quote on the homepage and the only item in the 22 Sep demo walk
+ * that is a liability rather than an untidiness, so it does not render.
+ *
+ * A REAL testimonial does exist and was NOT used, deliberately. The old repo
+ * carries three at `public/cms/en/about.base.json` → `sections[5].cards[]`
+ * ("What Our Client Speak"), live on the current site: HCL, Cognizant and
+ * Hero Fincorp, each attributed by role and company line ("HR Shared
+ * Services @ India's largest IT company") with a client logo, and each
+ * de-identified on purpose — no personal name, no photograph. Dropping one
+ * into this section verbatim would leave the two stat blocks beside it
+ * ("1,600+ riders verified a month", "5 days to 30 min") attached to a named
+ * real customer. Those figures have no source: searched the old repo for
+ * "1,600", "1600" and "rider" and the only hit is an image alt text. That
+ * turns a self-labelled sample into an unlabelled false claim about an
+ * identifiable company — strictly worse than what is here now. Fitting the
+ * real quote properly means a logo where the headshot is and no metrics at
+ * all, which is a different section, not this one.
+ *
+ * WHY A FLAG AND NOT A DELETION: the layout is the shell a real story will
+ * reuse, and the gate lives here rather than at the call site so the homepage
+ * (`app/[locale]/page.tsx`) does not have to know. Setting
+ * `STORY_IS_ATTRIBUTABLE` true is the whole re-enable once a quote and its
+ * metrics have a named owner. Rejected: deleting the component, which loses
+ * the layout and spreads the same decision over two files.
+ *
+ * The `href="#"` on "Read the story" below is left as it is — it belongs to
+ * a story that does not exist, and it now emits nothing on any route.
+ */
+const STORY_IS_ATTRIBUTABLE: boolean = false;
 
-export function CustomerStory() {
+export async function CustomerStory() {
+  if (!STORY_IS_ATTRIBUTABLE) return null;
+
+  const t = (await copy(SECTIONS)).customerStory;
+
   return (
     <>
       <div className="dsk">
@@ -20,15 +59,15 @@ export function CustomerStory() {
               {' '}
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span className="k">
-                  Customer story
+                  {t.kicker}
                 </span>
                 <span className="mono" style={{ padding: '3px 8px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--muted)', fontSize: '10.5px' }}>
-                  SAMPLE — REPLACE
+                  {t.pill}
                 </span>
               </div>
               {' '}
               <blockquote className="serif" style={{ margin: '28px 0 0', fontSize: '46px', lineHeight: '1.12', letterSpacing: '-0.025em', textWrap: 'pretty' }}>
-                “We onboard four hundred riders a week. Verification used to be the thing that slowed us down. Now it finishes before the induction video does.”
+                {t.quote}
               </blockquote>
               {' '}
               <div style={{ marginTop: '36px', display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -41,10 +80,10 @@ export function CustomerStory() {
                 {' '}
                 <div>
                   <div style={{ fontSize: '16px', fontWeight: '500' }}>
-                    Head of Fleet Operations
+                    {t.role}
                   </div>
                   <div style={{ marginTop: '2px', fontSize: '14px', color: 'var(--muted)' }}>
-                    Quick-commerce company, Bengaluru
+                    {t.org}
                   </div>
                 </div>
                 {' '}
@@ -56,32 +95,32 @@ export function CustomerStory() {
               {' '}
               <div style={{ paddingBottom: '24px', borderBottom: '1px solid var(--hair)' }}>
                 <div className="serif" style={{ fontSize: '56px', lineHeight: '1', letterSpacing: '-0.03em' }}>
-                  1,600
+                  {t.stats.ridersValue}
                   <span style={{ color: 'var(--muted)' }}>
-                    +
+                    {t.stats.ridersPlus}
                   </span>
                 </div>
                 <div style={{ marginTop: '8px', fontSize: '15px', color: 'var(--muted)' }}>
-                  riders verified a month
+                  {t.stats.ridersLabel}
                 </div>
               </div>
               {' '}
               <div style={{ padding: '24px 0', borderBottom: '1px solid var(--hair)' }}>
                 <div className="serif" style={{ fontSize: '44px', lineHeight: '1', letterSpacing: '-0.03em' }}>
-                  5 days{' '}
+                  {t.stats.timeA}{' '}
                   <span style={{ color: 'var(--muted)' }}>
-                    to
+                    {t.stats.timeTo}
                   </span>
-                  {' '}30 min
+                  {' '}{t.stats.timeB}
                 </div>
                 <div style={{ marginTop: '8px', fontSize: '15px', color: 'var(--muted)' }}>
-                  time to a completed report, before and after
+                  {t.stats.timeLabel}
                 </div>
               </div>
               {' '}
               <div style={{ paddingTop: '24px' }}>
                 <a href="#" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontSize: '15px', fontWeight: '500' }}>
-                  Read the story{' '}
+                  {t.readStory}{' '}
                   <Arrow />
                 </a>
               </div>
@@ -97,23 +136,23 @@ export function CustomerStory() {
           {' '}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span className="k">
-              Customer story
+              {t.kicker}
             </span>
             <span className="mono" style={{ padding: '2px 7px', borderRadius: '999px', background: 'var(--white)', border: '1px solid var(--hair)', color: 'var(--muted)', fontSize: '10px' }}>
-              SAMPLE
+              {t.pillMob}
             </span>
           </div>
           {' '}
           <blockquote className="serif" style={{ margin: '18px 0 0', fontSize: '28px', lineHeight: '1.15', letterSpacing: '-0.02em' }}>
-            “We onboard four hundred riders a week. Verification used to be the thing that slowed us down. Now it finishes before the induction video does.”
+            {t.quote}
           </blockquote>
           {' '}
           <div style={{ marginTop: '20px', fontSize: '14px' }}>
             <b style={{ fontWeight: '500' }}>
-              Head of Fleet Operations
+              {t.role}
             </b>
             <span style={{ color: 'var(--muted)' }}>
-              {' '}· Quick-commerce company, Bengaluru
+              {' '}{t.orgMob}
             </span>
           </div>
           {' '}
@@ -121,19 +160,19 @@ export function CustomerStory() {
             {' '}
             <div>
               <div className="serif" style={{ fontSize: '36px', lineHeight: '1' }}>
-                1,600+
+                {t.stats.ridersMob}
               </div>
               <div style={{ marginTop: '6px', fontSize: '13px', color: 'var(--muted)' }}>
-                riders verified a month
+                {t.stats.ridersLabel}
               </div>
             </div>
             {' '}
             <div>
               <div className="serif" style={{ fontSize: '28px', lineHeight: '1' }}>
-                5 days to 30 min
+                {t.stats.timeMob}
               </div>
               <div style={{ marginTop: '6px', fontSize: '13px', color: 'var(--muted)' }}>
-                time to a report
+                {t.stats.timeLabelMob}
               </div>
             </div>
             {' '}

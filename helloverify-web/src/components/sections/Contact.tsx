@@ -1,8 +1,33 @@
 import Image from "next/image";
-import { SIZES_FEATURE, noteInk, tint } from "@/lib/img";
-/** Contact form. */
 
-export function Contact() {
+import { MOCK_FIELDS_DSK, MOCK_FIELDS_MOB, MockFields, Segments } from "@/components/blocks/LeadMock";
+import { AppLink } from "@/components/chrome/AppLink";
+import { SIZES_FEATURE, noteInk, tint } from "@/lib/img";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS } from "@/lib/copy/sections";
+/** Contact form.
+ *
+ *  319 lines against `max-lines` max 300 (`eslint.config.mjs`, §17
+ *  condition 22). The six field rows and the three segment chips were each
+ *  written twice, once per breakpoint; a script diffed the copies field by
+ *  field and found FOUR of the six rows and the whole segment row
+ *  byte-identical after dedent. Both are one list in
+ *  `blocks/LeadMock.tsx` now, rendered once per breakpoint.
+ *
+ *  WHAT STAYED WRITTEN TWICE, because the same script measured it as
+ *  genuinely different rather than assuming either way: the headline
+ *  (64px/0.98 against 36px/1), the photo panel (a 760px minimum against a
+ *  fixed 300px, and only desktop carries the `.light` gradient, the `.note`
+ *  caption and the closing paragraph), the consent paragraph (shorter copy,
+ *  and the phone does not link the address) and the submit button (`full`
+ *  plus a top margin on the phone). None of those is a repeat, so none of
+ *  them moved - the same call `sections/PeopleStrip.tsx` made about its two
+ *  lists.
+ */
+
+export async function Contact() {
+  const t = (await copy(SECTIONS)).contact;
+
   return (
     <>
       <div className="dsk">
@@ -22,7 +47,7 @@ export function Contact() {
                   than unified with the other two values, which would change
                   what six tiles render. */}
               <div className="note" style={{ top: '26%', color: noteInk("/img/23-closing.jpg") }}>
-                photo · warm, people at work
+                {t.note}
               </div>
               {' '}
               <div style={{ position: 'absolute', inset: '0', background: 'linear-gradient(to top, rgba(14,13,10,0.95) 0%, rgba(14,13,10,0.7) 32%, rgba(14,13,10,0.15) 70%, rgba(14,13,10,0) 100%)' }}>
@@ -31,11 +56,11 @@ export function Contact() {
               <div style={{ position: 'absolute', insetInlineStart: '56px', insetInlineEnd: '56px', bottom: '56px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
                 {' '}
                 <h2 className="serif" style={{ margin: '0', fontSize: '64px', lineHeight: '0.98', letterSpacing: '-0.03em', fontWeight: '400' }}>
-                  Every great journey deserves a{' '}
+                  {t.headingA}{' '}
                   <em style={{ fontStyle: 'italic' }}>
-                    verified
+                    {t.headingEm}
                   </em>
-                  {' '}beginning.
+                  {' '}{t.headingB}
                 </h2>
                 {' '}
                 {/* THE ONLY SUPPRESSION OF `hv/no-color-literal` IN `src/`, and
@@ -64,7 +89,7 @@ export function Contact() {
                     wants a screenshot before anyone relies on it. */}
                 {/* eslint-disable-next-line hv/no-color-literal */}
                 <p style={{ margin: '20px 0 0', fontSize: '18px', lineHeight: '1.45', color: 'rgba(255,255,255,0.82)', maxWidth: '460px' }}>
-                  Take the first step. We'll handle the rest.
+                  {t.sub}
                 </p>
                 {' '}
               </div>
@@ -76,109 +101,34 @@ export function Contact() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
                 {' '}
                 <div className="k">
-                  Talk to sales
+                  {t.k}
                 </div>
                 {' '}
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <span className="seg on">
-                    Business
-                  </span>
-                  <span className="seg">
-                    Government
-                  </span>
-                  <span className="seg">
-                    Individual
-                  </span>
-                </div>
+                <Segments />
                 {' '}
               </div>
               {' '}
               <div style={{ marginTop: '36px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '28px 24px' }}>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Full name
-                  </div>
-                  <div className="inp fill">
-                    Priya Menon
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Company
-                  </div>
-                  <div className="inp">
-                    Company name
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Business email
-                  </div>
-                  <div className="inp">
-                    name@company.com
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Mobile
-                  </div>
-                  <div className="inp">
-                    <span>
-                      <span style={{ color: 'var(--ink)' }}>
-                        +91
-                      </span>
-                      {' '}· 98··· ·····
-                    </span>
-                  </div>
-                </div>
-                {' '}
-                <div style={{ gridColumn: 'span 2' }}>
-                  <div className="fld-l">
-                    Services of interest
-                  </div>
-                  <div className="inp">
-                    <span>
-                      Employee verification, KYC, Certifier, Consumer…
-                    </span>
-                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                      <path d="M3 4.5l3 3 3-3" stroke="#15140F" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                      </path>
-                    </svg>
-                  </div>
-                </div>
-                {' '}
-                <div style={{ gridColumn: 'span 2' }}>
-                  <div className="fld-l">
-                    Message
-                  </div>
-                  <div className="inp" style={{ height: '84px', alignItems: 'flex-start', paddingTop: '14px' }}>
-                    How many checks a month, and where?
-                  </div>
-                </div>
-                {' '}
+                <MockFields fields={MOCK_FIELDS_DSK} />
               </div>
               {' '}
               <p style={{ margin: '24px 0 0', fontSize: '13px', lineHeight: '1.5', color: 'var(--muted)' }}>
-                By submitting, you consent to HelloVerify processing your data for lead generation and related communications, per our{' '}
-                <a href="#" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
-                  Privacy Policy
+                {t.consent.lead}{' '}
+                <AppLink href="/legal/privacy-policy" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
+                  {t.consent.policy}
+                </AppLink>
+                {t.consent.mid}{' '}
+                <a href="mailto:privacy@helloverify.com" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
+                  {t.consent.email}
                 </a>
-                . Withdraw any time at{' '}
-                <a href="#" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
-                  privacy@helloverify.com
-                </a>
-                .
+                {t.consent.end}
               </p>
               {' '}
               <div style={{ marginTop: '28px', display: 'flex', alignItems: 'center', gap: '16px' }}>
                 {' '}
-                <a href="#" className="btn btn-ink">
-                  Submit
-                </a>
+                <AppLink href="/contact" className="btn btn-ink">
+                  {t.submit}
+                </AppLink>
                 {' '}
               </div>
               {' '}
@@ -203,11 +153,11 @@ export function Contact() {
               {' '}
               <div style={{ position: 'absolute', insetInlineStart: '22px', insetInlineEnd: '22px', bottom: '22px', zIndex: '3', color: 'var(--white)', textShadow: '0 2px 24px rgba(14,13,10,0.8)' }}>
                 <h2 className="serif" style={{ margin: '0', fontSize: '36px', lineHeight: '1', letterSpacing: '-0.03em', fontWeight: '400' }}>
-                  Every great journey deserves a{' '}
+                  {t.headingA}{' '}
                   <em style={{ fontStyle: 'italic' }}>
-                    verified
+                    {t.headingEm}
                   </em>
-                  {' '}beginning.
+                  {' '}{t.headingB}
                 </h2>
               </div>
               {' '}
@@ -215,98 +165,23 @@ export function Contact() {
             {' '}
             <div style={{ padding: '24px 22px 28px' }}>
               {' '}
-              <div style={{ display: 'flex', gap: '6px' }}>
-                <span className="seg on">
-                  Business
-                </span>
-                <span className="seg">
-                  Government
-                </span>
-                <span className="seg">
-                  Individual
-                </span>
-              </div>
+              <Segments />
               {' '}
               <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Full name
-                  </div>
-                  <div className="inp fill">
-                    Priya Menon
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Company
-                  </div>
-                  <div className="inp">
-                    Company name
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Business email
-                  </div>
-                  <div className="inp">
-                    name@company.com
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Mobile
-                  </div>
-                  <div className="inp">
-                    <span>
-                      <span style={{ color: 'var(--ink)' }}>
-                        +91
-                      </span>
-                      {' '}· 98··· ·····
-                    </span>
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Services of interest
-                  </div>
-                  <div className="inp">
-                    <span>
-                      Employee verification, KYC…
-                    </span>
-                    <svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                      <path d="M3 4.5l3 3 3-3" stroke="#15140F" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-                      </path>
-                    </svg>
-                  </div>
-                </div>
-                {' '}
-                <div>
-                  <div className="fld-l">
-                    Message
-                  </div>
-                  <div className="inp">
-                    How many checks a month, and where?
-                  </div>
-                </div>
-                {' '}
+                <MockFields fields={MOCK_FIELDS_MOB} />
               </div>
               {' '}
               <p style={{ margin: '18px 0 0', fontSize: '12.5px', lineHeight: '1.5', color: 'var(--muted)' }}>
-                By submitting, you consent to HelloVerify processing your data for lead generation, per our{' '}
-                <a href="#" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
-                  Privacy Policy
-                </a>
-                . Withdraw any time at privacy@helloverify.com.
+                {t.consent.leadMob}{' '}
+                <AppLink href="/legal/privacy-policy" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
+                  {t.consent.policy}
+                </AppLink>
+                {t.consent.tailMob}
               </p>
               {' '}
-              <a href="#" className="btn btn-ink full" style={{ marginTop: '18px' }}>
-                Submit
-              </a>
+              <AppLink href="/contact" className="btn btn-ink full" style={{ marginTop: '18px' }}>
+                {t.submit}
+              </AppLink>
               {' '}
             </div>
             {' '}

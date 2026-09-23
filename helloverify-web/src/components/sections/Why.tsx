@@ -2,6 +2,8 @@ import { Fragment } from "react";
 import Image from "next/image";
 
 import { SIZES_WHY, noteInk, tint } from "@/lib/img";
+import { copy } from "@/lib/copy/request";
+import { SECTIONS, type WhyEvidenceId, type WhyReasonId } from "@/lib/copy/sections";
 
 /** Why governments work with us.
  *
@@ -19,35 +21,31 @@ import { SIZES_WHY, noteInk, tint } from "@/lib/img";
  *  row and after the last, mobile only between them.
  */
 
-const REASONS: readonly (readonly [string, string, string])[] = [
-  ["01", "Primary source, at national scale", "Confirmed with the issuer — never a proxy database."],
-  ["02", "One platform, public and private", "People, businesses, suppliers and institutions."],
-  ["03", "Proven with governments", "India, Saudi Arabia, the UAE, Singapore, European workflows."],
-  ["04", "Built to last", "Infrastructure regulators rely on for years, not a project."],
-  ["05", "Evidence, not opinion", "Remarks, artefacts and an auditable trail with every result."],
-];
+/** The five reasons, in order. The numeral is the ordinal the card prints AND
+ *  the React key, so it stays here and doubles as the dictionary key - it is
+ *  position, not words. The two lines of words are in `lib/copy/sections`. */
+const REASONS: readonly WhyReasonId[] = ["01", "02", "03", "04", "05"];
 
-/** The four lines under "One result, and how we know" - label, then value. */
-const EVIDENCE: readonly (readonly [string, string])[] = [
-  ["Read by", "HelloVerify AI · 14 fields · 1.2 s"],
-  ["Confirmed", "RTO Karnataka · 10:08"],
-  ["Artefact", "Sarathi record · PDF · hashed"],
-  ["Reviewed", "K.S. · audit trail, 5 events"],
-];
+/** The four lines under "One result, and how we know", in order. The label is
+ *  still the React key, and it still resolves to the same English string -
+ *  third corollary of the byte-identity rule in `lib/copy`'s header. */
+const EVIDENCE: readonly WhyEvidenceId[] = ["read", "confirmed", "artefact", "reviewed"];
 
 const PHOTO = "/img/09-licensing-officer.jpg";
 
-function Reasons({ mob, style }: { mob?: boolean; style: React.CSSProperties }) {
+async function Reasons({ mob, style }: { mob?: boolean; style: React.CSSProperties }) {
+  const t = (await copy(SECTIONS)).why;
+
   return (
     <div style={style}>
-      {REASONS.map(([n, t, p], i) => (
+      {REASONS.map((n, i) => (
         <Fragment key={n}>
           {(!mob || i > 0) && " "}
           <div className="rz">
             <span className="n">{n}</span>
             <div>
-              <div className="t">{t}</div>
-              <div className="p">{p}</div>
+              <div className="t">{t.reasons[n].t}</div>
+              <div className="p">{t.reasons[n].p}</div>
             </div>
           </div>
         </Fragment>
@@ -57,7 +55,9 @@ function Reasons({ mob, style }: { mob?: boolean; style: React.CSSProperties }) 
   );
 }
 
-function WhyCard({ mob }: { mob?: boolean }) {
+async function WhyCard({ mob }: { mob?: boolean }) {
+  const t = (await copy(SECTIONS)).why;
+
   return (
     <div
       className="whyv ph"
@@ -72,7 +72,7 @@ function WhyCard({ mob }: { mob?: boolean }) {
           The literal was one of six `rgba()` values that `hv/no-color-literal`
           could not see before 22 Sep 2026. */}
       <div className="note" style={{ top: "18%", color: noteInk(PHOTO) }}>
-        photo · licensing officer at a counter, natural light
+        {t.card.note}
       </div>
       {" "}
       <div className="scrim" style={{ height: "70%" }}></div>
@@ -85,20 +85,20 @@ function WhyCard({ mob }: { mob?: boolean }) {
       >
         {" "}
         <div className="sealsm">
-          <span>Verified</span>
+          <span>{t.card.seal}</span>
         </div>
         {" "}
-        <div className="k">One result, and how we know</div>
+        <div className="k">{t.card.k}</div>
         {" "}
         <div className="serif" style={{ margin: "8px 80px 12px 0", fontSize: "22px", lineHeight: "1.05" }}>
-          Driving licence
+          {t.card.title}
         </div>
-        {EVIDENCE.map(([label, value]) => (
-          <Fragment key={label}>
+        {EVIDENCE.map((k) => (
+          <Fragment key={t.evidence[k].label}>
             {" "}
             <div className="r">
-              <span>{label}</span>
-              <span>{value}</span>
+              <span>{t.evidence[k].label}</span>
+              <span>{t.evidence[k].value}</span>
             </div>
           </Fragment>
         ))}{" "}
@@ -108,7 +108,9 @@ function WhyCard({ mob }: { mob?: boolean }) {
   );
 }
 
-export function Why() {
+export async function Why() {
+  const t = (await copy(SECTIONS)).why;
+
   return (
     <>
       <div className="dsk">
@@ -119,11 +121,11 @@ export function Why() {
             <div>
               {" "}
               <h2 className="h2" style={{ fontSize: "56px" }}>
-                Why governments work with us.
+                {t.heading}
               </h2>
               {" "}
               <p className="lede" style={{ marginTop: "22px", maxWidth: "400px" }}>
-                A ministry isn't buying reports. It's buying the trust layer under every permit, licence and clearance.
+                {t.lede}
               </p>
               {" "}
               <Reasons style={{ marginTop: "36px" }} />
@@ -139,10 +141,10 @@ export function Why() {
       <div className="mob">
         <div className="wrap sec hair-top">
           {" "}
-          <h2 className="h2">Why governments work with us.</h2>
+          <h2 className="h2">{t.heading}</h2>
           {" "}
           <p className="lede">
-            A ministry isn't buying reports. It's buying the trust layer under every permit, licence and clearance.
+            {t.lede}
           </p>
           {" "}
           <Reasons mob style={{ marginTop: "24px" }} />
