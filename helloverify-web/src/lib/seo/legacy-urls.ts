@@ -50,21 +50,111 @@ export type LegacyRoute = {
  *  Those 56 are consolidated onto their English equivalents rather than left
  *  to 404. It is the lesser of two bad options — it answers a request for
  *  Hindi with English — but the alternative discards two thirds of the indexed
- *  base, and a 404 does not serve a Hindi speaker either. The debt is real and
- *  named: when `hi` ships it has to reclaim URLs that were 308'd away, which
- *  means removing the locale from this list in the same change that adds it to
- *  `routing.ts`.
+ *  base, and a 404 does not serve a Hindi speaker either.
+ *
+ *  THIS LIST NEVER SHRINKS, and the note that used to stand here — "when `hi`
+ *  ships it has to be removed from this list in the same change" — was wrong.
+ *  Traced through `./redirects` with `hi` in BOTH lists:
+ *  `destinationLocaleFor("hi")` returns `"hi"`, so `/hi/technology` 308s to
+ *  `/hi/platform/technology`, which is the RIGHT answer and a better one than
+ *  deleting the row (that hands an indexed URL a 404); and `unservedLocales()`
+ *  already filters `hi` out of the `/hi/:path*` catch-all. So this is a
+ *  historical fact about Google's index, it is append-only, and the only list
+ *  that has to move in lockstep with `routing.ts` is `SERVED_LOCALES` below.
+ *  Asserted by running the real emitter over a served `["en","hi","ar"]` in
+ *  `tools/test/locales.test.ts`, not by reading the code again.
  */
 export const LEGACY_LOCALES: readonly string[] = ["en", "hi", "ar"];
 
 /** Mirror of `routing.ts#routing.locales`. Duplicated rather than imported so
- *  this module stays loadable from `next.config.ts` — and deliberately
- *  compared against `LEGACY_LOCALES` in `unservedLocales()` so the two cannot
- *  drift silently. */
+ *  this module stays loadable from `next.config.ts`, where `@/` does not
+ *  resolve. Checked against the original by `localeContractDrift()` below —
+ *  the previous version of this comment claimed `unservedLocales()` kept the
+ *  two from drifting, which was false: that function compares this list to
+ *  `LEGACY_LOCALES` and never sees `routing.locales` at all. */
 export const SERVED_LOCALES: readonly string[] = ["en"];
 
-/** Where an unprefixed or unserved-locale path lands. */
+/** Where an unprefixed or unserved-locale path lands. Mirror of
+ *  `routing.ts#routing.defaultLocale`, same reason, same guard. */
 export const DEFAULT_LOCALE = "en";
+
+/** Has the mirror above drifted from the list it mirrors?
+ *
+ *  Returns one string per disagreement and an empty array when the contract
+ *  holds. `lib/seo/canonical.ts` calls it at module load and throws, so an
+ *  inconsistent state fails `next build`; the call cannot live in this file
+ *  because this file must not import `routing.ts` (see the note above).
+ *
+ *  WHAT IT DEFENDS, read off `./redirects`: `legacyRedirects()` emits
+ *  `/${l}/:path*` -> `/${DEFAULT_LOCALE}/:path*` for every locale in
+ *  `LEGACY_LOCALES` that is NOT in `SERVED_LOCALES`. Declare `hi` in
+ *  `routing.locales` alone and all 56 Hindi pages prerender, carry the right
+ *  canonical, appear in the sitemap — and every one of them 308s to its
+ *  English equivalent, permanently, because a 308 is cached by the browser
+ *  forever. Nothing in the build output can see it. `probe:redirects` can, and
+ *  it needs a running server, so it is the wrong gate for a mistake this
+ *  cheap to make.
+ *
+ *  REJECTED — a comment saying "remember to edit both". That is what the
+ *  previous version of this file had, in three places, and it is what left the
+ *  `unservedLocales()` claim above standing while it was false.
+ *
+ *  REJECTED — deriving `SERVED_LOCALES` from `routing.locales`. That is the
+ *  import this module exists to avoid: `next.config.ts` loads outside the app
+ *  graph, so `@/` does not resolve and `next-intl/routing` would be pulled
+ *  into the config load. The duplication is deliberate; only the silence
+ *  about it was the defect.
+ *
+ *  BOTH SIDES ARE PARAMETERS, with this module's own constants as defaults.
+ *  The call site passes two arguments and reads as if the other two were
+ *  closed over; the test passes four. That is not a convenience — a guard
+ *  that closes over the value it checks can only ever be exercised by editing
+ *  the file it defends, which means it is exercised once and never again.
+ *  `tools/test/locales.test.ts` drives seven drifted states through it.
+ */
+export function localeContractDrift(
+  routingLocales: readonly string[],
+  routingDefaultLocale: string,
+  servedLocales: readonly string[] = SERVED_LOCALES,
+  legacyDefaultLocale: string = DEFAULT_LOCALE,
+): readonly string[] {
+  const problems: string[] = [];
+
+  /** Sequence equality, not set equality. `SERVED_LOCALES` is a copy of
+   *  `routing.locales`, and requiring the same ORDER keeps "is this still a
+   *  copy?" a one-line diff for a reviewer. Reordering changes no behaviour —
+   *  every use is `.includes()` — so the stricter rule costs one more line in
+   *  an edit that is already touching both files. */
+  if (
+    servedLocales.length !== routingLocales.length ||
+    servedLocales.some((l, i) => l !== routingLocales[i])
+  ) {
+    problems.push(
+      `SERVED_LOCALES ${JSON.stringify(servedLocales)} != routing.locales ` +
+        `${JSON.stringify(routingLocales)} — a locale served but not mirrored here ` +
+        `is 308'd onto ${JSON.stringify(legacyDefaultLocale)} by the legacy catch-all; ` +
+        `a locale mirrored here but not served points legacy 308s at a 404.`,
+    );
+  }
+
+  if (legacyDefaultLocale !== routingDefaultLocale) {
+    problems.push(
+      `DEFAULT_LOCALE ${JSON.stringify(legacyDefaultLocale)} != routing.defaultLocale ` +
+        `${JSON.stringify(routingDefaultLocale)} — every unserved-locale redirect ` +
+        `would land in a different locale from the one the proxy negotiates to.`,
+    );
+  }
+
+  if (!routingLocales.includes(routingDefaultLocale)) {
+    problems.push(
+      `routing.defaultLocale ${JSON.stringify(routingDefaultLocale)} is not in ` +
+        `routing.locales ${JSON.stringify(routingLocales)} — x-default and every ` +
+        `legacy destination would point at a locale with no pages.`,
+    );
+  }
+
+  return problems;
+}
 
 /** The old React SPA, which moves to its own host (BUILD-SPEC decision 1:
  *  "Marketing only. Old SPA -> app.helloverify.com").
@@ -153,26 +243,42 @@ export const LEGACY_ROUTES: readonly LegacyRoute[] = [
   // Resources
   { from: "/blog", to: "/resources/blog", why: "IA §9 — blog becomes resources" },
 
-  // The four indexed posts, whose copy did not come across (posts.ts has two
-  // unrelated slugs). Each goes to the live page that covers the SAME SUBJECT,
-  // not to the blog index: Google treats a redirect to a generic index as a
-  // soft 404 and drops the URL, so the index is the option that looks safe and
-  // loses the equity. A topically-equivalent target is the one thing that
-  // actually consolidates.
+  // The four indexed posts, now pointing at THE ARTICLE rather than at the
+  // nearest live page on the same subject. This block previously read "this is
+  // second-best and should be revisited — porting the posts is strictly
+  // better", and the copy was ported on 22 Sep 2026 (see the provenance note
+  // in `lib/content/posts.ts`): 2,490–4,009 characters of body each, out of
+  // the old repo's `src/i18n/en.json` and `src/pages/blog/*.tsx`. A crawler
+  // asking for an article now gets that article, not a product page.
   //
-  // This is second-best and should be revisited. Porting the posts is strictly
-  // better — "Data Privacy Bill compliance" is high-intent commercial search in
-  // India and we are giving it to a page that is about our controls rather than
-  // about the law. These targets are one line to change once the copy exists.
-  { from: "/blog/fir-check-api", to: "/checks/criminal", why: "An FIR check IS the criminal record check — same subject, live page" },
-  { from: "/blog/digital-address-verification", to: "/checks/current-address", why: "Same subject, live page" },
-  { from: "/blog/data-privacy-bill-penalties", to: "/platform/security-compliance", why: "DPDP Act — nearest live page; port the post to beat this" },
-  { from: "/blog/data-privacy-bill-compliance", to: "/platform/security-compliance", why: "DPDP Act — nearest live page; port the post to beat this" },
+  // THESE ROWS STAY, and deleting them would be the mistake. The ported post
+  // does not live at `/blog/<slug>` — it lives at `/resources/blog/<slug>`,
+  // because IA §9 moved the whole blog under `/resources` (the `/blog` row
+  // above is the same move for the index). So there is no self-redirect to
+  // avoid here: removing a row would hand four URLs that Google holds today a
+  // 404, which is strictly worse than the subject-based 308 it replaces.
+  //
+  // One consequence worth stating: this is the only place on the site where a
+  // legacy 308 lands on a page whose content came from the SAME old URL. If a
+  // post is ever unpublished, its row here has to move back to a subject
+  // target in the same change, or `probe:redirects` reports a 308 into a 404.
+  { from: "/blog/fir-check-api", to: "/resources/blog/fir-check-api", why: "Post ported — same slug under the /resources IA" },
+  { from: "/blog/digital-address-verification", to: "/resources/blog/digital-address-verification", why: "Post ported — same slug under the /resources IA" },
+  { from: "/blog/data-privacy-bill-penalties", to: "/resources/blog/data-privacy-bill-penalties", why: "Post ported — same slug under the /resources IA" },
+  { from: "/blog/data-privacy-bill-compliance", to: "/resources/blog/data-privacy-bill-compliance", why: "Post ported — same slug under the /resources IA" },
 
   // Contact
   { from: "/signup", to: "/contact", why: "App.tsx LocaleRedirect; §6.2" },
   { from: "/support", to: "/contact", why: "web.config rule Redirect Obsolete Contact Paths" },
   { from: "/support/enquiry", to: "/contact", why: "web.config rule Redirect Obsolete Contact Paths" },
+  {
+    from: "/support/track",
+    to: "/contact",
+    why:
+      "web.config rule Redirect Obsolete Contact Paths matched `support/track` and sent it to " +
+      "?tab=enquiry with appendQueryString=false; App.tsx L80 sends it to the same place. The " +
+      "?tab=track destination was unreachable from this URL in production, so nothing is lost.",
+  },
   { from: "/premium", to: "/contact", why: "web.config rule Redirect Obsolete Contact Paths" },
 
   // Hubs
@@ -213,15 +319,29 @@ export const LEGACY_ROUTES: readonly LegacyRoute[] = [
  *  worse than the 404 alone — it burns crawl budget to arrive at the same
  *  place. They are listed rather than deleted so the choice stays visible and
  *  is one line of code away.
+ *
+ *  EMPTY, and the type stays so the next one has a home.
+ *
+ *  `/support/track` was the last entry and it is closed, not deleted. The
+ *  blocker recorded here was "no verification-tracking page exists", which is
+ *  true and turned out to be irrelevant: the old site did not send this URL to
+ *  a tracking page either. Both authorities agree, and they are the only two
+ *  that ever ran — `web.config`'s "Redirect Obsolete Contact Paths" matches
+ *  `^(en|hi|ar)/(signup|premium|support|support/enquiry|support/track)/?$` and
+ *  redirects to `/{R:1}/contact?tab=enquiry` with `appendQueryString="false"`,
+ *  and `src/App.tsx` L80 renders `<LocaleRedirect to="/contact?tab=enquiry"/>`.
+ *  Neither ever emitted `?tab=track`.
+ *
+ *  The tracking tab was real — `ContactUsUnified.tsx` L738-L879 has an
+ *  `'enquiry' | 'track'` tab pair — but it was reachable only from
+ *  `/contact?tab=track`, never from `/support/track`. So there is no
+ *  destination to invent: this URL's production behaviour was "go to the
+ *  contact page", the new contact page is not tabbed (same reason the
+ *  `/premium/immigration-applicant` row drops its `?tab=applicant`), and the
+ *  row above states exactly that. Closed 23 Sep 2026.
  */
 export const PENDING_DECISIONS: readonly {
   readonly from: string;
   readonly blockedOn: string;
-}[] = [
-  {
-    from: "/support/track",
-    blockedOn:
-      "No verification-tracking page exists. The old site already contradicted itself — web.config AND App.tsx both send this to /contact?tab=enquiry, never ?tab=track, so the tracking destination was dead in production already.",
-  },
-];
+}[] = [];
 
