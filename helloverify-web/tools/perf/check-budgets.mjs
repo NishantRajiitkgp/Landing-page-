@@ -98,6 +98,14 @@ const CEILING = {
    *    rules whose classes nothing in `src/` references (6.2 KB raw) and by
    *    trimming two flourishes from the new panels; what is left is the new
    *    UI itself. The next CSS on /en should come with a matching removal.
+   *  - stylesheet 42 -> 43, total 443 -> 436 (25 Sep 2026, the phone pass):
+   *    every v2 band became one tree at every width, each v2 sheet gaining a
+   *    `max-width: 1080px` layout. The old `.mob` trees and three phone-only
+   *    bands were deleted, and with them 213 `design.css`/`pages.css` rules
+   *    (~27 KB raw) nothing references any more. Net: /en stylesheet 41.2 ->
+   *    42.3 KB for phone layouts of 19 sections, while the page TOTAL fell
+   *    435.7 -> 427.8 KB (one tree instead of two in the HTML and flight).
+   *    Total is lowered to the new measurement + ~2% so that saving holds.
    *
    *  LOWERED, so the saving cannot quietly erode:
    *  - font 245 -> 127: 123.3 KB after the wght pin (was 241.9).
@@ -105,9 +113,9 @@ const CEILING = {
    *
    *  Each is the measurement plus ~3%, the headroom rule stated above. */
   script: 188,
-  stylesheet: 42,
+  stylesheet: 43,
   font: 127,
-  total: 443,
+  total: 436,
   thirdParty: 5,
 };
 
