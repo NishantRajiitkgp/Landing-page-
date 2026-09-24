@@ -15,6 +15,9 @@
     reduced-motion rules this implements. */
 
 import { GRAPH_EDGES, GRAPH_NODES } from "@/lib/platformGraph";
+import { LAST } from "@/lib/trustNetworkSteps";
+
+export { LAST };
 
 const W = 700;
 const H = 500;
@@ -23,7 +26,6 @@ const CY = 250;
 /** The medallion's keep-out radius in drawing units (132px disc + dial). */
 const KEEP = 92;
 const TAU = 6.2832;
-export const LAST = 8;
 
 type Node = {
   ax: number; ay: number; x: number; y: number; vx: number; vy: number; fx: number; fy: number;

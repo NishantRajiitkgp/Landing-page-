@@ -11,9 +11,15 @@
  *
  *  THE LOOP RUNS ONLY WHILE IT HAS SOMETHING TO MOVE: the map is on screen
  *  (IntersectionObserver) and it is playing, being dragged, or has ambient
- *  motion on. Otherwise `kick()` draws one frame and it stops. */
+ *  motion on. Otherwise `kick()` draws one frame and it stops.
+ *
+ *  THE PAINTER LOADS LATE. The clock, the play/scrub state and the text it
+ *  feeds React run from mount; the canvas painter (`./sunPaint`, with the
+ *  land dots) is fetched as the map approaches (`lib/whenNear`), and frames
+ *  before it arrives advance the state without drawing. */
 import { MAP_W, offsetsAt, worldAt } from "@/lib/sunMap";
-import { SunPainter, readPalette } from "./sunPaint";
+import { whenNear } from "@/lib/whenNear";
+import type { SunPainter } from "./sunPaint";
 
 const PLAY_MS = 14000;
 const DAY_MS = 86400000;
@@ -32,16 +38,13 @@ export class SunLoop {
   private play0 = 0;
   private playStart = 0;
   private raf = 0;
-  private painter: SunPainter;
+  private painter: SunPainter | null = null;
 
   constructor(
     private cv: HTMLCanvasElement,
-    stage: HTMLElement,
     private labels: { noon: string; midnight: string },
     private on: Listeners,
-  ) {
-    this.painter = new SunPainter(cv, readPalette(stage));
-  }
+  ) {}
 
   /** Observers and the 20-second clock. Returns the teardown. */
   attach(stage: HTMLElement, map: HTMLElement): () => void {
@@ -69,10 +72,15 @@ export class SunLoop {
       { threshold: [0, 0.35] },
     );
     io.observe(stage);
+    const stopNear = whenNear(stage, () => import("./sunPaint"), ({ SunPainter, readPalette }) => {
+      this.painter = new SunPainter(this.cv, readPalette(stage));
+      this.kick();
+    });
     const tick = window.setInterval(() => {
       if (this.scrub === null) this.on.now(Date.now());
     }, 20000);
     return () => {
+      stopNear();
       ro.disconnect();
       io.disconnect();
       clearInterval(tick);
@@ -109,8 +117,11 @@ export class SunLoop {
       t = this.scrub ?? Date.now();
     }
     const quiet = this.still || this.reduce;
-    this.painter.draw(t, tt, worldAt(t, offsetsAt(t)), quiet, this.labels);
-    if (this.visible && (this.playing || this.drag || !quiet)) this.raf = requestAnimationFrame(this.frame);
+    const p = this.painter;
+    p?.draw(t, tt, worldAt(t, offsetsAt(t)), quiet, this.labels);
+    // Without a painter yet, only the time-lapse needs frames; its arrival
+    // kicks the loop for the rest.
+    if (this.visible && (this.playing || (p && (this.drag || !quiet)))) this.raf = requestAnimationFrame(this.frame);
   };
 
   private setScrub(t: number | null) {

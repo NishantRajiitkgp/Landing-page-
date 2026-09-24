@@ -16,7 +16,8 @@
  *  the travelling document, the breathing lamps) for `prefers-reduced-motion`
  *  and for the "Pause motion" control; time itself still moves on drag,
  *  play and the live clock. */
-import { CARD_H, CARD_W, MAP_H, MAP_W, OFFICES, landDots, type World } from "@/lib/sunMap";
+import { landDots } from "@/lib/sunLand";
+import { CARD_H, CARD_W, MAP_H, MAP_W, OFFICES, type World } from "@/lib/sunMap";
 
 type RGB = [number, number, number];
 const TOKENS = {
