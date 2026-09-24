@@ -4,8 +4,7 @@
 
     The cards are server-rendered; this owns one rAF loop that moves them:
 
-    1. **A curved path.** Both tracks (the greyscale one and the `aria-hidden`
-       colour lane) are translated together, and each card is turned toward
+    1. **A curved path.** The track is translated, and each card is turned toward
        the centre by its distance from it — `rotateY` up to 26°, pushed back
        up to 150px, dropped up to 26px — so the strip reads as a drum.
     2. **Drag and fling.** Pointer drag moves the strip 1:1; release keeps the
@@ -39,11 +38,9 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
   useEffect(() => {
     const strip = ref.current;
     if (!strip) return;
-    const tracks = strip.querySelectorAll<HTMLElement>(".track");
-    if (tracks.length < 2) return;
-    const [main, lane] = [tracks[0], tracks[1]];
+    const main = strip.querySelector<HTMLElement>(".track");
+    if (!main) return;
     const a = Array.from(main.children) as HTMLElement[];
-    const b = Array.from(lane.children) as HTMLElement[];
     if (!a.length) return;
 
     // RTL lays the track out from the right and `drift` runs the other way;
@@ -93,7 +90,6 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
       const C = (strip.clientWidth || 1440) / 2;
       const tx = `translate3d(${(-p * flip).toFixed(2)}px,0,0)`;
       main.style.transform = tx;
-      lane.style.transform = tx;
       const skew = Math.max(-9, Math.min(9, -(v - target) / 70)) * flip;
       for (let i = 0; i < cards.length; i++) {
         const c = cards[i];
@@ -103,7 +99,6 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
           `perspective(1300px) translate3d(0,${(an * an * 26).toFixed(1)}px,${(-Math.pow(an, 1.4) * 150).toFixed(1)}px) ` +
           `rotateY(${(-n * 26).toFixed(2)}deg) skewX(${skew.toFixed(2)}deg)`;
         a[i].style.transform = tr;
-        if (b[i]) b[i].style.transform = tr;
         a[i].style.opacity = String(Math.max(0.35, 1 - Math.max(0, an - 0.7) * 0.7));
       }
       raf = requestAnimationFrame(frame);
@@ -166,7 +161,7 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
       strip.removeEventListener("pointerleave", leave);
       strip.removeEventListener("wheel", wheel);
       strip.classList.remove("hv-js", "hv-grab", "hv-strip-still");
-      for (const el of [main, lane, ...a, ...b]) {
+      for (const el of [main, ...a]) {
         el.style.transform = "";
         el.style.opacity = "";
       }
@@ -176,18 +171,9 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
   return (
     <div ref={ref} className="rise d6 hv-strip">
       {children}
-      <div className="hv-check" aria-hidden="true">
-        <div className="hv-check-k">
-          <span className="dot live" />
-          {checkpoint}
-        </div>
-        <div className="hv-scanwrap">
-          <div className="hv-scan" />
-        </div>
-        <span className="hv-br hv-br-tl" />
-        <span className="hv-br hv-br-tr" />
-        <span className="hv-br hv-br-bl" />
-        <span className="hv-br hv-br-br" />
+      <div className="hv-strip-k" aria-hidden="true">
+        <span className="dot live" />
+        {checkpoint}
       </div>
     </div>
   );

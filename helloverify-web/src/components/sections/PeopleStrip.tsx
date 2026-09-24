@@ -12,9 +12,9 @@ import { PeopleStripStage } from "./PeopleStripStage";
 /** Drifting strip of verified people; the track is duplicated so the loop is
  *  seamless.
  *
- *  Homepage v2 (desktop): the same cards pass an "At the source" checkpoint
- *  and come into colour there, on a curved path you can drag and fling —
- *  `./PeopleStripStage` and `app/v2/strip.css`. The card markup is unchanged.
+ *  Homepage v2 (desktop): the same cards, in colour, on a curved path you can
+ *  drag and fling, under an "At the source" label — `./PeopleStripStage` and
+ *  `app/v2/strip.css`. The card markup is unchanged.
  *
  *  That duplication used to be literal: 28 hand-written cards for 14 people,
  *  each person's markup appearing twice in the desktop track and twice again in
@@ -158,15 +158,13 @@ export async function PeopleStrip() {
   return (
     <>
       <div className="dsk">
-        {/* v2: the checkpoint and the curved, draggable strip. The colour lane
-            is a second copy of the same track, clipped to the checkpoint's
-            window, so it is `aria-hidden` — the first copy is the one read. */}
+        {/* v2: the curved, draggable strip, in full colour. The canvas also
+            had a greyscale track with a colour copy clipped under a scanning
+            "checkpoint"; the owner dropped it as gimmicky (24 Sep 2026), which
+            also removed that second, `aria-hidden` copy of every card. */}
         <PeopleStripStage checkpoint={t.checkpoint}>
           {" "}
           <Track people={DESKTOP} words={t.dsk} />{" "}
-          <div className="hv-colorlane" aria-hidden="true">
-            <Track people={DESKTOP} words={t.dsk} />
-          </div>{" "}
         </PeopleStripStage>{" "}
         {/* Desktop only - the mobile block is the track alone. */}
         <div
