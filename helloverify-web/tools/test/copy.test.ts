@@ -834,7 +834,7 @@ const BANDS: Record<string, readonly [number, number]> = {
   international: [6, 152],
   packages: [7, 61],
   peopleStrip: [2, 53],
-  contact: [11, 14],
+  contact: [11, 12],
   customerStory: [15, 18],
   demo2: [39, 43],
   presence: [8, 67],
@@ -862,7 +862,6 @@ check(
 );
 
 const BLOCK_FILES: Record<string, readonly [number, number]> = {
-  leadMock: [0, 17],
   helloVPhone: [15, 22],
   panels: [12, 38],
 };
@@ -889,11 +888,14 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  1582 -> 1557: `oneInEight.compare`, the claimed-vs-verified card dropped
  *  on review (24 Sep 2026) — 25 string leaves. 1557 -> 1558: the ID badges'
  *  `enterprises.employees.turn`. 1558 -> 1559: the SMB conversion pass
- *  added `smb.best` and `smb.perCheck` and dropped `smb.included`. */
+ *  added `smb.best` and `smb.perCheck` and dropped `smb.included`.
+ *  1559 -> 1557 and blocks 77 -> 60: the closing band's form is the real
+ *  `ContactForm` now, so `contact.k`, `contact.submit` and the whole
+ *  `blocks.leadMock` mock (17 leaves) went. */
 check(
-  "sections holds 1559 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1559 &&
-    leafPaths(EN_BLOCKS).length === 77 &&
+  "sections holds 1557 leaves for 152 nodes and blocks 60 for 27 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1557 &&
+    leafPaths(EN_BLOCKS).length === 60 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
   { sections: leafPaths(EN_SECTIONS).length, blocks: leafPaths(EN_BLOCKS).length },
@@ -917,23 +919,21 @@ check(
  *  Dropping `oneInEight.compare` took 25 more strings: 1538; the badges'
  *  "Turn over" added one: 1539. The SMB conversion pass swapped one string
  *  for another (`smb.best` for `smb.included`) and added a sixth function,
- *  `smb.perCheck`. */
+ *  `smb.perCheck`. The real closing-band form dropped two strings: 1537. */
 check(
-  "sections: 1539 string leaves, 14 rich-text leaves and 6 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1539 &&
+  "sections: 1537 string leaves, 14 rich-text leaves and 6 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1537 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 20 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
 );
 
-/** The 2 in `blocks`: `panels.read.checks.c1.l` (another `&amp;` split) and
- *  `leadMock.fields.mobile.value`, which is a whole `<span>` carrying a
- *  `style` — moved as a node rather than re-expressed, because its three
- *  children are what React's separators depend on. */
+/** The 1 in `blocks`: `panels.read.checks.c1.l` (another `&amp;` split).
+ *  The second, `leadMock.fields.mobile.value`, went with the mock form. */
 check(
-  "blocks: 75 string leaves and 2 rich-text leaves, one of them a whole node",
-  stringLeaves(EN_BLOCKS).length === 75 &&
-    leafPaths(EN_BLOCKS).length - stringLeaves(EN_BLOCKS).length === 2,
+  "blocks: 59 string leaves and 1 rich-text leaf",
+  stringLeaves(EN_BLOCKS).length === 59 &&
+    leafPaths(EN_BLOCKS).length - stringLeaves(EN_BLOCKS).length === 1,
   { strings: stringLeaves(EN_BLOCKS).length, all: leafPaths(EN_BLOCKS).length },
 );
 
@@ -970,32 +970,6 @@ check(
     EN_SECTIONS.howItWorks.steps.report.label,
   ].join("|") === "Upload|Read|Confirm|Report",
   Object.values(EN_SECTIONS.howItWorks.steps).map((s) => s.label),
-);
-
-check(
-  "LeadMock's six desktop rows still key on the labels they keyed on",
-  [
-    EN_BLOCKS.leadMock.fields.fullName.label,
-    EN_BLOCKS.leadMock.fields.company.label,
-    EN_BLOCKS.leadMock.fields.email.label,
-    EN_BLOCKS.leadMock.fields.mobile.label,
-    EN_BLOCKS.leadMock.fields.services.label,
-    EN_BLOCKS.leadMock.fields.message.label,
-  ].join("|") === "Full name|Company|Business email|Mobile|Services of interest|Message",
-  Object.values(EN_BLOCKS.leadMock.fields).map((f) => f.label),
-);
-
-check(
-  "…and the phone's two differing rows carry the same two labels",
-  EN_BLOCKS.leadMock.fields.servicesMob.label === "Services of interest" &&
-    EN_BLOCKS.leadMock.fields.message.label === "Message",
-  [EN_BLOCKS.leadMock.fields.servicesMob.label, EN_BLOCKS.leadMock.fields.message.label],
-);
-
-check(
-  "LeadMock's three segment chips still key on Business/Government/Individual",
-  Object.values(EN_BLOCKS.leadMock.segments).join("|") === "Business|Government|Individual",
-  Object.values(EN_BLOCKS.leadMock.segments),
 );
 
 /** The function leaf, against the template literal it replaced. Nine cards

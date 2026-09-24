@@ -38,54 +38,6 @@
  */
 
 export const en = {
-  /** `blocks/LeadMock.tsx`. `fields` is keyed by row id: the component owns
-   *  the ORDER, which rows each breakpoint shows, and the box metrics
-   *  (`inp`, `inpStyle`, `wide`, `select`) — all of which are layout. */
-  leadMock: {
-    fields: {
-      fullName: { label: "Full name", value: "Priya Menon" },
-      company: { label: "Company", value: "Company name" },
-      email: { label: "Business email", value: "name@company.com" },
-      /** THE ONE RICH-TEXT LEAF HERE, and it carries a `style`. That is
-       *  deliberate and it is the reason this file is `.tsx`: the row's
-       *  `<span>` has three children — an element, a `{' '}` and a text node —
-       *  and `LeadMock`'s own header records that it was moved as a NODE
-       *  rather than re-expressed, because React's SSR `<!-- -->` separators
-       *  depend on that children array exactly. Splitting the ink colour out
-       *  into the component would mean re-expressing it, which is the thing
-       *  that file measured and refused. Proved again for this migration with
-       *  `renderToString` before the edit: the node renders the same bytes
-       *  standing here as it did standing there. */
-      mobile: {
-        label: "Mobile",
-        value: (
-          <span>
-            <span style={{ color: 'var(--ink)' }}>
-              +91
-            </span>
-            {' '}· 98··· ·····
-          </span>
-        ),
-      },
-      /** Two ids for one label because the two breakpoints genuinely name a
-       *  different number of services — `LeadMock`'s header measured that as
-       *  one of the three fields that differ. `message` needs no second id:
-       *  its label and its value are identical at both, and only the box
-       *  height differs, which is layout and stays in the component. */
-      services: { label: "Services of interest", value: "Employee verification, KYC, Certifier, Consumer…" },
-      servicesMob: { label: "Services of interest", value: "Employee verification, KYC…" },
-      message: { label: "Message", value: "How many checks a month, and where?" },
-    },
-    /** Which audience the mock is set to. Keyed by segment, not an array:
-     *  an array leaf derives to `string[]`, so a locale could ship two chips
-     *  where English ships three — the argument in `./index`. `on` stays in
-     *  the component: which chip is selected is state, not words. */
-    segments: {
-      business: "Business",
-      government: "Government",
-      individual: "Individual",
-    },
-  },
 
   /** `blocks/HelloVPhone.tsx` — a WhatsApp thread, so the leaves are keyed by
    *  message. The timestamps are copy and not structure: they are rendered
