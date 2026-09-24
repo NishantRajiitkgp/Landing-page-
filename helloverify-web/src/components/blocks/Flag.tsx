@@ -1,33 +1,21 @@
 import type { ReactNode } from "react";
 
-/** The flag box, and the one drawing two of these blocks share.
+import type { OfficeId } from "@/lib/copy/sections";
+
+/** Flag drawings shared across the homepage, one drawing per country.
  *
- *  Extracted from `sections/Presence.tsx` 23 Sep 2026 to clear `max-lines`:
- *  that file stood at exactly 300 of the 300 `eslint.config.mjs` allows, so
- *  the next thing in it that needed the copy layer - an import plus an
- *  `await copy(NS)`, about three lines - could not have had them. Which
- *  symbols belong here was measured rather than chosen
- *  (`scratchpad/census_maxlines_5bd3.py`): these are the only two declarations
- *  in that file referenced from BOTH halves of the split - `Flag` once in
- *  `blocks/DayBand.tsx` and once in `blocks/Governments.tsx`, `FLAG_INDIA` the
- *  same. Put either one inside a block and the other block imports from it,
- *  which is why this third module exists rather than two.
+ *  The six office flags are `<use>`d by the v2 Presence map (its cards and
+ *  its hour strip, `sections/Presence.tsx`); Saudi Arabia, the UAE and the EU
+ *  are inlaid by the v2 seals (`sections/GovSeals.tsx`); India is used by both.
  *
- *  A THIRD CALL SITE EXISTS AND IS NOT TAKEN. `sections/International.tsx:137`
- *  hand-writes the same `<span className="fl">` around the same
- *  `<svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice">`, differing
- *  only in a hardcoded `30px` where this takes `size` - diffed, not assumed.
- *  Rewiring it is a separate commit: this one is gated on byte-identical HTML
- *  and that file is not being moved in it (Part 5, "do not batch these").
+ *  THE PHONE PASS (Sep 2026) DELETED THE BLOCKS THIS FILE WAS CUT FROM:
+ *  `blocks/DayBand.tsx` and `blocks/Governments.tsx` drew only the old phone
+ *  Presence band, and with them went the `<Flag>` box component, which had no
+ *  other caller. The office drawings moved here from `DayBand.tsx` unchanged.
  *
- *  THE FLAG DRAWINGS THEMSELVES ARE STILL NOT SHAREABLE WITH
- *  `International.tsx`, checked rather than assumed: its Singapore crescent
- *  sits at cx 9.5/10.6 where `blocks/DayBand.tsx`'s is at 6.2/7.3, and its
- *  Philippines triangle is drawn from a different origin - different boxes,
- *  different drawings. Only Egypt happens to match, so a shared registry would
- *  carry two variants of most countries and be no simpler. Within Presence
- *  India genuinely is drawn twice, byte-identically, for the Noida row and the
- *  Government of India tile: hence `FLAG_INDIA`.
+ *  STILL NOT SHAREABLE WITH `sections/International.tsx`, checked rather than
+ *  assumed: its Singapore crescent sits at cx 9.5/10.6 where this one is at
+ *  6.2/7.3, and its Philippines triangle is drawn from a different origin.
  *
  *  Flag hex stays literal - facts about the world, not palette, which is the
  *  exemption `check:tokens` was given in Part 3.
@@ -42,10 +30,7 @@ export const FLAG_INDIA = (
   </>
 );
 
-/** Saudi Arabia, the UAE and the EU, moved here from `blocks/Governments.tsx`
- *  (Sep 2026) because homepage v2's seals (`sections/GovSeals.tsx`) inlay the
- *  same three drawings, and India's reason for living here now applies to
- *  them too. Same elements, same attribute strings. */
+/** Saudi Arabia, the UAE and the EU, as the v2 seals inlay them. */
 export const FLAG_KSA = (
   <>
     <rect width="30" height="20" fill="#006C35" />
@@ -79,10 +64,69 @@ export const FLAG_EU = (
   </>
 );
 
-export function Flag({ children, size }: { children: ReactNode; size: string }) {
-  return (
-    <span className="fl" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{children}</svg>
-    </span>
-  );
-}
+/** The six offices, in the order the working day reaches them, Manila first.
+ *  The UAE's red hoist band starts at x=0 here and at x=3 in `FLAG_UAE` (the
+ *  seals' drawing): two drawings on the boards, kept as drawn. */
+export const OFFICE_FLAGS: readonly { k: OfficeId; flag: ReactNode }[] = [
+  {
+    k: "manila",
+    flag: (
+      <>
+        <rect width="30" height="10" fill="#0038A8" />
+        <rect y="10" width="30" height="10" fill="#CE1126" />
+        <polygon points="0,0 13,10 0,20" fill="#FFFFFF" />
+        <circle cx="4.6" cy="10" r="1.7" fill="#FCD116" />
+      </>
+    ),
+  },
+  {
+    k: "singapore",
+    flag: (
+      <>
+        <rect width="30" height="10" fill="#EF3340" />
+        <rect y="10" width="30" height="10" fill="#FFFFFF" />
+        <circle cx="6.2" cy="5" r="2.8" fill="#FFFFFF" />
+        <circle cx="7.3" cy="5" r="2.4" fill="#EF3340" />
+      </>
+    ),
+  },
+  { k: "noida", flag: FLAG_INDIA },
+  {
+    k: "dubai",
+    flag: (
+      <>
+        <rect width="30" height="6.7" fill="#00732F" />
+        <rect y="6.7" width="30" height="6.6" fill="#FFFFFF" />
+        <rect y="13.3" width="30" height="6.7" fill="#15140F" />
+        <rect width="8" height="20" fill="#FF0000" />
+      </>
+    ),
+  },
+  {
+    k: "cairo",
+    flag: (
+      <>
+        <rect width="30" height="6.7" fill="#CE1126" />
+        <rect y="6.7" width="30" height="6.6" fill="#FFFFFF" />
+        <rect y="13.3" width="30" height="6.7" fill="#15140F" />
+        <circle cx="15" cy="10" r="1.8" fill="#C09300" />
+      </>
+    ),
+  },
+  {
+    k: "newYork",
+    flag: (
+      <>
+        <rect width="30" height="20" fill="#FFFFFF" />
+        <rect y="0.00" width="30" height="1.54" fill="#B22234" />
+        <rect y="3.08" width="30" height="1.54" fill="#B22234" />
+        <rect y="6.15" width="30" height="1.54" fill="#B22234" />
+        <rect y="9.23" width="30" height="1.54" fill="#B22234" />
+        <rect y="12.31" width="30" height="1.54" fill="#B22234" />
+        <rect y="15.38" width="30" height="1.54" fill="#B22234" />
+        <rect y="18.46" width="30" height="1.54" fill="#B22234" />
+        <rect width="12" height="10.8" fill="#3C3B6E" />
+      </>
+    ),
+  },
+];

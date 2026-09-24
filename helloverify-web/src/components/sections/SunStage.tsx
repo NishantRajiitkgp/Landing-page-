@@ -22,6 +22,10 @@
     a running time-lapse; `prefers-reduced-motion` does the same from the
     start and skips the auto-play.
 
+    PHONE. The same markup; `presence.css` crops the map to the offices and
+    stacks the cards under it, and a touch only scrubs once it moves
+    sideways or taps (`SunLoop.pointer`), so the map never traps a scroll.
+
     KEYBOARD. Dragging has a single-pointer, keyboard-reachable equivalent
     (WCAG 2.5.7): each hour of the strip is a button that sets the map to it. */
 
@@ -99,12 +103,18 @@ export function SunStage({
     loop.current?.kick();
   }, [now, scrub, playing, still]);
 
-  const onPointer = (kind: "down" | "move" | "up", e: PointerEvent<HTMLDivElement>) => {
+  const onPointer = (kind: "down" | "move" | "up" | "cancel", e: PointerEvent<HTMLDivElement>) => {
     const l = loop.current;
     if (!l) return;
-    if (kind === "down") e.currentTarget.setPointerCapture(e.pointerId);
-    if (kind === "up" && e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
-    l.pointer(kind, e.clientX);
+    // Only the map scrubs. On desktop the cards are `pointer-events: none`
+    // over it, so every press lands on the canvas anyway; on the phone the
+    // cards are a list under the map, and pressing one must not move the sun.
+    if (kind === "down") {
+      if (e.target !== cvRef.current) return;
+      e.currentTarget.setPointerCapture(e.pointerId);
+    }
+    if (kind !== "down" && kind !== "move" && e.currentTarget.hasPointerCapture(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId);
+    l.pointer(kind, e.clientX, e.pointerType === "touch");
   };
 
   const mounted = now !== null;
@@ -167,7 +177,7 @@ export function SunStage({
         onPointerDown={(e) => onPointer("down", e)}
         onPointerMove={(e) => onPointer("move", e)}
         onPointerUp={(e) => onPointer("up", e)}
-        onPointerCancel={(e) => onPointer("up", e)}
+        onPointerCancel={(e) => onPointer("cancel", e)}
       >
         <div ref={mapRef} className="su-map">
           <canvas ref={cvRef} className="su-cv" width={MAP_W} height={MAP_H} role="img" aria-label={sun.map} />

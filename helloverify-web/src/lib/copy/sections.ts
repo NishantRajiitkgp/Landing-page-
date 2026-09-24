@@ -67,10 +67,8 @@ export type PackLineId = keyof SectionsCopy["packages"]["lines"];
 export type PersonSrcDsk = keyof SectionsCopy["peopleStrip"]["dsk"];
 export type PersonSrcMob = keyof SectionsCopy["peopleStrip"]["mob"];
 
-/** `Presence.tsx` — an axis label, an office row, a government tile. */
-export type HourId = keyof SectionsCopy["presence"]["hours"];
+/** `Presence.tsx` — an office on the sun map (`lib/sunMap.ts`). */
 export type OfficeId = keyof SectionsCopy["presence"]["offices"];
-export type GovId = keyof SectionsCopy["presence"]["govs"];
 
 /** `GovSeals.tsx` — one of the five authorities. `GovDossiers.tsx` — one of
  *  the four dossiers. `GovMom.tsx` — a C2 scoring option. */
