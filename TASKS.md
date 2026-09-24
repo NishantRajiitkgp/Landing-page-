@@ -2058,6 +2058,54 @@ Still open here, and all of it needs access:
 
 ---
 
+## Part 12 — Homepage v2, ported from the redesign canvas · **12.1 DONE (24 Sep 2026)**
+
+The homepage was redesigned section by section on a Claude Design canvas
+(`HOMEPAGE-REVAMP-RESEARCH.md` is the brief). Those boards carry logic —
+state, pointer handlers, canvas loops — that `tools/port/h2jsx.py` cannot
+convert, so v2 is **hand-ported, one section per sub-part**, on branch
+`feat/homepage-v2`. Rules that hold for every sub-part:
+
+- Markup lives in the section component; CSS in `src/app/v2.css`, imported by
+  the homepage route only (not `globals.css` — measured: from globals it put
+  `/en/about` over the 16 KB stylesheet ceiling for a hero it never renders).
+- `v2.css` is in both `check-css-color.mjs` SHEETS and `check-logical-css.mjs`
+  FILES. New paper tints are `--v2-*` tokens with a BASELINE `why`.
+- Desktop (`.dsk`) only for now; each section keeps its generated `.mob` tree
+  until the phone pass, because the v2 boards have no 390px artboard.
+- Wording is the canvas wording; every new string goes through
+  `lib/copy/sections.en.tsx` and the pinned counts in `copy.test.ts` move with it.
+
+### 12.1 — Hero · DONE (24 Sep 2026)
+
+Security-print hero: turning guilloche (computed from the ring formulas in
+`lib/heroArt.ts`, byte-identical to the canvas output — verified by diffing),
+pointer-following UV lamp revealing a green print, microtext ring and paper
+fibres, microtext frame, a stamp beside "in minutes." that replays on click,
+a WCAG 2.2.2 pause control, and six audience doors (hinge side via
+`--origin-x`, swing via `--flip`) linking to the IA's routes.
+
+- Client islands: `HeroStage` (lamp, replay, pause) and `HeroPrint` (the
+  print). Everything else is server-rendered.
+- **Budget ceilings raised** `stylesheet 16→17`, `total 460→468`, with the
+  measurement and what was tried first in `check-budgets.mjs`. `/en` measured
+  453.1 → 465.2 KB brotli; both stay inside §9.1.
+- **Contrast fix found by the browser layer:** the frame microtext at the
+  board's `opacity: .62` was 2.4:1; now full `--muted` (4.83:1).
+- Verified: `check:all` 11/11, 701 unit tests, 290 e2e (4 skipped), contract
+  29, redirects 840, `tsc`, ESLint.
+- Environment note: `npx playwright install chromium` was needed once — the
+  installed Playwright wanted `chromium_headless_shell-1243`.
+
+### 12.2 onward — queued, in page order
+
+People strip (curved drag) · One in eight · How we know (orb steps) ·
+Numbers · Presence (follow the sun) · Governments we work with (seals) ·
+Government dossiers · Why governments (deck) · 33 checks (clock) · Packages
+(photo cards, 6 new images) · Enterprises (wave rings, letters) · SMB ·
+Business due diligence · International (globe) · Consumer (photo storefront,
+8 new images) · Platform (live graph) · Footer · then the phone pass.
+
 ## Demo readiness · audited 22 Sep 2026
 
 Asked because the site is about to be shown to a founder. The audit walked the

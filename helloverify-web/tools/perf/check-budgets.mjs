@@ -75,9 +75,25 @@ const SPEC = {
  *  these as the gap closes; never raise one without saying why in the diff. */
 const CEILING = {
   script: 163,
-  stylesheet: 16,
+  /** RAISED 16 -> 17 and 460 -> 468 for homepage v2, part 1 (the hero,
+   *  Sep 2026). Measured against the pre-change build on `/en`: total
+   *  453.1 -> 465.2 KB, of which the document is +7.5 KB brotli (36.9 -> 44.4:
+   *  the security-print guilloche, UV layer, microtext frame, seal and six
+   *  doors), the flight payload +1.6, the route-scoped `v2.css` +2.5, and the
+   *  two client islands the rest. Both stay inside §9.1 (40 and 500).
+   *
+   *  What was tried before raising: `v2.css` moved from `globals.css` to the
+   *  homepage route (it had put `/en/about` at 16.1 KB of CSS for a hero that
+   *  page never renders); the guilloche moved into a client component so its
+   *  path data is computed from a formula rather than serialised into the
+   *  flight payload; and integer coordinates, rejected because they brotli
+   *  WORSE (3,264 -> 3,445 B — the one-decimal values repeat more).
+   *
+   *  Later v2 parts will move these again, each with its own measurement;
+   *  every generated section they retire should give some of it back. */
+  stylesheet: 17,
   font: 245,
-  total: 460,
+  total: 468,
   thirdParty: 5,
 };
 

@@ -18,6 +18,13 @@ import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
+// Homepage v2's stylesheet is imported HERE, not in `globals.css`, so only
+// this route downloads it. Measured: from globals it put `/en/about` at
+// 16.1 KB of CSS against `check-budgets.mjs`'s 16 KB ceiling — every page
+// paying for a hero it does not render. Imported after the root layout's
+// `globals.css`, so it still follows `design.css` and wins on equal
+// specificity.
+import "../v2.css";
 
 /** The homepage inherited its title and description from the root layout and
  *  needed no export of its own — until §8.1, because a canonical cannot be

@@ -59,7 +59,7 @@ function values(text) {
   return out;
 }
 
-const FILES = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css"];
+const FILES = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css", "src/app/v2.css"];
 
 /** Each rule is a property at declaration position, plus its logical
  *  replacement, so the failure message says what to write instead. */

@@ -812,7 +812,11 @@ const EN_SECTIONS = pick(SECTIONS, DEFAULT);
 const EN_BLOCKS = pick(BLOCKS, DEFAULT);
 
 const BANDS: Record<string, readonly [number, number]> = {
-  hero: [9, 6],
+  /** 6 -> 38 with homepage v2 (Sep 2026): the desktop tree gained the
+   *  security-print notes, microtext, seal, motion labels and six doors (3
+   *  leaves each). The matcher figure stays the migration-time 9 — it is the
+   *  historical count the 152 below sums, not a re-measurement. */
+  hero: [9, 38],
   compliance: [4, 5],
   numbers: [14, 13],
   why: [8, 24],
@@ -828,6 +832,17 @@ const BANDS: Record<string, readonly [number, number]> = {
   demo2: [39, 43],
   presence: [8, 29],
 };
+
+/** v2 splits the hero headline so the underlined word is its own node
+ *  (`sections/Hero.tsx`). The two halves are separated by a JSX `{" "}`, so
+ *  they must rejoin to exactly `headline` with one space — or the desktop
+ *  heading silently diverges from the phone's, which still renders
+ *  `headline` whole. */
+check(
+  "sections.hero: headlineLead + ' ' + headlineMark === headline",
+  `${EN_SECTIONS.hero.headlineLead} ${EN_SECTIONS.hero.headlineMark}` === EN_SECTIONS.hero.headline,
+  { lead: EN_SECTIONS.hero.headlineLead, mark: EN_SECTIONS.hero.headlineMark, whole: EN_SECTIONS.hero.headline },
+);
 
 const BLOCK_FILES: Record<string, readonly [number, number]> = {
   leadMock: [0, 17],
@@ -854,8 +869,8 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
 }
 
 check(
-  "sections holds 438 leaves for 152 nodes and blocks 77 for 27 — 2.88x over both",
-  leafPaths(EN_SECTIONS).length === 438 &&
+  "sections holds 470 leaves for 152 nodes and blocks 77 for 27 (438 before v2 hero +32)",
+  leafPaths(EN_SECTIONS).length === 470 &&
     leafPaths(EN_BLOCKS).length === 77 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
@@ -870,8 +885,8 @@ check(
  *  and two `demo2.checks` labels — and the thirteenth is `packages.tot`, the
  *  one FUNCTION leaf in either namespace. */
 check(
-  "sections: 425 string leaves, 12 rich-text leaves and 1 function leaf",
-  stringLeaves(EN_SECTIONS).length === 425 &&
+  "sections: 457 string leaves, 12 rich-text leaves and 1 function leaf",
+  stringLeaves(EN_SECTIONS).length === 457 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 13 &&
     typeof EN_SECTIONS.packages.tot === "function",
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
