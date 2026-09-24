@@ -24,7 +24,15 @@
  *  `inert` — out of the tab order and the accessibility tree — rather than
  *  `aria-hidden`, which would leave their links focusable. The deck is a
  *  polite live region only while it is not rotating on its own, so a screen
- *  reader hears a card the user chose and is not interrupted every 3.6s. */
+ *  reader hears a card the user chose and is not interrupted every 3.6s.
+ *
+ *  TOUCH. A sideways swipe on the deck turns it — toward the inline start
+ *  for the next card, so it mirrors under `dir="rtl"` — and a tap on the
+ *  front card's drawing turns it forward. The deck is `touch-action: pan-y`
+ *  (`why.css`), so a vertical drag still scrolls the page and cancels the
+ *  gesture. The eight progress bars remain the keyboard and screen-reader
+ *  route; the swipe and the tap are shortcuts, not the only way. Mouse drags
+ *  are ignored: they would fight text selection on desktop. */
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
@@ -51,6 +59,7 @@ export function WhyDeck({
   const [focus, setFocus] = useState(false);
   const [paused, setPaused] = useState(false);
   const [inView, setInView] = useState(true);
+  const swipe = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -70,6 +79,8 @@ export function WhyDeck({
   const hold = hover || focus || paused || !inView;
   const rotating = run && !hold;
 
+  const turn = (by: number) => setNow((i) => (i + by + n) % n);
+
   const pos = (k: number) => {
     const rel = (k - now + n) % n;
     return rel === 0 ? "wy-p0" : rel === 1 ? "wy-p1" : rel === 2 ? "wy-p2" : rel === n - 1 ? "wy-px" : "wy-ph";
@@ -87,6 +98,25 @@ export function WhyDeck({
         aria-live={rotating ? "off" : "polite"}
         onPointerEnter={() => setHover(true)}
         onPointerLeave={() => setHover(false)}
+        onPointerDown={(e) => {
+          swipe.current = e.pointerType === "mouse" ? null : { x: e.clientX, y: e.clientY };
+        }}
+        onPointerCancel={() => {
+          swipe.current = null;
+        }}
+        onPointerUp={(e) => {
+          const s = swipe.current;
+          swipe.current = null;
+          if (!s) return;
+          const dx = e.clientX - s.x;
+          // 40px, and more sideways than down: a swipe, not a wobbly scroll.
+          if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(e.clientY - s.y)) return;
+          const rtl = getComputedStyle(e.currentTarget).direction === "rtl";
+          turn((dx < 0) !== rtl ? 1 : -1);
+        }}
+        onClick={(e) => {
+          if ((e.target as Element).closest(".wy-p0 .wy-vis")) turn(1);
+        }}
         onFocus={() => setFocus(true)}
         onBlur={(e) => {
           if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocus(false);
