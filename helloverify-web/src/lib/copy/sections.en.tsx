@@ -53,20 +53,18 @@ export const en = {
    *  from `headlineLead` on is the v2 desktop tree only. */
   hero: {
     backedBy: "Backed by",
-    /** Two leaves, not one: `<br />` sits between them on desktop and a
-     *  `{' '}` on mobile, so the two children are the unit React separates. */
-    headline: "Verified at the source,",
+    /** The headline in three nodes: the last word of the first line carries
+     *  the hand-drawn underline, and the italic second line carries the seal.
+     *  They read "Verified at the source, in minutes." No edge whitespace —
+     *  the component supplies the gaps. (The whole first line was once its
+     *  own `headline` leaf for the phone tree; one tree since Sep 2026.) */
     headlineEm: "in minutes.",
-    /** v2 desktop splits `headline` once more: the last word carries the
-     *  hand-drawn underline, so it is its own node. `headlineLead` +
-     *  `headlineMark` joined by one space must read as `headline`; the copy test
-     *  pins that. No edge whitespace — the component supplies the gap. */
     headlineLead: "Verified at the",
     headlineMark: "source,",
     lede: "AI reads the documents. Our team confirms with the issuer — the university, the employer, the registry. You get an answer in as little as 15 minutes.",
     cta: "Talk to sales",
     checks: "See all 33 checks",
-    /** Homepage v2 (desktop). The corner notes of the security-print sheet
+    /** Homepage v2. The corner notes of the security-print sheet
      *  are decoration — `aria-hidden` in the component — but they are words
      *  a translator must see, so they live here and not in the markup. */
     notes: {
@@ -1035,10 +1033,13 @@ export const en = {
   peopleStrip: {
     strip: "Hires, tenants, drivers, suppliers, nannies. Anyone you need to trust.",
     times: "Times shown are from upload to report",
-    /** v2 desktop: the label over the checkpoint the photographs pass
+    /** v2: the label over the strip the photographs pass
      *  through. Decorative (`aria-hidden`), but a word a translator sees. */
     checkpoint: "At the source",
-    dsk: {
+    /** One table since the phone pass: the phone shows the same eight
+     *  cards and words (the six-card `mob` table, with its shorter chips,
+     *  went with the mobile track). Keyed by photograph. */
+    people: {
       "/img/01-rider-bengaluru.jpg": {
         role: "Delivery rider",
         city: "Bengaluru",
@@ -1086,38 +1087,6 @@ export const en = {
         city: "London",
         chip: "Global database · 15 min",
         note: "photo · executive",
-      },
-    },
-    mob: {
-      "/img/01-rider-bengaluru.jpg": {
-        role: "Delivery rider",
-        city: "Bengaluru",
-        chip: "Licence · 30 min",
-      },
-      "/img/02-nurse-abudhabi.jpg": {
-        role: "Nurse",
-        city: "Abu Dhabi",
-        chip: "Degree · 3 days",
-      },
-      "/img/03-engineer-manila.jpg": {
-        role: "Software engineer",
-        city: "Manila",
-        chip: "Employment · 60 min",
-      },
-      "/img/04-nanny-gurugram.jpg": {
-        role: "Nanny",
-        city: "Gurugram",
-        chip: "Criminal · 30 min",
-      },
-      "/img/05-warehouse-pune.jpg": {
-        role: "Warehouse associate",
-        city: "Pune · 00:41 elapsed",
-        chip: "Reading Aadhaar…",
-      },
-      "/img/06-supplier-cairo.jpg": {
-        role: "Textile supplier",
-        city: "Cairo",
-        chip: "Trade licence · 2 days",
       },
     },
   },

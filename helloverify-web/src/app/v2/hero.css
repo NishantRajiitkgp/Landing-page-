@@ -17,8 +17,12 @@
    `check-css-color.mjs` names for its "+a" rows. Inline-axis offsets are
    logical properties; the one horizontal `translateX` goes through `--flip`.
 
-   Only the desktop tree (`.dsk`, ≥1081px) is v2 so far. The phone keeps the
-   generated `.mob` markup until its own part. */
+   ONE TREE (phone pass, Sep 2026). The hero renders the v2 markup at every
+   width. What holds at both sizes is unscoped; the 1440 board's fixed
+   placements stay in `min-width: 1081px`, the phone's layout is in
+   `max-width: 1080px`. The boards have no 390px artboard, so the phone is a
+   re-lay-out of the same parts, not a shrunk stage: content in flow, the
+   guilloche scaled to the headline, the doors a 3×2 grid. */
 
 /* Horizontal gradients here are written `calc(var(--flip) * 90deg)`: each
    one fades toward, or away from, something on the inline axis (the kicker's
@@ -41,119 +45,196 @@
   --v2-dash: #BDB7AB;
 }
 
+/* The lamp's position is registered so a touch can glide it (below); the
+   pointer-following desktop lamp declares no transition and is unchanged. */
+@property --mx { syntax: "<length-percentage>"; inherits: true; initial-value: 50%; }
+@property --my { syntax: "<length-percentage>"; inherits: true; initial-value: 30%; }
+
+/* ── Hero: security print ─────────────────────────────────────────────── */
+.hv-hero { position: relative; overflow: hidden; --mx: 720px; --my: 300px; --uv: 0; --lr: 240px; --mr: 210px; }
+.hv-guil { position: absolute; width: 1200px; height: 1200px; pointer-events: none; opacity: .72; transform-origin: 50% 50%; animation: hvSpin 260s linear infinite; }
+@keyframes hvSpin { to { transform: rotate(360deg); } }
+.hv-lamp { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; background: radial-gradient(circle var(--lr) at var(--mx) var(--my), rgb(from var(--green-light) r g b / .3), rgb(from var(--green-light) r g b / 0) 72%); }
+.hv-uv { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; -webkit-mask-image: radial-gradient(circle var(--mr) at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); mask-image: radial-gradient(circle var(--mr) at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); }
+.hv-uv .hv-guil { opacity: 1; }
+.hv-fibres { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* A touch screen has no pointer to follow: the lamp rests lit, and a tap
+   glides it to the finger (`HeroStage`). */
+@media (hover: none) {
+  .hv-hero { --uv: 1; transition: --mx .7s cubic-bezier(.2, .8, .2, 1), --my .7s cubic-bezier(.2, .8, .2, 1); }
+}
+.hv-frame { position: absolute; top: 14px; inset-inline: 20px; bottom: 14px; border: 1px solid var(--v2-frame); pointer-events: none; }
+.hv-frame-in { position: absolute; inset: 13px; border: 1px solid var(--hair); }
+.hv-mt { position: absolute; inset-inline: 13px; height: 13px; overflow: hidden; white-space: nowrap; }
+.hv-mt-top { top: 0; }
+.hv-mt-bot { bottom: 0; }
+/* `display: block; width: max-content`, not the board's `inline-block`: an
+   inline-block sits on the baseline of the band's own 16px/normal line box,
+   which put the 13px text 8px low and clipped it (measured: band top 216,
+   text top 224). `max-content` keeps the -50% marquee maths intact. */
+.hv-mt-in { display: block; width: max-content; font-family: var(--mono); font-size: 6.4px; line-height: 13px; letter-spacing: .34em; color: var(--muted); animation: hvMarq 140s linear infinite; }
+/* Full-strength `--muted` (4.83:1 on paper), not the board's `opacity: .62`:
+   that measured 2.4:1 in `tools/e2e/a11y.spec.ts`, which keeps no allowlist
+   and fixes colour rather than excusing it — even for decorative microtext. */
+.hv-mt-rev { animation-direction: reverse; }
+@keyframes hvMarq { to { transform: translateX(calc(var(--flip) * -50%)); } }
+.hv-reg { position: absolute; }
+.hv-reg-tl { inset-inline-start: -8px; top: -8px; }
+.hv-reg-tr { inset-inline-end: -8px; top: -8px; }
+.hv-reg-bl { inset-inline-start: -8px; bottom: -8px; }
+.hv-reg-br { inset-inline-end: -8px; bottom: -8px; }
+.hv-note { position: absolute; top: 42px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; pointer-events: none; }
+.hv-note-tl { inset-inline-start: 54px; }
+.hv-note-tr { inset-inline-end: 54px; }
+.hv-note-bl { top: auto; bottom: 42px; inset-inline-start: 54px; }
+/* "Move your cursor" is an instruction a touch screen cannot follow, and the
+   phone's bottom row is the pause control's. */
+@media (max-width: 1080px), (hover: none) {
+  .hv-note-bl { display: none; }
+}
+.hv-uvdot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); box-shadow: 0 0 0 3px rgb(from var(--green-light) r g b / .28); }
+
+/* The headline: each line focuses in, the underline draws under "source",
+   and the seal stamps down beside "in minutes." (replayable). */
+.hv-content { position: relative; padding-top: 84px; text-align: center; }
+.hv-pill { display: inline-flex; align-items: center; gap: 10px; height: 38px; padding-block: 0; padding-inline: 14px 16px; border-radius: 999px; background: var(--white); border: 1px solid var(--hair); font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+.hv-h1 { margin: 34px auto 0; max-width: 1080px; font-size: 112px; line-height: .96; letter-spacing: -.03em; font-weight: 400; text-wrap: balance; animation: hvNudge .34s ease 1.93s; }
+@keyframes hvNudge { 30% { transform: translateY(2px); } 60% { transform: translateY(-1px); } }
+.hv-l { display: block; animation: hvFocus 1.15s cubic-bezier(.16, 1, .3, 1) both; }
+.hv-l1 { animation-delay: .12s; }
+.hv-l2 { animation-delay: .34s; }
+@keyframes hvFocus { 0% { opacity: 0; filter: blur(16px); transform: translateY(16px); } 55% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
+.hv-src { position: relative; display: inline-block; }
+.hv-ul { position: absolute; inset-inline: .02em .34em; top: .74em; height: .17em; overflow: visible; pointer-events: none; }
+.hv-ul path { fill: none; stroke: var(--green); stroke-width: 4.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: hvDraw .95s cubic-bezier(.65, 0, .35, 1) 1.05s forwards; }
+@keyframes hvDraw { to { stroke-dashoffset: 0; } }
+.hv-em { position: relative; display: inline-block; font-style: italic; font-weight: 400; }
+.hv-lede { margin: 36px auto 0; max-width: 640px; font-size: 21px; line-height: 1.45; color: var(--ink-soft); letter-spacing: -.005em; text-wrap: pretty; }
+.hv-ctas { margin-top: 40px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; }
+/* The seal is sized in `em` of the headline (168px at 112px) so it scales
+   with the phone's smaller type rather than needing a second geometry; a
+   button's UA font-size is 13.33px, hence the `inherit`. */
+.hv-seal-btn { position: absolute; inset-inline-start: calc(100% + 4px); top: -.3214em; width: 1.5em; height: 1.5em; font-size: inherit; padding: 0; border: 0; background: none; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.hv-seal-btn svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hv-seal-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.hv-seal { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; mix-blend-mode: multiply; }
+.hv-shock { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; }
+/* Two identical keyframe pairs so a replay is a class swap, not a reflow
+   hack: changing `animation-name` restarts an animation, re-setting the
+   same one does not. */
+.hv-stampA .hv-seal { animation: hvStampA .62s cubic-bezier(.3, 1.35, .5, 1) 1.6s both; }
+.hv-stampB .hv-seal { animation: hvStampB .62s cubic-bezier(.3, 1.35, .5, 1) 0s both; }
+.hv-stampA .hv-shock { animation: hvShockA .8s cubic-bezier(.16, 1, .3, 1) 1.9s both; }
+.hv-stampB .hv-shock { animation: hvShockB .8s cubic-bezier(.16, 1, .3, 1) .3s both; }
+@keyframes hvStampA { 0% { opacity: 0; transform: scale(1.9) rotate(-2deg); } 55% { opacity: .96; transform: scale(.95) rotate(-15deg); } to { opacity: .93; transform: scale(1) rotate(-14deg); } }
+@keyframes hvStampB { 0% { opacity: 0; transform: scale(1.9) rotate(-2deg); } 55% { opacity: .96; transform: scale(.95) rotate(-15deg); } to { opacity: .93; transform: scale(1) rotate(-14deg); } }
+@keyframes hvShockA { 0% { opacity: .55; transform: scale(.9); } to { opacity: 0; transform: scale(1.55); } }
+@keyframes hvShockB { 0% { opacity: .55; transform: scale(.9); } to { opacity: 0; transform: scale(1.55); } }
+
+.hv-motion { position: absolute; inset-inline-end: 54px; bottom: 36px; display: flex; align-items: center; gap: 8px; padding: 6px 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.hv-motion:hover { color: var(--ink); }
+.hv-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+.hv-paused .hv-guil, .hv-paused .hv-mt-in, .hv-paused .dr-leaf { animation-play-state: paused; }
+
+/* ── Hero doors: six audiences, one platform ─────────────────────────── */
+.dr { display: flex; flex-direction: column; align-items: center; }
+.dr-k { display: flex; align-items: center; gap: 16px; animation: rise .9s cubic-bezier(.2, .7, .2, 1) .8s both; }
+.dr-k i { width: 44px; height: 1px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--v2-dash)); }
+.dr-k i:last-child { background: linear-gradient(calc(var(--flip) * 90deg), var(--v2-dash), transparent); }
+.dr-row { position: relative; margin-top: 22px; display: grid; justify-content: center; }
+.dr-floor { position: absolute; inset-inline: -36px; top: 118px; height: 1px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--tick-off) 8%, var(--tick-off) 92%, transparent); }
+.dr-floor-go { position: absolute; inset-inline: -36px; top: 117.5px; height: 2px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green) 8%, var(--green) 92%, transparent); transform: scaleX(0); transform-origin: var(--origin-x) center; animation: hvGo 1.6s cubic-bezier(.65, 0, .35, 1) 2.2s forwards; opacity: .85; }
+@keyframes hvGo { to { transform: scaleX(1); } }
+.dr-d { position: relative; display: flex; flex-direction: column; align-items: center; color: var(--ink); text-decoration: none; animation: rise .9s cubic-bezier(.2, .7, .2, 1) calc(.95s + var(--i) * .08s) both; outline: none; }
+.dr-arch { position: relative; width: 112px; height: 118px; border-radius: 56px 56px 4px 4px; background: linear-gradient(180deg, var(--v2-paper-hi), var(--v2-paper-lo)); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .18), inset 0 -10px 18px -12px rgb(from var(--ink) r g b / .18), 0 1px 0 rgb(from var(--white) r g b / .9); perspective: 420px; transition: box-shadow .5s; }
+.dr-arch::before { content: ""; position: absolute; inset: 5px; border-radius: 51px 51px 2px 2px; box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1); pointer-events: none; }
+.dr-in { position: absolute; inset: 6px; border-radius: 50px 50px 1px 1px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; padding-bottom: 18px; background: radial-gradient(ellipse at 50% 88%, rgb(from var(--green-light) r g b / .95), rgb(from var(--green-light) r g b / .35) 50%, var(--v2-mint-pale) 88%); }
+.dr-t { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1; color: var(--green); white-space: nowrap; }
+.dr-go { width: 24px; height: 24px; border-radius: 50%; background: var(--green); color: var(--white); display: inline-flex; align-items: center; justify-content: center; transform: scale(.6); opacity: 0; transition: transform .4s cubic-bezier(.3, 1.5, .5, 1) .15s, opacity .3s .15s; }
+/* The leaf hinges on the inline start, so it swings from the right in
+   Arabic — `--origin-x` is the transform-origin token `globals.css` keeps for
+   exactly this. The shading gradient runs across the leaf away from its
+   hinge and mirrors with it. */
+.dr-leaf { position: absolute; inset: 6px; border-radius: 50px 50px 1px 1px; display: flex; align-items: center; justify-content: center; background: linear-gradient(calc(var(--flip) * 90deg), var(--white) 0, var(--v2-leaf-mid) 70%, var(--v2-leaf-lo) 100%); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1); transform-origin: var(--origin-x) 50%; transform: rotateY(0); transition: transform .75s cubic-bezier(.2, .8, .2, 1), box-shadow .75s; animation: drPeek 13.2s cubic-bezier(.45, 0, .3, 1) var(--pd) infinite; backface-visibility: hidden; }
+.dr-leaf::before { content: ""; position: absolute; inset: 14px 12px 16px; border-radius: 40px 40px 2px 2px; box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .07); pointer-events: none; }
+.dr-ic { width: 34px; height: 34px; stroke: rgb(from var(--ink) r g b / .72); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; transition: stroke .4s; }
+.dr-knob { position: absolute; inset-inline-end: 13px; top: 60%; width: 5px; height: 5px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 2px rgb(from var(--green-light) r g b / .4); }
+@keyframes drPeek { 0%, 9%, 100% { transform: rotateY(0); } 4.5% { transform: rotateY(calc(var(--flip) * -34deg)); } }
+.dr-d:hover .dr-leaf, .dr-d:focus-visible .dr-leaf { animation: none; transform: rotateY(calc(var(--flip) * -74deg)); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1), calc(var(--flip) * 18px) 0 22px -10px rgb(from var(--ink) r g b / .28); }
+.dr-d:hover .dr-go, .dr-d:focus-visible .dr-go { transform: scale(1); opacity: 1; }
+.dr-d:hover .dr-arch, .dr-d:focus-visible .dr-arch { box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .35), inset 0 -10px 18px -12px rgb(from var(--ink) r g b / .18), 0 18px 30px -18px rgb(from var(--green) r g b / .55); }
+.dr-d:focus-visible .dr-arch { outline: 2px solid var(--ink); outline-offset: 4px; }
+.dr-lab { position: relative; margin-top: 14px; text-align: center; }
+.dr-a, .dr-b { display: block; }
+.dr-a { font-family: var(--serif); font-size: 18px; line-height: 1.15; letter-spacing: -.012em; color: var(--ink); }
+.dr-b { font-size: 13px; line-height: 1.35; color: var(--ink-soft); text-wrap: balance; }
+
 @media (min-width: 1081px) {
-  /* ── Hero: security print ─────────────────────────────────────────────── */
-  .hv-hero { position: relative; height: 940px; overflow: hidden; --mx: 720px; --my: 300px; --uv: 0; }
-  .hv-guil { position: absolute; inset-inline-start: 120px; top: -290px; width: 1200px; height: 1200px; pointer-events: none; opacity: .72; transform-origin: 50% 50%; animation: hvSpin 260s linear infinite; }
-  @keyframes hvSpin { to { transform: rotate(360deg); } }
-  .hv-lamp { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; background: radial-gradient(circle 240px at var(--mx) var(--my), rgb(from var(--green-light) r g b / .3), rgb(from var(--green-light) r g b / 0) 72%); }
-  .hv-uv { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; -webkit-mask-image: radial-gradient(circle 210px at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); mask-image: radial-gradient(circle 210px at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); }
-  .hv-uv .hv-guil { opacity: 1; }
-  .hv-fibres { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .hv-frame { position: absolute; top: 14px; inset-inline: 20px; bottom: 14px; border: 1px solid var(--v2-frame); pointer-events: none; }
-  .hv-frame-in { position: absolute; inset: 13px; border: 1px solid var(--hair); }
-  .hv-mt { position: absolute; inset-inline: 13px; height: 13px; overflow: hidden; white-space: nowrap; }
-  .hv-mt-top { top: 0; }
-  .hv-mt-bot { bottom: 0; }
-  /* `display: block; width: max-content`, not the board's `inline-block`: an
-     inline-block sits on the baseline of the band's own 16px/normal line box,
-     which put the 13px text 8px low and clipped it (measured: band top 216,
-     text top 224). `max-content` keeps the -50% marquee maths intact. */
-  .hv-mt-in { display: block; width: max-content; font-family: var(--mono); font-size: 6.4px; line-height: 13px; letter-spacing: .34em; color: var(--muted); animation: hvMarq 140s linear infinite; }
-  /* Full-strength `--muted` (4.83:1 on paper), not the board's `opacity: .62`:
-     that measured 2.4:1 in `tools/e2e/a11y.spec.ts`, which keeps no allowlist
-     and fixes colour rather than excusing it — even for decorative microtext. */
-  .hv-mt-rev { animation-direction: reverse; }
-  @keyframes hvMarq { to { transform: translateX(calc(var(--flip) * -50%)); } }
-  .hv-reg { position: absolute; }
-  .hv-reg-tl { inset-inline-start: -8px; top: -8px; }
-  .hv-reg-tr { inset-inline-end: -8px; top: -8px; }
-  .hv-reg-bl { inset-inline-start: -8px; bottom: -8px; }
-  .hv-reg-br { inset-inline-end: -8px; bottom: -8px; }
-  .hv-note { position: absolute; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; pointer-events: none; }
-  .hv-note-tl { top: 42px; inset-inline-start: 54px; }
-  .hv-note-tr { top: 42px; inset-inline-end: 54px; }
-  .hv-note-bl { bottom: 42px; inset-inline-start: 54px; }
-  .hv-uvdot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); box-shadow: 0 0 0 3px rgb(from var(--green-light) r g b / .28); }
+  .hv-hero { height: 940px; }
+  .hv-guil { inset-inline-start: 120px; top: -290px; }
 
-  /* The headline: each line focuses in, the underline draws under "source",
-     and the seal stamps down beside "in minutes." (replayable). */
-  .hv-content { position: relative; padding-top: 84px; text-align: center; }
-  .hv-pill { display: inline-flex; align-items: center; gap: 10px; height: 38px; padding-block: 0; padding-inline: 14px 16px; border-radius: 999px; background: var(--white); border: 1px solid var(--hair); font-size: 13px; font-weight: 500; color: var(--ink-soft); }
-  .hv-h1 { margin: 34px auto 0; max-width: 1080px; font-size: 112px; line-height: .96; letter-spacing: -.03em; font-weight: 400; text-wrap: balance; animation: hvNudge .34s ease 1.93s; }
-  @keyframes hvNudge { 30% { transform: translateY(2px); } 60% { transform: translateY(-1px); } }
-  .hv-l { display: block; animation: hvFocus 1.15s cubic-bezier(.16, 1, .3, 1) both; }
-  .hv-l1 { animation-delay: .12s; }
-  .hv-l2 { animation-delay: .34s; }
-  @keyframes hvFocus { 0% { opacity: 0; filter: blur(16px); transform: translateY(16px); } 55% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
-  .hv-src { position: relative; display: inline-block; }
-  .hv-ul { position: absolute; inset-inline: .02em .34em; top: .74em; height: .17em; overflow: visible; pointer-events: none; }
-  .hv-ul path { fill: none; stroke: var(--green); stroke-width: 4.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: hvDraw .95s cubic-bezier(.65, 0, .35, 1) 1.05s forwards; }
-  @keyframes hvDraw { to { stroke-dashoffset: 0; } }
-  .hv-em { position: relative; display: inline-block; font-style: italic; font-weight: 400; }
-  .hv-lede { margin: 36px auto 0; max-width: 640px; font-size: 21px; line-height: 1.45; color: var(--ink-soft); letter-spacing: -.005em; text-wrap: pretty; }
-  .hv-ctas { margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 14px; }
-  .hv-seal-btn { position: absolute; inset-inline-start: calc(100% + 4px); top: -36px; width: 168px; height: 168px; padding: 0; border: 0; background: none; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .hv-seal-btn svg { display: block; width: 100%; height: 100%; overflow: visible; }
-  .hv-seal-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
-  .hv-seal { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; mix-blend-mode: multiply; }
-  .hv-shock { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; }
-  /* Two identical keyframe pairs so a replay is a class swap, not a reflow
-     hack: changing `animation-name` restarts an animation, re-setting the
-     same one does not. */
-  .hv-stampA .hv-seal { animation: hvStampA .62s cubic-bezier(.3, 1.35, .5, 1) 1.6s both; }
-  .hv-stampB .hv-seal { animation: hvStampB .62s cubic-bezier(.3, 1.35, .5, 1) 0s both; }
-  .hv-stampA .hv-shock { animation: hvShockA .8s cubic-bezier(.16, 1, .3, 1) 1.9s both; }
-  .hv-stampB .hv-shock { animation: hvShockB .8s cubic-bezier(.16, 1, .3, 1) .3s both; }
-  @keyframes hvStampA { 0% { opacity: 0; transform: scale(1.9) rotate(-2deg); } 55% { opacity: .96; transform: scale(.95) rotate(-15deg); } to { opacity: .93; transform: scale(1) rotate(-14deg); } }
-  @keyframes hvStampB { 0% { opacity: 0; transform: scale(1.9) rotate(-2deg); } 55% { opacity: .96; transform: scale(.95) rotate(-15deg); } to { opacity: .93; transform: scale(1) rotate(-14deg); } }
-  @keyframes hvShockA { 0% { opacity: .55; transform: scale(.9); } to { opacity: 0; transform: scale(1.55); } }
-  @keyframes hvShockB { 0% { opacity: .55; transform: scale(.9); } to { opacity: 0; transform: scale(1.55); } }
-
-  .hv-motion { position: absolute; inset-inline-end: 54px; bottom: 36px; display: flex; align-items: center; gap: 8px; padding: 6px 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .hv-motion:hover { color: var(--ink); }
-  .hv-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
-  .hv-paused .hv-guil, .hv-paused .hv-mt-in, .hv-paused .dr-leaf { animation-play-state: paused; }
-
-  /* ── Hero doors: six audiences, one platform ─────────────────────────── */
-  .dr { position: absolute; inset-inline: 120px; top: 636px; display: flex; flex-direction: column; align-items: center; }
-  .dr-k { display: flex; align-items: center; gap: 16px; animation: rise .9s cubic-bezier(.2, .7, .2, 1) .8s both; }
-  .dr-k i { width: 44px; height: 1px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--v2-dash)); }
-  .dr-k i:last-child { background: linear-gradient(calc(var(--flip) * 90deg), var(--v2-dash), transparent); }
-  .dr-row { position: relative; margin-top: 22px; display: grid; grid-template-columns: repeat(6, 152px); gap: 22px; justify-content: center; }
-  .dr-floor { position: absolute; inset-inline: -36px; top: 118px; height: 1px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--tick-off) 8%, var(--tick-off) 92%, transparent); }
-  .dr-floor-go { position: absolute; inset-inline: -36px; top: 117.5px; height: 2px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green) 8%, var(--green) 92%, transparent); transform: scaleX(0); transform-origin: var(--origin-x) center; animation: hvGo 1.6s cubic-bezier(.65, 0, .35, 1) 2.2s forwards; opacity: .85; }
-  @keyframes hvGo { to { transform: scaleX(1); } }
-  .dr-d { position: relative; display: flex; flex-direction: column; align-items: center; color: var(--ink); text-decoration: none; animation: rise .9s cubic-bezier(.2, .7, .2, 1) calc(.95s + var(--i) * .08s) both; outline: none; }
-  .dr-arch { position: relative; width: 112px; height: 118px; border-radius: 56px 56px 4px 4px; background: linear-gradient(180deg, var(--v2-paper-hi), var(--v2-paper-lo)); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .18), inset 0 -10px 18px -12px rgb(from var(--ink) r g b / .18), 0 1px 0 rgb(from var(--white) r g b / .9); perspective: 420px; transition: box-shadow .5s; }
-  .dr-arch::before { content: ""; position: absolute; inset: 5px; border-radius: 51px 51px 2px 2px; box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1); pointer-events: none; }
-  .dr-in { position: absolute; inset: 6px; border-radius: 50px 50px 1px 1px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; padding-bottom: 18px; background: radial-gradient(ellipse at 50% 88%, rgb(from var(--green-light) r g b / .95), rgb(from var(--green-light) r g b / .35) 50%, var(--v2-mint-pale) 88%); }
-  .dr-t { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1; color: var(--green); white-space: nowrap; }
-  .dr-go { width: 24px; height: 24px; border-radius: 50%; background: var(--green); color: var(--white); display: inline-flex; align-items: center; justify-content: center; transform: scale(.6); opacity: 0; transition: transform .4s cubic-bezier(.3, 1.5, .5, 1) .15s, opacity .3s .15s; }
-  /* The leaf hinges on the inline start, so it swings from the right in
-     Arabic — `--origin-x` is the transform-origin token `globals.css` keeps for
-     exactly this. The shading gradient runs across the leaf away from its
-     hinge and mirrors with it. */
-  .dr-leaf { position: absolute; inset: 6px; border-radius: 50px 50px 1px 1px; display: flex; align-items: center; justify-content: center; background: linear-gradient(calc(var(--flip) * 90deg), var(--white) 0, var(--v2-leaf-mid) 70%, var(--v2-leaf-lo) 100%); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1); transform-origin: var(--origin-x) 50%; transform: rotateY(0); transition: transform .75s cubic-bezier(.2, .8, .2, 1), box-shadow .75s; animation: drPeek 13.2s cubic-bezier(.45, 0, .3, 1) var(--pd) infinite; backface-visibility: hidden; }
-  .dr-leaf::before { content: ""; position: absolute; inset: 14px 12px 16px; border-radius: 40px 40px 2px 2px; box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .07); pointer-events: none; }
-  .dr-ic { width: 34px; height: 34px; stroke: rgb(from var(--ink) r g b / .72); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; transition: stroke .4s; }
-  .dr-knob { position: absolute; inset-inline-end: 13px; top: 60%; width: 5px; height: 5px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 2px rgb(from var(--green-light) r g b / .4); }
-  @keyframes drPeek { 0%, 9%, 100% { transform: rotateY(0); } 4.5% { transform: rotateY(calc(var(--flip) * -34deg)); } }
-  .dr-d:hover .dr-leaf, .dr-d:focus-visible .dr-leaf { animation: none; transform: rotateY(calc(var(--flip) * -74deg)); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1), calc(var(--flip) * 18px) 0 22px -10px rgb(from var(--ink) r g b / .28); }
-  .dr-d:hover .dr-go, .dr-d:focus-visible .dr-go { transform: scale(1); opacity: 1; }
-  .dr-d:hover .dr-arch, .dr-d:focus-visible .dr-arch { box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .35), inset 0 -10px 18px -12px rgb(from var(--ink) r g b / .18), 0 18px 30px -18px rgb(from var(--green) r g b / .55); }
-  .dr-d:focus-visible .dr-arch { outline: 2px solid var(--ink); outline-offset: 4px; }
-  .dr-lab { position: relative; margin-top: 14px; width: 152px; height: 40px; text-align: center; }
+  .dr { position: absolute; inset-inline: 120px; top: 636px; }
+  .dr-row { grid-template-columns: repeat(6, 152px); gap: 22px; }
+  .dr-lab { width: 152px; height: 40px; }
+  /* At rest a door shows its name; open, the name lifts away and the line
+     rises into its place. The phone shows both (below): it has no hover. */
   .dr-a, .dr-b { position: absolute; inset-inline: 0; top: 0; transition: opacity .35s, transform .45s cubic-bezier(.16, 1, .3, 1); }
-  .dr-a { font-family: var(--serif); font-size: 18px; line-height: 1.15; letter-spacing: -.012em; color: var(--ink); }
-  .dr-b { font-size: 13px; line-height: 1.35; color: var(--ink-soft); opacity: 0; transform: translateY(6px); text-wrap: balance; }
+  .dr-b { opacity: 0; transform: translateY(6px); }
   .dr-d:hover .dr-a, .dr-d:focus-visible .dr-a { opacity: 0; transform: translateY(-6px); }
   .dr-d:hover .dr-b, .dr-d:focus-visible .dr-b { opacity: 1; transform: none; }
 }
 
-@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+/* ── Phone and tablet ────────────────────────────────────────────────────
+   The stage flows: content, then the doors, then a bottom row for the pause
+   control. The frame tightens to 8px so the inner rule clears the 28px text
+   gutter. The lamp shrinks to the 390px screen (240px would light it all)
+   and rests on the headline: rested on the stage's centre it sat on the
+   17px lede, and the green print under body text made it hard to read. */
+@media (max-width: 1080px) {
+  .hv-hero { padding-block: 0 72px; --mx: 50%; --my: 215px; --lr: 150px; --mr: 120px; }
+  /* 1200px → 860px, centred on the headline as the board centres it on 720. */
+  .hv-guil { width: 860px; height: 860px; inset-inline-start: 50%; margin-inline-start: -430px; top: -150px; }
+  /* Drawn for 1440×900; stretched over a 390×1300 stage the fibres turn into
+     vertical hairs, so they keep roughly that ratio and are cropped. */
+  .hv-fibres { width: 2080px; inset-inline-start: 50%; margin-inline-start: -1040px; }
+  .hv-frame { inset: 8px; }
+  .hv-note { top: 30px; }
+  .hv-note-tl { inset-inline-start: 30px; }
+  .hv-note-tr { inset-inline-end: 30px; }
+  .hv-content { padding-block: 70px 0; padding-inline: 28px; }
+  .hv-h1 { margin-top: 26px; font-size: clamp(46px, 9vw, 80px); }
+  /* Smaller, and pressed over the full stop: beside it, the 1.9× landing
+     frame of the stamp overran a 390px screen (and the left edge, mirrored). */
+  .hv-seal-btn { inset-inline-start: calc(100% - .35em); top: -.25em; width: 1.3em; height: 1.3em; }
+  .hv-lede { margin-top: 24px; font-size: 17px; }
+  .hv-ctas { margin-top: 28px; gap: 6px 14px; }
+  /* `.btn-ghost` is declared for the desktop artboard only in `design.css`. */
+  .hv-ctas .btn-ghost { color: var(--ink); }
+  .hv-motion { inset-inline-end: 30px; bottom: 26px; }
+
+  .dr { margin-top: 48px; padding-inline: 12px; }
+  .dr-k { gap: 12px; }
+  .dr-k i { width: 20px; }
+  /* Three by two, so all six audiences are on screen at once — a sideways
+     row would hide half of what the band is for. `zoom` scales the arch's
+     px geometry (radii, insets, icon, the time) as one; a second set of
+     door measurements was the alternative. */
+  .dr-row { grid-template-columns: repeat(3, minmax(0, 132px)); gap: 26px 4px; }
+  .dr-arch { zoom: .82; }
+  /* One floor per door instead of the board's one per row: rows wrap, so
+     the second floor's height is not known to CSS. Drawn at the arch's foot
+     (118px × .82) and spanning the gap, they read as one line per row. */
+  .dr-floor, .dr-floor-go { display: none; }
+  .dr-d::before, .dr-d::after { content: ""; position: absolute; inset-inline: -2px; top: 96.5px; height: 1px; background: var(--tick-off); }
+  .dr-d::after { height: 2px; top: 96px; background: var(--green); opacity: .85; transform: scaleX(0); transform-origin: var(--origin-x) center; animation: hvGo .5s cubic-bezier(.65, 0, .35, 1) calc(2.2s + var(--i) * .12s) forwards; }
+  .dr-lab { margin-top: 10px; }
+  .dr-a { font-size: 16px; }
+  .dr-b { margin-top: 3px; font-size: 12.5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .hv-lamp, .hv-uv { display: none; }
   .hv-l { filter: none; }
   .dr-leaf { animation: none; }
-  .dr-floor-go { animation: none; transform: scaleX(1); }
+  .dr-floor-go, .dr-d::after { animation: none; transform: scaleX(1); }
 }
