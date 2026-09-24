@@ -1,7 +1,7 @@
-/** International, desktop — homepage v2's globe (the canvas "09 World — the
-    orb", Sep 2026). Replaces the five photo cards on desktop; the phone keeps
-    `International.tsx`'s generated card grid, since the v2 boards have no
-    390px artboard.
+/** International — homepage v2's globe (the canvas "09 World — the orb",
+    Sep 2026), at every width: on the phone the stage runs edge to edge and
+    the card stacks under the orb (`globe.css`). Replaced the five photo
+    cards, desktop first and then the phone.
 
     The words and the flags are rendered here, on the server; the canvas, the
     pins' positions and the card that opens are `./GlobeStage`. */
@@ -18,9 +18,8 @@ type PinId = "in" | "sa" | "ae" | "sg" | "ph" | "eg" | "gb" | "it" | "lv" | "us"
 
 /** Where each pin sits, and its flag. India comes first because every route
  *  starts there. Flag hex stays literal — facts about the world, not palette
- *  (the exemption `International.tsx`'s header records); the five drawings
- *  shared with that file's cards are the same paths, and Saudi Arabia has
- *  none on the board, so its pin shows a code. */
+ *  (the exemption `check:tokens` was given in Part 3); Saudi Arabia has no
+ *  drawing on the board, so its pin shows a code. */
 const PINS: { id: PinId; lat: number; lon: number; flag?: ReactNode }[] = [
   {
     id: "in", lat: 28.5, lon: 77.4,

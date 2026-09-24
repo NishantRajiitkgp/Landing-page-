@@ -1,7 +1,7 @@
-/** Consumer, desktop — homepage v2's HelloV storefront (the canvas
-    "Consumer — who's coming into your home", Sep 2026). Replaces the two
-    plan cards and service chips on desktop; the phone keeps `Consumer.tsx`'s
-    generated tree, since the v2 boards have no 390px artboard.
+/** Consumer — homepage v2's HelloV storefront (the canvas "Consumer —
+    who's coming into your home", Sep 2026), at every width; on the phone the
+    panels stack as an accordion (`consumer.css`). Replaced the two plan
+    cards and service chips, desktop first and then the phone.
 
     Eight full-height photo panels, one open at a time with its price card;
     under them the statement, the QR with its three steps, and the WhatsApp
