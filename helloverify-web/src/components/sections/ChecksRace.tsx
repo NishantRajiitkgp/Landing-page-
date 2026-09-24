@@ -14,8 +14,11 @@
  *  HYDRATION. `t` is null until a run starts, and null renders the finished
  *  state: every tile ticked, the hand at rest, "13 of 17" in the readout. The
  *  server sends exactly that, and a run starts only after mount — once, when
- *  the stage is 35% in view (never under `prefers-reduced-motion`), or from
- *  the button. The readout is not a live region: it changes eight times a
+ *  the dial is 60% in view (never under `prefers-reduced-motion`), or from
+ *  the button. The dial, not the stage: on a phone the tiles stack under it
+ *  and the stage is twice the viewport, so a stage ratio would fire late or,
+ *  on a landscape phone, never. On desktop 60% of the dial is about when 35%
+ *  of the stage was. The readout is not a live region: it changes eight times a
  *  second, and the finished state it settles on is already the page's
  *  static text. */
 
@@ -58,7 +61,7 @@ const fill = (tpl: string, n: number, total?: number) =>
   tpl.replace("{n}", String(n)).replace("{total}", String(total ?? ""));
 
 export function ChecksRace({ tiles, t, more }: { tiles: RaceTile[]; t: RaceCopy; more: ReactNode }) {
-  const stage = useRef<HTMLDivElement>(null);
+  const dial = useRef<HTMLDivElement>(null);
   const [ms, setMs] = useState<number | null>(null);
   const [runs, setRuns] = useState(0);
   const tick = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -79,7 +82,7 @@ export function ChecksRace({ tiles, t, more }: { tiles: RaceTile[]; t: RaceCopy;
   }, []);
 
   useEffect(() => {
-    const el = stage.current;
+    const el = dial.current;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let io: IntersectionObserver | undefined;
     if (el && !reduce && typeof IntersectionObserver !== "undefined") {
@@ -90,7 +93,7 @@ export function ChecksRace({ tiles, t, more }: { tiles: RaceTile[]; t: RaceCopy;
             start();
           }
         },
-        { threshold: 0.35 },
+        { threshold: 0.6 },
       );
       io.observe(el);
     }
@@ -123,9 +126,9 @@ export function ChecksRace({ tiles, t, more }: { tiles: RaceTile[]; t: RaceCopy;
   }
 
   return (
-    <div ref={stage} className={running ? "cz-stage cz-on" : "cz-stage"}>
+    <div className={running ? "cz-stage cz-on" : "cz-stage"}>
       <div className="cz-left">
-        <div className="cz-watch">
+        <div ref={dial} className="cz-watch">
           <ChecksDial
             hand={hand}
             arc={arc}
