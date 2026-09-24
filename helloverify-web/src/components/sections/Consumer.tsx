@@ -4,8 +4,12 @@ import { HelloVPhone } from "@/components/blocks/HelloVPhone";
 import { Tick } from "@/components/brand/Tick";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type PlanId, type PlanLineId, type ServiceId } from "@/lib/copy/sections";
+import { ConsumerShop } from "./ConsumerShop";
 
 /** HelloV - the consumer side.
+ *
+ *  DESKTOP IS NOW HOMEPAGE V2's STOREFRONT (`./ConsumerShop`, Sep 2026);
+ *  what follows describes the chips and plan cards the phone still renders.
  *
  *  610 lines, of which 284 were two more hand-written copies of a component
  *  this repo already had. `components/blocks/HelloVPhone.tsx` was lifted from
@@ -172,40 +176,11 @@ export async function Consumer() {
 
   return (
     <>
+      {/* Homepage v2: the HelloV storefront replaces the chips and plan
+          cards on desktop. The phone keeps the tree below until the v2
+          boards have a 390px artboard to port from. */}
       <div className="dsk">
-        <div className="wrap hair-top" style={{ paddingTop: "120px", paddingBottom: "140px" }}>
-          {" "}
-          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 7fr) minmax(0, 5fr)", gap: "72px", alignItems: "center" }}>
-            {" "}
-            <div>
-              {" "}
-              <div className="k">{t.k}</div>
-              {" "}
-              <h2 className="h2" style={{ marginTop: "18px", fontSize: "60px" }}>
-                {t.headingA}
-                <br />
-                {t.headingB}
-              </h2>
-              {" "}
-              <p className="lede" style={{ marginTop: "22px", maxWidth: "480px" }}>
-                {t.lede}
-              </p>
-              {" "}
-              <Services style={{ marginTop: "24px", display: "flex", flexWrap: "wrap", gap: "8px" }} />
-              {" "}
-              <Plans style={{ marginTop: "36px", display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: "16px", maxWidth: "600px" }} />
-              {" "}
-              <p className="mono" style={{ margin: "14px 0 0", color: "var(--muted)" }}>
-                {t.note}
-              </p>
-              {" "}
-            </div>
-            {" "}
-            <Phone />
-            {" "}
-          </div>
-          {" "}
-        </div>
+        <ConsumerShop />
       </div>
       <div className="mob">
         <div className="wrap sec hair-top">

@@ -6,8 +6,29 @@ import { Tick } from "@/components/brand/Tick";
 import { copy } from "@/lib/copy/request";
 import { BLOCKS } from "@/lib/copy/blocks";
 
-export async function HelloVPhone() {
+/** The lines that change when the phone verifies someone other than a
+ *  driver (homepage v2's storefront, `sections/ConsumerShop.tsx`). Same
+ *  bubbles, same timing; omitted, the phone plays the driver chat above. */
+export type PhoneScript = {
+  ask: string;
+  request: string;
+  doc: string;
+  read: { lead: string; plate: string; tail: string };
+  rows: string[];
+  elapsed: string;
+};
+
+export async function HelloVPhone({ script }: { script?: PhoneScript } = {}) {
   const t = (await copy(BLOCKS)).helloVPhone;
+  const r = t.report.rows;
+  const s = script ?? {
+    ask: t.msgs.m2.text,
+    request: t.msgs.m3.text,
+    doc: t.licence.title,
+    read: t.msgs.m5,
+    rows: [r.licence, r.criminal, r.address],
+    elapsed: t.report.elapsed,
+  };
 
   return (
     <div className="phone2">
@@ -43,14 +64,14 @@ export async function HelloVPhone() {
           </div>
           {' '}
           <div className="b out" style={{ animation: 'm2 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-            {t.msgs.m2.text}
+            {s.ask}
             <span className="ts">
               {t.msgs.m2.ts}
             </span>
           </div>
           {' '}
           <div className="b in" style={{ animation: 'm3 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-            {t.msgs.m3.text}
+            {s.request}
             <span className="ts">
               {t.msgs.m3.ts}
             </span>
@@ -59,7 +80,7 @@ export async function HelloVPhone() {
           <div className="b out img" style={{ animation: 'm4 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
             <div className="lic chat" style={{  }}>
               <span className="lt">
-                {t.licence.title}
+                {s.doc}
               </span>
               <span className="lr">
                 {t.licence.region}
@@ -92,11 +113,11 @@ export async function HelloVPhone() {
           </div>
           {' '}
           <div className="b in" style={{ animation: 'm5 14.0s cubic-bezier(0.16, 1, 0.3, 1) infinite' }}>
-            {t.msgs.m5.lead}{' '}
+            {s.read.lead}{' '}
             <b>
-              {t.msgs.m5.plate}
+              {s.read.plate}
             </b>
-            {t.msgs.m5.tail}
+            {s.read.tail}
             <span className="ts">
               {t.msgs.m5.ts}
             </span>
@@ -118,23 +139,23 @@ export async function HelloVPhone() {
                 {t.report.verdict}
               </span>
               <span className="rt">
-                {t.report.elapsed}
+                {s.elapsed}
               </span>
             </div>
             {' '}
             <div className="rr">
               <Tick />
-              {t.report.rows.licence}
+              {s.rows[0]}
             </div>
             {' '}
             <div className="rr">
               <Tick />
-              {t.report.rows.criminal}
+              {s.rows[1]}
             </div>
             {' '}
             <div className="rr">
               <Tick />
-              {t.report.rows.address}
+              {s.rows[2]}
             </div>
             {' '}
             <div className="rf">

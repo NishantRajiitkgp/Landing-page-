@@ -351,6 +351,19 @@ const BASELINE = {
   "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
   "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
+  // ── homepage v2 · international globe (`src/app/v2/globe.css`). Surfaces
+  //    only: the stage's paper and three tints the canvas reads at runtime.
+  "decl #F5F7F2": { n: 1, why: "--v2-gb-stage-mid: the globe stage's paper, mid-stop" },
+  "decl #ECEFE8": { n: 1, why: "--v2-gb-stage-lo: the globe stage's paper at its edge" },
+  "decl #F2F7F3": { n: 1, why: "--v2-gb-body-mid: the orb's body, mid-stop (canvas)" },
+  "decl #D3E4D9": { n: 1, why: "--v2-gb-body-lo: the orb's shaded limb (canvas)" },
+  "decl #2EAA76": { n: 1, why: "--v2-gb-pulse: a pulse travelling a route (canvas)" },
+
+  // ── homepage v2 · consumer storefront (`src/app/v2/consumer.css`).
+  //    Surfaces only: the WhatsApp Buy Now and the WhatsApp chip's mint.
+  "decl #117F45": { n: 1, why: "--v2-cx-wa: the WhatsApp-green Buy Now (5.1:1 with its white label)" },
+  "decl #E7F7EC": { n: 1, why: "--v2-cx-wa-tint: the WhatsApp chip behind --green text" },
+
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
   //    debt rule 3 pins: not a contrast failure, but colour nobody can
