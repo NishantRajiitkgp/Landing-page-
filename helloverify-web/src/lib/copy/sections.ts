@@ -54,11 +54,8 @@ export type StatId = keyof SectionsCopy["international"]["statLabels"];
 export type PackId = keyof SectionsCopy["packages"]["packs"];
 export type PackLineId = keyof SectionsCopy["packages"]["lines"];
 
-/** `PeopleStrip.tsx` — a card in each track. Two unions, because the two
- *  breakpoints carry different copy for the same people and the mobile
- *  track is a subset. */
-export type PersonSrcDsk = keyof SectionsCopy["peopleStrip"]["dsk"];
-export type PersonSrcMob = keyof SectionsCopy["peopleStrip"]["mob"];
+/** `PeopleStrip.tsx` — a card on the track, by photograph. */
+export type PersonSrc = keyof SectionsCopy["peopleStrip"]["people"];
 
 /** `Presence.tsx` — an office on the sun map (`lib/sunMap.ts`). */
 export type OfficeId = keyof SectionsCopy["presence"]["offices"];
