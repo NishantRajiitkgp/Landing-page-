@@ -24,7 +24,17 @@
 
     Transforms are written through `style` (CSSOM), not React state: 16 cards
     × 60 fps through a render would be the whole cost of the effect.
-    Values are the canvas's (`scripts/assemble_at2.py`, `stFrame`). */
+    Values are the canvas's (`scripts/assemble_at2.py`, `stFrame`).
+
+    ON A PHONE (one tree since Sep 2026). The cards are .66 of their desktop
+    box (`--ps` in `strip.css`), so the drop and push-back scale by the same
+    factor, and the drum's radius is floored at 400px: measured against
+    half of a 390px screen, the neighbouring cards sat past 28° and read as
+    folded away rather than curving. `touch-action: pan-y` gives vertical
+    swipes to the page; if the browser takes one over mid-drag
+    (`pointercancel`) the strip keeps the speed it had, not a fling from
+    the few pixels it saw first. Card offsets are re-measured on resize,
+    since the breakpoint changes every card's width. */
 
 import { useEffect, useRef, type ReactNode } from "react";
 
@@ -46,8 +56,15 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
     // RTL lays the track out from the right and `drift` runs the other way;
     // every horizontal quantity below goes through `flip`.
     const flip = getComputedStyle(strip).direction === "rtl" ? -1 : 1;
-    const cards = a.map((el) => ({ left: el.offsetLeft, w: el.offsetWidth }));
-    const half = main.scrollWidth / 2;
+    let cards: { left: number; w: number }[] = [];
+    let half = 1;
+    let k = 1;
+    const measure = () => {
+      cards = a.map((el) => ({ left: el.offsetLeft, w: el.offsetWidth }));
+      half = main.scrollWidth / 2 || 1;
+      k = parseFloat(getComputedStyle(strip).getPropertyValue("--ps")) || 1;
+    };
+    measure();
 
     // Take over from the CSS `drift` where it has got to, so hydration does
     // not jump the strip back to its first card.
@@ -56,7 +73,7 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
     let v = 0;
     let last = 0;
     let hover = false;
-    let drag: { x: number; t: number; v: number } | null = null;
+    let drag: { x: number; t: number; v: number; v0: number } | null = null;
     let raf = 0;
 
     const reduce = matchMedia("(prefers-reduced-motion: reduce)");
@@ -88,15 +105,16 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
       let p = x % half;
       if (p < 0) p += half;
       const C = (strip.clientWidth || 1440) / 2;
+      const R = Math.max(C, 400);
       const tx = `translate3d(${(-p * flip).toFixed(2)}px,0,0)`;
       main.style.transform = tx;
       const skew = Math.max(-9, Math.min(9, -(v - target) / 70)) * flip;
       for (let i = 0; i < cards.length; i++) {
         const c = cards[i];
-        const n = Math.max(-1.6, Math.min(1.6, (c.left + c.w / 2 - p * flip - C) / C));
+        const n = Math.max(-1.6, Math.min(1.6, (c.left + c.w / 2 - p * flip - C) / R));
         const an = Math.abs(n);
         const tr =
-          `perspective(1300px) translate3d(0,${(an * an * 26).toFixed(1)}px,${(-Math.pow(an, 1.4) * 150).toFixed(1)}px) ` +
+          `perspective(1300px) translate3d(0,${(an * an * 26 * k).toFixed(1)}px,${(-Math.pow(an, 1.4) * 150 * k).toFixed(1)}px) ` +
           `rotateY(${(-n * 26).toFixed(2)}deg) skewX(${skew.toFixed(2)}deg)`;
         a[i].style.transform = tr;
         a[i].style.opacity = String(Math.max(0.35, 1 - Math.max(0, an - 0.7) * 0.7));
@@ -111,10 +129,12 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
       if (e.isIntersecting) raf = requestAnimationFrame(frame);
     });
     io.observe(strip);
+    const ro = new ResizeObserver(measure);
+    ro.observe(strip);
 
     const down = (e: PointerEvent) => {
       if (e.button !== 0) return;
-      drag = { x: e.clientX, t: performance.now(), v: 0 };
+      drag = { x: e.clientX, t: performance.now(), v: 0, v0: v };
       strip.classList.add("hv-grab");
       strip.setPointerCapture(e.pointerId);
     };
@@ -130,7 +150,7 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
     };
     const up = (e: PointerEvent) => {
       if (!drag) return;
-      v = Math.max(-FLING_MAX, Math.min(FLING_MAX, drag.v));
+      v = e.type === "pointercancel" ? drag.v0 : Math.max(-FLING_MAX, Math.min(FLING_MAX, drag.v));
       drag = null;
       strip.classList.remove("hv-grab");
       if (strip.hasPointerCapture(e.pointerId)) strip.releasePointerCapture(e.pointerId);
@@ -152,6 +172,7 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
+      ro.disconnect();
       mo?.disconnect();
       strip.removeEventListener("pointerdown", down);
       strip.removeEventListener("pointermove", move);

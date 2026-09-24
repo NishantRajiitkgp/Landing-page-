@@ -12,6 +12,12 @@
        The board measured the offset against `offsetWidth / rect.width`
        because the canvas is zoomed; a real page is not, but the ratio is 1
        there and keeps the maths honest if the page ever is.
+       On touch there is no hover to follow and a drag is the page's scroll,
+       so `hero.css` rests the lamp lit (`hover: none`) and a tap moves it:
+       pointer events rather than mouse events, and a touch pointer leaving
+       does not put the lamp out. REJECTED: following a touch-drag with
+       `touch-action: none`, which would trap the page's scroll on the
+       tallest band of the phone.
     2. **Replaying the seal.** The seal button lives in the server tree, so
        this listens by delegation and swaps `hv-stampA`↔`hv-stampB` on the
        button itself. Two identically-keyframed classes, because changing
@@ -26,7 +32,7 @@
     ~30 KB of SVG computed at build time (`lib/heroArt.ts`); shipping it as a
     client payload to re-render it on hydration buys nothing. */
 
-import { useCallback, useRef, useState, type MouseEvent, type ReactNode } from "react";
+import { useCallback, useRef, useState, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 
 export function HeroStage({
   children,
@@ -40,7 +46,7 @@ export function HeroStage({
   const ref = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
 
-  const onMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
+  const onMove = useCallback((e: PointerEvent<HTMLDivElement>) => {
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -50,8 +56,8 @@ export function HeroStage({
     el.style.setProperty("--uv", "1");
   }, []);
 
-  const onLeave = useCallback(() => {
-    ref.current?.style.setProperty("--uv", "0");
+  const onLeave = useCallback((e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "touch") ref.current?.style.setProperty("--uv", "0");
   }, []);
 
   const onClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
@@ -66,8 +72,9 @@ export function HeroStage({
     <div
       ref={ref}
       className={paused ? "hv-hero hv-paused" : "hv-hero"}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
+      onPointerMove={onMove}
+      onPointerDown={onMove}
+      onPointerLeave={onLeave}
       onClick={onClick}
     >
       {children}
