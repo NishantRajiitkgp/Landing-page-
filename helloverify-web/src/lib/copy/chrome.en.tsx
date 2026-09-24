@@ -131,6 +131,49 @@ export const en = {
       cookies: "Cookie Policy",
     },
     offices: "India · UAE · Singapore · Philippines · Egypt · United States",
+    /** Homepage v2's footer treatment (desktop, every route): the canvas's
+     *  "last page of the document" band, the live office clocks, the
+     *  embossed seals' captions, the UV wordmark and its microtext. Here and
+     *  not in `sections` because the footer is chrome and reads `CHROME`;
+     *  every string is the Desktop4 board's, verbatim. */
+    v2: {
+      sheet: "Sheet 12 / 12",
+      /** Two leaves: the second is set in italic green. Same words as the
+       *  hero's `headline` + `headlineEm`. */
+      end: "Verified at the source,",
+      endEm: "in minutes.",
+      backToTop: "Back to top",
+      /** One repeat of the text that runs round the back-to-top seal. */
+      backRing: "BACK TO TOP · VERIFIED AT THE SOURCE ·",
+      officesHead: "Six offices. Twelve hours apart.",
+      /** `{open}` is filled in the browser once the clocks have run; the
+       *  server renders no count, since it cannot know the time of viewing. */
+      openNow: "{open} of 6 offices open now",
+      atDesk: "at a desk now",
+      closed: "closed",
+      cities: {
+        noida: { city: "Noida", country: "India" },
+        dubai: { city: "Dubai", country: "United Arab Emirates" },
+        singapore: { city: "Singapore", country: "Singapore" },
+        manila: { city: "Manila", country: "Philippines" },
+        cairo: { city: "Cairo", country: "Egypt" },
+        newYork: { city: "New York", country: "United States" },
+      },
+      /** Visible captions under the embossed seals. The images keep
+       *  `certs` as their `alt`; the captions are `aria-hidden` so a screen
+       *  reader hears each credential once. */
+      seals: {
+        iso: "ISO 27001",
+        gdpr: "GDPR",
+        pbsa: "PBSA",
+        nsr: "NSR",
+        mom: "Ministry of Manpower (SG)",
+      },
+      markHint: "UV · move your cursor over the mark",
+      /** One repeat of the microtext under the wordmark; the component tiles
+       *  it. Every figure is one `sections.numbers` already states. */
+      microtext: "HELLO VERIFY INDIA PRIVATE LTD · VERIFIED AT THE SOURCE · 20M+ CHECKS COMPLETED SINCE 2018 · 120+ COUNTRIES · ISO 27001 · GDPR · PBSA · NSR · INDIA · UAE · SINGAPORE · PHILIPPINES · EGYPT · UNITED STATES ·",
+    },
   },
 
   /** `chrome/Breadcrumb.tsx`. `home` is the rung that component renders

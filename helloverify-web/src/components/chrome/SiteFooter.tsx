@@ -12,7 +12,6 @@
  */
 import { Logo } from "@/components/brand/Logo";
 import Image from "next/image";
-import { CERTLINE_BOX } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { LocaleSwitch } from "@/components/chrome/LocaleSwitch";
 import {
@@ -22,6 +21,13 @@ import {
   type FooterHref,
 } from "@/lib/copy/chrome";
 import { copy } from "@/lib/copy/request";
+import { Arrow } from "@/components/brand/Arrow";
+// Homepage v2's footer treatment, one sheet like every v2 section. Imported
+// here, so it rides with the footer onto all 56 routes; it is desktop-only
+// rules plus a handful of `display: none` lines for the phone.
+import "@/app/v2/footer.css";
+import { FooterMark } from "./FooterMark";
+import { OfficeClocks } from "./OfficeClocks";
 
 const COLS: readonly { k: FooterColKey; links: readonly FooterHref[] }[] = [
   {
@@ -68,6 +74,12 @@ const COLS: readonly { k: FooterColKey; links: readonly FooterHref[] }[] = [
   },
 ];
 
+/** The embossed seals' image box: 40px inside a 64px disc (`footer.css`
+ *  `.fz-seal-d img`). Declared here rather than reusing `CERTLINE_BOX` (34),
+ *  which would serve the desktop seal an upscaled 2x; the phone's certline
+ *  still draws it at 34px from the same srcset. */
+const SEAL_BOX = 40;
+
 const CERTS: readonly { id: FooterCertId; img: string }[] = [
   { id: "iso", img: "/img/iso.jpg" },
   { id: "gdpr", img: "/img/gdpr.jpg" },
@@ -78,13 +90,50 @@ const CERTS: readonly { id: FooterCertId; img: string }[] = [
 
 export async function SiteFooter() {
   const t = (await copy(CHROME)).footer;
+  const v = t.v2;
+  const micro = `${v.microtext} `.repeat(6).trim();
 
   return (
-    <footer className="foot2 hair-top">
+    <footer className="foot2 fz hair-top">
+      {/* HOMEPAGE V2 (Sep 2026), desktop. The canvas's footer (Desktop4,
+          `assemble_footer.py`) brought a new visual treatment AND a regrouped
+          set of columns; only the treatment is taken. The columns, routes and
+          words below are the IA's (§9), an approved deviation from the board,
+          and stay exactly as they were. One tree for both breakpoints: the
+          v2-only blocks (the closing band, the office clocks, the wordmark,
+          the microtext, per-link arrows, column counts, seal captions) are
+          `display: none` under 1081px, so the phone renders what it did.
+          REJECTED: a second `.dsk` footer beside the `.mob` one, the
+          homepage's pattern — it would send every link twice on 56 routes. */}
+      <div className="fz-guil" aria-hidden="true" />
       <div className="wrap">
+        <div className="fz-top">
+          <div className="fz-end">
+            <span className="fz-end-k">{v.sheet}</span>
+            <span className="fz-end-t">{v.end} <em>{v.endEm}</em></span>
+          </div>
+          {/* `#top` is the HTML spec's own fragment for the top of the
+              document — it scrolls there with no element carrying the id. */}
+          <a href="#top" className="fz-back" aria-label={v.backToTop}>
+            <svg className="fz-back-ring" viewBox="0 0 120 120" aria-hidden="true">
+              <defs>
+                <path id="fz-back-arc" d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0" />
+              </defs>
+              <text fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="8.6" letterSpacing="2.2" fill="currentColor">
+                <textPath href="#fz-back-arc" textLength="272" lengthAdjust="spacing">{`${v.backRing} `}</textPath>
+              </text>
+            </svg>
+            <span className="fz-back-c">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </a>
+        </div>
+        <OfficeClocks head={v.officesHead} openNow={v.openNow} atDesk={v.atDesk} closed={v.closed} cities={v.cities} />
         <div className="cols">
           <div className="fcol2 brandcol">
-            <AppLink href="/" aria-label={t.logoHome}><Logo width={103} height={30} /></AppLink>
+            <AppLink href="/" aria-label={t.logoHome} className="fz-logo"><Logo width={103} height={30} /></AppLink>
             <p className="blurb">
               {t.blurb}
             </p>
@@ -149,16 +198,27 @@ export async function SiteFooter() {
           </div>
           {COLS.map((c) => (
             <div className="fcol2" key={t.cols[c.k]}>
-              <div className="h">{t.cols[c.k]}</div>
+              <div className="h">
+                {t.cols[c.k]}
+                <i aria-hidden="true">{String(c.links.length).padStart(2, "0")}</i>
+              </div>
               {c.links.map((href) => (
-                <AppLink key={href + t.links[href]} href={href}>{t.links[href]}</AppLink>
+                <AppLink key={href + t.links[href]} href={href}>
+                  {t.links[href]}
+                  <span className="fz-arr"><Arrow size="14" /></span>
+                </AppLink>
               ))}
             </div>
           ))}
         </div>
         <div className="certline">
           {CERTS.map((c) => (
-            <Image key={t.certs[c.id]} src={c.img} alt={t.certs[c.id]} width={CERTLINE_BOX} height={CERTLINE_BOX} />
+            <span key={t.certs[c.id]} className="fz-seal">
+              <span className="fz-seal-d">
+                <Image src={c.img} alt={t.certs[c.id]} width={SEAL_BOX} height={SEAL_BOX} />
+              </span>
+              <span className="fz-seal-l" aria-hidden="true">{v.seals[c.id]}</span>
+            </span>
           ))}
           <span className="t">{t.certline}</span>
         </div>
@@ -172,6 +232,30 @@ export async function SiteFooter() {
           <span className="offices">{t.offices}</span>
         </div>
       </div>
+      <FooterMark>
+        {/* The engraving: the logo's own paths, filled with a fine wave
+            pattern (ink, and red for the swoosh) through CSS `fill`, which
+            beats `Logo`'s presentation attributes — so this reuses
+            `brand/Logo.tsx` instead of a second copy of its paths. The
+            patterns are artwork; their colours are SVG attribute literals. */}
+        <svg className="fz-defs" width="0" height="0" focusable="false">
+          <defs>
+            <pattern id="fz-eng" width="0.62" height="0.62" patternUnits="userSpaceOnUse">
+              <path d="M0 0.31 q0.155 -0.2 0.31 0 t0.31 0" fill="none" stroke="#15140F" strokeWidth="0.2" />
+            </pattern>
+            <pattern id="fz-eng-r" width="0.62" height="0.62" patternUnits="userSpaceOnUse">
+              <path d="M0 0.31 q0.155 -0.2 0.31 0 t0.31 0" fill="none" stroke="#EC2E21" strokeWidth="0.22" />
+            </pattern>
+            <pattern id="fz-uv" width="1.4" height="1.4" patternUnits="userSpaceOnUse">
+              <circle cx="0.7" cy="0.7" r="0.34" fill="#6EE7B0" />
+            </pattern>
+          </defs>
+        </svg>
+        <div className="fz-mark-eng"><Logo width={172} height={50} /></div>
+        <div className="fz-mark-uv"><Logo width={172} height={50} /></div>
+        <span className="fz-mark-hint">{v.markHint}</span>
+      </FooterMark>
+      <div className="fz-micro" aria-hidden="true">{micro}</div>
     </footer>
   );
 }
