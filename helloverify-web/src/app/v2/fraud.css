@@ -31,90 +31,128 @@
   --v2-ff-uv-bad: #3B3659;
 }
 
+/* Shared by every width; the desktop layout and the phone layout follow. */
+.ff { position: relative; padding-top: 72px; }
+.ff-mast { display: flex; justify-content: space-between; align-items: center; }
+.ff-flag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.ff-one { font-style: italic; }
+.ff-sup { font-family: var(--mono); font-size: .22em; letter-spacing: 0; vertical-align: super; color: var(--muted); margin-inline-start: 2px; }
+.lede .ff-sup { font-size: .62em; }
+
+/* ── The evidence table ─────────────────────────────────────────────── */
+/* `--ff-r` is the lamp's radius: 150px under a mouse, smaller on a phone,
+   where one certificate is ~150px wide. */
+.ff-table { position: relative; margin-top: 32px; border-radius: 18px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); --mx: -400px; --my: -400px; --uv: 0; --ff-r: 150px; cursor: crosshair; }
+.ff-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--hair); font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ff-bar-k { display: flex; align-items: center; gap: 10px; }
+.ff-uvdot { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); box-shadow: 0 0 0 3px rgb(from var(--green-light) r g b / .3); }
+.ff-status { color: var(--ink); }
+.ff-stage { position: relative; background-image: linear-gradient(var(--v2-leaf-lo) 1px, transparent 1px), linear-gradient(calc(var(--flip) * 90deg), var(--v2-leaf-lo) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
+.ff-grid { display: grid; }
+.ff-cert { position: relative; display: block; padding: 0; border: 0; background: none; cursor: crosshair; border-radius: 4px; transition: transform .35s cubic-bezier(.16, 1, .3, 1); font: inherit; color: inherit; text-align: center; }
+.ff-cert:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+/* A certificate face. Sized in em so the big one in the comparison is the
+   same drawing at 16px. */
+.ff-face { position: absolute; inset: 0; text-align: center; display: flex; flex-direction: column; align-items: center; padding: 14px 16px 12px; box-sizing: border-box; background: var(--v2-ff-paper); border: 1px solid var(--v2-ff-edge); border-radius: 4px; box-shadow: 0 12px 24px -18px rgb(from var(--ink) r g b / .45); color: var(--ink-soft); overflow: hidden; font-size: 10px; transition: opacity .4s, filter .4s; }
+.ff-inner { position: absolute; inset: 5px; border: 1px solid var(--v2-ff-rule); border-radius: 2px; box-shadow: inset 0 0 0 2px var(--v2-ff-paper), inset 0 0 0 3px var(--v2-ff-rule-lo); pointer-events: none; }
+.ff-crest { width: 2.2em; height: 2.4em; color: var(--muted); flex: none; }
+.ff-inst { margin-top: .5em; font-family: var(--serif); font-size: .95em; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); line-height: 1.2; text-wrap: balance; }
+.ff-cer { margin-top: .45em; font-family: var(--serif); font-style: italic; font-size: .82em; color: var(--muted); }
+.ff-name { margin-top: .2em; font-family: var(--serif); font-size: 1.55em; font-weight: 400; color: var(--ink); letter-spacing: -.01em; }
+.ff-deg { margin-top: .2em; font-family: var(--serif); font-size: .95em; color: var(--ink-soft); }
+.ff-foot { margin-top: auto; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; }
+.ff-sig { width: 5.4em; height: 1.5em; color: var(--muted); }
+.ff-seal { width: 2.6em; height: 2.6em; border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--v2-ff-gold-hi), var(--v2-ff-gold) 60%, var(--v2-ff-gold-lo)); box-shadow: 0 0 0 2px var(--v2-ff-paper), 0 0 0 3px var(--v2-ff-gold-rim); }
+.ff-yr { font-family: var(--mono); font-size: .85em; color: var(--muted); }
+/* The forgery's tells: a heavier name, a seal off its mark, a tilted
+   crest, tighter tracking — small enough to pass a glance. */
+/* The forged name is set heavier on purpose — one of the tells. Newsreader
+   ships at 400 only (`tools/perf/pin-serif-weight.mjs`), so this 600 is
+   drawn as synthesised bold, which keeps the tell; it is the one place the
+   site asks the serif for more than 400. */
+.ff-forged .ff-name { font-weight: 600; letter-spacing: .01em; }
+.ff-forged .ff-seal { transform: translate(calc(var(--flip) * .35em), -.25em); background: radial-gradient(circle at 35% 30%, var(--v2-ff-fgold-hi), var(--v2-ff-fgold) 60%, var(--v2-ff-fgold-lo)); }
+.ff-forged .ff-crest { transform: rotate(4deg); }
+.ff-forged .ff-inst { letter-spacing: .11em; }
+
+/* The stamps. Resting state is hidden; `.is-ok` / `.is-ref` land them. */
+.ff-ok { position: absolute; inset-inline-end: -12px; top: -14px; width: 58px; height: 58px; opacity: 0; transform: scale(1.8) rotate(-10deg); pointer-events: none; mix-blend-mode: multiply; }
+.ff-ok svg { display: block; width: 100%; height: 100%; }
+.is-ok .ff-ok { opacity: .92; transform: scale(1) rotate(-10deg); animation: ffStampIn .5s cubic-bezier(.3, 1.35, .5, 1) both; }
+.ff-ref { position: absolute; inset-inline-start: 50%; top: 52%; padding: 9px 16px 8px; border: 2.5px solid var(--ink); border-radius: 6px; color: var(--ink); font-family: var(--mono); text-align: center; background: var(--v2-ff-paper); box-shadow: 0 0 0 4px var(--v2-ff-paper); opacity: 0; transform: translate(calc(var(--flip) * -50%), -50%) scale(1.8) rotate(-9deg); pointer-events: none; }
+.is-ref .ff-face { opacity: .55; filter: grayscale(.5); }
+.ff-ref span { display: block; font-size: 17px; font-weight: 500; letter-spacing: .14em; }
+.ff-ref i { display: block; margin-top: 2px; font-style: normal; font-size: 8.5px; letter-spacing: .2em; }
+.is-ref .ff-ref { opacity: .95; transform: translate(calc(var(--flip) * -50%), -50%) scale(1) rotate(-9deg); animation: ffRefIn .55s cubic-bezier(.3, 1.35, .5, 1) .15s both; }
+@keyframes ffStampIn { 0% { opacity: 0; transform: scale(1.8) rotate(2deg); } 60% { opacity: .95; transform: scale(.94) rotate(-12deg); } to { opacity: .92; transform: scale(1) rotate(-10deg); } }
+@keyframes ffRefIn { 0% { opacity: 0; transform: translate(calc(var(--flip) * -50%), -50%) scale(1.8) rotate(-2deg); } 60% { opacity: 1; transform: translate(calc(var(--flip) * -50%), -50%) scale(.95) rotate(-10deg); } to { opacity: .95; transform: translate(calc(var(--flip) * -50%), -50%) scale(1) rotate(-9deg); } }
+
+/* The UV layer: a blacklight circle that follows the pointer. Its padding
+   and grid match `.ff-stage`'s at each width, so its cells sit exactly
+   under the certificates. */
+.ff-uvlayer { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .35s ease; -webkit-mask-image: radial-gradient(circle var(--ff-r) at var(--mx) var(--my), var(--ink) 0, var(--ink) 97%, transparent 100%); mask-image: radial-gradient(circle var(--ff-r) at var(--mx) var(--my), var(--ink) 0, var(--ink) 97%, transparent 100%); }
+.ff-uvlayer::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle var(--ff-r) at var(--mx) var(--my), var(--v2-ff-uv-hi), var(--v2-ff-uv-lo) 70%); }
+.ff-grid-uv { position: relative; }
+.ff-uvc { position: relative; display: block; border-radius: 4px; background: var(--v2-ff-uv-cell); box-shadow: inset 0 0 0 1px rgb(from var(--green-light) r g b / .18); overflow: hidden; color: var(--green-light); }
+.ff-uv-ros { position: absolute; inset-inline-start: 50%; top: 50%; width: 150px; height: 150px; margin-block-start: -75px; margin-inline-start: -75px; fill: none; stroke: currentColor; stroke-width: .8; opacity: .75; filter: drop-shadow(0 0 3px rgb(from var(--green-light) r g b / .8)); }
+.ff-uv-mt { position: absolute; inset-inline: 10px; font-family: var(--mono); font-size: 6.5px; letter-spacing: .24em; white-space: nowrap; overflow: hidden; text-shadow: 0 0 6px rgb(from var(--green-light) r g b / .9); }
+.ff-uv-mt-t { top: 10px; }
+.ff-uv-mt-b { bottom: 10px; }
+.ff-uv-seal { position: absolute; inset-inline-end: 26%; bottom: 16px; width: 34px; height: 34px; filter: drop-shadow(0 0 5px rgb(from var(--green-light) r g b / .95)); }
+.ff-uv-fib { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; filter: drop-shadow(0 0 2px rgb(from var(--green-light) r g b / .9)); }
+.ff-uvc-bad { background: var(--v2-ff-uv-bad); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .08); color: var(--tick-off); }
+.ff-uv-blank { position: absolute; inset-inline: 0; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; text-align: center; }
+/* Placed from the physical top-left on purpose: `--mx`/`--my` are pointer
+   coordinates from the stage's physical left edge, in either direction, so
+   a logical inset here would put the loupe on the wrong side in Arabic. */
+.ff-loupe { position: absolute; inset: 0 auto auto 0; width: calc(2 * var(--ff-r)); height: calc(2 * var(--ff-r)); border-radius: 50%; pointer-events: none; opacity: var(--uv); transition: opacity .35s ease; transform: translate(calc(var(--mx) - var(--ff-r)), calc(var(--my) - var(--ff-r))); box-shadow: 0 0 0 1.5px rgb(from var(--green-light) r g b / .85), 0 0 0 7px rgb(from var(--ink) r g b / .08), 0 30px 60px -20px rgb(from var(--ink) r g b / .5), inset 0 0 40px rgb(from var(--green-light) r g b / .12); }
+.ff-loupe-k { position: absolute; inset-inline-start: 50%; bottom: -26px; transform: translateX(calc(var(--flip) * -50%)); font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--green); white-space: nowrap; }
+.ff-foot-bar { display: flex; border-top: 1px solid var(--hair); }
+.ff-naked { margin: 0; font-family: var(--serif); font-size: 22px; letter-spacing: -.015em; color: var(--ink); }
+.ff-naked em { font-style: italic; }
+.ff-foot-acts { display: flex; align-items: center; gap: 14px; }
+.ff-hint { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--muted); }
+
+.ff-fn { margin: 22px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.ff-fn sup { margin-inline-end: 4px; }
+
 @media (min-width: 1081px) {
-  .ff { position: relative; padding-top: 120px; padding-bottom: 0; }
-  .ff-mast { display: flex; justify-content: space-between; align-items: center; }
-  .ff-flag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .ff-one { font-style: italic; }
-  .ff-sup { font-family: var(--mono); font-size: .22em; letter-spacing: 0; vertical-align: super; color: var(--muted); margin-inline-start: 2px; }
-  .lede .ff-sup { font-size: .62em; }
-
-  /* ── The evidence table ─────────────────────────────────────────────── */
-  .ff-table { position: relative; margin-top: 64px; border-radius: 24px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); --mx: -400px; --my: -400px; --uv: 0; cursor: crosshair; }
-  .ff-bar { display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; border-bottom: 1px solid var(--hair); font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-  .ff-bar-k { display: flex; align-items: center; gap: 10px; }
-  .ff-uvdot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); box-shadow: 0 0 0 3px rgb(from var(--green-light) r g b / .3); }
-  .ff-status { color: var(--ink); }
-  .ff-stage { position: relative; padding: 36px 40px; background-image: linear-gradient(var(--v2-leaf-lo) 1px, transparent 1px), linear-gradient(calc(var(--flip) * 90deg), var(--v2-leaf-lo) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
-  .ff-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
-  .ff-cert { position: relative; display: block; height: 186px; padding: 0; border: 0; background: none; cursor: crosshair; border-radius: 4px; transition: transform .35s cubic-bezier(.16, 1, .3, 1); font: inherit; color: inherit; text-align: center; }
+  .ff { padding-top: 120px; }
+  .ff-table { margin-top: 64px; border-radius: 24px; }
+  .ff-bar { padding: 18px 28px; }
+  .ff-stage, .ff-uvlayer { padding: 36px 40px; }
+  .ff-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; }
+  .ff-cert, .ff-uvc { height: 186px; }
   .ff-cert:hover { transform: translateY(-3px); }
-  .ff-cert:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
-
-  /* A certificate face. Sized in em so the big one in the comparison is the
-     same drawing at 16px. */
-  .ff-face { position: absolute; inset: 0; text-align: center; display: flex; flex-direction: column; align-items: center; padding: 14px 16px 12px; box-sizing: border-box; background: var(--v2-ff-paper); border: 1px solid var(--v2-ff-edge); border-radius: 4px; box-shadow: 0 12px 24px -18px rgb(from var(--ink) r g b / .45); color: var(--ink-soft); overflow: hidden; font-size: 10px; transition: opacity .4s, filter .4s; }
-  .ff-inner { position: absolute; inset: 5px; border: 1px solid var(--v2-ff-rule); border-radius: 2px; box-shadow: inset 0 0 0 2px var(--v2-ff-paper), inset 0 0 0 3px var(--v2-ff-rule-lo); pointer-events: none; }
-  .ff-crest { width: 2.2em; height: 2.4em; color: var(--muted); flex: none; }
-  .ff-inst { margin-top: .5em; font-family: var(--serif); font-size: .95em; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); line-height: 1.2; text-wrap: balance; }
-  .ff-cer { margin-top: .45em; font-family: var(--serif); font-style: italic; font-size: .82em; color: var(--muted); }
-  .ff-name { margin-top: .2em; font-family: var(--serif); font-size: 1.55em; font-weight: 400; color: var(--ink); letter-spacing: -.01em; }
-  .ff-deg { margin-top: .2em; font-family: var(--serif); font-size: .95em; color: var(--ink-soft); }
-  .ff-foot { margin-top: auto; width: 100%; display: flex; justify-content: space-between; align-items: flex-end; }
-  .ff-sig { width: 5.4em; height: 1.5em; color: var(--muted); }
-  .ff-seal { width: 2.6em; height: 2.6em; border-radius: 50%; background: radial-gradient(circle at 35% 30%, var(--v2-ff-gold-hi), var(--v2-ff-gold) 60%, var(--v2-ff-gold-lo)); box-shadow: 0 0 0 2px var(--v2-ff-paper), 0 0 0 3px var(--v2-ff-gold-rim); }
-  .ff-yr { font-family: var(--mono); font-size: .85em; color: var(--muted); }
-  /* The forgery's tells: a heavier name, a seal off its mark, a tilted
-     crest, tighter tracking — small enough to pass a glance. */
-  /* The forged name is set heavier on purpose — one of the tells. Newsreader
-     ships at 400 only (`tools/perf/pin-serif-weight.mjs`), so this 600 is
-     drawn as synthesised bold, which keeps the tell; it is the one place the
-     site asks the serif for more than 400. */
-  .ff-forged .ff-name { font-weight: 600; letter-spacing: .01em; }
-  .ff-forged .ff-seal { transform: translate(calc(var(--flip) * .35em), -.25em); background: radial-gradient(circle at 35% 30%, var(--v2-ff-fgold-hi), var(--v2-ff-fgold) 60%, var(--v2-ff-fgold-lo)); }
-  .ff-forged .ff-crest { transform: rotate(4deg); }
-  .ff-forged .ff-inst { letter-spacing: .11em; }
-
-  /* The stamps. Resting state is hidden; `.is-ok` / `.is-ref` land them. */
-  .ff-ok { position: absolute; inset-inline-end: -12px; top: -14px; width: 58px; height: 58px; opacity: 0; transform: scale(1.8) rotate(-10deg); pointer-events: none; mix-blend-mode: multiply; }
-  .ff-ok svg { display: block; width: 100%; height: 100%; }
-  .is-ok .ff-ok { opacity: .92; transform: scale(1) rotate(-10deg); animation: ffStampIn .5s cubic-bezier(.3, 1.35, .5, 1) both; }
-  .ff-ref { position: absolute; inset-inline-start: 50%; top: 52%; padding: 9px 16px 8px; border: 2.5px solid var(--ink); border-radius: 6px; color: var(--ink); font-family: var(--mono); text-align: center; background: var(--v2-ff-paper); box-shadow: 0 0 0 4px var(--v2-ff-paper); opacity: 0; transform: translate(calc(var(--flip) * -50%), -50%) scale(1.8) rotate(-9deg); pointer-events: none; }
-  .is-ref .ff-face { opacity: .55; filter: grayscale(.5); }
-  .ff-ref span { display: block; font-size: 17px; font-weight: 500; letter-spacing: .14em; }
-  .ff-ref i { display: block; margin-top: 2px; font-style: normal; font-size: 8.5px; letter-spacing: .2em; }
-  .is-ref .ff-ref { opacity: .95; transform: translate(calc(var(--flip) * -50%), -50%) scale(1) rotate(-9deg); animation: ffRefIn .55s cubic-bezier(.3, 1.35, .5, 1) .15s both; }
-  @keyframes ffStampIn { 0% { opacity: 0; transform: scale(1.8) rotate(2deg); } 60% { opacity: .95; transform: scale(.94) rotate(-12deg); } to { opacity: .92; transform: scale(1) rotate(-10deg); } }
-  @keyframes ffRefIn { 0% { opacity: 0; transform: translate(calc(var(--flip) * -50%), -50%) scale(1.8) rotate(-2deg); } 60% { opacity: 1; transform: translate(calc(var(--flip) * -50%), -50%) scale(.95) rotate(-10deg); } to { opacity: .95; transform: translate(calc(var(--flip) * -50%), -50%) scale(1) rotate(-9deg); } }
-
-  /* The UV layer: a blacklight circle that follows the pointer. */
-  .ff-uvlayer { position: absolute; inset: 0; padding: 36px 40px; pointer-events: none; opacity: var(--uv); transition: opacity .35s ease; -webkit-mask-image: radial-gradient(circle 150px at var(--mx) var(--my), var(--ink) 0, var(--ink) 97%, transparent 100%); mask-image: radial-gradient(circle 150px at var(--mx) var(--my), var(--ink) 0, var(--ink) 97%, transparent 100%); }
-  .ff-uvlayer::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle 150px at var(--mx) var(--my), var(--v2-ff-uv-hi), var(--v2-ff-uv-lo) 70%); }
-  .ff-grid-uv { position: relative; }
-  .ff-uvc { position: relative; display: block; height: 186px; border-radius: 4px; background: var(--v2-ff-uv-cell); box-shadow: inset 0 0 0 1px rgb(from var(--green-light) r g b / .18); overflow: hidden; color: var(--green-light); }
-  .ff-uv-ros { position: absolute; inset-inline-start: 50%; top: 50%; width: 150px; height: 150px; margin-block-start: -75px; margin-inline-start: -75px; fill: none; stroke: currentColor; stroke-width: .8; opacity: .75; filter: drop-shadow(0 0 3px rgb(from var(--green-light) r g b / .8)); }
-  .ff-uv-mt { position: absolute; inset-inline: 10px; font-family: var(--mono); font-size: 6.5px; letter-spacing: .24em; white-space: nowrap; overflow: hidden; text-shadow: 0 0 6px rgb(from var(--green-light) r g b / .9); }
-  .ff-uv-mt-t { top: 10px; }
-  .ff-uv-mt-b { bottom: 10px; }
-  .ff-uv-seal { position: absolute; inset-inline-end: 26%; bottom: 16px; width: 34px; height: 34px; filter: drop-shadow(0 0 5px rgb(from var(--green-light) r g b / .95)); }
-  .ff-uv-fib { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; filter: drop-shadow(0 0 2px rgb(from var(--green-light) r g b / .9)); }
-  .ff-uvc-bad { background: var(--v2-ff-uv-bad); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .08); color: var(--tick-off); }
-  .ff-uv-blank { position: absolute; inset-inline: 0; top: 50%; transform: translateY(-50%); font-family: var(--mono); font-size: 10px; letter-spacing: .2em; text-transform: uppercase; text-align: center; }
-  /* Placed from the physical top-left on purpose: `--mx`/`--my` are pointer
-     coordinates from the stage's physical left edge, in either direction, so
-     a logical inset here would put the loupe on the wrong side in Arabic. */
-  .ff-loupe { position: absolute; inset: 0 auto auto 0; width: 300px; height: 300px; border-radius: 50%; pointer-events: none; opacity: var(--uv); transition: opacity .35s ease; transform: translate(calc(var(--mx) - 150px), calc(var(--my) - 150px)); box-shadow: 0 0 0 1.5px rgb(from var(--green-light) r g b / .85), 0 0 0 7px rgb(from var(--ink) r g b / .08), 0 30px 60px -20px rgb(from var(--ink) r g b / .5), inset 0 0 40px rgb(from var(--green-light) r g b / .12); }
-  .ff-loupe-k { position: absolute; inset-inline-start: 50%; bottom: -26px; transform: translateX(calc(var(--flip) * -50%)); font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--green); white-space: nowrap; }
-  .ff-foot-bar { display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 20px 28px; border-top: 1px solid var(--hair); }
-  .ff-naked { margin: 0; font-family: var(--serif); font-size: 22px; letter-spacing: -.015em; color: var(--ink); }
-  .ff-naked em { font-style: italic; }
-  .ff-foot-acts { display: flex; align-items: center; gap: 14px; }
-  .ff-hint { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--muted); }
-
-  .ff-fn { margin: 22px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .ff-fn sup { margin-inline-end: 4px; }
+  .ff-foot-bar { justify-content: space-between; align-items: center; gap: 24px; padding: 20px 28px; }
 }
 
 @media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
   .ff-uvlayer, .ff-loupe { display: none; }
+}
+
+/* Phone and tablet. Two columns at 390px, four once a column can be 22%
+   wide (from ~700px), so the eight read as one table at every width. The
+   certificates go near-square: at 150px wide the desktop 1.39:1 card would
+   set the face at 6px; 8:7 leaves room for 8px. There is no hover, so a tap
+   puts the lamp on the certificate it checks (`OneInEightTable`). */
+@media (max-width: 1080px) {
+  .ff-table { --ff-r: 84px; }
+  .ff-bar { flex-wrap: wrap; gap: 6px 16px; padding: 14px 16px; font-size: 10px; }
+  .ff-stage, .ff-uvlayer { padding: 16px; }
+  .ff-stage { background-size: 24px 24px; }
+  .ff-grid { grid-template-columns: repeat(auto-fill, minmax(max(136px, 22%), 1fr)); gap: 12px; }
+  .ff-cert, .ff-uvc { aspect-ratio: 8 / 7; }
+  .ff-face { padding: 10px 8px 8px; font-size: 8px; }
+  .ff-ok { inset-inline-end: -8px; top: -10px; width: 44px; height: 44px; }
+  .ff-uv-ros { width: 96px; height: 96px; margin-block-start: -48px; margin-inline-start: -48px; }
+  .ff-foot-bar { flex-direction: column; gap: 14px; padding: 18px 16px; }
+  .ff-naked { font-size: 20px; line-height: 1.2; }
+}
+
+/* A touch screen has no lamp to move, so the hint's first half would ask
+   for something it cannot do; the button stands alone. */
+@media (hover: none) {
+  .ff-hint { display: none; }
 }
