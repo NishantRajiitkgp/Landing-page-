@@ -14,18 +14,15 @@
  *  r170–182, numerals r136; the days subdial at 9 o'clock (116, 200) r44.
  *  The markers' `×N` are how many of the 17 checks finish at that mark. */
 
+import { closedPolyline, polarRing } from "@/lib/svgPath";
+
 const C = 200;
 const f = (n: number) => n.toFixed(1);
 const at = (k: number, of: number) => (k / of) * 2 * Math.PI - Math.PI / 2;
 
+/** Relative moves on the 0.1 grid (`lib/svgPath.ts`), same vertices. */
 function ring(): string {
-  const pts: string[] = [];
-  for (let k = 0; k <= 240; k++) {
-    const t = (2 * Math.PI * k) / 240;
-    const r = 104 + 10 * Math.sin(12 * t);
-    pts.push(`${f(C + r * Math.cos(t))} ${f(C + r * Math.sin(t))}`);
-  }
-  return `M${pts.join(" L")}Z`;
+  return closedPolyline(polarRing(240, (t) => 104 + 10 * Math.sin(12 * t), C, C));
 }
 
 /** Minute-ring markers: where on the 60-minute dial, how many land there,

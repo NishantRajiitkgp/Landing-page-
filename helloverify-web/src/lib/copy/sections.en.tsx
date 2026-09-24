@@ -427,28 +427,18 @@ export const en = {
    *  of a bento cell that is neither copy nor duplicated — the same
    *  argument `chrome.footer.links` makes for keying by href.
    *
-   *  THE ONE RAGGED ROW IN EITHER NAMESPACE: only the first cell has a
-   *  `mobTag`, so this table's members are not the same type and
-   *  `t.cells[c.src].mobTag` is a type error on the other five. Kept ragged
-   *  and narrowed at the call site with `"mobTag" in cell`, because
-   *  "Governments" is that cell's own word; the alternative — five
-   *  `mobTag: undefined` leaves to square the table — would put five empty
-   *  rows in front of a translator to satisfy the type checker. */
+   *  PHONE ONLY since the Sep 2026 perf pass, which deleted the band's
+   *  never-shown desktop tree (homepage v2 gave its audiences their own
+   *  bands). The leaves only that tree read went with it: `headingA`,
+   *  `headingB`, `lede`, the six placeholder `note`s, and the first cell's
+   *  desktop tag "Governments & authorities" — whose phone tag
+   *  "Governments" was the ragged `mobTag` field and is now plain `tag`, so
+   *  the table is square again. */
   whoItsFor: {
-    headingA: "For the moment you",
-    headingB: "need to trust someone.",
     headingMob: "For the moment you need to trust someone.",
-    lede: "A health ministry licensing ten thousand nurses and a family hiring one nanny need the same thing: a real answer, quickly. Same platform, different door.",
     cells: {
       "/img/10-ministry-hall.jpg": {
-        note: "photo · ministry hall",
-        /** Real JSX. The artboard exporter split these three tags around the
-         *  `&amp;`, so each is five text children with React's `<!-- -->`
-         *  between them; a plain `"Governments & authorities"` collapses them
-         *  to one and moves the bytes. Same note as `Packages.tsx`'s `tt` and
-         *  `Checks.tsx`'s lane headings. */
-        tag: <>Governments{" "}&amp;{" "}authorities</>,
-        mobTag: "Governments",
+        tag: "Governments",
         from: "from 3 days",
         h: (
           <>
@@ -459,31 +449,31 @@ export const en = {
         ),
       },
       "/img/11-office-first-day.jpg": {
-        note: "photo · office, first day",
+        /** Real JSX. The artboard exporter split these two tags around the
+         *  `&amp;`, so each is five text children with React's `<!-- -->`
+         *  between them; a plain `"Enterprise & SMB · BGV"` collapses them
+         *  to one and moves the bytes. Same note as `Packages.tsx`'s `tt` and
+         *  `Checks.tsx`'s lane headings. */
         tag: <>Enterprise{" "}&amp;{" "}SMB · BGV</>,
         from: "from 30 min",
         h: "Every hire, white-collar and blue",
       },
       "/img/12-phone-signup.jpg": {
-        note: "photo · phone, signup",
         tag: <>KYC · Trust{" "}&amp;{" "}Safety</>,
         from: "15 min",
         h: "Customers, verified at signup",
       },
       "/img/13-factory-floor.jpg": {
-        note: "photo · factory floor",
         tag: "Vendors · Certifier",
         from: "from 2 days",
         h: "Know who you buy from",
       },
       "/img/14-visa-counter.jpg": {
-        note: "photo · visa counter",
         tag: "Premium services",
         from: "assisted",
         h: "Visas and healthcare credentials",
       },
       "/img/15-home-doorway.jpg": {
-        note: "photo · home, doorway",
         tag: "Consumer · HelloV",
         from: "30 min",
         h: "The people in your home",

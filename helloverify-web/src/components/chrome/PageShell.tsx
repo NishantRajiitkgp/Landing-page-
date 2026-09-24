@@ -12,6 +12,10 @@
  *  link in this shell, so no new cost and no client boundary. It resolves
  *  statically because every page calls `setRequestLocale` (BUILD-SPEC §5).
  */
+// First, so the inner-page rules keep their old place in the cascade: after
+// `globals.css` (where they sat at the end of `pages.css`) and before any
+// section sheet the page imports. Only inner pages load them; see the file.
+import "@/app/inner.css";
 import { SiteNav } from "@/components/chrome/SiteNav";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { Breadcrumb } from "@/components/chrome/Breadcrumb";
