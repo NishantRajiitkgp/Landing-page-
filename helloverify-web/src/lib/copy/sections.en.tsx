@@ -124,26 +124,24 @@ export const en = {
   numbers: {
     headingA: "Built on trust.",
     headingB: "Proven by numbers.",
-    headingMob: "Built on trust. Proven by numbers.",
     lede: "Every figure here is a real count, not a target.",
-    /** Its own `<span className="sfx">`, so its own text node, on all eight
-     *  renderings. One leaf, used eight times. */
+    /** After the odometer and each card's figure: one leaf, four uses. */
     plus: "+",
     figures: {
-      checks: { v: "20M", l: "checks completed since 2018, every one at the primary source." },
+      checks: { l: "checks completed since 2018, every one at the primary source." },
       clients: { v: "2,000", l: "enterprise clients globally, from fleets to health ministries." },
       countries: { v: "120", l: "countries where we can reach the issuing authority." },
       catalogue: { v: "33", l: "verification checks, from a driving licence to a director's default history." },
     },
-    /** Homepage v2 (desktop) from here. The figures, captions and `plus`
-     *  above are reused as they are; these are the words the v2 board adds
-     *  around them. */
+    /** Homepage v2 from here. The figures, captions and `plus` above are
+     *  reused as they are; these are the words the v2 board adds around
+     *  them. The odometer prints the checks' figure, so it has no `v`. */
     kicker: "Proof",
     sheet: "Sheet 02 / 12",
-    /** The odometer's digits, one rolling column per digit. `figures.checks.v`
-     *  ("20M") stays the phone's figure. The component rolls every character
-     *  that is a digit and prints the rest (the group separators) as is, so a
-     *  locale that groups differently only edits this string. */
+    /** The odometer's digits, one rolling column per digit. The component
+     *  rolls every character that is a digit and prints the rest (the group
+     *  separators) as is, so a locale that groups differently only edits
+     *  this string. */
     odometer: "20,000,000",
     recount: "Count again",
     pace: {
@@ -1295,11 +1293,9 @@ export const en = {
   presence: {
     headingA: "Six offices.",
     headingB: "Twelve hours apart.",
-    headingMob: "Six offices. Twelve hours apart.",
-    /** Desktop only (the phone has `ledeMob`). v2 swapped the last sentence,
-     *  which described the old day band, for the map's instruction. */
+    /** v2 swapped the last sentence, which described the old day band, for
+     *  the map's instruction. */
     lede: "From Manila to New York, office hours overlap so a request filed at night in one place is picked up in the morning somewhere else. Drag the sun to see who is at a desk.",
-    ledeMob: "Working hours in UTC. The line is now.",
     hours: {
       h00: "00:00",
       h06: "06:00",
@@ -1307,32 +1303,19 @@ export const en = {
       h18: "18:00",
       h24: "24:00 UTC",
     },
-    coverage: "Someone at a desk · 21 of 24 hours",
-    /** Desktop only — the phone's row is the flag and the city, which that
-     *  file's header names as the kind of omission a symmetrical rewrite
-     *  invents. */
-    local: "09–18 local",
     offices: {
       manila: "Manila",
       singapore: "Singapore",
       /** Labelled New Delhi on the homepage map on review (24 Sep 2026); the
-       *  key stays `noida` because the phone's `DayBand` and the sun map
-       *  share it. The head office everywhere else (schema, llms.txt,
-       *  /about, /contact) is still Noida. */
+       *  key stays `noida`, which the sun map and the flag defs share. The
+       *  head office everywhere else (schema, llms.txt, /about, /contact) is
+       *  still Noida. */
       noida: "New Delhi",
       dubai: "Dubai",
       cairo: "Cairo",
       newYork: "New York",
     },
-    govsHeading: "Governments we work with",
-    govs: {
-      mom: { name: "Ministry of Manpower", sub: "Singapore" },
-      india: { name: "Government of India", sub: "Authorities" },
-      ksa: { name: "Kingdom of Saudi Arabia", sub: "Authorities" },
-      uae: { name: "United Arab Emirates", sub: "Authorities" },
-      eu: { name: "European authorities", sub: "Verification workflows" },
-    },
-    /** Homepage v2 desktop: the follow-the-sun map (`sections/SunStage.tsx`,
+    /** Homepage v2: the follow-the-sun map (`sections/SunStage.tsx`,
      *  a client island, so every string reaches it as a prop). A `{name}` is
      *  filled in by the island; a function leaf cannot cross the server/client
      *  boundary. The cities are `offices` above and the axis is `hours`. */

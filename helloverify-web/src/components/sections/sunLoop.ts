@@ -34,6 +34,11 @@ export class SunLoop {
   private visible = false;
   private seen = false;
   private drag = false;
+  /** A touch that has gone down but not yet moved sideways (see `pointer`). */
+  private held = false;
+  private x0 = 0;
+  private xw = MAP_W;
+  private downX = 0;
   private shown = 0;
   private play0 = 0;
   private playStart = 0;
@@ -54,7 +59,8 @@ export class SunLoop {
     this.on.now(Date.now());
     // The drawing is the board's fixed 1200 x 434 box, scaled to the column:
     // the cards were placed by hand round the lamps, and reflowing them
-    // below 1440px would stack them on each other.
+    // below 1440px would stack them on each other. The phone ignores `--su-k`:
+    // its canvas is sized by CSS and its cards are a list (`presence.css`).
     const ro = new ResizeObserver(() => map.style.setProperty("--su-k", String(stage.clientWidth / MAP_W)));
     ro.observe(stage);
     let auto = 0;
@@ -172,16 +178,41 @@ export class SunLoop {
 
   /** Drag: the longitude under the pointer becomes the UTC hour at which the
    *  sun stands over it. The canvas follows the pointer exactly; the text,
-   *  which re-renders React, is quantised to five minutes. */
-  pointer(kind: "down" | "move" | "up", clientX: number) {
-    if (kind === "up") {
+   *  which re-renders React, is quantised to five minutes.
+   *
+   *  A TOUCH WAITS until it has moved 8px sideways, or lifts as a tap. The
+   *  stage is `touch-action: pan-y`, so a vertical swipe over the map scrolls
+   *  the page and ends in `cancel`; setting the time on `down`, as a mouse
+   *  does, would jump the sun under every thumb that scrolls past.
+   *
+   *  The phone crops the canvas to the offices (`presence.css`, `object-fit`)
+   *  and names the visible slice, in map px, as `--su-x0`/`--su-xw`; unset
+   *  (desktop) they are the whole map. */
+  pointer(kind: "down" | "move" | "up" | "cancel", clientX: number, touch = false) {
+    if (kind === "down") {
+      const cs = getComputedStyle(this.cv);
+      this.x0 = parseFloat(cs.getPropertyValue("--su-x0")) || 0;
+      this.xw = parseFloat(cs.getPropertyValue("--su-xw")) || MAP_W;
+      this.downX = clientX;
+      if (touch) {
+        this.held = true;
+        return;
+      }
+      this.drag = true;
+    } else if (kind === "move") {
+      if (this.held && Math.abs(clientX - this.downX) >= 8) {
+        this.held = false;
+        this.drag = true;
+      }
+      if (!this.drag) return;
+    } else {
+      const tap = kind === "up" && this.held;
+      this.held = false;
       this.drag = false;
-      return;
+      if (!tap) return;
     }
-    if (kind === "move" && !this.drag) return;
-    if (kind === "down") this.drag = true;
     const r = this.cv.getBoundingClientRect();
-    const x = Math.max(0, Math.min(MAP_W, ((clientX - r.left) * MAP_W) / (r.width || MAP_W)));
+    const x = Math.max(0, Math.min(MAP_W, this.x0 + ((clientX - r.left) * this.xw) / (r.width || MAP_W)));
     const u = (24 - (x / MAP_W) * 24) % 24;
     const base = this.scrub ?? Date.now();
     const t = base - (base % DAY_MS) + u * 3600000;
