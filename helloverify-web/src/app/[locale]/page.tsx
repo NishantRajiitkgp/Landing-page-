@@ -12,6 +12,7 @@ import { WhoItsFor } from "@/components/sections/WhoItsFor";
 import { International } from "@/components/sections/International";
 import { Consumer } from "@/components/sections/Consumer";
 import { CustomerStory } from "@/components/sections/CustomerStory";
+import { TrustPlatform } from "@/components/sections/TrustPlatform";
 import { Compliance } from "@/components/sections/Compliance";
 import { Contact } from "@/components/sections/Contact";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
@@ -63,6 +64,7 @@ export default async function Home({
         <International />
         <Consumer />
         <CustomerStory />
+        <TrustPlatform />
         <Compliance />
         <Contact />
       </main>

@@ -776,4 +776,89 @@ export const en = {
       eu: { name: "European authorities", sub: "Verification workflows" },
     },
   },
+
+  /** `sections/TrustPlatform.tsx` — homepage v2, desktop only (the canvas's
+   *  "Sheet 10 / 12"). Every string is the founder's canvas wording, verbatim,
+   *  including "Every Connected institution" and "better outcome"; do not
+   *  tidy them here without the owner. The years on the rewind slider are
+   *  numerals the component counts (2018 + step); only `today` is copy. */
+  trustPlatform: {
+    kicker: "The Trust Technology Platform",
+    sheet: "Sheet 10 / 12",
+    headline: "Most verification systems are static.",
+    headlineEm: "Ours compound.",
+    lede: "HelloVerify's Trust Technology Platform performs Primary Source Verification directly from authorised sources, orchestrating complex workflows across countries, institutions, and regulatory ecosystems. Powered by AI and trained on millions of verifications.",
+    motion: { pause: "Pause motion", play: "Play motion" },
+    net: {
+      title: "A platform that gets stronger with every verification.",
+      legend: { institutions: "Institutions", customers: "Customers", verifications: "Verifications" },
+      canvas: "A live network of institutions and customers connected through HelloVerify",
+      hint: "Hover the network · drag a node",
+      rewind: "Rewind the network",
+      today: "Today",
+      /** The hover label drawn on the canvas: "Institution · 6 connections". */
+      node: { institution: "Institution", customer: "Customer", one: "connection", many: "connections" },
+    },
+    wheel: {
+      lead: "Ours",
+      em: "compound",
+      words: {
+        trust: "Trust",
+        verifications: "Verifications",
+        intelligence: "Intelligence",
+        institutions: "Institutions",
+        customers: "Customers",
+        ecosystem: "Ecosystem",
+      },
+    },
+    fly: {
+      intelligence: {
+        title: "Every verification enriches our intelligence",
+        body: "Each completed check adds to our understanding of institutions, documents and fraud patterns",
+      },
+      network: {
+        title: "Every Connected institution expands our network",
+        body: "Each new issuing authority becomes a permanent, trusted node in our verification infrastructure",
+      },
+      ecosystem: {
+        title: "Every new customer strengthens the ecosystem",
+        body: "More customers means more verifications, more data, more connections and better outcome for everyone.",
+      },
+    },
+    engines: {
+      onboarding: {
+        title: "Seamless Applicant Onboarding",
+        body: "Our AI automatically captures, structures, and validates information directly from uploaded documents, creating clean, verification ready data without manual intervention.",
+      },
+      research: {
+        title: "AI-Powered Research Intelligence",
+        body: "Our AI research engine connects with the right authorised contacts, leverages a proprietary database of fraudulent institutions, and continuously learns from every verification to strengthen fraud detection.",
+      },
+      workflow: {
+        title: "ML-Driven Workflow Orchestration",
+        body: "Our ML based automation engine intelligently orchestrates every verification routing cases, automating decision making, and managing complex cross-border workflows across global institutions and regulatory environments.",
+      },
+    },
+    domains: {
+      kicker: "From verification provider to global trust platform.",
+      items: {
+        mobility: "Workforce Mobility",
+        business: "Business verification",
+        procurement: "Procurement & vendor trust",
+        compliance: "Compliance & regulatory",
+        financial: "Financial onboarding",
+        identity: "Digital identity",
+        crossBorder: "Cross-border economic activity",
+        credentials: "Verified credentials",
+      },
+    },
+    belief: {
+      kicker: "Our Belief",
+      first: "Trust is becoming the world's next critical digital infrastructure.",
+      /** `lead` + one space + `move` is the sentence; `move` carries the
+       *  hand-drawn underline, so it is its own node. */
+      lead: "HelloVerify is building the platform through which",
+      move: "trust will move.",
+    },
+  },
 };
