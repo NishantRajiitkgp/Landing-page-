@@ -7,7 +7,10 @@
     1. **The orb** is drawn into a 1200×720 canvas by `lib/globeDraw`, and
        turned by `lib/globeEngine` — spin, drag, inertia, the ease toward a
        chosen country — in a loop that runs only while something moves and
-       the stage is on screen. The land points load on first approach.
+       the stage is on screen. Both engine modules and the land points are
+       fetched by dynamic import as the stage approaches (`lib/whenNear`),
+       so none of it is in the page's first-load JS; until then the markup
+       below (pins, HUD, slider, card) is already there from the server.
     2. **The pins are HTML buttons**, not canvas marks, so each is a real,
        named, keyboard-operable control. Their positions are written as
        transforms through CSSOM each frame — no React render per frame.
@@ -23,8 +26,12 @@
 
 import { useEffect, useId, useRef, useState, type PointerEvent, type ReactNode } from "react";
 
-import { H, W } from "@/lib/globeDraw";
-import { GlobeEngine, START, hudText } from "@/lib/globeEngine";
+import type { GlobeEngine } from "@/lib/globeEngine";
+import { H, START, W, hudText } from "@/lib/globeFrame";
+import { whenNear } from "@/lib/whenNear";
+
+/** The engine, with the land points fetched alongside it rather than after. */
+const loadEngine = () => Promise.all([import("@/lib/globeEngine"), import("@/lib/globeLand")]).then(([m]) => m);
 
 export type GlobePin = {
   id: string;
@@ -71,20 +78,31 @@ export function GlobeStage({ pins, labels, world }: { pins: GlobePin[]; labels: 
   const hudRef = useRef<HTMLElement>(null);
   const pinEls = useRef<(HTMLButtonElement | null)[]>([]);
   const eng = useRef<GlobeEngine | null>(null);
+  /** The slider and the open card as last set, for an engine that arrives
+   *  after the reader has already touched them. */
+  const live = useRef({ speed: 35, sel: -1 });
 
   useEffect(() => {
-    if (!stageRef.current || !canvasRef.current) return;
-    const e = new GlobeEngine(stageRef.current, canvasRef.current, pinEls.current, hudRef.current, pins.map((p) => [p.lat, p.lon]), labels.compass);
-    eng.current = e;
-    return () => {
-      e.destroy();
-      eng.current = null;
-    };
+    const stage = stageRef.current;
+    const canvas = canvasRef.current;
+    if (!stage || !canvas) return;
+    return whenNear(stage, loadEngine, ({ GlobeEngine }) => {
+      const e = new GlobeEngine(stage, canvas, pinEls.current, hudRef.current, pins.map((p) => [p.lat, p.lon]), labels.compass);
+      e.speed = live.current.speed;
+      e.sel = live.current.sel;
+      if (e.sel >= 0) e.face(e.sel);
+      eng.current = e;
+      return () => {
+        e.destroy();
+        eng.current = null;
+      };
+    });
   }, [pins, labels.compass]);
 
   const pick = (i: number) => {
     const e = eng.current;
     if (e) { e.sel = i; e.face(i); }
+    live.current.sel = i;
     setSel(i);
   };
 
@@ -92,6 +110,7 @@ export function GlobeStage({ pins, labels, world }: { pins: GlobePin[]; labels: 
     const was = sel;
     const e = eng.current;
     if (e) { e.sel = -1; e.release(); }
+    live.current.sel = -1;
     setSel(-1);
     // The close button unmounts with the card; hand focus back to the pin.
     if (was >= 0) pinEls.current[was]?.focus();
@@ -157,6 +176,7 @@ export function GlobeStage({ pins, labels, world }: { pins: GlobePin[]; labels: 
           onChange={(e) => {
             const v = parseInt(e.target.value, 10) || 0;
             if (eng.current) { eng.current.speed = v; eng.current.kick(); }
+            live.current.speed = v;
             setSpeed(v);
           }}
         />

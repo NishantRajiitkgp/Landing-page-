@@ -12,13 +12,14 @@
     at runtime (`app/v2/globe.css`), so the canvas re-themes with the page and
     this file carries no literal for `hv/no-color-literal` to find. */
 
+import { H, W } from "./globeFrame";
+
 export type Vec = [number, number, number];
 type RGB = [number, number, number];
 
-/** The stage's drawing box, in CSS px. The canvas is this size at every
- *  desktop width; the stage clips it (see `globe.css`). */
-export const W = 1200;
-export const H = 720;
+/** The stage's drawing box, in CSS px (`./globeFrame`, which the eager
+ *  island shares). */
+export { H, W };
 const CY = 372;
 const R = 286;
 /** The globe's centre on the inline axis, measured from the inline-start

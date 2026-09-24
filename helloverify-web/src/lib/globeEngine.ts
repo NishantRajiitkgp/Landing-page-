@@ -14,18 +14,12 @@
     reduced motion also snaps to a chosen country instead of easing. */
 
 import { CX, H, W, arc, drawFrame, landPoints, readPalette, vec, type Palette, type Scene } from "./globeDraw";
+import { START, TILT, hudText } from "./globeFrame";
 
 type Compass = { n: string; s: string; e: string; w: string };
 
-const TILT = 22;
 /** The six offices, head office first (it is drawn filled). */
 const OFFICES: [number, number][] = [[28.5, 77.4], [25.2, 55.3], [1.35, 103.8], [14.6, 121.0], [30.0, 31.2], [40.7, -74.0]];
-export const START = { lon: -52, lat: TILT };
-
-export function hudText(lon: number, lat: number, c: Compass) {
-  const l = (((-lon % 360) + 540) % 360) - 180;
-  return `${Math.abs(l).toFixed(1)}° ${l >= 0 ? c.e : c.w} · ${Math.abs(lat).toFixed(1)}° ${lat >= 0 ? c.n : c.s}`;
-}
 
 export class GlobeEngine {
   private rot = { ...START };

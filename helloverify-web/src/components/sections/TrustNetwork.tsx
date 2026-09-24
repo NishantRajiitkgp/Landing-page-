@@ -31,7 +31,9 @@
     range input with a label and an `aria-valuetext` of the year. */
 
 import { useContext, useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
-import { createTrustNetwork, LAST, type TrustNetworkSim } from "@/lib/trustNetworkSim";
+import type { TrustNetworkSim } from "@/lib/trustNetworkSim";
+import { LAST } from "@/lib/trustNetworkSteps";
+import { whenNear } from "@/lib/whenNear";
 import { MotionPaused } from "./TrustPlatformStage";
 
 /** The drawing box, in canvas units; CSS scales it to the 700×500 stage. */
@@ -70,16 +72,20 @@ export function TrustNetwork({ t, children }: { t: NetworkCopy; children: ReactN
     const cv = cvRef.current;
     const stage = stageRef.current;
     if (!cv || !stage) return;
-    const s = createTrustNetwork(cv, stage, {
-      net: () => netRef.current,
-      paused: () => pausedRef.current,
-      copy: tRef.current.node,
+    // The simulation and its graph table load as the stage approaches, not
+    // with the page (`lib/whenNear`).
+    return whenNear(stage, () => import("@/lib/trustNetworkSim"), ({ createTrustNetwork }) => {
+      const s = createTrustNetwork(cv, stage, {
+        net: () => netRef.current,
+        paused: () => pausedRef.current,
+        copy: tRef.current.node,
+      });
+      sim.current = s;
+      return () => {
+        s?.destroy();
+        sim.current = null;
+      };
     });
-    sim.current = s;
-    return () => {
-      s?.destroy();
-      sim.current = null;
-    };
   }, []);
 
   const call = (k: "down" | "move" | "up" | "leave", e: PointerEvent<HTMLDivElement>) => sim.current?.[k](e);

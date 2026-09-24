@@ -84,7 +84,7 @@ export function SunStage({
     const map = mapRef.current;
     const cv = cvRef.current;
     if (!stage || !map || !cv) return;
-    const l = new SunLoop(cv, stage, { noon, midnight }, { scrub: setScrub, playing: setPlaying, now: setNow, reduce: setReduce });
+    const l = new SunLoop(cv, { noon, midnight }, { scrub: setScrub, playing: setPlaying, now: setNow, reduce: setReduce });
     loop.current = l;
     const detach = l.attach(stage, map);
     return () => {

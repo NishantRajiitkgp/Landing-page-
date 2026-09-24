@@ -33,7 +33,9 @@
 
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent, type ReactNode } from "react";
 
-import { PILL_TOP, SIZE, drawWave, newSim, parseColour, ringAt, type Palette } from "@/lib/enWave";
+import { PILL_TOP, SIZE, newSim, ringAt } from "@/lib/enRings";
+import type { Palette } from "@/lib/enWave";
+import { whenNear } from "@/lib/whenNear";
 
 import { useMotionPaused } from "./BizMotion";
 
@@ -66,66 +68,71 @@ export function EnterprisePerimeter({
     still.current();
   }, [ent]);
 
+  // The drawing (`lib/enWave`) loads as the perimeter approaches, not with
+  // the page; the pills, the panels and the pointer hit-test work before it.
   useEffect(() => {
     const cv = cvRef.current;
-    const ctx = cv?.getContext("2d");
-    if (!cv || !ctx) return;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.width = SIZE * dpr;
-    cv.height = SIZE * dpr;
+    if (!cv) return;
+    return whenNear(cv, () => import("@/lib/enWave"), ({ drawWave, parseColour }) => {
+      const ctx = cv.getContext("2d");
+      if (!ctx) return;
+      const dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = SIZE * dpr;
+      cv.height = SIZE * dpr;
 
-    const cs = getComputedStyle(cv);
-    const pal: Palette = {
-      INK: parseColour(cs.getPropertyValue("--ink")),
-      GREEN: parseColour(cs.getPropertyValue("--green")),
-      MINT: parseColour(cs.getPropertyValue("--green-light")),
-      WHITE: parseColour(cs.getPropertyValue("--white")),
-    };
+      const cs = getComputedStyle(cv);
+      const pal: Palette = {
+        INK: parseColour(cs.getPropertyValue("--ink")),
+        GREEN: parseColour(cs.getPropertyValue("--green")),
+        MINT: parseColour(cs.getPropertyValue("--green-light")),
+        WHITE: parseColour(cs.getPropertyValue("--white")),
+      };
 
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let reduce = mq.matches;
-    let visible = false;
-    let raf = 0;
-    const S = sim.current;
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      let reduce = mq.matches;
+      let visible = false;
+      let raf = 0;
+      const S = sim.current;
 
-    const draw = (ts: number, calm: boolean) => drawWave(ctx, dpr, S, entRef.current, ts, calm, pal);
+      const draw = (ts: number, calm: boolean) => drawWave(ctx, dpr, S, entRef.current, ts, calm, pal);
 
-    const stopped = () => reduce || pausedRef.current || !visible;
-    const loop = (t: number) => {
-      S.ts = t / 1000;
-      draw(S.ts, false);
-      raf = requestAnimationFrame(loop);
-    };
-    const sync = () => {
-      cancelAnimationFrame(raf);
-      raf = 0;
-      if (stopped()) draw(reduce ? 0 : S.ts, true);
-      else raf = requestAnimationFrame(loop);
-    };
-    still.current = () => {
-      if (!raf) draw(reduce ? 0 : S.ts, true);
-    };
-    syncRef.current = sync;
+      const stopped = () => reduce || pausedRef.current || !visible;
+      const loop = (t: number) => {
+        S.ts = t / 1000;
+        draw(S.ts, false);
+        raf = requestAnimationFrame(loop);
+      };
+      const sync = () => {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        if (stopped()) draw(reduce ? 0 : S.ts, true);
+        else raf = requestAnimationFrame(loop);
+      };
+      still.current = () => {
+        if (!raf) draw(reduce ? 0 : S.ts, true);
+      };
+      syncRef.current = sync;
 
-    const io = new IntersectionObserver((entries) => {
-      for (const e of entries) visible = e.isIntersecting;
-      sync();
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) visible = e.isIntersecting;
+        sync();
+      });
+      io.observe(cv);
+      const onMq = () => {
+        reduce = mq.matches;
+        sync();
+      };
+      mq.addEventListener("change", onMq);
+      draw(0, true);
+
+      return () => {
+        cancelAnimationFrame(raf);
+        io.disconnect();
+        mq.removeEventListener("change", onMq);
+        still.current = () => {};
+        syncRef.current = () => {};
+      };
     });
-    io.observe(cv);
-    const onMq = () => {
-      reduce = mq.matches;
-      sync();
-    };
-    mq.addEventListener("change", onMq);
-    draw(0, true);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      io.disconnect();
-      mq.removeEventListener("change", onMq);
-      still.current = () => {};
-      syncRef.current = () => {};
-    };
   }, []);
 
   useEffect(() => {
