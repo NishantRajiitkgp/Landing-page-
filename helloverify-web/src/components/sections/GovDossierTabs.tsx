@@ -11,7 +11,8 @@
 
     Keyboard: the WAI-ARIA tabs pattern with automatic activation — one tab
     stop, arrows move and select, Home/End jump. The arrows follow reading
-    order, so they swap under `dir="rtl"`. */
+    order, so they swap under `dir="rtl"`. A tap is a click, so the phone
+    needs nothing more; the rows' descriptions open on tap by CSS. */
 
 import {
   useCallback,
@@ -21,6 +22,20 @@ import {
   type KeyboardEvent,
   type ReactNode,
 } from "react";
+
+/** Below 1081px the tabs are a sideways scroller (`govdossier.css`), and
+ *  the pager can choose one out of view: centre it. The strip is scrolled
+ *  by measurement because `scrollIntoView` would scroll the page too. A
+ *  no-op wherever the strip does not overflow, as on desktop. */
+function reveal(strip: HTMLElement | null, tab: HTMLElement | undefined) {
+  if (!strip || !tab || strip.scrollWidth <= strip.clientWidth) return;
+  const s = strip.getBoundingClientRect();
+  const t = tab.getBoundingClientRect();
+  strip.scrollBy({
+    left: t.left + t.width / 2 - (s.left + s.width / 2),
+    behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+  });
+}
 
 export function GovDossierTabs({
   tabs,
@@ -66,7 +81,9 @@ export function GovDossierTabs({
   const go = useCallback((i: number, focus?: boolean) => {
     const next = (i + n) % n;
     setOn(next);
-    if (focus) list.current?.querySelectorAll<HTMLElement>("[role=tab]")[next]?.focus();
+    const tab = list.current?.querySelectorAll<HTMLElement>("[role=tab]")[next];
+    if (focus) tab?.focus();
+    else reveal(list.current, tab);
   }, [n]);
 
   const onKey = useCallback((e: KeyboardEvent) => {

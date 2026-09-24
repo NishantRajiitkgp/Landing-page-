@@ -1,4 +1,4 @@
-/** Governments we work with — the seals of state (homepage v2, desktop).
+/** Governments we work with — the seals of state (homepage v2).
 
     Five embossed seals, each with its own guilloche rim, a turning ring of
     microtext and the authority's flag (or the ministry's logo) inlaid; a record
@@ -11,8 +11,9 @@
     still renders inside `sections/Presence.tsx`, which this part does not own;
     removing it there is the lead's call (see the report).
 
-    Brand new, so desktop only: there is no `.mob` tree to keep, and no 390px
-    artboard to port one from. */
+    One tree at every width: the board had no 390px artboard, so the phone
+    layout (seals three and two at half size, the record in one column) is
+    `govseals.css`'s own, below 1081px. */
 import { FLAG_EU, FLAG_INDIA, FLAG_KSA, FLAG_UAE } from "@/components/blocks/Flag";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type GovSealId } from "@/lib/copy/sections";
@@ -57,37 +58,35 @@ export async function GovSeals() {
   });
 
   return (
-    <div className="dsk">
-      <section className="wrap sv" aria-labelledby="sv-h">
-        <div className="sv-mast">
-          <span className="k">{t.kicker}</span>
-          <i aria-hidden="true" />
-          <span className="sv-mast-r">{t.kickerEnd}</span>
-        </div>
-        <h2 className="sv-h" id="sv-h">
-          {t.heading} <em>{t.headingEm}</em>
-        </h2>
-        <GovSealsStage
-          items={items}
-          thread={threadPath(SEALS.map((s) => s.lift))}
-          ledeLead={t.ledeLead}
-          ledeAnd={t.ledeAnd}
-          stamp={t.stamp}
-          pauseLabel={all.hero.motion.pause}
-          playLabel={all.hero.motion.play}
-        >
-          <p className="sv-close">
-            {t.closeLead}{" "}
-            <span className="sv-under">
-              {t.closeMark}
-              <svg viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <path d="M3 14 C 110 8, 250 18, 397 9" pathLength="1" />
-              </svg>
-            </span>{" "}
-            {t.closeTail}
-          </p>
-        </GovSealsStage>
-      </section>
-    </div>
+    <section className="wrap sv" aria-labelledby="sv-h">
+      <div className="sv-mast">
+        <span className="k">{t.kicker}</span>
+        <i aria-hidden="true" />
+        <span className="sv-mast-r">{t.kickerEnd}</span>
+      </div>
+      <h2 className="sv-h" id="sv-h">
+        {t.heading} <em>{t.headingEm}</em>
+      </h2>
+      <GovSealsStage
+        items={items}
+        thread={threadPath(SEALS.map((s) => s.lift))}
+        ledeLead={t.ledeLead}
+        ledeAnd={t.ledeAnd}
+        stamp={t.stamp}
+        pauseLabel={all.hero.motion.pause}
+        playLabel={all.hero.motion.play}
+      >
+        <p className="sv-close">
+          {t.closeLead}{" "}
+          <span className="sv-under">
+            {t.closeMark}
+            <svg viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path d="M3 14 C 110 8, 250 18, 397 9" pathLength="1" />
+            </svg>
+          </span>{" "}
+          {t.closeTail}
+        </p>
+      </GovSealsStage>
+    </section>
   );
 }
