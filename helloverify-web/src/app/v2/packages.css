@@ -1,0 +1,51 @@
+/* Homepage v2 · "Or take a package." — photo package cards (`pq-`).
+   Hand-ported from the canvas (`assemble_pkg.py`); imported by
+   `sections/Packages.tsx`. The header of `hero.css` explains why v2 sheets
+   are authored rather than generated.
+
+   No literal colour. The board's rules (`#EDE9E0`, `#EEEAE2`) are within two
+   units of `--v2-paper-lo`; the photo placeholder is the per-image `tint()`
+   inline; and the pale mint of the turnaround on the glass chip (`#CFEBDD`)
+   is `--green-light` mixed 45% into `--white`, which lands within two units
+   of it. Text on the photograph sits on a scrim that reaches 72% ink at the
+   foot and on a 42%-ink glass chip, so the white text there is measured
+   against the darkened photo, not the photo. */
+
+@media (min-width: 1081px) {
+  .pq-grid { margin-top: 80px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; align-items: stretch; }
+  .pq-card { position: relative; display: flex; flex-direction: column; border-radius: 26px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 34px 64px -44px rgb(from var(--ink) r g b / .5); overflow: hidden; transition: transform .55s cubic-bezier(.16, 1, .3, 1), box-shadow .55s; }
+  .pq-card:hover { transform: translateY(-6px); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 80px -46px rgb(from var(--ink) r g b / .55); }
+  .pq-ph { position: relative; height: 330px; overflow: hidden; }
+  .pq-ph img { object-fit: cover; display: block; transform: scale(1.02); transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
+  .pq-card:hover .pq-ph img { transform: scale(1.08); }
+  .pq-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(from var(--ink) r g b / .18) 0, rgb(from var(--ink) r g b / 0) 26%, rgb(from var(--ink) r g b / 0) 46%, rgb(from var(--ink) r g b / .72) 100%); pointer-events: none; }
+  .pq-seg { position: absolute; inset-inline-start: 16px; top: 16px; height: 28px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+  .pq-time { position: absolute; inset-inline-end: 16px; top: 14px; display: flex; flex-direction: column; align-items: flex-end; padding: 8px 14px 9px; border-radius: 16px; background: rgb(from var(--ink) r g b / .42); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: var(--white); }
+  .pq-time span { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; }
+  .pq-time b { margin-top: 2px; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 24px; line-height: 1; letter-spacing: -.01em; color: color-mix(in srgb, var(--green-light) 45%, var(--white)); }
+  .pq-cap { position: absolute; inset-inline: 22px; bottom: 18px; color: var(--white); }
+  .pq-cap h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 32px; line-height: 1.02; letter-spacing: -.022em; text-shadow: 0 2px 20px rgb(from var(--ink) r g b / .35); }
+  .pq-cap p { margin: 6px 0 0; font-size: 14px; line-height: 1.4; }
+  .pq-body { flex: 1; display: flex; flex-direction: column; padding: 20px 24px 22px; }
+  .pq-bk { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .pq-bar { flex: 1; height: 2px; border-radius: 2px; background: var(--v2-paper-lo); overflow: hidden; }
+  .pq-bar i { display: block; height: 100%; background: var(--green); transform: scaleX(.18); transform-origin: var(--origin-x); transition: transform .9s cubic-bezier(.65, 0, .35, 1); }
+  .pq-card:hover .pq-bar i, .pq-card:focus-within .pq-bar i { transform: scaleX(1); }
+  .pq-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 2px; }
+  .pq-list li { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 15px; color: var(--ink); border-bottom: 1px dashed var(--v2-paper-lo); }
+  .pq-list li:last-child { border-bottom: 0; }
+  .pq-tk { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--white); color: var(--green); box-shadow: inset 0 0 0 1.4px rgb(from var(--green) r g b / .4); transition: background .35s, color .35s, box-shadow .35s; transition-delay: calc(var(--i) * .09s); }
+  .pq-tk .tick { width: 12px; height: 12px; color: inherit; }
+  .pq-card:hover .pq-tk, .pq-card:focus-within .pq-tk { background: var(--green); color: var(--white); box-shadow: inset 0 0 0 1.4px var(--green); }
+  .pq-foot { margin-top: auto; padding-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--v2-paper-lo); }
+  .pq-who { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .pq-more { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; font-size: 14.5px; font-weight: 500; color: var(--ink); text-decoration: none; transition: gap .3s, color .3s; }
+  .pq-more:hover { gap: 12px; color: var(--green); }
+  .pq-buy { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap; transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .pq-buy:hover { transform: translateY(-1px); }
+  .pq-more:focus-visible, .pq-buy:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 999px; }
+}
+
+@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+  .pq-card, .pq-ph img, .pq-tk, .pq-bar i { transition: none; }
+}

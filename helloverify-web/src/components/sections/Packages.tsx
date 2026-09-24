@@ -4,8 +4,16 @@ import { Arrow } from "@/components/brand/Arrow";
 import { Tick } from "@/components/brand/Tick";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type PackId, type PackLineId } from "@/lib/copy/sections";
+// Homepage v2 styles are one sheet per section (see `app/v2/hero.css`).
+import "@/app/v2/packages.css";
+import { PackPhoto, type PackPhotoProps } from "./PackPhoto";
 
 /** Packages, drawn as receipts.
+ *
+ *  DESKTOP IS HOMEPAGE V2 (Sep 2026): the six receipts became photo cards
+ *  (`./PackPhoto`) over the same records and the same words. The phone keeps
+ *  its three receipts below, so `PackCard` and `Rack` now render the `.mob`
+ *  tree only.
  *
  *  712 lines for nine cards, six on desktop and three on mobile, each one
  *  written out by hand. The card is now one component over one record list
@@ -58,6 +66,18 @@ const PACKS: readonly Pack[] = [
   { k: "vendorRisk", lines: ["financial", "gst", "creditChecks", "promoter"] },
   { k: "visaHealth", lines: ["form", "prescreen", "primary"] },
 ];
+
+/** The v2 desktop card's photograph, its focal point, and where its link
+ *  goes — the IA's page for that package's audience (`lib/seo/routes.ts`).
+ *  The focal points are the board's. */
+const PHOTOS: Record<PackId, Pick<PackPhotoProps, "src" | "focus" | "href">> = {
+  blueCollar: { src: "/img/v2/pkg-bluecollar.jpg", focus: "50% 35%", href: "/business/smb" },
+  whiteCollar: { src: "/img/v2/pkg-whitecollar.jpg", focus: "50% 30%", href: "/business/enterprise" },
+  driver: { src: "/img/v2/pkg-driver.jpg", focus: "50% 40%", href: "/individuals/hellov" },
+  tradeRisk: { src: "/img/v2/pkg-trade.jpg", focus: "40% 40%", href: "/business/certifier" },
+  vendorRisk: { src: "/img/v2/pkg-vendor.jpg", focus: "50% 35%", href: "/business/certifier" },
+  visaHealth: { src: "/img/v2/pkg-visa.jpg", focus: "55% 40%", href: "/individuals/immigration" },
+};
 
 /** Mobile carries three of the six, and not the first three: Driver sits
  *  second, ahead of the white-collar package it follows on desktop. The rest
@@ -197,16 +217,11 @@ export async function Packages() {
             {" "}
           </div>
           {" "}
-          <Rack
-            packs={PACKS}
-            style={{
-              marginTop: "80px",
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              gap: "48px 32px",
-              alignItems: "start",
-            }}
-          />
+          <div className="pq-grid">
+            {PACKS.map((p) => (
+              <PackPhoto key={p.k} k={p.k} lines={p.lines} buy={p.buy} {...PHOTOS[p.k]} />
+            ))}
+          </div>
           {" "}
         </div>
       </div>

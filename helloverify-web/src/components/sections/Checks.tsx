@@ -2,15 +2,20 @@ import { Fragment } from "react";
 
 import { Arrow } from "@/components/brand/Arrow";
 import { copy } from "@/lib/copy/request";
-import {
-  SECTIONS,
-  type AxisStop,
-  type BucketId,
-  type CheckId,
-  type LaneId,
-} from "@/lib/copy/sections";
+import { AppLink } from "@/components/chrome/AppLink";
+import { SECTIONS, type BucketId, type CheckId, type SectionsCopy } from "@/lib/copy/sections";
+// Homepage v2 styles are one sheet per section (see `app/v2/hero.css`).
+import "@/app/v2/checks.css";
+import { ChecksRace } from "./ChecksRace";
 
 /** The 33-check catalogue, plotted against turnaround time.
+ *
+ *  DESKTOP IS HOMEPAGE V2 (Sep 2026): the lane timeline became a race — a
+ *  chronograph and 17 tiles that tick as its hand passes them
+ *  (`./ChecksRace`, `./ChecksDial`). The phone keeps its three buckets. The
+ *  `STOPS` table below now only decides the phone's `fast` class; its
+ *  durations and delays belonged to the retired desktop lanes and are kept
+ *  with the measurements that justified them, not re-derived.
  *
  *  520 lines for 17 checks drawn twice - a timeline of lanes on desktop, three
  *  buckets of chips on mobile. One list of checks now, with each view naming
@@ -100,27 +105,32 @@ const CHECKS: Record<CheckId, Stop> = {
   directorsGst: "92%",
 };
 
-type Lane = { readonly k: LaneId; readonly zone?: true; readonly ids: readonly CheckId[] };
+type Group = keyof SectionsCopy["checks"]["race"]["groups"];
 
-/** The three lanes in order, and which checks each plots. The heading and
- *  the subtitle are `lib/copy/sections`' `checks.lanes`. `zone` is a FLAG
- *  rather than the caption itself: only the first lane carries one, and a
- *  shared leaf plus a boolean keeps `lanes` a square table - that file's
- *  header argues the trade-off against the ragged alternative. */
-const LANES: readonly Lane[] = [
-  { k: "l1", zone: true, ids: ["identity", "pan", "passport", "age", "licence", "rc"] },
-  { k: "l2", ids: ["digitalEmployment", "moonlighting", "entitlement", "employment", "education"] },
-  {
-    k: "l3",
-    ids: ["credit", "globalDatabase", "criminal", "currentAddress", "tradeLicence", "directorsGst"],
-  },
+/** The race, in board order: each check, the group line printed over it, and
+ *  the minute its tile flips. The minutes are the turnarounds in `items` —
+ *  15/30/60 min, 2 days = 2880, 3 days = 4320 — as numbers the clock can
+ *  compare; 13 of the 17 finish within the hour, which is the readout's
+ *  resting "13 of 17". */
+const RACE: readonly { id: CheckId; group: Group; min: number }[] = [
+  { id: "identity", group: "identity", min: 15 },
+  { id: "pan", group: "identity", min: 15 },
+  { id: "passport", group: "identity", min: 15 },
+  { id: "age", group: "identity", min: 15 },
+  { id: "credit", group: "records", min: 15 },
+  { id: "globalDatabase", group: "records", min: 15 },
+  { id: "licence", group: "identity", min: 30 },
+  { id: "rc", group: "identity", min: 30 },
+  { id: "criminal", group: "records", min: 30 },
+  { id: "currentAddress", group: "records", min: 30 },
+  { id: "digitalEmployment", group: "work", min: 60 },
+  { id: "moonlighting", group: "work", min: 60 },
+  { id: "entitlement", group: "work", min: 60 },
+  { id: "employment", group: "work", min: 2880 },
+  { id: "tradeLicence", group: "records", min: 2880 },
+  { id: "education", group: "work", min: 4320 },
+  { id: "directorsGst", group: "records", min: 4320 },
 ];
-
-/** The four labelled stops on the axis, and the four tick marks under each
- *  plot - the same four positions, which is why they are one list. The
- *  labels are keyed BY POSITION in `lib/copy/sections`, so a label and the
- *  tick it sits over cannot come apart. */
-const AXIS: readonly AxisStop[] = ["4%", "26%", "62%", "92%"];
 
 type Bucket = { readonly k: BucketId; readonly ids: readonly CheckId[] };
 
@@ -140,116 +150,41 @@ const BUCKETS: readonly Bucket[] = [
   { k: "slow", ids: ["employment", "education", "tradeLicence", "directorsGst"] },
 ];
 
-async function Plot({ lane }: { lane: Lane }) {
-  const t = (await copy(SECTIONS)).checks;
-
-  return (
-    <div className="plot">
-      <div className="sweep"></div>
-      <div className="zone">{lane.zone !== undefined && <span>{t.zone}</span>}</div>
-      {AXIS.map((at) => (
-        <i className="tk" key={at} style={{ insetInlineStart: at }}></i>
-      ))}
-      {lane.ids.map((id) => {
-        const at = CHECKS[id];
-        const s = STOPS[at];
-        return (
-          <div className="prow" key={id}>
-            <i className={s.fast ? "lead fast" : "lead"} style={{ width: at, animationDuration: s.dur }}></i>
-            <span className={s.fast ? "pin fast" : "pin r"} style={{ insetInlineStart: at, animationDelay: s.delay }}>
-              <span className="d"></span>
-              {t.items[id].name}
-              <span className="t">{t.items[id].time}</span>
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 export async function Checks() {
   const t = (await copy(SECTIONS)).checks;
 
   return (
     <>
       <div className="dsk">
-        <div className="wrap hair-top" style={{ paddingTop: "120px", paddingBottom: "140px" }}>
-          {" "}
+        <div className="wrap hair-top cz" style={{ paddingTop: "120px", paddingBottom: "140px" }}>
           <div className="sec-head">
-            {" "}
             <h2 className="h2">
               {t.headingA}
               <br />
               {t.headingB}
             </h2>
-            {" "}
             <p className="lede" style={{ marginBottom: "8px" }}>
               {t.lede}
             </p>
-            {" "}
           </div>
-          {" "}
-          <div style={{ marginTop: "72px" }}>
-            {" "}
-            <div className="lane">
-              {" "}
-              <span></span>
-              {" "}
-              <div className="axis">
-                {AXIS.map((at) => (
-                  <span key={at} style={{ insetInlineStart: at }}>
-                    {t.axis[at]}
-                  </span>
-                ))}
-              </div>
-              {" "}
-            </div>
-            {LANES.map((lane, i) => (
-              <Fragment key={i}>
-                {" "}
-                {/* The first lane sits directly under the axis and carries no
-                    top margin; only the two below it do. */}
-                <div className="lane" {...(i > 0 ? { style: { marginTop: "56px" } } : {})}>
-                  {" "}
-                  <div className="g">
-                    <div className="k">{t.lanes[lane.k].k}</div>
-                    <div className="t">{t.lanes[lane.k].t}</div>
-                  </div>
-                  {" "}
-                  <Plot lane={lane} />
-                  {" "}
-                </div>
-              </Fragment>
-            ))}{" "}
-            {/* Outside the repeated run: the "plus 16 more" footer, which is a
-                fourth `.lane` so it aligns with the plots above it.
-
-                The space that precedes it is OUTSIDE the `.map()` above, and
-                that is load-bearing: an array whose last child is a text node
-                makes React emit a `<!-- -->` after it for hydration. Measured -
-                putting it inside the fragment cost exactly 8 bytes here. */}
-            <div className="lane" style={{ marginTop: "48px" }}>
-              {" "}
-              <span></span>
-              {" "}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "24px", paddingTop: "24px", borderTop: "1px solid var(--hair)" }}>
-                {" "}
-                <span style={{ fontSize: "15px", color: "var(--muted)" }}>
-                  {t.more}
-                </span>
-                {" "}
-                <a href="#" className="btn btn-line" style={{ height: "44px", padding: "0 20px", fontSize: "15px" }}>
-                  {t.all}{" "}
+          <ChecksRace
+            t={{ ...t.race, zone: t.zone }}
+            tiles={RACE.map(({ id, group, min }) => ({
+              name: t.items[id].name,
+              time: t.items[id].time,
+              group: t.race.groups[group],
+              min,
+            }))}
+            more={
+              <>
+                <span>{t.more}</span>
+                <AppLink href="/resources/checks" className="cz-all">
+                  {t.all}
                   <Arrow size="14" />
-                </a>
-                {" "}
-              </div>
-              {" "}
-            </div>
-            {" "}
-          </div>
-          {" "}
+                </AppLink>
+              </>
+            }
+          />
         </div>
       </div>
       <div className="mob">

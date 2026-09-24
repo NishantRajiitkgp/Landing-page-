@@ -4,8 +4,20 @@ import Image from "next/image";
 import { SIZES_WHY, noteInk, tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type WhyEvidenceId, type WhyReasonId } from "@/lib/copy/sections";
+import { Arrow } from "@/components/brand/Arrow";
+import { AppLink } from "@/components/chrome/AppLink";
+// Homepage v2 styles are one sheet per section (see `app/v2/hero.css`).
+import "@/app/v2/why.css";
+import { WhyArt, type WhyCardId } from "./WhyArt";
+import { WhyDeck } from "./WhyDeck";
 
 /** Why governments work with us.
+ *
+ *  DESKTOP IS HOMEPAGE V2 (Sep 2026): the five reasons stay, and the photo
+ *  evidence card beside them is replaced by a deck of eight illustrated
+ *  cards that advances on its own (`./WhyDeck`, art in `./WhyArt`). The
+ *  phone keeps the photo card below until its own part — `WhyCard` is now
+ *  rendered by the `.mob` tree only.
  *
  *  328 lines for five reasons and one evidence card, each written out once per
  *  breakpoint. One list now, and one card component (BUILD-SPEC §4 rule 2,
@@ -32,6 +44,21 @@ const REASONS: readonly WhyReasonId[] = ["01", "02", "03", "04", "05"];
 const EVIDENCE: readonly WhyEvidenceId[] = ["read", "confirmed", "artefact", "reviewed"];
 
 const PHOTO = "/img/09-licensing-officer.jpg";
+
+/** The v2 desktop deck, in board order: which card, its tint class, and
+ *  where "Explore More" goes. The four audience cards open their own
+ *  `/governments/*` page; the four "why we stand out" cards have no page of
+ *  their own yet, so they open `/governments`, the page that sells them. */
+const DECK: readonly { id: WhyCardId; tint: string; href: string }[] = [
+  { id: "health", tint: "mint", href: "/governments/health" },
+  { id: "immigration", tint: "sky", href: "/governments/immigration" },
+  { id: "manpower", tint: "sand", href: "/governments/manpower-education" },
+  { id: "trade", tint: "lilac", href: "/governments/trade" },
+  { id: "fraud", tint: "rose", href: "/governments" },
+  { id: "dashboards", tint: "teal", href: "/governments" },
+  { id: "reports", tint: "paper", href: "/governments" },
+  { id: "integration", tint: "slate", href: "/governments" },
+];
 
 async function Reasons({ mob, style }: { mob?: boolean; style: React.CSSProperties }) {
   const t = (await copy(SECTIONS)).why;
@@ -110,32 +137,65 @@ async function WhyCard({ mob }: { mob?: boolean }) {
 
 export async function Why() {
   const t = (await copy(SECTIONS)).why;
+  const d = t.deck;
+  const pad = (k: number) => String(k).padStart(2, "0");
 
   return (
     <>
       <div className="dsk">
         <div className="wrap hair-top" style={{ paddingTop: "120px", paddingBottom: "140px" }}>
-          {" "}
           <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 5fr) minmax(0, 7fr)", gap: "80px", alignItems: "center" }}>
-            {" "}
             <div>
-              {" "}
-              <h2 className="h2" style={{ fontSize: "56px" }}>
+              <h2 className="h2" style={{ fontSize: "60px" }}>
                 {t.heading}
               </h2>
-              {" "}
               <p className="lede" style={{ marginTop: "22px", maxWidth: "400px" }}>
                 {t.lede}
               </p>
-              {" "}
               <Reasons style={{ marginTop: "36px" }} />
-              {" "}
             </div>
-            {" "}
-            <WhyCard />
-            {" "}
+            <WhyDeck
+              label={d.kicker}
+              cardOf={d.cardOf}
+              pauseLabel={d.motion.pause}
+              playLabel={d.motion.play}
+              tints={DECK.map((c) => c.tint)}
+              cards={DECK.map(({ id, href }, k) => {
+                const c = d.cards[id];
+                const title = `wy-t-${id}`;
+                return (
+                  <>
+                    <div className="wy-vis" aria-hidden="true">
+                      <WhyArt id={id} a={d.art} />
+                    </div>
+                    <div className="wy-body">
+                      <div className="wy-top">
+                        <span className="wy-tag"><i />{c.tag}</span>
+                        <span className="wy-n">{`${pad(k + 1)} / ${pad(DECK.length)}`}</span>
+                      </div>
+                      <h3 className="wy-t" id={title}>{c.title}</h3>
+                      <p className="wy-l">{c.line}</p>
+                      <div className="wy-foot">
+                        {c.chips.length ? (
+                          <ul className="wy-chips">
+                            {c.chips.map((x: string) => <li key={x}>{x}</li>)}
+                          </ul>
+                        ) : (
+                          <span />
+                        )}
+                        {/* Eight links read "Explore More"; the card title
+                            tells them apart for a screen reader. */}
+                        <AppLink href={href} className="wy-more" aria-describedby={title}>
+                          {d.more}
+                          <Arrow size="14" />
+                        </AppLink>
+                      </div>
+                    </div>
+                  </>
+                );
+              })}
+            />
           </div>
-          {" "}
         </div>
       </div>
       <div className="mob">
