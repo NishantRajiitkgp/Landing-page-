@@ -1444,6 +1444,9 @@ export const en = {
       hA: "Onboard faster.",
       hB: "Detect fraud earlier.",
       lead: "Our comprehensive KYC solution brings every step of the digital onboarding process together creating a seamless experience that keeps fraudsters out and genuine customers moving forward.",
+      /** NEW MICROCOPY (24 Sep 2026): the heading over the phone's step list,
+       *  taken from the lead's own "every step of the digital onboarding". */
+      stepsK: "Every step of digital onboarding",
       steps: {
         upload: "The user uploads a photo of their ID",
         selfie: "User takes a Selfie",

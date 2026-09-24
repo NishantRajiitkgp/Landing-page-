@@ -61,7 +61,7 @@
       /* Reveal */
       @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
       .rise { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-      .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.32s; } .d4 { animation-delay: 0.46s; } .d5 { animation-delay: 0.6s; } .d6 { animation-delay: 0.8s; }
+      .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.32s; } .d4 { animation-delay: 0.46s; } .d6 { animation-delay: 0.8s; }
 
       /* Photo placeholder */
       .ph { position: relative; overflow: hidden; background: #D9CDB8; }
@@ -80,9 +80,6 @@
 
       /* Hero numbers */
       .hn { display: flex; align-items: baseline; gap: 10px; }
-      .hn .n { font-family: var(--serif); font-size: 40px; line-height: 1; letter-spacing: -0.03em; }
-      .hn .n em { font-style: normal; color: var(--muted); }
-      .hn .l { font-size: 14px; color: var(--muted); }
 
       /* People strip */
       @keyframes drift { from { transform: translateX(0); } to { transform: translateX(calc(var(--flip) * -50%)); } }
@@ -100,20 +97,13 @@
       /* Hero AI demo */
       .demo { position: relative; margin: 56px 0 0; max-width: none; border-radius: 26px; padding: 1.5px; overflow: hidden; }
       .dring { position: absolute; inset-inline-start: 50%; top: 50%; width: 260%; aspect-ratio: 1 / 1; margin: 0; transform: translate(-50%, -50%); background: conic-gradient(from 0deg, rgba(27,107,74,0.12) 0 55%, rgba(27,107,74,0.7) 74%, rgba(27,107,74,0.12) 92%, rgba(27,107,74,0.12) 100%); animation: spinc 6s linear infinite; }
-      .dcard { position: relative; border-radius: 25px; background: #FFFFFF; box-shadow: 0 40px 80px -50px rgba(21,20,15,0.45); text-align: start; overflow: hidden; }
       .dtabs { display: flex; align-items: center; gap: 4px; padding: 12px 14px; border-bottom: 1px solid var(--hair); }
       .dtabs span { height: 32px; padding: 0 12px; border-radius: 999px; display: inline-flex; align-items: center; font-size: 13px; font-weight: 500; color: var(--muted); }
       .dtabs span.on { background: var(--ink); color: #FFFFFF; }
       .dtabs .more { margin-inline-start: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-      .dbody { display: grid; grid-template-columns: 320px minmax(0, 1fr); gap: 40px; padding: 28px 32px; }
-      .dscan { position: relative; height: 118px; }
       .lic.demo { width: 190px; height: 118px; margin: 0 auto; }
-      .dbeam { inset-inline-start: 20px; inset-inline-end: 20px; animation-name: dbeam; animation-duration: 9s; }
-      .dmeta { position: relative; margin-top: 14px; height: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
-      .dright { position: relative; min-height: 150px; font-family: var(--mono); font-size: 13.5px; line-height: 1.5; color: var(--ink); display: flex; flex-direction: column; gap: 6px; }
       .dl { display: flex; gap: 10px; align-items: baseline; } .dl .pr { color: var(--muted); } .dl b { margin-inline-start: auto; font-weight: 500; color: var(--green); white-space: nowrap; }
       .dl.ok { padding-top: 8px; margin-top: 4px; border-top: 1px solid var(--hair); }
-      .dcaret { display: inline-block; width: 7px; height: 13px; margin-inline-start: 8px; background: var(--ink); animation: caret 1s steps(1) infinite; align-self: center; }
       /* Numbers reveal */
       .big { font-family: var(--serif); font-size: 176px; line-height: 0.9; letter-spacing: -0.045em; font-weight: 400; white-space: nowrap; overflow: hidden; padding-bottom: 0.24em; margin-bottom: -0.16em; }
       .big .in { display: inline-block; animation: up 1.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
@@ -162,13 +152,6 @@
       .lane .g .t { margin-top: 8px; font-family: var(--serif); font-size: 30px; line-height: 1.05; letter-spacing: -0.02em; }
       .axis { position: relative; height: 22px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
       .axis span { position: absolute; top: 0; transform: translateX(calc(var(--flip) * -50%)); white-space: nowrap; }
-      .plot { position: relative; padding: 6px 0; }
-      .plot .tk { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--hair); }
-      .plot .zone { position: absolute; top: 0; bottom: 0; inset-inline-start: 0; width: 30%; background: rgba(27,107,74,0.045); border-inline-end: 1px dashed rgba(27,107,74,0.35); border-radius: 0 6px 6px 0; }
-      .plot .zone span { position: absolute; inset-inline-end: 8px; bottom: -20px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); }
-      .prow { position: relative; height: 42px; }
-      .prow .lead { position: absolute; inset-inline-start: 0; top: 50%; height: 1px; background: #CFCAC0; }
-      .prow .lead.fast { background: rgba(27,107,74,0.5); }
       .pin { position: absolute; top: 4px; display: inline-flex; align-items: center; gap: 9px; height: 34px; padding-block: 0; padding-inline: 10px 12px; border-radius: 999px; background: #FFFFFF; border: 1px solid var(--hair); font-size: 13.5px; font-weight: 500; white-space: nowrap; transform: translateX(calc(var(--flip) * -13px)); box-shadow: 0 1px 0 rgba(21,20,15,0.04); }
       .pin.r { transform: translateX(calc(var(--flip) * -100% + var(--flip) * 13px)); padding-block: 0; padding-inline: 12px 10px; }
       .pin.r .d { order: 3; } .pin.r .t { order: 2; }
@@ -176,13 +159,7 @@
       .pin.fast .d { background: var(--green); }
       .pin .t { font-family: var(--mono); font-size: 11px; color: var(--muted); font-weight: 400; }
       .pin:hover { border-color: var(--ink); }
-      @keyframes sweep { 0% { inset-inline-start: 0; opacity: 0; } 4% { opacity: 1; } 92% { opacity: 1; } 100% { inset-inline-start: 100%; opacity: 0; } }
-      @keyframes drawx { from { transform: scaleX(0); } to { transform: scaleX(1); } }
       @keyframes pinin { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
-      @keyframes zonein { from { opacity: 0; } to { opacity: 1; } }
-      .plot .sweep { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--green); box-shadow: 0 0 12px rgba(27,107,74,0.5); animation: sweep 2.6s linear 0.3s both; pointer-events: none; }
-      .plot .zone { animation: zonein 1s ease 2.6s both; }
-      .prow .lead { transform-origin: var(--origin-x); animation: drawx linear 0.3s both; }
       .pin { animation: pinin 0.5s ease both; }
 
       /* Receipts */
@@ -205,12 +182,9 @@
       .clock { position: absolute; top: 24px; inset-inline-end: 28px; z-index: 4; display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
       .clock .tr { position: relative; width: 200px; height: 2px; background: var(--hair); overflow: hidden; }
       .clock .tr i { position: absolute; inset: 0; background: var(--ink); transform-origin: var(--origin-x); animation: clockfill 12s linear infinite; }
-      .strack { position: absolute; inset-inline-start: 6%; inset-inline-end: 6%; top: 450px; height: 1px; background: #DDD8CE; }
       .trail { position: absolute; inset-inline-start: 14.25%; top: 450px; height: 1px; background: var(--green); animation: trail 12s linear infinite; }
       .pk { position: absolute; top: 450px; width: 10px; height: 10px; margin-block: -5px 0; margin-inline: -5px 0; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px rgba(27,107,74,0.14), 0 0 22px rgba(27,107,74,0.55); z-index: 3; animation: pkmove 12s linear infinite; }
       .node { position: absolute; top: 450px; width: 12px; height: 12px; margin-block: -6px 0; margin-inline: -6px 0; border-radius: 50%; background: #FFFFFF; border: 1.5px solid #CFCAC0; z-index: 2; animation-duration: 12s; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); animation-iteration-count: infinite; }
-      .stlbl { position: absolute; top: 474px; transform: translateX(calc(var(--flip) * -50%)); text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; display: flex; flex-direction: column; gap: 5px; }
-      .stlbl b { font-weight: 500; color: var(--ink); font-size: 12px; }
       .panels { position: absolute; inset-inline-start: 40px; inset-inline-end: 40px; top: 76px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
       .panel { position: relative; height: 320px; padding: 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid var(--hair); box-shadow: 0 30px 60px -40px rgba(21,20,15,0.35), 0 1px 0 rgba(21,20,15,0.03); }
       .panel::after { content: ""; position: absolute; inset-inline-start: 50%; top: 100%; width: 1px; height: 54px; background: #DDD8CE; }
@@ -277,8 +251,6 @@
       .cell .body { position: absolute; inset-inline-start: 24px; inset-inline-end: 24px; bottom: 22px; z-index: 3; color: #FFFFFF; text-shadow: 0 2px 20px rgba(14,13,10,0.75); }
       .cell .body .h { font-family: var(--serif); font-size: 32px; line-height: 1.02; letter-spacing: -0.02em; }
       .cell .body .p { margin-top: 8px; font-size: 15px; line-height: 1.45; color: rgba(255,255,255,0.82); max-width: 420px; text-wrap: pretty; }
-      .cell .body .ls { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
-      .cell .body .ls span { font-family: var(--mono); font-size: 11px; padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,0.16); color: #FFFFFF; }
 
       /* Countries: photo cards */
       .cc { display: flex; flex-direction: column; gap: 14px; }
@@ -369,10 +341,6 @@
 
       /* Footer */
       .fcol { display: flex; flex-direction: column; gap: 11px; }
-      .fcol .h { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-      .fcol a { font-size: 14.5px; color: var(--muted); line-height: 1.3; }
-      .fcol a:hover { color: var(--ink); }
-      .fcol a small { display: block; font-size: 12px; color: var(--muted); }
       .soc { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--hair); display: flex; align-items: center; justify-content: center; color: var(--ink); }
       .soc:hover { border-color: var(--ink); }
       @keyframes pkmove { 0%, 13.33% { inset-inline-start: 14.25%; opacity: 1; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 18.33%, 41.67% { inset-inline-start: 38.08%; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 46.67%, 71.67% { inset-inline-start: 61.9%; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 76.67%, 96% { inset-inline-start: 85.75%; opacity: 1; } 99%, 100% { inset-inline-start: 85.75%; opacity: 0; } }
@@ -481,12 +449,7 @@
 
       @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
       .rise { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-      .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.32s; } .d4 { animation-delay: 0.46s; } .d5 { animation-delay: 0.6s; }
-
-      .hn { display: flex; flex-direction: column; gap: 4px; padding: 14px 0; }
-      .hn .n { font-family: var(--serif); font-size: 34px; line-height: 1; letter-spacing: -0.03em; } .hn .n em { font-style: normal; color: var(--muted); }
-      .hn .l { font-size: 13px; color: var(--muted); }
-
+      .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.32s; } .d4 { animation-delay: 0.46s; } 
       @keyframes drift { from { transform: translateX(0); } to { transform: translateX(calc(var(--flip) * -50%)); } }
       .track { display: flex; align-items: flex-end; width: max-content; animation: drift 60s linear infinite; }
       .person { position: relative; flex: 0 0 auto; margin-inline-end: 12px; border-radius: 16px; overflow: hidden; }
@@ -498,20 +461,13 @@
       /* Hero AI demo */
       .demo { position: relative; margin: 56px 0 0; max-width: none; border-radius: 26px; padding: 1.5px; overflow: hidden; }
       .dring { position: absolute; inset-inline-start: 50%; top: 50%; width: 260%; aspect-ratio: 1 / 1; margin: 0; transform: translate(-50%, -50%); background: conic-gradient(from 0deg, rgba(27,107,74,0.12) 0 55%, rgba(27,107,74,0.7) 74%, rgba(27,107,74,0.12) 92%, rgba(27,107,74,0.12) 100%); animation: spinc 6s linear infinite; }
-      .dcard { position: relative; border-radius: 25px; background: #FFFFFF; box-shadow: 0 40px 80px -50px rgba(21,20,15,0.45); text-align: start; overflow: hidden; }
       .dtabs { display: flex; align-items: center; gap: 4px; padding: 12px 14px; border-bottom: 1px solid var(--hair); }
       .dtabs span { height: 32px; padding: 0 12px; border-radius: 999px; display: inline-flex; align-items: center; font-size: 13px; font-weight: 500; color: var(--muted); }
       .dtabs span.on { background: var(--ink); color: #FFFFFF; }
       .dtabs .more { margin-inline-start: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-      .dbody { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 24px; padding: 22px 24px; }
-      .dscan { position: relative; height: 118px; }
       .lic.demo { width: 190px; height: 118px; margin: 0 auto; }
-      .dbeam { inset-inline-start: 20px; inset-inline-end: 20px; animation-name: dbeam; animation-duration: 9s; }
-      .dmeta { position: relative; margin-top: 14px; height: 18px; font-family: var(--mono); font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
-      .dright { position: relative; min-height: 150px; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; color: var(--ink); display: flex; flex-direction: column; gap: 6px; }
       .dl { display: flex; gap: 10px; align-items: baseline; } .dl .pr { color: var(--muted); } .dl b { margin-inline-start: auto; font-weight: 500; color: var(--green); white-space: nowrap; }
       .dl.ok { padding-top: 8px; margin-top: 4px; border-top: 1px solid var(--hair); }
-      .dcaret { display: inline-block; width: 7px; height: 13px; margin-inline-start: 8px; background: var(--ink); animation: caret 1s steps(1) infinite; align-self: center; }
       /* Numbers reveal */
       .big { font-family: var(--serif); font-size: 176px; line-height: 0.9; letter-spacing: -0.045em; font-weight: 400; white-space: nowrap; overflow: hidden; padding-bottom: 0.24em; margin-bottom: -0.16em; }
       .big .in { display: inline-block; animation: up 1.2s cubic-bezier(0.16, 1, 0.3, 1) both; }
@@ -551,8 +507,6 @@
       /* mobile demo/day-band overrides */
       .demo { margin: 0; max-width: none; }
       .dtabs { flex-wrap: wrap; gap: 6px; } .dtabs span { flex: 0 0 auto; height: 30px; font-size: 12.5px; padding: 0 10px; } .dtabs .more { margin-inline-start: 0; }
-      .dbody { grid-template-columns: 1fr; gap: 16px; padding: 18px 16px; }
-      .dright { font-size: 11.5px; min-height: 0; }
           .big { font-size: 104px; }
       .drow, .drow .bar2 { height: 34px; } .drow .bar2 { border-radius: 17px; padding-block: 0; padding-inline: 6px 10px; gap: 8px; } .drow .bc { font-size: 12.5px; } .cov span { font-size: 9px; inset-inline-start: 10px; }
       .drow { grid-template-columns: 1fr; height: auto; padding: 10px 0 12px; align-items: start; }
@@ -565,11 +519,6 @@
       .why .p { margin-top: 8px; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
 
       .g .t { margin-top: 8px; font-family: var(--serif); font-size: 26px; line-height: 1.05; letter-spacing: -0.02em; }
-      .crow { padding: 14px 0; border-top: 1px solid var(--hair); }
-      .crow .r1 { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-      .crow .nm { font-size: 16px; font-weight: 500; }
-      .crow .tm { font-family: var(--serif); font-style: italic; font-size: 22px; line-height: 1; white-space: nowrap; } .crow .tm small { font-size: 13px; color: var(--muted); margin-inline-start: 2px; }
-      .crow .sr { margin-top: 3px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
       .bar { position: relative; height: 14px; display: flex; align-items: center; margin-top: 8px; }
       .bar::before { content: ""; position: absolute; inset-inline-start: 0; inset-inline-end: 0; top: 50%; height: 1px; background: var(--hair); }
       .bar i { position: relative; display: block; height: 5px; border-radius: 3px; background: var(--ink); }
@@ -605,12 +554,9 @@
       .clock { position: absolute; top: 24px; inset-inline-end: 28px; z-index: 4; display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
       .clock .tr { position: relative; width: 200px; height: 2px; background: var(--hair); overflow: hidden; }
       .clock .tr i { position: absolute; inset: 0; background: var(--ink); transform-origin: var(--origin-x); animation: clockfill 12s linear infinite; }
-      .strack { position: absolute; inset-inline-start: 6%; inset-inline-end: 6%; top: 450px; height: 1px; background: #DDD8CE; }
       .trail { position: absolute; inset-inline-start: 14.25%; top: 450px; height: 1px; background: var(--green); animation: trail 12s linear infinite; }
       .pk { position: absolute; top: 450px; width: 10px; height: 10px; margin-block: -5px 0; margin-inline: -5px 0; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px rgba(27,107,74,0.14), 0 0 22px rgba(27,107,74,0.55); z-index: 3; animation: pkmove 12s linear infinite; }
       .node { position: absolute; top: 450px; width: 12px; height: 12px; margin-block: -6px 0; margin-inline: -6px 0; border-radius: 50%; background: #FFFFFF; border: 1.5px solid #CFCAC0; z-index: 2; animation-duration: 12s; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); animation-iteration-count: infinite; }
-      .stlbl { position: absolute; top: 474px; transform: translateX(calc(var(--flip) * -50%)); text-align: center; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; display: flex; flex-direction: column; gap: 5px; }
-      .stlbl b { font-weight: 500; color: var(--ink); font-size: 12px; }
       .panels { position: absolute; inset-inline-start: 40px; inset-inline-end: 40px; top: 76px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
       .panel { position: relative; height: 320px; padding: 20px; border-radius: 20px; background: #FFFFFF; border: 1px solid var(--hair); box-shadow: 0 30px 60px -40px rgba(21,20,15,0.35), 0 1px 0 rgba(21,20,15,0.03); }
       .panel::after { content: ""; position: absolute; inset-inline-start: 50%; top: 100%; width: 1px; height: 54px; background: #DDD8CE; }
@@ -732,7 +678,6 @@
       .stlbl2 { height: 28px; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
       .stlbl2 b { font-weight: 500; color: var(--ink); font-size: 11.5px; }
       .stn2 .panel { height: 320px; box-shadow: 0 20px 40px -30px rgba(21,20,15,0.35); } .stn2 .panel::after { display: none; }
-      .doc .dsub { display: none; }
       .ccard { height: 300px; } .cn { font-size: 22px; } .cst b { font-size: 11.5px; } .cst span { font-size: 9px; }
       .cby b { font-size: 15px; }
       .phone2 { width: 300px; height: 690px; }
@@ -748,9 +693,6 @@
          the failure on the tree that mobile actually paints. */
       .inp { margin-top: 6px; height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #D8D3C9; background: #F6F4EF; display: flex; align-items: center; justify-content: space-between; font-size: 15px; color: var(--muted); } .inp.fill { color: var(--ink); }
       .seg { height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #CFCAC0; font-size: 12.5px; color: #3D3B35; display: inline-flex; align-items: center; } .seg.on { border-color: var(--ink); color: var(--ink); font-weight: 500; }
-
-      .fcol { display: flex; flex-direction: column; gap: 10px; padding: 18px 0; border-top: 1px solid var(--hair); }
-      .fcol .h { font-size: 13px; font-weight: 600; } .fcol a { font-size: 14px; color: var(--muted); } .fcol a small { display: block; font-size: 11.5px; color: var(--muted); }
       .soc { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--hair); display: flex; align-items: center; justify-content: center; }
       @keyframes pkmove { 0%, 13.33% { inset-inline-start: 14.25%; opacity: 1; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 18.33%, 41.67% { inset-inline-start: 38.08%; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 46.67%, 71.67% { inset-inline-start: 61.9%; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 76.67%, 96% { inset-inline-start: 85.75%; opacity: 1; } 99%, 100% { inset-inline-start: 85.75%; opacity: 0; } }
       @keyframes trail { 0%, 13.33% { width: 0; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 18.33%, 41.67% { width: 23.83%; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 46.67%, 71.67% { width: 47.65%; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); } 76.67%, 96% { width: 71.50%; } 99%, 100% { width: 0; } }
