@@ -56,7 +56,7 @@ export type NodeCopy = { institution: string; customer: string; one: string; man
 
 /** The subset of a pointer event the handlers read; a React
  *  `PointerEvent<HTMLDivElement>` satisfies it. */
-type Ptr = { clientX: number; clientY: number; pointerId: number; currentTarget: HTMLElement; preventDefault(): void };
+type Ptr = { clientX: number; clientY: number; pointerId: number; pointerType: string; currentTarget: HTMLElement; preventDefault(): void };
 
 export type TrustNetworkSim = {
   /** Re-read `net` and `paused`, and restart the loop if it had stopped. */
@@ -329,19 +329,25 @@ export function createTrustNetwork(
     // label for the focused node
     if (focus && focus.al > 0.5) {
       const txt = `${focus.cu ? t_.customer : t_.institution} · ${focus.deg} ${focus.deg === 1 ? t_.one : t_.many}`.toUpperCase();
-      ctx!.font = `500 10.5px ${MONO}`;
-      const w = ctx!.measureText(txt).width + 20, h = 24;
+      ctx!.font = `500 ${10.5 * ui}px ${MONO}`;
+      const w = ctx!.measureText(txt).width + 20 * ui, h = 24 * ui;
       const lx = Math.max(8, Math.min(W - 8 - w, focus.x - w / 2));
       let ly = focus.y - focus.r * 1.6 - h - 10;
       if (ly < 8) ly = focus.y + focus.r * 1.6 + 10;
+      // Enlarged on a phone, a label beside the hub would run under the
+      // medallion (HTML, over the canvas), so it clears the medallion's
+      // 84-unit dial instead, on the node's side.
+      if (ui > 1 && lx < CX + 84 && lx + w > CX - 84 && ly < CY + 84 && ly + h > CY - 84) {
+        ly = focus.y < CY ? CY - 90 - h : CY + 90;
+      }
       ctx!.save();
       ctx!.shadowColor = rgba(INK, 0.18); ctx!.shadowBlur = 16; ctx!.shadowOffsetY = 6;
-      ctx!.fillStyle = rgba(WHITE, 1); ctx!.beginPath(); ctx!.roundRect(lx, ly, w, h, 12); ctx!.fill();
+      ctx!.fillStyle = rgba(WHITE, 1); ctx!.beginPath(); ctx!.roundRect(lx, ly, w, h, h / 2); ctx!.fill();
       ctx!.restore();
       ctx!.strokeStyle = rgba(INK, 0.1); ctx!.lineWidth = 1; ctx!.beginPath();
-      ctx!.roundRect(lx + 0.5, ly + 0.5, w - 1, h - 1, 12); ctx!.stroke();
+      ctx!.roundRect(lx + 0.5, ly + 0.5, w - 1, h - 1, h / 2); ctx!.stroke();
       ctx!.fillStyle = rgba(focus.cu ? GREEN : INK, 1); ctx!.textBaseline = "middle";
-      ctx!.fillText(txt, lx + 10, ly + h / 2 + 0.5);
+      ctx!.fillText(txt, lx + 10 * ui, ly + h / 2 + 0.5);
     }
   }
 
@@ -381,12 +387,23 @@ export function createTrustNetwork(
   reduce.addEventListener("change", onReduce);
 
   // Pointer handling lives in the same closure as the simulation it drives.
+  /** How much larger than its drawing units the label and the pick radius
+   *  are drawn: 1 at the desktop's 700px, up to 2.2 on a phone, where the
+   *  canvas shrinks to ~320px and a 10.5-unit label would be 5px of text and
+   *  an 18-unit pick an 8px target for a finger. */
+  let ui = 1;
+  const ro = new ResizeObserver(() => {
+    ui = Math.min(2.2, Math.max(1, W / (cv.clientWidth || W)));
+    kick();
+  });
+  ro.observe(cv);
+
   const pt = (e: { clientX: number; clientY: number }) => {
     const r = cv.getBoundingClientRect();
     return { x: ((e.clientX - r.left) * W) / (r.width || W), y: ((e.clientY - r.top) * H) / (r.height || H) };
   };
   const pick = (x: number, y: number) => {
-    let best = -1, bd = 18 * 18;
+    let best = -1, bd = (18 * ui) ** 2;
     for (let i = 1; i < N.length; i++) {
       const n = N[i];
       if (!n.on || n.al < 0.5) continue;
@@ -398,8 +415,10 @@ export function createTrustNetwork(
   const down = (e: Ptr) => {
     const p = pt(e); P.x = p.x; P.y = p.y; P.in = true;
     const i = pick(p.x, p.y);
+    // A tap is the phone's hover: it sets the focus, and `leave` keeps it.
+    hov = i;
     if (i > 0) {
-      drag = i; hov = i;
+      drag = i;
       try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* capture is a nicety */ }
       e.currentTarget.style.cursor = "grabbing";
       e.preventDefault();
@@ -428,7 +447,7 @@ export function createTrustNetwork(
     kick();
   };
   const leave = (e: Ptr) => {
-    if (drag >= 0) return;
+    if (drag >= 0 || e.pointerType === "touch") return;
     P.in = false; hov = -1; hub = false;
     e.currentTarget.style.cursor = "";
     kick();
@@ -437,6 +456,7 @@ export function createTrustNetwork(
   const destroy = () => {
     cancelAnimationFrame(raf);
     io.disconnect();
+    ro.disconnect();
     reduce.removeEventListener("change", onReduce);
   };
   return { refresh, down, move, up, leave, destroy };

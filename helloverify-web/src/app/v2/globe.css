@@ -1,7 +1,8 @@
 /* Homepage v2 · international: the globe (`sections/Globe.tsx`, the canvas
    "09 World — the orb"). Imported by that component; conventions as in
    `hero.css`'s header — tokens for colour, logical properties, every
-   selector prefixed `gb-`.
+   selector prefixed `gb-`. One tree at every width: the base holds what
+   both sizes share, then the desktop board's layout, then the phone's.
 
    Five tints the board uses that the palette does not have, declared once.
    The first two are the stage's paper, the last three are read by the canvas
@@ -16,81 +17,120 @@
   --v2-gb-pulse: #2EAA76;
 }
 
+.gb-mast { display: flex; justify-content: space-between; align-items: center; }
+.gb-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.gb-sh { margin-top: 22px; }
+.gb-sh .h2 { font-size: clamp(36px, 10vw, 58px); }
+.gb-it { font-style: italic; }
+
+.gb-stage { position: relative; overflow: hidden; cursor: grab; user-select: none; -webkit-user-select: none; background: radial-gradient(ellipse 65% 75% at 34% 48%, var(--white) 0%, var(--v2-gb-stage-mid) 55%, var(--v2-gb-stage-lo) 100%); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 100px -60px rgb(from var(--ink) r g b / .35), inset 0 0 0 1px var(--hair); }
+.gb-stage:active { cursor: grabbing; }
+.gb-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgb(from var(--ink) r g b / .07) 1px, transparent 1px); background-size: 22px 22px; -webkit-mask-image: radial-gradient(ellipse at 34% 48%, transparent 34%, var(--ink) 82%); mask-image: radial-gradient(ellipse at 34% 48%, transparent 34%, var(--ink) 82%); }
+/* The canvas and the pin layer share one 1200×720 box anchored at the
+   inline start (scaled down on the phone, below). Each pin is
+   `direction: ltr` because the pins are placed in canvas pixels, which do
+   not mirror; the island moves the orb itself under RTL instead
+   (`lib/globeEngine`, `cx`). On the pins, not their layer: a logical inset
+   resolves in the element's own direction, so an `ltr` layer anchored left
+   while the canvas anchored right — apart once the box is not the stage's
+   width, as on the phone. */
+.gb-canvas, .gb-pins { position: absolute; top: 0; inset-inline-start: 0; }
+.gb-canvas { display: block; }
+.gb-pins { pointer-events: none; }
+.gb-pin { direction: ltr; position: absolute; inset-inline-start: 0; top: 0; display: block; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; pointer-events: auto; opacity: 0; transition: opacity .25s; will-change: transform; }
+.gb-fl { width: 28px !important; height: 28px !important; box-shadow: 0 0 0 2.5px var(--white), 0 0 0 3.5px rgb(from var(--ink) r g b / .14), 0 6px 14px -4px rgb(from var(--ink) r g b / .35); transition: filter .35s, box-shadow .3s, transform .35s cubic-bezier(.16, 1, .3, 1); }
+.gb-code { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--green); color: var(--white); font-family: var(--mono); font-size: 7.5px; letter-spacing: .04em; }
+/* The label is out of flow, so the button's box is the 28px flag alone —
+   a label-wide box would overlap its neighbours (UAE and Saudi Arabia sit
+   ~30px apart) and fail axe `target-size`. Centred with both insets and
+   auto margins rather than a translate, which the RTL gate would ask to
+   flip. */
+.gb-pin-l { position: absolute; top: calc(100% + 6px); inset-inline: -120px; margin-inline: auto; width: max-content; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); white-space: nowrap; padding: 4px 8px; border-radius: 999px; background: var(--white); box-shadow: 0 0 0 1px var(--hair), 0 8px 18px -10px rgb(from var(--ink) r g b / .4); opacity: 0; transform: translateY(-4px); transition: opacity .25s, transform .3s cubic-bezier(.16, 1, .3, 1); pointer-events: none; }
+.gb-pin:hover .gb-pin-l, .gb-pin:focus-visible .gb-pin-l { opacity: 1; transform: none; }
+.gb-pin:hover .gb-fl, .gb-pin:focus-visible .gb-fl { transform: scale(1.18); box-shadow: 0 0 0 2.5px var(--white), 0 0 0 4px rgb(from var(--green) r g b / .55), 0 10px 22px -6px rgb(from var(--green) r g b / .5); }
+.gb-pin:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
+.gb-pin:focus-visible .gb-pin-l { box-shadow: 0 0 0 2px var(--ink); }
+.gb-on .gb-fl { transform: scale(1.32); box-shadow: 0 0 0 3px var(--white), 0 0 0 4.5px var(--green), 0 12px 24px -6px rgb(from var(--ink) r g b / .45); }
+.gb-on .gb-pin-l { background: var(--ink); color: var(--white); box-shadow: none; opacity: 1; transform: none; }
+
+.gb-hud { display: flex; gap: 6px; pointer-events: none; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.gb-hud b { font-weight: 400; color: var(--green); letter-spacing: .08em; }
+.gb-legend { display: flex; gap: 18px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.gb-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.gb-lg-hq { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px rgb(from var(--green) r g b / .18); }
+.gb-lg-off { width: 8px; height: 8px; border-radius: 50%; border: 1.4px solid var(--green); box-sizing: border-box; }
+.gb-lg-arc { width: 18px; height: 2px; border-radius: 2px; background: linear-gradient(calc(var(--flip) * 90deg), rgb(from var(--green) r g b / 0), var(--green)); }
+.gb-speed { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.gb-speed input { width: 130px; height: 24px; margin: 0; accent-color: var(--green); cursor: pointer; }
+.gb-speed input:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+.gb-panel { cursor: default; }
+.gb-card { box-sizing: border-box; display: flex; flex-direction: column; padding: 28px 28px 24px; border-radius: 22px; background: rgb(from var(--white) r g b / .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 0 0 1px var(--hair), 0 30px 60px -36px rgb(from var(--ink) r g b / .4); color: var(--ink); animation: gbIn .6s cubic-bezier(.16, 1, .3, 1) .15s both; }
+@keyframes gbIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 16px)); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+.gb-card-top { display: flex; align-items: center; gap: 14px; }
+.gb-fl-lg { width: 44px !important; height: 44px !important; flex: none; font-size: 10px; }
+.gb-role { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--green); }
+.gb-cn { margin: 4px 0 0; font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.02; letter-spacing: -.02em; color: var(--ink); }
+.gb-x { margin-inline-start: auto; align-self: flex-start; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--hair); background: var(--white); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.gb-x:hover { border-color: var(--ink); }
+.gb-x:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.gb-head { margin: 22px 0 0; font-family: var(--serif); font-size: 21px; line-height: 1.3; letter-spacing: -.01em; color: var(--ink); text-wrap: pretty; }
+.gb-rows { margin: 18px 0 0; }
+.gb-row { padding-block: 11px; border-top: 1px solid var(--hair); }
+.gb-row dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.gb-row dd { margin: 4px 0 0; font-weight: 500; font-size: 14px; line-height: 1.4; color: var(--ink); }
+.gb-coord { margin-top: auto; padding-top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--muted); }
+.gb-big { margin-top: 22px; font-family: var(--serif); font-size: clamp(88px, 24vw, 120px); line-height: .88; letter-spacing: -.05em; color: var(--ink); }
+.gb-big span { font-size: .45em; vertical-align: top; margin-inline-start: 4px; color: var(--green); }
+.gb-big-p { margin: 14px 0 0; font-size: 15px; line-height: 1.5; color: var(--ink-soft); }
+.gb-offk { margin-top: 26px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.gb-offs { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.gb-offs li { height: 28px; display: inline-flex; align-items: center; padding-inline: 11px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--hair); font-size: 12.5px; color: var(--ink); background: var(--white); }
+.gb-tip { margin: auto 0 0; display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink); }
+.gb-tipdot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgb(from var(--green) r g b / .45); animation: gbPing 1.8s ease-out infinite; }
+/* "Still" pauses the one CSS loop in the card too. */
+.gb-still .gb-tipdot { animation-play-state: paused; }
+@keyframes gbPing { to { box-shadow: 0 0 0 10px rgb(from var(--green) r g b / 0); } }
+/* `wrap`: on the phone the link drops under the sentence instead of
+   squeezing it. */
+.gb-foot { margin-top: 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 24px; font-size: 14px; color: var(--muted); }
+.gb-all { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; color: var(--ink); text-decoration: none; white-space: nowrap; }
+
 @media (min-width: 1081px) {
   .gb { padding-block: 120px 140px; }
-  .gb-mast { display: flex; justify-content: space-between; align-items: center; }
-  .gb-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .gb-sh { margin-top: 22px; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
-  .gb-sh .h2 { font-size: 58px; }
+  .gb-sh { grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
   .gb-sh .lede { margin-bottom: 8px; }
-  .gb-it { font-style: italic; }
+  /* `touch-action: none` so a drag turns the globe rather than scrolling. */
+  .gb-stage { margin-top: 56px; height: 720px; border-radius: 30px; touch-action: none; }
+  .gb-canvas, .gb-pins { width: 1200px; height: 720px; }
+  .gb-hud { position: absolute; inset-inline-start: 28px; top: 24px; flex-direction: column; }
+  .gb-legend { position: absolute; inset-inline-start: 28px; bottom: 26px; }
+  .gb-speed { position: absolute; inset-inline-start: 28px; bottom: 60px; }
+  .gb-panel { position: absolute; inset-inline-end: 22px; top: 22px; bottom: 22px; width: 372px; }
+  .gb-card { height: 100%; }
+}
 
-  /* The stage. `touch-action: none` so a drag turns the globe rather than
-     scrolling; desktop pointers only reach this tree. */
-  .gb-stage { position: relative; margin-top: 56px; height: 720px; border-radius: 30px; overflow: hidden; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; background: radial-gradient(ellipse 65% 75% at 34% 48%, var(--white) 0%, var(--v2-gb-stage-mid) 55%, var(--v2-gb-stage-lo) 100%); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 100px -60px rgb(from var(--ink) r g b / .35), inset 0 0 0 1px var(--hair); }
-  .gb-stage:active { cursor: grabbing; }
-  .gb-stage::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgb(from var(--ink) r g b / .07) 1px, transparent 1px); background-size: 22px 22px; -webkit-mask-image: radial-gradient(ellipse at 34% 48%, transparent 34%, var(--ink) 82%); mask-image: radial-gradient(ellipse at 34% 48%, transparent 34%, var(--ink) 82%); }
-  /* The canvas and the pin layer share one 1200×720 box anchored at the
-     inline start. The pin layer is `direction: ltr` because the pins are
-     placed in canvas pixels, which do not mirror; the island moves the orb
-     itself under RTL instead (`GlobeStage`, `cx`). */
-  .gb-canvas, .gb-pins { position: absolute; top: 0; inset-inline-start: 0; width: 1200px; height: 720px; }
-  .gb-canvas { display: block; }
-  .gb-pins { pointer-events: none; direction: ltr; }
-  .gb-pin { position: absolute; inset-inline-start: 0; top: 0; display: block; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; pointer-events: auto; opacity: 0; transition: opacity .25s; will-change: transform; }
-  .gb-fl { width: 28px !important; height: 28px !important; box-shadow: 0 0 0 2.5px var(--white), 0 0 0 3.5px rgb(from var(--ink) r g b / .14), 0 6px 14px -4px rgb(from var(--ink) r g b / .35); transition: filter .35s, box-shadow .3s, transform .35s cubic-bezier(.16, 1, .3, 1); }
-  .gb-code { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--green); color: var(--white); font-family: var(--mono); font-size: 7.5px; letter-spacing: .04em; }
-  /* The label is out of flow, so the button's box is the 28px flag alone —
-     a label-wide box would overlap its neighbours (UAE and Saudi Arabia sit
-     ~30px apart) and fail axe `target-size`. Centred with both insets and
-     auto margins rather than a translate, which the RTL gate would ask to
-     flip. */
-  .gb-pin-l { position: absolute; top: calc(100% + 6px); inset-inline: -120px; margin-inline: auto; width: max-content; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); white-space: nowrap; padding: 4px 8px; border-radius: 999px; background: var(--white); box-shadow: 0 0 0 1px var(--hair), 0 8px 18px -10px rgb(from var(--ink) r g b / .4); opacity: 0; transform: translateY(-4px); transition: opacity .25s, transform .3s cubic-bezier(.16, 1, .3, 1); pointer-events: none; }
-  .gb-pin:hover .gb-pin-l, .gb-pin:focus-visible .gb-pin-l { opacity: 1; transform: none; }
-  .gb-pin:hover .gb-fl, .gb-pin:focus-visible .gb-fl { transform: scale(1.18); box-shadow: 0 0 0 2.5px var(--white), 0 0 0 4px rgb(from var(--green) r g b / .55), 0 10px 22px -6px rgb(from var(--green) r g b / .5); }
-  .gb-pin:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
-  .gb-pin:focus-visible .gb-pin-l { box-shadow: 0 0 0 2px var(--ink); }
-  .gb-on .gb-fl { transform: scale(1.32); box-shadow: 0 0 0 3px var(--white), 0 0 0 4.5px var(--green), 0 12px 24px -6px rgb(from var(--ink) r g b / .45); }
-  .gb-on .gb-pin-l { background: var(--ink); color: var(--white); box-shadow: none; opacity: 1; transform: none; }
-
-  .gb-hud { position: absolute; inset-inline-start: 28px; top: 24px; display: flex; flex-direction: column; gap: 6px; pointer-events: none; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .gb-hud b { font-weight: 400; color: var(--green); letter-spacing: .08em; }
-  .gb-legend { position: absolute; inset-inline-start: 28px; bottom: 26px; display: flex; gap: 18px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .gb-legend span { display: inline-flex; align-items: center; gap: 8px; }
-  .gb-lg-hq { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px rgb(from var(--green) r g b / .18); }
-  .gb-lg-off { width: 8px; height: 8px; border-radius: 50%; border: 1.4px solid var(--green); box-sizing: border-box; }
-  .gb-lg-arc { width: 18px; height: 2px; border-radius: 2px; background: linear-gradient(calc(var(--flip) * 90deg), rgb(from var(--green) r g b / 0), var(--green)); }
-  .gb-speed { position: absolute; inset-inline-start: 28px; bottom: 60px; display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .gb-speed input { width: 130px; height: 24px; margin: 0; accent-color: var(--green); cursor: pointer; }
-  .gb-speed input:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-
-  .gb-panel { position: absolute; inset-inline-end: 22px; top: 22px; bottom: 22px; width: 372px; cursor: default; }
-  .gb-card { height: 100%; box-sizing: border-box; display: flex; flex-direction: column; padding: 28px 28px 24px; border-radius: 22px; background: rgb(from var(--white) r g b / .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 0 0 1px var(--hair), 0 30px 60px -36px rgb(from var(--ink) r g b / .4); color: var(--ink); animation: gbIn .6s cubic-bezier(.16, 1, .3, 1) .15s both; }
-  @keyframes gbIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 16px)); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
-  .gb-card-top { display: flex; align-items: center; gap: 14px; }
-  .gb-fl-lg { width: 44px !important; height: 44px !important; flex: none; font-size: 10px; }
-  .gb-role { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--green); }
-  .gb-cn { margin: 4px 0 0; font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.02; letter-spacing: -.02em; color: var(--ink); }
-  .gb-x { margin-inline-start: auto; align-self: flex-start; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--hair); background: var(--white); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-  .gb-x:hover { border-color: var(--ink); }
-  .gb-x:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .gb-head { margin: 22px 0 0; font-family: var(--serif); font-size: 21px; line-height: 1.3; letter-spacing: -.01em; color: var(--ink); text-wrap: pretty; }
-  .gb-rows { margin: 18px 0 0; }
-  .gb-row { padding-block: 11px; border-top: 1px solid var(--hair); }
-  .gb-row dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .gb-row dd { margin: 4px 0 0; font-weight: 500; font-size: 14px; line-height: 1.4; color: var(--ink); }
-  .gb-coord { margin-top: auto; padding-top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--muted); }
-  .gb-big { margin-top: 22px; font-family: var(--serif); font-size: 120px; line-height: .88; letter-spacing: -.05em; color: var(--ink); }
-  .gb-big span { font-size: .45em; vertical-align: top; margin-inline-start: 4px; color: var(--green); }
-  .gb-big-p { margin: 14px 0 0; font-size: 15px; line-height: 1.5; color: var(--ink-soft); }
-  .gb-offk { margin-top: 26px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-  .gb-offs { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-  .gb-offs li { height: 28px; display: inline-flex; align-items: center; padding-inline: 11px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--hair); font-size: 12.5px; color: var(--ink); background: var(--white); }
-  .gb-tip { margin: auto 0 0; display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink); }
-  .gb-tipdot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgb(from var(--green) r g b / .45); animation: gbPing 1.8s ease-out infinite; }
-  /* "Still" pauses the one CSS loop in the card too. */
-  .gb-still .gb-tipdot { animation-play-state: paused; }
-  @keyframes gbPing { to { box-shadow: 0 0 0 10px rgb(from var(--green) r g b / 0); } }
-  .gb-foot { margin-top: 24px; display: flex; justify-content: space-between; align-items: center; gap: 24px; font-size: 14px; color: var(--muted); }
-  .gb-all { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; color: var(--ink); text-decoration: none; white-space: nowrap; }
+/* The phone: the stage runs edge to edge and stacks — the orb, one caption
+   row of HUD, spin and legend, then the card under it. */
+@media (max-width: 1080px) {
+  .gb { padding-block: 72px; }
+  /* Full-bleed, because 350px is too small a globe: Riyadh and Dubai are
+     7.8° apart, which is 24px of screen only once the radius passes 177px,
+     and closer than that their pins overlap and fail axe `target-size`. */
+  .gb-stage { margin: 32px -20px 0; padding-bottom: 20px; box-shadow: inset 0 1px var(--hair), inset 0 -1px var(--hair); touch-action: pan-y pinch-zoom; }
+  /* A square window on the canvas's globe: the 1200×720 box drawn at 199%
+     of it puts the 572px orb at 95% of the width, centred. The engine reads
+     the drawn width back to place the pins (`lib/globeEngine`, `s`). */
+  .gb-orb { position: relative; width: min(100%, 600px); margin-inline: auto; aspect-ratio: 1; }
+  .gb-canvas, .gb-pins { top: -11.78%; inset-inline-start: -18.09%; width: 199.3%; }
+  /* Unclipped, so the halo fades out and the floor shadow lands under the
+     orb; the rows below are positioned to paint over it, and the canvas
+     lets taps through to them (the stage handles the drag). */
+  .gb-canvas { height: auto; pointer-events: none; }
+  .gb-fl { width: 24px !important; height: 24px !important; }
+  .gb-hud, .gb-speed, .gb-legend { position: relative; justify-content: center; flex-wrap: wrap; margin-top: 12px; padding-inline: 20px; }
+  .gb-legend { gap: 8px 16px; }
+  .gb-panel { margin: 20px 20px 0; }
+  .gb-card { padding: 24px 22px 20px; }
+  .gb-tip { margin-top: 22px; }
 }

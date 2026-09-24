@@ -481,50 +481,16 @@ export const en = {
     },
   },
 
-  /** `sections/Consumer.tsx`. `checkLines` is flat rather than nested per
-   *  plan: the three lines are the same three strings in both cards, and
-   *  the plans differ only in which of them they list and which one is
-   *  struck through. `most` is one shared leaf with a boolean in the
-   *  component for the same reason `blocks/LeadMock.tsx` keeps `on` there —
-   *  which card is flashed is a choice about the card, not a word. */
+  /** `sections/ConsumerShop.tsx` (composed as `Consumer`). */
   consumer: {
     k: "Consumer · HelloV",
     headingA: "Verify anyone.",
     headingB: "From your phone, in 30 minutes.",
-    headingMob: "Verify anyone. From your phone, in 30 minutes.",
     lede: "Send a photo of the document over WhatsApp. We do the rest and message you back with the report.",
-    ledeMob: "Send a photo of the document over WhatsApp. We message you back with the report.",
-    note: "Prices are placeholders. Home staff, tenant and nanny packages priced the same way.",
-    noteMob: "Prices are placeholders.",
-    services: {
-      driver: "Driver",
-      homeStaff: "Home staff",
-      tenant: "Tenant",
-      nanny: "Nanny",
-      verifyAnyone: "Verify anyone",
-      cyberIdentity: "Cyber identity",
-      knowIdentity: "Know the identity",
-      knowContact: "Know your contact",
-    },
-    /** The currency mark is its own `<span className="cur">`, so its own
-     *  text node — and it is copy, not a constant: a locale that prices in
-     *  another currency changes this and the figure beside it together. */
-    currency: "₹",
-    per: "per check",
-    most: "Most chosen",
-    checkLines: {
-      licence: "Driving licence check",
-      criminal: "Criminal record check",
-      address: "Current address check",
-    },
-    plans: {
-      basic: { name: "Driver · Basic", price: "499", ready: "Ready in 30 min", cta: "Buy Basic" },
-      advanced: { name: "Driver · Advanced", price: "799", ready: "Ready in 30 min", cta: "Buy Advanced" },
-    },
-    /** Homepage v2 (desktop): the HelloV storefront — eight photo panels,
+    /** Homepage v2: the HelloV storefront, at every width — eight photo panels,
      *  a price card, the QR steps and the phone. `k`, `headingA`, `headingB`
-     *  and `lede` above are said again by this tree, string for string, so
-     *  they are not repeated here. The product names, one-liners and check
+     *  and `lede` above are this tree's too, so they are not repeated
+     *  here. The product names, one-liners and check
      *  lists are the old homepage tabs and `/products/hellov`, verbatim; a
      *  service without `price` shows the placeholder, which is deliberate
      *  until the founder confirms the figure. */
@@ -738,54 +704,16 @@ export const en = {
     },
   },
 
-  /** `sections/International.tsx`. Keyed by photograph, as `whoItsFor` is.
-   *  The flags stay in the component — they are drawings, and their hex is
-   *  the `check:tokens` exemption that file's header records. `stats` is
-   *  keyed by the same three ids as `statLabels` so the pairing is a type
-   *  and not an index. */
+  /** `sections/Globe.tsx` (composed as `International`). The flags stay in
+   *  the component — they are drawings, and their hex is the `check:tokens`
+   *  exemption. */
   international: {
     headingA: "Verified in 120 countries.",
     headingB: "With a time you can plan around.",
-    headingMob: "Verified in 120 countries. With a time you can plan around.",
     lede: "Local sources — the same courts, registries and licensing bodies a local employer would call. Start now and the report lands by the time shown.",
     courts: "Criminal records are checked across Supreme, High and District Courts and tribunals. Times are from upload, in your local time.",
     all: "All countries",
-    readyBy: "Report ready by",
-    statLabels: { audience: "For", count: "Checks", ready: "Ready in" },
-    countries: {
-      "/img/16-united-kingdom.jpg": {
-        name: "United Kingdom",
-        note: "photo · London street",
-        stats: { audience: "Drivers", count: "2", ready: "30 min" },
-        by: "Today, 4:12 PM",
-      },
-      "/img/17-philippines.jpg": {
-        name: "Philippines",
-        note: "photo · Manila, jeepney",
-        stats: { audience: "Drivers", count: "3", ready: "30 min" },
-        by: "Today, 4:12 PM",
-      },
-      "/img/18-uae.jpg": {
-        name: "United Arab Emirates",
-        note: "photo · Dubai skyline",
-        stats: { audience: "House help", count: "3", ready: "24 hrs" },
-        by: "Tomorrow, 9:00 AM",
-      },
-      "/img/19-singapore.jpg": {
-        name: "Singapore",
-        note: "photo · Singapore campus",
-        stats: { audience: "Graduates", count: "1", ready: "3 days" },
-        by: "Fri, 19 Sep",
-      },
-      "/img/20-egypt.jpg": {
-        name: "Egypt",
-        note: "photo · Cairo rooftops",
-        stats: { audience: "Tenants", count: "3", ready: "30 min" },
-        by: "Today, 4:12 PM",
-      },
-    },
-    /** Homepage v2 (desktop): the globe. `headingA`, `headingB`, `lede`,
-     *  `courts` and `all` above are said again by this tree. Each pin's card
+    /** Homepage v2: the globe, at every width. Each pin's card
      *  quotes what the site already says about that country — the Saudi
      *  health-authority programme, the MOM empanelment, the embassy
      *  partners, the office pages — and its `rows` are ragged on purpose:

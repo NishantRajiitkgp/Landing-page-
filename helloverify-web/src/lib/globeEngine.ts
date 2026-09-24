@@ -33,8 +33,12 @@ export class GlobeEngine {
   private pal: Palette | null = null;
   private ctx: CanvasRenderingContext2D | null = null;
   private dpr = 1;
+  /** The canvas's CSS width over `W`: 1 on desktop, about 0.63 at 390px,
+   *  where `globe.css` shrinks the whole 1200×720 box to fit the phone. */
+  private s = 1;
   private visible = false;
   private io: IntersectionObserver;
+  private ro: ResizeObserver;
   private mq: MediaQueryList;
   private dead = false;
   speed = 35;
@@ -58,13 +62,29 @@ export class GlobeEngine {
       }
     }, { rootMargin: "300px 0px" });
     this.io.observe(stage);
+    this.ro = new ResizeObserver(() => {
+      this.s = canvas.clientWidth / W || 1;
+      if (this.scene) { this.size(); this.kick(); }
+    });
+    this.ro.observe(canvas);
+  }
+
+  /** The backing store follows the drawn size, not the 1200px box: at 390px
+   *  a full-resolution buffer would be 2.5× the pixels actually shown, filled
+   *  every frame of the spin. */
+  private size() {
+    const d = Math.min(2, window.devicePixelRatio || 1) * this.s;
+    if (Math.abs(d - this.dpr) < 0.01 && this.ctx) return;
+    this.dpr = d;
+    this.canvas.width = Math.round(W * d);
+    this.canvas.height = Math.round(H * d);
   }
 
   private init(land: string) {
     if (this.dead || this.scene) return;
-    this.dpr = Math.min(2, window.devicePixelRatio || 1);
-    this.canvas.width = W * this.dpr;
-    this.canvas.height = H * this.dpr;
+    this.s = this.canvas.clientWidth / W || 1;
+    this.dpr = 0;
+    this.size();
     this.ctx = this.canvas.getContext("2d");
     this.pal = readPalette(this.stage);
     const pv = this.pinsAt.map(([la, lo]) => vec(la, lo));
@@ -84,6 +104,7 @@ export class GlobeEngine {
   destroy() {
     this.dead = true;
     this.io.disconnect();
+    this.ro.disconnect();
     this.mq.removeEventListener("change", this.kick);
     cancelAnimationFrame(this.raf);
     this.raf = 0;
@@ -117,10 +138,12 @@ export class GlobeEngine {
     this.kick();
   }
 
-  /** `k` converts screen px to layout px, in case the page is zoomed. */
+  /** `k` converts screen px to layout px, in case the page is zoomed; over
+   *  `s`, so a smaller globe turns as far under the finger as a big one. */
   move(x: number, y: number, k: number) {
     const d = this.drag;
     if (!d) return;
+    k /= this.s;
     this.rot.lon = d.lon + (x - d.x) * k * 0.32;
     this.rot.lat = Math.max(-65, Math.min(65, d.lat + (y - d.y) * k * 0.26));
     this.vel = (x - d.lx) * k * 0.32 * 0.6;
@@ -167,7 +190,7 @@ export class GlobeEngine {
       // A focused pin always shows, even mid-turn from the far side.
       const focused = el === document.activeElement;
       const fade = p[2] > 0.12 ? Math.min(1, (p[2] - 0.12) * 4) : 0;
-      el.style.transform = `translate(${p[0].toFixed(1)}px,${p[1].toFixed(1)}px) translate(-50%,-50%) scale(${(0.78 + Math.max(0, p[2]) * 0.28).toFixed(3)})`;
+      el.style.transform = `translate(${(p[0] * this.s).toFixed(1)}px,${(p[1] * this.s).toFixed(1)}px) translate(-50%,-50%) scale(${(0.78 + Math.max(0, p[2]) * 0.28).toFixed(3)})`;
       el.style.opacity = String(focused ? 1 : fade);
       el.style.pointerEvents = focused || p[2] > 0.12 ? "auto" : "none";
       el.style.zIndex = String(Math.round(Math.max(0, p[2]) * 100));

@@ -35,11 +35,6 @@ export type StepId = keyof SectionsCopy["howItWorks"]["steps"];
 /** `WhoItsFor.tsx` — a bento cell, keyed by its photograph. */
 export type CellSrc = keyof SectionsCopy["whoItsFor"]["cells"];
 
-/** `Consumer.tsx` — a service chip, a plan card, and a line inside one. */
-export type ServiceId = keyof SectionsCopy["consumer"]["services"];
-export type PlanId = keyof SectionsCopy["consumer"]["plans"];
-export type PlanLineId = keyof SectionsCopy["consumer"]["checkLines"];
-
 /** `Checks.tsx` — a check, a lane, a bucket, and a stop on the axis. The
  *  stop union is shared with the component's own `STOPS` table: the axis
  *  labels and the pin positions have to be the same six percentages or the
@@ -48,11 +43,6 @@ export type CheckId = keyof SectionsCopy["checks"]["items"];
 export type LaneId = keyof SectionsCopy["checks"]["lanes"];
 export type BucketId = keyof SectionsCopy["checks"]["buckets"];
 export type AxisStop = keyof SectionsCopy["checks"]["axis"];
-
-/** `International.tsx` — a country, keyed by its photograph, and the three
- *  fixed stat labels each card renders in order. */
-export type CountrySrc = keyof SectionsCopy["international"]["countries"];
-export type StatId = keyof SectionsCopy["international"]["statLabels"];
 
 /** `Packages.tsx` — a pack, and a line a pack may list. One line union
  *  for all six packs rather than one per pack: a per-pack union is the

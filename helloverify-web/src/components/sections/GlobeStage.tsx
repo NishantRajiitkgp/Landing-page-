@@ -1,13 +1,14 @@
 "use client";
 
 /** The interactive globe under "Verified in 120 countries." (homepage v2,
-    desktop). `sections/Globe.tsx` renders the words; this owns the canvas,
+    every width). `sections/Globe.tsx` renders the words; this owns the canvas,
     the pins and the card.
 
     1. **The orb** is drawn into a 1200×720 canvas by `lib/globeDraw`, and
        turned by `lib/globeEngine` — spin, drag, inertia, the ease toward a
        chosen country — in a loop that runs only while something moves and
-       the stage is on screen. Both engine modules and the land points are
+       the stage is on screen. On the phone the same box is drawn smaller
+       (`globe.css`) and the engine scales the pins with it. Both engine modules and the land points are
        fetched by dynamic import as the stage approaches (`lib/whenNear`),
        so none of it is in the page's first-load JS; until then the markup
        below (pins, HUD, slider, card) is already there from the server.
@@ -20,6 +21,8 @@
        the spin and freezes the pulses. `prefers-reduced-motion: reduce` does
        the same and makes a chosen country snap into view instead of
        swinging there; dragging still works, since the user drives it.
+       On touch screens only a sideways drag turns it (`touch-action: pan-y`
+       in `globe.css`), so a vertical swipe still scrolls the page.
 
     REJECTED: drawing the pins on the canvas and hit-testing clicks. It
     matches the board pixel for pixel and gives a keyboard user nothing. */
@@ -140,25 +143,29 @@ export function GlobeStage({ pins, labels, world }: { pins: GlobePin[]; labels: 
       onPointerCancel={() => eng.current?.up()}
       onKeyDown={(ev) => { if (ev.key === "Escape" && sel >= 0) close(); }}
     >
-      <canvas ref={canvasRef} className="gb-canvas" width={W} height={H} role="img" aria-label={labels.canvas} />
-      <div className="gb-pins">
-        {pins.map((pin, i) => (
-          <button
-            key={pin.id}
-            ref={(el) => { pinEls.current[i] = el; }}
-            type="button"
-            className={sel === i ? "gb-pin gb-on" : "gb-pin"}
-            aria-label={pin.name}
-            aria-pressed={sel === i}
-            aria-controls={panelId}
-            onClick={() => pick(i)}
-            onFocus={() => eng.current?.face(i)}
-            onBlur={() => eng.current?.release()}
-          >
-            <Badge pin={pin} />
-            <span className="gb-pin-l" aria-hidden="true">{pin.name}</span>
-          </button>
-        ))}
+      {/* No box on desktop, where the canvas is placed against the stage;
+          on the phone, the square window the globe is scaled into. */}
+      <div className="gb-orb">
+        <canvas ref={canvasRef} className="gb-canvas" width={W} height={H} role="img" aria-label={labels.canvas} />
+        <div className="gb-pins">
+          {pins.map((pin, i) => (
+            <button
+              key={pin.id}
+              ref={(el) => { pinEls.current[i] = el; }}
+              type="button"
+              className={sel === i ? "gb-pin gb-on" : "gb-pin"}
+              aria-label={pin.name}
+              aria-pressed={sel === i}
+              aria-controls={panelId}
+              onClick={() => pick(i)}
+              onFocus={() => eng.current?.face(i)}
+              onBlur={() => eng.current?.release()}
+            >
+              <Badge pin={pin} />
+              <span className="gb-pin-l" aria-hidden="true">{pin.name}</span>
+            </button>
+          ))}
+        </div>
       </div>
       <div className="gb-hud" aria-hidden="true">
         <span>{labels.hud}</span>
