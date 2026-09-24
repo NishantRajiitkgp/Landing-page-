@@ -1,7 +1,7 @@
 /** Business due diligence - two Certifier products, each running a risk scan.
 
-    Homepage v2, desktop only (the Business board, Sep 2026). New on the
-    homepage, so there is no `.mob` tree to keep; the phone gets its own part.
+    Homepage v2 (the Business board, Sep 2026), one tree at every width;
+    on a phone the two cards stack (`diligence.css`).
 
     Each card loops a 10 s scan in pure CSS (`app/v2/diligence.css`): the four
     check tiles go orb → tick one after another, the gauge needle climbs from
@@ -95,76 +95,74 @@ export async function Diligence() {
   const motion = (await copy(SECTIONS)).hero.motion;
 
   return (
-    <div className="dsk">
-      <MotionStage className="wrap hair-top dd" pausedClassName="dd-paused">
-        <div className="dd-mast">
-          <span className="k">{t.kicker}</span>
-          <span className="dd-mast-r">
-            <MotionButton className="dd-motion" pauseLabel={motion.pause} playLabel={motion.play} />
-            <span className="dd-sheet">{t.sheet}</span>
-          </span>
-        </div>
-        <div className="sec-head dd-head">
-          <h2 className="h2 dd-h2">
-            {t.headingA} <em className="dd-it">{t.headingB}</em>
-          </h2>
-          <p className="lede dd-lede">{t.lede}</p>
-        </div>
-        <div className="dd-row">
-          {CARDS.map((c, i) => {
-            const card = t.cards[c.id];
-            return (
-              <article key={c.id} className={`dd-card dd-c${i}`}>
-                <div className="dd-ph" style={{ background: tint(c.src) }}>
-                  <Image className="dd-img" src={c.src} alt="" fill sizes={SIZES_PATH_SPAN3} style={{ objectPosition: c.pos }} />
-                  <div className="dd-scrim" />
-                  <span className="dd-chip">{t.chip}</span>
-                  <div className="dd-sw">
-                    <Stamp i={i} ring={t.stamp} />
-                  </div>
-                  <div className="dd-cap">
-                    <span>{card.when}</span>
-                    <h3>{card.t}</h3>
-                  </div>
+    <MotionStage className="wrap hair-top dd" pausedClassName="dd-paused">
+      <div className="dd-mast">
+        <span className="k">{t.kicker}</span>
+        <span className="dd-mast-r">
+          <MotionButton className="dd-motion" pauseLabel={motion.pause} playLabel={motion.play} />
+          <span className="dd-sheet">{t.sheet}</span>
+        </span>
+      </div>
+      <div className="sec-head dd-head">
+        <h2 className="h2 dd-h2">
+          {t.headingA} <em className="dd-it">{t.headingB}</em>
+        </h2>
+        <p className="lede dd-lede">{t.lede}</p>
+      </div>
+      <div className="dd-row">
+        {CARDS.map((c, i) => {
+          const card = t.cards[c.id];
+          return (
+            <article key={c.id} className={`dd-card dd-c${i}`}>
+              <div className="dd-ph" style={{ background: tint(c.src) }}>
+                <Image className="dd-img" src={c.src} alt="" fill sizes={SIZES_PATH_SPAN3} style={{ objectPosition: c.pos }} />
+                <div className="dd-scrim" />
+                <span className="dd-chip">{t.chip}</span>
+                <div className="dd-sw">
+                  <Stamp i={i} ring={t.stamp} />
                 </div>
-                <div className="dd-body">
-                  <p className="dd-p">{card.p}</p>
-                  <div className="dd-scan">
-                    <div className="dd-ckk">{t.included}</div>
-                    <div className="dd-grid">
-                      {Object.entries(card.checks).map(([k, v], j) => (
-                        <div key={k} className={`dd-ck dd-ck${j}`}>
-                          <span className="dd-orb" aria-hidden="true">
-                            <span className="dd-spin" />
-                            <span className="dd-ok">{OK}</span>
-                          </span>
-                          <span>{v}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="dd-meter" aria-hidden="true">
-                      <Gauge i={i} />
-                      <div className="dd-ml">
-                        <span className="dd-m1">{t.scanning}</span>
-                        <span className="dd-m2">{t.low}</span>
+                <div className="dd-cap">
+                  <span>{card.when}</span>
+                  <h3>{card.t}</h3>
+                </div>
+              </div>
+              <div className="dd-body">
+                <p className="dd-p">{card.p}</p>
+                <div className="dd-scan">
+                  <div className="dd-ckk">{t.included}</div>
+                  <div className="dd-grid">
+                    {Object.entries(card.checks).map(([k, v], j) => (
+                      <div key={k} className={`dd-ck dd-ck${j}`}>
+                        <span className="dd-orb" aria-hidden="true">
+                          <span className="dd-spin" />
+                          <span className="dd-ok">{OK}</span>
+                        </span>
+                        <span>{v}</span>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                  <div className="dd-foot">
-                    <div className="dd-eta">
-                      <b>{t.eta}</b>
-                      <span>{t.etaLabel}</span>
+                  <div className="dd-meter" aria-hidden="true">
+                    <Gauge i={i} />
+                    <div className="dd-ml">
+                      <span className="dd-m1">{t.scanning}</span>
+                      <span className="dd-m2">{t.low}</span>
                     </div>
-                    <AppLink href="/business/certifier" className="dd-more">
-                      {t.explore} <Arrow size="14" />
-                    </AppLink>
                   </div>
                 </div>
-              </article>
-            );
-          })}
-        </div>
-      </MotionStage>
-    </div>
+                <div className="dd-foot">
+                  <div className="dd-eta">
+                    <b>{t.eta}</b>
+                    <span>{t.etaLabel}</span>
+                  </div>
+                  <AppLink href="/business/certifier" className="dd-more">
+                    {t.explore} <Arrow size="14" />
+                  </AppLink>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </MotionStage>
   );
 }

@@ -10,9 +10,10 @@
 export const SIZE = 640;
 export const C = SIZE / 2;
 export const RS = [96, 170, 244];
-/** Each pill sits on its ring's 12 o'clock: `270 − r − 17` in the 540 box
- *  (17 = half the 34 px pill). */
-export const PILL_TOP = RS.map((r) => 270 - r - 17);
+/** Each pill sits on its ring's 12 o'clock: `270 − r` down the 540 box,
+ *  less 17 (half the 34 px pill). A share of the box, not px, because the
+ *  box shrinks to the phone's width while the pills keep their size. */
+export const PILL_TOP = RS.map((r) => `calc(${(270 - r) / 5.4}% - 17px)`);
 
 /** Which ring (if any) a canvas-space point is over: within 24 units of it. */
 export function ringAt(x: number, y: number): number {

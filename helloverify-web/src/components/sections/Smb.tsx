@@ -1,7 +1,9 @@
 /** Small & medium businesses - receipts on clips, and one that prints.
 
-    Homepage v2, desktop only (the Business board, Sep 2026). New on the
-    homepage, so there is no `.mob` tree to keep; the phone gets its own part.
+    Homepage v2 (the Business board, Sep 2026), one tree at every width.
+    On a phone the receipts hang in a row that scrolls sideways, one and a
+    bit in view (`smb.css`); stacked, three 500px receipts pushed the builder
+    two screens further down.
 
     Three fixed packages as receipts hanging from bulldog clips (the shared
     `.rc` receipt from `design.css`, given a scalloped tear here), the
@@ -68,120 +70,118 @@ export async function Smb() {
   }));
 
   return (
-    <div className="dsk">
-      <div className="wrap hair-top sm">
-        <div className="sm-mast">
-          <span className="k">{t.kicker}</span>
-          <span className="sm-sheet">{t.sheet}</span>
-        </div>
-        <div className="sec-head sm-head">
-          <h2 className="h2 sm-h2">
-            {t.headingA}
-            <br />
-            <em className="sm-it">{t.headingB}</em>
-          </h2>
-          <p className="lede sm-lede">{t.lede}</p>
-        </div>
+    <div className="wrap hair-top sm">
+      <div className="sm-mast">
+        <span className="k">{t.kicker}</span>
+        <span className="sm-sheet">{t.sheet}</span>
+      </div>
+      <div className="sec-head sm-head">
+        <h2 className="h2 sm-h2">
+          {t.headingA}
+          <br />
+          <em className="sm-it">{t.headingB}</em>
+        </h2>
+        <p className="lede sm-lede">{t.lede}</p>
+      </div>
 
-        <div className="sm-pks">
-          {PACKS.map((p) => {
-            const pk = t.packs[p.id];
-            return (
-              <div
-                key={p.id}
-                className={p.best ? "sm-pk sm-pk-best" : "sm-pk"}
-                style={{ "--rot": p.rot } as React.CSSProperties}
-              >
-                <Clip />
-                <div className="rc sm-rc">
-                  <div className="hd">
-                    <span>{pk.name}</span>
-                    <span className="sm-tat">
-                      <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-                        <circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" strokeWidth="1.2" />
-                        <path d="M6 3.4V6l1.8 1.1" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                      </svg>
-                      {t.mins}
-                    </span>
-                  </div>
-                  <div className="tt sm-tt">
-                    {pk.tt}
-                    {p.best && <span className="sm-stamp">{t.best}</span>}
-                  </div>
-                  <div className="sub">{pk.sub}</div>
-                  <div className="sep" />
-                  {p.lines.map((l) => (
-                    <div key={l} className={p.adds.includes(l) ? "ln sm-add" : "ln"}>
-                      <Tick />
-                      <span>{t.lines[l]}</span>
-                    </div>
-                  ))}
-                  <div className="sm-fill" />
-                  <div className="sep" />
-                  <div className="tot">
-                    <span className="lb">{t.tot(p.lines.length)}</span>
-                    <span className="v">{pk.price}</span>
-                  </div>
-                  <div className="sm-each">{t.perCheck(B.rupees(perCheck(pk.price, p.lines.length)))}</div>
-                  <AppLink href="/business/smb" className={p.best ? "btn sm-pk-buy sm-pk-buy-best" : "btn btn-ink sm-pk-buy"}>
-                    <span>{t.buy}</span>
-                    <Arrow />
-                  </AppLink>
-                  <div className="bc" />
+      <div className="sm-pks">
+        {PACKS.map((p) => {
+          const pk = t.packs[p.id];
+          return (
+            <div
+              key={p.id}
+              className={p.best ? "sm-pk sm-pk-best" : "sm-pk"}
+              style={{ "--rot": p.rot } as React.CSSProperties}
+            >
+              <Clip />
+              <div className="rc sm-rc">
+                <div className="hd">
+                  <span>{pk.name}</span>
+                  <span className="sm-tat">
+                    <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                      <circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" strokeWidth="1.2" />
+                      <path d="M6 3.4V6l1.8 1.1" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                    </svg>
+                    {t.mins}
+                  </span>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <a className="sm-custom" href="#sm-build">
-          <span>{B.kicker}</span>
-          <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
-            <path d="M6 2v8M2.5 6.5L6 10l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </a>
-
-        <div className="sm-steps">
-          {Object.entries(t.steps).map(([k, s], i) => (
-            <div key={k} className="sm-step">
-              <span className="sm-step-n">{String(i + 1).padStart(2, "0")}</span>
-              <div>
-                <b>{s.b}</b>
-                <p>{s.p}</p>
+                <div className="tt sm-tt">
+                  {pk.tt}
+                  {p.best && <span className="sm-stamp">{t.best}</span>}
+                </div>
+                <div className="sub">{pk.sub}</div>
+                <div className="sep" />
+                {p.lines.map((l) => (
+                  <div key={l} className={p.adds.includes(l) ? "ln sm-add" : "ln"}>
+                    <Tick />
+                    <span>{t.lines[l]}</span>
+                  </div>
+                ))}
+                <div className="sm-fill" />
+                <div className="sep" />
+                <div className="tot">
+                  <span className="lb">{t.tot(p.lines.length)}</span>
+                  <span className="v">{pk.price}</span>
+                </div>
+                <div className="sm-each">{t.perCheck(B.rupees(perCheck(pk.price, p.lines.length)))}</div>
+                <AppLink href="/business/smb" className={p.best ? "btn sm-pk-buy sm-pk-buy-best" : "btn btn-ink sm-pk-buy"}>
+                  <span>{t.buy}</span>
+                  <Arrow />
+                </AppLink>
+                <div className="bc" />
               </div>
             </div>
-          ))}
-        </div>
-
-        <SmbBuilder
-          head={
-            <>
-              <div className="k">{B.kicker}</div>
-              <h3 className="sm-build-h">{B.h}</h3>
-            </>
-          }
-          quote={
-            <p className="sm-quote">
-              <b>{B.quoteB}</b> {B.quote}
-            </p>
-          }
-          buyLink={
-            <AppLink href="/business/smb" className="btn btn-ink sm-buy">
-              {t.buy}
-            </AppLink>
-          }
-          options={options}
-          receipt={B.receipt}
-          count={[0, 1, 2, 3, 4, 5].map((n) => B.count(n))}
-          empty={B.empty}
-          total={B.total}
-          eduNote={B.eduNote}
-          eduId="education"
-          rupees={B.rupees("")}
-          printer={B.printer}
-          tick={<Tick />}
-        />
+          );
+        })}
       </div>
+
+      <a className="sm-custom" href="#sm-build">
+        <span>{B.kicker}</span>
+        <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+          <path d="M6 2v8M2.5 6.5L6 10l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </a>
+
+      <div className="sm-steps">
+        {Object.entries(t.steps).map(([k, s], i) => (
+          <div key={k} className="sm-step">
+            <span className="sm-step-n">{String(i + 1).padStart(2, "0")}</span>
+            <div>
+              <b>{s.b}</b>
+              <p>{s.p}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <SmbBuilder
+        head={
+          <>
+            <div className="k">{B.kicker}</div>
+            <h3 className="sm-build-h">{B.h}</h3>
+          </>
+        }
+        quote={
+          <p className="sm-quote">
+            <b>{B.quoteB}</b> {B.quote}
+          </p>
+        }
+        buyLink={
+          <AppLink href="/business/smb" className="btn btn-ink sm-buy">
+            {t.buy}
+          </AppLink>
+        }
+        options={options}
+        receipt={B.receipt}
+        count={[0, 1, 2, 3, 4, 5].map((n) => B.count(n))}
+        empty={B.empty}
+        total={B.total}
+        eduNote={B.eduNote}
+        eduId="education"
+        rupees={B.rupees("")}
+        printer={B.printer}
+        tick={<Tick />}
+      />
     </div>
   );
 }
