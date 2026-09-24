@@ -1,5 +1,6 @@
-/* Homepage v2 — the sections re-designed on the canvas after the original
-   port (HOMEPAGE-REVAMP-RESEARCH.md, Sep 2026).
+/* Homepage v2 · hero. One sheet per v2 section lives in `app/v2/`, imported
+   by that section's component (HOMEPAGE-REVAMP-RESEARCH.md, Sep 2026). This
+   one also declares the shared `--v2-*` paper tints the other sheets use.
 
    WHY A SEPARATE SHEET. `design.css` is generated from the nine artboards by
    `tools/port/build-css.py`, and a hand edit there is one regeneration from
@@ -11,7 +12,7 @@
    so nothing in the generated sheet is overridden by accident.
 
    GATES. This file is in `check-css-color.mjs`'s SHEETS and
-   `check-logical-css.mjs`'s FILES. Colour is written through tokens; a
+   `check-logical-css.mjs`'s FILES — both read every `app/v2/*.css`. Colour is written through tokens; a
    translucent token is `rgb(from var(--x) r g b / a)`, the rewrite
    `check-css-color.mjs` names for its "+a" rows. Inline-axis offsets are
    logical properties; the one horizontal `translateX` goes through `--flip`.
