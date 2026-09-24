@@ -66,6 +66,10 @@
   .ff-yr { font-family: var(--mono); font-size: .85em; color: var(--muted); }
   /* The forgery's tells: a heavier name, a seal off its mark, a tilted
      crest, tighter tracking — small enough to pass a glance. */
+  /* The forged name is set heavier on purpose — one of the tells. Newsreader
+     ships at 400 only (`tools/perf/pin-serif-weight.mjs`), so this 600 is
+     drawn as synthesised bold, which keeps the tell; it is the one place the
+     site asks the serif for more than 400. */
   .ff-forged .ff-name { font-weight: 600; letter-spacing: .01em; }
   .ff-forged .ff-seal { transform: translate(calc(var(--flip) * .35em), -.25em); background: radial-gradient(circle at 35% 30%, var(--v2-ff-fgold-hi), var(--v2-ff-fgold) 60%, var(--v2-ff-fgold-lo)); }
   .ff-forged .ff-crest { transform: rotate(4deg); }

@@ -33,8 +33,12 @@ import "../globals.css";
  *  measured curve and why closing the rest needs a design decision rather than
  *  a build step.
  *
- *  BOTH VARIABLE AXES SURVIVE. Newsreader carries `wght` 200-800 and `opsz`,
- *  and the canvas depends on the latter: the serif runs from 15px captions to a
+ *  `opsz` SURVIVES; `wght` IS PINNED AT 400 (24 Sep 2026). A census found the
+ *  serif drawn at 400 for 15,249 characters and at 500/600 for 34, so
+ *  `tools/perf/pin-serif-weight.mjs` instanced the weight axis out: the two
+ *  faces went 202.7 KB -> 84.1 KB with every glyph kept. The `weight` below is
+ *  therefore "400", not a range. `opsz` is kept because the canvas depends on
+ *  it: the serif runs from 15px captions to a
  *  176px display number, so `font-optical-sizing: auto` is doing real work
  *  across that range. harfbuzz keeps the axes through a subset — only glyphs
  *  are removed — so this is byte-smaller, not visually different.
@@ -46,12 +50,13 @@ import "../globals.css";
 const newsreader = localFont({
   variable: "--font-newsreader",
   display: "swap",
-  /** `weight` is the RANGE the variable axis covers, not a static instance;
-   *  `next/font/local` passes it through to `font-weight` in the `@font-face`,
-   *  which is how a browser knows it may interpolate. */
+  /** `weight` is what `next/font/local` writes into the `@font-face`: "400",
+   *  because the weight axis is instanced out (see above). A request for 600
+   *  is then drawn as synthesised bold — used once, deliberately, on the
+   *  forged certificate name in `app/v2/fraud.css`. */
   src: [
-    { path: "../../fonts/newsreader-roman.woff2", weight: "200 800", style: "normal" },
-    { path: "../../fonts/newsreader-italic.woff2", weight: "200 800", style: "italic" },
+    { path: "../../fonts/newsreader-roman.woff2", weight: "400", style: "normal" },
+    { path: "../../fonts/newsreader-italic.woff2", weight: "400", style: "italic" },
   ],
 });
 
