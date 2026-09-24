@@ -26,18 +26,8 @@ export const SECTIONS: Dictionary<SectionsCopy> = { en };
 /** `Why.tsx` — the ordinal a reason prints, which is also its React key. */
 export type WhyReasonId = keyof SectionsCopy["why"]["reasons"];
 
-/** `Consumer.tsx` — a service chip, a plan card, and a line inside one. */
-export type ServiceId = keyof SectionsCopy["consumer"]["services"];
-export type PlanId = keyof SectionsCopy["consumer"]["plans"];
-export type PlanLineId = keyof SectionsCopy["consumer"]["checkLines"];
-
 /** `Checks.tsx` — a check in the race. */
 export type CheckId = keyof SectionsCopy["checks"]["items"];
-
-/** `International.tsx` — a country, keyed by its photograph, and the three
- *  fixed stat labels each card renders in order. */
-export type CountrySrc = keyof SectionsCopy["international"]["countries"];
-export type StatId = keyof SectionsCopy["international"]["statLabels"];
 
 /** `Packages.tsx` — a pack, and a line a pack may list. One line union
  *  for all six packs rather than one per pack: a per-pack union is the
