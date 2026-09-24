@@ -4,9 +4,17 @@ import Image from "next/image";
 import { SIZES_PERSON, noteInk, tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type PersonSrcDsk, type PersonSrcMob } from "@/lib/copy/sections";
+// Homepage v2 styles: one sheet per section, imported by the section itself
+// (see the header of `app/v2/hero.css`). The behaviour is the island.
+import "@/app/v2/strip.css";
+import { PeopleStripStage } from "./PeopleStripStage";
 
 /** Drifting strip of verified people; the track is duplicated so the loop is
  *  seamless.
+ *
+ *  Homepage v2 (desktop): the same cards pass an "At the source" checkpoint
+ *  and come into colour there, on a curved path you can drag and fling —
+ *  `./PeopleStripStage` and `app/v2/strip.css`. The card markup is unchanged.
  *
  *  That duplication used to be literal: 28 hand-written cards for 14 people,
  *  each person's markup appearing twice in the desktop track and twice again in
@@ -150,10 +158,16 @@ export async function PeopleStrip() {
   return (
     <>
       <div className="dsk">
-        <div className="rise d6" style={{ padding: "40px 0 8px", overflow: "hidden" }}>
+        {/* v2: the checkpoint and the curved, draggable strip. The colour lane
+            is a second copy of the same track, clipped to the checkpoint's
+            window, so it is `aria-hidden` — the first copy is the one read. */}
+        <PeopleStripStage checkpoint={t.checkpoint}>
           {" "}
           <Track people={DESKTOP} words={t.dsk} />{" "}
-        </div>{" "}
+          <div className="hv-colorlane" aria-hidden="true">
+            <Track people={DESKTOP} words={t.dsk} />
+          </div>{" "}
+        </PeopleStripStage>{" "}
         {/* Desktop only - the mobile block is the track alone. */}
         <div
           className="wrap"

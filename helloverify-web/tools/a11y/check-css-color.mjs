@@ -351,6 +351,38 @@ const BASELINE = {
   "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
   "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
+  // ── homepage v2 · One in eight (`src/app/v2/fraud.css`): the synthetic
+  //    certificates' paper, rules and gold seal, and the UV lamp's blacklight.
+  //    All surfaces; the certificates' words are `--ink`/`--ink-soft`/`--muted`.
+  "decl #FBF8F0": { n: 1, why: "--v2-ff-paper: certificate paper" },
+  "decl #E3DCCB": { n: 1, why: "--v2-ff-edge: certificate edge" },
+  "decl #DCD2BC": { n: 1, why: "--v2-ff-rule: certificate inner rule" },
+  "decl #E8E0CE": { n: 1, why: "--v2-ff-rule-lo: certificate inner rule, second line" },
+  "decl #E6D3A0": { n: 1, why: "--v2-ff-gold-hi: gold seal, highlight" },
+  "decl #B99A5B": { n: 1, why: "--v2-ff-gold: gold seal" },
+  "decl #9C7F45": { n: 1, why: "--v2-ff-gold-lo: gold seal, shade" },
+  "decl #C8B07A": { n: 1, why: "--v2-ff-gold-rim: gold seal rim" },
+  "decl #E9D59C": { n: 1, why: "--v2-ff-fgold-hi: the forged seal's slightly-off gold, highlight" },
+  "decl #C2A25C": { n: 1, why: "--v2-ff-fgold: the forged seal's slightly-off gold" },
+  "decl #A4864A": { n: 1, why: "--v2-ff-fgold-lo: the forged seal's slightly-off gold, shade" },
+  "decl #221D3A": { n: 1, why: "--v2-ff-uv-hi: UV lamp pool, centre" },
+  "decl #16132A": { n: 1, why: "--v2-ff-uv-lo: UV lamp pool, edge" },
+  "decl #1C1834": { n: 1, why: "--v2-ff-uv-cell: a genuine certificate under UV" },
+  "decl #3B3659": { n: 1, why: "--v2-ff-uv-bad: the forgery under UV (no features)" },
+
+  // ── homepage v2 · How we know (`src/app/v2/how.css`): the case file's table
+  //    and rails, the specimen's hologram, and the custody orb. All surfaces.
+  "decl #F4F1EA": { n: 1, why: "--v2-hw-table: the desk the specimen lies on" },
+  "decl #EDE9E0": { n: 1, why: "--v2-hw-rail: progress track, tile meters, custody rail" },
+  "decl #E8D9FF": { n: 1, why: "--v2-hw-holo-1: specimen hologram, conic stop" },
+  "decl #C7F0E0": { n: 1, why: "--v2-hw-holo-2: specimen hologram, conic stop" },
+  "decl #FFF3C4": { n: 1, why: "--v2-hw-holo-3: specimen hologram, conic stop" },
+  "decl #FFD6E6": { n: 1, why: "--v2-hw-holo-4: specimen hologram, conic stop" },
+  "decl #CFE4FF": { n: 1, why: "--v2-hw-holo-5: specimen hologram, conic stop" },
+  "decl #E9F7EF": { n: 1, why: "--v2-hw-orb-hi: the spinning mint orb, highlight" },
+  "decl #9AD8BA": { n: 1, why: "--v2-hw-orb-mid: the spinning mint orb" },
+  "decl #2E8A62": { n: 1, why: "--v2-hw-orb-lo: the spinning mint orb, shade" },
+
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
   //    debt rule 3 pins: not a contrast failure, but colour nobody can

@@ -201,6 +201,119 @@ export const en = {
         cap: "One report, with the source named beside every result.",
       },
     },
+    /** Homepage v2 desktop — `sections/HowWeKnow.tsx`, which replaces this
+     *  band's desktop tree and `demo2`'s (canvas sheet 04). It reuses
+     *  `headingA`, `headingB`, every `steps.*.label` and `steps.*.cap`, and
+     *  `lede` as the licence route's caption, all verbatim; what is new is
+     *  below. `kicker` and `lede2` are `demo2`'s own words, repeated here so
+     *  this band does not depend on one the lead will retire.
+     *
+     *  The two cases are SPECIMENS — fictional holders and case numbers,
+     *  said so on the page (`specimen`) and on the documents. */
+    v2: {
+      kicker: "HelloVerify AI",
+      sheet: "Sheet 04 / 12",
+      lede2: "Every document starts here. Fields, forgery checks and the issuing office — in about a second, before a person touches it.",
+      switchLabel: "Choose a route through the same machine",
+      specimen: "Specimen document · illustrative",
+      run: "Run · 16s loop",
+      custody: "Chain of custody",
+      verifying: "Verifying…",
+      verified: "Verified",
+      /** The ring of text on the stamp that lands on the document. */
+      sealRing: "VERIFIED AT THE SOURCE · HELLOVERIFY ·",
+      evKicker: "One result, and how we know",
+      promiseA: "Accuracy is not our feature.",
+      promiseEm: "It's our promise.",
+      ev: { read: "Read by", confirmed: "Confirmed", artefact: "Artefact", reviewed: "Reviewed" },
+      routes: {
+        licence: {
+          chip: "Driving licence · 30 min",
+          role: "Delivery rider",
+          city: "Bengaluru",
+          caseNo: "CASE HV-0417 · DRIVING LICENCE · KARNATAKA",
+          from: "09:40",
+          to: "10:10",
+          source: "RTO Karnataka · the source",
+          verdict: "Verified · 30 min · 4 sources",
+          hash: "SHA-256 · 4f9c…a21e",
+          tiles: {
+            t0: { k: "Template & fonts", v: "match" },
+            t1: { k: "Face vs. selfie", v: "98%" },
+            t2: { k: "Issuer located", v: "RTO Karnataka" },
+          },
+          logs: {
+            l0: { t: "09:40:02", kind: "Upload", what: "Captured on the candidate's phone · sharp, no glare, all edges", who: "Candidate" },
+            l1: { t: "09:40:03", kind: "Read", what: "14 fields extracted in 1.2 s", who: "HelloVerify AI" },
+            l2: { t: "09:40:03", kind: "Check", what: "Template & fonts · match", who: "HelloVerify AI" },
+            l3: { t: "09:40:04", kind: "Check", what: "Face vs. selfie · 98%", who: "HelloVerify AI" },
+            l4: { t: "09:41:00", kind: "Route", what: "Request filed with the issuing office", who: "RTO Karnataka" },
+            l5: { t: "10:08:12", kind: "Confirm", what: "Record matched · licence valid", who: "RTO Karnataka" },
+            l6: { t: "10:09:40", kind: "Review", what: "Audit trail, 5 events", who: "K.S. · reviewer" },
+            l7: { t: "10:10:00", kind: "Report", what: "Sarathi record · PDF · hashed · shared with HR", who: "HelloVerify" },
+          },
+          evTitle: "Driving licence",
+          evRead: "HelloVerify AI · 14 fields · 1.2 s",
+          evConfirmed: "RTO Karnataka · 10:08",
+          evArtefact: "Sarathi record · PDF · hashed",
+          evReviewed: "K.S. · audit trail, 5 events",
+          /** The words printed on the specimen licence, and the tags on the
+           *  four fields the scan boxes. Decorative (`aria-hidden`). */
+          doc: {
+            title: "DRIVING LICENCE",
+            specimen: "SPECIMEN",
+            micro: "SAMPLE DOCUMENT · ILLUSTRATIVE · NOT A REAL LICENCE · SAMPLE DOCUMENT · ILLUSTRATIVE",
+            f1: { l: "NAME", v: "A. RAMESH", tag: "NAME" },
+            f2: { l: "LICENCE NO.", v: "KA05 •••• 4812", tag: "LICENCE" },
+            f3: { l: "CLASS", v: "LMV · MCWG", tag: "CLASS" },
+            f4: { l: "VALID TILL", v: "13 · 03 · 2039", tag: "VALID" },
+            sign: "HOLDER SIGNATURE",
+          },
+        },
+        degree: {
+          chip: "Degree · 3 days",
+          role: "Nurse",
+          city: "Abu Dhabi",
+          cap: "A nurse's degree, start to finish. Three days, on loop.",
+          caseNo: "CASE HV-2291 · DEGREE · PRIMARY SOURCE",
+          from: "Mon 09:40",
+          to: "Wed 14:20",
+          source: "University registrar · the source",
+          verdict: "Verified · 3 days · 4 sources",
+          hash: "SHA-256 · 7b1d…09c4",
+          tiles: {
+            t0: { k: "Template & fonts", v: "match" },
+            t1: { k: "Institution", v: "accredited" },
+            t2: { k: "Issuer located", v: "Registrar" },
+          },
+          logs: {
+            l0: { t: "Mon 09:40", kind: "Upload", what: "Degree, transcripts and passport · applicant portal", who: "Applicant" },
+            l1: { t: "Mon 09:40", kind: "Read", what: "11 fields extracted in 1.4 s", who: "HelloVerify AI" },
+            l2: { t: "Mon 09:41", kind: "Check", what: "Template & fonts · match", who: "HelloVerify AI" },
+            l3: { t: "Mon 09:41", kind: "Check", what: "Institution · accredited", who: "HelloVerify AI" },
+            l4: { t: "Mon 09:42", kind: "Route", what: "Request filed with the registrar", who: "Office of the Registrar" },
+            l5: { t: "Wed 14:18", kind: "Confirm", what: "Record matched · degree conferred", who: "Office of the Registrar" },
+            l6: { t: "Wed 14:19", kind: "Review", what: "Audit trail, 9 events", who: "M.A. · reviewer" },
+            l7: { t: "Wed 14:20", kind: "Report", what: "Registrar letter · PDF · hashed · to the authority", who: "HelloVerify" },
+          },
+          evTitle: "Degree certificate",
+          evRead: "HelloVerify AI · 11 fields · 1.4 s",
+          evConfirmed: "University registrar · Wed 14:20",
+          evArtefact: "Registrar letter · PDF · hashed",
+          evReviewed: "M.A. · audit trail, 9 events",
+          doc: {
+            specimen: "SPECIMEN",
+            issuer: "ISSUING UNIVERSITY · ILLUSTRATIVE",
+            certify: "This is to certify that",
+            f1: { v: "S. Mathew", tag: "NAME" },
+            f2: { v: "Bachelor of Science in Nursing", tag: "DEGREE" },
+            f3: { v: "REG · 2291", tag: "REF." },
+            f4: { v: "AWARDED 12 · 06 · 2016", tag: "AWARDED" },
+            sign: "REGISTRAR",
+          },
+        },
+      },
+    },
   },
 
   /** `sections/WhoItsFor.tsx`. Keyed by photograph, which is the one field
@@ -539,6 +652,9 @@ export const en = {
   peopleStrip: {
     strip: "Hires, tenants, drivers, suppliers, nannies. Anyone you need to trust.",
     times: "Times shown are from upload to report",
+    /** v2 desktop: the label over the checkpoint the photographs pass
+     *  through. Decorative (`aria-hidden`), but a word a translator sees. */
+    checkpoint: "At the source",
     dsk: {
       "/img/01-rider-bengaluru.jpg": {
         role: "Delivery rider",
@@ -620,6 +736,82 @@ export const en = {
         city: "Cairo",
         chip: "Trade licence · 2 days",
       },
+    },
+  },
+
+  /** `sections/OneInEight.tsx` (homepage v2, desktop only — a new band with
+   *  no phone tree yet). The canvas's wording, verbatim. The two figures
+   *  (`1 in 8`, `12–14%`) carry footnote `1`, whose own text says the source
+   *  is still to be confirmed; they are the authority pages' claims, not new
+   *  ones.
+   *
+   *  The eight certificates are SYNTHETIC — fictional institutions and people,
+   *  said so in `bar` — and the sixth (`westmarch`) is the forgery. Their
+   *  words are here because they are words on the page; which one is forged
+   *  is the component's decision, not copy. */
+  oneInEight: {
+    sheet: "Sheet 03 / 12",
+    flag: "Fraud",
+    /** `headingEm` + " " + `heading` is the sentence; the italic figure is its
+     *  own node. `fn` is the footnote mark both figures carry. */
+    headingEm: "1 in 8",
+    heading: "applicants misrepresent their academic credentials.",
+    lede: "We flag fraudulent documents before approval. Our system detects fraud in 12–14% of applications.",
+    fn: "1",
+    footnote: "Figures as published on HelloVerify’s authority pages. Source and period to be confirmed before launch.",
+    bar: "Evidence table · 8 applications · illustrative, synthetic documents",
+    /** The live status reads `${n} ${checked}` until the forgery is found. */
+    checked: "of 8 checked",
+    found: "7 verified · 1 referred",
+    certify: "This is to certify that",
+    /** `${checkCert} ${inst}` — the accessible name of each certificate. */
+    checkCert: "Check the certificate from",
+    certs: {
+      aldermoor: { inst: "Aldermoor University", deg: "Bachelor of Science in Nursing", name: "A. Rahman", yr: "2018" },
+      kestrel: { inst: "Kestrel Institute of Technology", deg: "Bachelor of Technology", name: "P. Iyer", yr: "2017" },
+      meridia: { inst: "University of Meridia", deg: "Master of Business Administration", name: "L. Santos", yr: "2020" },
+      lindenfield: { inst: "Lindenfield College of Health", deg: "Diploma in Pharmacy", name: "M. Haddad", yr: "2016" },
+      harbourline: { inst: "Harbourline University", deg: "Bachelor of Commerce", name: "S. Tan", yr: "2019" },
+      westmarch: { inst: "Westmarch International University", deg: "Bachelor of Science in Nursing", name: "R. Menon", yr: "2019" },
+      crestvale: { inst: "Crestvale School of Medicine", deg: "Doctor of Medicine", name: "N. Farouk", yr: "2015" },
+      aurelian: { inst: "St. Aurelian College", deg: "Bachelor of Arts", name: "J. Cruz", yr: "2021" },
+    },
+    /** What the UV lamp shows. Decorative (`aria-hidden`); `uvTop` is
+     *  followed by the certificate's institution, upper-cased by CSS. */
+    uv: {
+      top: "VERIFIED AT SOURCE ·",
+      bottom: "PRIMARY SOURCE · HELLOVERIFY · PRIMARY SOURCE ·",
+      none: "no UV features",
+      loupe: "UV · 365 nm",
+    },
+    referred: "REFERRED",
+    notVerified: "NOT VERIFIED",
+    nakedA: "Identifies hidden inconsistencies",
+    nakedEm: "invisible to the naked eye.",
+    hint: "Move the lamp over the documents, or",
+    reveal: "Show me the forgery",
+    reset: "Reset the table",
+    compare: {
+      app: "Application 06 · Westmarch International University",
+      seg: "Show the claim or the verified result",
+      claimed: "Claimed",
+      verified: "Verified",
+      notes: { template: "Template & fonts", seal: "Issuer seal" },
+      claim: {
+        degree: { l: "Degree", v: "Bachelor of Science in Nursing" },
+        institution: { l: "Institution", v: "Westmarch International University" },
+        year: { l: "Year", v: "2019" },
+        by: { l: "Submitted by", v: "Applicant · R. Menon" },
+      },
+      asSubmitted: "As submitted",
+      result: {
+        template: { l: "Template & fonts", v: "mismatch" },
+        institution: { l: "Institution", v: "not accredited" },
+        registrar: { l: "Registrar", v: "no record of enrolment" },
+        identity: { l: "Identity", v: "matched" },
+      },
+      referredVerdict: "Referred · not verified",
+      mill: "Our accreditation check confirms that the institution is a legitimate and approved provider of degree programs, not a diploma or degree mill.",
     },
   },
 
