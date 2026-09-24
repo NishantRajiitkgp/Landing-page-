@@ -9,6 +9,9 @@ import { Checks } from "@/components/sections/Checks";
 import { Packages } from "@/components/sections/Packages";
 import { HowItWorks } from "@/components/sections/HowItWorks";
 import { WhoItsFor } from "@/components/sections/WhoItsFor";
+import { Enterprises } from "@/components/sections/Enterprises";
+import { Smb } from "@/components/sections/Smb";
+import { Diligence } from "@/components/sections/Diligence";
 import { International } from "@/components/sections/International";
 import { Consumer } from "@/components/sections/Consumer";
 import { CustomerStory } from "@/components/sections/CustomerStory";
@@ -60,6 +63,9 @@ export default async function Home({
         <Packages />
         <HowItWorks />
         <WhoItsFor />
+        <Enterprises />
+        <Smb />
+        <Diligence />
         <International />
         <Consumer />
         <CustomerStory />
