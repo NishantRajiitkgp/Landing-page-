@@ -13,201 +13,263 @@
    `--v2-paper-lo` (#EFEBE3), `#BDB7AA` `--v2-dash` (#BDB7AB), `#F3F9F5`
    `--v2-mint-pale` (#F4FAF6), `#F6F4EE`/`#F6F4EF` `--paper`. The two
    declared below are the folder's own card stock: an unselected tab and the
-   deepest sheet of the stack, darker than any tint on file. */
+   deepest sheet of the stack, darker than any tint on file.
+
+   ONE TREE, EVERY WIDTH, as `govseals.css` explains: shared rules in the
+   base, layout in the two media blocks, and `clamp(min, max ÷ 1081 vw,
+   max)` for sizes that only scale, so desktop keeps its board values. */
 :root {
   --v2-gv-tab: #ECE7DD;
   --v2-gv-back: #E8E3D9;
 }
 
+.gv { position: relative; padding-top: clamp(64px, 11.11vw, 120px); padding-bottom: clamp(72px, 12.96vw, 140px); }
+.gv-defs { position: absolute; }
+.gv-mast-k { display: flex; justify-content: space-between; align-items: center; }
+.gv-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.gv-head { margin-top: 22px; }
+.gv-lede { margin-bottom: 8px; }
+.gv-it { font-style: italic; }
+
+/* ── The folder: tabs, pager, and a stack of sheets ── */
+.gv-dossier { margin-top: clamp(36px, 6.67vw, 72px); }
+.gv-tabs-row { display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 3; }
+.gv-tabs { display: flex; gap: 8px; align-items: flex-end; }
+/* `--ink-soft` on an unselected tab, not the board's `--muted`: that is
+   4.3:1 on the tab's card stock, under 1.4.3's 4.5 (axe, `/en`). */
+.gv-tab { flex: none; display: flex; align-items: center; gap: 12px; height: 56px; padding-block: 0; padding-inline: 20px 26px; border: 1px solid var(--hair); border-bottom: 0; border-radius: 14px 14px 0 0; background: var(--v2-gv-tab); color: var(--ink-soft); font-family: var(--sans); font-size: 15px; font-weight: 500; cursor: pointer; transform: translateY(6px); transition: transform .35s cubic-bezier(.16, 1, .3, 1), background .25s, color .25s; }
+.gv-tab:hover { transform: translateY(2px); color: var(--ink); }
+.gv-tab-n { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink-soft); }
+.gv-tab-on { background: var(--white); color: var(--ink); transform: none; height: 62px; border-color: var(--white); box-shadow: 0 -10px 24px -18px rgb(from var(--ink) r g b / .35); }
+.gv-tab-on .gv-tab-n { color: var(--green); }
+.gv-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.gv-pager { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; }
+/* A figure pair reads left to right in Arabic too; without this the bidi
+   algorithm shows "01 / 04" as "04 / 01" under `dir="rtl"` (measured). */
+.gv-count { direction: ltr; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted); margin-inline-end: 6px; }
+.gv-arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hair); background: var(--white); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); transition: border-color .25s, transform .25s; }
+.gv-arrow:hover { border-color: var(--ink); transform: translateY(-1px); }
+.gv-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* The pager's arrows point along reading order, as `globals.css` makes
+   every `Arrow` do. */
+.gv-flip { transform: scaleX(var(--flip)); }
+.gv-stack { position: relative; }
+.gv-back { position: absolute; height: 40px; border-radius: 0 0 22px 22px; background: var(--v2-paper-lo); border: 1px solid var(--hair); border-top: 0; }
+.gv-back-1 { bottom: -12px; inset-inline: 14px; z-index: 1; }
+.gv-back-2 { bottom: -24px; inset-inline: 30px; background: var(--v2-gv-back); z-index: 0; }
+/* Square only under the first tab, which is at the inline start. */
+.gv-sheet-card { position: relative; z-index: 2; background: var(--white); border-radius: 22px; border-start-start-radius: 0; box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); overflow: hidden; }
+.gv-sheet-in { position: relative; display: grid; animation: gvIn .7s cubic-bezier(.16, 1, .3, 1) both; }
+/* `display: grid` outranks the UA's `[hidden]`, so it is restated. */
+.gv-sheet-in[hidden] { display: none; }
+@keyframes gvIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 26px)) rotate(.4deg); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+/* The board turned this watermark forever (180 s a revolution). Here it
+   turns 12° as its sheet opens and settles: the same sense of a print
+   under the paper, without a loop WCAG 2.2.2 would need a pause for. */
+.gv-wm { position: absolute; inset-inline-end: -90px; bottom: -110px; width: 420px; height: 420px; pointer-events: none; opacity: .9; animation: gvTurn 4.8s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes gvTurn { from { transform: rotate(12deg); } to { transform: rotate(0); } }
+
+/* ── The cover: title, photograph, stamp, the proof line ── */
+.gv-cover { position: relative; display: flex; flex-direction: column; }
+.gv-cover-k { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.gv-title { margin: 22px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 3.52vw, 38px); line-height: 1.03; letter-spacing: -.025em; text-wrap: balance; }
+.gv-sub { margin: 14px 0 0; font-size: 16px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+/* `flex: 1` fills the desktop cover's 700px; in the phone's single column
+   there is nothing to fill, and `min-height` alone sets it (~5:4 at 390). */
+.gv-photo { position: relative; margin-top: 26px; flex: 1; min-height: 250px; border-radius: 18px; overflow: visible; }
+.gv-photo .pimg { border-radius: 18px; }
+.gv-photo .scrim { height: 60%; border-radius: 0 0 18px 18px; }
+.gv-photo.ph::after { border-radius: 18px; }
+.gv-chips { position: absolute; inset-inline: 16px; bottom: 16px; z-index: 3; display: flex; flex-wrap: wrap; gap: 6px; }
+.gv-chip { height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); font-family: var(--mono); font-size: 11px; color: var(--ink); }
+.gv-stamp-wrap { position: absolute; z-index: 4; pointer-events: none; }
+.gv-stamp { display: block; width: 150px; height: 150px; overflow: visible; mix-blend-mode: multiply; transform-origin: 50% 50%; animation: gvStamp .6s cubic-bezier(.3, 1.35, .5, 1) .55s both; }
+.gv-stamp-wide { width: 196px; height: auto; }
+@keyframes gvStamp { 0% { opacity: 0; transform: scale(1.8) rotate(4deg); } 55% { opacity: .97; transform: scale(.95) rotate(-11deg); } to { opacity: .95; transform: scale(1) rotate(-10deg); } }
+.gv-proof { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-size: 14.5px; line-height: 1.45; color: var(--ink-soft); }
+.gv-proof img { flex: none; border-radius: 6px; }
+.gv-proof-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .12); }
+
+/* ── The contents page: rows that open, the chain at the foot ── */
+.gv-contents { position: relative; box-sizing: border-box; display: flex; flex-direction: column; }
+.gv-rows { margin-top: 10px; }
+.gv-row { position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr) 20px; gap: 12px; padding: 15px 0; border-top: 1px solid var(--hair); cursor: default; outline: none; transition: background .3s; animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; }
+.gv-row::after { content: "+"; align-self: start; justify-self: end; font-family: var(--sans); font-size: 20px; line-height: 22px; color: var(--v2-dash); transition: transform .35s cubic-bezier(.16, 1, .3, 1), color .3s; }
+.gv-row .tick { margin-top: 4px; }
+.gv-row-t { font-size: 18px; font-weight: 500; letter-spacing: -.015em; transition: color .3s; }
+.gv-row-p { max-height: 0; opacity: 0; margin-top: 0; overflow: hidden; font-size: 14px; line-height: 1.45; color: var(--muted); text-wrap: pretty; transition: max-height .45s cubic-bezier(.16, 1, .3, 1), opacity .3s ease, margin-top .3s; }
+/* `:focus`, not `:focus-visible`: a tap focuses the row (`tabIndex={0}`)
+   but never matches `:focus-visible`, and a touch screen has no hover, so
+   this is what opens a row there. 120px is four lines of the phone's
+   300px column; the board's 80 held two. */
+.gv-row:is(:hover, :focus)::after { transform: rotate(45deg); color: var(--green); }
+.gv-row:is(:hover, :focus) .gv-row-t { color: var(--green); }
+.gv-row:is(:hover, :focus) .gv-row-p { max-height: 120px; opacity: 1; margin-top: 6px; }
+.gv-row:focus-visible { box-shadow: inset 0 0 0 2px var(--ink); border-radius: 6px; }
+.gv-chain-box { margin-top: auto; padding: 18px 20px 14px; border-radius: 16px; background: var(--v2-paper-hi); border: 1px solid var(--v2-paper-lo); }
+/* The board also faded each node's WORDS in from 35% opacity; only the
+   dot and the link animate here. Text held at 35% while the sheet waits
+   off screen measured 2.2:1 in axe, and the lit dot says the same thing. */
+.gv-chain { list-style: none; margin: 0; padding: 0; display: grid; }
+.gv-node { position: relative; display: block; font-family: var(--sans); font-size: 14px; font-weight: 500; line-height: 1.3; color: var(--ink); }
+.gv-node i { position: absolute; inset-inline-start: 0; top: 0; width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--white); box-sizing: border-box; animation: gvNodeDot .4s ease both; animation-delay: inherit; }
+.gv-node b { font-weight: 500; }
+/* Grows from the chain's start: `scaleX(0)` across on desktop, `scaleY(0)`
+   down on the phone, and the one keyframe undoes either. */
+.gv-link { position: absolute; background: var(--green); animation: gvLink .5s cubic-bezier(.65, 0, .35, 1) both; }
+@keyframes gvLink { to { transform: none; } }
+@keyframes gvNodeDot { to { background: var(--green); border-color: var(--green); } }
+.gv-foot { position: relative; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 16px 20px; }
+.gv-ctas { display: flex; align-items: center; gap: 10px; }
+.gv-explore { height: 40px; padding: 0 10px; font-size: 14px; }
+.gv-mom-cta { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding-block: 0; padding-inline: 10px 16px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; transition: border-color .25s; }
+.gv-mom-cta:hover { border-color: var(--ink); }
+.gv-mom-cta:focus-visible, .gv-explore:focus-visible, .gv-sel-menu a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.gv-sel-btn { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding-block: 0; padding-inline: 8px 14px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; }
+.gv-sel-btn:hover { border-color: var(--ink); }
+.gv-sel-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.gv-sel-ic { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--white); display: inline-flex; align-items: center; justify-content: center; }
+.gv-sel-menu { position: absolute; bottom: 52px; padding: 6px; border-radius: 14px; background: var(--white); border: 1px solid var(--hair); box-shadow: 0 18px 40px -20px rgb(from var(--ink) r g b / .35); opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .2s, transform .2s, visibility .2s; z-index: 6; }
+.gv-sel-open { opacity: 1; visibility: visible; transform: none; }
+.gv-sel-menu a { white-space: nowrap; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; }
+.gv-sel-menu a:hover { background: var(--paper); }
+
+/* Held until the stack is on screen (`GovDossierTabs` adds `gv-wait`). */
+.gv-wait :is(.gv-sheet-in, .gv-wm, .gv-stamp, .gv-row, .gv-node i, .gv-link) { animation-play-state: paused; }
+
+/* ── MOM · COMPASS, the calmer block ── */
+.mw { margin-top: clamp(72px, 11.85vw, 128px); }
+.mw-kick { display: flex; align-items: center; gap: 12px; }
+.mw-logo { flex: none; width: 44px; height: 44px; border-radius: 12px; background: var(--white); box-shadow: 0 0 0 1px var(--hair), 0 6px 14px -10px rgb(from var(--ink) r g b / .4); display: inline-flex; align-items: center; justify-content: center; }
+.mw-logo img { display: block; }
+.mw-sg { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mw-kick i { flex: 1; height: 1px; background: var(--hair); margin-inline-start: 12px; }
+.mw-head { margin-top: 40px; display: grid; gap: clamp(24px, 6.67vw, 72px); align-items: end; }
+.mw-h { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 7.04vw, 76px); line-height: .98; letter-spacing: -.04em; color: var(--ink); }
+.mw-h em { font-style: italic; color: var(--green); }
+.mw-intro p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
+.mw-passes { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--hair); }
+.mw-pk { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mw-pl { display: flex; flex-wrap: wrap; margin-top: 8px; font-size: 15px; font-weight: 500; color: var(--ink); }
+.mw-pl span:not(:last-child)::after { content: "·"; margin: 0 10px; color: var(--v2-dash); font-weight: 400; }
+.mw-card { margin-top: clamp(36px, 5.93vw, 64px); display: grid; border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .45); overflow: hidden; }
+.mw-lp { margin: 14px 0 0; max-width: 560px; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+.mw-track { position: relative; list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.mw-track::before { content: ""; position: absolute; inset-inline: 18px calc(50% + 10px); top: 17px; height: 1.5px; background: linear-gradient(calc(var(--flip) * 90deg), var(--tick-off), var(--green)); }
+.mw-st { position: relative; display: flex; flex-direction: column; gap: 14px; }
+.mw-sn { position: relative; z-index: 1; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--tick-off); font-family: var(--serif); font-size: 18px; color: var(--ink); }
+.mw-st b { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mw-st div span { display: block; margin-top: 6px; font-size: 15px; line-height: 1.5; color: var(--ink); }
+.mw-st-on .mw-sn { background: var(--green); color: var(--white); box-shadow: 0 0 0 6px rgb(from var(--green-light) r g b / .3); }
+.mw-st-on b { color: var(--green); }
+.mw-c2 { margin-top: 40px; padding-top: 32px; border-top: 1px dashed var(--hair); display: grid; gap: 32px; align-items: center; }
+.mw-c2-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mw-opts { margin-top: 12px; display: grid; gap: 6px; }
+.mw-opt { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 11px 14px; border: 0; border-radius: 12px; background: transparent; font-family: var(--sans); font-size: 14.5px; color: var(--ink-soft); text-align: start; cursor: pointer; transition: background .25s, color .25s; }
+.mw-opt:hover { background: var(--paper); color: var(--ink); }
+.mw-opt:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.mw-opt i { width: 16px; height: 16px; border-radius: 50%; box-sizing: border-box; box-shadow: inset 0 0 0 1.5px var(--tick-off); transition: box-shadow .25s; }
+.mw-opt b { font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--muted); }
+.mw-on { background: var(--v2-mint-pale); color: var(--ink); }
+.mw-on i { box-shadow: inset 0 0 0 5px var(--green); }
+.mw-on b { color: var(--green); }
+.mw-c2-r { text-align: center; }
+.mw-pts { display: flex; align-items: baseline; justify-content: center; gap: 6px; color: var(--green); }
+.mw-pts span { font-family: var(--serif); font-size: clamp(72px, 8.89vw, 96px); line-height: .9; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.mw-pts em { font-family: var(--serif); font-style: italic; font-size: 26px; }
+.mw-ptsA { animation: mwPtsA .5s cubic-bezier(.3, 1.4, .5, 1); }
+.mw-ptsB { animation: mwPtsB .5s cubic-bezier(.3, 1.4, .5, 1); }
+@keyframes mwPtsA { 0% { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes mwPtsB { 0% { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.mw-bar { margin: 16px auto 0; width: 150px; height: 6px; border-radius: 999px; background: var(--v2-paper-lo); overflow: hidden; }
+.mw-bar i { display: block; height: 100%; border-radius: 999px; background: var(--green); transition: width .6s cubic-bezier(.16, 1, .3, 1); }
+.mw-note { margin: 26px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
+.mw-hl { color: var(--ink); background: linear-gradient(transparent 62%, rgb(from var(--green-light) r g b / .55) 62%); padding: 0 2px; }
+.mw-r { background: linear-gradient(180deg, var(--v2-paper-hi), var(--paper)); display: flex; flex-direction: column; }
+.mw-rk { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.mw-tt { margin-top: 18px; font-family: var(--serif); font-size: 32px; line-height: 1.05; letter-spacing: -.025em; color: var(--ink); }
+.mw-sub { margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
+.mw-price { margin-top: 36px; display: flex; align-items: flex-start; gap: 8px; color: var(--green); }
+.mw-cur { margin-top: 14px; font-family: var(--mono); font-size: 14px; font-weight: 500; letter-spacing: .06em; }
+.mw-amt { font-family: var(--serif); font-size: clamp(88px, 10.18vw, 110px); line-height: .85; letter-spacing: -.05em; }
+.mw-per { margin-top: 12px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .02em; color: var(--muted); }
+.mw-add { margin-top: 30px; margin-bottom: 32px; }
+.mw-add div { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: baseline; padding: 13px 0; border-top: 1px solid var(--hair); font-size: 14px; color: var(--ink); }
+.mw-add em { font-style: normal; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.mw-add b { font-family: var(--mono); font-size: 13px; font-weight: 500; }
+.mw-cta { margin-top: auto; height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 15.5px; font-weight: 500; text-decoration: none; transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s; }
+/* Restated: `design.css`'s `a:hover` (0,1,1) would otherwise turn the label green on ink. */
+.mw-cta:hover { color: var(--white); transform: translateY(-2px); box-shadow: 0 16px 30px -18px rgb(from var(--ink) r g b / .6); }
+.mw-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.mw-who { margin-top: 12px; text-align: center; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+/* ── Premium services ── */
+.mw-prem { margin-top: clamp(64px, 9.63vw, 104px); padding-top: 44px; border-top: 1px solid var(--hair); display: grid; gap: clamp(20px, 6.67vw, 72px); align-items: start; }
+.mw-prem-h { margin: 14px 0 0; font-family: var(--serif); font-size: clamp(26px, 2.97vw, 32px); line-height: 1.12; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+.gv-prem-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) 20px; gap: 14px; align-items: center; padding: 18px 4px; border-top: 1px solid var(--hair); color: var(--ink); text-decoration: none; transition: padding .3s cubic-bezier(.16, 1, .3, 1); }
+.gv-prem-row:first-child { border-top: 0; padding-top: 4px; }
+.gv-prem-row:hover { padding-inline-start: 12px; }
+.gv-prem-row:hover svg { color: var(--green); }
+.gv-prem-n { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--muted); }
+.gv-prem-row b { display: block; font-size: 16px; font-weight: 500; }
+.gv-prem-row i { display: block; margin-top: 4px; font-style: normal; font-size: 14px; line-height: 1.45; color: var(--muted); }
+.gv-prem-row:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 8px; }
+
 @media (min-width: 1081px) {
-  .gv { position: relative; padding-top: 120px; padding-bottom: 140px; }
-  .gv-defs { position: absolute; }
-  .gv-mast-k { display: flex; justify-content: space-between; align-items: center; }
-  .gv-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .gv-head { margin-top: 22px; }
-  .gv-lede { margin-bottom: 8px; }
-  .gv-it { font-style: italic; }
-
-  /* ── The folder: tabs, pager, and a stack of sheets ── */
-  .gv-dossier { margin-top: 72px; }
-  .gv-tabs-row { display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 3; }
-  .gv-tabs { display: flex; gap: 8px; align-items: flex-end; }
-  /* `--ink-soft` on an unselected tab, not the board's `--muted`: that is
-     4.3:1 on the tab's card stock, under 1.4.3's 4.5 (axe, `/en`). */
-  .gv-tab { display: flex; align-items: center; gap: 12px; height: 56px; padding-block: 0; padding-inline: 20px 26px; border: 1px solid var(--hair); border-bottom: 0; border-radius: 14px 14px 0 0; background: var(--v2-gv-tab); color: var(--ink-soft); font-family: var(--sans); font-size: 15px; font-weight: 500; cursor: pointer; transform: translateY(6px); transition: transform .35s cubic-bezier(.16, 1, .3, 1), background .25s, color .25s; }
-  .gv-tab:hover { transform: translateY(2px); color: var(--ink); }
-  .gv-tab-n { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink-soft); }
-  .gv-tab-on { background: var(--white); color: var(--ink); transform: none; height: 62px; border-color: var(--white); box-shadow: 0 -10px 24px -18px rgb(from var(--ink) r g b / .35); }
-  .gv-tab-on .gv-tab-n { color: var(--green); }
-  .gv-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .gv-pager { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; }
-  /* A figure pair reads left to right in Arabic too; without this the bidi
-     algorithm shows "01 / 04" as "04 / 01" under `dir="rtl"` (measured). */
-  .gv-count { direction: ltr; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted); margin-inline-end: 6px; }
-  .gv-arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hair); background: var(--white); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); transition: border-color .25s, transform .25s; }
-  .gv-arrow:hover { border-color: var(--ink); transform: translateY(-1px); }
-  .gv-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  /* The pager's arrows point along reading order, as `globals.css` makes
-     every `Arrow` do. */
-  .gv-flip { transform: scaleX(var(--flip)); }
-  .gv-stack { position: relative; }
-  .gv-back { position: absolute; height: 40px; border-radius: 0 0 22px 22px; background: var(--v2-paper-lo); border: 1px solid var(--hair); border-top: 0; }
-  .gv-back-1 { bottom: -12px; inset-inline: 14px; z-index: 1; }
-  .gv-back-2 { bottom: -24px; inset-inline: 30px; background: var(--v2-gv-back); z-index: 0; }
-  /* Square only under the first tab, which is at the inline start. */
-  .gv-sheet-card { position: relative; z-index: 2; background: var(--white); border-radius: 22px; border-start-start-radius: 0; box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); overflow: hidden; }
-  .gv-sheet-in { position: relative; height: 700px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); animation: gvIn .7s cubic-bezier(.16, 1, .3, 1) both; }
-  /* `display: grid` outranks the UA's `[hidden]`, so it is restated. */
-  .gv-sheet-in[hidden] { display: none; }
-  @keyframes gvIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 26px)) rotate(.4deg); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
-  /* The board turned this watermark forever (180 s a revolution). Here it
-     turns 12° as its sheet opens and settles: the same sense of a print
-     under the paper, without a loop WCAG 2.2.2 would need a pause for. */
-  .gv-wm { position: absolute; inset-inline-end: -90px; bottom: -110px; width: 420px; height: 420px; pointer-events: none; opacity: .9; animation: gvTurn 4.8s cubic-bezier(.16, 1, .3, 1) both; }
-  @keyframes gvTurn { from { transform: rotate(12deg); } to { transform: rotate(0); } }
-
-  /* ── The cover: title, photograph, stamp, the proof line ── */
-  .gv-cover { position: relative; padding: 40px 44px 32px; border-inline-end: 1px dashed var(--hair); display: flex; flex-direction: column; }
-  .gv-cover-k { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .gv-title { margin: 22px 0 0; font-family: var(--serif); font-weight: 400; font-size: 38px; line-height: 1.03; letter-spacing: -.025em; text-wrap: balance; }
-  .gv-sub { margin: 14px 0 0; font-size: 16px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
-  .gv-photo { position: relative; margin-top: 26px; flex: 1; min-height: 250px; border-radius: 18px; overflow: visible; }
-  .gv-photo .pimg { border-radius: 18px; }
-  .gv-photo .scrim { height: 60%; border-radius: 0 0 18px 18px; }
-  .gv-photo.ph::after { border-radius: 18px; }
-  .gv-chips { position: absolute; inset-inline: 16px; bottom: 16px; z-index: 3; display: flex; flex-wrap: wrap; gap: 6px; }
-  .gv-chip { height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); font-family: var(--mono); font-size: 11px; color: var(--ink); }
-  .gv-stamp-wrap { position: absolute; inset-inline-end: -34px; top: -40px; z-index: 4; pointer-events: none; }
-  .gv-stamp { display: block; width: 150px; height: 150px; overflow: visible; mix-blend-mode: multiply; transform-origin: 50% 50%; animation: gvStamp .6s cubic-bezier(.3, 1.35, .5, 1) .55s both; }
-  .gv-stamp-wide { width: 196px; height: auto; }
+  .gv-sheet-in { height: 700px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+  .gv-cover { padding: 40px 44px 32px; border-inline-end: 1px dashed var(--hair); }
+  .gv-stamp-wrap { inset-inline-end: -34px; top: -40px; }
   .gv-stamp-wrap:has(.gv-stamp-wide) { top: -22px; inset-inline-end: -40px; }
-  @keyframes gvStamp { 0% { opacity: 0; transform: scale(1.8) rotate(4deg); } 55% { opacity: .97; transform: scale(.95) rotate(-11deg); } to { opacity: .95; transform: scale(1) rotate(-10deg); } }
-  .gv-proof { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-size: 14.5px; line-height: 1.45; color: var(--ink-soft); }
-  .gv-proof img { flex: none; border-radius: 6px; }
-  .gv-proof-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .12); }
-
-  /* ── The contents page: rows that open, the chain at the foot ── */
-  .gv-contents { position: relative; padding: 40px 48px 32px; height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
-  .gv-rows { margin-top: 10px; }
-  .gv-row { position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr) 20px; gap: 12px; padding: 15px 0; border-top: 1px solid var(--hair); cursor: default; outline: none; transition: background .3s; animation: rise .8s cubic-bezier(.2, .7, .2, 1) both; }
-  .gv-row::after { content: "+"; align-self: start; justify-self: end; font-family: var(--sans); font-size: 20px; line-height: 22px; color: var(--v2-dash); transition: transform .35s cubic-bezier(.16, 1, .3, 1), color .3s; }
-  .gv-row .tick { margin-top: 4px; }
-  .gv-row-t { font-size: 18px; font-weight: 500; letter-spacing: -.015em; transition: color .3s; }
-  .gv-row-p { max-height: 0; opacity: 0; margin-top: 0; overflow: hidden; font-size: 14px; line-height: 1.45; color: var(--muted); text-wrap: pretty; transition: max-height .45s cubic-bezier(.16, 1, .3, 1), opacity .3s ease, margin-top .3s; }
-  .gv-row:is(:hover, :focus-visible)::after { transform: rotate(45deg); color: var(--green); }
-  .gv-row:is(:hover, :focus-visible) .gv-row-t { color: var(--green); }
-  .gv-row:is(:hover, :focus-visible) .gv-row-p { max-height: 80px; opacity: 1; margin-top: 6px; }
-  .gv-row:focus-visible { box-shadow: inset 0 0 0 2px var(--ink); border-radius: 6px; }
-  .gv-chain-box { margin-top: auto; padding: 18px 20px 14px; border-radius: 16px; background: var(--v2-paper-hi); border: 1px solid var(--v2-paper-lo); }
-  /* The board also faded each node's WORDS in from 35% opacity; only the
-     dot and the link animate here. Text held at 35% while the sheet waits
-     off screen measured 2.2:1 in axe, and the lit dot says the same thing. */
-  .gv-chain { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .gv-node { position: relative; display: block; padding-block: 22px 0; padding-inline: 0 12px; font-family: var(--sans); font-size: 14px; font-weight: 500; line-height: 1.3; color: var(--ink); }
-  .gv-node i { position: absolute; inset-inline-start: 0; top: 0; width: 11px; height: 11px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--white); box-sizing: border-box; animation: gvNodeDot .4s ease both; animation-delay: inherit; }
-  .gv-node b { font-weight: 500; }
-  .gv-link { position: absolute; inset-inline: 17px 6px; top: 4.5px; height: 2px; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x) center; animation: gvLink .5s cubic-bezier(.65, 0, .35, 1) both; }
-  @keyframes gvLink { to { transform: scaleX(1); } }
-  @keyframes gvNodeDot { to { background: var(--green); border-color: var(--green); } }
-  .gv-foot { padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 16px 20px; }
-  .gv-ctas { display: flex; align-items: center; gap: 10px; flex: none; margin-inline-start: auto; }
-  .gv-explore { height: 40px; padding: 0 10px; font-size: 14px; }
-  .gv-mom-cta { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding-block: 0; padding-inline: 10px 16px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; transition: border-color .25s; }
-  .gv-mom-cta:hover { border-color: var(--ink); }
-  .gv-mom-cta:focus-visible, .gv-explore:focus-visible, .gv-sel-menu a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .gv-contents { padding: 40px 48px 32px; height: 100%; }
+  .gv-chain { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .gv-node { padding-block: 22px 0; padding-inline: 0 12px; }
+  .gv-link { inset-inline: 17px 6px; top: 4.5px; height: 2px; transform: scaleX(0); transform-origin: var(--origin-x) center; }
+  .gv-ctas { flex: none; margin-inline-start: auto; }
   .gv-sel { position: relative; }
-  .gv-sel-btn { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding-block: 0; padding-inline: 8px 14px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; }
-  .gv-sel-btn:hover { border-color: var(--ink); }
-  .gv-sel-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .gv-sel-ic { width: 28px; height: 28px; border-radius: 50%; background: var(--ink); color: var(--white); display: inline-flex; align-items: center; justify-content: center; }
-  .gv-sel-menu { position: absolute; inset-inline-end: 0; bottom: 52px; min-width: 280px; padding: 6px; border-radius: 14px; background: var(--white); border: 1px solid var(--hair); box-shadow: 0 18px 40px -20px rgb(from var(--ink) r g b / .35); opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .2s, transform .2s, visibility .2s; z-index: 6; }
-  .gv-sel-open { opacity: 1; visibility: visible; transform: none; }
-  .gv-sel-menu a { white-space: nowrap; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; }
-  .gv-sel-menu a:hover { background: var(--paper); }
-
-  /* Held until the stack is on screen (`GovDossierTabs` adds `gv-wait`). */
-  .gv-wait :is(.gv-sheet-in, .gv-wm, .gv-stamp, .gv-row, .gv-node i, .gv-link) { animation-play-state: paused; }
-
-  /* ── MOM · COMPASS, the calmer block ── */
-  .mw { margin-top: 128px; }
-  .mw-kick { display: flex; align-items: center; gap: 12px; }
-  .mw-logo { width: 44px; height: 44px; border-radius: 12px; background: var(--white); box-shadow: 0 0 0 1px var(--hair), 0 6px 14px -10px rgb(from var(--ink) r g b / .4); display: inline-flex; align-items: center; justify-content: center; }
-  .mw-logo img { display: block; }
-  .mw-sg { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .mw-kick i { flex: 1; height: 1px; background: var(--hair); margin-inline-start: 12px; }
-  .mw-head { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; align-items: end; }
-  .mw-h { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 76px; line-height: .98; letter-spacing: -.04em; color: var(--ink); }
-  .mw-h em { font-style: italic; color: var(--green); }
-  .mw-intro p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
-  .mw-passes { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--hair); }
-  .mw-pk { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .mw-pl { display: flex; flex-wrap: wrap; margin-top: 8px; font-size: 15px; font-weight: 500; color: var(--ink); }
-  .mw-pl span:not(:last-child)::after { content: "·"; margin: 0 10px; color: var(--v2-dash); font-weight: 400; }
-  .mw-card { margin-top: 64px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .45); overflow: hidden; }
+  .gv-sel-menu { inset-inline-end: 0; min-width: 280px; }
+  .mw-head, .mw-card { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
   .mw-l { padding: 52px 56px 48px; }
-  .mw-lp { margin: 14px 0 0; max-width: 560px; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
-  .mw-track { position: relative; list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .mw-track::before { content: ""; position: absolute; inset-inline: 18px calc(50% + 10px); top: 17px; height: 1.5px; background: linear-gradient(calc(var(--flip) * 90deg), var(--tick-off), var(--green)); }
-  .mw-st { position: relative; display: flex; flex-direction: column; gap: 14px; }
-  .mw-sn { position: relative; z-index: 1; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--tick-off); font-family: var(--serif); font-size: 18px; color: var(--ink); }
-  .mw-st b { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .mw-st div span { display: block; margin-top: 6px; font-size: 15px; line-height: 1.5; color: var(--ink); }
-  .mw-st-on .mw-sn { background: var(--green); color: var(--white); box-shadow: 0 0 0 6px rgb(from var(--green-light) r g b / .3); }
-  .mw-st-on b { color: var(--green); }
-  .mw-c2 { margin-top: 40px; padding-top: 32px; border-top: 1px dashed var(--hair); display: grid; grid-template-columns: minmax(0, 1fr) 180px; gap: 32px; align-items: center; }
-  .mw-c2-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .mw-opts { margin-top: 12px; display: grid; gap: 6px; }
-  .mw-opt { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 11px 14px; border: 0; border-radius: 12px; background: transparent; font-family: var(--sans); font-size: 14.5px; color: var(--ink-soft); text-align: start; cursor: pointer; transition: background .25s, color .25s; }
-  .mw-opt:hover { background: var(--paper); color: var(--ink); }
-  .mw-opt:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .mw-opt i { width: 16px; height: 16px; border-radius: 50%; box-sizing: border-box; box-shadow: inset 0 0 0 1.5px var(--tick-off); transition: box-shadow .25s; }
-  .mw-opt b { font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--muted); }
-  .mw-on { background: var(--v2-mint-pale); color: var(--ink); }
-  .mw-on i { box-shadow: inset 0 0 0 5px var(--green); }
-  .mw-on b { color: var(--green); }
-  .mw-c2-r { text-align: center; }
-  .mw-pts { display: flex; align-items: baseline; justify-content: center; gap: 6px; color: var(--green); }
-  .mw-pts span { font-family: var(--serif); font-size: 96px; line-height: .9; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
-  .mw-pts em { font-family: var(--serif); font-style: italic; font-size: 26px; }
-  .mw-ptsA { animation: mwPtsA .5s cubic-bezier(.3, 1.4, .5, 1); }
-  .mw-ptsB { animation: mwPtsB .5s cubic-bezier(.3, 1.4, .5, 1); }
-  @keyframes mwPtsA { 0% { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  @keyframes mwPtsB { 0% { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  .mw-bar { margin: 16px auto 0; width: 150px; height: 6px; border-radius: 999px; background: var(--v2-paper-lo); overflow: hidden; }
-  .mw-bar i { display: block; height: 100%; border-radius: 999px; background: var(--green); transition: width .6s cubic-bezier(.16, 1, .3, 1); }
-  .mw-note { margin: 26px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
-  .mw-hl { color: var(--ink); background: linear-gradient(transparent 62%, rgb(from var(--green-light) r g b / .55) 62%); padding: 0 2px; }
-  .mw-r { padding: 52px 48px 44px; background: linear-gradient(180deg, var(--v2-paper-hi), var(--paper)); border-inline-start: 1px dashed var(--hair); display: flex; flex-direction: column; }
-  .mw-rk { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .mw-tt { margin-top: 18px; font-family: var(--serif); font-size: 32px; line-height: 1.05; letter-spacing: -.025em; color: var(--ink); }
-  .mw-sub { margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
-  .mw-price { margin-top: 36px; display: flex; align-items: flex-start; gap: 8px; color: var(--green); }
-  .mw-cur { margin-top: 14px; font-family: var(--mono); font-size: 14px; font-weight: 500; letter-spacing: .06em; }
-  .mw-amt { font-family: var(--serif); font-size: 110px; line-height: .85; letter-spacing: -.05em; }
-  .mw-per { margin-top: 12px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .02em; color: var(--muted); }
-  .mw-add { margin-top: 30px; margin-bottom: 32px; }
-  .mw-add div { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: baseline; padding: 13px 0; border-top: 1px solid var(--hair); font-size: 14px; color: var(--ink); }
-  .mw-add em { font-style: normal; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
-  .mw-add b { font-family: var(--mono); font-size: 13px; font-weight: 500; }
-  .mw-cta { margin-top: auto; height: 52px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 15.5px; font-weight: 500; text-decoration: none; transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s; }
-  /* Restated: `design.css`'s `a:hover` (0,1,1) would otherwise turn the label green on ink. */
-  .mw-cta:hover { color: var(--white); transform: translateY(-2px); box-shadow: 0 16px 30px -18px rgb(from var(--ink) r g b / .6); }
-  .mw-cta:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .mw-who { margin-top: 12px; text-align: center; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-
-  /* ── Premium services ── */
-  .mw-prem { margin-top: 104px; padding-top: 44px; border-top: 1px solid var(--hair); display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 72px; align-items: start; }
-  .mw-prem-h { margin: 14px 0 0; font-family: var(--serif); font-size: 32px; line-height: 1.12; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
-  .gv-prem-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) 20px; gap: 14px; align-items: center; padding: 18px 4px; border-top: 1px solid var(--hair); color: var(--ink); text-decoration: none; transition: padding .3s cubic-bezier(.16, 1, .3, 1); }
-  .gv-prem-row:first-child { border-top: 0; padding-top: 4px; }
-  .gv-prem-row:hover { padding-inline-start: 12px; }
-  .gv-prem-row:hover svg { color: var(--green); }
-  .gv-prem-n { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--muted); }
-  .gv-prem-row b { display: block; font-size: 16px; font-weight: 500; }
-  .gv-prem-row i { display: block; margin-top: 4px; font-style: normal; font-size: 14px; line-height: 1.45; color: var(--muted); }
-  .gv-prem-row:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 8px; }
+  .mw-c2 { grid-template-columns: minmax(0, 1fr) 180px; }
+  .mw-r { padding: 52px 48px 44px; border-inline-start: 1px dashed var(--hair); }
+  .mw-prem { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 }
 
-@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+/* Phone and tablet. The folder keeps its tabs, which become a sideways
+   snap row under the pager (the four labels are ~800px); a sheet reads
+   top to bottom, cover over contents; and the chain of trust turns
+   vertical, as four ~70px columns cannot hold "Accreditation body". */
+@media (max-width: 1080px) {
+  .gv-tabs-row { flex-direction: column-reverse; align-items: stretch; }
+  .gv-pager { justify-content: flex-end; }
+  /* Bled to the screen edges so tabs slide out from under the gutter; the
+     padding keeps the first tab over the sheet's square corner and leaves
+     room for the open tab's shadow. The 6px a closed tab drops is clipped,
+     not scrolled: it is the part hidden behind the sheet on desktop. */
+  .gv-tabs { overflow: auto hidden; scroll-snap-type: x proximity; scroll-padding-inline: 20px; scrollbar-width: none; margin-inline: -20px; padding-block-start: 12px; padding-inline: 20px; }
+  .gv-tab { scroll-snap-align: start; }
+  .gv-cover { padding: 28px 22px 24px; border-bottom: 1px dashed var(--hair); }
+  /* On the photo, not over its edge: the 1.8× landing would cross the
+     edge of a 390px screen (`rtl.spec` measures it mid-flight). */
+  .gv-stamp-wrap { inset-inline-end: 16px; top: -30px; }
+  .gv-stamp { width: 112px; height: 112px; }
+  .gv-stamp-wide { width: 128px; height: auto; }
+  .gv-contents { padding: 20px 22px 28px; }
+  .gv-chain-box { margin-top: 20px; }
+  .gv-node { padding-block: 0 14px; padding-inline-start: 24px; }
+  .gv-node:last-child { padding-bottom: 0; }
+  .gv-node i { top: 4px; }
+  .gv-link { inset-inline-start: 4.5px; top: 17px; bottom: -2px; width: 2px; transform: scaleY(0); transform-origin: top; }
+  .gv-ctas { flex: 1 1 100%; flex-wrap: wrap; justify-content: space-between; }
+  /* `design.css` has no phone `.btn-sm`. */
+  .gv-ctas .btn-sm { height: 40px; padding: 0 18px; font-size: 14px; }
+  .gv-mom-cta { max-width: 100%; padding-block: 6px; }
+  /* The menu spans the foot rather than hanging off its button, which may
+     have wrapped to either end of the line. */
+  .gv-sel-menu { inset-inline: 0; }
+  .mw-l { padding: 28px 22px; }
+  .mw-r { padding: 28px 22px 32px; border-top: 1px dashed var(--hair); }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .gv-wm { animation: none; }
 }

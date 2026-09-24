@@ -1,5 +1,5 @@
 /** Government & International Authorities — four dossiers, the MOM COMPASS
-    case, and premium services (homepage v2, desktop).
+    case, and premium services (homepage v2).
 
     Hand-ported from the top of the canvas board `Desktop2.dc.html`: the four
     tabbed dossiers (`assemble_gov.py`) as the "minimal read" pass left them
@@ -12,7 +12,9 @@
     pass sets both to `display: none`; porting them as hidden text would put
     words in the page no sighted visitor can reach.
 
-    Brand new, so desktop only (no `.mob` tree, no 390px artboard). */
+    One tree at every width. The board had no 390px artboard; below 1081px
+    `govdossier.css` stacks each sheet, cover over contents, and the tabs
+    become a sideways row. */
 import { Fragment } from "react";
 import Image from "next/image";
 
@@ -29,7 +31,8 @@ import { GovMom } from "./GovMom";
 import { InkFilter, StampOct, StampOval, StampRect, StampRound, type StampWords } from "./GovStamps";
 
 /** `.gv-photo` — the cover column is 5/12 of the 1200px sheet, less 88px of
- *  padding: 412px at 1440 (28.6vw). The page has no phone layout for it. */
+ *  padding: 412px at 1440 (28.6vw). Below 1081 it is the sheet's width less
+ *  gutters and padding: 306px at 390 (78vw), 684px at 768 (89vw). */
 const SIZES_GV_PHOTO = "(max-width: 1080px) 90vw, 29vw";
 
 type Cta = "talk" | "authority" | "mom";
@@ -145,28 +148,26 @@ export async function GovDossiers() {
   });
 
   return (
-    <div className="dsk">
-      <section className="wrap hair-top gv" aria-labelledby="gv-h">
-        <InkFilter />
-        <div className="gv-mast">
-          <div className="gv-mast-k"><span className="k">{t.kicker}</span><span className="gv-sheet">{t.sheet}</span></div>
-          <div className="sec-head gv-head">
-            <h2 className="h2" id="gv-h">
-              {t.heading} <em className="gv-it">{t.headingEm}</em>
-            </h2>
-            <p className="lede gv-lede">{t.lede}</p>
-          </div>
+    <section className="wrap hair-top gv" aria-labelledby="gv-h">
+      <InkFilter />
+      <div className="gv-mast">
+        <div className="gv-mast-k"><span className="k">{t.kicker}</span><span className="gv-sheet">{t.sheet}</span></div>
+        <div className="sec-head gv-head">
+          <h2 className="h2" id="gv-h">
+            {t.heading} <em className="gv-it">{t.headingEm}</em>
+          </h2>
+          <p className="lede gv-lede">{t.lede}</p>
         </div>
-        <GovDossierTabs
-          tabs={DOSSIERS.map(({ id }) => t.items[id].tab)}
-          counts={DOSSIERS.map(({ id }) => t.items[id].count)}
-          panels={panels}
-          label={t.tabsLabel}
-          prevLabel={t.prev}
-          nextLabel={t.next}
-        />
-        <GovMom />
-      </section>
-    </div>
+      </div>
+      <GovDossierTabs
+        tabs={DOSSIERS.map(({ id }) => t.items[id].tab)}
+        counts={DOSSIERS.map(({ id }) => t.items[id].count)}
+        panels={panels}
+        label={t.tabsLabel}
+        prevLabel={t.prev}
+        nextLabel={t.next}
+      />
+      <GovMom />
+    </section>
   );
 }

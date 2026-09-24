@@ -10,126 +10,166 @@
    `--paper`, `#EDE9E0`/`#F8F6F1` for `--v2-paper-lo`/`--v2-leaf-mid` — the
    existing one is used: no eye separates them, and each new literal is a row
    in `check-css-color.mjs` for ever. The two declared below are the foil's
-   holographic stops, which are nothing on the palette. */
+   holographic stops, which are nothing on the palette.
+
+   ONE TREE, EVERY WIDTH. The base holds what both sizes share; the two media
+   blocks hold only layout. A size written `clamp(min, V, max)` with
+   V = max ÷ 1081 reaches the board's desktop value at 1081px and holds it
+   above, so desktop is unchanged and 390–1080 scales with no extra rule. */
 :root {
   --v2-sv-foil-gold: #FFE4A0;
   --v2-sv-foil-blue: #AAC8FF;
 }
 
-@media (min-width: 1081px) {
-  .sv { position: relative; padding-top: 128px; padding-bottom: 150px; }
-  .sv-mast { display: flex; align-items: center; gap: 24px; }
-  .sv-mast i { flex: 1; height: 1px; background: var(--hair); }
-  .sv-mast-r { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .sv-h { margin: 64px 0 0; text-align: center; font-family: var(--serif); font-weight: 400; font-size: 104px; line-height: .95; letter-spacing: -.045em; color: var(--ink); }
-  .sv-h em { font-style: italic; color: var(--green); }
-  .sv-lede { margin: 30px auto 0; max-width: 900px; text-align: center; font-size: 19px; line-height: 1.6; color: var(--muted); text-wrap: balance; }
-  .sv-nw { white-space: nowrap; }
-  .sv-ln { display: inline; padding: 0; border: 0; background: none; font: inherit; color: var(--ink); cursor: pointer; background-image: linear-gradient(transparent 88%, rgb(from var(--ink) r g b / .18) 88%); transition: color .3s, background-size .3s; }
-  .sv-ln:hover { color: var(--green); }
-  .sv-ln:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 3px; }
-  .sv-ln-on { color: var(--green); background-image: linear-gradient(transparent 62%, rgb(from var(--green-light) r g b / .55) 62%); }
+.sv { position: relative; }
+.sv-mast { display: flex; align-items: center; gap: clamp(12px, 2.23vw, 24px); }
+.sv-mast i { flex: 1; height: 1px; background: var(--hair); }
+.sv-mast-r { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sv-h { margin: clamp(32px, 5.93vw, 64px) 0 0; text-align: center; font-family: var(--serif); font-weight: 400; font-size: clamp(46px, 9.63vw, 104px); line-height: .95; letter-spacing: -.045em; color: var(--ink); }
+.sv-h em { font-style: italic; color: var(--green); }
+.sv-lede { margin: 30px auto 0; max-width: 900px; text-align: center; font-size: clamp(16px, 1.76vw, 19px); line-height: 1.6; color: var(--muted); text-wrap: balance; }
+.sv-nw { white-space: nowrap; }
+.sv-ln { display: inline; padding: 0; border: 0; background: none; font: inherit; color: var(--ink); cursor: pointer; background-image: linear-gradient(transparent 88%, rgb(from var(--ink) r g b / .18) 88%); transition: color .3s, background-size .3s; }
+.sv-ln:hover { color: var(--green); }
+.sv-ln:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 3px; }
+.sv-ln-on { color: var(--green); background-image: linear-gradient(transparent 62%, rgb(from var(--green-light) r g b / .55) 62%); }
 
-  /* ── The row of seals, the thread between them, the rosette behind ── */
-  .sv-stage { position: relative; margin-top: 84px; height: 330px; }
-  .sv-rose { position: absolute; inset-inline-start: 50%; top: 50%; width: 1000px; height: 1000px; margin-block-start: -520px; margin-inline-start: -500px; pointer-events: none; animation: svSpin 260s linear infinite; -webkit-mask-image: radial-gradient(circle, var(--ink) 30%, transparent 62%); mask-image: radial-gradient(circle, var(--ink) 30%, transparent 62%); }
-  .sv-rose path { fill: none; stroke: rgb(from var(--green) r g b / .075); stroke-width: 1; }
-  @keyframes svSpin { to { transform: rotate(360deg); } }
+/* ── The row of seals, the thread between them, the rosette behind ── */
+.sv-stage { position: relative; }
+.sv-rose { position: absolute; inset-inline-start: 50%; top: 50%; width: 1000px; height: 1000px; margin-block-start: -520px; margin-inline-start: -500px; pointer-events: none; animation: svSpin 260s linear infinite; -webkit-mask-image: radial-gradient(circle, var(--ink) 30%, transparent 62%); mask-image: radial-gradient(circle, var(--ink) 30%, transparent 62%); }
+.sv-rose path { fill: none; stroke: rgb(from var(--green) r g b / .075); stroke-width: 1; }
+@keyframes svSpin { to { transform: rotate(360deg); } }
+.sv-seal { position: relative; display: flex; flex-direction: column; align-items: center; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; color: var(--ink); -webkit-tap-highlight-color: transparent; }
+.sv-seal:focus-visible { outline: none; }
+.sv-seal:focus-visible .sv-disc { box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--ink); }
+/* The disc tilts from `--rx/--ry` (written by `GovSealsStage` on pointer
+   move) and swells on the active seal through `--sc`. */
+.sv-disc { position: relative; width: 208px; height: 208px; border-radius: 50%; background: radial-gradient(circle at 34% 28%, var(--white) 0, var(--v2-leaf-mid) 45%, var(--v2-paper-lo) 100%); box-shadow: inset 2px 3px 3px rgb(from var(--white) r g b / .95), inset -4px -6px 10px rgb(from var(--ink) r g b / .07), 0 0 0 1px rgb(from var(--ink) r g b / .05), 0 30px 44px -28px rgb(from var(--ink) r g b / .42); transform: perspective(760px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--sc, 1)); transition: transform .6s cubic-bezier(.16, 1, .3, 1), box-shadow .6s; will-change: transform; }
+.sv-seal:hover .sv-disc { transition: transform .12s linear, box-shadow .6s; }
+.sv-rim { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.sv-ln1 { fill: none; stroke: rgb(from var(--ink) r g b / .22); stroke-width: .8; }
+.sv-g { fill: none; stroke: rgb(from var(--ink) r g b / .26); stroke-width: .55; transition: stroke .6s; }
+.sv-prog { fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; transform: rotate(-90deg); transform-origin: 104px 104px; }
+.sv-micro { position: absolute; inset: 0; width: 100%; height: 100%; animation: svSpin 90s linear infinite; }
+.sv-micro text { font-family: var(--mono); font-size: 7.6px; letter-spacing: .12em; fill: rgb(from var(--ink) r g b / .5); transition: fill .6s; }
+.sv-inlay { position: absolute; inset-inline-start: 50%; top: 50%; width: 104px; height: 104px; margin-block-start: -52px; margin-inline-start: -52px; border-radius: 50%; overflow: hidden; background: var(--white); box-shadow: 0 0 0 5px var(--white), 0 0 0 6px rgb(from var(--ink) r g b / .1), inset 0 2px 8px rgb(from var(--ink) r g b / var(--in, .18)), 0 10px 18px -10px rgb(from var(--ink) r g b / .5); }
+.sv-inlay svg { display: block; width: 100%; height: 100%; }
+.sv-inlay-logo { display: flex; align-items: center; justify-content: center; --in: .08; }
+.sv-inlay-logo img { display: block; width: 64px; height: 64px; object-fit: contain; }
+/* Foil and sheen follow the pointer (`--fx`, `--lx/--ly`). The foil's
+   sweep is paint, not layout, but it is written through `--flip` so the
+   highlight travels the same way relative to reading order. */
+.sv-foil { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; opacity: 0; background: linear-gradient(calc(var(--flip) * 115deg), transparent 30%, rgb(from var(--green-light) r g b / .55) 44%, rgb(from var(--v2-sv-foil-gold) r g b / .5) 50%, rgb(from var(--v2-sv-foil-blue) r g b / .45) 56%, transparent 70%); background-size: 260% 260%; background-position: var(--fx, 50%) 50%; mix-blend-mode: multiply; transition: opacity .5s; }
+.sv-sheen { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background: radial-gradient(circle at var(--lx, 32%) var(--ly, 24%), rgb(from var(--white) r g b / .9), rgb(from var(--white) r g b / 0) 42%); mix-blend-mode: screen; opacity: .75; transition: opacity .5s; }
+.sv-seal:hover .sv-foil { opacity: .55; }
+.sv-name { margin-top: clamp(12px, 2.41vw, 26px); font-family: var(--serif); font-size: clamp(15px, 1.95vw, 21px); line-height: 1.1; letter-spacing: -.015em; text-align: center; transition: color .4s; }
+.sv-where { margin-top: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sv-on .sv-disc { --sc: 1.07; box-shadow: inset 2px 3px 3px rgb(from var(--white) r g b / .95), inset -4px -6px 10px rgb(from var(--ink) r g b / .07), 0 0 0 1px rgb(from var(--green) r g b / .18), 0 0 0 12px rgb(from var(--green-light) r g b / .16), 0 40px 60px -30px rgb(from var(--green) r g b / .55); }
+.sv-on .sv-g { stroke: rgb(from var(--green) r g b / .7); }
+.sv-on .sv-ln1 { stroke: rgb(from var(--green) r g b / .45); }
+.sv-on .sv-micro text { fill: var(--green); }
+.sv-on .sv-micro { animation-duration: 30s; }
+.sv-on .sv-name { color: var(--green); }
+/* The ring's `animationend` is what advances the cycle (`GovSealsStage`),
+   so pausing it — the motion toggle, or reduced motion removing it —
+   pauses the cycle with it. */
+.sv-auto .sv-on .sv-prog { opacity: 1; animation: svProg 7s linear forwards; }
+@keyframes svProg { to { stroke-dashoffset: 0; } }
+.sv-paused :is(.sv-rose, .sv-micro), .sv-paused.sv-auto .sv-on .sv-prog { animation-play-state: paused; }
+
+/* The hero's pause control, restyled only in position. */
+.sv-motion { display: flex; align-items: center; gap: 8px; min-height: 24px; padding: 6px 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sv-motion:hover { color: var(--ink); }
+.sv-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+
+/* ── The record of the chosen authority ── */
+.sv-recs { margin-top: clamp(40px, 8.89vw, 96px); }
+.sv-rec { position: relative; display: grid; border-radius: 28px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .5); overflow: hidden; animation: svIn .8s cubic-bezier(.16, 1, .3, 1) both; }
+/* `display: grid` outranks the UA's `[hidden]`, so it is restated. */
+.sv-rec[hidden] { display: none; }
+@keyframes svIn { 0% { opacity: 0; transform: translateY(24px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+.sv-rec-k { display: flex; justify-content: space-between; gap: 20px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sv-rec-k span:last-child { color: var(--green); text-align: end; }
+.sv-rec-h { margin: 30px 0 0; font-family: var(--serif); font-size: clamp(25px, 3.52vw, 38px); line-height: 1.1; letter-spacing: -.025em; color: var(--ink); text-wrap: balance; }
+.sv-rec-p { margin: 18px 0 0; font-size: 16px; line-height: 1.6; color: var(--muted); text-wrap: pretty; max-width: 620px; }
+.sv-facts { margin: 34px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; }
+.sv-fact { padding: 16px 0; border-top: 1px solid var(--hair); animation: svRise .7s cubic-bezier(.16, 1, .3, 1) both; }
+.sv-fact dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sv-fact dd { margin: 6px 0 0; font-size: 15px; font-weight: 500; line-height: 1.4; letter-spacing: -.005em; color: var(--ink); }
+@keyframes svRise { 0% { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.sv-rec-r { position: relative; background: linear-gradient(180deg, var(--v2-paper-hi), var(--paper)); display: flex; flex-direction: column; }
+.sv-emb { position: relative; width: 64px; height: 64px; }
+.sv-emb .sv-inlay { width: 64px; height: 64px; margin-block-start: -32px; margin-inline-start: -32px; box-shadow: 0 0 0 3px var(--white), 0 0 0 4px rgb(from var(--ink) r g b / .1), 0 8px 14px -8px rgb(from var(--ink) r g b / .5); }
+.sv-emb .sv-inlay-logo img { width: 40px; height: 40px; }
+/* The chain of trust: the green line drops, then each link lights. */
+.sv-chain { list-style: none; margin: 30px 0 0; padding: 0; position: relative; }
+.sv-chain::before { content: ""; position: absolute; inset-inline-start: 6px; top: 8px; bottom: 8px; width: 1.5px; background: var(--hair); }
+.sv-chain::after { content: ""; position: absolute; inset-inline-start: 6px; top: 8px; bottom: 8px; width: 1.5px; background: var(--green); transform-origin: top; transform: scaleY(0); animation: svDrop 1.3s cubic-bezier(.65, 0, .35, 1) .35s forwards; }
+@keyframes svDrop { to { transform: scaleY(1); } }
+.sv-chain li { position: relative; display: flex; align-items: center; gap: 16px; padding: 19px 0; font-family: var(--mono); font-size: 13.5px; letter-spacing: .02em; color: var(--muted); animation: svTxt .4s ease var(--d) forwards; }
+.sv-chain li:last-child { font-weight: 500; }
+.sv-chain i { position: relative; z-index: 1; flex: none; width: 13.5px; height: 13.5px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--tick-off); background: var(--white); animation: svDot .4s ease var(--d) forwards; }
+@keyframes svTxt { to { color: var(--ink); } }
+@keyframes svDot { to { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green-light) r g b / .35); } }
+.sv-cap { margin: auto 0 0; padding-top: 26px; font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+.sv-stamp-w { position: absolute; pointer-events: none; }
+.sv-stamp { display: block; width: 150px; height: 150px; color: var(--green); mix-blend-mode: multiply; opacity: 0; animation: svStamp .6s cubic-bezier(.3, 1.35, .5, 1) 1.6s both; }
+.sv-stamp text { font-family: var(--mono); }
+@keyframes svStamp { 0% { opacity: 0; transform: scale(1.9) rotate(6deg); } 55% { opacity: .9; transform: scale(.94) rotate(-13deg); } to { opacity: .82; transform: scale(1) rotate(-12deg); } }
+
+/* ── The closing line, with a hand-drawn underline ── */
+.sv-close { margin: clamp(64px, 11.11vw, 120px) auto 0; max-width: 1080px; text-align: center; font-family: var(--serif); font-size: clamp(28px, 4.45vw, 48px); line-height: 1.12; letter-spacing: -.028em; color: var(--ink); text-wrap: balance; }
+.sv-under { position: relative; display: inline-block; font-style: italic; color: var(--green); }
+.sv-under svg { position: absolute; inset-inline: 0; top: .9em; width: 100%; height: .22em; overflow: visible; }
+.sv-under path { fill: none; stroke: var(--green); stroke-width: 3.4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: svDraw 1.4s cubic-bezier(.65, 0, .35, 1) .6s forwards; }
+@keyframes svDraw { to { stroke-dashoffset: 0; } }
+
+/* Held until on screen (`GovSealsStage` adds and removes `sv-wait`). */
+.sv-wait :is(.sv-rec, .sv-fact, .sv-chain li, .sv-chain i, .sv-stamp, .sv-under path),
+.sv-wait .sv-chain::after { animation-play-state: paused; }
+
+@media (min-width: 1081px) {
+  .sv { padding-top: 128px; padding-bottom: 150px; }
+  .sv-stage { margin-top: 84px; height: 330px; }
   .sv-thread { position: absolute; inset-inline-start: 0; top: 0; width: 1200px; height: 260px; overflow: visible; pointer-events: none; }
   .sv-thread path { fill: none; stroke: rgb(from var(--ink) r g b / .18); stroke-width: 1; stroke-dasharray: 3 6; }
   .sv-row { position: relative; display: grid; grid-template-columns: repeat(5, 208px); justify-content: space-between; }
-  .sv-seal { position: relative; display: flex; flex-direction: column; align-items: center; padding: 0; border: 0; background: none; cursor: pointer; transform: translateY(var(--lift)); font: inherit; color: var(--ink); -webkit-tap-highlight-color: transparent; }
-  .sv-seal:focus-visible { outline: none; }
-  .sv-seal:focus-visible .sv-disc { box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--ink); }
-  /* The disc tilts from `--rx/--ry` (written by `GovSealsStage` on pointer
-     move) and swells on the active seal through `--sc`. */
-  .sv-disc { position: relative; width: 208px; height: 208px; border-radius: 50%; background: radial-gradient(circle at 34% 28%, var(--white) 0, var(--v2-leaf-mid) 45%, var(--v2-paper-lo) 100%); box-shadow: inset 2px 3px 3px rgb(from var(--white) r g b / .95), inset -4px -6px 10px rgb(from var(--ink) r g b / .07), 0 0 0 1px rgb(from var(--ink) r g b / .05), 0 30px 44px -28px rgb(from var(--ink) r g b / .42); transform: perspective(760px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(var(--sc, 1)); transition: transform .6s cubic-bezier(.16, 1, .3, 1), box-shadow .6s; will-change: transform; }
-  .sv-seal:hover .sv-disc { transition: transform .12s linear, box-shadow .6s; }
-  .sv-rim { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .sv-ln1 { fill: none; stroke: rgb(from var(--ink) r g b / .22); stroke-width: .8; }
-  .sv-g { fill: none; stroke: rgb(from var(--ink) r g b / .26); stroke-width: .55; transition: stroke .6s; }
-  .sv-prog { fill: none; stroke: var(--green); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 100; opacity: 0; transform: rotate(-90deg); transform-origin: 104px 104px; }
-  .sv-micro { position: absolute; inset: 0; width: 100%; height: 100%; animation: svSpin 90s linear infinite; }
-  .sv-micro text { font-family: var(--mono); font-size: 7.6px; letter-spacing: .12em; fill: rgb(from var(--ink) r g b / .5); transition: fill .6s; }
-  .sv-inlay { position: absolute; inset-inline-start: 50%; top: 50%; width: 104px; height: 104px; margin-block-start: -52px; margin-inline-start: -52px; border-radius: 50%; overflow: hidden; background: var(--white); box-shadow: 0 0 0 5px var(--white), 0 0 0 6px rgb(from var(--ink) r g b / .1), inset 0 2px 8px rgb(from var(--ink) r g b / .18), 0 10px 18px -10px rgb(from var(--ink) r g b / .5); }
-  .sv-inlay svg { display: block; width: 100%; height: 100%; }
-  .sv-inlay-logo { display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 5px var(--white), 0 0 0 6px rgb(from var(--ink) r g b / .1), inset 0 2px 8px rgb(from var(--ink) r g b / .08), 0 10px 18px -10px rgb(from var(--ink) r g b / .5); }
-  .sv-inlay-logo img { display: block; width: 64px; height: 64px; object-fit: contain; }
-  /* Foil and sheen follow the pointer (`--fx`, `--lx/--ly`). The foil's
-     sweep is paint, not layout, but it is written through `--flip` so the
-     highlight travels the same way relative to reading order. */
-  .sv-foil { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; opacity: 0; background: linear-gradient(calc(var(--flip) * 115deg), transparent 30%, rgb(from var(--green-light) r g b / .55) 44%, rgb(from var(--v2-sv-foil-gold) r g b / .5) 50%, rgb(from var(--v2-sv-foil-blue) r g b / .45) 56%, transparent 70%); background-size: 260% 260%; background-position: var(--fx, 50%) 50%; mix-blend-mode: multiply; transition: opacity .5s; }
-  .sv-sheen { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background: radial-gradient(circle at var(--lx, 32%) var(--ly, 24%), rgb(from var(--white) r g b / .9), rgb(from var(--white) r g b / 0) 42%); mix-blend-mode: screen; opacity: .75; transition: opacity .5s; }
-  .sv-seal:hover .sv-foil { opacity: .55; }
-  .sv-name { white-space: nowrap; margin-top: 26px; font-family: var(--serif); font-size: 21px; line-height: 1.1; letter-spacing: -.015em; text-align: center; transition: color .4s; }
-  .sv-where { margin-top: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .sv-on .sv-disc { --sc: 1.07; box-shadow: inset 2px 3px 3px rgb(from var(--white) r g b / .95), inset -4px -6px 10px rgb(from var(--ink) r g b / .07), 0 0 0 1px rgb(from var(--green) r g b / .18), 0 0 0 12px rgb(from var(--green-light) r g b / .16), 0 40px 60px -30px rgb(from var(--green) r g b / .55); }
-  .sv-on .sv-g { stroke: rgb(from var(--green) r g b / .7); }
-  .sv-on .sv-ln1 { stroke: rgb(from var(--green) r g b / .45); }
-  .sv-on .sv-micro text { fill: var(--green); }
-  .sv-on .sv-micro { animation-duration: 30s; }
-  .sv-on .sv-name { color: var(--green); }
-  /* The ring's `animationend` is what advances the cycle (`GovSealsStage`),
-     so pausing it — the motion toggle, or reduced motion removing it —
-     pauses the cycle with it. */
-  .sv-auto .sv-on .sv-prog { opacity: 1; animation: svProg 7s linear forwards; }
-  @keyframes svProg { to { stroke-dashoffset: 0; } }
-  .sv-paused :is(.sv-rose, .sv-micro), .sv-paused.sv-auto .sv-on .sv-prog { animation-play-state: paused; }
-
-  /* The hero's pause control, restyled only in position. */
-  .sv-motion { position: absolute; inset-inline-end: 0; top: -56px; display: flex; align-items: center; gap: 8px; min-height: 24px; padding: 6px 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .sv-motion:hover { color: var(--ink); }
-  .sv-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
-
-  /* ── The record of the chosen authority ── */
-  .sv-recs { margin-top: 96px; }
-  .sv-rec { position: relative; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); border-radius: 28px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .5); overflow: hidden; animation: svIn .8s cubic-bezier(.16, 1, .3, 1) both; }
-  /* `display: grid` outranks the UA's `[hidden]`, so it is restated. */
-  .sv-rec[hidden] { display: none; }
-  @keyframes svIn { 0% { opacity: 0; transform: translateY(24px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+  .sv-seal { transform: translateY(var(--lift)); }
+  .sv-name { white-space: nowrap; }
+  .sv-motion { position: absolute; inset-inline-end: 0; top: -56px; }
+  .sv-rec { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
   .sv-rec-l { padding: 48px 56px 50px; }
-  .sv-rec-k { display: flex; justify-content: space-between; gap: 20px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .sv-rec-k span:last-child { color: var(--green); text-align: end; }
-  .sv-rec-h { margin: 30px 0 0; font-family: var(--serif); font-size: 38px; line-height: 1.1; letter-spacing: -.025em; color: var(--ink); text-wrap: balance; }
-  .sv-rec-p { margin: 18px 0 0; font-size: 16px; line-height: 1.6; color: var(--muted); text-wrap: pretty; max-width: 620px; }
-  .sv-facts { margin: 34px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; }
-  .sv-fact { padding: 16px 0; border-top: 1px solid var(--hair); animation: svRise .7s cubic-bezier(.16, 1, .3, 1) both; }
-  .sv-fact dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .sv-fact dd { margin: 6px 0 0; font-size: 15px; font-weight: 500; line-height: 1.4; letter-spacing: -.005em; color: var(--ink); }
-  @keyframes svRise { 0% { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  .sv-rec-r { position: relative; padding: 48px 48px 44px; background: linear-gradient(180deg, var(--v2-paper-hi), var(--paper)); border-inline-start: 1px dashed var(--hair); display: flex; flex-direction: column; }
-  .sv-emb { position: relative; width: 64px; height: 64px; }
-  .sv-emb .sv-inlay { width: 64px; height: 64px; margin-block-start: -32px; margin-inline-start: -32px; box-shadow: 0 0 0 3px var(--white), 0 0 0 4px rgb(from var(--ink) r g b / .1), 0 8px 14px -8px rgb(from var(--ink) r g b / .5); }
-  .sv-emb .sv-inlay-logo img { width: 40px; height: 40px; }
-  /* The chain of trust: the green line drops, then each link lights. */
-  .sv-chain { list-style: none; margin: 30px 0 0; padding: 0; position: relative; }
-  .sv-chain::before { content: ""; position: absolute; inset-inline-start: 6px; top: 8px; bottom: 8px; width: 1.5px; background: var(--hair); }
-  .sv-chain::after { content: ""; position: absolute; inset-inline-start: 6px; top: 8px; bottom: 8px; width: 1.5px; background: var(--green); transform-origin: top; transform: scaleY(0); animation: svDrop 1.3s cubic-bezier(.65, 0, .35, 1) .35s forwards; }
-  @keyframes svDrop { to { transform: scaleY(1); } }
-  .sv-chain li { position: relative; display: flex; align-items: center; gap: 16px; padding: 19px 0; font-family: var(--mono); font-size: 13.5px; letter-spacing: .02em; color: var(--muted); animation: svTxt .4s ease var(--d) forwards; }
-  .sv-chain li:last-child { font-weight: 500; }
-  .sv-chain i { position: relative; z-index: 1; flex: none; width: 13.5px; height: 13.5px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--tick-off); background: var(--white); animation: svDot .4s ease var(--d) forwards; }
-  @keyframes svTxt { to { color: var(--ink); } }
-  @keyframes svDot { to { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green-light) r g b / .35); } }
-  .sv-cap { margin: auto 0 0; padding-top: 26px; font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
-  .sv-stamp-w { position: absolute; inset-inline-end: 40px; bottom: 132px; pointer-events: none; }
-  .sv-stamp { display: block; width: 150px; height: 150px; color: var(--green); mix-blend-mode: multiply; opacity: 0; animation: svStamp .6s cubic-bezier(.3, 1.35, .5, 1) 1.6s both; }
-  .sv-stamp text { font-family: var(--mono); }
-  @keyframes svStamp { 0% { opacity: 0; transform: scale(1.9) rotate(6deg); } 55% { opacity: .9; transform: scale(.94) rotate(-13deg); } to { opacity: .82; transform: scale(1) rotate(-12deg); } }
-
-  /* ── The closing line, with a hand-drawn underline ── */
-  .sv-close { margin: 120px auto 0; max-width: 1080px; text-align: center; font-family: var(--serif); font-size: 48px; line-height: 1.12; letter-spacing: -.028em; color: var(--ink); text-wrap: balance; }
-  .sv-under { position: relative; display: inline-block; font-style: italic; color: var(--green); }
-  .sv-under svg { position: absolute; inset-inline: 0; top: .9em; width: 100%; height: .22em; overflow: visible; }
-  .sv-under path { fill: none; stroke: var(--green); stroke-width: 3.4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: svDraw 1.4s cubic-bezier(.65, 0, .35, 1) .6s forwards; }
-  @keyframes svDraw { to { stroke-dashoffset: 0; } }
-
-  /* Held until on screen (`GovSealsStage` adds and removes `sv-wait`). */
-  .sv-wait :is(.sv-rec, .sv-fact, .sv-chain li, .sv-chain i, .sv-stamp, .sv-under path),
-  .sv-wait .sv-chain::after { animation-play-state: paused; }
+  .sv-rec-r { padding: 48px 48px 44px; border-inline-start: 1px dashed var(--hair); }
+  .sv-stamp-w { inset-inline-end: 40px; bottom: 132px; }
 }
 
-@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+/* Phone and tablet: the five seals wrap three and two, centred, at half
+   size, so every authority is on screen and one tap away. REJECTED: a
+   swiped row of full-size seals — the auto-cycle would light seals
+   scrolled out of view, and the choice is the point of the band. The
+   arch and its thread are a 1200px drawing; they go. `zoom` rather than
+   `transform: scale()` because the disc's transform already carries the
+   tilt and the swell, and zoom also gives back the layout box. */
+@media (max-width: 1080px) {
+  /* The 1000px rosette is wider than a phone; clipped, not scrolled. */
+  .sv { padding-top: 72px; padding-bottom: 88px; overflow-x: clip; }
+  .sv-stage { margin-top: 28px; display: flex; flex-direction: column; }
+  .sv-thread { display: none; }
+  .sv-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 28px 12px; }
+  .sv-seal { flex: 0 1 calc(33.3% - 8px); max-width: 124px; }
+  .sv-disc { zoom: .5; }
+  .sv-motion { order: -1; align-self: flex-end; margin-bottom: 12px; }
+  .sv-rec-l, .sv-rec-r { padding: 28px 22px; }
+  .sv-rec-k { flex-direction: column; gap: 6px; }
+  .sv-rec-k span:last-child { text-align: start; }
+  .sv-rec-r { border-top: 1px dashed var(--hair); }
+  /* Beside the emblem, clear of the chain, and far enough in that its
+     1.9× landing stays inside a 390px screen (`rtl.spec` measures it). */
+  .sv-stamp-w { inset-inline-end: 32px; top: 16px; }
+  .sv-stamp { width: 112px; height: 112px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   .sv-rose, .sv-micro { animation: none; }
   .sv-auto .sv-on .sv-prog { animation: none; opacity: 0; }
   .sv-motion { display: none; }
