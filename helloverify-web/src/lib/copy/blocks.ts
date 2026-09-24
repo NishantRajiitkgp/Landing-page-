@@ -20,14 +20,6 @@ export type BlocksCopy = typeof en;
 
 export const BLOCKS: Dictionary<BlocksCopy> = { en };
 
-/** A row in the closing band's lead-form mock. One union for both
- *  breakpoints: the two orders are different subsets of it, which is what
- *  `blocks/LeadMock.tsx` measured. */
-export type MockFieldId = keyof BlocksCopy["leadMock"]["fields"];
-
-/** An audience chip under the mock's heading. */
-export type SegmentId = keyof BlocksCopy["leadMock"]["segments"];
-
 /** A message in the HelloV thread. */
 export type PhoneMsgId = keyof BlocksCopy["helloVPhone"]["msgs"];
 

@@ -1,32 +1,34 @@
 import Image from "next/image";
+import { getLocale } from "next-intl/server";
 
-import { MOCK_FIELDS_DSK, MOCK_FIELDS_MOB, MockFields, Segments } from "@/components/blocks/LeadMock";
 import { AppLink } from "@/components/chrome/AppLink";
+import { ContactForm } from "@/components/forms/ContactForm";
 import { SIZES_FEATURE, noteInk, tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
+import "@/app/v2/contact.css";
 /** Contact form.
  *
- *  319 lines against `max-lines` max 300 (`eslint.config.mjs`, §17
- *  condition 22). The six field rows and the three segment chips were each
- *  written twice, once per breakpoint; a script diffed the copies field by
- *  field and found FOUR of the six rows and the whole segment row
- *  byte-identical after dedent. Both are one list in
- *  `blocks/LeadMock.tsx` now, rendered once per breakpoint.
+ *  THE FORM IS REAL NOW (24 Sep 2026). The closing band drew a mock — six
+ *  static boxes, three segment chips that did nothing and a "Submit" that
+ *  linked to /contact — so a visitor who picked "Government" or "Individual"
+ *  got no response at all. Both trees now render `forms/ContactForm`, the
+ *  /contact form and its Server Action, which switches its fields per
+ *  audience (`SEGMENT_FORM` in `forms/LeadFields.tsx`). Each tree gets its
+ *  own id prefix, since both are in the DOM. The layout rules the /contact
+ *  page scopes to `.ct3` are restated for `.hc` in `app/v2/contact.css`.
  *
- *  WHAT STAYED WRITTEN TWICE, because the same script measured it as
- *  genuinely different rather than assuming either way: the headline
- *  (64px/0.98 against 36px/1), the photo panel (a 760px minimum against a
- *  fixed 300px, and only desktop carries the `.light` gradient, the `.note`
- *  caption and the closing paragraph), the consent paragraph (shorter copy,
- *  and the phone does not link the address) and the submit button (`full`
- *  plus a top margin on the phone). None of those is a repeat, so none of
- *  them moved - the same call `sections/PeopleStrip.tsx` made about its two
- *  lists.
+ *  WHAT IS STILL WRITTEN TWICE, and was measured as genuinely different
+ *  when the mock was split out (see git history for `blocks/LeadMock.tsx`):
+ *  the headline (64px/0.98 against 36px/1), the photo panel (a 760px minimum
+ *  against a fixed 300px; only desktop carries the `.light` gradient, the
+ *  `.note` caption and the closing paragraph) and the consent paragraph
+ *  (shorter on the phone, which does not link the address).
  */
 
 export async function Contact() {
   const t = (await copy(SECTIONS)).contact;
+  const locale = await getLocale();
 
   return (
     <>
@@ -96,46 +98,22 @@ export async function Contact() {
               {' '}
             </div>
             {' '}
-            <div style={{ padding: '56px 64px' }}>
-              {' '}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
-                {' '}
-                <div className="k">
-                  {t.k}
-                </div>
-                {' '}
-                <Segments />
-                {' '}
-              </div>
-              {' '}
-              <div style={{ marginTop: '36px', display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '28px 24px' }}>
-                <MockFields fields={MOCK_FIELDS_DSK} />
-              </div>
-              {' '}
-              <p style={{ margin: '24px 0 0', fontSize: '13px', lineHeight: '1.5', color: 'var(--muted)' }}>
-                {t.consent.lead}{' '}
-                <AppLink href="/legal/privacy-policy" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
-                  {t.consent.policy}
-                </AppLink>
-                {t.consent.mid}{' '}
-                <a href="mailto:privacy@helloverify.com" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
-                  {t.consent.email}
-                </a>
-                {t.consent.end}
-              </p>
-              {' '}
-              <div style={{ marginTop: '28px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-                {' '}
-                <AppLink href="/contact" className="btn btn-ink">
-                  {t.submit}
-                </AppLink>
-                {' '}
-              </div>
-              {' '}
+            <div className="hc" style={{ padding: '56px 64px' }}>
+              <ContactForm
+                locale={locale}
+                idPrefix="d-"
+                consent={
+                  <p className="consent">
+                    {t.consent.lead}{' '}
+                    <AppLink href="/legal/privacy-policy">{t.consent.policy}</AppLink>
+                    {t.consent.mid}{' '}
+                    <a href="mailto:privacy@helloverify.com">{t.consent.email}</a>
+                    {t.consent.end}
+                  </p>
+                }
+              />
             </div>
-            {' '}
           </div>
-          {' '}
         </div>
       </div>
       <div className="mob">
@@ -163,30 +141,20 @@ export async function Contact() {
               {' '}
             </div>
             {' '}
-            <div style={{ padding: '24px 22px 28px' }}>
-              {' '}
-              <Segments />
-              {' '}
-              <div style={{ marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-                <MockFields fields={MOCK_FIELDS_MOB} />
-              </div>
-              {' '}
-              <p style={{ margin: '18px 0 0', fontSize: '12.5px', lineHeight: '1.5', color: 'var(--muted)' }}>
-                {t.consent.leadMob}{' '}
-                <AppLink href="/legal/privacy-policy" style={{ color: 'var(--muted)', textDecoration: 'underline' }}>
-                  {t.consent.policy}
-                </AppLink>
-                {t.consent.tailMob}
-              </p>
-              {' '}
-              <AppLink href="/contact" className="btn btn-ink full" style={{ marginTop: '18px' }}>
-                {t.submit}
-              </AppLink>
-              {' '}
+            <div className="hc" style={{ padding: '24px 22px 28px' }}>
+              <ContactForm
+                locale={locale}
+                idPrefix="m-"
+                consent={
+                  <p className="consent">
+                    {t.consent.leadMob}{' '}
+                    <AppLink href="/legal/privacy-policy">{t.consent.policy}</AppLink>
+                    {t.consent.tailMob}
+                  </p>
+                }
+              />
             </div>
-            {' '}
           </div>
-          {' '}
         </div>
       </div>
     </>

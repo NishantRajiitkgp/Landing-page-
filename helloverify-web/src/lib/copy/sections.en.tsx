@@ -1195,7 +1195,6 @@ export const en = {
     headingB: "beginning.",
     note: "photo · warm, people at work",
     sub: "Take the first step. We'll handle the rest.",
-    k: "Talk to sales",
     consent: {
       lead: "By submitting, you consent to HelloVerify processing your data for lead generation and related communications, per our",
       policy: "Privacy Policy",
@@ -1208,7 +1207,6 @@ export const en = {
       leadMob: "By submitting, you consent to HelloVerify processing your data for lead generation, per our",
       tailMob: ". Withdraw any time at privacy@helloverify.com.",
     },
-    submit: "Submit",
   },
 
   /** `sections/CustomerStory.tsx`, which renders NOTHING today:

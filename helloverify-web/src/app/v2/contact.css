@@ -1,0 +1,35 @@
+/* Homepage · the closing band's lead form (`sections/Contact.tsx`), which is
+   the real `forms/ContactForm` since 24 Sep 2026. The /contact page scopes
+   the form's layout to `.ct3` in `inner.css`, a sheet the homepage does not
+   load; these are the same rules restated for `.hc`, laid out as the band's
+   mock was (label and segments on one row, 28/24 field gaps). The global
+   parts — `.inp`, `select.inp`'s chevron, `.vh`, focus rings, invalid
+   states — come from `pages.css` as they do on /contact.
+
+   Both breakpoints, unlike the other v2 sheets: the phone tree renders the
+   same form. Tokens only. */
+
+.hc .form-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+/* `ContactForm` gives its label an inline 10px bottom margin for /contact's
+   stacked layout; on one row it would sit the label off the chips' centre. */
+.hc .form-top > .fld-l { margin-bottom: 0 !important; }
+.hc .segs { display: flex; flex-wrap: wrap; gap: 6px; }
+.hc .seg { cursor: pointer; transition: border-color .2s; }
+.hc .seg:hover { border-color: var(--ink); }
+.hc .seg:has(input:checked) { border-color: var(--ink); color: var(--ink); font-weight: 500; }
+/* 14px on top of the form's inline 22px margin: the band's 36px. */
+.hc .fgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 24px; padding-top: 14px; }
+.hc .fgrid .full2 { grid-column: 1 / -1; }
+.hc textarea.inp { min-height: 84px; }
+.hc .consent { margin: 24px 0 0; font-size: 13px; line-height: 1.5; color: var(--muted); }
+.hc .consent a { color: var(--muted); text-decoration: underline; }
+.hc .err { margin-top: 6px; font-size: 12.5px; line-height: 1.5; font-weight: 500; color: var(--ink); }
+.hc .status { margin-top: 18px; padding: 13px 15px; border: 1px solid var(--hair); border-radius: 12px; background: var(--v2-paper-hi); font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.hc .status.ok::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 999px; background: var(--green); margin-inline-end: 9px; vertical-align: 1px; }
+
+@media (max-width: 1080px) {
+  .hc .form-top { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .hc .fgrid { grid-template-columns: minmax(0, 1fr); gap: 18px; padding-top: 0; }
+  .hc .fgrid .full2 { grid-column: auto; }
+  .hc .consent { margin-top: 18px; font-size: 12.5px; }
+}

@@ -1,4 +1,4 @@
-import type { LeadField } from "@/lib/leads/constraints";
+import type { InterestValue, LeadField, SegmentValue } from "@/lib/leads/constraints";
 import { LIMITS, MOBILE_PATTERN } from "@/lib/leads/constraints";
 
 /** The lead form's field primitives, lifted out of `ContactForm.tsx`.
@@ -26,10 +26,10 @@ import { LIMITS, MOBILE_PATTERN } from "@/lib/leads/constraints";
  *  It takes the message rather than closing over `errorFor`, which is what lets
  *  it live out here at all.
  */
-export function ErrorText({ field, message }: { field: LeadField; message?: string }) {
+export function ErrorText({ field, message, idPrefix = "" }: { field: LeadField; message?: string; idPrefix?: string }) {
   if (!message) return null;
   return (
-    <p className="err" id={`${field}-error`}>
+    <p className="err" id={`${idPrefix}${field}-error`}>
       {message}
     </p>
   );
@@ -42,21 +42,25 @@ export function Field({
   label,
   wide,
   message,
+  idPrefix = "",
   children,
 }: {
   id: LeadField;
   label: string;
   wide?: boolean;
   message?: string;
+  /** Prefixes the DOM ids, for a page that renders the form twice (the
+   *  homepage's desktop and phone trees). The `name`s never change. */
+  idPrefix?: string;
   children: React.ReactNode;
 }) {
   return (
     <div {...(wide ? { className: "full2" } : {})}>
-      <label className="fld-l" htmlFor={id}>
+      <label className="fld-l" htmlFor={idPrefix + id}>
         {label}
       </label>
       {children}
-      <ErrorText field={id} message={message} />
+      <ErrorText field={id} message={message} idPrefix={idPrefix} />
     </div>
   );
 }
@@ -100,3 +104,51 @@ export const TEXT_FIELDS: readonly TextField[] = [
   { id: "mobile", label: "Mobile", type: "tel", placeholder: "+91", autoComplete: "tel",
     pattern: MOBILE_PATTERN, maxLength: LIMITS.mobile.max },
 ];
+
+/** What the form asks each audience (24 Sep 2026). The segment chips used to
+ *  change nothing but the posted value, so a ministry was asked for its
+ *  "Company" and "Business email" and offered SMB packages, and a person
+ *  vetting a nanny was asked for a company too.
+ *
+ *  - `company` is the organisation field's wording, or absent: an individual
+ *    has none, so the field is not rendered and nothing is posted (the
+ *    schema already treats `company` as optional).
+ *  - `interests` is the subset of `INTEREST_VALUES` that audience is offered,
+ *    in order; `preset` is selected on switching to the segment, where one
+ *    answer is overwhelmingly the likely one.
+ *
+ *  Business keeps the form's original wording exactly. The government and
+ *  individual strings are NEW MICROCOPY, not from the old site. */
+export type SegmentForm = {
+  readonly company?: { readonly label: string; readonly placeholder: string };
+  readonly email: { readonly label: string; readonly placeholder: string };
+  readonly interests: readonly InterestValue[];
+  readonly preset?: InterestValue;
+  readonly interestPlaceholder: string;
+  readonly message: string;
+};
+
+export const SEGMENT_FORM: Record<SegmentValue, SegmentForm> = {
+  business: {
+    company: { label: "Company", placeholder: "Company name" },
+    email: { label: "Business email", placeholder: "name@company.com" },
+    interests: ["enterprise", "smb", "employee-verification", "customer-kyc", "certifier"],
+    interestPlaceholder: "Employee verification, KYC, Certifier, Consumer…",
+    message: "How many checks a month, and where?",
+  },
+  government: {
+    company: { label: "Department or authority", placeholder: "Ministry, department or agency" },
+    email: { label: "Official email", placeholder: "name@department.gov" },
+    interests: ["governments", "employee-verification"],
+    preset: "governments",
+    interestPlaceholder: "Government / authority programme",
+    message: "Which programme is it for, and roughly how many applicants a year?",
+  },
+  individual: {
+    email: { label: "Email", placeholder: "you@example.com" },
+    interests: ["hellov"],
+    preset: "hellov",
+    interestPlaceholder: "Individual / HelloV",
+    message: "Who would you like to verify — a tenant, a nanny, a driver?",
+  },
+};
