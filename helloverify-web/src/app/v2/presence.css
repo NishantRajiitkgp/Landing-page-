@@ -2,11 +2,17 @@
    `components/sections/Presence.tsx`; the header of `hero.css` explains why
    v2 sheets are per-section and hand-written. Every selector is `su-`.
 
-   THE MAP IS GEOGRAPHY, NOT READING ORDER. `.su-stage` is `direction: ltr`,
-   so under `dir="rtl"` New York stays west of Cairo; inside it the cards'
-   `inset-inline-start` is therefore the physical left the canvas is drawn
-   against. Everything outside the stage (the controls, the hour strip)
-   mirrors as usual. */
+   THE MAP IS GEOGRAPHY, NOT READING ORDER. On desktop `.su-stage` is
+   `direction: ltr`, so under `dir="rtl"` New York stays west of Cairo;
+   inside it the cards' `inset-inline-start` is therefore the physical left
+   the canvas is drawn against. Everything outside the stage (the controls,
+   the hour strip) mirrors as usual.
+
+   ONE TREE AT EVERY WIDTH (phone pass, Sep 2026). Base rules hold at both
+   sizes; the `min-width: 1081px` block is the board's layout and the
+   `max-width: 1080px` block the phone's. At 390px the whole 1200px map
+   would be 127px tall with 4px lettering on the cards, so the phone crops
+   the canvas to the six offices and lists the cards under it instead. */
 
 /* The sun and the night, as tints the canvas painter reads at runtime
    (`sections/sunPaint.ts` → `getComputedStyle`), so no colour is typed in
@@ -22,86 +28,125 @@
   --v2-su-dusk: #787C8C;
 }
 
+.su-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.su { margin-top: 8px; }
+/* Held invisible, keeping their box, until the island knows the time. */
+.su-wait { visibility: hidden; }
+
+/* ── Clock, open count, controls ──────────────────────────────────────── */
+.su-clock { display: flex; align-items: flex-end; gap: 14px; }
+.su-big { font-family: var(--serif); font-size: 64px; line-height: .9; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+.su-sub { display: flex; flex-direction: column; gap: 4px; padding-bottom: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.su-sub b { font-weight: 500; color: var(--ink); }
+.su-open { display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 16px; border-radius: 999px; background: var(--white); box-shadow: 0 0 0 1px var(--hair); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); margin-bottom: 4px; white-space: nowrap; }
+.su-open-d { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .15); animation: suBlink 2s ease-in-out infinite; }
+@keyframes suBlink { 50% { box-shadow: 0 0 0 7px rgb(from var(--green) r g b / .05); } }
+.su-ctl { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 4px; }
+.su-hint { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-inline-end: 6px; white-space: nowrap; }
+.su-btn { height: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 13.5px; font-weight: 500; color: var(--ink); cursor: pointer; white-space: nowrap; transition: background .25s, color .25s, border-color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+.su-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.su-play { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.su-play.su-playing { background: var(--white); color: var(--ink); border-color: var(--hair); }
+.su-play:disabled { cursor: default; }
+
+/* ── The map ──────────────────────────────────────────────────────────── */
+.su-stage { position: relative; width: 100%; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.su-cv { display: block; }
+.su-card { box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding-inline: 10px 12px; border-radius: 14px; background: rgb(from var(--white) r g b / .72); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .07); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); pointer-events: none; transition: background .5s, box-shadow .5s, transform .5s cubic-bezier(.16, 1, .3, 1); }
+.su-fl { width: 26px; height: 26px; filter: grayscale(.6); opacity: .7; transition: filter .5s, opacity .5s; }
+.su-cx { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
+.su-cx b { font-size: 14.5px; font-weight: 500; letter-spacing: -.01em; color: var(--muted); transition: color .5s; }
+.su-meta { font-family: var(--mono); font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.su-meta em { font-style: normal; font-variant-numeric: tabular-nums; }
+/* `--muted`, not the board's #A8A294: that measured 2.5:1 on the card, and
+   text colour here must be a token (`check-css-color.mjs`, rule 1). The
+   closed state still reads as off through the hollow dot and grey flag. */
+.su-st { display: inline-flex; align-items: center; gap: 5px; margin-top: 2px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.su-st i { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--v2-dash); box-sizing: border-box; }
+.su-on { background: var(--white); box-shadow: 0 0 0 1px rgb(from var(--green) r g b / .28), 0 16px 30px -18px rgb(from var(--green) r g b / .55); transform: translateY(-2px); }
+.su-on .su-fl { filter: none; opacity: 1; }
+.su-on .su-cx b, .su-on .su-meta { color: var(--ink); }
+.su-on .su-st { color: var(--green); }
+.su-on .su-st i { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 3px rgb(from var(--green) r g b / .16); }
+
+/* ── The hand-off sentence and the motion switch ──────────────────────── */
+.su-relay { margin-top: 16px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--ink); min-height: 24px; }
+.su-doc { flex: none; width: 18px; height: 22px; border-radius: 3px; background: var(--white); box-shadow: 0 0 0 1.3px var(--green); position: relative; }
+.su-doc::before, .su-doc::after { content: ""; position: absolute; inset-inline: 4px; height: 1.3px; background: var(--green); top: 7px; }
+.su-doc::after { top: 12px; inset-inline-end: 7px; }
+/* The hero's "Pause motion" control (`hero.css` `.hv-motion`), placed at
+   the end of this row rather than over the map. */
+.su-motion { margin-inline-start: auto; display: flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.su-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+.su-still .su-open-d { animation-play-state: paused; }
+
+/* ── Who covers each UTC hour ─────────────────────────────────────────── */
+.su-cov { margin-top: 40px; }
+.su-cov-h { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: 12px; }
+.su-cov-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+.su-cov-l { display: flex; gap: 18px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.su-cols { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 4px; }
+.su-col { position: relative; height: 132px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 0; border: 0; border-radius: 10px; background: var(--v2-leaf-lo); cursor: pointer; transition: background .3s; }
+.su-col:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.su-stack { display: flex; flex-direction: column-reverse; align-items: center; gap: 3px; }
+.su-cf { display: block; width: 16px; height: 16px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 1.5px var(--white), 0 0 0 2.5px rgb(from var(--ink) r g b / .08); }
+.su-cf svg { display: block; width: 100%; height: 100%; }
+.su-hr { font-family: var(--mono); font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.su-h-on { background: var(--white); box-shadow: 0 0 0 1.5px var(--green), 0 14px 28px -18px rgb(from var(--green) r g b / .6); }
+.su-h-on .su-hr { color: var(--green); font-weight: 500; }
+
 @media (min-width: 1081px) {
-  .su-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-  .su { margin-top: 8px; }
-  /* Held invisible, keeping their box, until the island knows the time. */
-  .su-wait { visibility: hidden; }
-
-  /* ── Clock, open count, controls ──────────────────────────────────────── */
+  .su-band { padding-top: 120px; padding-bottom: 140px; }
   .su-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; margin-bottom: 18px; }
-  .su-clock { display: flex; align-items: flex-end; gap: 14px; }
-  .su-big { font-family: var(--serif); font-size: 64px; line-height: .9; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
-  .su-sub { display: flex; flex-direction: column; gap: 4px; padding-bottom: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-  .su-sub b { font-weight: 500; color: var(--ink); }
-  .su-open { display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 16px; border-radius: 999px; background: var(--white); box-shadow: 0 0 0 1px var(--hair); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); margin-bottom: 4px; white-space: nowrap; }
-  .su-open-d { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .15); animation: suBlink 2s ease-in-out infinite; }
-  @keyframes suBlink { 50% { box-shadow: 0 0 0 7px rgb(from var(--green) r g b / .05); } }
-  .su-ctl { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 4px; }
-  .su-hint { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-inline-end: 6px; white-space: nowrap; }
-  .su-btn { height: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 13.5px; font-weight: 500; color: var(--ink); cursor: pointer; white-space: nowrap; transition: background .25s, color .25s, border-color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
   .su-btn:hover { transform: translateY(-1px); border-color: var(--tick-off); }
-  .su-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .su-play { background: var(--ink); border-color: var(--ink); color: var(--white); }
   .su-play:hover { border-color: var(--ink); }
-  .su-play.su-playing { background: var(--white); color: var(--ink); border-color: var(--hair); }
-  .su-play:disabled { cursor: default; }
-
-  /* ── The map ──────────────────────────────────────────────────────────── */
   /* Fluid width, fixed shape: the drawing inside is the board's 1200 x 434
      box, scaled by `--su-k` (column width / 1200, set by the island). */
-  .su-stage { position: relative; direction: ltr; width: 100%; aspect-ratio: 1200 / 434; border-radius: 22px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .06); overflow: hidden; cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+  .su-stage { direction: ltr; aspect-ratio: 1200 / 434; border-radius: 22px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .06); overflow: hidden; cursor: grab; }
   .su-stage:active { cursor: grabbing; }
   .su-map { position: absolute; top: 0; inset-inline-start: 0; width: 1200px; height: 434px; transform: scale(var(--su-k, 1)); transform-origin: 0 0; }
-  .su-cv { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .su-card { position: absolute; width: 172px; height: 54px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding-block: 0; padding-inline: 10px 12px; border-radius: 14px; background: rgb(from var(--white) r g b / .72); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .07); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); pointer-events: none; transition: background .5s, box-shadow .5s, transform .5s cubic-bezier(.16, 1, .3, 1); }
-  .su-fl { width: 26px; height: 26px; filter: grayscale(.6); opacity: .7; transition: filter .5s, opacity .5s; }
-  .su-cx { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
-  .su-cx b { font-size: 14.5px; font-weight: 500; letter-spacing: -.01em; color: var(--muted); transition: color .5s; }
-  .su-meta { font-family: var(--mono); font-size: 10.5px; color: var(--muted); white-space: nowrap; }
-  .su-meta em { font-style: normal; font-variant-numeric: tabular-nums; }
-  /* `--muted`, not the board's #A8A294: that measured 2.5:1 on the card, and
-     text colour here must be a token (`check-css-color.mjs`, rule 1). The
-     closed state still reads as off through the hollow dot and grey flag. */
-  .su-st { display: inline-flex; align-items: center; gap: 5px; margin-top: 2px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-  .su-st i { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--v2-dash); box-sizing: border-box; }
-  .su-on { background: var(--white); box-shadow: 0 0 0 1px rgb(from var(--green) r g b / .28), 0 16px 30px -18px rgb(from var(--green) r g b / .55); transform: translateY(-2px); }
-  .su-on .su-fl { filter: none; opacity: 1; }
-  .su-on .su-cx b, .su-on .su-meta { color: var(--ink); }
-  .su-on .su-st { color: var(--green); }
-  .su-on .su-st i { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 3px rgb(from var(--green) r g b / .16); }
-
-  /* ── The hand-off sentence and the motion switch ──────────────────────── */
-  .su-relay { margin-top: 16px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--ink); min-height: 24px; }
-  .su-doc { flex: none; width: 18px; height: 22px; border-radius: 3px; background: var(--white); box-shadow: 0 0 0 1.3px var(--green); position: relative; }
-  .su-doc::before, .su-doc::after { content: ""; position: absolute; inset-inline: 4px; height: 1.3px; background: var(--green); top: 7px; }
-  .su-doc::after { top: 12px; inset-inline-end: 7px; }
-  /* The hero's "Pause motion" control (`hero.css` `.hv-motion`), placed at
-     the end of this row rather than over the map. */
-  .su-motion { margin-inline-start: auto; display: flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .su-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .su-card { position: absolute; width: 172px; height: 54px; padding-block: 0; }
   .su-motion:hover { color: var(--ink); }
-  .su-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
-  .su-still .su-open-d { animation-play-state: paused; }
-
-  /* ── Who covers each UTC hour ─────────────────────────────────────────── */
-  .su-cov { margin-top: 40px; }
-  .su-cov-h { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; margin-bottom: 12px; }
-  .su-cov-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
-  .su-cov-l { display: flex; gap: 18px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
-  .su-cols { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 4px; }
-  .su-col { position: relative; height: 132px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 0; border: 0; border-radius: 10px; background: var(--v2-leaf-lo); cursor: pointer; transition: background .3s; }
   .su-col:hover { background: var(--hair); }
-  .su-col:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .su-stack { display: flex; flex-direction: column-reverse; align-items: center; gap: 3px; }
-  .su-cf { display: block; width: 16px; height: 16px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 1.5px var(--white), 0 0 0 2.5px rgb(from var(--ink) r g b / .08); }
-  .su-cf svg { display: block; width: 100%; height: 100%; }
-  .su-hr { font-family: var(--mono); font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .su-h-on { background: var(--white); box-shadow: 0 0 0 1.5px var(--green), 0 14px 28px -18px rgb(from var(--green) r g b / .6); }
-  .su-h-on .su-hr { color: var(--green); font-weight: 500; }
 }
 
 /* Between 1081 and ~1280px the controls' column is too narrow for the hint
-   and both buttons; the hint is the one that repeats the lede, so it goes. */
-@media (min-width: 1081px) and (max-width: 1279px) {
+   and both buttons; the hint is the one that repeats the lede, so it goes.
+   The phone drops it for the same reason. */
+@media (max-width: 1279px) {
   .su-hint { display: none; }
+}
+
+@media (max-width: 1080px) {
+  .su-band { padding-top: 72px; padding-bottom: 72px; }
+  /* Clock on its own row; the open count and the buttons share the next. */
+  .su-top { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 10px; margin: 24px 0 16px; }
+  .su-clock { flex: 1 0 100%; }
+  .su-big { font-size: 52px; }
+  .su-open, .su-ctl { margin: 0; }
+  /* Beside the pill where they fit (768px), under it at 390px; flush with
+     the start edge either way, since a lone button pushed to the end of a
+     wrapped row read as stray. */
+  .su-ctl { justify-content: flex-start; }
+  /* The cards leave the map for a list under it; the stage is only the box
+     the drag is listened on. */
+  .su-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(148px, 30%), 1fr)); gap: 8px; }
+  /* x 280-1080 of the 1200px map: New York to Manila with a margin, 190px
+     tall at 390px rather than 127. `object-fit` crops the drawing; the two
+     custom properties tell `SunLoop.pointer` which slice is showing. */
+  .su-cv { --su-x0: 280; --su-xw: 800; grid-column: 1 / -1; width: 100%; height: auto; aspect-ratio: 800 / 434; object-fit: cover; object-position: 70% 0; margin-bottom: 6px; border-radius: 18px; background: var(--v2-paper-hi); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .06); cursor: grab; }
+  .su-card { min-height: 54px; padding-block: 8px; }
+  .su-meta { white-space: normal; }
+  .su-relay { flex-wrap: wrap; align-items: flex-start; }
+  /* The sentence takes the row; the motion switch drops to the end of the
+     next, instead of squeezing the sentence to three lines at 390px. */
+  .su-relay > span[aria-live] { flex: 1 1 calc(100% - 30px); }
+  .su-cov-l { display: none; }
+}
+
+/* Under 700px, 24 columns would be 10px targets; two rows of twelve keep
+   each hour a 24px-wide button (WCAG 2.5.8) with its flags unclipped. */
+@media (max-width: 699px) {
+  .su-cols { grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: 8px; }
 }
