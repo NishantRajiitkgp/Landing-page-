@@ -15,6 +15,12 @@
       CSSOM on the table, as `HeroStage` does, so moving the lamp costs no
       render. It is a pointer flourish; the keyboard path to the same finding
       is the reveal button, and every certificate is a real `<button>`.
+    - **Touch.** A finger has no hover, and a lamp dragged by one would fight
+      the page scroll, so a tap puts the lamp on the certificate it checks
+      (the reveal button, on the forgery) for `HOLD` ms, then lifts it to show
+      the stamp beneath. Pointer events rather than mouse events: a tap's
+      compatibility `mousemove` would otherwise park the lamp where the finger
+      was, with no `mouseleave` to ever put it out.
     - **No loop.** Nothing here animates for longer than a stamp landing, so
       there is nothing to pause (WCAG 2.2.2). Every resting state is its own
       end state in CSS, so a stamp that never animates still shows.
@@ -22,7 +28,7 @@
     The UV rosettes are drawn from their formula here rather than shipped as
     path data, for the reason `HeroPrint` gives. */
 
-import { useCallback, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 
 import type { SectionsCopy } from "@/lib/copy/sections";
 import { closedPolyline, polarRing } from "@/lib/svgPath";
@@ -33,6 +39,20 @@ type CertId = keyof T["certs"];
 const ORDER: CertId[] = ["aldermoor", "kestrel", "meridia", "lindenfield", "harbourline", "westmarch", "crestvale", "aurelian"];
 /** Application 06, the forgery. */
 const FORGED: CertId = "westmarch";
+/** How long a tap holds the lamp over a certificate: long enough to read
+ *  "no UV features" on the forgery, short enough that the stamp follows. */
+const HOLD = 1800;
+
+/** Puts the lamp at a viewport point, in the stage's unscaled pixels. */
+function lampAt(table: HTMLElement, x: number, y: number) {
+  const stage = table.querySelector<HTMLElement>(".ff-stage");
+  if (!stage) return;
+  const r = stage.getBoundingClientRect();
+  const k = r.width ? stage.offsetWidth / r.width : 1;
+  table.style.setProperty("--mx", `${Math.round((x - r.left) * k)}px`);
+  table.style.setProperty("--my", `${Math.round((y - r.top) * k)}px`);
+  table.style.setProperty("--uv", y >= r.top && y <= r.bottom ? "1" : "0");
+}
 
 /** A guilloche ring: radius `R` modulated by `A` over `n` lobes, 8 points a lobe
  *  (canvas `ring()`, `scripts/assemble_fraud.py`). */
@@ -103,8 +123,23 @@ function Uv({ id, t }: { id: CertId; t: T }) {
 export function OneInEightTable({ t }: { t: T }) {
   const [checked, setChecked] = useState<CertId[]>([]);
   const [found, setFound] = useState(false);
+  const table = useRef<HTMLDivElement>(null);
+  /** Whether the last press was a finger (set on pointerdown, before click). */
+  const touch = useRef(false);
+  const lift = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(lift.current), []);
 
+  const shine = (id: CertId) => {
+    const el = table.current;
+    const cert = el?.querySelectorAll<HTMLElement>(".ff-cert")[ORDER.indexOf(id)];
+    if (!el || !cert || !touch.current) return;
+    const c = cert.getBoundingClientRect();
+    lampAt(el, c.left + c.width / 2, c.top + c.height / 2);
+    clearTimeout(lift.current);
+    lift.current = setTimeout(() => el.style.setProperty("--uv", "0"), HOLD);
+  };
   const pick = (id: CertId) => {
+    shine(id);
     if (id === FORGED) {
       setFound(true);
     } else if (!checked.includes(id)) {
@@ -113,26 +148,25 @@ export function OneInEightTable({ t }: { t: T }) {
   };
   const reveal = () => {
     if (found) {
+      clearTimeout(lift.current);
+      table.current?.style.setProperty("--uv", "0");
       setFound(false);
       setChecked([]);
     } else {
+      shine(FORGED);
       setFound(true);
     }
   };
 
-  const onLamp = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    const table = e.currentTarget;
-    const stage = table.querySelector<HTMLElement>(".ff-stage");
-    if (!stage) return;
-    const r = stage.getBoundingClientRect();
-    const k = r.width ? stage.offsetWidth / r.width : 1;
-    table.style.setProperty("--mx", `${Math.round((e.clientX - r.left) * k)}px`);
-    table.style.setProperty("--my", `${Math.round((e.clientY - r.top) * k)}px`);
-    table.style.setProperty("--uv", e.clientY >= r.top && e.clientY <= r.bottom ? "1" : "0");
-  }, []);
-  const offLamp = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.setProperty("--uv", "0");
-  }, []);
+  const onDown = (e: PointerEvent<HTMLDivElement>) => {
+    touch.current = e.pointerType === "touch";
+  };
+  const onLamp = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "touch") lampAt(e.currentTarget, e.clientX, e.clientY);
+  };
+  const offLamp = (e: PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "touch") e.currentTarget.style.setProperty("--uv", "0");
+  };
 
   return (
     <>
@@ -143,7 +177,7 @@ export function OneInEightTable({ t }: { t: T }) {
         </defs>
       </svg>
 
-      <div className="ff-table" onMouseMove={onLamp} onMouseLeave={offLamp}>
+      <div ref={table} className="ff-table" onPointerDown={onDown} onPointerMove={onLamp} onPointerLeave={offLamp}>
         <div className="ff-bar">
           <span className="ff-bar-k">
             <span className="ff-uvdot" />
