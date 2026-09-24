@@ -351,6 +351,15 @@ const BASELINE = {
   "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
   "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
+  // ── homepage v2 · governments (`src/app/v2/govseals.css`,
+  //    `src/app/v2/govdossier.css`). Surfaces only. Board shades within two
+  //    units of a token or an existing `--v2-*` tint were mapped onto it
+  //    rather than declared; these four have no neighbour on file.
+  "decl #FFE4A0": { n: 1, why: "--v2-sv-foil-gold: the seal foil's holographic gold stop" },
+  "decl #AAC8FF": { n: 1, why: "--v2-sv-foil-blue: the seal foil's holographic blue stop" },
+  "decl #ECE7DD": { n: 1, why: "--v2-gv-tab: an unselected dossier tab's card stock" },
+  "decl #E8E3D9": { n: 1, why: "--v2-gv-back: the deepest sheet in the dossier stack" },
+
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
   //    debt rule 3 pins: not a contrast failure, but colour nobody can
