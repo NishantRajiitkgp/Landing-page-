@@ -481,9 +481,12 @@ console.log("7. the numbers this slice is measured by");
 /** Recorded so the next namespace has a baseline rather than a feeling. The
  *  `>text<` matcher in `lib/copy/index.ts`'s header is a 3x undercount — see
  *  that header — and this is the arithmetic behind it. */
+/** 76 -> 104 strings (77 -> 105 leaves) with homepage v2's footer
+ *  (`chrome.footer.v2`: the sheet band, office clocks, seal captions and
+ *  microtext — 28 leaves, all plain strings). */
 check(
-  "chrome/en holds 76 string leaves plus the one rich-text leaf",
-  stringLeaves(EN).length === 76 && leafPaths(EN).length === 77,
+  "chrome/en holds 104 string leaves plus the one rich-text leaf",
+  stringLeaves(EN).length === 104 && leafPaths(EN).length === 105,
   { strings: stringLeaves(EN).length, all: leafPaths(EN).length },
 );
 
@@ -494,8 +497,8 @@ check(
  *  `COLS`/`CERTS`, and `consent.body` — a real text node the matcher drops
  *  because the node contains a `{" "}`. */
 check(
-  "the >text< matcher saw 24 of them; 53 is the undercount",
-  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 === leafPaths(EN).length,
+  "the >text< matcher saw 24 of them; 53 is the undercount (+28 v2 footer leaves)",
+  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 + 28 === leafPaths(EN).length,
   leafPaths(EN).length,
 );
 
@@ -818,19 +821,29 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  historical count the 152 below sums, not a re-measurement. */
   hero: [9, 38],
   compliance: [4, 5],
-  numbers: [14, 13],
-  why: [8, 24],
-  howItWorks: [5, 18],
+  numbers: [14, 26],
+  why: [8, 89],
+  howItWorks: [5, 168],
   whoItsFor: [7, 29],
-  consumer: [10, 30],
-  checks: [7, 58],
-  international: [6, 40],
-  packages: [7, 59],
-  peopleStrip: [2, 52],
+  consumer: [10, 162],
+  checks: [7, 77],
+  international: [6, 152],
+  packages: [7, 61],
+  peopleStrip: [2, 53],
   contact: [11, 14],
   customerStory: [15, 18],
   demo2: [39, 43],
-  presence: [8, 29],
+  presence: [8, 67],
+  /** Bands homepage v2 added (Sep 2026). The first number is the migration-
+   *  time `>text<` matcher count, which never saw them, so it is 0 and the
+   *  152 sum below still describes the migration. The second is measured. */
+  oneInEight: [0, 80],
+  govSeals: [0, 115],
+  govDossiers: [0, 165],
+  enterprises: [0, 102],
+  smb: [0, 49],
+  diligence: [0, 27],
+  trustPlatform: [0, 52],
 };
 
 /** v2 splits the hero headline so the underlined word is its own node
@@ -869,8 +882,8 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
 }
 
 check(
-  "sections holds 470 leaves for 152 nodes and blocks 77 for 27 (438 before v2 hero +32)",
-  leafPaths(EN_SECTIONS).length === 470 &&
+  "sections holds 1592 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1592 &&
     leafPaths(EN_BLOCKS).length === 77 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
@@ -884,11 +897,15 @@ check(
  *  `packages.more`, `packages.lines.credit`, `packages.packs.visaHealth.tt`
  *  and two `demo2.checks` labels — and the thirteenth is `packages.tot`, the
  *  one FUNCTION leaf in either namespace. */
+/** Homepage v2 added seven more: three rich-text `enterprises.letters` quotes
+ *  (the highlighted phrase is a `<mark>`) and four function leaves that
+ *  format a number into a label — `packages.count`, `smb.tot`,
+ *  `smb.build.count`, `smb.build.rupees`. So 15 rich-text + 5 functions. */
 check(
-  "sections: 457 string leaves, 12 rich-text leaves and 1 function leaf",
-  stringLeaves(EN_SECTIONS).length === 457 &&
-    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 13 &&
-    typeof EN_SECTIONS.packages.tot === "function",
+  "sections: 1572 string leaves, 15 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1572 &&
+    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 20 &&
+    [EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
 );
 
