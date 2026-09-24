@@ -16,6 +16,11 @@ import { Arrow } from "@/components/brand/Arrow";
 import { AppLink } from "@/components/chrome/AppLink";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
+// Homepage v2 styles are one sheet per section in `app/v2/`, imported by the
+// section itself so only the routes that render it download it. Measured when
+// this sheet sat in `globals.css`: `/en/about` went to 16.1 KB of CSS against
+// the 16 KB ceiling for a hero it never renders.
+import "@/app/v2/hero.css";
 import { HeroPrint } from "./HeroPrint";
 import { HeroStage } from "./HeroStage";
 

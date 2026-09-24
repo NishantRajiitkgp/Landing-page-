@@ -125,13 +125,19 @@
  *      node tools/a11y/check-css-color.mjs
  *      node tools/a11y/check-css-color.mjs --census   # print BASELINE afresh
  */
+import { readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const root = new URL("../../", import.meta.url);
 const CENSUS = process.argv.includes("--census");
 
 /** Shipped stylesheets. Rule 1 is fatal here. */
-const SHEETS = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css", "src/app/v2.css"];
+const SHEETS = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css"];
+/** Homepage v2: one hand-written sheet per section in `src/app/v2/`, read as a
+ *  directory so a new section cannot ship a stylesheet this gate never sees. */
+SHEETS.push(
+  ...readdirSync(new URL("src/app/v2/", root)).filter((f) => f.endsWith(".css")).sort().map((f) => `src/app/v2/${f}`),
+);
 
 /** The generator's inputs (`tools/port/build-css.py`). Rule 1 is reported and
  *  capped here — see the header. */

@@ -21,6 +21,7 @@
  *  layout, and mirroring a photograph's focal point is usually wrong. Six such
  *  values exist; they are a design decision per instance, not a lint failure.
  */
+import { readdirSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 const root = new URL("../../", import.meta.url);
@@ -59,7 +60,12 @@ function values(text) {
   return out;
 }
 
-const FILES = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css", "src/app/v2.css"];
+const FILES = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css"];
+/** Homepage v2: one hand-written sheet per section in `src/app/v2/`, read as a
+ *  directory so a new section cannot ship a stylesheet this gate never sees. */
+FILES.push(
+  ...readdirSync(new URL("src/app/v2/", root)).filter((f) => f.endsWith(".css")).sort().map((f) => `src/app/v2/${f}`),
+);
 
 /** Each rule is a property at declaration position, plus its logical
  *  replacement, so the failure message says what to write instead. */

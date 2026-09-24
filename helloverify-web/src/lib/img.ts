@@ -100,6 +100,24 @@ export const PLACEHOLDER_TINT: Record<string, string> = {
   "/img/21-portrait-ramesh.jpg": "#B7C3B2",
   "/img/22-portrait-fleet-head.jpg": "#ADB4BE",
   "/img/23-closing.jpg": "#6B6E5B",
+  /** Homepage v2 photographs (Higgsfield, Sep 2026). Each tint is the
+   *  photograph's mean colour, measured with sharp `stats()`, not picked. */
+  "/img/v2/cs-anyone.jpg": "#93887B",
+  "/img/v2/cs-contact.jpg": "#7F725F",
+  "/img/v2/cs-cyber.jpg": "#8F7D75",
+  "/img/v2/cs-driver.jpg": "#7B7F72",
+  "/img/v2/cs-identity.jpg": "#81746B",
+  "/img/v2/cs-nanny.jpg": "#8B7159",
+  "/img/v2/cs-staff.jpg": "#928173",
+  "/img/v2/cs-tenant.jpg": "#807869",
+  "/img/v2/dd-trade.jpg": "#7B7064",
+  "/img/v2/dd-vendor.jpg": "#93897F",
+  "/img/v2/pkg-bluecollar.jpg": "#7B7B72",
+  "/img/v2/pkg-driver.jpg": "#646559",
+  "/img/v2/pkg-trade.jpg": "#726B5F",
+  "/img/v2/pkg-vendor.jpg": "#8F8277",
+  "/img/v2/pkg-visa.jpg": "#8C8A83",
+  "/img/v2/pkg-whitecollar.jpg": "#A9A297",
 };
 
 /** `tint("/img/01-rider-bengaluru.jpg")` -> its placeholder colour.
