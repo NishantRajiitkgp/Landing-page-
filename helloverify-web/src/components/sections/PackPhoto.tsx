@@ -7,20 +7,19 @@ import { tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type PackId, type PackLineId } from "@/lib/copy/sections";
 
-/** One v2 package card (desktop): a photograph that carries the package's
- *  name, segment and turnaround on glass, and a check list below it whose
- *  ticks fill in, one after another, on hover. Pure CSS — `app/v2/packages.css`
- *  — so this stays a Server Component. Rendered by `./Packages.tsx`.
- *
- *  Every word is the receipt card's (`packages` in `lib/copy/sections`); the
- *  only new leaves are `count` and `readyIn`, the two halves of the receipt's
- *  "4 checks · ready in" now that they sit in different places. */
+/** One v2 package card: a photograph that carries the package's name,
+ *  segment and turnaround on glass, and a check list below it whose ticks
+ *  fill in, one after another, on hover (already filled on a touch screen).
+ *  Pure CSS — `app/v2/packages.css` — so this stays a Server Component.
+ *  Rendered by `./Packages.tsx`, in a grid on desktop and a scroll-snap row
+ *  on a phone. */
 
-/** Measured on the board: three columns of 381px in the 1200px wrap
- *  (381 / 1440 = 26.5vw). Not `SIZES_BENTO_NARROW`, which is the same number
- *  today for a different box — two boxes that happen to agree should not share
- *  a constant that one of them will outgrow. */
-const SIZES_PKG = "(max-width: 1080px) 90vw, 27vw";
+/** Desktop: three columns of 381px in the 1200px wrap (381 / 1440 = 26.5vw).
+ *  Phone and tablet: the row's `min(78vw, 300px)` column, written as two
+ *  queries because 300 / .78 = 385px is where the cap takes over. Not
+ *  `SIZES_BENTO_NARROW`, which is the same desktop number for a different
+ *  box — two boxes that happen to agree should not share a constant. */
+const SIZES_PKG = "(max-width: 385px) 78vw, (max-width: 1080px) 300px, 27vw";
 
 export type PackPhotoProps = {
   k: PackId;
