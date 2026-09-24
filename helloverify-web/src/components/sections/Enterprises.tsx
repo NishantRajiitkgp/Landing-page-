@@ -8,7 +8,8 @@
     Three pieces, one band:
     - the trust perimeter: pills and canvas rings that pick one of three
       panels (`./EnterprisePerimeter`, a client island; the panels are
-      rendered here and passed in),
+      rendered here and passed in). The Employees panel's two workforces
+      are ID badges on lanyards (`./EnterpriseBadges`),
     - four stats,
     - the client letters (`./ClientLetters`, a client island).
 
@@ -22,6 +23,7 @@ import { SECTIONS } from "@/lib/copy/sections";
 import "@/app/v2/enterprises.css";
 import { MotionButton, MotionStage } from "./BizMotion";
 import { ClientLetters } from "./ClientLetters";
+import { EnterpriseBadges } from "./EnterpriseBadges";
 import { EnterprisePerimeter } from "./EnterprisePerimeter";
 
 function Chips({ items }: { items: Record<string, string> }) {
@@ -76,23 +78,23 @@ export async function Enterprises() {
         <span className="en-tag">{e.tag}</span>
       </div>
       <h3 className="en-ph">{e.h}</h3>
-      <div className="en-two">
-        {[e.white, e.blue].map((col) => (
-          <div key={col.t} className="en-col">
-            <div className="en-ct">{col.t}</div>
-            <p className="en-cp">{col.p}</p>
-            <Chips items={col.chips} />
-          </div>
-        ))}
-      </div>
-      <div className="en-int">
-        <span className="en-int-k">{e.intK}</span>
-        {Object.entries(e.ints).map(([k, v]) => (
-          <span key={k}>
-            <Tick />
-            {v}
-          </span>
-        ))}
+      <EnterpriseBadges
+        turn={e.turn}
+        cols={[
+          { ...e.white, photo: "/img/v2/en-white.jpg", tone: "green" },
+          { ...e.blue, photo: "/img/v2/en-blue.jpg", tone: "hivis" },
+        ]}
+      />
+      <div className="en-flow">
+        <span className="en-flow-k">{e.intK}</span>
+        <ol className="en-flow-l">
+          {Object.entries(e.ints).map(([k, v]) => (
+            <li key={k}>
+              <Tick />
+              <span>{v}</span>
+            </li>
+          ))}
+        </ol>
       </div>
       <Foot href="/business/enterprise" />
     </div>,

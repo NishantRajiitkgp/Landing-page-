@@ -112,6 +112,8 @@ export const PLACEHOLDER_TINT: Record<string, string> = {
   "/img/v2/cs-tenant.jpg": "#807869",
   "/img/v2/dd-trade.jpg": "#7B7064",
   "/img/v2/dd-vendor.jpg": "#93897F",
+  "/img/v2/en-blue.jpg": "#A1968B",
+  "/img/v2/en-white.jpg": "#938A7D",
   "/img/v2/pkg-bluecollar.jpg": "#7B7B72",
   "/img/v2/pkg-driver.jpg": "#646559",
   "/img/v2/pkg-trade.jpg": "#726B5F",
