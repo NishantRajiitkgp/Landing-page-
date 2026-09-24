@@ -4,6 +4,8 @@ import { PeopleStrip } from "@/components/sections/PeopleStrip";
 import { Demo2 } from "@/components/sections/Demo2";
 import { Numbers } from "@/components/sections/Numbers";
 import { Presence } from "@/components/sections/Presence";
+import { GovSeals } from "@/components/sections/GovSeals";
+import { GovDossiers } from "@/components/sections/GovDossiers";
 import { Why } from "@/components/sections/Why";
 import { Checks } from "@/components/sections/Checks";
 import { Packages } from "@/components/sections/Packages";
@@ -58,6 +60,8 @@ export default async function Home({
         <Demo2 />
         <Numbers />
         <Presence />
+        <GovSeals />
+        <GovDossiers />
         <Why />
         <Checks />
         <Packages />
