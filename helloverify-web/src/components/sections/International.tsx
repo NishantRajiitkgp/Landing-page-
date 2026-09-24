@@ -2,12 +2,15 @@ import type { ReactNode } from "react";
 import { Fragment } from "react";
 import Image from "next/image";
 
-import { Arrow } from "@/components/brand/Arrow";
 import { SIZES_CCARD, noteInk, tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type CountrySrc, type StatId } from "@/lib/copy/sections";
+import { Globe } from "./Globe";
 
 /** International coverage.
+ *
+ *  DESKTOP IS NOW HOMEPAGE V2's GLOBE (`./Globe`, Sep 2026); everything below
+ *  describes the card grid, which the phone still renders.
  *
  *  778 lines for ten cards — the same five countries written out once per
  *  breakpoint. One component over one record list now (BUILD-SPEC §4 rule 2,
@@ -195,49 +198,11 @@ export async function International() {
 
   return (
     <>
+      {/* Homepage v2: the globe replaces the five cards on desktop. The
+          phone keeps the grid below until the v2 boards have a 390px
+          artboard to port from. */}
       <div className="dsk">
-        <div className="wrap hair-top" style={{ paddingTop: "120px", paddingBottom: "140px" }}>
-          {" "}
-          <div className="sec-head">
-            {" "}
-            <h2 className="h2">
-              {t.headingA}
-              <br />
-              {t.headingB}
-            </h2>
-            {" "}
-            <p className="lede" style={{ marginBottom: "8px" }}>
-              {t.lede}
-            </p>
-            {" "}
-          </div>
-          {" "}
-          <Grid
-            style={{
-              marginTop: "64px",
-              display: "grid",
-              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-              gap: "20px",
-            }}
-          />
-          {" "}
-          {/* Outside the repeated run: the court-coverage caption and the link
-              to the full list. Desktop only — the mobile block ends at the
-              grid. */}
-          <div style={{ marginTop: "28px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "14px", color: "var(--muted)" }}>
-            {" "}
-            <span>
-              {t.courts}
-            </span>
-            {" "}
-            <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontWeight: "500", color: "var(--ink)" }}>
-              {t.all}{" "}
-              <Arrow size="14" />
-            </a>
-            {" "}
-          </div>
-          {" "}
-        </div>
+        <Globe />
       </div>
       <div className="mob">
         <div className="wrap sec hair-top">
