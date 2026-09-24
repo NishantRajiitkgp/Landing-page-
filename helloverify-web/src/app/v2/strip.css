@@ -1,7 +1,10 @@
 /* Homepage v2 · people strip ("At the source"). Imported by
    `sections/PeopleStrip.tsx`; the behaviour is `sections/PeopleStripStage.tsx`.
 
-   The cards are the generated `.person` markup, unchanged and in full colour.
+   The cards are the generated `.person` markup, in full colour, sized from
+   `--pw`/`--ph` (the desktop box, unitless) times `--ps`: 1px on desktop,
+   .66px on the phone. `design.css` already carries a phone card (smaller
+   role, chip and radius), which is why the box scales and the type does not.
    Once the island mounts (`.hv-js`), the CSS `drift` is switched off and the
    island drives the track from one rAF loop: a curved path, drag-and-fling, a
    velocity skew. Before hydration, and with JS off, `drift` keeps running.
@@ -9,18 +12,26 @@
    REMOVED (owner, 24 Sep 2026): the canvas's checkpoint — a greyscale track, a
    colour copy clipped under corner brackets, and a scan line sweeping them.
    Judged gimmicky; the label is all that is left of it. */
-@media (min-width: 1081px) {
-  .hv-strip { position: relative; padding-block: 40px 8px; overflow: hidden; }
-  .hv-strip-k { position: absolute; top: 8px; inset-inline: 0; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); pointer-events: none; }
+.hv-strip { position: relative; padding-block: 40px 8px; overflow: hidden; --ps: 1px; }
+.hv-strip .person { width: calc(var(--pw) * var(--ps)); height: calc(var(--ph) * var(--ps)); }
+.hv-strip-k { position: absolute; top: 8px; inset-inline: 0; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); pointer-events: none; }
+/* Wraps to two lines on the phone rather than squeezing both into one. */
+.hv-strip-cap { padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 24px; font-size: 14px; color: var(--muted); }
 
-  /* The island has taken over from `drift`. */
-  .hv-strip.hv-js { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
-  .hv-strip.hv-js.hv-grab { cursor: grabbing; }
-  .hv-strip.hv-js .track { animation: none; will-change: transform; }
-  .hv-strip.hv-js .person { will-change: transform; transform-origin: 50% 60%; backface-visibility: hidden; }
-  .hv-strip.hv-js .person img { pointer-events: none; -webkit-user-drag: none; }
+/* The island has taken over from `drift`. `pan-y` hands vertical swipes to
+   the page, so a phone scrolls past the strip and only a sideways drag
+   moves it. */
+.hv-strip.hv-js { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.hv-strip.hv-js.hv-grab { cursor: grabbing; }
+.hv-strip.hv-js .track { animation: none; will-change: transform; }
+.hv-strip.hv-js .person { will-change: transform; transform-origin: 50% 60%; backface-visibility: hidden; }
+.hv-strip.hv-js .person img { pointer-events: none; -webkit-user-drag: none; }
 
-  /* The hero's "Pause motion" stops this strip too (the island reads it),
-     including the label's live dot. */
-  .hv-strip-still .dot.live { animation-play-state: paused; }
+/* The hero's "Pause motion" stops this strip too (the island reads it),
+   including the label's live dot. */
+.hv-strip-still .dot.live { animation-play-state: paused; }
+
+@media (max-width: 1080px) {
+  .hv-strip { padding-block: 34px 4px; --ps: .66px; }
+  .hv-strip-cap { padding-top: 14px; font-size: 13px; }
 }
