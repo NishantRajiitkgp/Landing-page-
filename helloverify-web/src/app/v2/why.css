@@ -1,0 +1,177 @@
+/* Homepage v2 · "Why governments work with us." — the card deck (`wy-`).
+   Hand-ported from the canvas (`assemble_why.py`, the illustrated version);
+   imported by `sections/Why.tsx`. The header of `hero.css` explains why v2
+   sheets are authored rather than generated.
+
+   Eight tinted cards, each with a small UI illustration. The illustration's
+   parts (`.wy-pop`) come in on TRANSITIONS keyed on the front card's class,
+   not on keyframes: a transition's end state is simply the styled state, so
+   the drawing is complete with motion paused, reduced, or before any JS has
+   run. The rejected alternative — keyframes with `both` — leaves a card blank
+   whenever its animation has not been allowed to play.
+
+   Each card sets `--acc`; everything tinted reads it, including translucent
+   washes as `rgb(from var(--acc) r g b / a)`. Small text in the accent uses
+   `--acc-ink`, the accent mixed 80/20 with `--ink`: measured on white, the
+   raw sand accent is 3.84:1 against AA's 4.5, and the mix is 5.23:1 (sky
+   6.79, rose 6.63 — every tint clears it). Large type keeps the raw accent. */
+
+/* The accents and the deep end of each card's tint. The light centre of the
+   tint is derived — `color-mix(… 35%, --white)` reproduces the board's own
+   centre stops to within one unit (`#F5FBF7` from `#E2F2E9`, `#F4F8FC` from
+   `#E1ECF8`) — so only the deep stop is a literal. Mint and paper reuse
+   `--green` and `--v2-paper-lo`. All surfaces; text only ever reads the
+   `--acc-ink` mix, never these directly. */
+:root {
+  --v2-wy-sky: #2F6FB5;
+  --v2-wy-sand: #A77A2E;
+  --v2-wy-lilac: #6B54A8;
+  --v2-wy-rose: #C2463B;
+  --v2-wy-teal: #1F7A6D;
+  --v2-wy-slate: #3F5F8F;
+  --v2-wy-mint-t: #E2F2E9;
+  --v2-wy-sky-t: #E1ECF8;
+  --v2-wy-sand-t: #F2E8D6;
+  --v2-wy-lilac-t: #EAE3F5;
+  --v2-wy-rose-t: #F7E3E0;
+  --v2-wy-teal-t: #DFF0EC;
+  --v2-wy-slate-t: #E2E8F0;
+}
+
+@media (min-width: 1081px) {
+  .wy-deck-w { position: relative; }
+  .wy-deck { position: relative; height: 600px; margin-top: 48px; }
+  .wy-card { position: absolute; inset: 0; display: flex; flex-direction: column; border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -46px rgb(from var(--ink) r g b / .5); overflow: hidden; transform-origin: 50% 0; transition: transform .62s cubic-bezier(.34, 1.35, .64, 1), opacity .45s ease, filter .45s ease; will-change: transform; --acc-ink: color-mix(in srgb, var(--acc) 80%, var(--ink)); }
+  .wy-p0 { z-index: 4; transform: none; opacity: 1; }
+  .wy-p1 { z-index: 3; transform: translateY(-24px) scale(.95); opacity: .92; filter: saturate(.85); }
+  .wy-p2 { z-index: 2; transform: translateY(-46px) scale(.9); opacity: .6; filter: saturate(.7); }
+  .wy-ph { z-index: 1; transform: translateY(-62px) scale(.86); opacity: 0; }
+  /* The card that just left is flung off toward the inline start, so the
+     throw and its tilt both mirror under `dir="rtl"`. */
+  .wy-px { z-index: 5; transform: translate(calc(var(--flip) * -16%), 40px) rotate(calc(var(--flip) * -8deg)) scale(.96); opacity: 0; transition: transform .55s cubic-bezier(.55, 0, .8, .4), opacity .4s ease .1s; }
+
+  .wy-vis { position: relative; height: 310px; flex: none; overflow: hidden; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--tint) 35%, var(--white)), var(--tint) 70%); }
+  .wy-vis::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgb(from var(--ink) r g b / .07) 1px, transparent 1.2px); background-size: 18px 18px; -webkit-mask-image: linear-gradient(180deg, var(--ink), transparent 90%); mask-image: linear-gradient(180deg, var(--ink), transparent 90%); pointer-events: none; }
+  .wy-mint { --acc: var(--green); --tint: var(--v2-wy-mint-t); }
+  .wy-sky { --acc: var(--v2-wy-sky); --tint: var(--v2-wy-sky-t); }
+  .wy-sand { --acc: var(--v2-wy-sand); --tint: var(--v2-wy-sand-t); }
+  .wy-lilac { --acc: var(--v2-wy-lilac); --tint: var(--v2-wy-lilac-t); }
+  .wy-rose { --acc: var(--v2-wy-rose); --tint: var(--v2-wy-rose-t); }
+  .wy-teal { --acc: var(--v2-wy-teal); --tint: var(--v2-wy-teal-t); }
+  .wy-paper { --acc: var(--green); --tint: var(--v2-paper-lo); }
+  .wy-slate { --acc: var(--v2-wy-slate); --tint: var(--v2-wy-slate-t); }
+
+  .wy-body { position: relative; flex: 1; padding: 26px 34px 30px; display: flex; flex-direction: column; }
+  .wy-top { display: flex; justify-content: space-between; align-items: center; }
+  .wy-tag { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--acc-ink); }
+  .wy-tag i { width: 7px; height: 7px; border-radius: 50%; background: var(--acc); }
+  .wy-n { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .wy-t { margin: 14px 0 0; font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.08; letter-spacing: -.022em; color: var(--ink); text-wrap: balance; }
+  .wy-l { margin: 10px 0 0; font-size: 15px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+  .wy-foot { margin-top: auto; padding-top: 18px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+  .wy-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .wy-chips li { height: 28px; display: inline-flex; align-items: center; padding: 0 11px; border-radius: 999px; background: var(--paper); font-family: var(--mono); font-size: 11px; color: var(--ink); }
+  .wy-more { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 4px; font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; transition: gap .3s, color .3s; }
+  .wy-more:hover { gap: 12px; color: var(--acc-ink); }
+  .wy-more:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+
+  /* ── The illustrations ─────────────────────────────────────────────── */
+  .wy-pop { opacity: .001; transform: translateY(14px) scale(.96); transition: opacity .4s ease, transform .55s cubic-bezier(.34, 1.5, .64, 1); }
+  .wy-p0 .wy-pop { opacity: 1; transform: none; transition-delay: var(--d); }
+  .wy-tk { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--acc); color: var(--white); display: inline-flex; align-items: center; justify-content: center; }
+  .wy-tk .tick { width: 12px; height: 12px; color: inherit; }
+  .wy-art { position: relative; z-index: 1; }
+  .wy-v1 { width: 340px; display: grid; gap: 8px; }
+  .wy-prof { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 18px; background: var(--white); box-shadow: 0 14px 30px -18px rgb(from var(--ink) r g b / .35); }
+  .wy-av { width: 40px; height: 40px; border-radius: 50%; background: var(--acc); color: var(--white); display: inline-flex; align-items: center; justify-content: center; font-family: var(--serif); font-style: italic; font-size: 16px; }
+  .wy-bars { flex: 1; display: grid; gap: 6px; }
+  .wy-bars i, .wy-cert i, .wy-doc i, .wy-rep i, .wy-cl i { display: block; height: 7px; border-radius: 4px; background: var(--hair); }
+  .wy-lic { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--acc-ink); padding: 4px 8px; border-radius: 999px; background: rgb(from var(--acc) r g b / .08); }
+  .wy-row { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: 14px; background: rgb(from var(--white) r g b / .8); font-size: 14px; color: var(--ink); }
+  .wy-row em { margin-inline-start: auto; font-style: normal; font-family: var(--mono); font-size: 10.5px; color: var(--acc-ink); }
+  .wy-v2 { width: 440px; }
+  .wy-flow { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .wy-fl { position: absolute; inset-inline: 12.5%; top: 10px; height: 2px; background: rgb(from var(--acc) r g b / .2); }
+  .wy-fl::after { content: ""; position: absolute; inset: 0; background: var(--acc); transform: scaleX(0); transform-origin: var(--origin-x); transition: transform 1.1s cubic-bezier(.65, 0, .35, 1); }
+  .wy-p0 .wy-fl::after { transform: scaleX(1); transition-delay: .35s; }
+  .wy-fn { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; font-family: var(--mono); font-size: 11.5px; line-height: 1.3; color: var(--ink); }
+  .wy-fn i { width: 22px; height: 22px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 2px var(--acc), 0 0 0 5px rgb(from var(--acc) r g b / .12); }
+  .wy-v3 { display: flex; align-items: center; gap: 34px; }
+  .wy-big b { display: block; font-family: var(--serif); font-weight: 400; font-size: 108px; line-height: .9; letter-spacing: -.05em; color: var(--acc); }
+  .wy-big span { display: block; margin-top: 6px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .wy-cert { position: relative; width: 170px; padding: 18px 16px 26px; border-radius: 12px; background: var(--white); box-shadow: 0 18px 34px -20px rgb(from var(--ink) r g b / .4); display: grid; gap: 9px; transform: rotate(4deg); }
+  .wy-cert-k { font-family: var(--serif); font-style: italic; font-size: 18px; color: var(--ink); }
+  .wy-seal { position: absolute; inset-inline-end: -12px; bottom: -12px; width: 42px; height: 42px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 4px var(--white), 0 0 0 5px rgb(from var(--acc) r g b / .3); }
+  .wy-v4 { display: flex; flex-direction: column; align-items: center; }
+  .wy-o0, .wy-o2 { padding: 9px 16px; border-radius: 12px; background: var(--white); font-family: var(--mono); font-size: 11px; color: var(--ink); box-shadow: 0 10px 22px -14px rgb(from var(--ink) r g b / .4); }
+  .wy-o0 { background: var(--acc); color: var(--white); }
+  .wy-o-l { width: 2px; height: 22px; background: rgb(from var(--acc) r g b / .35); }
+  .wy-o-row { display: flex; gap: 12px; padding-top: 10px; border-top: 2px solid rgb(from var(--acc) r g b / .3); }
+  .wy-o1 { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-radius: 12px; background: var(--white); font-size: 13px; color: var(--ink); box-shadow: 0 10px 22px -14px rgb(from var(--ink) r g b / .4); }
+  .wy-o2 { margin-top: 20px; background: rgb(from var(--white) r g b / .7); }
+  .wy-doc { width: 250px; padding: 26px 22px; border-radius: 14px; background: var(--white); box-shadow: 0 20px 40px -24px rgb(from var(--ink) r g b / .45); display: grid; gap: 12px; }
+  .wy-doc .wy-bad { background: rgb(from var(--acc) r g b / .35); box-shadow: 0 0 0 4px rgb(from var(--acc) r g b / .12); }
+  .wy-v5 > .wy-pop:last-child { position: absolute; inset-inline-end: -64px; top: 54px; }
+  .wy-flag { display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 14px; border-radius: 999px; background: var(--acc); color: var(--white); font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 14px 26px -14px rgb(from var(--acc) r g b / .7); }
+  .wy-flag-d { width: 7px; height: 7px; border-radius: 50%; background: var(--white); animation: wyDot 1s ease-in-out infinite; }
+  @keyframes wyDot { 50% { opacity: .2; transform: translateY(-2px); } }
+  .wy-dash { width: 400px; padding: 20px 22px; border-radius: 18px; background: var(--white); box-shadow: 0 20px 40px -24px rgb(from var(--ink) r g b / .4); }
+  .wy-dash-k { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--acc-ink); }
+  .wy-live { width: 8px; height: 8px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 4px rgb(from var(--acc) r g b / .15); animation: wyBlink 2s ease-in-out infinite; }
+  @keyframes wyBlink { 50% { box-shadow: 0 0 0 7px rgb(from var(--acc) r g b / .04); } }
+  .wy-chart { margin-top: 16px; height: 150px; display: flex; align-items: flex-end; gap: 10px; }
+  .wy-chart i { flex: 1; height: var(--h); border-radius: 6px 6px 2px 2px; background: linear-gradient(180deg, var(--acc), rgb(from var(--acc) r g b / .35)); transform-origin: bottom; transform: scaleY(.1); transition: transform .7s cubic-bezier(.34, 1.4, .64, 1); }
+  .wy-p0 .wy-chart i { transform: scaleY(1); transition-delay: var(--d2); }
+  .wy-rep { position: relative; width: 280px; padding: 22px 22px 26px; border-radius: 14px; background: var(--white); box-shadow: 0 20px 40px -24px rgb(from var(--ink) r g b / .45); }
+  .wy-rep-h { display: grid; gap: 7px; padding-bottom: 14px; margin-bottom: 10px; border-bottom: 1px dashed var(--hair); }
+  .wy-rep-r { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+  .wy-rep-r i { flex: none; }
+  .wy-stamp { position: absolute; inset-inline-end: -26px; bottom: -14px; padding: 8px 14px; border: 2px solid var(--acc); border-radius: 10px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--acc-ink); background: rgb(from var(--white) r g b / .85); transform: rotate(-10deg); }
+  .wy-v8 { display: flex; align-items: center; gap: 26px; }
+  .wy-code { width: 300px; border-radius: 14px; background: var(--white); box-shadow: 0 20px 40px -24px rgb(from var(--ink) r g b / .45); overflow: hidden; }
+  .wy-code-h { display: flex; align-items: center; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--v2-paper-lo); }
+  .wy-code-h i { width: 8px; height: 8px; border-radius: 50%; background: var(--hair); }
+  .wy-code-h span { margin-inline-start: auto; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--acc-ink); }
+  .wy-cl { display: flex; gap: 8px; padding-block: 9px 0; padding-inline: 16px; margin-inline-start: 16px; }
+  .wy-cl:last-child { padding-bottom: 16px; }
+  /* Syntax colours of the skeleton code: a key, a string, a value. The board
+     typed two off-palette hexes here; these are the card's accent at .7 and
+     the sand accent, within a few units and with no new literal. */
+  .wy-cl .wy-ck { background: rgb(from var(--acc) r g b / .7); }
+  .wy-cl .wy-cs { background: var(--green); }
+  .wy-cl .wy-cv { background: var(--v2-wy-sand); }
+  .wy-sys { display: grid; gap: 10px; }
+  .wy-sys span { display: block; padding: 10px 14px; border-radius: 12px; background: var(--white); font-family: var(--mono); font-size: 11px; color: var(--ink); box-shadow: 0 10px 22px -14px rgb(from var(--ink) r g b / .4); position: relative; }
+  .wy-sys span::before { content: ""; position: absolute; inset-inline-end: 100%; top: 50%; width: 22px; height: 1.5px; background: var(--acc); opacity: .5; }
+
+  /* ── Navigation: kicker, pause, one progress bar per card ─────────── */
+  .wy-nav { margin-top: 26px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+  .wy-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .wy-ctl { display: flex; align-items: center; gap: 10px; }
+  .wy-bars-n { display: flex; gap: 6px; }
+  /* 24px tall, not the board's 18: the bar is a button, and 24×24 is the
+     target-size floor. The visible bar is the 3px line inside; the extra
+     height is hit area only. */
+  .wy-b { width: 34px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; }
+  .wy-b i { position: relative; display: block; width: 100%; height: 3px; border-radius: 3px; background: var(--hair); overflow: hidden; }
+  .wy-b i::after { content: ""; position: absolute; inset: 0; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x); }
+  .wy-b:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 3px; }
+  .wy-done i::after { transform: scaleX(1); }
+  /* The progress runs only once the island has mounted (`wy-run`), and its
+     `animationend` is what advances the deck — so a held or paused deck
+     holds its bar too, and the server-rendered page shows card one, still. */
+  .wy-run .wy-now i::after { animation: wyProg 3.6s linear forwards; }
+  .wy-hold .wy-now i::after { animation-play-state: paused; }
+  @keyframes wyProg { to { transform: scaleX(1); } }
+  .wy-motion { flex: none; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; padding: 0; border: 0; border-radius: 50%; background: none; color: var(--muted); cursor: pointer; }
+  .wy-motion:hover { color: var(--ink); }
+  .wy-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .wy-paused .wy-flag-d, .wy-paused .wy-live { animation-play-state: paused; }
+}
+
+@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+  .wy-card { transition: opacity .3s; }
+  .wy-pop, .wy-chart i, .wy-fl::after { transition: none; opacity: 1; transform: none; }
+  .wy-now i::after, .wy-run .wy-now i::after { animation: none; transform: scaleX(1); }
+  .wy-flag-d, .wy-live { animation: none; }
+}
