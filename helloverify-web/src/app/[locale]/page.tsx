@@ -1,6 +1,8 @@
 import { SiteNav } from "@/components/chrome/SiteNav";
 import { Hero } from "@/components/sections/Hero";
 import { PeopleStrip } from "@/components/sections/PeopleStrip";
+import { OneInEight } from "@/components/sections/OneInEight";
+import { HowWeKnow } from "@/components/sections/HowWeKnow";
 import { Demo2 } from "@/components/sections/Demo2";
 import { Numbers } from "@/components/sections/Numbers";
 import { Presence } from "@/components/sections/Presence";
@@ -52,13 +54,21 @@ export default async function Home({
       <main id="main-content">
         <Hero />
         <PeopleStrip />
-        <Demo2 />
+        <OneInEight />
+        <HowWeKnow />
+        {/* v2 replaces Demo2 and HowItWorks on desktop (HowWeKnow); the phone
+            keeps both until the v2 phone part. Lead: finalise. */}
+        <div className="mob">
+          <Demo2 />
+        </div>
         <Numbers />
         <Presence />
         <Why />
         <Checks />
         <Packages />
-        <HowItWorks />
+        <div className="mob">
+          <HowItWorks />
+        </div>
         <WhoItsFor />
         <International />
         <Consumer />

@@ -1,0 +1,285 @@
+/* Homepage v2 · 04 "How we know" — one machine, two routes. Imported by
+   `sections/HowWeKnow.tsx`; the route switch and the run are
+   `sections/HowWeKnowStage.tsx`. Ported from the canvas's
+   `scripts/assemble_how2.py` with `scripts/assemble_orb.py` on top (the
+   chain-of-custody steps with a spinning orb that becomes a tick). Prefixes
+   `hw-` (frame), `hw2-` (the case file), `hw3-` (the custody steps).
+
+   THE RESTING STATE IS THE FINISHED CASE. The canvas hid every log row, box
+   and tick at rest and let a 16s loop reveal them, which leaves a paused,
+   reduced-motion or JS-less reader looking at an empty ledger. Here the base
+   rules are the loop's END — every step ticked, the seal down, "Verified" —
+   and the loop is opted into by `.hw-run` on the stage, which the island sets
+   only while the case is on screen, motion is allowed and nobody has pressed
+   pause (WCAG 2.2.2). Taking `.hw-run` off cuts straight to the finished
+   case; while it runs, the canvas's own timings — including its fade-out
+   over the last few percent before the loop restarts — are kept.
+
+   THE SPECIMEN DOES NOT MIRROR. `.hw2-doc` is `direction: ltr`: it is a
+   picture of a physical document, its SVG is drawn left to right, and the
+   field boxes over it are placed in the SVG's own coordinates. Everything
+   around it — the track, the ledger, the route line — is logical and mirrors. */
+:root {
+  --v2-hw-table: #F4F1EA;
+  --v2-hw-rail: #EDE9E0;
+  --v2-hw-holo-1: #E8D9FF;
+  --v2-hw-holo-2: #C7F0E0;
+  --v2-hw-holo-3: #FFF3C4;
+  --v2-hw-holo-4: #FFD6E6;
+  --v2-hw-holo-5: #CFE4FF;
+  --v2-hw-orb-hi: #E9F7EF;
+  --v2-hw-orb-mid: #9AD8BA;
+  --v2-hw-orb-lo: #2E8A62;
+}
+
+@media (min-width: 1081px) {
+  .hw { padding-top: 120px; padding-bottom: 140px; }
+  .hw-mast { display: flex; justify-content: space-between; align-items: center; }
+  .hw-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hw-it { font-style: italic; }
+
+  /* ── The route switch ──────────────────────────────────────────────── */
+  .hw-switch { margin-top: 56px; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 4fr) minmax(0, 4fr); gap: 16px; align-items: center; }
+  .hw-route { position: relative; display: flex; align-items: center; gap: 16px; padding-block: 12px; padding-inline: 12px 18px; border-radius: 20px; border: 1px solid var(--hair); background: var(--white); cursor: pointer; text-align: start; font: inherit; color: inherit; transition: border-color .3s, box-shadow .3s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .hw-route:hover { transform: translateY(-2px); border-color: var(--tick-off); }
+  .hw-route:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .hw-on, .hw-on:hover { border-color: var(--ink); box-shadow: 0 18px 40px -26px rgb(from var(--ink) r g b / .5); }
+  .hw-av { position: relative; flex: none; width: 64px; height: 64px; border-radius: 14px; overflow: hidden; }
+  .hw-rt { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .hw-chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--paper); font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
+  .hw-who b { display: block; font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1; letter-spacing: -.015em; }
+  .hw-who i { display: block; margin-top: 3px; font-style: normal; font-size: 13px; color: var(--muted); }
+  .hw-play { margin-inline-start: auto; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--hair); display: inline-flex; align-items: center; justify-content: center; color: var(--muted); transition: background .3s, color .3s, border-color .3s; }
+  .hw-on .hw-play { background: var(--ink); border-color: var(--ink); color: var(--white); }
+  .hw-run .hw-on .hw-chip .dot { animation: pulse 1.6s ease-in-out infinite; }
+  .hw-cap { padding-inline-start: 24px; border-inline-start: 1px solid var(--hair); }
+  .hw-cap-p { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
+  @keyframes hwIn { 0% { opacity: 0; transform: translateY(14px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+
+  /* ── The case file ─────────────────────────────────────────────────── */
+  .hw2 { margin-top: 32px; border-radius: 26px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .06), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); overflow: hidden; animation: hwIn .7s cubic-bezier(.16, 1, .3, 1) both; }
+  .hw2-bar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 28px; align-items: center; padding: 18px 28px; border-bottom: 1px solid var(--hair); }
+  .hw2-case, .hw2-clock { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+  .hw2-clock b { font-weight: 500; color: var(--ink); }
+  .hw2-track { position: relative; height: 30px; }
+  .hw2-track::before { content: ""; position: absolute; inset-inline: 0; top: 6px; height: 2px; background: var(--v2-hw-rail); border-radius: 2px; }
+  .hw2-fill { position: absolute; inset-inline: 0; top: 6px; height: 2px; background: var(--green); transform-origin: var(--origin-x); }
+  .hw2-st { position: absolute; top: 14px; inset-inline-start: var(--at); font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+  .hw2-st::before { content: ""; position: absolute; inset-inline-start: 0; top: -12px; width: 1px; height: 8px; background: var(--tick-off); }
+  .hw2-body { display: grid; grid-template-columns: 560px minmax(0, 1fr); }
+  .hw2-table { position: relative; padding: 40px 44px 26px; background-color: var(--v2-hw-table); background-image: linear-gradient(rgb(from var(--ink) r g b / .045) 1px, transparent 1px), linear-gradient(calc(var(--flip) * 90deg), rgb(from var(--ink) r g b / .045) 1px, transparent 1px); background-size: 24px 24px; border-inline-end: 1px solid var(--hair); }
+  .hw2-doc { position: relative; direction: ltr; width: 470px; height: 300px; filter: drop-shadow(0 24px 30px rgb(from var(--ink) r g b / .22)) drop-shadow(0 2px 3px rgb(from var(--ink) r g b / .12)); }
+  .hw2-doc-svg { display: block; width: 100%; height: 100%; }
+  .hw2-doc::after { content: ""; position: absolute; inset-inline-end: 30px; bottom: 18px; width: 64px; height: 64px; border-radius: 50%; background: conic-gradient(from 0deg, var(--v2-hw-holo-1), var(--v2-hw-holo-2), var(--v2-hw-holo-3), var(--v2-hw-holo-4), var(--v2-hw-holo-5), var(--v2-hw-holo-1)); mix-blend-mode: multiply; opacity: .55; }
+  .hw2-b .hw2-doc::after { inset-inline-end: 40px; bottom: 26px; width: 52px; height: 52px; }
+  @keyframes hw2Holo { to { transform: rotate(360deg); } }
+  .hw2-box { position: absolute; inset-inline-start: var(--x); top: var(--y); width: var(--w); height: var(--h); border: 1.3px solid var(--green); border-radius: 3px; background: rgb(from var(--green) r g b / .05); }
+  .hw2-box i { position: absolute; inset-inline-end: -6px; top: 50%; transform: translate(100%, -50%); font-style: normal; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--green); background: var(--white); padding: 2px 5px; border-radius: 3px; box-shadow: 0 0 0 1px rgb(from var(--green) r g b / .35); white-space: nowrap; }
+  .hw2-scan { position: absolute; inset-inline: -10px; top: 0; height: 2px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green-light), transparent); box-shadow: 0 0 16px 3px rgb(from var(--green-light) r g b / .55); opacity: 0; }
+  .hw2-br { position: absolute; width: 26px; height: 26px; border: 0 solid var(--ink); opacity: 0; }
+  .hw2-br1 { inset-inline-start: -14px; top: -14px; border-inline-start-width: 2px; border-top-width: 2px; }
+  .hw2-br2 { inset-inline-end: -14px; top: -14px; border-inline-end-width: 2px; border-top-width: 2px; }
+  .hw2-br3 { inset-inline-start: -14px; bottom: -14px; border-inline-start-width: 2px; border-bottom-width: 2px; }
+  .hw2-br4 { inset-inline-end: -14px; bottom: -14px; border-inline-end-width: 2px; border-bottom-width: 2px; }
+  .hw2-seal { position: absolute; inset-inline-end: -26px; top: -30px; width: 122px; height: 122px; opacity: .92; transform: rotate(-11deg); mix-blend-mode: multiply; }
+  .hw2-route { position: relative; height: 40px; margin-top: 22px; }
+  .hw2-route-l { position: absolute; inset-inline: 0 -44px; top: 19px; height: 1px; background: repeating-linear-gradient(calc(var(--flip) * 90deg), var(--ink) 0 4px, transparent 4px 8px); opacity: .35; }
+  .hw2-route-dot { position: absolute; inset-inline-start: 0; top: 15px; width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .15); opacity: 0; }
+  .hw2-route-k { position: absolute; inset-inline-end: -30px; top: -2px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--green); background: var(--v2-hw-table); padding: 0 6px; }
+  .hw2-tiles { margin-top: 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .hw2-tile { padding: 12px 12px 10px; border-radius: 10px; background: var(--white); box-shadow: 0 0 0 1px var(--hair), 0 8px 16px -12px rgb(from var(--ink) r g b / .3); }
+  .hw2-tile-k { display: block; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hw2-tile b { display: block; margin-top: 4px; font-family: var(--mono); font-weight: 500; font-size: 12px; color: var(--green); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hw2-tile-m { display: block; margin-top: 8px; height: 3px; border-radius: 2px; background: var(--v2-hw-rail); overflow: hidden; }
+  .hw2-tile-m em { display: block; height: 100%; background: var(--green); transform-origin: var(--origin-x); }
+  .hw2-doc-k { margin-top: 6px; display: flex; justify-content: space-between; align-items: center; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hw2-doc-acts { display: inline-flex; align-items: center; gap: 14px; }
+  .hw2-live { display: inline-flex; align-items: center; gap: 6px; }
+  .hw2-live i { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .hw-run .hw2-live i { animation: pulse 1.6s ease-in-out infinite; }
+  /* The pause (WCAG 2.2.2), in the hero's words and the hero's pattern. */
+  .hw2-motion { display: inline-flex; align-items: center; gap: 6px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--muted); }
+  .hw2-motion:hover { color: var(--ink); }
+  .hw2-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 3px; }
+
+  /* ── The chain of custody ──────────────────────────────────────────── */
+  .hw2-ledger { display: flex; flex-direction: column; padding: 28px 32px 24px; }
+  .hw3-head { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 1px solid var(--hair); }
+  .hw3-h { font-family: var(--sans); font-size: 17px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
+  .hw3-state { position: relative; height: 28px; min-width: 118px; font-family: var(--sans); font-size: 13.5px; font-weight: 500; }
+  .hw3-st-run, .hw3-st-done { position: absolute; inset-inline-end: 0; top: 0; height: 28px; display: inline-flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 999px; white-space: nowrap; }
+  .hw3-st-run { background: var(--v2-mint-pale); color: var(--green); opacity: 0; }
+  .hw3-st-done { background: var(--green); color: var(--white); }
+  .hw3-st-done svg { width: 13px; height: 13px; }
+  .hw3-mini { width: 12px; height: 12px; border-radius: 50%; background: conic-gradient(from 0deg, rgb(from var(--green) r g b / 0), var(--green)); -webkit-mask: radial-gradient(circle, transparent 3.2px, var(--ink) 3.6px); mask: radial-gradient(circle, transparent 3.2px, var(--ink) 3.6px); }
+  .hw-run .hw3-mini { animation: hw3Rot .9s linear infinite; }
+  .hw3-steps { list-style: none; margin: 2px 0 0; padding: 0; }
+  .hw3-row { position: relative; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 14px; padding: 7.5px 0; }
+  .hw3-row::before { content: ""; position: absolute; inset-inline-start: 12px; top: 36px; bottom: -6px; width: 2px; border-radius: 2px; background: var(--v2-hw-rail); }
+  .hw3-row::after { content: ""; position: absolute; inset-inline-start: 12px; top: 36px; bottom: -6px; width: 2px; border-radius: 2px; background: var(--green); transform-origin: top; }
+  .hw3-r7::before, .hw3-r7::after { display: none; }
+  .hw3-orb { position: relative; width: 26px; height: 26px; }
+  .hw3-spin, .hw3-ok { position: absolute; inset: 0; border-radius: 50%; }
+  .hw3-spin { opacity: 0; background: radial-gradient(circle at 35% 30%, var(--v2-hw-orb-hi) 0, var(--v2-hw-orb-mid) 45%, var(--v2-hw-orb-lo) 100%); box-shadow: 0 0 0 4px rgb(from var(--green-light) r g b / .25), 0 0 18px 2px rgb(from var(--green-light) r g b / .7); }
+  .hw3-spin i { position: absolute; inset: -3px; border-radius: 50%; background: conic-gradient(from 0deg, rgb(from var(--white) r g b / 0) 0deg, rgb(from var(--white) r g b / .95) 70deg, rgb(from var(--white) r g b / 0) 140deg, rgb(from var(--green) r g b / 0) 200deg, rgb(from var(--green) r g b / .9) 300deg, rgb(from var(--green) r g b / 0) 360deg); -webkit-mask: radial-gradient(circle, transparent 9.5px, var(--ink) 10.5px); mask: radial-gradient(circle, transparent 9.5px, var(--ink) 10.5px); }
+  .hw3-spin::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, var(--white), rgb(from var(--white) r g b / .2) 70%); }
+  .hw-run .hw3-spin i { animation: hw3Rot 1s linear infinite; }
+  .hw-run .hw3-spin::after { animation: hw3Pulse 1.2s ease-in-out infinite; }
+  @keyframes hw3Rot { to { transform: rotate(360deg); } }
+  @keyframes hw3Pulse { 50% { transform: scale(.7); opacity: .6; } }
+  .hw3-ok { display: flex; align-items: center; justify-content: center; background: var(--green); color: var(--white); box-shadow: 0 6px 14px -6px rgb(from var(--green) r g b / .7); }
+  .hw3-ok svg { width: 15px; height: 15px; }
+  .hw3-tx { min-width: 0; padding-top: 1px; }
+  .hw3-top { display: flex; align-items: baseline; gap: 10px; }
+  .hw3-top b { font-family: var(--sans); font-size: 14.5px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
+  .hw3-who { font-family: var(--sans); font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hw3-time { margin-inline-start: auto; font-family: var(--sans); font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .hw3-what { margin-top: 1px; font-family: var(--sans); font-size: 14px; line-height: 1.35; color: var(--ink); }
+  .hw2-verdict { margin-top: auto; padding-top: 16px; display: flex; align-items: center; gap: 14px; }
+  .hw2-v-seal { display: inline-flex; align-items: center; justify-content: center; width: 58px; height: 58px; border-radius: 50%; border: 1.5px solid var(--green); font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--green); transform: rotate(-8deg); flex: none; }
+  .hw2-v-t { font-family: var(--serif); font-size: 24px; letter-spacing: -.015em; }
+  .hw2-v-h { margin-inline-start: auto; font-family: var(--sans); font-size: 12px; color: var(--muted); }
+
+  /* ── The four steps and the evidence strip ─────────────────────────── */
+  .hw-caps { margin-top: 48px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px; }
+  .hw-ev { margin-top: 56px; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px; align-items: center; padding: 32px 36px; border-radius: 24px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 18px 40px -28px rgb(from var(--ink) r g b / .3); }
+  .hw-promise { margin: 12px 0 0; font-family: var(--serif); font-size: 30px; line-height: 1.08; letter-spacing: -.02em; text-wrap: balance; }
+  .hw-promise em { font-style: italic; color: var(--green); }
+  .hw-ev-r { position: relative; padding-inline-end: 96px; }
+  .hw-ev-in { animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
+  .hw-ev-t { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-size: 22px; letter-spacing: -.015em; }
+  .hw-ev-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
+  .hw-ev-c { padding-top: 12px; border-top: 1px solid var(--hair); }
+  .hw-ev-c span { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hw-ev-c b { display: block; margin-top: 6px; font-weight: 500; font-size: 13.5px; line-height: 1.4; }
+  .hw-seal { position: absolute; inset-inline-end: 0; top: 50%; width: 76px; height: 76px; margin-top: -38px; border-radius: 50%; border: 1.5px solid var(--green); color: var(--green); display: flex; align-items: center; justify-content: center; transform: rotate(-8deg); }
+  .hw-seal::before { content: ""; position: absolute; inset: 5px; border-radius: 50%; border: 1px solid var(--green); opacity: .6; }
+  .hw-seal span { font-family: var(--serif); font-style: italic; font-size: 17px; }
+
+  /* ── The run: one 16s loop, every element keyed to the same clock ──── */
+  .hw-run .hw2-doc::after { animation: hw2Holo 5s linear infinite; }
+  @keyframes hw2Fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .hw-run .hw2-fill { animation: hw2Fill 16s linear infinite; }
+  @keyframes hw2Doc { 0% { filter: blur(7px) drop-shadow(0 24px 30px rgb(from var(--ink) r g b / .22)); transform: perspective(900px) rotateX(8deg) rotateY(-9deg) scale(.97); } 9%, 95% { filter: blur(0) drop-shadow(0 24px 30px rgb(from var(--ink) r g b / .22)) drop-shadow(0 2px 3px rgb(from var(--ink) r g b / .12)); transform: none; } 100% { filter: blur(4px); transform: scale(.99); } }
+  .hw-run .hw2-doc { animation: hw2Doc 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw2Scan { 0%, 11% { opacity: 0; transform: translateY(0); } 12% { opacity: 1; } 24% { opacity: 1; transform: translateY(300px); } 25%, 100% { opacity: 0; transform: translateY(300px); } }
+  .hw-run .hw2-scan { animation: hw2Scan 16s linear infinite; }
+  @keyframes hw2Br { 0% { opacity: 0; transform: scale(1.25); } 4% { opacity: 1; } 9% { opacity: 1; transform: none; } 12%, 100% { opacity: 0; transform: none; } }
+  .hw-run .hw2-br { animation: hw2Br 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw2Seal { 0%, 85% { opacity: 0; transform: scale(1.8) rotate(4deg); } 88% { opacity: .95; transform: scale(.95) rotate(-12deg); } 90%, 95% { opacity: .92; transform: scale(1) rotate(-11deg); } 100% { opacity: 0; } }
+  .hw-run .hw2-seal { animation: hw2Seal 16s cubic-bezier(.3, 1.35, .5, 1) infinite; }
+  @keyframes hw2Dot { 0%, 29% { opacity: 0; inset-inline-start: 0; } 31% { opacity: 1; inset-inline-start: 0; } 60% { opacity: 1; inset-inline-start: calc(100% + 40px); } 62%, 100% { opacity: 0; inset-inline-start: calc(100% + 40px); } }
+  .hw-run .hw2-route-dot { animation: hw2Dot 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw2V { 0%, 86% { opacity: .15; } 89%, 97% { opacity: 1; } 100% { opacity: .15; } }
+  .hw-run .hw2-v-seal { animation: hw2V 16s ease infinite; }
+  @keyframes hw2B0 { 0%, 13% { opacity: 0; transform: scale(1.06); } 15%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw2-box0 { animation: hw2B0 16s ease infinite; }
+  @keyframes hw2B1 { 0%, 16% { opacity: 0; transform: scale(1.06); } 18%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw2-box1 { animation: hw2B1 16s ease infinite; }
+  @keyframes hw2B2 { 0%, 19% { opacity: 0; transform: scale(1.06); } 21%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw2-box2 { animation: hw2B2 16s ease infinite; }
+  @keyframes hw2B3 { 0%, 22% { opacity: 0; transform: scale(1.06); } 24%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw2-box3 { animation: hw2B3 16s ease infinite; }
+  @keyframes hw2T0 { 0%, 16% { opacity: .35; } 18%, 95% { opacity: 1; } 100% { opacity: .35; } }
+  .hw-run .hw2-tile0 { animation: hw2T0 16s ease infinite; }
+  @keyframes hw2M0 { 0%, 16% { transform: scaleX(0); } 20%, 95% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+  .hw-run .hw2-tile0 .hw2-tile-m em { animation: hw2M0 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw2T1 { 0%, 20% { opacity: .35; } 22%, 95% { opacity: 1; } 100% { opacity: .35; } }
+  .hw-run .hw2-tile1 { animation: hw2T1 16s ease infinite; }
+  @keyframes hw2M1 { 0%, 20% { transform: scaleX(0); } 24%, 95% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+  .hw-run .hw2-tile1 .hw2-tile-m em { animation: hw2M1 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw2T2 { 0%, 24% { opacity: .35; } 26%, 95% { opacity: 1; } 100% { opacity: .35; } }
+  .hw-run .hw2-tile2 { animation: hw2T2 16s ease infinite; }
+  @keyframes hw2M2 { 0%, 24% { transform: scaleX(0); } 28%, 95% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+  .hw-run .hw2-tile2 .hw2-tile-m em { animation: hw2M2 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw2S0 { 0%, 0% { color: var(--muted); } 1%, 97% { color: var(--ink); } 100% { color: var(--muted); } }
+  .hw-run .hw2-st0 { animation: hw2S0 16s linear infinite; }
+  @keyframes hw2S1 { 0%, 11.9% { color: var(--muted); } 13%, 97% { color: var(--ink); } 100% { color: var(--muted); } }
+  .hw-run .hw2-st1 { animation: hw2S1 16s linear infinite; }
+  @keyframes hw2S2 { 0%, 29.9% { color: var(--muted); } 31%, 97% { color: var(--ink); } 100% { color: var(--muted); } }
+  .hw-run .hw2-st2 { animation: hw2S2 16s linear infinite; }
+  @keyframes hw2S3 { 0%, 83.9% { color: var(--muted); } 85%, 97% { color: var(--ink); } 100% { color: var(--muted); } }
+  .hw-run .hw2-st3 { animation: hw2S3 16s linear infinite; }
+  @keyframes hw3Run { 0%, 89% { opacity: 1; } 90%, 97% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes hw3Done { 0%, 89.5% { opacity: 0; transform: scale(.85); } 91%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-st-run { animation: hw3Run 16s linear infinite; }
+  .hw-run .hw3-st-done { animation: hw3Done 16s ease infinite; }
+  @keyframes hw3R0 { 0%, 3% { opacity: 0; transform: translateY(8px); } 4.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r0 { animation: hw3R0 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S0 { 0%, 3% { opacity: 0; transform: scale(.6); } 4%, 11.7% { opacity: 1; transform: none; } 12.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r0 .hw3-spin { animation: hw3S0 16s ease infinite; }
+  @keyframes hw3O0 { 0%, 12% { opacity: 0; transform: scale(.4); } 13.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r0 .hw3-ok { animation: hw3O0 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W0 { 0%, 12% { color: var(--muted); } 12.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r0 .hw3-what { animation: hw3W0 16s linear infinite; }
+  @keyframes hw3L0 { 0%, 11.5% { transform: scaleY(0); } 13.5%, 96% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .hw-run .hw3-r0::after { animation: hw3L0 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw3R1 { 0%, 12% { opacity: 0; transform: translateY(8px); } 13.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r1 { animation: hw3R1 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S1 { 0%, 12% { opacity: 0; transform: scale(.6); } 13%, 15.7% { opacity: 1; transform: none; } 16.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r1 .hw3-spin { animation: hw3S1 16s ease infinite; }
+  @keyframes hw3O1 { 0%, 16% { opacity: 0; transform: scale(.4); } 17.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r1 .hw3-ok { animation: hw3O1 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W1 { 0%, 16% { color: var(--muted); } 16.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r1 .hw3-what { animation: hw3W1 16s linear infinite; }
+  @keyframes hw3L1 { 0%, 15.5% { transform: scaleY(0); } 17.5%, 96% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .hw-run .hw3-r1::after { animation: hw3L1 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw3R2 { 0%, 16% { opacity: 0; transform: translateY(8px); } 17.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r2 { animation: hw3R2 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S2 { 0%, 16% { opacity: 0; transform: scale(.6); } 17%, 19.7% { opacity: 1; transform: none; } 20.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r2 .hw3-spin { animation: hw3S2 16s ease infinite; }
+  @keyframes hw3O2 { 0%, 20% { opacity: 0; transform: scale(.4); } 21.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r2 .hw3-ok { animation: hw3O2 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W2 { 0%, 20% { color: var(--muted); } 20.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r2 .hw3-what { animation: hw3W2 16s linear infinite; }
+  @keyframes hw3L2 { 0%, 19.5% { transform: scaleY(0); } 21.5%, 96% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .hw-run .hw3-r2::after { animation: hw3L2 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw3R3 { 0%, 20% { opacity: 0; transform: translateY(8px); } 21.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r3 { animation: hw3R3 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S3 { 0%, 20% { opacity: 0; transform: scale(.6); } 21%, 29.7% { opacity: 1; transform: none; } 30.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r3 .hw3-spin { animation: hw3S3 16s ease infinite; }
+  @keyframes hw3O3 { 0%, 30% { opacity: 0; transform: scale(.4); } 31.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r3 .hw3-ok { animation: hw3O3 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W3 { 0%, 30% { color: var(--muted); } 30.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r3 .hw3-what { animation: hw3W3 16s linear infinite; }
+  @keyframes hw3L3 { 0%, 29.5% { transform: scaleY(0); } 31.5%, 96% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .hw-run .hw3-r3::after { animation: hw3L3 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw3R4 { 0%, 30% { opacity: 0; transform: translateY(8px); } 31.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r4 { animation: hw3R4 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S4 { 0%, 30% { opacity: 0; transform: scale(.6); } 31%, 61.7% { opacity: 1; transform: none; } 62.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r4 .hw3-spin { animation: hw3S4 16s ease infinite; }
+  @keyframes hw3O4 { 0%, 62% { opacity: 0; transform: scale(.4); } 63.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r4 .hw3-ok { animation: hw3O4 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W4 { 0%, 62% { color: var(--muted); } 62.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r4 .hw3-what { animation: hw3W4 16s linear infinite; }
+  @keyframes hw3L4 { 0%, 61.5% { transform: scaleY(0); } 63.5%, 96% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .hw-run .hw3-r4::after { animation: hw3L4 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw3R5 { 0%, 62% { opacity: 0; transform: translateY(8px); } 63.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r5 { animation: hw3R5 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S5 { 0%, 62% { opacity: 0; transform: scale(.6); } 63%, 75.7% { opacity: 1; transform: none; } 76.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r5 .hw3-spin { animation: hw3S5 16s ease infinite; }
+  @keyframes hw3O5 { 0%, 76% { opacity: 0; transform: scale(.4); } 77.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r5 .hw3-ok { animation: hw3O5 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W5 { 0%, 76% { color: var(--muted); } 76.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r5 .hw3-what { animation: hw3W5 16s linear infinite; }
+  @keyframes hw3L5 { 0%, 75.5% { transform: scaleY(0); } 77.5%, 96% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .hw-run .hw3-r5::after { animation: hw3L5 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw3R6 { 0%, 76% { opacity: 0; transform: translateY(8px); } 77.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r6 { animation: hw3R6 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S6 { 0%, 76% { opacity: 0; transform: scale(.6); } 77%, 85.7% { opacity: 1; transform: none; } 86.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r6 .hw3-spin { animation: hw3S6 16s ease infinite; }
+  @keyframes hw3O6 { 0%, 86% { opacity: 0; transform: scale(.4); } 87.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r6 .hw3-ok { animation: hw3O6 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W6 { 0%, 86% { color: var(--muted); } 86.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r6 .hw3-what { animation: hw3W6 16s linear infinite; }
+  @keyframes hw3L6 { 0%, 85.5% { transform: scaleY(0); } 87.5%, 96% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+  .hw-run .hw3-r6::after { animation: hw3L6 16s cubic-bezier(.65, 0, .35, 1) infinite; }
+  @keyframes hw3R7 { 0%, 86% { opacity: 0; transform: translateY(8px); } 87.5%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r7 { animation: hw3R7 16s cubic-bezier(.16, 1, .3, 1) infinite; }
+  @keyframes hw3S7 { 0%, 86% { opacity: 0; transform: scale(.6); } 87%, 89.7% { opacity: 1; transform: none; } 90.8%, 100% { opacity: 0; transform: scale(.6); } }
+  .hw-run .hw3-r7 .hw3-spin { animation: hw3S7 16s ease infinite; }
+  @keyframes hw3O7 { 0%, 90% { opacity: 0; transform: scale(.4); } 91.2%, 96% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+  .hw-run .hw3-r7 .hw3-ok { animation: hw3O7 16s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+  @keyframes hw3W7 { 0%, 90% { color: var(--muted); } 90.8%, 100% { color: var(--ink); } }
+  .hw-run .hw3-r7 .hw3-what { animation: hw3W7 16s linear infinite; }
+}
