@@ -176,21 +176,8 @@ export const en = {
       "04": { t: "Built to last", p: "Infrastructure regulators rely on for years, not a project." },
       "05": { t: "Evidence, not opinion", p: "Remarks, artefacts and an auditable trail with every result." },
     },
-    card: {
-      note: "photo · licensing officer at a counter, natural light",
-      seal: "Verified",
-      k: "One result, and how we know",
-      title: "Driving licence",
-    },
-    evidence: {
-      read: { label: "Read by", value: "HelloVerify AI · 14 fields · 1.2 s" },
-      confirmed: { label: "Confirmed", value: "RTO Karnataka · 10:08" },
-      artefact: { label: "Artefact", value: "Sarathi record · PDF · hashed" },
-      reviewed: { label: "Reviewed", value: "K.S. · audit trail, 5 events" },
-    },
-    /** Homepage v2 (desktop): the deck of eight cards beside the reasons.
-     *  `card` and `evidence` above are the phone's photo card and stay until
-     *  its own part. The card copy is the canvas board's, word for word,
+    /** Homepage v2: the deck of eight cards beside the reasons (under them
+     *  on a phone). The card copy is the canvas board's, word for word,
      *  including its capitalisation. `cardOf` is a template the client island
      *  fills (`{k}`, `{n}`) — a function cannot cross the server/client
      *  boundary as a prop. The motion labels repeat the hero's on purpose. */
@@ -660,25 +647,12 @@ export const en = {
   checks: {
     headingA: "33 checks.",
     headingB: "Most take minutes.",
-    headingMob: "33 checks. Most take minutes.",
     lede: "Each check sits where it finishes. Green is an hour or less. The rest go to a registrar or a court and come back in days.",
-    ledeMob: "Grouped by how long you wait, from upload to report.",
     more: "Plus 16 more — Cyber Identity, Know Your Contact, Financial Assessment, Promoter Criminal History and others.",
-    /** The same words in the desktop footer's button and the mobile
-     *  full-width one. One leaf; the two buttons differ only in geometry. */
+    /** The link in the race's last tile. */
     all: "All 33 checks",
-    /** Rendered under the first lane only. One leaf and a boolean on that
-     *  lane, rather than an optional field that would make `lanes` a ragged
-     *  table — see this file's header. */
+    /** The readout's resting label, over "13 of 17". */
     zone: "an hour or less",
-    /** Keyed by the axis position the label sits at, which is the same key
-     *  the tick marks use. */
-    axis: {
-      "4%": "15 min",
-      "26%": "1 hour",
-      "62%": "1 day",
-      "92%": "3 days",
-    },
     items: {
       identity: { name: "Identity", time: "15 min" },
       pan: { name: "PAN", time: "15 min" },
@@ -696,22 +670,11 @@ export const en = {
       criminal: { name: "Criminal", time: "30 min" },
       currentAddress: { name: "Current address", time: "30 min" },
       tradeLicence: { name: "Trade licence", time: "2 days" },
-      /** Real JSX — the artboard split this title around the `&amp;`. The
-       *  component's own comment says why in full; it is the same reason as
-       *  the two lane headings below. */
+      /** Real JSX — the artboard split this title around the `&amp;`, and
+       *  the port kept its five text nodes rather than retype the string. */
       directorsGst: { name: <>Directors{" "}&amp;{" "}GST</>, time: "3 days" },
     },
-    lanes: {
-      l1: { k: "01 — Identity", t: "Who they are" },
-      l2: { k: <>02 — Work{" "}&amp;{" "}education</>, t: "What they've done" },
-      l3: { k: <>03 — Records{" "}&amp;{" "}risk</>, t: "What's on file" },
-    },
-    buckets: {
-      fast: { big: "15–30 min", k: "Identity, documents, records" },
-      hour: { big: "60 min", k: "Provident-fund and work-authorisation records" },
-      slow: { big: "1–3 days", k: "Confirmed with a registrar, employer or authority" },
-    },
-    /** Homepage v2 (desktop): the chronograph race. The tiles reuse `items`
+    /** Homepage v2: the chronograph race. The tiles reuse `items`
      *  above; the readout's resting label reuses `zone`. The `{n}`/`{total}`
      *  strings are templates the client island fills, because a function leaf
      *  cannot be passed to a Client Component as a prop. */
@@ -928,15 +891,10 @@ export const en = {
   packages: {
     headingA: "Or take a package.",
     headingB: "One upload, one answer.",
-    headingMob: "Or take a package. One upload, one answer.",
     lede: "A fixed set of checks with one turnaround. Everything runs in parallel, so a package is only as slow as its slowest check.",
-    ledeMob: "A fixed set of checks with one turnaround — as fast as its slowest check.",
-    more: <>Trade licence, vendor risk{" "}&amp;{" "}premium packages</>,
-    package: "Package",
-    tot: (n: number) => `${n} checks · ready in`,
-    /** Homepage v2 (desktop) splits `tot` in two: the count sits over the
-     *  card's check list and "Ready in" on the photograph's glass chip. Both
-     *  are server-rendered, so the count can stay a function leaf. */
+    /** The count over a card's check list, and the label on the
+     *  photograph's glass chip. Server-rendered, so the count can be a
+     *  function leaf. */
     count: (n: number) => `${n} checks`,
     readyIn: "Ready in",
     buy: "Buy now",

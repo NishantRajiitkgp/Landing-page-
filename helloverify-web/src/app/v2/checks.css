@@ -3,6 +3,9 @@
    `sections/Checks.tsx`. The header of `hero.css` explains why v2 sheets are
    authored rather than generated.
 
+   One tree at every width: shared rules in the base, the board's desktop
+   layout under `min-width: 1081px`, the phone's under `max-width: 1080px`.
+
    No literal colour: every paper shade the board typed is within three units
    of a v2 tint `hero.css` already declares (`#EEEAE1`/`#ECE8DF` → paper-lo
    `#EFEBE3`, `#F3F9F5` → mint-pale `#F4FAF6`, `#E3DED3` → `--hair`), so they
@@ -12,100 +15,126 @@
    every script — so its SVG geometry is physical on purpose. The layout
    around it is logical. */
 
-@media (min-width: 1081px) {
-  .cz-stage { margin-top: 72px; display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 64px; align-items: start; padding-block: 52px; padding-inline: 48px 52px; border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .45); }
-  .cz-left { position: sticky; top: 40px; display: flex; flex-direction: column; align-items: center; }
-  .cz-watch { position: relative; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle at 36% 28%, var(--white) 0, var(--v2-leaf-mid) 50%, var(--v2-paper-lo) 100%); box-shadow: inset 2px 3px 4px rgb(from var(--white) r g b / .95), inset -6px -8px 16px rgb(from var(--ink) r g b / .07), 0 0 0 1px rgb(from var(--ink) r g b / .06), 0 40px 60px -36px rgb(from var(--ink) r g b / .45); }
-  .cz-dial { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-  .cz-gl { fill: none; stroke: rgb(from var(--green) r g b / .09); stroke-width: .8; }
-  .cz-rim { fill: none; stroke: rgb(from var(--ink) r g b / .14); stroke-width: 1; }
-  .cz-rim2 { fill: none; stroke: rgb(from var(--ink) r g b / .07); stroke-width: 1; }
-  .cz-tk { stroke: rgb(from var(--ink) r g b / .28); stroke-width: 1; }
-  .cz-tk5 { stroke: rgb(from var(--ink) r g b / .7); stroke-width: 1.6; stroke-linecap: round; }
-  .cz-num { font-family: var(--serif); font-size: 22px; text-anchor: middle; fill: var(--ink); }
-  .cz-unit, .cz-sunit { font-family: var(--mono); font-size: 8.5px; letter-spacing: .14em; text-anchor: middle; fill: var(--muted); }
-  .cz-sx { font-family: var(--mono); font-size: 9.5px; font-weight: 500; text-anchor: middle; fill: var(--muted); }
-  .cz-snum { font-family: var(--mono); font-size: 9px; text-anchor: middle; fill: var(--ink); }
-  .cz-sub { fill: rgb(from var(--white) r g b / .7); stroke: rgb(from var(--ink) r g b / .16); stroke-width: 1; }
-  .cz-arc { fill: none; stroke: var(--green-light); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 0; opacity: .75; transform: rotate(-90deg); transform-origin: 200px 200px; }
-  .cz-mk circle { fill: var(--white); stroke: rgb(from var(--ink) r g b / .35); stroke-width: 1.4; transition: fill .3s, stroke .3s; }
-  .cz-mk text { font-family: var(--mono); font-size: 12px; font-weight: 500; text-anchor: middle; fill: var(--muted); transition: fill .3s; }
-  .cz-mk-on circle { fill: var(--green); stroke: var(--white); stroke-width: 2; }
-  .cz-mk-on text { fill: var(--green); }
-  .cz-smk { fill: var(--white); stroke: rgb(from var(--ink) r g b / .4); stroke-width: 1.2; transition: fill .3s; }
-  .cz-smk-on { fill: var(--ink); stroke: var(--ink); }
-  .cz-hand line { stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
-  .cz-tip { fill: var(--green); stroke: var(--white); stroke-width: 1.5; }
-  .cz-cap { fill: var(--ink); }
-  .cz-pin { fill: var(--white); }
-  .cz-hand-s line { stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; }
-  .cz-hand-s circle { fill: var(--ink); }
-  .cz-hand-s { transform: rotate(270deg); }
-  /* One minute-hand turn in the first 5/9 of the run (linear: the hour), then
-     three more turns eased into the days. A/B are identical so a restart is
-     a class swap — changing `animation-name` restarts, re-setting does not. */
-  .cz-hA { animation: czMainA 9s both; }
-  .cz-hB { animation: czMainB 9s both; }
-  .cz-hand-s.cz-hA { animation: czSubA 9s linear both; }
-  .cz-hand-s.cz-hB { animation: czSubB 9s linear both; }
-  .cz-arcA { animation: czArcA 9s both; }
-  .cz-arcB { animation: czArcB 9s both; }
-  @keyframes czMainA { 0% { transform: rotate(0); animation-timing-function: linear; } 55.56% { transform: rotate(360deg); animation-timing-function: cubic-bezier(.5, 0, .3, 1); } to { transform: rotate(1440deg); } }
-  @keyframes czMainB { 0% { transform: rotate(0); animation-timing-function: linear; } 55.56% { transform: rotate(360deg); animation-timing-function: cubic-bezier(.5, 0, .3, 1); } to { transform: rotate(1440deg); } }
-  @keyframes czSubA { 0%, 55.56% { transform: rotate(0); } to { transform: rotate(270deg); } }
-  @keyframes czSubB { 0%, 55.56% { transform: rotate(0); } to { transform: rotate(270deg); } }
-  @keyframes czArcA { 0% { stroke-dashoffset: 100; } 55.56%, to { stroke-dashoffset: 0; } }
-  @keyframes czArcB { 0% { stroke-dashoffset: 100; } 55.56%, to { stroke-dashoffset: 0; } }
+.cz-stage { display: grid; align-items: start; border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .45); }
+.cz-left { display: flex; flex-direction: column; align-items: center; }
+.cz-watch { position: relative; width: min(80%, 360px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 36% 28%, var(--white) 0, var(--v2-leaf-mid) 50%, var(--v2-paper-lo) 100%); box-shadow: inset 2px 3px 4px rgb(from var(--white) r g b / .95), inset -6px -8px 16px rgb(from var(--ink) r g b / .07), 0 0 0 1px rgb(from var(--ink) r g b / .06), 0 40px 60px -36px rgb(from var(--ink) r g b / .45); }
+.cz-dial { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.cz-gl { fill: none; stroke: rgb(from var(--green) r g b / .09); stroke-width: .8; }
+.cz-rim { fill: none; stroke: rgb(from var(--ink) r g b / .14); stroke-width: 1; }
+.cz-rim2 { fill: none; stroke: rgb(from var(--ink) r g b / .07); stroke-width: 1; }
+.cz-tk { stroke: rgb(from var(--ink) r g b / .28); stroke-width: 1; }
+.cz-tk5 { stroke: rgb(from var(--ink) r g b / .7); stroke-width: 1.6; stroke-linecap: round; }
+.cz-num { font-family: var(--serif); font-size: 22px; text-anchor: middle; fill: var(--ink); }
+.cz-unit, .cz-sunit { font-family: var(--mono); font-size: 8.5px; letter-spacing: .14em; text-anchor: middle; fill: var(--muted); }
+.cz-sx { font-family: var(--mono); font-size: 9.5px; font-weight: 500; text-anchor: middle; fill: var(--muted); }
+.cz-snum { font-family: var(--mono); font-size: 9px; text-anchor: middle; fill: var(--ink); }
+.cz-sub { fill: rgb(from var(--white) r g b / .7); stroke: rgb(from var(--ink) r g b / .16); stroke-width: 1; }
+.cz-arc { fill: none; stroke: var(--green-light); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 0; opacity: .75; transform: rotate(-90deg); transform-origin: 200px 200px; }
+.cz-mk circle { fill: var(--white); stroke: rgb(from var(--ink) r g b / .35); stroke-width: 1.4; transition: fill .3s, stroke .3s; }
+.cz-mk text { font-family: var(--mono); font-size: 12px; font-weight: 500; text-anchor: middle; fill: var(--muted); transition: fill .3s; }
+.cz-mk-on circle { fill: var(--green); stroke: var(--white); stroke-width: 2; }
+.cz-mk-on text { fill: var(--green); }
+.cz-smk { fill: var(--white); stroke: rgb(from var(--ink) r g b / .4); stroke-width: 1.2; transition: fill .3s; }
+.cz-smk-on { fill: var(--ink); stroke: var(--ink); }
+.cz-hand line { stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
+.cz-tip { fill: var(--green); stroke: var(--white); stroke-width: 1.5; }
+.cz-cap { fill: var(--ink); }
+.cz-pin { fill: var(--white); }
+.cz-hand-s line { stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; }
+.cz-hand-s circle { fill: var(--ink); }
+.cz-hand-s { transform: rotate(270deg); }
+/* One minute-hand turn in the first 5/9 of the run (linear: the hour), then
+   three more turns eased into the days. A/B are identical so a restart is
+   a class swap — changing `animation-name` restarts, re-setting does not. */
+.cz-hA { animation: czMainA 9s both; }
+.cz-hB { animation: czMainB 9s both; }
+.cz-hand-s.cz-hA { animation: czSubA 9s linear both; }
+.cz-hand-s.cz-hB { animation: czSubB 9s linear both; }
+.cz-arcA { animation: czArcA 9s both; }
+.cz-arcB { animation: czArcB 9s both; }
+@keyframes czMainA { 0% { transform: rotate(0); animation-timing-function: linear; } 55.56% { transform: rotate(360deg); animation-timing-function: cubic-bezier(.5, 0, .3, 1); } to { transform: rotate(1440deg); } }
+@keyframes czMainB { 0% { transform: rotate(0); animation-timing-function: linear; } 55.56% { transform: rotate(360deg); animation-timing-function: cubic-bezier(.5, 0, .3, 1); } to { transform: rotate(1440deg); } }
+@keyframes czSubA { 0%, 55.56% { transform: rotate(0); } to { transform: rotate(270deg); } }
+@keyframes czSubB { 0%, 55.56% { transform: rotate(0); } to { transform: rotate(270deg); } }
+@keyframes czArcA { 0% { stroke-dashoffset: 100; } 55.56%, to { stroke-dashoffset: 0; } }
+@keyframes czArcB { 0% { stroke-dashoffset: 100; } 55.56%, to { stroke-dashoffset: 0; } }
 
-  .cz-read { margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
-  .cz-read-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .cz-read-v { font-family: var(--serif); font-size: 60px; line-height: 1; letter-spacing: -.035em; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .cz-read-c { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--muted); }
-  .cz-read-c b { font-weight: 500; color: var(--green); }
-  .cz-keys { margin-top: 22px; display: flex; gap: 18px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; color: var(--muted); }
-  .cz-keys span { display: inline-flex; align-items: center; gap: 7px; }
-  .cz-key-g { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
-  .cz-key-i { width: 10px; height: 10px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .cz-run { margin-top: 22px; height: 44px; display: inline-flex; align-items: center; gap: 10px; padding-block: 0; padding-inline: 18px 20px; border-radius: 999px; border: 0; background: var(--ink); color: var(--white); font-family: var(--sans); font-size: 14.5px; font-weight: 500; cursor: pointer; transition: transform .3s cubic-bezier(.16, 1, .3, 1), background .3s; }
-  .cz-run:hover { transform: translateY(-2px); }
-  .cz-run:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .cz-on .cz-run { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--hair); }
+.cz-read { margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; }
+.cz-read-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.cz-read-v { font-family: var(--serif); font-size: clamp(44px, 2.5vw + 34px, 60px); line-height: 1; letter-spacing: -.035em; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cz-read-c { font-family: var(--mono); font-size: 12px; letter-spacing: .04em; color: var(--muted); }
+.cz-read-c b { font-weight: 500; color: var(--green); }
+.cz-keys { margin-top: 22px; display: flex; gap: 18px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .04em; color: var(--muted); }
+.cz-keys span { display: inline-flex; align-items: center; gap: 7px; }
+.cz-key-g { width: 10px; height: 10px; border-radius: 50%; background: var(--green); }
+.cz-key-i { width: 10px; height: 10px; border-radius: 50%; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.cz-run { margin-top: 22px; height: 44px; display: inline-flex; align-items: center; gap: 10px; padding-block: 0; padding-inline: 18px 20px; border-radius: 999px; border: 0; background: var(--ink); color: var(--white); font-family: var(--sans); font-size: 14.5px; font-weight: 500; cursor: pointer; transition: transform .3s cubic-bezier(.16, 1, .3, 1), background .3s; }
+.cz-run:hover { transform: translateY(-2px); }
+.cz-run:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.cz-on .cz-run { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--hair); }
 
-  .cz-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
-  .cz-tile { position: relative; min-height: 112px; box-sizing: border-box; display: flex; flex-direction: column; padding: 16px 18px 14px; border-radius: 18px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-paper-lo); overflow: hidden; transition: background .45s, box-shadow .45s, transform .45s cubic-bezier(.16, 1, .3, 1); }
-  .cz-g { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .cz-n { margin-top: 6px; font-size: 16.5px; font-weight: 500; letter-spacing: -.012em; line-height: 1.2; color: var(--ink); }
-  .cz-st { margin-top: auto; padding-top: 12px; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; }
-  .cz-ic { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--green); color: var(--white); transform: scale(1); transition: transform .45s cubic-bezier(.3, 1.6, .5, 1), background .3s; }
-  .cz-ic .tick { width: 13px; height: 13px; color: inherit; }
-  .cz-time { color: var(--green); font-weight: 500; }
-  .cz-wait { display: none; color: var(--muted); }
-  .cz-wait i { display: inline-block; width: 3px; height: 3px; margin-inline-start: 3px; border-radius: 50%; background: currentColor; animation: czDot 1s ease-in-out infinite; }
-  .cz-wait i:nth-child(2) { animation-delay: .15s; }
-  .cz-wait i:nth-child(3) { animation-delay: .3s; }
-  @keyframes czDot { 50% { opacity: .2; transform: translateY(-2px); } }
-  .cz-scan { position: absolute; inset-inline-start: 0; bottom: 0; height: 2px; width: 40%; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green-light), transparent); opacity: 0; }
-  .cz-fast { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .22); }
-  .cz-slow .cz-ic { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
-  .cz-slow .cz-time { color: var(--ink); }
-  .cz-slow { background: var(--v2-paper-hi); }
-  .cz-pend { background: var(--white); box-shadow: inset 0 0 0 1px var(--v2-paper-lo); }
-  .cz-pend .cz-n { color: var(--ink-soft); }
-  .cz-pend .cz-ic { transform: scale(0); width: 0; margin-inline-end: -8px; }
-  .cz-pend .cz-time { display: none; }
-  .cz-pend .cz-wait { display: inline-flex; align-items: center; }
-  .cz-pend .cz-scan { opacity: 1; animation: czScan 1.4s ease-in-out infinite; }
-  @keyframes czScan { 0% { transform: translateX(calc(var(--flip) * -100%)); } to { transform: translateX(calc(var(--flip) * 260%)); } }
-  .cz-land { animation: czLand .6s cubic-bezier(.3, 1.5, .5, 1); }
-  .cz-fast.cz-land { box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .35), 0 16px 30px -18px rgb(from var(--green) r g b / .6); }
-  @keyframes czLand { 0% { transform: scale(.96); } 60% { transform: scale(1.03); } to { transform: none; } }
-  .cz-more { justify-content: space-between; background: transparent; box-shadow: inset 0 0 0 1px var(--hair); background-image: repeating-linear-gradient(calc(var(--flip) * 135deg), rgb(from var(--ink) r g b / .025) 0 8px, transparent 8px 16px); }
-  .cz-more > span { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
-  .cz-all { margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; min-height: 24px; font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; }
-  .cz-all:hover { color: var(--green); }
-  .cz-all:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+.cz-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
+.cz-tile { position: relative; min-height: 112px; box-sizing: border-box; display: flex; flex-direction: column; padding: 16px 18px 14px; border-radius: 18px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-paper-lo); overflow: hidden; transition: background .45s, box-shadow .45s, transform .45s cubic-bezier(.16, 1, .3, 1); }
+.cz-g { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.cz-n { margin-top: 6px; font-size: 16.5px; font-weight: 500; letter-spacing: -.012em; line-height: 1.2; color: var(--ink); }
+.cz-st { margin-top: auto; padding-top: 12px; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; }
+.cz-ic { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--green); color: var(--white); transform: scale(1); transition: transform .45s cubic-bezier(.3, 1.6, .5, 1), background .3s; }
+.cz-ic .tick { width: 13px; height: 13px; color: inherit; }
+.cz-time { color: var(--green); font-weight: 500; }
+.cz-wait { display: none; color: var(--muted); }
+.cz-wait i { display: inline-block; width: 3px; height: 3px; margin-inline-start: 3px; border-radius: 50%; background: currentColor; animation: czDot 1s ease-in-out infinite; }
+.cz-wait i:nth-child(2) { animation-delay: .15s; }
+.cz-wait i:nth-child(3) { animation-delay: .3s; }
+@keyframes czDot { 50% { opacity: .2; transform: translateY(-2px); } }
+.cz-scan { position: absolute; inset-inline-start: 0; bottom: 0; height: 2px; width: 40%; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green-light), transparent); opacity: 0; }
+.cz-fast { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .22); }
+.cz-slow .cz-ic { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.cz-slow .cz-time { color: var(--ink); }
+.cz-slow { background: var(--v2-paper-hi); }
+.cz-pend { background: var(--white); box-shadow: inset 0 0 0 1px var(--v2-paper-lo); }
+.cz-pend .cz-n { color: var(--ink-soft); }
+.cz-pend .cz-ic { transform: scale(0); width: 0; margin-inline-end: -8px; }
+.cz-pend .cz-time { display: none; }
+.cz-pend .cz-wait { display: inline-flex; align-items: center; }
+.cz-pend .cz-scan { opacity: 1; animation: czScan 1.4s ease-in-out infinite; }
+@keyframes czScan { 0% { transform: translateX(calc(var(--flip) * -100%)); } to { transform: translateX(calc(var(--flip) * 260%)); } }
+.cz-land { animation: czLand .6s cubic-bezier(.3, 1.5, .5, 1); }
+.cz-fast.cz-land { box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .35), 0 16px 30px -18px rgb(from var(--green) r g b / .6); }
+@keyframes czLand { 0% { transform: scale(.96); } 60% { transform: scale(1.03); } to { transform: none; } }
+.cz-more { justify-content: space-between; background: transparent; box-shadow: inset 0 0 0 1px var(--hair); background-image: repeating-linear-gradient(calc(var(--flip) * 135deg), rgb(from var(--ink) r g b / .025) 0 8px, transparent 8px 16px); }
+.cz-more > span { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+.cz-all { margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; min-height: 24px; font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; }
+.cz-all:hover { color: var(--green); }
+.cz-all:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cz-hA, .cz-hB, .cz-hand-s.cz-hA, .cz-hand-s.cz-hB, .cz-arcA, .cz-arcB, .cz-pend .cz-scan, .cz-wait i, .cz-land { animation: none; }
 }
 
-@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
-  .cz-hA, .cz-hB, .cz-hand-s.cz-hA, .cz-hand-s.cz-hB, .cz-arcA, .cz-arcB, .cz-pend .cz-scan, .cz-wait i, .cz-land { animation: none; }
+.cz { padding-block: 72px; }
+
+@media (min-width: 1081px) {
+  .cz { padding-block: 120px 140px; }
+  .cz .lede { margin-bottom: 8px; }
+  .cz-stage { margin-top: 72px; grid-template-columns: 400px minmax(0, 1fr); gap: 64px; padding-block: 52px; padding-inline: 48px 52px; }
+  .cz-left { position: sticky; top: 40px; }
+  .cz-watch { width: 400px; }
+}
+
+/* Phone and tablet: the dial stacks over the tiles, sized so the dial, the
+   readout and the button fit one phone screen and the first tiles show below
+   them. The dial's `×N` labels hang 11% outside its rim, inside the 80%. */
+@media (max-width: 1080px) {
+  .cz-stage { margin-top: 40px; gap: 36px; padding: 32px 16px 16px; border-radius: 24px; }
+}
+
+/* Two tiles a row at phone width: at 150px a tile still takes the longest
+   name ("Registration certificate") in two lines. */
+@media (max-width: 640px) {
+  .cz-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .cz-tile { min-height: 104px; padding: 14px 14px 12px; border-radius: 16px; }
+  .cz-n { font-size: 15px; }
+  /* The two key entries wrap whole, one a line, not mid-phrase. */
+  .cz-keys { flex-wrap: wrap; justify-content: center; gap: 8px 18px; }
+  .cz-keys span { white-space: nowrap; }
 }
