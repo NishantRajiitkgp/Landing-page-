@@ -2097,14 +2097,44 @@ a WCAG 2.2.2 pause control, and six audience doors (hinge side via
 - Environment note: `npx playwright install chromium` was needed once — the
   installed Playwright wanted `chromium_headless_shell-1243`.
 
-### 12.2 onward — queued, in page order
+### 12.2 — The rest of the desktop page · DONE (24 Sep 2026)
 
-People strip (curved drag) · One in eight · How we know (orb steps) ·
-Numbers · Presence (follow the sun) · Governments we work with (seals) ·
-Government dossiers · Why governments (deck) · 33 checks (clock) · Packages
-(photo cards, 6 new images) · Enterprises (wave rings, letters) · SMB ·
-Business due diligence · International (globe) · Consumer (photo storefront,
-8 new images) · Platform (live graph) · Footer · then the phone pass.
+Ported in parallel by seven agents, one per canvas board, each in its own
+worktree against a shared brief, then merged here: people strip (curved drag),
+One in eight, How we know (orb steps), Numbers, Presence (follow the sun),
+Governments we work with (seals), government dossiers + MOM + premium, Why
+(deck), 33 checks (clock race), Packages (photo cards), Enterprises (wave
+rings + client letters), SMB, Business due diligence, International (globe),
+Consumer (photo storefront), Platform (live graph), footer v2 (all pages).
+
+- Page order follows the canvas. Demo2, HowItWorks and WhoItsFor render on the
+  phone only (their desktop trees were removed, not hidden) until the phone pass.
+- Every looping section has a WCAG 2.2.2 pause; reduced motion shows end
+  states; canvas colours are read from CSS custom properties at runtime.
+- Merge lesson: agent worktrees are cut from `main`, not the current branch —
+  each brief must say `git merge --ff-only <branch>` first. Two BASELINE rows
+  were declared by two agents each; a duplicate key in a JS object literal
+  silently keeps only the last, so they were merged by hand.
+
+**Weight.** Integrated `/en` measured 566.8 KB (spec 500). Then:
+engines lazy-loaded on approach (`lib/whenNear.ts`) −9.7; dead desktop trees,
+`app/inner.css` split and compact ring paths −8.4 (stylesheet 41.9 → 39.6);
+Newsreader `wght` pinned at 400 (`tools/perf/pin-serif-weight.mjs`, opsz and
+every glyph kept) fonts 241.9 → 123.3. **Final 430.0 KB.** Rejected: moving
+static SVG from client stages to RSC (−2.3 script, +2.3 document, total ±0).
+Ceilings reset with reasons in `check-budgets.mjs`.
+
+Verified: `check:all` 11/11, 722 unit, 290 e2e (4 skipped), contract 29,
+redirects 840, `tsc`, ESLint.
+
+### 12.3 — Open
+
+- **Phone pass.** v2 is desktop-first; the canvas has no 390px boards for it.
+- **Owner confirmations:** "₹ — price to confirm" on four consumer services and
+  every Basic tier; "1 in 8" / "12–14%" sources; the four non-driver HelloV chat
+  scripts and globe card texts; the QR target; Cairo office days (board says
+  Mon–Fri); "30+ Checks" in Enterprises vs "33 checks" elsewhere.
+- `.npmrc`'s Windows cache path creates `helloverify-web/D:\Caches\npm/` on macOS.
 
 ## Demo readiness · audited 22 Sep 2026
 
