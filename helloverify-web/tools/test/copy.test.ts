@@ -845,7 +845,7 @@ const BANDS: Record<string, readonly [number, number]> = {
   govSeals: [0, 115],
   govDossiers: [0, 165],
   enterprises: [0, 103],
-  smb: [0, 49],
+  smb: [0, 50],
   diligence: [0, 27],
   trustPlatform: [0, 52],
 };
@@ -888,10 +888,11 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
 /** 1592 -> 1582: `whoItsFor`'s ten desktop-only leaves (see `BANDS`).
  *  1582 -> 1557: `oneInEight.compare`, the claimed-vs-verified card dropped
  *  on review (24 Sep 2026) — 25 string leaves. 1557 -> 1558: the ID badges'
- *  `enterprises.employees.turn`. */
+ *  `enterprises.employees.turn`. 1558 -> 1559: the SMB conversion pass
+ *  added `smb.best` and `smb.perCheck` and dropped `smb.included`. */
 check(
-  "sections holds 1558 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1558 &&
+  "sections holds 1559 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1559 &&
     leafPaths(EN_BLOCKS).length === 77 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
@@ -914,12 +915,14 @@ check(
  *  `whoItsFor` tags remain rich) and the band's `headingA`, `headingB`,
  *  `lede` and six `note`s. So 1563 strings, 14 rich-text + 5 functions.
  *  Dropping `oneInEight.compare` took 25 more strings: 1538; the badges'
- *  "Turn over" added one: 1539. */
+ *  "Turn over" added one: 1539. The SMB conversion pass swapped one string
+ *  for another (`smb.best` for `smb.included`) and added a sixth function,
+ *  `smb.perCheck`. */
 check(
-  "sections: 1539 string leaves, 14 rich-text leaves and 5 function leaves",
+  "sections: 1539 string leaves, 14 rich-text leaves and 6 function leaves",
   stringLeaves(EN_SECTIONS).length === 1539 &&
-    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 19 &&
-    [EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
+    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 20 &&
+    [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
 );
 

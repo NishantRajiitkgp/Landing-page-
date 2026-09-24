@@ -8,6 +8,7 @@
     three-step strip, and "Customize Your Package" — the only interactive
     piece, and so the only client island (`./SmbBuilder`). It has no loop
     that outlasts the click that started it, so it needs no pause control. */
+import { Arrow } from "@/components/brand/Arrow";
 import { Tick } from "@/components/brand/Tick";
 import { AppLink } from "@/components/chrome/AppLink";
 import { copy } from "@/lib/copy/request";
@@ -18,13 +19,27 @@ import { SmbBuilder, type SmbOption } from "./SmbBuilder";
 type Pack = "basic" | "standard" | "premium";
 type Line = "identity" | "criminal" | "global" | "address" | "moonlighting";
 
-/** Which lines each package lists, in its receipt's order, and the tilt it
- *  hangs at. The old SMB tab lists Premium's address check second. */
-const PACKS: { id: Pack; lines: Line[]; rot: string }[] = [
-  { id: "basic", lines: ["identity", "criminal", "global"], rot: "-1.4deg" },
-  { id: "standard", lines: ["identity", "criminal", "global", "address"], rot: "0.8deg" },
-  { id: "premium", lines: ["identity", "address", "criminal", "global", "moonlighting"], rot: "-0.6deg" },
+/** Which lines each package lists, what it adds over the tier below (drawn
+ *  highlighted), and the tilt it hangs at.
+ *
+ *  CONVERSION PASS (24 Sep 2026). The lines are in one order on every
+ *  receipt, the inherited ones first, so the eye can compare down the three
+ *  and the added check is always the last — the old SMB tab listed Premium's
+ *  address check second, which hid what Premium adds. Premium is the one
+ *  spotlit (`best`): at ≈₹480 a check it is the cheapest per check, and it
+ *  hangs straight, raised, with the green button. */
+const PACKS: { id: Pack; lines: Line[]; adds: Line[]; rot: string; best?: true }[] = [
+  { id: "basic", lines: ["identity", "criminal", "global"], adds: [], rot: "-1.4deg" },
+  { id: "standard", lines: ["identity", "criminal", "global", "address"], adds: ["address"], rot: "0.8deg" },
+  { id: "premium", lines: ["identity", "criminal", "global", "address", "moonlighting"], adds: ["moonlighting"], rot: "0deg", best: true },
 ];
+
+/** "₹2,399" over 5 checks -> "480", rounded and grouped the Indian way
+ *  (no `Intl`, so server and browser print the same); the copy adds the ₹. */
+function perCheck(price: string, n: number): string {
+  const each = Math.round(Number(price.replace(/[^0-9]/g, "")) / n);
+  return String(each).replace(/\B(?=(\d{2})*\d{3}$)/g, ",");
+}
 
 /** À-la-carte prices in rupees, from the old `/products/bgv-smb`. */
 const PRICES = { identity: 349, employment: 499, education: 999, address: 499, reference: 499 };
@@ -72,18 +87,31 @@ export async function Smb() {
           {PACKS.map((p) => {
             const pk = t.packs[p.id];
             return (
-              <div key={p.id} className="sm-pk" style={{ "--rot": p.rot } as React.CSSProperties}>
+              <div
+                key={p.id}
+                className={p.best ? "sm-pk sm-pk-best" : "sm-pk"}
+                style={{ "--rot": p.rot } as React.CSSProperties}
+              >
                 <Clip />
                 <div className="rc sm-rc">
                   <div className="hd">
                     <span>{pk.name}</span>
-                    <span>{t.mins}</span>
+                    <span className="sm-tat">
+                      <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+                        <circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" strokeWidth="1.2" />
+                        <path d="M6 3.4V6l1.8 1.1" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                      </svg>
+                      {t.mins}
+                    </span>
                   </div>
-                  <div className="tt">{pk.tt}</div>
+                  <div className="tt sm-tt">
+                    {pk.tt}
+                    {p.best && <span className="sm-stamp">{t.best}</span>}
+                  </div>
                   <div className="sub">{pk.sub}</div>
                   <div className="sep" />
                   {p.lines.map((l) => (
-                    <div key={l} className="ln">
+                    <div key={l} className={p.adds.includes(l) ? "ln sm-add" : "ln"}>
                       <Tick />
                       <span>{t.lines[l]}</span>
                     </div>
@@ -94,18 +122,24 @@ export async function Smb() {
                     <span className="lb">{t.tot(p.lines.length)}</span>
                     <span className="v">{pk.price}</span>
                   </div>
+                  <div className="sm-each">{t.perCheck(B.rupees(perCheck(pk.price, p.lines.length)))}</div>
+                  <AppLink href="/business/smb" className={p.best ? "btn sm-pk-buy sm-pk-buy-best" : "btn btn-ink sm-pk-buy"}>
+                    <span>{t.buy}</span>
+                    <Arrow />
+                  </AppLink>
                   <div className="bc" />
-                  <div className="act">
-                    <span className="who">{t.included}</span>
-                    <AppLink href="/business/smb" className="btn btn-ink btn-sm sm-pk-buy">
-                      {t.buy}
-                    </AppLink>
-                  </div>
                 </div>
               </div>
             );
           })}
         </div>
+
+        <a className="sm-custom" href="#sm-build">
+          <span>{B.kicker}</span>
+          <svg viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+            <path d="M6 2v8M2.5 6.5L6 10l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
 
         <div className="sm-steps">
           {Object.entries(t.steps).map(([k, s], i) => (

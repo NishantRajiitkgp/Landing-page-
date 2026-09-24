@@ -93,7 +93,7 @@ export function SmbBuilder({
   };
 
   return (
-    <div className="sm-build">
+    <div className="sm-build" id="sm-build">
       <div className="sm-build-l">
         {head}
         <div className="sm-opts">
