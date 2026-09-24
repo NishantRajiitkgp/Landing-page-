@@ -5,20 +5,20 @@
  *  Pure apart from the canvas it is handed: no DOM reads, no clock. The
  *  caller supplies the time and the palette (read from CSS custom properties
  *  at runtime, so there is no colour literal here either). Constants are the
- *  Business board's, unchanged. */
+ *  Business board's, unchanged.
+ *
+ *  The geometry and the simulation state live in `./enRings`, which the
+ *  island imports eagerly; this file, the drawing, is fetched by dynamic
+ *  import as the section approaches. */
 
-/** Canvas geometry, in the board's 640-unit canvas that overhangs the
- *  540 px perimeter box by 50 px each side. */
-export const SIZE = 640;
-export const C = SIZE / 2;
-const RS = [96, 170, 244];
+import { C, RS, SIZE, type Sim } from "./enRings";
+
+export { C, PILL_TOP, SIZE, newSim, ringAt, type Sim } from "./enRings";
+
 const K1 = [3, 4, 5];
 const BR = [20, 30, 42];
 const NODES = [8, 14, 20];
 const SAMP = 300;
-/** Each pill sits on its ring's 12 o'clock: `270 − r − 17` in the 540 box
- *  (17 = half the 34 px pill). */
-export const PILL_TOP = RS.map((r) => 270 - r - 17);
 
 export type RGB = [number, number, number];
 
@@ -50,34 +50,7 @@ const wrap = (a: number) => {
   return a - Math.PI;
 };
 
-/** Which ring (if any) a canvas-space point is over: within 24 units of it. */
-export function ringAt(x: number, y: number): number {
-  const d = Math.hypot(x - C, y - C);
-  let hov = -1;
-  RS.forEach((R, i) => {
-    if (Math.abs(d - R) < 24) hov = i;
-  });
-  return hov;
-}
-
-export type Sim = {
-  A: number[];
-  H: number[];
-  P: { x: number; y: number; in: boolean; e: number };
-  hov: number;
-  last: number;
-  rip: { t0: number; s: number }[];
-  nextRip: number;
-  th0: number;
-  t0: number;
-  ts: number;
-};
-
 export type Palette = { INK: RGB; GREEN: RGB; MINT: RGB; WHITE: RGB };
-
-export function newSim(): Sim {
-  return { A: [1, 0, 0], H: [0, 0, 0], P: { x: 0, y: 0, in: false, e: 0 }, hov: -1, last: -1, rip: [], nextRip: 0, th0: -Math.PI / 2, t0: 0, ts: 0 };
-}
 
 /** One frame at time `ts` (seconds) for selection `en`. `calm` = stopped:
  *  eased values snap to their targets and nothing time-driven is added. */
