@@ -26,10 +26,3 @@ export type PhoneMsgId = keyof BlocksCopy["helloVPhone"]["msgs"];
 /** A line in the phone's finished report. */
 export type PhoneReportRow = keyof BlocksCopy["helloVPhone"]["report"]["rows"];
 
-/** The four tables inside the process animation. Separate unions because the
- *  four panels are four independent lists and nothing should let a `read`
- *  field id stand where a `report` row id belongs. */
-export type ReadFieldId = keyof BlocksCopy["panels"]["read"]["fields"];
-export type DocCheckId = keyof BlocksCopy["panels"]["read"]["checks"];
-export type ConfirmEventId = keyof BlocksCopy["panels"]["confirm"]["events"];
-export type ReportRowId = keyof BlocksCopy["panels"]["report"]["rows"];
