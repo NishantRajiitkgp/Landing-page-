@@ -311,6 +311,137 @@ export const en = {
       basic: { name: "Driver · Basic", price: "499", ready: "Ready in 30 min", cta: "Buy Basic" },
       advanced: { name: "Driver · Advanced", price: "799", ready: "Ready in 30 min", cta: "Buy Advanced" },
     },
+    /** Homepage v2 (desktop): the HelloV storefront — eight photo panels,
+     *  a price card, the QR steps and the phone. `k`, `headingA`, `headingB`
+     *  and `lede` above are said again by this tree, string for string, so
+     *  they are not repeated here. The product names, one-liners and check
+     *  lists are the old homepage tabs and `/products/hellov`, verbatim; a
+     *  service without `price` shows the placeholder, which is deliberate
+     *  until the founder confirms the figure. */
+    shop: {
+      sheet: "Sheet 08 / 12",
+      lede: "The nannies, house staff, drivers, and tenants you trust with your home deserve thorough verification. 100% digital, fast and accurate — so you never have to wonder about the people closest to your family.",
+      whatsapp: "WhatsApp",
+      eta: "30 mins",
+      tiers: { basic: "Basic", advanced: "Advanced" },
+      tierNames: { basic: "Basic", advanced: "Advanced Package" },
+      popular: "MOST POPULAR",
+      currency: "INR",
+      tbc: { mark: "₹ —", note: "price to confirm" },
+      buy: "Buy Now",
+      /** Prefixes the Advanced price on a closed panel: "from ₹1799". */
+      from: "from",
+      groups: { home: "In your home", online: "Online" },
+      qr: "QR code: verify on WhatsApp",
+      steps: {
+        s1: { k: "STEP 01", t: "Scan QR Code using Whatsapp Camera" },
+        s2: { k: "STEP 02", t: "Select who you want to verify" },
+        s3: { k: "STEP 03", t: "The Person being verified using Whatsapp Camera" },
+      },
+      /** The phone replays its chat on a loop, so it carries the hero's pause
+       *  (WCAG 2.2.2) — the same two words. */
+      motion: { pause: "Pause motion", play: "Play motion" },
+      services: {
+        driver: {
+          short: "Driver",
+          title: "Driver Verification",
+          line: "Comprehensive driver verification ensures safe and reliable hiring.",
+          basic: ["Driving License Check", "Criminal Check"],
+          advanced: ["Driving License Check", "Criminal Check", "Voter Id Check", "Address Check"],
+          price: "₹1799",
+        },
+        homeStaff: {
+          short: "Home Staff",
+          title: "Home Staff Verification",
+          line: "End to end home staff verification ensures safe and trustworthy hiring.",
+          basic: ["Identity Check", "Criminal Check"],
+          advanced: ["Voter Id Check", "Criminal Check", "Address Check"],
+          price: "₹1399",
+        },
+        tenant: {
+          short: "Tenant",
+          title: "Tenant Verification",
+          line: "End-to-end tenant checks including credit, criminal, and identity signals.",
+          basic: ["Identity Check", "Criminal Check"],
+          advanced: ["Credit Check", "Criminal Check", "Aadhaar Check"],
+          price: "₹1799",
+        },
+        nanny: {
+          short: "Nanny",
+          title: "Nanny Verification",
+          line: "Trusted nanny verification covering identity, criminal, and address checks for your family.",
+          basic: ["Identity Check", "Criminal Check"],
+          advanced: ["Identity Check", "Criminal Check", "Address Check"],
+          price: "₹1399",
+        },
+        verifyAnyone: {
+          short: "Verify Anyone",
+          title: "Verify Anyone",
+          line: "Know your tenant, tutor, caretaker, or anyone else with fast identity and background checks.",
+          basic: ["Identity Check", "Criminal Check"],
+          advanced: ["Identity Check", "Criminal Check", "Current Address Check"],
+        },
+        cyberIdentity: {
+          short: "Cyber Identity",
+          title: "Cyber Identity Verification",
+          line: "Comprehensive cyber identity verification to protect against online fraud and impersonation.",
+          basic: ["Identity Check", "Criminal Check"],
+          advanced: ["Identity Check", "Criminal Check", "Social Media Check"],
+        },
+        knowIdentity: {
+          short: "Know The Identity",
+          title: "Know The Identity",
+          line: "Protect yourself from online identity fraud with fast document and database verification.",
+          basic: ["Identity Check"],
+          advanced: ["Identity Check", "Criminal Check"],
+        },
+        knowContact: {
+          short: "Know Your Contact",
+          title: "Know Your Contact",
+          line: "Protect yourself from frauds — verify picture, ID, and location before you trust a contact.",
+          basic: ["Identity Check", "Criminal Check"],
+          advanced: ["Identity Check", "Criminal Check", "Email Verification Check"],
+        },
+      },
+      /** The chat the phone plays for each service. The driver's is
+       *  `blocks.helloVPhone` itself; these four swap the lines that name the
+       *  person and the document, in the same bubbles, so the timing is shared.
+       *  All four online services play `online`. */
+      chats: {
+        homeStaff: {
+          ask: "Our new cook starts Monday. Advanced please.",
+          request: "Send a photo of her Voter ID, front and back.",
+          doc: "Voter ID",
+          read: { lead: "Read in 1.1 s ·", plate: "ABC •••• 4417", tail: ". Checking with the courts and her address now." },
+          rows: ["Voter ID · valid", "Criminal record · none found", "Address · confirmed"],
+          elapsed: "26 min",
+        },
+        tenant: {
+          ask: "A tenant for our flat. Advanced please.",
+          request: "Send a photo of his Aadhaar, front and back.",
+          doc: "Aadhaar",
+          read: { lead: "Read in 1.0 s ·", plate: "XXXX •••• 5720", tail: ". Running credit and court checks now." },
+          rows: ["Aadhaar · valid", "Criminal record · none found", "Credit · checked"],
+          elapsed: "29 min",
+        },
+        nanny: {
+          ask: "A nanny for our daughter. Advanced please.",
+          request: "Send a photo of her ID, front and back.",
+          doc: "Identity card",
+          read: { lead: "Read in 1.2 s ·", plate: "identity matched", tail: ". Checking with the courts and her address now." },
+          rows: ["Identity · matched", "Criminal record · none found", "Address · confirmed"],
+          elapsed: "28 min",
+        },
+        online: {
+          ask: "Someone I met online. Can you check them?",
+          request: "Send their photo and their ID.",
+          doc: "Identity card",
+          read: { lead: "Read in 1.3 s ·", plate: "photo matched", tail: ". Checking picture, ID and location now." },
+          rows: ["Identity · matched", "Criminal record · none found", "Email · verified"],
+          elapsed: "22 min",
+        },
+      },
+    },
   },
 
   /** `sections/Checks.tsx`. `items` is keyed by the ids the component
@@ -418,6 +549,133 @@ export const en = {
         note: "photo · Cairo rooftops",
         stats: { audience: "Tenants", count: "3", ready: "30 min" },
         by: "Today, 4:12 PM",
+      },
+    },
+    /** Homepage v2 (desktop): the globe. `headingA`, `headingB`, `lede`,
+     *  `courts` and `all` above are said again by this tree. Each pin's card
+     *  quotes what the site already says about that country — the Saudi
+     *  health-authority programme, the MOM empanelment, the embassy
+     *  partners, the office pages — and its `rows` are ragged on purpose:
+     *  a card lists what there is to say, so they are an array, not a table. */
+    globe: {
+      kicker: "Global Verification",
+      sheet: "Sheet 09 / 12",
+      canvas: "Interactive globe showing HelloVerify countries",
+      hud: "HelloVerify network",
+      /** The HUD's live read-out and each card's coordinates. */
+      compass: { n: "N", s: "S", e: "E", w: "W" },
+      legend: { hq: "Head office", office: "Office", route: "Verification route" },
+      spin: "Spin",
+      speeds: { still: "Still", slow: "Slow", steady: "Steady", fast: "Fast" },
+      close: "Back to the world view",
+      world: {
+        k: "International Background Verification",
+        big: "120",
+        plus: "+",
+        line: "countries where we can reach the issuing authority.",
+        officesK: "Our Offices",
+        offices: ["Egypt", "India", "Philippines", "Singapore", "United Arab Emirates", "United States"],
+        tip: "Drag the globe · click a flag",
+      },
+      pins: {
+        in: {
+          name: "India",
+          role: "Head office · Noida",
+          head: "Trusted by India’s top IT/ITES companies for Background Verification",
+          rows: [
+            { k: "Checks", v: "20M+ completed since 2018" },
+            { k: "Clients", v: "India’s largest IT company · India’s largest Fintech company" },
+            { k: "Registry", v: "National Skills Registry" },
+            { k: "Government", v: "Government of India · Authorities" },
+          ],
+        },
+        sa: {
+          name: "Saudi Arabia",
+          /** The pin has no flag drawing; it shows this code instead. */
+          code: "KSA",
+          role: "Health authority · Primary Source Verification",
+          head: "HelloVerify is a globally recognised verification partner trusted by health authority in Saudi Arabia.",
+          rows: [
+            { k: "Programme", v: "Primary Source Verification for Healthcare Workforce" },
+            { k: "Categories", v: "Doctor Practitioners · Non-physician · Pharmacists · Nurses and Midwives" },
+            { k: "Reports", v: "Audit-ready, for fast, defensible licensing decisions" },
+          ],
+        },
+        ae: {
+          name: "United Arab Emirates",
+          role: "Office · Dubai",
+          head: "Ensure safe hiring in the United Arab Emirates with trusted house help verification including identity, criminal history and work eligibility.",
+          rows: [
+            { k: "Checks", v: "Criminal Records · Passport Check · Entitlement to Work" },
+            { k: "Ready in", v: "24 hrs" },
+            { k: "Government", v: "United Arab Emirates · Authorities" },
+          ],
+        },
+        sg: {
+          name: "Singapore",
+          role: "Office · Ministry of Manpower",
+          head: "HelloVerify is officially empanelled by Singapore’s Ministry of Manpower (MOM) to provide Primary Source Verification (PSV) for educational qualifications under the COMPASS framework.",
+          rows: [
+            { k: "Work passes", v: "Employment Pass (EP) · S Pass · ONE Pass · PEP · TEP" },
+            { k: "Education check", v: "SGD 108 per qualification" },
+            { k: "Express", v: "≤ 7 working days" },
+          ],
+        },
+        ph: {
+          name: "Philippines",
+          role: "Office · Manila",
+          head: "Trusted driver verification in the Philippines including criminal and driving license verification checks.",
+          rows: [
+            { k: "Checks", v: "Criminal Records · Driving License Check · Global Database Check" },
+            { k: "Ready in", v: "30 min" },
+          ],
+        },
+        eg: {
+          name: "Egypt",
+          role: "Office · Cairo",
+          head: "Comprehensive tenant verification in Egypt, including identity, criminal history and financial status.",
+          rows: [
+            { k: "Checks", v: "Criminal Records · Identity Check · Credit Check" },
+            { k: "Ready in", v: "30 min" },
+          ],
+        },
+        gb: {
+          name: "United Kingdom",
+          role: "Local sources",
+          head: "Hire drivers you can trust.",
+          rows: [
+            { k: "For", v: "Drivers" },
+            { k: "Checks", v: "2" },
+            { k: "Ready in", v: "30 min" },
+          ],
+        },
+        it: {
+          name: "Italy",
+          role: "Embassy partner · immigration",
+          head: "Our Partners — Embassy of Italy. Streamlining pre-screening and applicant verification.",
+          rows: [
+            { k: "Programme", v: "Immigration documents pre-screening" },
+            { k: "Visas", v: "Tourist · Student · Work" },
+          ],
+        },
+        lv: {
+          name: "Latvia",
+          role: "Embassy partner · immigration",
+          head: "Our Partners — Embassy of Latvia. Streamlining pre-screening and applicant verification.",
+          rows: [
+            { k: "Programme", v: "Immigration documents pre-screening" },
+            { k: "Visas", v: "Tourist · Student · Work" },
+          ],
+        },
+        us: {
+          name: "United States",
+          role: "Office · New York",
+          head: "From Manila to New York, office hours overlap so a request filed at night in one place is picked up in the morning somewhere else.",
+          rows: [
+            { k: "Offices", v: "Six offices. Twelve hours apart." },
+            { k: "Coverage", v: "Someone at a desk · 21 of 24 hours" },
+          ],
+        },
       },
     },
   },
