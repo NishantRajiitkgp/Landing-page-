@@ -67,65 +67,6 @@
   .foot2 .base { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
 
-/* ============ DEMO v2 (homepage — approved redesign of the canvas DEMO) ============ */
-.demo2 { position: relative; margin-top: 56px; border-radius: 26px; padding: 1.5px; overflow: hidden; }
-.demo2 .dcard2 { position: relative; border-radius: 25px; background: #FFFFFF; box-shadow: 0 40px 80px -50px rgba(21,20,15,0.45); overflow: hidden; }
-.d2grid { display: grid; grid-template-columns: 340px minmax(0, 1fr) minmax(0, 1fr); }
-.d2col { padding: 26px 28px 24px; }
-.d2col + .d2col { border-inline-start: 1px solid var(--hair); }
-.d2scan { background: #FBFAF6; display: flex; flex-direction: column; }
-.d2stage { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 200px; }
-.lic.d2 { width: 236px; height: 146px; }
-.lic.d2 .lt { font-size: 8px; } .lic.d2 .lr { font-size: 9px; }
-.lic.d2 .face { width: 52px; height: 66px; top: 34px; }
-.lic.d2 .ln1, .lic.d2 .ln2, .lic.d2 .ln3, .lic.d2 .ln4 { inset-inline-start: 80px; height: 5px; }
-.lic.d2 .ln1 { top: 42px; width: 116px; } .lic.d2 .ln2 { top: 58px; width: 76px; }
-.lic.d2 .ln3 { top: 74px; width: 98px; } .lic.d2 .ln4 { top: 90px; width: 58px; }
-.lic.d2 .holo { width: 28px; height: 28px; }
-.d2beam { inset-inline-start: 34px; inset-inline-end: 34px; animation-duration: 6s; animation-name: d2beam; }
-@keyframes d2beam { 0% { top: 8%; opacity: 0; } 6% { opacity: 1; } 46% { top: 92%; opacity: 1; } 52% { opacity: 0; }
-                    58% { top: 92%; opacity: 0; } 64% { opacity: 1; } 96% { top: 8%; opacity: 1; } 100% { top: 8%; opacity: 0; } }
-.d2cap { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px;
-         font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.d2cap .chip2 { display: inline-flex; align-items: center; gap: 7px; height: 26px; padding-block: 0; padding-inline: 9px 10px;
-                border-radius: 999px; background: #FFFFFF; border: 1px solid var(--hair); }
-.d2h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
-       font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
-       padding-bottom: 12px; border-bottom: 1px solid var(--hair); }
-.d2h b { font-weight: 500; color: var(--green); letter-spacing: 0.04em; }
-.d2f { display: grid; grid-template-columns: 104px minmax(0, 1fr) 16px; gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px dashed #EAE6DC; }
-.d2f:last-child { border-bottom: 0; padding-bottom: 0; }
-.d2f .d2fl { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.d2f .d2fv { font-family: var(--mono); font-size: 13.5px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.d2f .tick { position: relative; top: 2px; }
-.d2c { display: flex; align-items: baseline; gap: 10px; padding: 10px 0; border-bottom: 1px dashed #EAE6DC; }
-.d2c:last-child { border-bottom: 0; padding-bottom: 0; }
-.d2c .tick { position: relative; top: 2px; flex: 0 0 auto; }
-.d2c .cl { font-size: 14.5px; font-weight: 500; letter-spacing: -0.005em; }
-.d2c .cs { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.d2c .cv { margin-inline-start: auto; font-family: var(--mono); font-size: 12px; color: var(--green); white-space: nowrap; }
-.d2meter { position: relative; width: 56px; height: 3px; border-radius: 2px; background: #EAE6DC; display: inline-block; vertical-align: 2px; margin-inline-end: 8px; }
-.d2meter i { position: absolute; inset: 0 2% 0 0; border-radius: 2px; background: var(--green); }
-.d2foot { display: flex; align-items: center; gap: 14px; padding: 18px 28px; border-top: 1px solid var(--hair); background: #FBFAF6; }
-.d2foot .fmsg { font-family: var(--mono); font-size: 12.5px; color: var(--ink); }
-.d2foot .fsub { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.d2foot .fright { margin-inline-start: auto; display: flex; align-items: center; gap: 16px; }
-.d2foot .ftime { font-family: var(--serif); font-style: italic; font-size: 24px; letter-spacing: -0.02em; color: var(--green); white-space: nowrap; }
-.d2foot .ftime small { font-family: var(--mono); font-style: normal; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-inline-end: 8px; }
-.d2prog { position: relative; width: 120px; height: 3px; border-radius: 2px; background: #E7E2D6; overflow: hidden; }
-.d2prog span { position: absolute; top: 0; bottom: 0; inset-inline-start: 0; width: 45%; border-radius: 2px; background: var(--green); animation: shimmer2 2.4s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
-@keyframes shimmer2 { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
-@keyframes d2in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.d2f, .d2c { animation: d2in 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
-@media (max-width: 1080px) {
-  .d2grid { grid-template-columns: 1fr; }
-  .d2col { padding: 20px 18px; }
-  .d2col + .d2col { border-inline-start: 0; border-top: 1px solid var(--hair); }
-  .d2stage { min-height: 180px; }
-  .d2f { grid-template-columns: 92px minmax(0, 1fr) 16px; }
-  .d2foot { flex-wrap: wrap; padding: 16px 18px; }
-  .d2foot .fright { margin-inline-start: 0; width: 100%; justify-content: space-between; }
-}
 
 /* The canvas drew .inp as a styled div. These are real controls now: make them
    fill their grid cell, keep the paper field look, and strip UA chrome. */
