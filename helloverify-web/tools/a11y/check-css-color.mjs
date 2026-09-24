@@ -351,6 +351,22 @@ const BASELINE = {
   "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
   "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
+  // ── homepage v2 · Numbers (`src/app/v2/numbers.css`). A surface, never text.
+  "decl #EDE9E0": { n: 1, why: "--v2-nm-track: the pace bar's empty groove, a step lighter than --hair" },
+
+  // ── homepage v2 · Presence, follow the sun (`src/app/v2/presence.css`).
+  //    Read at runtime by the canvas painter (`sections/sunPaint.ts`) so no
+  //    colour is typed in TS. Every one is canvas artwork: the sun, its
+  //    light and the night side. None is CSS text.
+  "decl #FFD682": { n: 1, why: "--v2-su-glow: the warm daylight wash round the sun" },
+  "decl #FFC450": { n: 1, why: "--v2-su-sun: the sun's halo" },
+  "decl #FFE6A3": { n: 1, why: "--v2-su-core-hi: the sun disc's lit edge, and the wash's outer stop" },
+  "decl #F2A92E": { n: 1, why: "--v2-su-core-lo: the sun disc's shaded edge" },
+  "decl #D69628": { n: 1, why: "--v2-su-amber: the sun's rays and the dashed noon meridian" },
+  "decl #B07014": { n: 1, why: "--v2-su-amber-ink: the NOON label drawn on the canvas" },
+  "decl #2C3A54": { n: 1, why: "--v2-su-night: the night side, the midnight meridian and its label" },
+  "decl #787C8C": { n: 1, why: "--v2-su-dusk: a land dot on the night side (green by day)" },
+
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
   //    debt rule 3 pins: not a contrast failure, but colour nobody can
