@@ -1,15 +1,16 @@
 "use client";
 
-/** The interactive part of `sections/OneInEight.tsx`: the evidence table, its
-    UV lamp, and the claimed-vs-verified comparison under it. One island
-    because all three read the same state — which certificates are checked,
-    whether the forgery has been found, and which side of the comparison is
-    showing (the canvas's `fraudVals()`).
+/** The interactive part of `sections/OneInEight.tsx`: the evidence table and
+    its UV lamp. One island because the certificates, the status line and the
+    reveal button read the same state — which certificates are checked and
+    whether the forgery has been found (the canvas's `fraudVals()`). The
+    canvas's claimed-vs-verified card under the table was dropped on review
+    (24 Sep 2026): it retold what the table already shows.
 
     - **Checking.** Clicking a genuine certificate stamps it verified; clicking
-      the forgery (or "Show me the forgery") refers it, stamps the other seven,
-      and turns the comparison to "Verified". The status line is a polite live
-      region, so the count is announced as it changes.
+      the forgery (or "Show me the forgery") refers it and stamps the other
+      seven. The status line is a polite live region, so the count is
+      announced as it changes.
     - **The lamp.** Pointer position is written to `--mx`/`--my`/`--uv` through
       CSSOM on the table, as `HeroStage` does, so moving the lamp costs no
       render. It is a pointer flourish; the keyboard path to the same finding
@@ -23,7 +24,6 @@
 
 import { useCallback, useState, type MouseEvent } from "react";
 
-import { Tick } from "@/components/brand/Tick";
 import type { SectionsCopy } from "@/lib/copy/sections";
 import { closedPolyline, polarRing } from "@/lib/svgPath";
 
@@ -31,7 +31,7 @@ type T = SectionsCopy["oneInEight"];
 type CertId = keyof T["certs"];
 
 const ORDER: CertId[] = ["aldermoor", "kestrel", "meridia", "lindenfield", "harbourline", "westmarch", "crestvale", "aurelian"];
-/** Application 06 — the one the comparison under the table is about. */
+/** Application 06, the forgery. */
 const FORGED: CertId = "westmarch";
 
 /** A guilloche ring: radius `R` modulated by `A` over `n` lobes, 8 points a lobe
@@ -100,23 +100,13 @@ function Uv({ id, t }: { id: CertId; t: T }) {
   );
 }
 
-function Cross() {
-  return (
-    <svg className="ff-x" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <path d="M4.5 4.5l7 7M11.5 4.5l-7 7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 export function OneInEightTable({ t }: { t: T }) {
   const [checked, setChecked] = useState<CertId[]>([]);
   const [found, setFound] = useState(false);
-  const [verified, setVerified] = useState(false);
 
   const pick = (id: CertId) => {
     if (id === FORGED) {
       setFound(true);
-      setVerified(true);
     } else if (!checked.includes(id)) {
       setChecked([...checked, id]);
     }
@@ -125,10 +115,8 @@ export function OneInEightTable({ t }: { t: T }) {
     if (found) {
       setFound(false);
       setChecked([]);
-      setVerified(false);
     } else {
       setFound(true);
-      setVerified(true);
     }
   };
 
@@ -145,8 +133,6 @@ export function OneInEightTable({ t }: { t: T }) {
   const offLamp = useCallback((e: MouseEvent<HTMLDivElement>) => {
     e.currentTarget.style.setProperty("--uv", "0");
   }, []);
-
-  const c = t.compare;
 
   return (
     <>
@@ -218,68 +204,6 @@ export function OneInEightTable({ t }: { t: T }) {
               {found ? t.reset : t.reveal}
             </button>
           </div>
-        </div>
-      </div>
-
-      <div className={found ? "ff-compare ff-found" : "ff-compare"}>
-        <div className="ff-cmp-l">
-          <div className="ff-big">
-            <Face id={FORGED} t={t} />
-            <span className="ff-ring ff-ring-name" aria-hidden="true" />
-            <span className="ff-ring ff-ring-seal" aria-hidden="true" />
-            <span className="ff-note ff-note-1" aria-hidden="true">{c.notes.template}</span>
-            <span className="ff-note ff-note-2" aria-hidden="true">{c.notes.seal}</span>
-          </div>
-        </div>
-        <div className="ff-cmp-r">
-          <div className="ff-cmp-top">
-            <span className="k">{c.app}</span>
-            <div className="ff-seg" role="group" aria-label={c.seg}>
-              <button type="button" className={verified ? "ff-seg-b" : "ff-seg-b ff-seg-on"} onClick={() => setVerified(false)} aria-pressed={!verified}>
-                {c.claimed}
-              </button>
-              <button type="button" className={verified ? "ff-seg-b ff-seg-on" : "ff-seg-b"} onClick={() => setVerified(true)} aria-pressed={verified}>
-                {c.verified}
-              </button>
-            </div>
-          </div>
-          <div className="ff-ledger-box">
-            {verified ? (
-              <div className="ff-ledger ff-ledger-in" key="ver">
-                {(["template", "institution", "registrar"] as const).map((k) => (
-                  <div className="ff-lr ff-bad" key={k}>
-                    <span>{c.result[k].l}</span>
-                    <b>{c.result[k].v}</b>
-                    <Cross />
-                  </div>
-                ))}
-                <div className="ff-lr">
-                  <span>{c.result.identity.l}</span>
-                  <b>{c.result.identity.v}</b>
-                  <Tick />
-                </div>
-                <div className="ff-verdict">
-                  <span className="ff-refdot" />
-                  <span>{c.referredVerdict}</span>
-                </div>
-              </div>
-            ) : (
-              <div className="ff-ledger ff-ledger-in" key="claim">
-                {(["degree", "institution", "year", "by"] as const).map((k) => (
-                  <div className="ff-lr" key={k}>
-                    <span>{c.claim[k].l}</span>
-                    <b>{c.claim[k].v}</b>
-                    <Tick tone="muted" />
-                  </div>
-                ))}
-                <div className="ff-verdict ff-verdict-claim">
-                  <span className="dot" />
-                  <span>{c.asSubmitted}</span>
-                </div>
-              </div>
-            )}
-          </div>
-          <p className="ff-mill">{c.mill}</p>
         </div>
       </div>
     </>
