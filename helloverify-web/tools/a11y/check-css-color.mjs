@@ -132,7 +132,7 @@ const root = new URL("../../", import.meta.url);
 const CENSUS = process.argv.includes("--census");
 
 /** Shipped stylesheets. Rule 1 is fatal here. */
-const SHEETS = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css"];
+const SHEETS = ["src/app/design.css", "src/app/pages.css", "src/app/inner.css", "src/app/globals.css"];
 /** Homepage v2: one hand-written sheet per section in `src/app/v2/`, read as a
  *  directory so a new section cannot ship a stylesheet this gate never sees. */
 SHEETS.push(

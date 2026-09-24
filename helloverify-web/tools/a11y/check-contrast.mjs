@@ -13,7 +13,7 @@
  *  background it cannot resolve (gradients, images, transparency), which on a
  *  design like this one is a lot of text. A token table has no such gaps.
  *
- *  It reads `design.css` and `pages.css` rather than a hand-kept list, so the
+ *  It reads `design.css` and `pages.css` (with `inner.css`, split out of it) rather than a hand-kept list, so the
  *  numbers come from the bytes that ship. Both carry a "generated, do not
  *  hand-edit" header from `tools/port/build-css.py`, and in practice both are
  *  maintained in place — the generator's inputs are present (measured 22 Sep
@@ -78,6 +78,7 @@ function ratio(a, b) {
 const css = [
   await readFile(new URL("src/app/design.css", root), "utf8"),
   await readFile(new URL("src/app/pages.css", root), "utf8"),
+  await readFile(new URL("src/app/inner.css", root), "utf8"),
 ].join("\n");
 
 /** The token table, from the `:root` the generator emits. */

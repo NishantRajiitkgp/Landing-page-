@@ -8,18 +8,13 @@
     `hv/no-color-literal` gives. Geometry and wording are the canvas's
     (`scripts/assemble_how2.py`: `licence()`, `degree()`, `SEAL`). */
 import type { SectionsCopy } from "@/lib/copy/sections";
+import { closedPolyline, polarRing } from "@/lib/svgPath";
 
 type Routes = SectionsCopy["howItWorks"]["v2"]["routes"];
 
+/** 8 vertices a lobe, relative moves on the 0.1 grid (`lib/svgPath.ts`). */
 function ring(cx: number, cy: number, R: number, A: number, n: number): string {
-  const N = n * 8;
-  const pts: string[] = [];
-  for (let i = 0; i <= N; i++) {
-    const a = (2 * Math.PI * i) / N;
-    const r = R + A * Math.sin(n * a);
-    pts.push(`${(cx + r * Math.cos(a)).toFixed(1)} ${(cy + r * Math.sin(a)).toFixed(1)}`);
-  }
-  return `M${pts.join(" L")}Z`;
+  return closedPolyline(polarRing(n * 8, (a) => R + A * Math.sin(n * a), cx, cy));
 }
 
 /** One period of the canvas's engraved wave lines (`waves()`), as a pattern

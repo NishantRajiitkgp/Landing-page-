@@ -10,13 +10,20 @@
     Rendered here, SSR still paints them before any JS runs, but what ships in
     the flight payload is these few lines of formula, not their output. */
 
+import { polyline } from "@/lib/svgPath";
+
 /** The dial: 120 ticks, one per country, from r=88 to r=100 about (110,110),
-    starting at twelve o'clock. Same maths as the board's generator. */
+    starting at twelve o'clock. Same maths as the board's generator; each tick
+    is `M` to its inner end and a relative `l` to its outer one, on the same
+    0.1 grid `.toFixed(1)` gave (`lib/svgPath.ts`). */
 const TICKS = Array.from({ length: 120 }, (_, k) => {
   const a = (2 * Math.PI * k) / 120 - Math.PI / 2;
   const c = Math.cos(a);
   const s = Math.sin(a);
-  return `M${(110 + 88 * c).toFixed(1)} ${(110 + 88 * s).toFixed(1)}L${(110 + 100 * c).toFixed(1)} ${(110 + 100 * s).toFixed(1)}`;
+  return polyline([
+    [110 + 88 * c, 110 + 88 * s],
+    [110 + 100 * c, 110 + 100 * s],
+  ]);
 }).join("");
 
 export function NumbersDial({ a, b }: { a: string; b: string }) {
