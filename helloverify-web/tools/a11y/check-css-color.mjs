@@ -418,6 +418,20 @@ const BASELINE = {
   "decl #AAC8FF": { n: 1, why: "--v2-sv-foil-blue: the seal foil's holographic blue stop" },
   "decl #ECE7DD": { n: 1, why: "--v2-gv-tab: an unselected dossier tab's card stock" },
   "decl #E8E3D9": { n: 1, why: "--v2-gv-back: the deepest sheet in the dossier stack" },
+  // ── homepage v2 · Trust Platform (`src/app/v2/platform.css`): the network
+  //    card's surfaces, plus two hover fills the canvas reads at runtime so
+  //    `sections/TrustNetwork.tsx` carries no hex. None is a text colour.
+  "decl #9FCDB5": { n: 1, why: "--v2-tq-edge: the legend's 'Verifications' line swatch" },
+  "decl #EEF7F1": { n: 1, why: "--v2-tq-glow: the network stage's centre glow" },
+  "decl #F7FBF8": { n: 1, why: "--v2-tq-mist: the network stage's mid-stop" },
+  "decl #F3F8F4": { n: 1, why: "--v2-tq-medal: the medallion's shaded rim" },
+  "decl #14573B": { n: 1, why: "--v2-tq-green-deep: a hovered customer node (canvas fill)" },
+  "decl #EAF5EE": { n: 1, why: "--v2-tq-mint: a hovered institution node (canvas fill)" },
+
+  // ── homepage v2 · footer (`src/app/v2/footer.css`, every route): the UV
+  //    lamp that reveals the giant wordmark. Surfaces and a glow, never text.
+  "decl #16132A": { n: 1, why: "--v2-fz-night: the UV lamp's dark disc over the wordmark" },
+  "decl #6EE7B0": { n: 1, why: "--v2-fz-uv: the fluorescent glow of the revealed wordmark" },
 
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
