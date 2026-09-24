@@ -9,9 +9,8 @@
     Everything but the canvas, the slider and the pause control is server
     markup (`./TrustPlatformStage` holds the pause state).
 
-    Desktop only, like the rest of v2 so far: the boards have no 390px
-    artboard, and this section is new, so there is no `.mob` tree to keep —
-    the phone simply does not render it yet. */
+    One tree at every width (the v2 phone pass, Sep 2026): on the phone the
+    bands stack and the network scales with its card (`platform.css`). */
 import { Logo } from "@/components/brand/Logo";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
@@ -69,122 +68,120 @@ export async function TrustPlatform() {
   const domainRow = DOMAINS.map((id) => t.domains.items[id]);
 
   return (
-    <div className="dsk">
-      <TrustPlatformStage kicker={t.kicker} sheet={t.sheet} pauseLabel={t.motion.pause} playLabel={t.motion.play}>
-        <div className="sec-head tq-head">
-          <h2 className="h2 tq-h2">
-            {t.headline}
-            <br />
-            <em className="tq-it">{t.headlineEm}</em>
-          </h2>
-          <p className="lede tq-lede">{t.lede}</p>
-        </div>
+    <TrustPlatformStage kicker={t.kicker} sheet={t.sheet} pauseLabel={t.motion.pause} playLabel={t.motion.play}>
+      <div className="sec-head tq-head">
+        <h2 className="h2 tq-h2">
+          {t.headline}
+          <br />
+          <em className="tq-it">{t.headlineEm}</em>
+        </h2>
+        <p className="lede tq-lede">{t.lede}</p>
+      </div>
 
-        <div className="tq-row">
-          <div className="tq-net">
-            <div className="tq-net-top">
-              <span className="tq-net-t">{t.net.title}</span>
-              <span className="tq-legend">
-                <i className="tq-lg-i" />{t.net.legend.institutions}
-                <i className="tq-lg-c" />{t.net.legend.customers}
-                <i className="tq-lg-e" />{t.net.legend.verifications}
+      <div className="tq-row">
+        <div className="tq-net">
+          <div className="tq-net-top">
+            <span className="tq-net-t">{t.net.title}</span>
+            <span className="tq-legend">
+              <i className="tq-lg-i" />{t.net.legend.institutions}
+              <i className="tq-lg-c" />{t.net.legend.customers}
+              <i className="tq-lg-e" />{t.net.legend.verifications}
+            </span>
+          </div>
+          <TrustNetwork t={t.net}>
+            <div className="tq-med" aria-hidden="true">
+              <span className="tq-rip" />
+              <span className="tq-rip tq-rip2" />
+              {/* The dial's 72 ticks are two dashed circles, not 72 lines:
+                  a 1-unit dash every 5° (every 30° on the inner, longer
+                  ring). `pathLength="360"` makes the dash maths degrees.
+                  The board's 72 `<line>`s were ~5 KB of markup, sent twice
+                  (HTML and flight payload). */}
+              <svg className="tq-dial" viewBox="0 0 160 160">
+                <circle cx="80" cy="80" r="75.5" pathLength="360" strokeWidth="3" strokeDasharray="0.76 4.24" strokeDashoffset="0.38" />
+                <circle cx="80" cy="80" r="72.5" pathLength="360" strokeWidth="3" strokeDasharray="0.79 29.21" strokeDashoffset="0.395" />
+              </svg>
+              <span className="tq-med-in">
+                <Logo width={96} height={28} />
               </span>
             </div>
-            <TrustNetwork t={t.net}>
-              <div className="tq-med" aria-hidden="true">
-                <span className="tq-rip" />
-                <span className="tq-rip tq-rip2" />
-                {/* The dial's 72 ticks are two dashed circles, not 72 lines:
-                    a 1-unit dash every 5° (every 30° on the inner, longer
-                    ring). `pathLength="360"` makes the dash maths degrees.
-                    The board's 72 `<line>`s were ~5 KB of markup, sent twice
-                    (HTML and flight payload). */}
-                <svg className="tq-dial" viewBox="0 0 160 160">
-                  <circle cx="80" cy="80" r="75.5" pathLength="360" strokeWidth="3" strokeDasharray="0.76 4.24" strokeDashoffset="0.38" />
-                  <circle cx="80" cy="80" r="72.5" pathLength="360" strokeWidth="3" strokeDasharray="0.79 29.21" strokeDashoffset="0.395" />
-                </svg>
-                <span className="tq-med-in">
-                  <Logo width={96} height={28} />
-                </span>
-              </div>
-            </TrustNetwork>
-          </div>
+          </TrustNetwork>
+        </div>
 
-          <div className="tq-fly">
-            <div className="tq-wheel" aria-hidden="true">
-              <div className="tq-wheel-r" />
-              <div className="tq-wheel-in">
-                {WORDS.map((id, i) => (
-                  <span key={id} className="tq-w" style={{ "--a": `${i * 60}deg` } as React.CSSProperties}>
-                    {t.wheel.words[id]}
-                  </span>
-                ))}
-              </div>
-              <div className="tq-wheel-c">
-                {t.wheel.lead}
-                <br />
-                <em>{t.wheel.em}</em>
-              </div>
-            </div>
-            <ol className="tq-fly-list">
-              {FLY.map((id, i) => (
-                <li key={id} className="tq-fl">
-                  <span className="tq-fl-n" aria-hidden="true">{`0${i + 1}`}</span>
-                  <div>
-                    <b>{t.fly[id].title}</b>
-                    <p>{t.fly[id].body}</p>
-                  </div>
-                </li>
+        <div className="tq-fly">
+          <div className="tq-wheel" aria-hidden="true">
+            <div className="tq-wheel-r" />
+            <div className="tq-wheel-in">
+              {WORDS.map((id, i) => (
+                <span key={id} className="tq-w" style={{ "--a": `${i * 60}deg` } as React.CSSProperties}>
+                  {t.wheel.words[id]}
+                </span>
               ))}
-            </ol>
-          </div>
-        </div>
-
-        <div className="tq-eng">
-          {ENGINES.map(({ id, icon }, i) => (
-            <div key={id} className="tq-e-card">
-              <div className="tq-e-top">
-                <span className="tq-e-n" aria-hidden="true">{`0${i + 1}`}</span>
-                <span className="tq-e-ic">
-                  <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">{icon}</svg>
-                </span>
-              </div>
-              <h3>{t.engines[id].title}</h3>
-              <p>{t.engines[id].body}</p>
             </div>
-          ))}
-        </div>
-
-        <div className="tq-dom">
-          <h3 className="tq-dom-k">{t.domains.kicker}</h3>
-          {/* The list is read once; the second copy exists only so the
-              marquee loops seamlessly, and is hidden from assistive tech. */}
-          <div className="tq-marq">
-            <div className="tq-marq-in">
-              <ul className="tq-marq-set">
-                {domainRow.map((d) => <li key={d} className="tq-d">{d}<i /></li>)}
-              </ul>
-              <ul className="tq-marq-set" aria-hidden="true">
-                {domainRow.map((d) => <li key={d} className="tq-d">{d}<i /></li>)}
-              </ul>
+            <div className="tq-wheel-c">
+              {t.wheel.lead}
+              <br />
+              <em>{t.wheel.em}</em>
             </div>
           </div>
+          <ol className="tq-fly-list">
+            {FLY.map((id, i) => (
+              <li key={id} className="tq-fl">
+                <span className="tq-fl-n" aria-hidden="true">{`0${i + 1}`}</span>
+                <div>
+                  <b>{t.fly[id].title}</b>
+                  <p>{t.fly[id].body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
+      </div>
 
-        <div className="tq-belief">
-          <div className="k">{t.belief.kicker}</div>
-          <p className="tq-b1">{t.belief.first}</p>
-          <p className="tq-b2">
-            {t.belief.lead}{" "}
-            <span className="tq-move">
-              {t.belief.move}
-              <svg className="tq-ul" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-                <path d="M3 14 C 110 8, 250 18, 397 9" pathLength="1" />
-              </svg>
-            </span>
-          </p>
+      <div className="tq-eng">
+        {ENGINES.map(({ id, icon }, i) => (
+          <div key={id} className="tq-e-card">
+            <div className="tq-e-top">
+              <span className="tq-e-n" aria-hidden="true">{`0${i + 1}`}</span>
+              <span className="tq-e-ic">
+                <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">{icon}</svg>
+              </span>
+            </div>
+            <h3>{t.engines[id].title}</h3>
+            <p>{t.engines[id].body}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="tq-dom">
+        <h3 className="tq-dom-k">{t.domains.kicker}</h3>
+        {/* The list is read once; the second copy exists only so the
+            marquee loops seamlessly, and is hidden from assistive tech. */}
+        <div className="tq-marq">
+          <div className="tq-marq-in">
+            <ul className="tq-marq-set">
+              {domainRow.map((d) => <li key={d} className="tq-d">{d}<i /></li>)}
+            </ul>
+            <ul className="tq-marq-set" aria-hidden="true">
+              {domainRow.map((d) => <li key={d} className="tq-d">{d}<i /></li>)}
+            </ul>
+          </div>
         </div>
-      </TrustPlatformStage>
-    </div>
+      </div>
+
+      <div className="tq-belief">
+        <div className="k">{t.belief.kicker}</div>
+        <p className="tq-b1">{t.belief.first}</p>
+        <p className="tq-b2">
+          {t.belief.lead}{" "}
+          <span className="tq-move">
+            {t.belief.move}
+            <svg className="tq-ul" viewBox="0 0 400 24" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path d="M3 14 C 110 8, 250 18, 397 9" pathLength="1" />
+            </svg>
+          </span>
+        </p>
+      </div>
+    </TrustPlatformStage>
   );
 }

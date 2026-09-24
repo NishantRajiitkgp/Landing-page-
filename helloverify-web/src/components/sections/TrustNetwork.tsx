@@ -36,7 +36,8 @@ import { LAST } from "@/lib/trustNetworkSteps";
 import { whenNear } from "@/lib/whenNear";
 import { MotionPaused } from "./TrustPlatformStage";
 
-/** The drawing box, in canvas units; CSS scales it to the 700×500 stage. */
+/** The drawing box, in canvas units; CSS scales it to the stage — 700×500
+ *  on desktop, the card's width at 7:5 on the phone. */
 const W = 700;
 const H = 500;
 

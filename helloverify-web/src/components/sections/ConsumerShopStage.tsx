@@ -1,6 +1,6 @@
 "use client";
 
-/** The HelloV storefront's interactive part (homepage v2, desktop;
+/** The HelloV storefront's interactive part (homepage v2, every width;
     `sections/ConsumerShop.tsx` renders the rest). Two pieces of state, as on
     the canvas board: which of the eight services is open, and whether its
     price card shows Basic or Advanced — one switch shared by all eight, so
@@ -59,7 +59,8 @@ export type ShopLabels = {
 
 /** The open panel is ~636px wide by 600px tall at 1440 and the photos are
  *  4:3, so `cover` scales them to 800px wide, 864px with the 1.08 zoom a
- *  closed panel carries: 60vw. Closed panels show the same file, grey. */
+ *  closed panel carries: 60vw. On the phone every panel is the full column,
+ *  ~350px of 390: 90vw. Closed panels show the same file, under a veil. */
 const SIZES_CX = "(max-width: 1080px) 90vw, 60vw";
 
 function WhatsAppIcon() {

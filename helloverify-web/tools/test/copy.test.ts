@@ -814,30 +814,32 @@ console.log("10. the numbers for `sections` and `blocks`, and the keys they had 
 const EN_SECTIONS = pick(SECTIONS, DEFAULT);
 const EN_BLOCKS = pick(BLOCKS, DEFAULT);
 
+/** THE PHONE PASS (25 Sep 2026) made every v2 band one tree at every width,
+ *  so the leaves only the deleted `.mob` trees read went with them (hero
+ *  38 -> 37, numbers 26 -> 24, why 89 -> 77, howItWorks 168 -> 161, consumer
+ *  162 -> 136, checks 77 -> 59, international 152 -> 117, packages 61 -> 56,
+ *  peopleStrip 53 -> 35, presence 67 -> 52), and the three phone-only bands
+ *  — `whoItsFor` [7, 19] and `demo2` [39, 43] here, `blocks.panels` [12, 38]
+ *  below — were deleted outright. Their matcher figures leave the historical
+ *  sums with them: 152 -> 106 nodes in `sections`, 27 -> 15 in `blocks`. */
 const BANDS: Record<string, readonly [number, number]> = {
   /** 6 -> 38 with homepage v2 (Sep 2026): the desktop tree gained the
    *  security-print notes, microtext, seal, motion labels and six doors (3
    *  leaves each). The matcher figure stays the migration-time 9 — it is the
    *  historical count the 152 below sums, not a re-measurement. */
-  hero: [9, 38],
+  hero: [9, 37],
   compliance: [4, 5],
-  numbers: [14, 26],
-  why: [8, 89],
-  howItWorks: [5, 168],
-  /** 29 -> 19 (Sep 2026 perf pass): the band renders only its phone tree
-   *  now, so the ten leaves only the deleted desktop bento read went with it
-   *  — `headingA`, `headingB`, `lede`, six placeholder `note`s, and the first
-   *  cell's desktop tag (its phone tag, the old `mobTag`, is now `tag`). */
-  whoItsFor: [7, 19],
-  consumer: [10, 162],
-  checks: [7, 77],
-  international: [6, 152],
-  packages: [7, 61],
-  peopleStrip: [2, 53],
+  numbers: [14, 24],
+  why: [8, 77],
+  howItWorks: [5, 161],
+  consumer: [10, 136],
+  checks: [7, 59],
+  international: [6, 117],
+  packages: [7, 56],
+  peopleStrip: [2, 35],
   contact: [11, 12],
   customerStory: [15, 18],
-  demo2: [39, 43],
-  presence: [8, 67],
+  presence: [8, 52],
   /** Bands homepage v2 added (Sep 2026). The first number is the migration-
    *  time `>text<` matcher count, which never saw them, so it is 0 and the
    *  152 sum below still describes the migration. The second is measured. */
@@ -850,20 +852,8 @@ const BANDS: Record<string, readonly [number, number]> = {
   trustPlatform: [0, 52],
 };
 
-/** v2 splits the hero headline so the underlined word is its own node
- *  (`sections/Hero.tsx`). The two halves are separated by a JSX `{" "}`, so
- *  they must rejoin to exactly `headline` with one space — or the desktop
- *  heading silently diverges from the phone's, which still renders
- *  `headline` whole. */
-check(
-  "sections.hero: headlineLead + ' ' + headlineMark === headline",
-  `${EN_SECTIONS.hero.headlineLead} ${EN_SECTIONS.hero.headlineMark}` === EN_SECTIONS.hero.headline,
-  { lead: EN_SECTIONS.hero.headlineLead, mark: EN_SECTIONS.hero.headlineMark, whole: EN_SECTIONS.hero.headline },
-);
-
 const BLOCK_FILES: Record<string, readonly [number, number]> = {
   helloVPhone: [15, 22],
-  panels: [12, 38],
 };
 
 for (const [k, v] of Object.entries(EN_SECTIONS)) {
@@ -892,13 +882,14 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  1559 -> 1557 and blocks 77 -> 60: the closing band's form is the real
  *  `ContactForm` now, so `contact.k`, `contact.submit` and the whole
  *  `blocks.leadMock` mock (17 leaves) went. 1557 -> 1558: the KYC phone's
- *  step heading, `enterprises.customers.stepsK`. */
+ *  step heading, `enterprises.customers.stepsK`. 1558 -> 1357 and blocks
+ *  60 -> 22: the phone pass (see `BANDS`). */
 check(
-  "sections holds 1558 leaves for 152 nodes and blocks 60 for 27 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1558 &&
-    leafPaths(EN_BLOCKS).length === 60 &&
-    Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
-    Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
+  "sections holds 1357 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1357 &&
+    leafPaths(EN_BLOCKS).length === 22 &&
+    Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
+    Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
   { sections: leafPaths(EN_SECTIONS).length, blocks: leafPaths(EN_BLOCKS).length },
 );
 
@@ -921,21 +912,28 @@ check(
  *  "Turn over" added one: 1539. The SMB conversion pass swapped one string
  *  for another (`smb.best` for `smb.included`) and added a sixth function,
  *  `smb.perCheck`. The real closing-band form dropped two strings: 1537;
- *  the KYC step heading added one: 1538. */
+ *  the KYC step heading added one: 1538. The phone pass took the strings
+ *  to 1346 and removed eight rich-text leaves (the `whoItsFor` and `demo2`
+ *  ones, both `checks.lanes` headings, `packages.more`) and one function
+ *  (`packages.tot`, with the receipt tree it labelled). What is left: six
+ *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
+ *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
+ *  functions. */
 check(
-  "sections: 1538 string leaves, 14 rich-text leaves and 6 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1538 &&
-    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 20 &&
-    [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
+  "sections: 1346 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1346 &&
+    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
+    [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
 );
 
-/** The 1 in `blocks`: `panels.read.checks.c1.l` (another `&amp;` split).
- *  The second, `leadMock.fields.mobile.value`, went with the mock form. */
+/** `blocks` is all strings now: its two rich-text leaves went with the mock
+ *  form (`leadMock.fields.mobile.value`) and the phone-only process panels
+ *  (`panels.read.checks.c1.l`). */
 check(
-  "blocks: 59 string leaves and 1 rich-text leaf",
-  stringLeaves(EN_BLOCKS).length === 59 &&
-    leafPaths(EN_BLOCKS).length - stringLeaves(EN_BLOCKS).length === 1,
+  "blocks: 22 string leaves and no rich-text leaf",
+  stringLeaves(EN_BLOCKS).length === 22 &&
+    leafPaths(EN_BLOCKS).length - stringLeaves(EN_BLOCKS).length === 0,
   { strings: stringLeaves(EN_BLOCKS).length, all: leafPaths(EN_BLOCKS).length },
 );
 
@@ -953,17 +951,6 @@ check(
  *  reading them back out of the dictionary would assert nothing.
  */
 check(
-  "Why's four evidence rows still key on the labels they keyed on",
-  [
-    EN_SECTIONS.why.evidence.read.label,
-    EN_SECTIONS.why.evidence.confirmed.label,
-    EN_SECTIONS.why.evidence.artefact.label,
-    EN_SECTIONS.why.evidence.reviewed.label,
-  ].join("|") === "Read by|Confirmed|Artefact|Reviewed",
-  Object.values(EN_SECTIONS.why.evidence).map((e) => e.label),
-);
-
-check(
   "HowItWorks' four steps still key on Upload/Read/Confirm/Report",
   [
     EN_SECTIONS.howItWorks.steps.upload.label,
@@ -974,23 +961,21 @@ check(
   Object.values(EN_SECTIONS.howItWorks.steps).map((s) => s.label),
 );
 
-/** The function leaf, against the template literal it replaced. Nine cards
- *  render this and `Packages.tsx`'s header measured the alternative spelling
- *  at 72 bytes of `<!-- -->`, so the string has to be identical and it has to
- *  arrive as ONE child. */
+/** A function leaf, against the label it prints. This pinned
+ *  `packages.tot` until the phone pass deleted the receipt tree it labelled;
+ *  `smb.tot` is the same shape — a number formatted into ONE child. */
 check(
-  "packages.tot(n) reproduces the template literal it replaced",
-  EN_SECTIONS.packages.tot(4) === "4 checks · ready in" &&
-    EN_SECTIONS.packages.tot(3) === "3 checks · ready in",
-  EN_SECTIONS.packages.tot(4),
+  "smb.tot(n) prints the receipt's count line",
+  EN_SECTIONS.smb.tot(4) === "4 checks · 60 mins" && EN_SECTIONS.smb.tot(3) === "3 checks · 60 mins",
+  EN_SECTIONS.smb.tot(4),
 );
 
 /** …and `leafPaths` counts it as one leaf rather than walking it, which is
  *  what makes the 438 above comparable with chrome's 77. */
 check(
   "leafPaths treats the function leaf as one leaf",
-  leafPaths(EN_SECTIONS.packages.tot).join("|") === "",
-  leafPaths(EN_SECTIONS.packages.tot),
+  leafPaths(EN_SECTIONS.smb.tot).join("|") === "",
+  leafPaths(EN_SECTIONS.smb.tot),
 );
 
 console.log("11. breaking the section 10 guards on purpose");
@@ -1013,12 +998,11 @@ check(
 /** THE KEY GUARD, broken. A renamed label is the exact mistake it exists for
  *  — it typechecks, it renders the same words in a different place, and it
  *  silently changes a React key. */
-const renamed = { ...EN_SECTIONS.why.evidence, read: { label: "Read", value: "x" } };
+const renamed = { ...EN_SECTIONS.howItWorks.steps, read: { ...EN_SECTIONS.howItWorks.steps.read, label: "Reading" } };
 check(
-  "the key guard WOULD fail on a renamed evidence label",
-  [renamed.read.label, renamed.confirmed.label, renamed.artefact.label, renamed.reviewed.label].join(
-    "|",
-  ) !== "Read by|Confirmed|Artefact|Reviewed",
+  "the key guard WOULD fail on a renamed step label",
+  [renamed.upload.label, renamed.read.label, renamed.confirm.label, renamed.report.label].join("|") !==
+    "Upload|Read|Confirm|Report",
   renamed.read.label,
 );
 
@@ -1037,9 +1021,9 @@ check(
 
 check(
   "…and does not fire on the JSX leaf actually shipped, because it is not a string",
-  stringLeaves({ more: EN_SECTIONS.packages.more }).length === 0 &&
-    typeof EN_SECTIONS.packages.more !== "string",
-  typeof EN_SECTIONS.packages.more,
+  stringLeaves({ credit: EN_SECTIONS.packages.lines.credit }).length === 0 &&
+    typeof EN_SECTIONS.packages.lines.credit !== "string",
+  typeof EN_SECTIONS.packages.lines.credit,
 );
 
 /** The `tot` guard, broken on the spelling that would put the number and the
@@ -1048,8 +1032,8 @@ check(
  *  `html-identity.mjs` and by the comment at the call site. */
 check(
   "the tot guard WOULD fail if the label's wording drifted",
-  ((n: number) => `${n} checks, ready in`)(4) !== EN_SECTIONS.packages.tot(4),
-  EN_SECTIONS.packages.tot(4),
+  ((n: number) => `${n} checks, 60 mins`)(4) !== EN_SECTIONS.smb.tot(4),
+  EN_SECTIONS.smb.tot(4),
 );
 
 console.log("12. the fourth corollary — `await copy()` in a fragment that ends in text");
@@ -1121,9 +1105,10 @@ function fragmentTextTails(source: string): string[] {
  *  STALENESS below: an entry that no longer matches is an entry to delete,
  *  which is the failure mode an allowlist normally hides. */
 const TAIL_ALLOW: Record<string, string> = {
-  "sections/Demo2.tsx:Demo2":
-    "five real builds measured this one byte-neutral; see the dated deviation " +
-    "in lib/copy/index.ts",
+  // Empty since the phone pass (25 Sep 2026) deleted `sections/Demo2.tsx`,
+  // its one entry ("five real builds measured this one byte-neutral"). The
+  // self-tests below build their own allowlist, so they still prove the
+  // mechanism with nothing listed here.
 };
 
 const tailOffenders: string[] = [];
@@ -1181,17 +1166,17 @@ check(
  *  must still fail, and a listed one that has been fixed must be reported as
  *  stale rather than sitting there forever granting an exemption nobody
  *  needs. */
-const pretendOffenders = ["sections/Demo2.tsx:Demo2", "blocks/LeadMock.tsx:MockFields"];
+const fakeAllow: Record<string, string> = { "sections/Allowed.tsx:Allowed": "measured byte-neutral" };
+const pretendOffenders = ["sections/Allowed.tsx:Allowed", "blocks/Unlisted.tsx:Unlisted"];
 check(
   "the allowlist WOULD still fail on an offender that is not listed",
-  pretendOffenders.filter((o) => TAIL_ALLOW[o] === undefined).join("|") ===
-    "blocks/LeadMock.tsx:MockFields",
-  pretendOffenders.filter((o) => TAIL_ALLOW[o] === undefined),
+  pretendOffenders.filter((o) => fakeAllow[o] === undefined).join("|") === "blocks/Unlisted.tsx:Unlisted",
+  pretendOffenders.filter((o) => fakeAllow[o] === undefined),
 );
 check(
   "…and the staleness check WOULD fail once the allowed one is fixed",
-  !Object.keys(TAIL_ALLOW).every((k) => ([] as string[]).includes(k)),
-  Object.keys(TAIL_ALLOW),
+  !Object.keys(fakeAllow).every((k) => ([] as string[]).includes(k)),
+  Object.keys(fakeAllow),
 );
 
 console.log("13. the numbers for `platform` and `governments`, and the keys they had to keep");
