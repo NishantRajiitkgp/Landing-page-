@@ -25,6 +25,7 @@ import { useCallback, useState, type MouseEvent } from "react";
 
 import { Tick } from "@/components/brand/Tick";
 import type { SectionsCopy } from "@/lib/copy/sections";
+import { closedPolyline, polarRing } from "@/lib/svgPath";
 
 type T = SectionsCopy["oneInEight"];
 type CertId = keyof T["certs"];
@@ -36,14 +37,7 @@ const FORGED: CertId = "westmarch";
 /** A guilloche ring: radius `R` modulated by `A` over `n` lobes, 8 points a lobe
  *  (canvas `ring()`, `scripts/assemble_fraud.py`). */
 function ring(R: number, A: number, n: number): string {
-  const N = n * 8;
-  const pts: string[] = [];
-  for (let i = 0; i <= N; i++) {
-    const a = (2 * Math.PI * i) / N;
-    const r = R + A * Math.sin(n * a);
-    pts.push(`${(r * Math.cos(a)).toFixed(1)} ${(r * Math.sin(a)).toFixed(1)}`);
-  }
-  return `M${pts.join(" L")}Z`;
+  return closedPolyline(polarRing(n * 8, (a) => R + A * Math.sin(n * a)));
 }
 
 function Crest() {

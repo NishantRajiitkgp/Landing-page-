@@ -21,6 +21,9 @@ from mkcomp import build              # noqa: E402
 #   Nav    -> chrome/SiteNav (audience-first IA nav)
 #   Demo   -> sections/Demo2 (demo redesign, Sep 2026)
 #   Footer -> chrome/SiteFooter (footer regrouped to the IA)
+# Desktop halves dropped by hand (homepage v2 replaced them; Sep 2026 perf
+# pass). Regenerating would put the never-shown `.dsk` tree back:
+#   HowItWorks, WhoItsFor -> phone tree only, wrapped in `.mob` by the page
 SECTIONS = [
     ('Hero',          'Main',     'HERO',               'Mobile',  'HERO',         'Hero - Verified at the source, in minutes.'),
     ('PeopleStrip',   'Main',     'PEOPLE STRIP',       'Mobile',  'PEOPLE STRIP', 'Drifting strip of verified people; the track is duplicated so the loop is seamless.'),

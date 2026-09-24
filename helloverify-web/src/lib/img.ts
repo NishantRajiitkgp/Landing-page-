@@ -156,7 +156,7 @@ export function tint(src: string): string {
  *  all in the other three), so the colour and its cause could drift apart.
  *
  *  **The three alpha values are the artboards' own and are NOT unified.** 0.4
- *  on the two mid tints and the bento, 0.45 on the five country cards, 0.35 on
+ *  on the two mid tints, 0.45 on the five country cards, 0.35 on
  *  the closing band. Collapsing them to one number would change what six tiles
  *  render, which is a DESIGN.md decision and not a lint fix; they are recorded
  *  per photograph instead, which is byte-faithful. Every entry here is the
@@ -168,8 +168,6 @@ const PLACEHOLDER_NOTE: Record<string, string> = {
   "/img/09-licensing-officer.jpg": "rgba(255,255,255,0.4)",
   /** `sections/PeopleStrip.tsx`, the live card at both breakpoints. */
   "/img/05-warehouse-pune.jpg": "rgba(255,255,255,0.4)",
-  /** `sections/WhoItsFor.tsx`, the one bento cell that carried `dimNote`. */
-  "/img/13-factory-floor.jpg": "rgba(255,255,255,0.4)",
   /** `sections/International.tsx`, all five country cards. */
   "/img/16-united-kingdom.jpg": "rgba(255,255,255,0.45)",
   "/img/17-philippines.jpg": "rgba(255,255,255,0.45)",
@@ -185,7 +183,7 @@ const PLACEHOLDER_NOTE: Record<string, string> = {
  *
  *  Undefined rather than throwing, which is the opposite of `tint()` above and
  *  deliberate: a missing tint is always a defect, whereas most photographs
- *  legitimately have no entry here - 14 of the 23 keep the default. Callers
+ *  legitimately have no entry here - 15 of the 23 keep the default (the WhoItsFor factory-floor entry went with that band's desktop tree, Sep 2026). Callers
  *  must therefore leave the `style` prop off entirely rather than pass
  *  `undefined` through it where the markup never had one; see the flight-payload
  *  note in `sections/Packages.tsx`.
