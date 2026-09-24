@@ -22,21 +22,17 @@
 
 import { useState, type ReactNode } from "react";
 
+import { closedPolyline, polarRing } from "@/lib/svgPath";
+
 import { useMotionPaused } from "./BizMotion";
 
 export type Letter = { role: string; co: string; q: ReactNode };
 
 /** Six offset rosettes of 14 lobes, r = 34 ± 5, and a plain ring at 24: the
  *  faint guilloche seal of the canvas letterhead (88-unit box). */
-const SEAL = Array.from({ length: 6 }, (_, l) => {
-  const pts: string[] = [];
-  for (let k = 0; k <= 180; k++) {
-    const t = (2 * Math.PI * k) / 180;
-    const r = 34 + 5 * Math.sin(14 * t + (l * Math.PI) / 3);
-    pts.push(`${(44 + r * Math.cos(t)).toFixed(1)} ${(44 + r * Math.sin(t)).toFixed(1)}`);
-  }
-  return `M${pts.join(" L")}Z`;
-});
+const SEAL = Array.from({ length: 6 }, (_, l) =>
+  closedPolyline(polarRing(180, (t) => 34 + 5 * Math.sin(14 * t + (l * Math.PI) / 3), 44, 44)),
+);
 
 export function ClientLetters({
   kicker,

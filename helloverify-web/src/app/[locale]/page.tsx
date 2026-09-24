@@ -66,7 +66,11 @@ export default async function Home({
             v2 desktop no longer shows stay on the phone, wrapped in `.mob`,
             until the v2 phone pass: Demo2 and HowItWorks (both folded into
             HowWeKnow) and WhoItsFor (its audiences now have their own bands —
-            GovSeals/GovDossiers, Enterprises, Smb, Diligence, Consumer). */}
+            GovSeals/GovDossiers, Enterprises, Smb, Diligence, Consumer).
+            The `.mob` here is their ONLY breakpoint switch: HowItWorks and
+            WhoItsFor render just their phone tree now, having carried a
+            never-shown `.dsk` copy into the HTML and the flight payload
+            (Sep 2026 perf pass). Demo2 is one tree at both widths. */}
         <div className="mob">
           <Demo2 />
         </div>

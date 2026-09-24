@@ -76,6 +76,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TARGETS = [
     os.path.join(HERE, '..', '..', 'src', 'app', 'design.css'),
     os.path.join(HERE, '..', '..', 'src', 'app', 'pages.css'),
+    os.path.join(HERE, '..', '..', 'src', 'app', 'inner.css'),
 ]
 
 # Property renames. Longest first so `border-left-width` is not half-matched by

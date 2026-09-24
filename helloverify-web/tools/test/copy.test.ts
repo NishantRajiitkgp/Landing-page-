@@ -824,7 +824,11 @@ const BANDS: Record<string, readonly [number, number]> = {
   numbers: [14, 26],
   why: [8, 89],
   howItWorks: [5, 168],
-  whoItsFor: [7, 29],
+  /** 29 -> 19 (Sep 2026 perf pass): the band renders only its phone tree
+   *  now, so the ten leaves only the deleted desktop bento read went with it
+   *  — `headingA`, `headingB`, `lede`, six placeholder `note`s, and the first
+   *  cell's desktop tag (its phone tag, the old `mobTag`, is now `tag`). */
+  whoItsFor: [7, 19],
   consumer: [10, 162],
   checks: [7, 77],
   international: [6, 152],
@@ -881,9 +885,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
   );
 }
 
+/** 1592 -> 1582: `whoItsFor`'s ten desktop-only leaves (see `BANDS`). */
 check(
-  "sections holds 1592 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1592 &&
+  "sections holds 1582 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1582 &&
     leafPaths(EN_BLOCKS).length === 77 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
@@ -901,10 +906,14 @@ check(
  *  (the highlighted phrase is a `<mark>`) and four function leaves that
  *  format a number into a label — `packages.count`, `smb.tot`,
  *  `smb.build.count`, `smb.build.rupees`. So 15 rich-text + 5 functions. */
+/** The Sep 2026 perf pass removed one rich-text leaf and nine strings: the
+ *  first `whoItsFor` tag ("Governments & authorities", desktop only — two
+ *  `whoItsFor` tags remain rich) and the band's `headingA`, `headingB`,
+ *  `lede` and six `note`s. So 1563 strings, 14 rich-text + 5 functions. */
 check(
-  "sections: 1572 string leaves, 15 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1572 &&
-    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 20 &&
+  "sections: 1563 string leaves, 14 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1563 &&
+    leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 19 &&
     [EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
 );
