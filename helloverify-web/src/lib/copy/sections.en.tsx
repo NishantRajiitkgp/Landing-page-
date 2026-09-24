@@ -135,6 +135,31 @@ export const en = {
       countries: { v: "120", l: "countries where we can reach the issuing authority." },
       catalogue: { v: "33", l: "verification checks, from a driving licence to a director's default history." },
     },
+    /** Homepage v2 (desktop) from here. The figures, captions and `plus`
+     *  above are reused as they are; these are the words the v2 board adds
+     *  around them. */
+    kicker: "Proof",
+    sheet: "Sheet 02 / 12",
+    /** The odometer's digits, one rolling column per digit. `figures.checks.v`
+     *  ("20M") stays the phone's figure. The component rolls every character
+     *  that is a digit and prints the rest (the group separators) as is, so a
+     *  locale that groups differently only edits this string. */
+    odometer: "20,000,000",
+    recount: "Count again",
+    pace: {
+      lead: "checks verified since you opened this page",
+      note: "About one every 14 seconds · our average pace since 2018",
+    },
+    /** The legend under each card: what one mark in its picture stands for. */
+    keys: {
+      clients: "One mark, one client",
+      countries: "One tick, one country",
+      catalogue: "One bar, one check",
+    },
+    /** Inside the dial, in the SVG. Decorative (`aria-hidden`) but visible. */
+    dial: { a: "ISSUING", b: "AUTHORITIES" },
+    /** The barcode's two ends: green bars are the fast checks. */
+    code: { fast: "An hour or less", slow: "Days · registrar or court" },
   },
 
   /** `sections/Why.tsx`. `reasons` is keyed by the ordinal the card prints,
@@ -855,7 +880,9 @@ export const en = {
     headingA: "Six offices.",
     headingB: "Twelve hours apart.",
     headingMob: "Six offices. Twelve hours apart.",
-    lede: "From Manila to New York, office hours overlap so a request filed at night in one place is picked up in the morning somewhere else. Working hours shown in UTC; the green line is now.",
+    /** Desktop only (the phone has `ledeMob`). v2 swapped the last sentence,
+     *  which described the old day band, for the map's instruction. */
+    lede: "From Manila to New York, office hours overlap so a request filed at night in one place is picked up in the morning somewhere else. Drag the sun to see who is at a desk.",
     ledeMob: "Working hours in UTC. The line is now.",
     hours: {
       h00: "00:00",
@@ -884,6 +911,52 @@ export const en = {
       ksa: { name: "Kingdom of Saudi Arabia", sub: "Authorities" },
       uae: { name: "United Arab Emirates", sub: "Authorities" },
       eu: { name: "European authorities", sub: "Verification workflows" },
+    },
+    /** Homepage v2 desktop: the follow-the-sun map (`sections/SunStage.tsx`,
+     *  a client island, so every string reaches it as a prop). A `{name}` is
+     *  filled in by the island; a function leaf cannot cross the server/client
+     *  boundary. The cities are `offices` above and the axis is `hours`. */
+    sun: {
+      hint: "Drag the sun",
+      back: "Back to now",
+      play: "Play 24 hours",
+      pause: "Pause",
+      map: "World map showing day and night over the six HelloVerify offices",
+      /** Drawn on the canvas, which is `role="img"` with `map` as its name. */
+      noon: "NOON",
+      midnight: "MIDNIGHT",
+      /** What the clock and the office times show before the page knows the
+       *  time: the server cannot, and must not guess (hydration). */
+      clock: "--:--",
+      yourTime: "{day} · your time",
+      days: { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat" },
+      utc: "{time} UTC",
+      open: "{n} of 6 offices open",
+      openNow: "{n} of 6 offices open now",
+      atDesk: "at a desk now",
+      closed: "closed",
+      countries: {
+        manila: "Philippines",
+        singapore: "Singapore",
+        noida: "India",
+        dubai: "UAE",
+        cairo: "Egypt",
+        newYork: "USA",
+      },
+      /** The same countries as they read after "in": "filed in the USA". */
+      countriesIn: {
+        manila: "the Philippines",
+        singapore: "Singapore",
+        noida: "India",
+        dubai: "the UAE",
+        cairo: "Egypt",
+        newYork: "the USA",
+      },
+      relay: "A request filed in {from} at {fromTime} is picked up in {to} at {toTime}.",
+      allClosed: "Every desk is closed. {office} opens in {h}h {m}m.",
+      allOpen: "Every office is at a desk.",
+      coverage: "Someone at a desk · {n} of 24 hours",
+      hour: "{h}:00 UTC",
     },
   },
 };

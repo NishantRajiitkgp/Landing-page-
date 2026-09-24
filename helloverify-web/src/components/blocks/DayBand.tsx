@@ -37,8 +37,12 @@ type Office = {
 
 /** In band order, west to east as the day runs. The stagger delay is derived
  *  from the position rather than stored: it was 0.0s to 0.5s in exactly this
- *  order, so a stored field would only be somewhere for the two to disagree. */
-const OFFICES: readonly Office[] = [
+ *  order, so a stored field would only be somewhere for the two to disagree.
+ *
+ *  Exported for the v2 desktop map (`sections/Presence.tsx`), whose office
+ *  cards and hour strip draw these same six flags — diffed against the v2
+ *  board's, byte for byte — so there is one drawing per country. */
+export const OFFICES: readonly Office[] = [
   {
     k: "manila",
     start: "4.17%",
