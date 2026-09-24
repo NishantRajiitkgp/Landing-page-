@@ -266,28 +266,22 @@ export const en = {
   howItWorks: {
     headingA: "One upload.",
     headingB: "Then we get to work.",
-    headingMob: "One upload. Then we get to work.",
     lede: "A driving licence in Bengaluru, start to finish. Thirty minutes, on loop.",
-    clock: { start: "09:40", end: "10:10" },
     steps: {
       upload: {
         label: "Upload",
-        sub: "09:40 · candidate's phone",
         cap: "Photograph the document. Edges, glare and focus are checked before the shutter fires.",
       },
       read: {
         label: "Read",
-        sub: "1.2 s · HelloVerify AI",
         cap: "AI captures every field, checks the document against itself, and finds the office that issued it.",
       },
       confirm: {
         label: "Confirm",
-        sub: "RTO Karnataka · the source",
         cap: "The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one.",
       },
       report: {
         label: "Report",
-        sub: "10:10 · shared with HR",
         cap: "One report, with the source named beside every result.",
       },
     },
@@ -406,63 +400,6 @@ export const en = {
     },
   },
 
-  /** `sections/WhoItsFor.tsx`. Keyed by photograph, which is the one field
-   *  of a bento cell that is neither copy nor duplicated — the same
-   *  argument `chrome.footer.links` makes for keying by href.
-   *
-   *  PHONE ONLY since the Sep 2026 perf pass, which deleted the band's
-   *  never-shown desktop tree (homepage v2 gave its audiences their own
-   *  bands). The leaves only that tree read went with it: `headingA`,
-   *  `headingB`, `lede`, the six placeholder `note`s, and the first cell's
-   *  desktop tag "Governments & authorities" — whose phone tag
-   *  "Governments" was the ragged `mobTag` field and is now plain `tag`, so
-   *  the table is square again. */
-  whoItsFor: {
-    headingMob: "For the moment you need to trust someone.",
-    cells: {
-      "/img/10-ministry-hall.jpg": {
-        tag: "Governments",
-        from: "from 3 days",
-        h: (
-          <>
-            Licences, visas
-            <br />
-            and permits
-          </>
-        ),
-      },
-      "/img/11-office-first-day.jpg": {
-        /** Real JSX. The artboard exporter split these two tags around the
-         *  `&amp;`, so each is five text children with React's `<!-- -->`
-         *  between them; a plain `"Enterprise & SMB · BGV"` collapses them
-         *  to one and moves the bytes. Same note as `Packages.tsx`'s `tt` and
-         *  `Checks.tsx`'s lane headings. */
-        tag: <>Enterprise{" "}&amp;{" "}SMB · BGV</>,
-        from: "from 30 min",
-        h: "Every hire, white-collar and blue",
-      },
-      "/img/12-phone-signup.jpg": {
-        tag: <>KYC · Trust{" "}&amp;{" "}Safety</>,
-        from: "15 min",
-        h: "Customers, verified at signup",
-      },
-      "/img/13-factory-floor.jpg": {
-        tag: "Vendors · Certifier",
-        from: "from 2 days",
-        h: "Know who you buy from",
-      },
-      "/img/14-visa-counter.jpg": {
-        tag: "Premium services",
-        from: "assisted",
-        h: "Visas and healthcare credentials",
-      },
-      "/img/15-home-doorway.jpg": {
-        tag: "Consumer · HelloV",
-        from: "30 min",
-        h: "The people in your home",
-      },
-    },
-  },
 
   /** `sections/Consumer.tsx`. `checkLines` is flat rather than nested per
    *  plan: the three lines are the same three strings in both cards, and
@@ -1167,50 +1104,6 @@ export const en = {
     readStory: "Read the story",
   },
 
-  /** `sections/Demo2.tsx`. The only band with no `.mob` tree — it is one
-   *  `.wrap` at both widths — so nothing here is duplicated per breakpoint.
-   *  Every row is written out longhand in the component with its own
-   *  animation delay, so the leaves are keyed to be read beside it rather
-   *  than iterated. */
-  demo2: {
-    kicker: "HelloVerify AI",
-    headingA: "Watch it read",
-    headingB: "a licence.",
-    lede: "Every document starts here. Fields, forgery checks and the issuing office — in about a second, before a person touches it.",
-    tabs: {
-      licence: "Driving licence",
-      degree: "Degree certificate",
-      pan: "PAN card",
-      passport: "Passport",
-      more: "+29",
-    },
-    licence: { title: "Driving licence", region: "IND" },
-    scan: { reading: "Reading · 0.9 s", sample: "sample document" },
-    extracted: { heading: "Extracted · 14 fields", time: "0.9 s" },
-    fields: {
-      name: { l: "Name", v: "A. Ramesh" },
-      dob: { l: "Date of birth", v: "14 Mar 1994" },
-      licence: { l: "Licence no.", v: "KA03 2019 0041782" },
-      vehicleClass: { l: "Class", v: "LMV · MCWG" },
-      valid: { l: "Valid till", v: "13 Mar 2039" },
-    },
-    checksHeading: "Checks",
-    checksVerdict: "All clear",
-    checks: {
-      /** Two more of the exporter's `&amp;` splits — real JSX, one leaf per
-       *  title, for the reason given at `whoItsFor.cells`. */
-      template: { l: <>Template{" "}&amp;{" "}fonts</>, s: "against Karnataka 2019 series", v: "match" },
-      hologram: { l: <>Hologram{" "}&amp;{" "}microtext</>, s: "tamper scan", v: "clear" },
-      face: { l: "Face vs. selfie", s: "liveness passed", v: "98%" },
-      issuer: { l: "Issuer located", s: "registry reachable", v: "RTO Karnataka" },
-    },
-    foot: {
-      msg: "Route: confirm at the source",
-      sub: "a person takes it from here — RTO Karnataka",
-      readyIn: "Ready in",
-      time: "30 min",
-    },
-  },
 
   /** `sections/Presence.tsx`. `hours` is keyed rather than an array because
    *  an array leaf derives to `string[]` and a locale could then ship four

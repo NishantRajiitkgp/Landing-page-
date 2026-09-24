@@ -3,7 +3,6 @@ import { Hero } from "@/components/sections/Hero";
 import { PeopleStrip } from "@/components/sections/PeopleStrip";
 import { OneInEight } from "@/components/sections/OneInEight";
 import { HowWeKnow } from "@/components/sections/HowWeKnow";
-import { Demo2 } from "@/components/sections/Demo2";
 import { Numbers } from "@/components/sections/Numbers";
 import { Presence } from "@/components/sections/Presence";
 import { GovSeals } from "@/components/sections/GovSeals";
@@ -11,8 +10,6 @@ import { GovDossiers } from "@/components/sections/GovDossiers";
 import { Why } from "@/components/sections/Why";
 import { Checks } from "@/components/sections/Checks";
 import { Packages } from "@/components/sections/Packages";
-import { HowItWorks } from "@/components/sections/HowItWorks";
-import { WhoItsFor } from "@/components/sections/WhoItsFor";
 import { Enterprises } from "@/components/sections/Enterprises";
 import { Smb } from "@/components/sections/Smb";
 import { Diligence } from "@/components/sections/Diligence";
@@ -62,18 +59,6 @@ export default async function Home({
         <PeopleStrip />
         <OneInEight />
         <HowWeKnow />
-        {/* Homepage v2 is desktop-first (TASKS.md Part 12). Three bands the
-            v2 desktop no longer shows stay on the phone, wrapped in `.mob`,
-            until the v2 phone pass: Demo2 and HowItWorks (both folded into
-            HowWeKnow) and WhoItsFor (its audiences now have their own bands —
-            GovSeals/GovDossiers, Enterprises, Smb, Diligence, Consumer).
-            The `.mob` here is their ONLY breakpoint switch: HowItWorks and
-            WhoItsFor render just their phone tree now, having carried a
-            never-shown `.dsk` copy into the HTML and the flight payload
-            (Sep 2026 perf pass). Demo2 is one tree at both widths. */}
-        <div className="mob">
-          <Demo2 />
-        </div>
         <Numbers />
         <Presence />
         <GovSeals />
@@ -81,12 +66,6 @@ export default async function Home({
         <Why />
         <Checks />
         <Packages />
-        <div className="mob">
-          <HowItWorks />
-        </div>
-        <div className="mob">
-          <WhoItsFor />
-        </div>
         <Enterprises />
         <Smb />
         <Diligence />

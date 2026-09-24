@@ -26,14 +26,6 @@ export const SECTIONS: Dictionary<SectionsCopy> = { en };
 /** `Why.tsx` — the ordinal a reason prints, which is also its React key. */
 export type WhyReasonId = keyof SectionsCopy["why"]["reasons"];
 
-/** `HowItWorks.tsx` — one of the four steps, named rather than positional
- *  because the caption cards, the desktop track and the mobile track all
- *  reach the same entry. */
-export type StepId = keyof SectionsCopy["howItWorks"]["steps"];
-
-/** `WhoItsFor.tsx` — a bento cell, keyed by its photograph. */
-export type CellSrc = keyof SectionsCopy["whoItsFor"]["cells"];
-
 /** `Consumer.tsx` — a service chip, a plan card, and a line inside one. */
 export type ServiceId = keyof SectionsCopy["consumer"]["services"];
 export type PlanId = keyof SectionsCopy["consumer"]["plans"];
