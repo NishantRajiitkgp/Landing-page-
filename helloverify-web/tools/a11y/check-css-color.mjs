@@ -351,6 +351,24 @@ const BASELINE = {
   "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
   "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
+  // ── homepage v2 · "Why governments" deck (`src/app/v2/why.css`): each card's
+  //    accent and the deep stop of its illustration tint (the light stop is
+  //    derived with color-mix). Surfaces only — small accent text reads a mix
+  //    of the accent with --ink that clears 4.5:1, never these directly.
+  "decl #2F6FB5": { n: 1, why: "--v2-wy-sky: the immigration card's accent" },
+  "decl #A77A2E": { n: 1, why: "--v2-wy-sand: the manpower & education card's accent" },
+  "decl #6B54A8": { n: 1, why: "--v2-wy-lilac: the business & trade card's accent" },
+  "decl #C2463B": { n: 1, why: "--v2-wy-rose: the fraud-alerts card's accent" },
+  "decl #1F7A6D": { n: 1, why: "--v2-wy-teal: the dashboards card's accent" },
+  "decl #3F5F8F": { n: 1, why: "--v2-wy-slate: the integration card's accent" },
+  "decl #E2F2E9": { n: 1, why: "--v2-wy-mint-t: the health card's illustration tint" },
+  "decl #E1ECF8": { n: 1, why: "--v2-wy-sky-t: the immigration card's illustration tint" },
+  "decl #F2E8D6": { n: 1, why: "--v2-wy-sand-t: the manpower card's illustration tint" },
+  "decl #EAE3F5": { n: 1, why: "--v2-wy-lilac-t: the business & trade card's illustration tint" },
+  "decl #F7E3E0": { n: 1, why: "--v2-wy-rose-t: the fraud-alerts card's illustration tint" },
+  "decl #DFF0EC": { n: 1, why: "--v2-wy-teal-t: the dashboards card's illustration tint" },
+  "decl #E2E8F0": { n: 1, why: "--v2-wy-slate-t: the integration card's illustration tint" },
+
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
   //    debt rule 3 pins: not a contrast failure, but colour nobody can

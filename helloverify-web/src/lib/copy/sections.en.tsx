@@ -165,6 +165,88 @@ export const en = {
       artefact: { label: "Artefact", value: "Sarathi record · PDF · hashed" },
       reviewed: { label: "Reviewed", value: "K.S. · audit trail, 5 events" },
     },
+    /** Homepage v2 (desktop): the deck of eight cards beside the reasons.
+     *  `card` and `evidence` above are the phone's photo card and stay until
+     *  its own part. The card copy is the canvas board's, word for word,
+     *  including its capitalisation. `cardOf` is a template the client island
+     *  fills (`{k}`, `{n}`) — a function cannot cross the server/client
+     *  boundary as a prop. The motion labels repeat the hero's on purpose. */
+    deck: {
+      kicker: "What we do for governments",
+      more: "Explore More",
+      cardOf: "Card {k} of {n}",
+      motion: { pause: "Pause motion", play: "Play motion" },
+      cards: {
+        health: {
+          tag: "Health Authorities",
+          title: "Primary Source Verification for Healthcare Workforce",
+          line: "Verify healthcare professionals credentials from primary source",
+          chips: ["Doctor Practitioners", "Non-physician", "Pharmacists", "Nurses and Midwives"],
+        },
+        immigration: {
+          tag: "Immigration Authorities",
+          title: "AI-Powered Verification for Faster, Safer Immigration Decisions.",
+          line: "Streamlining pre-screening & verification of Visa Application process",
+          chips: ["Tourist", "Student", "Work visa"],
+        },
+        manpower: {
+          tag: "Manpower & Education",
+          title: "AI-Powered Education Equivalency & Qualification Checks",
+          line: "Verifying education qualification from primary source",
+          chips: ["Degrees", "Diplomas", "Transcripts", "Marksheets"],
+        },
+        trade: {
+          tag: "Business & Trade",
+          title: "Authentication of credentials for foreign workers & business entities.",
+          line: "Verifying business entities & directors for regulatory compliance",
+          chips: ["Company registry", "Directors", "Workforce credentials"],
+        },
+        fraud: {
+          tag: "Why We Stand Out",
+          title: "Clear Fraud Alerts",
+          line: "AI driven fraud detection for forged documents and high risk applicants.",
+          chips: [],
+        },
+        dashboards: {
+          tag: "Why We Stand Out",
+          title: "Real-time Dashboards",
+          line: "Real-time dashboards provide comprehensive visibility for efficient operational oversight.",
+          chips: [],
+        },
+        reports: {
+          tag: "Why We Stand Out",
+          title: "Insightful and Informative Reports",
+          line: "Audit-ready reports with complete traceability and compliance support.",
+          chips: [],
+        },
+        integration: {
+          tag: "For Government and Diplomatic Missions",
+          title: "Scalable Integration",
+          line: "API-ready infrastructure to seamlessly integrate into existing hiring or visa processing systems.",
+          chips: [],
+        },
+      },
+      /** Words inside the eight illustrations. The illustrations are
+       *  `aria-hidden`, but a translator still has to see them. */
+      art: {
+        doctor: "Dr",
+        licence: "Health License",
+        verified: "Verified",
+        rows: ["Education Verification", "Health License", "Certificate Of Good Standing"],
+        flow: ["Applicant", "Document pre-screening", "Issuing sources", "Embassy"],
+        countries: "120+",
+        countriesUnit: "countries",
+        degree: "Degree",
+        registry: "Company registry",
+        director: "Director",
+        workforce: "Workforce credentials",
+        risk: "High risk",
+        live: "Real-time",
+        audit: "Audit-ready",
+        api: "API-ready",
+        systems: ["Hiring", "Visa processing"],
+      },
+    },
   },
 
   /** `sections/HowItWorks.tsx`. One entry per step, and the step name is
@@ -372,6 +454,29 @@ export const en = {
       hour: { big: "60 min", k: "Provident-fund and work-authorisation records" },
       slow: { big: "1–3 days", k: "Confirmed with a registrar, employer or authority" },
     },
+    /** Homepage v2 (desktop): the chronograph race. The tiles reuse `items`
+     *  above; the readout's resting label reuses `zone`. The `{n}`/`{total}`
+     *  strings are templates the client island fills, because a function leaf
+     *  cannot be passed to a Client Component as a prop. */
+    race: {
+      groups: { identity: "Identity", work: "Work & education", records: "Records & risk" },
+      checking: "Checking",
+      elapsed: "Elapsed",
+      min: "{n} min",
+      hour: "{n} hour",
+      hours: "{n} hours",
+      day: "{n} day",
+      days: "{n} days",
+      ofTotal: "{n} of {total}",
+      done: "of {total} done",
+      keyFast: "An hour or less",
+      keySlow: "Days · registrar or court",
+      run: "Run the clock",
+      restart: "Restart the clock",
+      again: "Run it again",
+      dialMin: "MIN",
+      dialDays: "DAYS",
+    },
   },
 
   /** `sections/International.tsx`. Keyed by photograph, as `whoItsFor` is.
@@ -445,6 +550,11 @@ export const en = {
     more: <>Trade licence, vendor risk{" "}&amp;{" "}premium packages</>,
     package: "Package",
     tot: (n: number) => `${n} checks · ready in`,
+    /** Homepage v2 (desktop) splits `tot` in two: the count sits over the
+     *  card's check list and "Ready in" on the photograph's glass chip. Both
+     *  are server-rendered, so the count can stay a function leaf. */
+    count: (n: number) => `${n} checks`,
+    readyIn: "Ready in",
     buy: "Buy now",
     explore: "Explore",
     /** ONE FLAT TABLE for every line on every card, not a `lines` nested per
