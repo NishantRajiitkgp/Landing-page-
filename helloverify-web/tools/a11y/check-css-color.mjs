@@ -410,6 +410,14 @@ const BASELINE = {
   "decl #2A2823": { n: 1, why: "--v2-sm-press: the receipt printer's top face (the .btn-ink:hover lift off --ink)" },
   "decl #050504": { n: 1, why: "--v2-sm-slot: the printer's paper slot, darker than --ink" },
   "decl #D8D3C9": { n: 1, why: "--v2-sm-dash: the printed receipt's dashed rules, .rc .sep's colour" },
+  // ── homepage v2 · governments (`src/app/v2/govseals.css`,
+  //    `src/app/v2/govdossier.css`). Surfaces only. Board shades within two
+  //    units of a token or an existing `--v2-*` tint were mapped onto it
+  //    rather than declared; these four have no neighbour on file.
+  "decl #FFE4A0": { n: 1, why: "--v2-sv-foil-gold: the seal foil's holographic gold stop" },
+  "decl #AAC8FF": { n: 1, why: "--v2-sv-foil-blue: the seal foil's holographic blue stop" },
+  "decl #ECE7DD": { n: 1, why: "--v2-gv-tab: an unselected dossier tab's card stock" },
+  "decl #E8E3D9": { n: 1, why: "--v2-gv-back: the deepest sheet in the dossier stack" },
 
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the

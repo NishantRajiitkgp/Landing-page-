@@ -42,6 +42,43 @@ export const FLAG_INDIA = (
   </>
 );
 
+/** Saudi Arabia, the UAE and the EU, moved here from `blocks/Governments.tsx`
+ *  (Sep 2026) because homepage v2's seals (`sections/GovSeals.tsx`) inlay the
+ *  same three drawings, and India's reason for living here now applies to
+ *  them too. Same elements, same attribute strings. */
+export const FLAG_KSA = (
+  <>
+    <rect width="30" height="20" fill="#006C35" />
+    <rect x="7" y="7.2" width="16" height="1.3" fill="#FFFFFF" rx="0.6" />
+    <rect x="9" y="11" width="12" height="1.1" fill="#FFFFFF" rx="0.5" />
+  </>
+);
+
+export const FLAG_UAE = (
+  <>
+    <rect width="30" height="6.7" fill="#00732F" />
+    <rect y="6.7" width="30" height="6.6" fill="#FFFFFF" />
+    <rect y="13.3" width="30" height="6.7" fill="#15140F" />
+    <rect x="3" width="8" height="20" fill="#FF0000" />
+  </>
+);
+
+/** The twelve stars, clockwise from three o'clock on a radius of 6. */
+const EU_STARS = [
+  ["21.00", "10.00"], ["20.20", "13.00"], ["18.00", "15.20"], ["15.00", "16.00"],
+  ["12.00", "15.20"], ["9.80", "13.00"], ["9.00", "10.00"], ["9.80", "7.00"],
+  ["12.00", "4.80"], ["15.00", "4.00"], ["18.00", "4.80"], ["20.20", "7.00"],
+];
+
+export const FLAG_EU = (
+  <>
+    <rect width="30" height="20" fill="#003399" />
+    {EU_STARS.map(([cx, cy]) => (
+      <circle key={`${cx},${cy}`} cx={cx} cy={cy} r="1" fill="#FFCC00" />
+    ))}
+  </>
+);
+
 export function Flag({ children, size }: { children: ReactNode; size: string }) {
   return (
     <span className="fl" style={{ width: size, height: size }}>

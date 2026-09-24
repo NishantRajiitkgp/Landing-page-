@@ -71,3 +71,9 @@ export type PersonSrcMob = keyof SectionsCopy["peopleStrip"]["mob"];
 export type HourId = keyof SectionsCopy["presence"]["hours"];
 export type OfficeId = keyof SectionsCopy["presence"]["offices"];
 export type GovId = keyof SectionsCopy["presence"]["govs"];
+
+/** `GovSeals.tsx` — one of the five authorities. `GovDossiers.tsx` — one of
+ *  the four dossiers. `GovMom.tsx` — a C2 scoring option. */
+export type GovSealId = keyof SectionsCopy["govSeals"]["items"];
+export type GovDossierId = keyof SectionsCopy["govDossiers"]["items"];
+export type MomC2Id = keyof SectionsCopy["govDossiers"]["mom"]["c2"];
