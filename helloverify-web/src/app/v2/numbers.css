@@ -1,0 +1,106 @@
+/* Homepage v2 · Numbers ("Proof", sheet 02). Imported by
+   `components/sections/Numbers.tsx`; the header of `hero.css` explains why v2
+   sheets are per-section and hand-written. Every selector is `nm-`.
+
+   ANIMATION IS OPT-IN. The rules below the static ones only animate under
+   `.nm-go`, which `NumbersStage.tsx` adds as each block nears the viewport.
+   So the resting styles are the FINAL frame — every strip on its digit, the
+   grid filled, the dial swept, the bars up — and that is what a reader
+   without JS, or a screenshot taken before scrolling, sees. The board ran
+   them on load, which on the canvas was the same moment you looked.
+
+   The two type sizes that would overflow below 1440px track the viewport
+   with `min()`: 212px is 14.72vw at 1440 and 96px is 6.67vw, so at 1081px
+   the odometer is 159px wide-set and still fits the 901px column. */
+
+/* The pace bar's empty track. One step lighter than `--hair`, which read as
+   a rule rather than a groove at 4px. A surface, never text. */
+:root {
+  --v2-nm-track: #EDE9E0;
+}
+
+@media (min-width: 1081px) {
+  .nm { padding-top: 160px; padding-bottom: 140px; }
+  .nm-mast { display: flex; justify-content: space-between; align-items: center; }
+  .nm-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .nm-head { margin-top: 22px; }
+  .nm-lede { margin-bottom: 8px; }
+  .nm-it { font-style: italic; }
+
+  /* ── The odometer ─────────────────────────────────────────────────────── */
+  .nm-hero { margin-top: 72px; }
+  .nm-odo-btn { display: block; padding: 0; border: 0; background: none; cursor: pointer; color: var(--ink); text-align: start; }
+  .nm-odo-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; border-radius: 8px; }
+  /* `direction: ltr` because the columns are flex items: under `dir="rtl"`
+     they would lay out right to left and print the number backwards. */
+  .nm-odo { display: flex; align-items: flex-start; direction: ltr; font-family: var(--serif); font-size: min(212px, 14.72vw); line-height: 1; letter-spacing: -.045em; font-variant-numeric: tabular-nums lining-nums; }
+  .nm-col { display: inline-block; height: 1em; overflow: hidden; padding-bottom: .02em; }
+  .nm-strip { display: block; transform: translateY(calc(var(--to) * -1em)); }
+  /* The strip's 40 digits are generated content, not 320 `<span>`s in the
+     HTML (the board's markup): same glyphs, same 1em pitch, ~5 KB lighter.
+     `\A ` is a line break — the space ends the escape, so `\A 1` is not
+     read as U+00A1. */
+  .nm-strip::before { content: "0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9\A 0\A 1\A 2\A 3\A 4\A 5\A 6\A 7\A 8\A 9"; display: block; white-space: pre; line-height: 1; }
+  .nm-comma { display: inline-block; margin-inline: -.04em; }
+  .nm-plus { margin-inline-start: .04em; font-size: .55em; line-height: 1.5; color: var(--green); }
+  .nm-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .nm-hero-cap { margin: 18px 0 0; font-size: 20px; line-height: 1.45; color: var(--ink-soft); }
+
+  /* ── The pace strip ───────────────────────────────────────────────────── */
+  .nm-pace { margin-top: 48px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 32px; align-items: center; padding: 22px 28px; border-radius: 20px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 18px 40px -28px rgb(from var(--ink) r g b / .3); }
+  .nm-pace-l { display: flex; align-items: baseline; gap: 14px; }
+  .nm-pace-l .dot { align-self: center; }
+  .nm-pace-l b { display: inline-block; font-family: var(--serif); font-weight: 400; font-size: 48px; line-height: 1; letter-spacing: -.03em; color: var(--green); font-variant-numeric: tabular-nums; }
+  .nm-pace-t { font-size: 15px; color: var(--ink-soft); max-width: 220px; line-height: 1.35; }
+  .nm-pace-bar { height: 4px; border-radius: 999px; background: var(--v2-nm-track); overflow: hidden; }
+  .nm-pace-bar i { display: block; height: 100%; background: var(--green); transform-origin: var(--origin-x); animation: nmPace 14s linear infinite; }
+  @keyframes nmPace { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .nm-pace-r { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; max-width: 260px; font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--muted); text-align: end; }
+  /* The hero's "Pause motion" control, restyled only in position. */
+  .nm-motion { display: flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .nm-motion:hover { color: var(--ink); }
+  .nm-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+  .nm-paused .nm-pace-bar i, .nm-paused .dot.live { animation-play-state: paused; }
+  .nm-popA { animation: nmPopA .6s cubic-bezier(.3, 1.4, .5, 1); }
+  .nm-popB { animation: nmPopB .6s cubic-bezier(.3, 1.4, .5, 1); }
+  @keyframes nmPopA { 0% { transform: translateY(10px); opacity: .3; } to { transform: none; opacity: 1; } }
+  @keyframes nmPopB { 0% { transform: translateY(10px); opacity: .3; } to { transform: none; opacity: 1; } }
+
+  /* ── The three cards ──────────────────────────────────────────────────── */
+  .nm-cards { margin-top: 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .nm-card { display: flex; flex-direction: column; padding: 28px 30px 24px; border-radius: 24px; border: 1px solid var(--hair); background: var(--v2-paper-hi); transition: background .3s, box-shadow .3s, transform .4s cubic-bezier(.16, 1, .3, 1); }
+  .nm-card:hover { background: var(--white); transform: translateY(-4px); box-shadow: 0 30px 60px -40px rgb(from var(--ink) r g b / .45); }
+  .nm-viz { height: 220px; display: flex; align-items: center; justify-content: center; }
+  .nm-grid { width: 250px; max-width: 100%; height: 200px; }
+  .nm-dial { width: 220px; height: 220px; }
+  .nm-dial-sweep { stroke-dasharray: 100; stroke-dashoffset: 0; transform: rotate(-90deg); transform-origin: 110px 110px; }
+  .nm-viz-code { flex-direction: column; align-items: stretch; justify-content: center; gap: 12px; }
+  .nm-code { width: 100%; height: 120px; }
+  .nm-bar { fill: var(--ink); transform-box: fill-box; transform-origin: bottom; }
+  .nm-bar-g { fill: var(--green); }
+  .nm-code-k { display: flex; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: 10px; letter-spacing: .04em; color: var(--muted); }
+  .nm-code-k span { display: inline-flex; align-items: center; gap: 6px; }
+  .nm-n { margin-top: 18px; display: flex; align-items: flex-start; font-family: var(--serif); font-size: min(96px, 6.67vw); line-height: .9; letter-spacing: -.045em; }
+  .nm-n i { font-style: normal; font-size: .5em; line-height: 1.3; margin-inline-start: 4px; color: var(--green); }
+  .nm-cap { margin: 14px 0 0; font-size: 15px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
+  .nm-foot { margin-top: auto; padding-top: 18px; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .nm-key { display: inline-block; flex: none; }
+  .nm-key-ink { width: 7px; height: 7px; border-radius: 1.5px; background: var(--ink); }
+  .nm-key-green { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .nm-key-bar { width: 3px; height: 12px; background: var(--ink); }
+
+  /* ── Armed: the entrances, only once `NumbersStage` says the block is near.
+     `both` holds the first frame through each delay, so an armed block that
+     is still below the fold waits at zero rather than at its final frame. */
+  .nm-go .nm-odoA .nm-strip { animation: nmRollA var(--dur) cubic-bezier(.16, .84, .2, 1) var(--del) both; }
+  .nm-go .nm-odoB .nm-strip { animation: nmRollB var(--dur) cubic-bezier(.16, .84, .2, 1) var(--del) both; }
+  @keyframes nmRollA { from { transform: translateY(0); } to { transform: translateY(calc(var(--to) * -1em)); } }
+  @keyframes nmRollB { from { transform: translateY(0); } to { transform: translateY(calc(var(--to) * -1em)); } }
+  .nm-go .nm-grid-on { animation: nmWipe 2.6s cubic-bezier(.65, 0, .35, 1) .3s both; }
+  @keyframes nmWipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }
+  .nm-go .nm-dial-sweep { animation: nmSweep 2.4s cubic-bezier(.65, 0, .35, 1) .3s both; }
+  @keyframes nmSweep { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+  /* The per-bar delay is inline on each `<rect>` and outranks this shorthand. */
+  .nm-go .nm-bar { animation: nmBar .5s cubic-bezier(.16, 1, .3, 1) both; }
+  @keyframes nmBar { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+}

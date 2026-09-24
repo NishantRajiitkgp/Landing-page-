@@ -1,7 +1,9 @@
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
-import { DayBand } from "@/components/blocks/DayBand";
+import { DayBand, OFFICES } from "@/components/blocks/DayBand";
 import { Governments } from "@/components/blocks/Governments";
+import "@/app/v2/presence.css";
+import { SunStage } from "./SunStage";
 
 /** Where HelloVerify operates, and who vouches for it.
  *
@@ -23,10 +25,18 @@ import { Governments } from "@/components/blocks/Governments";
  *  a 230-line module next to a 60-line one and satisfied the same lint rule
  *  while leaving the band and the tiles, which share nothing but the flag box,
  *  in one file. Part 5's rule is that the fix is not "cut the file in half".
+ *
+ *  DESKTOP IS HOMEPAGE v2 (Sep 2026): "follow the sun" — a live world map
+ *  with the day/night line over the six offices, in place of the UTC day
+ *  band, and without the "Governments we work with" strip, which v2 gives a
+ *  section of its own. The map is the client island `./SunStage`; the phone
+ *  keeps the day band and the tiles until it has a v2 artboard.
  */
 
 export async function Presence() {
-  const t = (await copy(SECTIONS)).presence;
+  const sections = await copy(SECTIONS);
+  const t = sections.presence;
+  const motion = sections.hero.motion;
   return (
     <>
       <div className="dsk">
@@ -42,11 +52,19 @@ export async function Presence() {
               {t.lede}
             </p>
           </div>
-          {" "}
-          <DayBand />
-          {" "}
-          <Governments />
-          {" "}
+          {/* The six flags, drawn once and `<use>`d by the map's six cards and
+              by every covered hour of the strip (up to ~60 copies): ~80 bytes
+              per copy instead of ~400. The board's alternative was a CSS
+              data URI per flag, which would have been a second drawing of
+              each one to keep in step with `blocks/DayBand.tsx`. */}
+          <svg className="su-defs" width="0" height="0" aria-hidden="true" focusable="false">
+            <defs>
+              {OFFICES.map((o) => (
+                <g key={o.k} id={`su-fl-${o.k}`}>{o.flag}</g>
+              ))}
+            </defs>
+          </svg>
+          <SunStage sun={t.sun} cities={t.offices} hours={t.hours} motion={motion} />
         </div>
       </div>
       <div className="mob">
