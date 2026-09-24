@@ -113,7 +113,9 @@
 .faq3 details { border-bottom: 1px solid var(--hair); }
 .faq3 summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 20px 0; font-size: 17px; font-weight: 500; letter-spacing: -0.005em; }
 .faq3 summary::-webkit-details-marker { display: none; }
-.faq3 summary .m { font-family: var(--serif); font-size: 22px; line-height: 1; color: var(--muted); flex: 0 0 auto; }
+.faq3 summary .m { font-family: var(--serif); font-size: 22px; font-weight: 400; line-height: 1; color: var(--muted); flex: 0 0 auto; }
+/* `font-weight: 400` explicitly: the "+" inherited 500 from the summary, and
+   Newsreader ships at 400 only since `tools/perf/pin-serif-weight.mjs`. */
 .faq3 details[open] summary .m { color: var(--green); }
 .faq3 .a { padding: 0 0 22px; max-width: 640px; font-size: 15px; line-height: 1.55; color: var(--muted); }
 @media (max-width: 1080px) { .faq3 summary { font-size: 15.5px; padding: 16px 0; } }
