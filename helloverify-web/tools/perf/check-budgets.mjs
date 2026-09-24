@@ -74,26 +74,33 @@ const SPEC = {
  *  re-chunking does not fail the build while a real regression does. Lower
  *  these as the gap closes; never raise one without saying why in the diff. */
 const CEILING = {
-  script: 163,
-  /** RAISED 16 -> 17 and 460 -> 468 for homepage v2, part 1 (the hero,
-   *  Sep 2026). Measured against the pre-change build on `/en`: total
-   *  453.1 -> 465.2 KB, of which the document is +7.5 KB brotli (36.9 -> 44.4:
-   *  the security-print guilloche, UV layer, microtext frame, seal and six
-   *  doors), the flight payload +1.6, the route-scoped `v2.css` +2.5, and the
-   *  two client islands the rest. Both stay inside §9.1 (40 and 500).
+  /** HOMEPAGE V2 (Sep 2026, TASKS.md Part 12) reset all four, measured on the
+   *  final integrated build rather than guessed. The redesign added eighteen
+   *  interactive sections; two optimisation passes then took `/en` from 566.8
+   *  to 548.6 KB, and pinning Newsreader's weight axis
+   *  (`tools/perf/pin-serif-weight.mjs`) to 430.0 KB — under §9.1's 500.
    *
-   *  What was tried before raising: `v2.css` moved from `globals.css` to the
-   *  homepage route (it had put `/en/about` at 16.1 KB of CSS for a hero that
-   *  page never renders); the guilloche moved into a client component so its
-   *  path data is computed from a formula rather than serialised into the
-   *  flight payload; and integer coordinates, rejected because they brotli
-   *  WORSE (3,264 -> 3,445 B — the one-decimal values repeat more).
+   *  RAISED, with the reason:
+   *  - script 163 -> 188: /en measures 182.3 KB. The v2 islands' canvas engines
+   *    (globe, trust graph, sun map, enterprise rings) already load on approach
+   *    via `lib/whenNear.ts`; what stays eager is the stage code each section
+   *    needs to paint and respond. Moving static SVG from client stages to the
+   *    server was measured and rejected: −2.3 KB script, +2.3 KB document, total
+   *    unchanged (it travels twice, HTML and flight). Still over §9.1's 120, as
+   *    it was before v2 (162).
+   *  - stylesheet 17 -> 41: /en measures 39.6 KB, inside §9.1's 40. Eighteen v2
+   *    section sheets, each imported only by its own section; inner-page rules
+   *    already split into `app/inner.css` so /en does not pay for them.
    *
-   *  Later v2 parts will move these again, each with its own measurement;
-   *  every generated section they retire should give some of it back. */
-  stylesheet: 17,
-  font: 245,
-  total: 468,
+   *  LOWERED, so the saving cannot quietly erode:
+   *  - font 245 -> 127: 123.3 KB after the wght pin (was 241.9).
+   *  - total 468 -> 443: 430.0 KB.
+   *
+   *  Each is the measurement plus ~3%, the headroom rule stated above. */
+  script: 188,
+  stylesheet: 41,
+  font: 127,
+  total: 443,
   thirdParty: 5,
 };
 
