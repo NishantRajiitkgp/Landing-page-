@@ -1,6 +1,6 @@
 /** The Ministry of Manpower case and the premium services band, under the
     government dossiers (`sections/GovDossiers.tsx`, which renders this inside
-    its own wrap — the canvas has them as one chapter). Homepage v2, desktop.
+    its own wrap — the canvas has them as one chapter). Homepage v2.
 
     The canvas's "calmer" MOM block (`assemble_mom.py`): headline and intro,
     then one card — COMPASS's two stages and a C2 points picker on the left,
