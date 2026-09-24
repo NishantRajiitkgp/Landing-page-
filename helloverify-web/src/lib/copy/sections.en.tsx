@@ -1317,7 +1317,11 @@ export const en = {
     offices: {
       manila: "Manila",
       singapore: "Singapore",
-      noida: "Noida",
+      /** Labelled New Delhi on the homepage map on review (24 Sep 2026); the
+       *  key stays `noida` because the phone's `DayBand` and the sun map
+       *  share it. The head office everywhere else (schema, llms.txt,
+       *  /about, /contact) is still Noida. */
+      noida: "New Delhi",
       dubai: "Dubai",
       cairo: "Cairo",
       newYork: "New York",
