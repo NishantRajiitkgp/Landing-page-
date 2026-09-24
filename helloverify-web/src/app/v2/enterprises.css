@@ -9,7 +9,12 @@
    of units (the board's #F1EEE7 chip is `--v2-leaf-lo` #F1EEE6, its #F4F8F5
    core glow and #F7FBF8 are `--v2-mint-pale`, its #CFC9BD hover rule is
    `--tick-off` #CFCAC0) rather than declaring near-duplicates. Two are new,
-   below. The rings themselves are canvas and read the palette from JS. */
+   below. The rings themselves are canvas and read the palette from JS.
+
+   One sheet for every width: the base is the board as drawn, with sizes
+   that can flex written as `clamp()`s that reach the board's value at
+   1081px; the few fixed desktop placements are in `min-width: 1081px`, and
+   the phone's re-layout (a column, not a squeeze) in `max-width: 1080px`. */
 :root {
   /* The letters' warm paper — whiter than `--paper`, warmer than `--white`. */
   --v2-lt-paper: #FFFEFB;
@@ -24,306 +29,359 @@
   --v2-en-foil-c: #FFDF73;
 }
 
+/* ── Band ─────────────────────────────────────────────────────────────── */
+.en { padding-top: clamp(72px, 11.2vw, 120px); padding-bottom: clamp(72px, 13vw, 140px); }
+.en-mast { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 22px; }
+.en-mast-r { display: flex; align-items: center; gap: 22px; }
+.en-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+/* The pause control (WCAG 2.2.2), styled as the hero's: a mono caption
+   that reads as part of the sheet's margin notes. 24px tall for 2.5.8. */
+.en-motion { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.en-motion:hover { color: var(--ink); }
+.en-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+/* `.sec-head` is a grid only at desktop (`design.css`); below, a block. */
+.en .en-head { margin-top: 22px; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
+.en .en-h2 { font-size: clamp(34px, 3vw + 24px, 56px); }
+.en .en-lede { margin-bottom: 8px; }
+.en-it { font-style: italic; }
+
+/* ── The perimeter ────────────────────────────────────────────────────── */
+.en-main { margin-top: clamp(48px, 6.7vw, 72px); display: grid; gap: clamp(40px, 5.2vw, 56px); align-items: center; }
+.en-sel { margin-bottom: 18px; text-align: center; }
+/* 540 square at desktop, the column's width below it: everything inside
+   is a share of the box (the pills' `top` too, `lib/enRings.ts`), so the
+   rings shrink as one picture while the pills keep a tappable size. */
+.en-per { position: relative; width: min(540px, 100%); aspect-ratio: 1; margin-inline: auto; }
+/* 640/540 of the box, overhanging it by 50/540 each side so the halo and
+   the ripples are not clipped. Canvas coordinates are physical — the
+   drawing is point-symmetric, so it needs no mirroring under RTL. */
+.en-wave { position: absolute; inset-inline-start: calc(-500% / 54); top: calc(-500% / 54); width: calc(6400% / 54); height: calc(6400% / 54); display: block; }
+.en-per .en-core, .en-per .en-rb { z-index: 1; }
+.en-core { position: absolute; inset: 0; width: min(118px, 11800% / 540); height: min(118px, 11800% / 540); margin: auto; border-radius: 50%; background: radial-gradient(circle at 34% 28%, var(--white) 0, var(--white) 55%, var(--v2-mint-pale) 100%); box-shadow: 0 0 0 1px var(--hair), 0 0 0 7px rgb(from var(--white) r g b / .65), 0 0 0 8px rgb(from var(--green) r g b / .12), 0 18px 40px -20px rgb(from var(--ink) r g b / .45); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink); }
+.en-core span { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.25; max-width: 80px; }
+.en-rb { position: absolute; inset-inline-start: 50%; transform: translateX(calc(var(--flip) * -50%)); height: 34px; display: inline-flex; align-items: center; gap: 8px; padding-block: 0; padding-inline: 10px 14px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; white-space: nowrap; box-shadow: 0 6px 14px -10px rgb(from var(--ink) r g b / .35); transition: border-color .25s, background .25s, color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+.en-rb:hover { transform: translateX(calc(var(--flip) * -50%)) translateY(-2px); border-color: var(--tick-off); }
+.en-rb:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.en-rb-n { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.en-rb-on { background: var(--ink); border-color: var(--ink); color: var(--white); }
+.en-rb-on:hover { border-color: var(--ink); }
+.en-rb-on .en-rb-n { color: var(--green-light); }
+.en-stop { margin: 22px 0 0; text-align: center; font-family: var(--serif); font-size: 26px; letter-spacing: -.015em; }
+.en-stop em { font-style: italic; color: var(--green); }
+
+/* ── The panels ───────────────────────────────────────────────────────── */
+.en-panel { box-sizing: border-box; display: flex; flex-direction: column; padding: clamp(24px, 3.4vw, 36px) clamp(20px, 3.8vw, 40px); border-radius: 24px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); animation: enIn .6s cubic-bezier(.16, 1, .3, 1) both; }
+@keyframes enIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 20px)); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
+.en-pk { display: flex; justify-content: space-between; align-items: center; }
+.en-tag { height: 26px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: var(--v2-leaf-lo); font-family: var(--mono); font-size: 11px; color: var(--ink); }
+.en-ph { margin: 18px 0 0; font-family: var(--serif); font-weight: 400; font-size: 25px; line-height: 1.12; letter-spacing: -.02em; text-wrap: balance; }
+.en-ph em { font-style: italic; color: var(--green); }
+.en-lead { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+
+/* ── Employees: two ID badges on lanyards (`EnterpriseBadges.tsx`) ─────
+   The zone clips at its top edge — the rail — so a badge parked above it
+   for the drop is hidden, while the sides and the foot stay open for the
+   swing. Each `.en-bd` is one rigid pendulum pivoting at the top of its
+   strap; the island writes its transform. Where two badges do not fit
+   side by side they wrap, the second onto a rail of its own (below). */
+.en-bds { position: relative; flex: none; margin-top: 16px; min-height: 426px; display: flex; flex-wrap: wrap; justify-content: center; gap: 24px 30px; clip-path: inset(0 -40px -60px -40px); }
+.en-bds-rail { position: absolute; inset-inline: 0; top: 0; height: 3px; border-radius: 3px; background: linear-gradient(var(--white), var(--tick-off)); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .08); }
+.en-bd { position: relative; width: 244px; padding-top: 80px; transform-origin: 50% 0; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; will-change: transform; }
+.en-bd:active { cursor: grabbing; }
+.en-bd-strap { position: absolute; inset-inline-start: 50%; top: -4px; width: 22px; height: 78px; margin-inline-start: -11px; border-radius: 2px; background: repeating-linear-gradient(0deg, rgb(from var(--white) r g b / .12) 0 1px, transparent 1px 3px), var(--green); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .12); }
+/* Hi-vis webbing with its reflective centre stripe. */
+.en-bd-hivis .en-bd-strap { background: linear-gradient(calc(var(--flip) * 90deg), transparent 42%, rgb(from var(--white) r g b / .7) 42% 58%, transparent 58%), repeating-linear-gradient(0deg, rgb(from var(--white) r g b / .12) 0 1px, transparent 1px 3px), var(--v2-en-hivis); }
+.en-bd-clip { position: absolute; z-index: 2; inset-inline-start: 50%; top: 66px; width: 30px; height: 22px; margin-inline-start: -15px; border-radius: 5px 5px 9px 9px; background: linear-gradient(var(--white), var(--tick-off) 55%, var(--muted)); box-shadow: 0 2px 3px rgb(from var(--ink) r g b / .28), inset 0 -2px 0 rgb(from var(--ink) r g b / .15); }
+.en-bd-card { position: relative; height: 340px; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3, 1.25, .4, 1); }
+.en-bd-flip { transform: rotateY(180deg); }
+.en-bd-face { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 22px 14px 12px; border-radius: 14px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .06), 0 24px 40px -22px rgb(from var(--ink) r g b / .5), inset 0 0 0 1px rgb(from var(--ink) r g b / .07); backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; transition: visibility 0s .38s; }
+/* The workforce's colour, as the badge's printed top band. */
+.en-bd-face::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 5px; background: var(--green); }
+.en-bd-hivis .en-bd-face::before { background: var(--v2-en-hivis); }
+/* The hidden face is also `visibility: hidden` (swapped at the flip's
+   midpoint), so it is out of the tab order and the accessibility tree
+   rather than merely facing away. */
+.en-bd-back { transform: rotateY(180deg); visibility: hidden; background: var(--v2-paper-hi); }
+.en-bd-flip .en-bd-back { visibility: visible; }
+.en-bd-flip .en-bd-front { visibility: hidden; }
+.en-bd-slot { position: absolute; inset-inline-start: 50%; top: 9px; width: 34px; height: 6px; margin-inline-start: -17px; border-radius: 3px; background: var(--paper); box-shadow: inset 0 1px 2px rgb(from var(--ink) r g b / .28); }
+.en-bd-ph { position: relative; display: block; flex: none; height: 104px; border-radius: 8px; overflow: hidden; }
+.en-bd-ph .pimg { object-position: 50% 30%; pointer-events: none; }
+.en-bd-t { margin: 10px 0 0; font-size: 14.5px; font-weight: 500; line-height: 1.2; letter-spacing: -.01em; color: var(--ink); }
+.en-bd-cks { list-style: none; margin: 9px 0 0; padding: 0; display: grid; gap: 4px; }
+.en-bd-cks li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; line-height: 1.2; color: var(--ink-soft); }
+.en-bd-ck { flex: none; width: 15px; height: 15px; display: grid; place-items: center; border-radius: 50%; background: var(--green); color: var(--white); }
+.en-bd-ck svg { width: 13px; height: 13px; display: block; }
+.en-bd-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; }
+.en-bd-code { width: 92px; height: 18px; opacity: .75; background: repeating-linear-gradient(calc(var(--flip) * 90deg), var(--ink) 0 1px, transparent 1px 3px, var(--ink) 3px 5px, transparent 5px 6px, var(--ink) 6px 7px, transparent 7px 10px); }
+.en-bd-code-back { margin-top: auto; }
+/* The foil seal: an iridescent disc with a guilloche of fine rings and a
+   light sweep across it. */
+.en-bd-foil { position: relative; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; }
+/* Shared with the Certifier seal (`.bx-seal`). */
+.en-bd-foil, .bx-seal { background: repeating-radial-gradient(circle, transparent 0 2px, rgb(from var(--white) r g b / .18) 2px 3px), conic-gradient(var(--v2-en-foil-a), var(--v2-en-foil-b), var(--green-light), var(--v2-en-foil-c), var(--v2-en-foil-a)); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .7), 0 1px 3px rgb(from var(--ink) r g b / .22); }
+.en-bd-foil::after { content: ""; position: absolute; inset: 0; background: linear-gradient(calc(var(--flip) * 115deg), transparent 35%, rgb(from var(--white) r g b / .85) 50%, transparent 65%) 0 0 / 300% 100%; animation: enFoil 3.6s ease-in-out infinite; }
+@keyframes enFoil { 0%, 40% { background-position: 100% 0; } to { background-position: 0 0; } }
+.en-bd-bt { position: relative; margin: 14px 0 0; font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.12; letter-spacing: -.015em; color: var(--ink); }
+.en-bd-p { position: relative; margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
+.en-bd-turn { position: absolute; z-index: 3; inset-inline-end: 22px; top: 110px; height: 24px; display: inline-flex; align-items: center; gap: 5px; padding: 0 9px; border: 0; border-radius: 999px; background: rgb(from var(--white) r g b / .92); box-shadow: 0 1px 3px rgb(from var(--ink) r g b / .22); font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
+/* On the back there is no photo to sit on; it moves to the foot, beside
+   the barcode, clear of the title. */
+.en-bd-turn-back { top: auto; bottom: 14px; inset-inline-end: 14px; background: var(--white); }
+.en-bd-turn svg { width: 11px; height: 11px; }
+.en-bd-turn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+/* Entrance. Armed: the checks wait, unticked, and the seal is off the
+   card. Run: each check lands 0.26 s after the last (`--i`, set per row;
+   the second badge is half a step behind), then the seal is struck. With
+   neither class — the server HTML, reduced motion, paused — everything is
+   in its end state. */
+.en-bds-armed .en-bd-ck { background: transparent; color: transparent; box-shadow: inset 0 0 0 1.2px var(--tick-off); }
+.en-bds-armed .en-bd-cks li { color: var(--muted); }
+.en-bds-armed .en-bd-foil { opacity: 0; }
+.en-bds-run .en-bd-ck { animation: enTick .45s cubic-bezier(.3, 1.5, .5, 1) calc(.55s + var(--i) * .26s) both; }
+.en-bds-run .en-bd-cks li { animation: enTickT .3s ease calc(.55s + var(--i) * .26s) both; }
+.en-bds-run .en-bd-foil { animation: enSeal .55s cubic-bezier(.3, 1.4, .5, 1) calc(.8s + var(--i) * .26s) both; }
+@keyframes enTick { 0% { background: transparent; color: transparent; box-shadow: inset 0 0 0 1.2px var(--tick-off); transform: scale(.6); } 60% { transform: scale(1.2); } to { background: var(--green); color: var(--white); box-shadow: none; transform: none; } }
+@keyframes enTickT { from { color: var(--muted); } to { color: var(--ink-soft); } }
+@keyframes enSeal { 0% { opacity: 0; transform: scale(2) rotate(-40deg); } 70% { opacity: 1; transform: scale(.9) rotate(6deg); } to { opacity: 1; transform: none; } }
+
+/* Automated Workforce Onboarding, as the pipeline it is: four stations on
+   a rail with a pulse running along it. */
+.en-flow { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hair); }
+.en-flow-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.en-flow-l { position: relative; list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.en-flow-l::before { content: ""; position: absolute; inset-inline: 10px; top: 10px; height: 1px; background: var(--hair); }
+.en-flow-l::after { content: ""; position: absolute; top: 9px; inset-inline-start: 0; width: 56px; height: 3px; border-radius: 3px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green)); animation: enFlow 3.4s cubic-bezier(.6, 0, .4, 1) infinite; }
+@keyframes enFlow { from { inset-inline-start: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } to { inset-inline-start: calc(100% - 56px); opacity: 0; } }
+.en-flow-l li { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 7px; font-size: 13px; line-height: 1.25; color: var(--ink); }
+.en-flow-l .tick { width: 20px; height: 20px; padding: 3px; box-sizing: border-box; border-radius: 50%; background: var(--white); box-shadow: 0 0 0 1px var(--hair); }
+.en-flow + .en-foot { padding-top: 6px; }
+.en-paused .en-bd-foil::after, .en-paused .en-flow-l::after { animation-play-state: paused; }
+.en-foot { margin-top: auto; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 10px; }
+.en-more { height: 40px; padding: 0 10px; font-size: 14px; }
+.en-grid6 { margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 18px; }
+.en-grid6 div { padding-top: 10px; border-top: 1px solid var(--hair); }
+.en-grid6 b { display: block; font-size: 14px; font-weight: 500; }
+.en-grid6 span { display: block; margin-top: 4px; font-family: var(--mono); font-size: 10px; line-height: 1.45; color: var(--muted); }
+.en-pts { margin-top: 14px; display: grid; }
+.en-pts div { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 9px 0; border-top: 1px solid var(--hair); }
+.en-pts b { font-size: 13.5px; font-weight: 500; }
+.en-pts span { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+
+
+/* ── Customers and Businesses: a walk-through on `StepCycler.tsx` ──────
+   The island marks each screen and step `is-on` (current) or `is-done`
+   (passed); these rules decide what that means per panel. */
+.cy { display: grid; align-items: center; }
+.cy-steps { grid-area: st; list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.cy-stage { grid-area: sg; position: relative; }
+.cy-st button { position: relative; width: 100%; display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: center; gap: 6px; padding: 9px 10px 10px; border: 0; border-radius: 10px; background: none; font: inherit; font-size: 13.5px; line-height: 1.3; color: var(--muted); text-align: start; cursor: pointer; transition: background .25s, color .25s; }
+.cy-st button:hover { color: var(--ink); }
+.cy-st button:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.cy-n { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1; }
+.cy-st.is-done button { color: var(--ink-soft); }
+.cy-st.is-on button { background: var(--v2-paper-hi); color: var(--ink); }
+.cy-st:is(.is-on, .is-done) .cy-n { color: var(--green); }
+.cy-bar { position: absolute; inset-inline: 10px; bottom: 3px; height: 2px; overflow: hidden; border-radius: 2px; opacity: 0; }
+.cy-bar i { display: block; height: 100%; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x) center; }
+.cy-st.is-on .cy-bar { opacity: 1; }
+.cy-run .is-on .cy-bar i { animation: cyBar var(--cy-dur) linear both; }
+@keyframes cyBar { to { transform: scaleX(1); } }
+@keyframes cyPop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
+.kx-bars { display: grid; gap: 6px; }
+.kx-bars i { display: block; height: 5px; border-radius: 3px; background: var(--hair); }
+.kx-bars i:last-child { width: 60%; }
+
+/* Customers: a phone, one screen at a time. */
+.kx { margin-top: 14px; grid-template-areas: "sg st"; grid-template-columns: 184px minmax(0, 1fr); gap: 26px; }
+.kx .cy-stage { height: 286px; margin: 7px; border-radius: 30px; background: var(--v2-paper-hi); box-shadow: 0 0 0 7px var(--ink), 0 30px 50px -24px rgb(from var(--ink) r g b / .55); overflow: hidden; }
+.kx .cy-stage::before { content: ""; position: absolute; z-index: 2; inset-inline-start: 50%; top: 8px; width: 54px; height: 15px; margin-inline-start: -27px; border-radius: 9px; background: var(--ink); }
+.kx .cy-scr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 30px 16px 18px; opacity: 0; transform: scale(.96); transition: opacity .45s ease, transform .6s cubic-bezier(.16, 1, .3, 1); }
+.kx .cy-scr.is-on { opacity: 1; transform: none; }
+.kx-cam { position: relative; display: grid; place-items: center; width: 140px; height: 96px; border: 2px dashed rgb(from var(--green) r g b / .55); border-radius: 12px; }
+.kx-id { display: flex; gap: 9px; width: 116px; height: 72px; padding: 10px; box-sizing: border-box; border-radius: 8px; background: var(--white); box-shadow: 0 6px 14px -8px rgb(from var(--ink) r g b / .45), inset 0 0 0 1px var(--hair); }
+.kx-id .kx-bars { flex: 1; padding-top: 3px; }
+.kx-id-ph { position: relative; flex: none; display: block; width: 32px; height: 42px; border-radius: 4px; overflow: hidden; background: var(--tick-off); }
+.kx .is-on .kx-id { animation: kxIn .7s cubic-bezier(.2, .9, .3, 1.2) both; }
+.kx .is-on .kx-cam { animation: kxLock .01s .8s both; }
+@keyframes kxIn { from { opacity: 0; transform: translateY(40px) rotate(-10deg); } }
+@keyframes kxLock { to { border-style: solid; border-color: var(--green); } }
+.kx-shutter { width: 40px; height: 40px; box-sizing: border-box; border: 4px solid var(--white); border-radius: 50%; background: var(--green); box-shadow: 0 0 0 1.5px var(--hair); }
+.kx-oval { position: relative; display: block; width: 116px; height: 148px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--green); }
+.kx-match { position: relative; display: flex; align-items: center; gap: 6px; }
+.kx-id-sm { flex-direction: column; width: 48px; height: 70px; padding: 6px; gap: 5px; }
+.kx-id-sm .kx-id-ph { width: 100%; height: 34px; }
+.kx-id-sm .kx-bars { gap: 4px; padding: 0; }
+.kx-id-sm .kx-bars i { height: 4px; }
+.kx-link { display: flex; gap: 3px; }
+.kx-link i { width: 4px; height: 4px; border-radius: 50%; background: var(--green); }
+.kx-face { position: relative; display: block; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--green); }
+.kx-ok { position: absolute; inset-inline-end: -8px; bottom: -8px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--green); }
+.kx-ok .tick { width: 14px; height: 14px; }
+.kx .is-on .kx-ok { animation: cyPop .4s cubic-bezier(.3, 1.5, .5, 1) .9s both; }
+/* Liveliness: a ring that closes round the face. */
+@property --kxp { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
+.kx-live { position: relative; padding: 9px; }
+.kx-live::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--green) var(--kxp), var(--hair) 0); -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 4px), var(--ink) calc(100% - 3px)); mask: radial-gradient(closest-side, transparent calc(100% - 4px), var(--ink) calc(100% - 3px)); }
+.kx .is-on .kx-live::before { animation: kxRing 1.8s .2s ease-in-out both; }
+@keyframes kxRing { to { --kxp: 100%; } }
+.kx-live .kx-oval { box-shadow: none; }
+.kx-seal { display: grid; place-items: center; width: 88px; height: 88px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 10px rgb(from var(--green) r g b / .14), 0 0 0 22px rgb(from var(--green) r g b / .07); }
+.kx-seal .tick { width: 44px; height: 44px; }
+.kx .is-on .kx-seal { animation: cyPop .5s cubic-bezier(.3, 1.5, .5, 1) .15s both; }
+.kx-welcome { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.kx-av { position: relative; display: block; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; }
+.kx-welcome > .kx-bars { width: 64%; }
+.kx-acct { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px; box-sizing: border-box; border-radius: 12px; background: var(--green); }
+.kx-acct .tick { flex: none; width: 18px; height: 18px; }
+.kx-acct .kx-bars { flex: 1; }
+.kx-bars-w i { background: rgb(from var(--white) r g b / .5); }
+
+/* Businesses: a Certifier certificate each step fills in, kept filled. */
+.bx { margin-top: 14px; grid-template-areas: "st sg"; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; }
+.bx .cy-stage { height: 276px; border-radius: 14px; background: var(--white); box-shadow: inset 0 4px 0 var(--green), 0 1px 0 rgb(from var(--ink) r g b / .06), 0 24px 44px -26px rgb(from var(--ink) r g b / .5), inset 0 0 0 1px rgb(from var(--ink) r g b / .07); overflow: hidden; }
+.bx .cy-scr { position: absolute; inset: 0; }
+.bx-real { opacity: 0; transition: opacity .4s ease, transform .55s cubic-bezier(.3, 1.3, .5, 1); }
+.bx :is(.is-on, .is-done) .bx-real { opacity: 1; transform: none; }
+.bx-top { position: absolute; inset-inline: 16px; top: 16px; display: flex; justify-content: space-between; align-items: center; }
+.bx-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.bx-sent { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 999px; background: var(--green); color: var(--white); transform: translateX(calc(var(--flip) * 14px)); }
+.bx-sent svg, .bx-sent .tick { width: 13px; height: 13px; }
+.bx-who { position: absolute; inset-inline-start: 16px; top: 56px; width: 150px; height: 40px; }
+.bx-who .kx-bars { position: absolute; inset: 0; gap: 7px; }
+.bx-who .kx-bars i:first-child { height: 7px; }
+.bx-who .bx-ink i:first-child { background: var(--ink); }
+.bx-ink i { height: 4px; background: var(--muted); transform: scaleX(0); transform-origin: var(--origin-x) center; transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
+.bx :is(.is-on, .is-done) .bx-ink i { transform: none; }
+.bx-map { position: absolute; inset-inline: 16px; top: 110px; height: 54px; border-radius: 10px; background: radial-gradient(circle, rgb(from var(--green) r g b / .28) 1px, transparent 1.5px) 0 0 / 8px 8px, var(--v2-mint-pale); }
+.bx-pin { position: absolute; inset-inline-start: 56%; top: 12px; width: 16px; height: 16px; border-radius: 50% 50% 50% 0; background: var(--green); transform: translateY(-26px) rotate(-45deg); }
+.bx :is(.is-on, .is-done) .bx-pin { transform: rotate(-45deg); }
+.bx-photo { position: absolute; inset-inline-end: 16px; top: 50px; display: flex; align-items: center; gap: 8px; }
+.bx-face { position: relative; display: block; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--white), 0 0 0 3.5px var(--green); transform: scale(.6); }
+.bx-cks { position: absolute; inset-inline: 16px; top: 176px; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; font-size: 11px; line-height: 1.25; color: var(--muted); }
+.bx-cks li { display: flex; align-items: flex-start; gap: 6px; }
+.bx-cks .tick { flex: none; width: 13px; height: 13px; padding: 1.5px; box-sizing: border-box; border-radius: 50%; background: var(--tick-off); }
+.bx .is-on .bx-cks li { animation: bxCk .35s ease calc(.4s + var(--i) * .16s) both; }
+.bx .is-on .bx-cks .tick { animation: bxTick .35s cubic-bezier(.3, 1.5, .5, 1) calc(.4s + var(--i) * .16s) both; }
+@keyframes bxCk { to { color: var(--ink-soft); } }
+@keyframes bxTick { 50% { transform: scale(1.3); } to { background: var(--green); } }
+.bx-seal { position: absolute; inset-inline-end: 24px; top: 114px; width: 46px; height: 46px; border-radius: 50%; overflow: hidden; opacity: 0; }
+.bx .is-on .bx-seal { animation: enSeal .55s cubic-bezier(.3, 1.4, .5, 1) 1.5s both; }
+
+/* ── Stats ────────────────────────────────────────────────────────────── */
+.en-stats { margin-top: clamp(56px, 8.2vw, 88px); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+.en-stats div { padding: 28px 0 26px; display: flex; align-items: baseline; gap: 12px; }
+.en-stats b { font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+.en-stats span { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+/* ── Letters from our clients ─────────────────────────────────────────── */
+.lt-letters { margin-top: clamp(72px, 10.4vw, 112px); padding-top: clamp(48px, 6vw, 64px); border-top: 1px solid var(--hair); display: grid; gap: clamp(40px, 6.7vw, 72px); align-items: center; }
+.lt-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.lt-h { margin: 20px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(32px, 2.3vw + 20px, 44px); line-height: 1.06; letter-spacing: -.028em; color: var(--ink); text-wrap: balance; }
+.lt-h em { font-style: italic; color: var(--green); }
+.lt-sel { margin-top: 40px; display: grid; }
+.lt-s { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; padding-block: 18px 20px; padding-inline: 4px; border: 0; border-top: 1px solid var(--hair); background: none; text-align: start; cursor: pointer; font: inherit; color: var(--ink); transition: padding .35s cubic-bezier(.16, 1, .3, 1); }
+.lt-s:last-child { border-bottom: 1px solid var(--hair); }
+.lt-s:hover { padding-inline-start: 10px; }
+.lt-s:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+/* The idle ordinal is `--muted`, not the board's #BDB7AA: that measured
+   1.9:1 on paper and it is text (24px italic numerals, still under the
+   3:1 large-text bar). Active stays green, so the selection still reads. */
+.lt-sn { font-family: var(--serif); font-style: italic; font-size: 24px; color: var(--muted); transition: color .4s; }
+.lt-sx b { display: block; font-size: 17px; font-weight: 500; letter-spacing: -.01em; color: var(--ink-soft); transition: color .4s; }
+.lt-sx em { display: block; margin-top: 4px; font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+/* Straddles the rule below the row; `z-index` so the next row's border,
+   painted later, does not cover its lower half. */
+.lt-sbar { position: absolute; z-index: 1; inset-inline: 0; bottom: -1px; height: 2px; overflow: hidden; }
+.lt-sbar i { position: absolute; inset: 0; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x) center; }
+.lt-on .lt-sn { color: var(--green); }
+.lt-on .lt-sx b { color: var(--ink); }
+/* The 8 s bar IS the rotation timer: `animationend` advances the letter
+   (ClientLetters.tsx). Holding pauses it; a manual pick fills it. */
+.lt-on .lt-sbar i { animation: ltBar 8s linear both; }
+@keyframes ltBar { to { transform: scaleX(1); } }
+.lt-hold .lt-on .lt-sbar i { animation-play-state: paused; }
+.lt-manual .lt-on .lt-sbar i { animation: none; transform: scaleX(1); transition: transform .5s ease; }
+.en-paused .lt-on .lt-sbar i { animation-play-state: paused; }
+.lt-right { position: relative; }
+.lt-stack { position: relative; }
+.lt-l { position: relative; margin: 0; display: flex; flex-direction: column; padding: 34px 44px 34px; border-radius: 22px; background: var(--v2-lt-paper); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 30px 60px -38px rgb(from var(--ink) r g b / .45), inset 0 0 0 1px rgb(from var(--ink) r g b / .04); transform-origin: 50% 100%; transition: transform .8s cubic-bezier(.3, 1.2, .4, 1), opacity .6s ease, box-shadow .6s; overflow: hidden; }
+.lt-l::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgb(from var(--ink) r g b / .022) 0 1px, transparent 1px 34px); pointer-events: none; }
+.lt-f0 { z-index: 3; transform: none; opacity: 1; }
+.lt-f1 { z-index: 2; transform: translate(calc(var(--flip) * 18px), 16px) rotate(calc(var(--flip) * 1.6deg)); opacity: .85; }
+.lt-f2 { z-index: 1; transform: translate(calc(var(--flip) * 34px), 30px) rotate(calc(var(--flip) * -1.2deg)); opacity: .6; }
+.lt-f1 .lt-q, .lt-f2 .lt-q, .lt-f1 .lt-sig, .lt-f2 .lt-sig, .lt-f1 .lt-qm, .lt-f2 .lt-qm { opacity: 0; }
+.lt-top { position: relative; display: flex; justify-content: space-between; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--v2-lt-rule); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lt-top span:last-child { text-transform: none; letter-spacing: .02em; }
+/* Fill and stroke sit on the `<svg>` and inherit into the `<use>`d
+   symbol; a selector on the symbol's own paths is not what a use-tree
+   reliably matches. */
+.lt-seal { position: absolute; inset-inline-end: 34px; top: 64px; width: 88px; height: 88px; opacity: .9; pointer-events: none; fill: none; stroke: rgb(from var(--green) r g b / .16); stroke-width: .8; }
+.lt-qm { position: relative; display: block; height: 54px; margin-top: 18px; font-family: var(--serif); font-size: 96px; line-height: 1; color: var(--green); transition: opacity .4s; }
+.lt-q { position: relative; margin: 0; font-family: var(--serif); font-size: 25px; line-height: 1.42; letter-spacing: -.012em; color: var(--ink); text-wrap: pretty; transition: opacity .45s ease .15s; }
+/* The highlighter: a mint band under the key phrase that sweeps in after
+   the letter lands. Grows along the inline axis, so it mirrors. */
+.lt-q mark { color: inherit; background: linear-gradient(transparent 58%, rgb(from var(--green-light) r g b / .6) 58%) var(--origin-x) 0 / 0% 100% no-repeat; padding: 0 2px; transition: background-size 1.1s cubic-bezier(.65, 0, .35, 1); }
+.lt-f0 .lt-q mark { background-size: 100% 100%; transition-delay: .7s; }
+.lt-sig { position: relative; margin-top: auto; padding-top: 22px; display: flex; flex-direction: column; gap: 4px; transition: opacity .4s; }
+.lt-sig b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 24px; letter-spacing: -.01em; color: var(--ink); }
+.lt-sig span { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+
+/* ── Desktop placements: the board's fixed columns and heights ─────────── */
 @media (min-width: 1081px) {
-  /* ── Band ─────────────────────────────────────────────────────────────── */
-  .en { padding-top: 120px; padding-bottom: 140px; }
-  .en-mast { display: flex; justify-content: space-between; align-items: center; }
-  .en-mast-r { display: flex; align-items: center; gap: 22px; }
-  .en-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  /* The pause control (WCAG 2.2.2), styled as the hero's: a mono caption
-     that reads as part of the sheet's margin notes. 24px tall for 2.5.8. */
-  .en-motion { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .en-motion:hover { color: var(--ink); }
-  .en-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
-  .en .en-head { margin-top: 22px; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
-  .en .en-h2 { font-size: 56px; }
-  .en .en-lede { margin-bottom: 8px; }
-  .en-it { font-style: italic; }
-
-  /* ── The perimeter ────────────────────────────────────────────────────── */
-  .en-main { margin-top: 72px; display: grid; grid-template-columns: 540px minmax(0, 1fr); gap: 56px; align-items: center; }
-  .en-sel { margin-bottom: 18px; text-align: center; }
-  .en-per { position: relative; width: 540px; height: 540px; }
-  /* 640 square, overhanging the 540 box by 50 each side so the halo and
-     the ripples are not clipped. Canvas coordinates are physical — the
-     drawing is point-symmetric, so it needs no mirroring under RTL. */
-  .en-wave { position: absolute; inset-inline-start: -50px; top: -50px; width: 640px; height: 640px; display: block; }
-  .en-per .en-core, .en-per .en-rb { z-index: 1; }
-  .en-core { position: absolute; inset-inline-start: 50%; top: 50%; width: 118px; height: 118px; margin-block: -59px 0; margin-inline: -59px 0; border-radius: 50%; background: radial-gradient(circle at 34% 28%, var(--white) 0, var(--white) 55%, var(--v2-mint-pale) 100%); box-shadow: 0 0 0 1px var(--hair), 0 0 0 7px rgb(from var(--white) r g b / .65), 0 0 0 8px rgb(from var(--green) r g b / .12), 0 18px 40px -20px rgb(from var(--ink) r g b / .45); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink); }
-  .en-core span { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.25; max-width: 80px; }
-  .en-rb { position: absolute; inset-inline-start: 50%; transform: translateX(calc(var(--flip) * -50%)); height: 34px; display: inline-flex; align-items: center; gap: 8px; padding-block: 0; padding-inline: 10px 14px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; white-space: nowrap; box-shadow: 0 6px 14px -10px rgb(from var(--ink) r g b / .35); transition: border-color .25s, background .25s, color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
-  .en-rb:hover { transform: translateX(calc(var(--flip) * -50%)) translateY(-2px); border-color: var(--tick-off); }
-  .en-rb:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-  .en-rb-n { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
-  .en-rb-on { background: var(--ink); border-color: var(--ink); color: var(--white); }
-  .en-rb-on:hover { border-color: var(--ink); }
-  .en-rb-on .en-rb-n { color: var(--green-light); }
-  .en-stop { margin: 22px 0 0; text-align: center; font-family: var(--serif); font-size: 26px; letter-spacing: -.015em; }
-  .en-stop em { font-style: italic; color: var(--green); }
-
-  /* ── The panels ───────────────────────────────────────────────────────── */
+  .en-main { grid-template-columns: 540px minmax(0, 1fr); }
   .en-panels { min-height: 800px; }
-  .en-panel { height: 800px; box-sizing: border-box; display: flex; flex-direction: column; padding: 36px 40px; border-radius: 24px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); animation: enIn .6s cubic-bezier(.16, 1, .3, 1) both; }
-  @keyframes enIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 20px)); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
-  .en-pk { display: flex; justify-content: space-between; align-items: center; }
-  .en-tag { height: 26px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: var(--v2-leaf-lo); font-family: var(--mono); font-size: 11px; color: var(--ink); }
-  .en-ph { margin: 18px 0 0; font-family: var(--serif); font-weight: 400; font-size: 25px; line-height: 1.12; letter-spacing: -.02em; text-wrap: balance; }
-  .en-ph em { font-style: italic; color: var(--green); }
-  .en-lead { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
-
-  /* ── Employees: two ID badges on lanyards (`EnterpriseBadges.tsx`) ─────
-     The zone clips at its top edge — the rail — so a badge parked above it
-     for the drop is hidden, while the sides and the foot stay open for the
-     swing. Each `.en-bd` is one rigid pendulum pivoting at the top of its
-     strap; the island writes its transform. */
-  .en-bds { position: relative; flex: none; margin-top: 16px; height: 426px; display: flex; justify-content: center; gap: 30px; clip-path: inset(0 -40px -60px -40px); }
-  .en-bds-rail { position: absolute; inset-inline: 0; top: 0; height: 3px; border-radius: 3px; background: linear-gradient(var(--white), var(--tick-off)); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .08); }
-  .en-bd { position: relative; width: 244px; padding-top: 80px; transform-origin: 50% 0; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; will-change: transform; }
-  .en-bd:active { cursor: grabbing; }
-  .en-bd-strap { position: absolute; inset-inline-start: 50%; top: -4px; width: 22px; height: 78px; margin-inline-start: -11px; border-radius: 2px; background: repeating-linear-gradient(0deg, rgb(from var(--white) r g b / .12) 0 1px, transparent 1px 3px), var(--green); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .12); }
-  /* Hi-vis webbing with its reflective centre stripe. */
-  .en-bd-hivis .en-bd-strap { background: linear-gradient(calc(var(--flip) * 90deg), transparent 42%, rgb(from var(--white) r g b / .7) 42% 58%, transparent 58%), repeating-linear-gradient(0deg, rgb(from var(--white) r g b / .12) 0 1px, transparent 1px 3px), var(--v2-en-hivis); }
-  .en-bd-clip { position: absolute; z-index: 2; inset-inline-start: 50%; top: 66px; width: 30px; height: 22px; margin-inline-start: -15px; border-radius: 5px 5px 9px 9px; background: linear-gradient(var(--white), var(--tick-off) 55%, var(--muted)); box-shadow: 0 2px 3px rgb(from var(--ink) r g b / .28), inset 0 -2px 0 rgb(from var(--ink) r g b / .15); }
-  .en-bd-card { position: relative; height: 340px; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3, 1.25, .4, 1); }
-  .en-bd-flip { transform: rotateY(180deg); }
-  .en-bd-face { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 22px 14px 12px; border-radius: 14px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .06), 0 24px 40px -22px rgb(from var(--ink) r g b / .5), inset 0 0 0 1px rgb(from var(--ink) r g b / .07); backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; transition: visibility 0s .38s; }
-  /* The workforce's colour, as the badge's printed top band. */
-  .en-bd-face::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 5px; background: var(--green); }
-  .en-bd-hivis .en-bd-face::before { background: var(--v2-en-hivis); }
-  /* The hidden face is also `visibility: hidden` (swapped at the flip's
-     midpoint), so it is out of the tab order and the accessibility tree
-     rather than merely facing away. */
-  .en-bd-back { transform: rotateY(180deg); visibility: hidden; background: var(--v2-paper-hi); }
-  .en-bd-flip .en-bd-back { visibility: visible; }
-  .en-bd-flip .en-bd-front { visibility: hidden; }
-  .en-bd-slot { position: absolute; inset-inline-start: 50%; top: 9px; width: 34px; height: 6px; margin-inline-start: -17px; border-radius: 3px; background: var(--paper); box-shadow: inset 0 1px 2px rgb(from var(--ink) r g b / .28); }
-  .en-bd-ph { position: relative; display: block; flex: none; height: 104px; border-radius: 8px; overflow: hidden; }
-  .en-bd-ph .pimg { object-position: 50% 30%; pointer-events: none; }
-  .en-bd-t { margin: 10px 0 0; font-size: 14.5px; font-weight: 500; line-height: 1.2; letter-spacing: -.01em; color: var(--ink); }
-  .en-bd-cks { list-style: none; margin: 9px 0 0; padding: 0; display: grid; gap: 4px; }
-  .en-bd-cks li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; line-height: 1.2; color: var(--ink-soft); }
-  .en-bd-ck { flex: none; width: 15px; height: 15px; display: grid; place-items: center; border-radius: 50%; background: var(--green); color: var(--white); }
-  .en-bd-ck svg { width: 13px; height: 13px; display: block; }
-  .en-bd-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; }
-  .en-bd-code { width: 92px; height: 18px; opacity: .75; background: repeating-linear-gradient(calc(var(--flip) * 90deg), var(--ink) 0 1px, transparent 1px 3px, var(--ink) 3px 5px, transparent 5px 6px, var(--ink) 6px 7px, transparent 7px 10px); }
-  .en-bd-code-back { margin-top: auto; }
-  /* The foil seal: an iridescent disc with a guilloche of fine rings and a
-     light sweep across it. */
-  .en-bd-foil { position: relative; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; }
-  /* Shared with the Certifier seal (`.bx-seal`). */
-  .en-bd-foil, .bx-seal { background: repeating-radial-gradient(circle, transparent 0 2px, rgb(from var(--white) r g b / .18) 2px 3px), conic-gradient(var(--v2-en-foil-a), var(--v2-en-foil-b), var(--green-light), var(--v2-en-foil-c), var(--v2-en-foil-a)); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .7), 0 1px 3px rgb(from var(--ink) r g b / .22); }
-  .en-bd-foil::after { content: ""; position: absolute; inset: 0; background: linear-gradient(calc(var(--flip) * 115deg), transparent 35%, rgb(from var(--white) r g b / .85) 50%, transparent 65%) 0 0 / 300% 100%; animation: enFoil 3.6s ease-in-out infinite; }
-  @keyframes enFoil { 0%, 40% { background-position: 100% 0; } to { background-position: 0 0; } }
-  .en-bd-bt { position: relative; margin: 14px 0 0; font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.12; letter-spacing: -.015em; color: var(--ink); }
-  .en-bd-p { position: relative; margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
-  .en-bd-turn { position: absolute; z-index: 3; inset-inline-end: 22px; top: 110px; height: 24px; display: inline-flex; align-items: center; gap: 5px; padding: 0 9px; border: 0; border-radius: 999px; background: rgb(from var(--white) r g b / .92); box-shadow: 0 1px 3px rgb(from var(--ink) r g b / .22); font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
-  /* On the back there is no photo to sit on; it moves to the foot, beside
-     the barcode, clear of the title. */
-  .en-bd-turn-back { top: auto; bottom: 14px; inset-inline-end: 14px; background: var(--white); }
-  .en-bd-turn svg { width: 11px; height: 11px; }
-  .en-bd-turn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-
-  /* Entrance. Armed: the checks wait, unticked, and the seal is off the
-     card. Run: each check lands 0.26 s after the last (`--i`, set per row;
-     the second badge is half a step behind), then the seal is struck. With
-     neither class — the server HTML, reduced motion, paused — everything is
-     in its end state. */
-  .en-bds-armed .en-bd-ck { background: transparent; color: transparent; box-shadow: inset 0 0 0 1.2px var(--tick-off); }
-  .en-bds-armed .en-bd-cks li { color: var(--muted); }
-  .en-bds-armed .en-bd-foil { opacity: 0; }
-  .en-bds-run .en-bd-ck { animation: enTick .45s cubic-bezier(.3, 1.5, .5, 1) calc(.55s + var(--i) * .26s) both; }
-  .en-bds-run .en-bd-cks li { animation: enTickT .3s ease calc(.55s + var(--i) * .26s) both; }
-  .en-bds-run .en-bd-foil { animation: enSeal .55s cubic-bezier(.3, 1.4, .5, 1) calc(.8s + var(--i) * .26s) both; }
-  @keyframes enTick { 0% { background: transparent; color: transparent; box-shadow: inset 0 0 0 1.2px var(--tick-off); transform: scale(.6); } 60% { transform: scale(1.2); } to { background: var(--green); color: var(--white); box-shadow: none; transform: none; } }
-  @keyframes enTickT { from { color: var(--muted); } to { color: var(--ink-soft); } }
-  @keyframes enSeal { 0% { opacity: 0; transform: scale(2) rotate(-40deg); } 70% { opacity: 1; transform: scale(.9) rotate(6deg); } to { opacity: 1; transform: none; } }
-
-  /* Automated Workforce Onboarding, as the pipeline it is: four stations on
-     a rail with a pulse running along it. */
-  .en-flow { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hair); }
-  .en-flow-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .en-flow-l { position: relative; list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-  .en-flow-l::before { content: ""; position: absolute; inset-inline: 10px; top: 10px; height: 1px; background: var(--hair); }
-  .en-flow-l::after { content: ""; position: absolute; top: 9px; inset-inline-start: 0; width: 56px; height: 3px; border-radius: 3px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green)); animation: enFlow 3.4s cubic-bezier(.6, 0, .4, 1) infinite; }
-  @keyframes enFlow { from { inset-inline-start: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } to { inset-inline-start: calc(100% - 56px); opacity: 0; } }
-  .en-flow-l li { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 7px; font-size: 13px; line-height: 1.25; color: var(--ink); }
-  .en-flow-l .tick { width: 20px; height: 20px; padding: 3px; box-sizing: border-box; border-radius: 50%; background: var(--white); box-shadow: 0 0 0 1px var(--hair); }
-  .en-flow + .en-foot { padding-top: 6px; }
-  .en-paused .en-bd-foil::after, .en-paused .en-flow-l::after { animation-play-state: paused; }
-  .en-foot { margin-top: auto; padding-top: 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
-  .en-more { height: 40px; padding: 0 10px; font-size: 14px; }
-  .en-grid6 { margin-top: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 18px; }
-  .en-grid6 div { padding-top: 10px; border-top: 1px solid var(--hair); }
-  .en-grid6 b { display: block; font-size: 14px; font-weight: 500; }
-  .en-grid6 span { display: block; margin-top: 4px; font-family: var(--mono); font-size: 10px; line-height: 1.45; color: var(--muted); }
-  .en-pts { margin-top: 14px; display: grid; }
-  .en-pts div { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 9px 0; border-top: 1px solid var(--hair); }
-  .en-pts b { font-size: 13.5px; font-weight: 500; }
-  .en-pts span { font-size: 12.5px; line-height: 1.45; color: var(--muted); }
-
-
-  /* ── Customers and Businesses: a walk-through on `StepCycler.tsx` ──────
-     The island marks each screen and step `is-on` (current) or `is-done`
-     (passed); these rules decide what that means per panel. */
-  .cy { display: grid; align-items: center; }
-  .cy-steps { grid-area: st; list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-  .cy-stage { grid-area: sg; position: relative; }
-  .cy-st button { position: relative; width: 100%; display: grid; grid-template-columns: 28px minmax(0, 1fr); align-items: center; gap: 6px; padding: 9px 10px 10px; border: 0; border-radius: 10px; background: none; font: inherit; font-size: 13.5px; line-height: 1.3; color: var(--muted); text-align: start; cursor: pointer; transition: background .25s, color .25s; }
-  .cy-st button:hover { color: var(--ink); }
-  .cy-st button:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
-  .cy-n { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1; }
-  .cy-st.is-done button { color: var(--ink-soft); }
-  .cy-st.is-on button { background: var(--v2-paper-hi); color: var(--ink); }
-  .cy-st:is(.is-on, .is-done) .cy-n { color: var(--green); }
-  .cy-bar { position: absolute; inset-inline: 10px; bottom: 3px; height: 2px; overflow: hidden; border-radius: 2px; opacity: 0; }
-  .cy-bar i { display: block; height: 100%; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x) center; }
-  .cy-st.is-on .cy-bar { opacity: 1; }
-  .cy-run .is-on .cy-bar i { animation: cyBar var(--cy-dur) linear both; }
-  @keyframes cyBar { to { transform: scaleX(1); } }
-  @keyframes cyPop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: none; } }
-  .kx-bars { display: grid; gap: 6px; }
-  .kx-bars i { display: block; height: 5px; border-radius: 3px; background: var(--hair); }
-  .kx-bars i:last-child { width: 60%; }
-
-  /* Customers: a phone, one screen at a time. */
-  .kx { margin-top: 14px; grid-template-areas: "sg st"; grid-template-columns: 184px minmax(0, 1fr); gap: 26px; }
-  .kx .cy-stage { height: 286px; margin: 7px; border-radius: 30px; background: var(--v2-paper-hi); box-shadow: 0 0 0 7px var(--ink), 0 30px 50px -24px rgb(from var(--ink) r g b / .55); overflow: hidden; }
-  .kx .cy-stage::before { content: ""; position: absolute; z-index: 2; inset-inline-start: 50%; top: 8px; width: 54px; height: 15px; margin-inline-start: -27px; border-radius: 9px; background: var(--ink); }
-  .kx .cy-scr { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 30px 16px 18px; opacity: 0; transform: scale(.96); transition: opacity .45s ease, transform .6s cubic-bezier(.16, 1, .3, 1); }
-  .kx .cy-scr.is-on { opacity: 1; transform: none; }
-  .kx-cam { position: relative; display: grid; place-items: center; width: 140px; height: 96px; border: 2px dashed rgb(from var(--green) r g b / .55); border-radius: 12px; }
-  .kx-id { display: flex; gap: 9px; width: 116px; height: 72px; padding: 10px; box-sizing: border-box; border-radius: 8px; background: var(--white); box-shadow: 0 6px 14px -8px rgb(from var(--ink) r g b / .45), inset 0 0 0 1px var(--hair); }
-  .kx-id .kx-bars { flex: 1; padding-top: 3px; }
-  .kx-id-ph { position: relative; flex: none; display: block; width: 32px; height: 42px; border-radius: 4px; overflow: hidden; background: var(--tick-off); }
-  .kx .is-on .kx-id { animation: kxIn .7s cubic-bezier(.2, .9, .3, 1.2) both; }
-  .kx .is-on .kx-cam { animation: kxLock .01s .8s both; }
-  @keyframes kxIn { from { opacity: 0; transform: translateY(40px) rotate(-10deg); } }
-  @keyframes kxLock { to { border-style: solid; border-color: var(--green); } }
-  .kx-shutter { width: 40px; height: 40px; box-sizing: border-box; border: 4px solid var(--white); border-radius: 50%; background: var(--green); box-shadow: 0 0 0 1.5px var(--hair); }
-  .kx-oval { position: relative; display: block; width: 116px; height: 148px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--green); }
-  .kx-match { position: relative; display: flex; align-items: center; gap: 6px; }
-  .kx-id-sm { flex-direction: column; width: 48px; height: 70px; padding: 6px; gap: 5px; }
-  .kx-id-sm .kx-id-ph { width: 100%; height: 34px; }
-  .kx-id-sm .kx-bars { gap: 4px; padding: 0; }
-  .kx-id-sm .kx-bars i { height: 4px; }
-  .kx-link { display: flex; gap: 3px; }
-  .kx-link i { width: 4px; height: 4px; border-radius: 50%; background: var(--green); }
-  .kx-face { position: relative; display: block; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--green); }
-  .kx-ok { position: absolute; inset-inline-end: -8px; bottom: -8px; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--green); }
-  .kx-ok .tick { width: 14px; height: 14px; }
-  .kx .is-on .kx-ok { animation: cyPop .4s cubic-bezier(.3, 1.5, .5, 1) .9s both; }
-  /* Liveliness: a ring that closes round the face. */
-  @property --kxp { syntax: "<percentage>"; inherits: false; initial-value: 0%; }
-  .kx-live { position: relative; padding: 9px; }
-  .kx-live::before { content: ""; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--green) var(--kxp), var(--hair) 0); -webkit-mask: radial-gradient(closest-side, transparent calc(100% - 4px), var(--ink) calc(100% - 3px)); mask: radial-gradient(closest-side, transparent calc(100% - 4px), var(--ink) calc(100% - 3px)); }
-  .kx .is-on .kx-live::before { animation: kxRing 1.8s .2s ease-in-out both; }
-  @keyframes kxRing { to { --kxp: 100%; } }
-  .kx-live .kx-oval { box-shadow: none; }
-  .kx-seal { display: grid; place-items: center; width: 88px; height: 88px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 10px rgb(from var(--green) r g b / .14), 0 0 0 22px rgb(from var(--green) r g b / .07); }
-  .kx-seal .tick { width: 44px; height: 44px; }
-  .kx .is-on .kx-seal { animation: cyPop .5s cubic-bezier(.3, 1.5, .5, 1) .15s both; }
-  .kx-welcome { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
-  .kx-av { position: relative; display: block; width: 54px; height: 54px; border-radius: 50%; overflow: hidden; }
-  .kx-welcome > .kx-bars { width: 64%; }
-  .kx-acct { display: flex; align-items: center; gap: 10px; width: 100%; padding: 12px; box-sizing: border-box; border-radius: 12px; background: var(--green); }
-  .kx-acct .tick { flex: none; width: 18px; height: 18px; }
-  .kx-acct .kx-bars { flex: 1; }
-  .kx-bars-w i { background: rgb(from var(--white) r g b / .5); }
-
-  /* Businesses: a Certifier certificate each step fills in, kept filled. */
-  .bx { margin-top: 14px; grid-template-areas: "st sg"; grid-template-columns: minmax(0, 1fr) 300px; gap: 22px; }
-  .bx .cy-stage { height: 276px; border-radius: 14px; background: var(--white); box-shadow: inset 0 4px 0 var(--green), 0 1px 0 rgb(from var(--ink) r g b / .06), 0 24px 44px -26px rgb(from var(--ink) r g b / .5), inset 0 0 0 1px rgb(from var(--ink) r g b / .07); overflow: hidden; }
-  .bx .cy-scr { position: absolute; inset: 0; }
-  .bx-real { opacity: 0; transition: opacity .4s ease, transform .55s cubic-bezier(.3, 1.3, .5, 1); }
-  .bx :is(.is-on, .is-done) .bx-real { opacity: 1; transform: none; }
-  .bx-top { position: absolute; inset-inline: 16px; top: 16px; display: flex; justify-content: space-between; align-items: center; }
-  .bx-tag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
-  .bx-sent { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 999px; background: var(--green); color: var(--white); transform: translateX(calc(var(--flip) * 14px)); }
-  .bx-sent svg, .bx-sent .tick { width: 13px; height: 13px; }
-  .bx-who { position: absolute; inset-inline-start: 16px; top: 56px; width: 150px; height: 40px; }
-  .bx-who .kx-bars { position: absolute; inset: 0; gap: 7px; }
-  .bx-who .kx-bars i:first-child { height: 7px; }
-  .bx-who .bx-ink i:first-child { background: var(--ink); }
-  .bx-ink i { height: 4px; background: var(--muted); transform: scaleX(0); transform-origin: var(--origin-x) center; transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
-  .bx :is(.is-on, .is-done) .bx-ink i { transform: none; }
-  .bx-map { position: absolute; inset-inline: 16px; top: 110px; height: 54px; border-radius: 10px; background: radial-gradient(circle, rgb(from var(--green) r g b / .28) 1px, transparent 1.5px) 0 0 / 8px 8px, var(--v2-mint-pale); }
-  .bx-pin { position: absolute; inset-inline-start: 56%; top: 12px; width: 16px; height: 16px; border-radius: 50% 50% 50% 0; background: var(--green); transform: translateY(-26px) rotate(-45deg); }
-  .bx :is(.is-on, .is-done) .bx-pin { transform: rotate(-45deg); }
-  .bx-photo { position: absolute; inset-inline-end: 16px; top: 50px; display: flex; align-items: center; gap: 8px; }
-  .bx-face { position: relative; display: block; width: 48px; height: 48px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 2px var(--white), 0 0 0 3.5px var(--green); transform: scale(.6); }
-  .bx-cks { position: absolute; inset-inline: 16px; top: 176px; margin: 0; padding: 0; list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; font-size: 11px; line-height: 1.25; color: var(--muted); }
-  .bx-cks li { display: flex; align-items: flex-start; gap: 6px; }
-  .bx-cks .tick { flex: none; width: 13px; height: 13px; padding: 1.5px; box-sizing: border-box; border-radius: 50%; background: var(--tick-off); }
-  .bx .is-on .bx-cks li { animation: bxCk .35s ease calc(.4s + var(--i) * .16s) both; }
-  .bx .is-on .bx-cks .tick { animation: bxTick .35s cubic-bezier(.3, 1.5, .5, 1) calc(.4s + var(--i) * .16s) both; }
-  @keyframes bxCk { to { color: var(--ink-soft); } }
-  @keyframes bxTick { 50% { transform: scale(1.3); } to { background: var(--green); } }
-  .bx-seal { position: absolute; inset-inline-end: 24px; top: 114px; width: 46px; height: 46px; border-radius: 50%; overflow: hidden; opacity: 0; }
-  .bx .is-on .bx-seal { animation: enSeal .55s cubic-bezier(.3, 1.4, .5, 1) 1.5s both; }
-
-  /* ── Stats ────────────────────────────────────────────────────────────── */
-  .en-stats { margin-top: 88px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
-  .en-stats div { padding: 28px 0 26px; display: flex; align-items: baseline; gap: 12px; }
+  .en-panel { height: 800px; }
   .en-stats div:not(:first-child) { padding-inline-start: 32px; border-inline-start: 1px solid var(--hair); }
-  .en-stats b { font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
   .en-stats div:last-child b { font-size: 40px; }
-  .en-stats span { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-
-  /* ── Letters from our clients ─────────────────────────────────────────── */
-  .lt-letters { margin-top: 112px; padding-top: 64px; border-top: 1px solid var(--hair); display: grid; grid-template-columns: minmax(0, 4.4fr) minmax(0, 7.6fr); gap: 72px; align-items: center; }
-  .lt-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-  .lt-h { margin: 20px 0 0; font-family: var(--serif); font-weight: 400; font-size: 44px; line-height: 1.06; letter-spacing: -.028em; color: var(--ink); text-wrap: balance; }
-  .lt-h em { font-style: italic; color: var(--green); }
-  .lt-sel { margin-top: 40px; display: grid; }
-  .lt-s { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; padding-block: 18px 20px; padding-inline: 4px; border: 0; border-top: 1px solid var(--hair); background: none; text-align: start; cursor: pointer; font: inherit; color: var(--ink); transition: padding .35s cubic-bezier(.16, 1, .3, 1); }
-  .lt-s:last-child { border-bottom: 1px solid var(--hair); }
-  .lt-s:hover { padding-inline-start: 10px; }
-  .lt-s:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
-  /* The idle ordinal is `--muted`, not the board's #BDB7AA: that measured
-     1.9:1 on paper and it is text (24px italic numerals, still under the
-     3:1 large-text bar). Active stays green, so the selection still reads. */
-  .lt-sn { font-family: var(--serif); font-style: italic; font-size: 24px; color: var(--muted); transition: color .4s; }
-  .lt-sx b { display: block; font-size: 17px; font-weight: 500; letter-spacing: -.01em; color: var(--ink-soft); transition: color .4s; }
-  .lt-sx em { display: block; margin-top: 4px; font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  /* Straddles the rule below the row; `z-index` so the next row's border,
-     painted later, does not cover its lower half. */
-  .lt-sbar { position: absolute; z-index: 1; inset-inline: 0; bottom: -1px; height: 2px; overflow: hidden; }
-  .lt-sbar i { position: absolute; inset: 0; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x) center; }
-  .lt-on .lt-sn { color: var(--green); }
-  .lt-on .lt-sx b { color: var(--ink); }
-  /* The 8 s bar IS the rotation timer: `animationend` advances the letter
-     (ClientLetters.tsx). Holding pauses it; a manual pick fills it. */
-  .lt-on .lt-sbar i { animation: ltBar 8s linear both; }
-  @keyframes ltBar { to { transform: scaleX(1); } }
-  .lt-hold .lt-on .lt-sbar i { animation-play-state: paused; }
-  .lt-manual .lt-on .lt-sbar i { animation: none; transform: scaleX(1); transition: transform .5s ease; }
-  .en-paused .lt-on .lt-sbar i { animation-play-state: paused; }
-  .lt-right { position: relative; }
-  .lt-stack { position: relative; height: 540px; }
-  .lt-l { position: absolute; inset-block: 0 34px; inset-inline: 0 34px; margin: 0; display: flex; flex-direction: column; padding: 34px 44px 34px; border-radius: 22px; background: var(--v2-lt-paper); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 30px 60px -38px rgb(from var(--ink) r g b / .45), inset 0 0 0 1px rgb(from var(--ink) r g b / .04); transform-origin: 50% 100%; transition: transform .8s cubic-bezier(.3, 1.2, .4, 1), opacity .6s ease, box-shadow .6s; overflow: hidden; }
-  .lt-l::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgb(from var(--ink) r g b / .022) 0 1px, transparent 1px 34px); pointer-events: none; }
-  .lt-f0 { z-index: 3; transform: none; opacity: 1; }
-  .lt-f1 { z-index: 2; transform: translate(calc(var(--flip) * 18px), 16px) rotate(calc(var(--flip) * 1.6deg)); opacity: .85; }
-  .lt-f2 { z-index: 1; transform: translate(calc(var(--flip) * 34px), 30px) rotate(calc(var(--flip) * -1.2deg)); opacity: .6; }
-  .lt-f1 .lt-q, .lt-f2 .lt-q, .lt-f1 .lt-sig, .lt-f2 .lt-sig, .lt-f1 .lt-qm, .lt-f2 .lt-qm { opacity: 0; }
-  .lt-top { position: relative; display: flex; justify-content: space-between; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--v2-lt-rule); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .lt-top span:last-child { text-transform: none; letter-spacing: .02em; }
-  /* Fill and stroke sit on the `<svg>` and inherit into the `<use>`d
-     symbol; a selector on the symbol's own paths is not what a use-tree
-     reliably matches. */
-  .lt-seal { position: absolute; inset-inline-end: 34px; top: 64px; width: 88px; height: 88px; opacity: .9; pointer-events: none; fill: none; stroke: rgb(from var(--green) r g b / .16); stroke-width: .8; }
-  .lt-qm { position: relative; display: block; height: 54px; margin-top: 18px; font-family: var(--serif); font-size: 96px; line-height: 1; color: var(--green); transition: opacity .4s; }
-  .lt-q { position: relative; margin: 0; font-family: var(--serif); font-size: 25px; line-height: 1.42; letter-spacing: -.012em; color: var(--ink); text-wrap: pretty; transition: opacity .45s ease .15s; }
-  /* The highlighter: a mint band under the key phrase that sweeps in after
-     the letter lands. Grows along the inline axis, so it mirrors. */
-  .lt-q mark { color: inherit; background: linear-gradient(transparent 58%, rgb(from var(--green-light) r g b / .6) 58%) var(--origin-x) 0 / 0% 100% no-repeat; padding: 0 2px; transition: background-size 1.1s cubic-bezier(.65, 0, .35, 1); }
-  .lt-f0 .lt-q mark { background-size: 100% 100%; transition-delay: .7s; }
-  .lt-sig { position: relative; margin-top: auto; padding-top: 22px; display: flex; flex-direction: column; gap: 4px; transition: opacity .4s; }
-  .lt-sig b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 24px; letter-spacing: -.01em; color: var(--ink); }
-  .lt-sig span { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .lt-letters { grid-template-columns: minmax(0, 4.4fr) minmax(0, 7.6fr); }
+  .lt-stack { height: 540px; }
+  .lt-l { position: absolute; inset-block: 0 34px; inset-inline: 0 34px; }
 }
 
-@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+/* ── Phone and tablet: one column ─────────────────────────────────────────
+   The perimeter above its panel, and each panel as tall as its content
+   rather than the board's 800px. The walk-throughs put the phone or the
+   certificate above its step list (184px beside six steps left the steps
+   ~100px on a 390px screen). */
+@media (max-width: 1080px) {
+  .en-core svg { width: 22px; height: 22px; }
+  .en-core span { font-size: 8px; max-width: 64px; }
+  .en-stop { font-size: 22px; }
+  /* Wrapped badges: the zone paints a rail every 444px (a 420px badge and
+     the 24px row gap), so the second row hangs from one too; with the
+     badges side by side the zone is 426px and the second never shows. The
+     first sits over the second, which drops in from behind it. */
+  .en-bds-rail { display: none; }
+  .en-bds { background: linear-gradient(var(--white), var(--tick-off) 3px, transparent 3px) 0 0 / 100% 444px; }
+  .en-bd:nth-child(2) { z-index: 1; }
+  .en-flow-l, .en-grid6 { grid-template-columns: 1fr 1fr; row-gap: 14px; }
+  .en-pts div { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .kx { grid-template-areas: "sg" "st"; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .kx .cy-stage { width: 170px; justify-self: center; }
+  .bx { grid-template-areas: "sg" "st"; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .bx .cy-stage { width: min(300px, 100%); justify-self: center; }
+  /* Stats two by two, each number over its label. */
+  .en-stats { grid-template-columns: 1fr 1fr; }
+  .en-stats div { flex-direction: column; gap: 8px; padding: 20px 0; }
+  .en-stats div:nth-child(even) { padding-inline-start: 20px; border-inline-start: 1px solid var(--hair); }
+  .en-stats div:nth-child(n+3) { border-top: 1px solid var(--hair); }
+  .en-stats b { font-size: 38px; }
+  .en-stats div:last-child b { font-size: 32px; }
+  /* The letters share one grid cell, so the stack is as tall as the longest
+     letter instead of a fixed 540px that a 390px column would overflow. */
+  .lt-stack { display: grid; }
+  .lt-l { grid-area: 1 / 1; margin-block: 0 16px; margin-inline: 0 16px; padding: 26px 22px; }
+  .lt-f1 { transform: translate(calc(var(--flip) * 8px), 8px) rotate(calc(var(--flip) * 1.6deg)); }
+  .lt-f2 { transform: translate(calc(var(--flip) * 16px), 16px) rotate(calc(var(--flip) * -1.2deg)); }
+  .lt-seal { inset-inline-end: 18px; top: 52px; width: 64px; height: 64px; }
+  .lt-qm { height: 40px; font-size: 72px; }
+  .lt-q { font-size: 19px; }
+  .lt-sig b { font-size: 21px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
   /* No auto-advance: with no animation there is no `animationend`. The
      global rule would otherwise shorten the bar to 0.01ms and fire it at
      once, shuffling the letters as fast as React can render. */

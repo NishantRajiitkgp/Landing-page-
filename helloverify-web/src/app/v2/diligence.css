@@ -7,7 +7,11 @@
    `--v2-*` (#FBFAF6 `--v2-paper-hi`, #F3F9F5 `--v2-mint-pale` #F4FAF6,
    #D9D3C7 `--v2-frame` #DAD4C8); the photo box's fill is the image's own
    placeholder tint, set inline from `lib/img.ts`. One is new, below. The
-   gauge's red and amber are SVG artwork in the component. */
+   gauge's red and amber are SVG artwork in the component.
+
+   One sheet for every width, as `enterprises.css`: fluid sizes in the
+   base, the two columns in `min-width: 1081px`, the phone's stacked cards
+   in `max-width: 1080px`. */
 :root {
   /* A check tile's resting outline, one step lighter than `--hair`. The
      same value as `--v2-lt-rule` in `enterprises.css`, declared again
@@ -15,111 +19,128 @@
   --v2-dd-rule: #ECE8DF;
 }
 
+.dd { padding-top: clamp(72px, 11.2vw, 120px); padding-bottom: clamp(72px, 13vw, 140px); }
+.dd-mast { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 22px; }
+.dd-mast-r { display: flex; align-items: center; gap: 22px; }
+.dd-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+/* The pause control (WCAG 2.2.2), the hero's mono caption. 24px tall. */
+.dd-motion { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.dd-motion:hover { color: var(--ink); }
+.dd-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+.dd .dd-head { margin-top: 22px; }
+.dd .dd-h2 { font-size: clamp(34px, 3.4vw + 24px, 60px); }
+.dd .dd-lede { margin-bottom: 8px; }
+.dd-it { font-style: italic; color: var(--green); }
+
+.dd-row { margin-top: clamp(48px, 6.7vw, 72px); display: grid; gap: clamp(24px, 3vw, 32px); }
+.dd-card { display: flex; flex-direction: column; border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .5); overflow: hidden; transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
+.dd-card:hover { transform: translateY(-6px); }
+.dd-ph { position: relative; height: clamp(300px, 33.4vw, 360px); overflow: hidden; }
+.dd-ph .dd-img { object-fit: cover; transform: scale(1.03); transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
+.dd-card:hover .dd-img { transform: scale(1.08); }
+.dd-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(from var(--ink) r g b / .2), rgb(from var(--ink) r g b / 0) 28%, rgb(from var(--ink) r g b / 0) 50%, rgb(from var(--ink) r g b / .72)); }
+.dd-chip { position: absolute; inset-inline-start: 20px; top: 20px; height: 30px; display: inline-flex; align-items: center; padding: 0 13px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+.dd-cap { position: absolute; inset-inline: 28px 180px; bottom: 24px; color: var(--white); }
+/* Full-strength white, not the board's .85 opacity: the kicker sits where
+   the scrim is thinnest, and translucent text there is a contrast risk. */
+.dd-cap span { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.dd-cap h3 { margin: 8px 0 0; font-family: var(--serif); font-weight: 400; font-size: 38px; line-height: 1.02; letter-spacing: -.025em; text-shadow: 0 2px 22px rgb(from var(--ink) r g b / .35); text-wrap: balance; }
+.dd-sw { position: absolute; inset-inline-end: 22px; bottom: 22px; }
+.dd-stamp { display: block; width: 130px; height: 130px; color: var(--green); opacity: 0; animation: ddStamp 10s cubic-bezier(.3, 1.35, .5, 1) infinite; }
+.dd-stamp-bg { fill: rgb(from var(--white) r g b / .88); }
+@keyframes ddStamp { 0%, 62% { opacity: 0; transform: scale(1.8) rotate(8deg); } 66% { opacity: .95; transform: scale(.94) rotate(-12deg); } 68%, 95% { opacity: .92; transform: scale(1) rotate(-10deg); } 100% { opacity: 0; transform: scale(1) rotate(-10deg); } }
+.dd-body { flex: 1; display: flex; flex-direction: column; padding: clamp(22px, 2.6vw, 28px) clamp(20px, 3vw, 32px); }
+.dd-p { margin: 0; font-size: 16px; line-height: 1.55; color: var(--ink-soft); text-wrap: pretty; }
+.dd-scan { margin-top: 24px; display: grid; grid-template-columns: minmax(0, 1fr) 150px; grid-template-rows: auto 1fr; column-gap: 22px; row-gap: 12px; }
+.dd-ckk { grid-column: 1 / -1; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.dd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dd-ck { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 10px 12px; box-sizing: border-box; border-radius: 14px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); font-size: 14px; font-weight: 500; line-height: 1.25; color: var(--ink); }
+.dd-orb { position: relative; flex: none; width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--v2-frame); }
+.dd-spin, .dd-ok { position: absolute; inset: 0; border-radius: 50%; opacity: 0; }
+.dd-spin { box-shadow: 0 0 12px rgb(from var(--green-light) r g b / .9); }
+.dd-spin::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgb(from var(--green) r g b / 0), var(--green)); -webkit-mask: radial-gradient(circle, transparent 7px, var(--ink) 7.5px); mask: radial-gradient(circle, transparent 7px, var(--ink) 7.5px); animation: ddRot .9s linear infinite; }
+@keyframes ddRot { to { transform: rotate(360deg); } }
+.dd-ok { display: flex; align-items: center; justify-content: center; background: var(--green); color: var(--white); }
+.dd-ok svg { width: 12px; height: 12px; }
+.dd-meter { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0 8px; border-radius: 18px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); }
+.dd-gauge { width: 130px; height: 74px; overflow: visible; }
+.dd-gt line { stroke: rgb(from var(--ink) r g b / .35); stroke-width: 1; }
+.dd-needle { transform-origin: 70px 66px; animation: ddNeedle 10s cubic-bezier(.5, 0, .3, 1) infinite; }
+.dd-needle line { stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; }
+.dd-needle circle { fill: var(--ink); }
+@keyframes ddNeedle { 0%, 6% { transform: rotate(-80deg); } 14% { transform: rotate(-40deg); } 26% { transform: rotate(-10deg); } 38% { transform: rotate(20deg); } 50% { transform: rotate(45deg); } 58%, 95% { transform: rotate(66deg); } 100% { transform: rotate(-80deg); } }
+.dd-ml { position: relative; height: 22px; width: 100%; margin-top: 4px; }
+.dd-ml span { position: absolute; inset-inline: 0; text-align: center; font-size: 14px; font-weight: 600; }
+.dd-m1 { color: var(--muted); animation: ddM1 10s linear infinite; }
+.dd-m2 { color: var(--green); opacity: 0; animation: ddM2 10s ease infinite; }
+@keyframes ddM1 { 0%, 57% { opacity: 1; } 59%, 97% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes ddM2 { 0%, 58% { opacity: 0; transform: translateY(6px); } 61%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.dd-foot { margin-top: auto; padding-top: 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.dd-eta b { display: block; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 40px; line-height: 1; letter-spacing: -.02em; color: var(--green); }
+.dd-eta span { display: block; margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.dd-more { display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 15px; font-weight: 500; white-space: nowrap; text-decoration: none; transition: transform .3s cubic-bezier(.16, 1, .3, 1), gap .3s; }
+.dd-more:hover { transform: translateY(-2px); gap: 14px; }
+.dd-more:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* The scan. Each tile's orb spins for ~1 s and then ticks, at 8, 20, 32
+   and 44 % of the loop; the needle and the label land at 58 %, the stamp
+   at 62–66 %, and everything resets over 95–100 %. */
+@keyframes ddS0 { 0%, 7% { opacity: 0; transform: scale(.5); } 8%, 17.5% { opacity: 1; transform: none; } 18.5%, 100% { opacity: 0; transform: scale(.5); } }
+.dd-ck0 .dd-spin { animation: ddS0 10s ease infinite; }
+@keyframes ddO0 { 0%, 18% { opacity: 0; transform: scale(.3); } 19.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.dd-ck0 .dd-ok { animation: ddO0 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+@keyframes ddT0 { 0%, 18% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 19.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
+.dd-ck0 { animation: ddT0 10s ease infinite; }
+@keyframes ddS1 { 0%, 19% { opacity: 0; transform: scale(.5); } 20%, 29.5% { opacity: 1; transform: none; } 30.5%, 100% { opacity: 0; transform: scale(.5); } }
+.dd-ck1 .dd-spin { animation: ddS1 10s ease infinite; }
+@keyframes ddO1 { 0%, 30% { opacity: 0; transform: scale(.3); } 31.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.dd-ck1 .dd-ok { animation: ddO1 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+@keyframes ddT1 { 0%, 30% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 31.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
+.dd-ck1 { animation: ddT1 10s ease infinite; }
+@keyframes ddS2 { 0%, 31% { opacity: 0; transform: scale(.5); } 32%, 41.5% { opacity: 1; transform: none; } 42.5%, 100% { opacity: 0; transform: scale(.5); } }
+.dd-ck2 .dd-spin { animation: ddS2 10s ease infinite; }
+@keyframes ddO2 { 0%, 42% { opacity: 0; transform: scale(.3); } 43.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.dd-ck2 .dd-ok { animation: ddO2 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+@keyframes ddT2 { 0%, 42% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 43.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
+.dd-ck2 { animation: ddT2 10s ease infinite; }
+@keyframes ddS3 { 0%, 43% { opacity: 0; transform: scale(.5); } 44%, 53.5% { opacity: 1; transform: none; } 54.5%, 100% { opacity: 0; transform: scale(.5); } }
+.dd-ck3 .dd-spin { animation: ddS3 10s ease infinite; }
+@keyframes ddO3 { 0%, 54% { opacity: 0; transform: scale(.3); } 55.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.dd-ck3 .dd-ok { animation: ddO3 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
+@keyframes ddT3 { 0%, 54% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 55.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
+.dd-ck3 { animation: ddT3 10s ease infinite; }
+
+/* The second card runs 1.4 s behind the first. Specific enough to beat
+   the per-tile shorthands above, which reset the delay — on the board that
+   left the second card's orbs ticking in step with the first. */
+.dd-c1 .dd-stamp, .dd-c1 .dd-needle, .dd-c1 .dd-m1, .dd-c1 .dd-m2, .dd-c1 .dd-grid .dd-ck, .dd-c1 .dd-ck .dd-ok, .dd-c1 .dd-ck .dd-spin { animation-delay: -1.4s; }
+
+.dd-paused .dd-stamp, .dd-paused .dd-needle, .dd-paused .dd-m1, .dd-paused .dd-m2, .dd-paused .dd-ck, .dd-paused .dd-ok, .dd-paused .dd-spin, .dd-paused .dd-spin::after { animation-play-state: paused; }
+
 @media (min-width: 1081px) {
-  .dd { padding-top: 120px; padding-bottom: 140px; }
-  .dd-mast { display: flex; justify-content: space-between; align-items: center; }
-  .dd-mast-r { display: flex; align-items: center; gap: 22px; }
-  .dd-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  /* The pause control (WCAG 2.2.2), the hero's mono caption. 24px tall. */
-  .dd-motion { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .dd-motion:hover { color: var(--ink); }
-  .dd-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
-  .dd .dd-head { margin-top: 22px; }
-  .dd .dd-h2 { font-size: 60px; }
-  .dd .dd-lede { margin-bottom: 8px; }
-  .dd-it { font-style: italic; color: var(--green); }
+  .dd-row { grid-template-columns: 1fr 1fr; }
+}
 
-  .dd-row { margin-top: 72px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-  .dd-card { display: flex; flex-direction: column; border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .5); overflow: hidden; transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
-  .dd-card:hover { transform: translateY(-6px); }
-  .dd-ph { position: relative; height: 360px; overflow: hidden; }
-  .dd-ph .dd-img { object-fit: cover; transform: scale(1.03); transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
-  .dd-card:hover .dd-img { transform: scale(1.08); }
-  .dd-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(from var(--ink) r g b / .2), rgb(from var(--ink) r g b / 0) 28%, rgb(from var(--ink) r g b / 0) 50%, rgb(from var(--ink) r g b / .72)); }
-  .dd-chip { position: absolute; inset-inline-start: 20px; top: 20px; height: 30px; display: inline-flex; align-items: center; padding: 0 13px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-  .dd-cap { position: absolute; inset-inline: 28px 180px; bottom: 24px; color: var(--white); }
-  /* Full-strength white, not the board's .85 opacity: the kicker sits where
-     the scrim is thinnest, and translucent text there is a contrast risk. */
-  .dd-cap span { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-  .dd-cap h3 { margin: 8px 0 0; font-family: var(--serif); font-weight: 400; font-size: 38px; line-height: 1.02; letter-spacing: -.025em; text-shadow: 0 2px 22px rgb(from var(--ink) r g b / .35); text-wrap: balance; }
-  .dd-sw { position: absolute; inset-inline-end: 22px; bottom: 22px; }
-  .dd-stamp { display: block; width: 130px; height: 130px; color: var(--green); opacity: 0; animation: ddStamp 10s cubic-bezier(.3, 1.35, .5, 1) infinite; }
-  .dd-stamp-bg { fill: rgb(from var(--white) r g b / .88); }
-  @keyframes ddStamp { 0%, 62% { opacity: 0; transform: scale(1.8) rotate(8deg); } 66% { opacity: .95; transform: scale(.94) rotate(-12deg); } 68%, 95% { opacity: .92; transform: scale(1) rotate(-10deg); } 100% { opacity: 0; transform: scale(1) rotate(-10deg); } }
-  .dd-body { flex: 1; display: flex; flex-direction: column; padding: 28px 32px 28px; }
-  .dd-p { margin: 0; font-size: 16px; line-height: 1.55; color: var(--ink-soft); text-wrap: pretty; }
-  .dd-scan { margin-top: 24px; display: grid; grid-template-columns: minmax(0, 1fr) 150px; grid-template-rows: auto 1fr; column-gap: 22px; row-gap: 12px; }
-  .dd-ckk { grid-column: 1 / -1; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-  .dd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .dd-ck { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 10px 12px; box-sizing: border-box; border-radius: 14px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); font-size: 14px; font-weight: 500; line-height: 1.25; color: var(--ink); }
-  .dd-orb { position: relative; flex: none; width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--v2-frame); }
-  .dd-spin, .dd-ok { position: absolute; inset: 0; border-radius: 50%; opacity: 0; }
-  .dd-spin { box-shadow: 0 0 12px rgb(from var(--green-light) r g b / .9); }
-  .dd-spin::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 0deg, rgb(from var(--green) r g b / 0), var(--green)); -webkit-mask: radial-gradient(circle, transparent 7px, var(--ink) 7.5px); mask: radial-gradient(circle, transparent 7px, var(--ink) 7.5px); animation: ddRot .9s linear infinite; }
-  @keyframes ddRot { to { transform: rotate(360deg); } }
-  .dd-ok { display: flex; align-items: center; justify-content: center; background: var(--green); color: var(--white); }
-  .dd-ok svg { width: 12px; height: 12px; }
-  .dd-meter { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0 8px; border-radius: 18px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); }
-  .dd-gauge { width: 130px; height: 74px; overflow: visible; }
-  .dd-gt line { stroke: rgb(from var(--ink) r g b / .35); stroke-width: 1; }
-  .dd-needle { transform-origin: 70px 66px; animation: ddNeedle 10s cubic-bezier(.5, 0, .3, 1) infinite; }
-  .dd-needle line { stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; }
-  .dd-needle circle { fill: var(--ink); }
-  @keyframes ddNeedle { 0%, 6% { transform: rotate(-80deg); } 14% { transform: rotate(-40deg); } 26% { transform: rotate(-10deg); } 38% { transform: rotate(20deg); } 50% { transform: rotate(45deg); } 58%, 95% { transform: rotate(66deg); } 100% { transform: rotate(-80deg); } }
-  .dd-ml { position: relative; height: 22px; width: 100%; margin-top: 4px; }
-  .dd-ml span { position: absolute; inset-inline: 0; text-align: center; font-size: 14px; font-weight: 600; }
-  .dd-m1 { color: var(--muted); animation: ddM1 10s linear infinite; }
-  .dd-m2 { color: var(--green); opacity: 0; animation: ddM2 10s ease infinite; }
-  @keyframes ddM1 { 0%, 57% { opacity: 1; } 59%, 97% { opacity: 0; } 100% { opacity: 1; } }
-  @keyframes ddM2 { 0%, 58% { opacity: 0; transform: translateY(6px); } 61%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-  .dd-foot { margin-top: auto; padding-top: 24px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; }
-  .dd-eta b { display: block; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 40px; line-height: 1; letter-spacing: -.02em; color: var(--green); }
-  .dd-eta span { display: block; margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .dd-more { display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 15px; font-weight: 500; text-decoration: none; transition: transform .3s cubic-bezier(.16, 1, .3, 1), gap .3s; }
-  .dd-more:hover { transform: translateY(-2px); gap: 14px; }
-  .dd-more:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-
-  /* The scan. Each tile's orb spins for ~1 s and then ticks, at 8, 20, 32
-     and 44 % of the loop; the needle and the label land at 58 %, the stamp
-     at 62–66 %, and everything resets over 95–100 %. */
-  @keyframes ddS0 { 0%, 7% { opacity: 0; transform: scale(.5); } 8%, 17.5% { opacity: 1; transform: none; } 18.5%, 100% { opacity: 0; transform: scale(.5); } }
-  .dd-ck0 .dd-spin { animation: ddS0 10s ease infinite; }
-  @keyframes ddO0 { 0%, 18% { opacity: 0; transform: scale(.3); } 19.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-  .dd-ck0 .dd-ok { animation: ddO0 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
-  @keyframes ddT0 { 0%, 18% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 19.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
-  .dd-ck0 { animation: ddT0 10s ease infinite; }
-  @keyframes ddS1 { 0%, 19% { opacity: 0; transform: scale(.5); } 20%, 29.5% { opacity: 1; transform: none; } 30.5%, 100% { opacity: 0; transform: scale(.5); } }
-  .dd-ck1 .dd-spin { animation: ddS1 10s ease infinite; }
-  @keyframes ddO1 { 0%, 30% { opacity: 0; transform: scale(.3); } 31.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-  .dd-ck1 .dd-ok { animation: ddO1 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
-  @keyframes ddT1 { 0%, 30% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 31.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
-  .dd-ck1 { animation: ddT1 10s ease infinite; }
-  @keyframes ddS2 { 0%, 31% { opacity: 0; transform: scale(.5); } 32%, 41.5% { opacity: 1; transform: none; } 42.5%, 100% { opacity: 0; transform: scale(.5); } }
-  .dd-ck2 .dd-spin { animation: ddS2 10s ease infinite; }
-  @keyframes ddO2 { 0%, 42% { opacity: 0; transform: scale(.3); } 43.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-  .dd-ck2 .dd-ok { animation: ddO2 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
-  @keyframes ddT2 { 0%, 42% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 43.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
-  .dd-ck2 { animation: ddT2 10s ease infinite; }
-  @keyframes ddS3 { 0%, 43% { opacity: 0; transform: scale(.5); } 44%, 53.5% { opacity: 1; transform: none; } 54.5%, 100% { opacity: 0; transform: scale(.5); } }
-  .dd-ck3 .dd-spin { animation: ddS3 10s ease infinite; }
-  @keyframes ddO3 { 0%, 54% { opacity: 0; transform: scale(.3); } 55.5%, 95% { opacity: 1; transform: none; } 100% { opacity: 0; } }
-  .dd-ck3 .dd-ok { animation: ddO3 10s cubic-bezier(.3, 1.6, .5, 1) infinite; }
-  @keyframes ddT3 { 0%, 54% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } 55.5%, 95% { background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3); } 100% { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--v2-dd-rule); } }
-  .dd-ck3 { animation: ddT3 10s ease infinite; }
-
-  /* The second card runs 1.4 s behind the first. Specific enough to beat
-     the per-tile shorthands above, which reset the delay — on the board that
-     left the second card's orbs ticking in step with the first. */
-  .dd-c1 .dd-stamp, .dd-c1 .dd-needle, .dd-c1 .dd-m1, .dd-c1 .dd-m2, .dd-c1 .dd-grid .dd-ck, .dd-c1 .dd-ck .dd-ok, .dd-c1 .dd-ck .dd-spin { animation-delay: -1.4s; }
-
-  .dd-paused .dd-stamp, .dd-paused .dd-needle, .dd-paused .dd-m1, .dd-paused .dd-m2, .dd-paused .dd-ck, .dd-paused .dd-ok, .dd-paused .dd-spin, .dd-paused .dd-spin::after { animation-play-state: paused; }
+/* ── Phone and tablet: the cards stack ────────────────────────────────────
+   The stamp moves up opposite the chip, so the title can take the photo's
+   full width (beside a 130px stamp it had ~140px on a phone), and the
+   gauge sits in a strip under the four checks instead of a column. */
+@media (max-width: 1080px) {
+  .dd-cap { inset-inline: 20px; bottom: 20px; }
+  .dd-cap h3 { font-size: 30px; }
+  .dd-sw { top: 14px; bottom: auto; inset-inline-end: 14px; }
+  .dd-stamp { width: 92px; height: 92px; }
+  .dd-scan { grid-template-columns: minmax(0, 1fr); }
+  .dd-meter { flex-direction: row; gap: 18px; padding: 10px 16px; }
+  .dd-ml { width: auto; margin: 0; flex: 1; }
+  .dd-ml span { text-align: start; }
 }
 
 /* Reduced motion shows where the scan ends — every tick, the needle at
    green, "Low risk", the stamp down — instead of the loop. `!important`
    because the global reduced-motion rule would otherwise run each loop once
    to its 100 % frame, which is the reset (stamp gone, needle back at red). */
-@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
   .dd-card, .dd-ph .dd-img { transition: none; }
   .dd-stamp, .dd-needle, .dd-m1, .dd-m2, .dd-ck, .dd-ok, .dd-spin { animation: none !important; }
   .dd-ok, .dd-m2 { opacity: 1; }

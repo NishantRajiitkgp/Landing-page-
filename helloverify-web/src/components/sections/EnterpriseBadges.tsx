@@ -13,6 +13,9 @@
     - **The swing** is a damped pendulum per badge, integrated in one `rAF`
       and written to `style.transform` directly, so it costs no React render.
       Drag a badge to swing it; brushing past with the pointer nudges it.
+      On touch only a sideways drag swings it: a vertical one scrolls the
+      page (`touch-action: pan-y`), so two badges that fill a phone's width
+      do not trap the scroll.
     - **Turning over.** A click that is not a drag turns the badge to its
       back, which carries the workforce's description; the "Turn over" button
       does the same from the keyboard.
@@ -32,8 +35,9 @@ import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { useMotionPaused } from "./BizMotion";
 
-/** The badge photo box: 244px wide at the 1440 board, 17vw. */
-const SIZES_EN_BADGE = "(max-width: 1080px) 90vw, 17vw";
+/** The badge photo box: 244px wide at the 1440 board, 17vw; on a 390px
+ *  phone the same badge is 63vw. */
+const SIZES_EN_BADGE = "(max-width: 1080px) 63vw, 17vw";
 
 /** Pendulum constants: ~1.1 Hz natural swing, settling in about 3 s. */
 const K = 48;
@@ -89,8 +93,14 @@ export function EnterpriseBadges({ cols, turn }: { cols: BadgeCol[]; turn: strin
   useEffect(() => {
     kick.current.forEach(clearTimeout);
     kick.current = [];
+    const top0 = els.current[0]?.offsetTop ?? 0;
     bodies.current.forEach((b, i) => {
-      if (phase === "armed") Object.assign(b, { y: DROP - i * 40, vy: 0, th: (i ? -1 : 1) * 9, om: 0 });
+      // On a phone the badges wrap one above the other, each on its own
+      // rail; the lower one parks as far above the top rail as the first
+      // (its offset added), so the zone's clip hides it too and it drops
+      // in from behind the first rather than hanging over it.
+      const off = (els.current[i]?.offsetTop ?? top0) - top0;
+      if (phase === "armed") Object.assign(b, { y: DROP - i * 40 - off, vy: 0, th: (i ? -1 : 1) * 9, om: 0 });
       if (phase === "run") {
         const at = (FIRST_TICK + (cols[i] ? Object.keys(cols[i].chips).length : 6) * TICK_GAP + 0.25 + i * 0.13) * 1000;
         kick.current.push(window.setTimeout(() => (b.om += i ? -46 : 46), at));
@@ -185,12 +195,14 @@ export function EnterpriseBadges({ cols, turn }: { cols: BadgeCol[]; turn: strin
     },
     [moving],
   );
+  /** `cancel`: the browser took the touch for a page scroll (the badge is
+   *  `touch-action: pan-y`), so a press that never travelled is not a tap. */
   const onUp = useCallback(
-    (i: number) => () => {
+    (i: number, cancel = false) => () => {
       const s = start.current;
       start.current = null;
       bodies.current[i].drag = false;
-      if (s && !s.moved) setFlipped((f) => f.map((v, j) => (j === i ? !v : v)));
+      if (s && !s.moved && !cancel) setFlipped((f) => f.map((v, j) => (j === i ? !v : v)));
     },
     [],
   );
@@ -210,7 +222,7 @@ export function EnterpriseBadges({ cols, turn }: { cols: BadgeCol[]; turn: strin
             onPointerDown={onDown(i)}
             onPointerMove={onMove(i)}
             onPointerUp={onUp(i)}
-            onPointerCancel={onUp(i)}
+            onPointerCancel={onUp(i, true)}
           >
             <span className="en-bd-strap" aria-hidden="true" />
             <span className="en-bd-clip" aria-hidden="true" />

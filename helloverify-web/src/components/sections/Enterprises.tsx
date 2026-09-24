@@ -1,9 +1,9 @@
 /** Enterprises - Background checks for every part of your organization.
 
-    Homepage v2, desktop only (the Business board, Sep 2026). New on the
-    homepage: no generated section preceded it, so there is no `.mob` tree
-    to keep and nothing renders under 1081px until the phone gets its own
-    part (the v2 boards have no 390px artboard).
+    Homepage v2 (the Business board, Sep 2026), one tree at every width:
+    the boards have no 390px artboard, so the phone layout is
+    `enterprises.css`'s `max-width: 1080px` block — the perimeter shrinks
+    to the column, the panels size to their content and stack.
 
     Three pieces, one band:
     - the trust perimeter: pills and canvas rings that pick one of three
@@ -238,53 +238,51 @@ export async function Enterprises() {
   const hero = (await copy(SECTIONS)).hero.motion;
 
   return (
-    <div className="dsk">
-      <MotionStage className="wrap en" pausedClassName="en-paused">
-        <div className="en-mast">
-          <span className="k">{t.kicker}</span>
-          <span className="en-mast-r">
-            <MotionButton className="en-motion" pauseLabel={hero.pause} playLabel={hero.play} />
-            <span className="en-sheet">{t.sheet}</span>
-          </span>
-        </div>
-        <div className="sec-head en-head">
-          <h2 className="h2 en-h2">
-            {t.headingA}
-            <br />
-            <em className="en-it">{t.headingB}</em>
-          </h2>
-          <p className="lede en-lede">{t.lede}</p>
-        </div>
-        <EnterprisePerimeter
-          select={t.select}
-          core={t.core}
-          stop={
-            <>
-              {t.stopA} <em>{t.stopB}</em>
-            </>
-          }
-          rings={[t.rings.employees, t.rings.customers, t.rings.businesses]}
-          panels={panels}
-        />
-        <div className="en-stats">
-          {Object.entries(t.stats).map(([k, s]) => (
-            <div key={k}>
-              <b>{s.b}</b>
-              <span>{s.s}</span>
-            </div>
-          ))}
-        </div>
-        <ClientLetters
-          kicker={L.kicker}
-          heading={
-            <>
-              {L.hA} <em>{L.hB}</em>
-            </>
-          }
-          from={L.from}
-          letters={Object.values(L.items)}
-        />
-      </MotionStage>
-    </div>
+    <MotionStage className="wrap en" pausedClassName="en-paused">
+      <div className="en-mast">
+        <span className="k">{t.kicker}</span>
+        <span className="en-mast-r">
+          <MotionButton className="en-motion" pauseLabel={hero.pause} playLabel={hero.play} />
+          <span className="en-sheet">{t.sheet}</span>
+        </span>
+      </div>
+      <div className="sec-head en-head">
+        <h2 className="h2 en-h2">
+          {t.headingA}
+          <br />
+          <em className="en-it">{t.headingB}</em>
+        </h2>
+        <p className="lede en-lede">{t.lede}</p>
+      </div>
+      <EnterprisePerimeter
+        select={t.select}
+        core={t.core}
+        stop={
+          <>
+            {t.stopA} <em>{t.stopB}</em>
+          </>
+        }
+        rings={[t.rings.employees, t.rings.customers, t.rings.businesses]}
+        panels={panels}
+      />
+      <div className="en-stats">
+        {Object.entries(t.stats).map(([k, s]) => (
+          <div key={k}>
+            <b>{s.b}</b>
+            <span>{s.s}</span>
+          </div>
+        ))}
+      </div>
+      <ClientLetters
+        kicker={L.kicker}
+        heading={
+          <>
+            {L.hA} <em>{L.hB}</em>
+          </>
+        }
+        from={L.from}
+        letters={Object.values(L.items)}
+      />
+    </MotionStage>
   );
 }
