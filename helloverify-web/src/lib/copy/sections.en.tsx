@@ -1174,28 +1174,6 @@ export const en = {
     hint: "Move the lamp over the documents, or",
     reveal: "Show me the forgery",
     reset: "Reset the table",
-    compare: {
-      app: "Application 06 · Westmarch International University",
-      seg: "Show the claim or the verified result",
-      claimed: "Claimed",
-      verified: "Verified",
-      notes: { template: "Template & fonts", seal: "Issuer seal" },
-      claim: {
-        degree: { l: "Degree", v: "Bachelor of Science in Nursing" },
-        institution: { l: "Institution", v: "Westmarch International University" },
-        year: { l: "Year", v: "2019" },
-        by: { l: "Submitted by", v: "Applicant · R. Menon" },
-      },
-      asSubmitted: "As submitted",
-      result: {
-        template: { l: "Template & fonts", v: "mismatch" },
-        institution: { l: "Institution", v: "not accredited" },
-        registrar: { l: "Registrar", v: "no record of enrolment" },
-        identity: { l: "Identity", v: "matched" },
-      },
-      referredVerdict: "Referred · not verified",
-      mill: "Our accreditation check confirms that the institution is a legitimate and approved provider of degree programs, not a diploma or degree mill.",
-    },
   },
 
   /** `sections/Contact.tsx`.

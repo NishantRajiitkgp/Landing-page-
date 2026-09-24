@@ -3,13 +3,12 @@
     Eight synthetic certificates on an evidence table, one of them forged. A
     UV lamp follows the pointer and shows the security features the genuine
     seven carry and the forgery lacks; clicking a certificate checks it, and
-    the forgery is referred. Underneath, the forged application's claim beside
-    what verification found.
+    the forgery is referred.
 
     Desktop only: the canvas has no phone artboard for it, so there is no
     `.mob` tree rather than an invented one. The heading and footnote are
     static and rendered here; everything that shares state — the table, its
-    status line, the comparison — is the `./OneInEightTable` island. */
+    status line, the reveal button — is the `./OneInEightTable` island. */
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
 // One sheet per v2 section (see the header of `app/v2/hero.css`).

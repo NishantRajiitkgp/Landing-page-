@@ -841,7 +841,7 @@ const BANDS: Record<string, readonly [number, number]> = {
   /** Bands homepage v2 added (Sep 2026). The first number is the migration-
    *  time `>text<` matcher count, which never saw them, so it is 0 and the
    *  152 sum below still describes the migration. The second is measured. */
-  oneInEight: [0, 80],
+  oneInEight: [0, 55],
   govSeals: [0, 115],
   govDossiers: [0, 165],
   enterprises: [0, 102],
@@ -885,10 +885,12 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
   );
 }
 
-/** 1592 -> 1582: `whoItsFor`'s ten desktop-only leaves (see `BANDS`). */
+/** 1592 -> 1582: `whoItsFor`'s ten desktop-only leaves (see `BANDS`).
+ *  1582 -> 1557: `oneInEight.compare`, the claimed-vs-verified card dropped
+ *  on review (24 Sep 2026) — 25 string leaves. */
 check(
-  "sections holds 1582 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1582 &&
+  "sections holds 1557 leaves for 152 nodes and blocks 77 for 27 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1557 &&
     leafPaths(EN_BLOCKS).length === 77 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
@@ -909,10 +911,11 @@ check(
 /** The Sep 2026 perf pass removed one rich-text leaf and nine strings: the
  *  first `whoItsFor` tag ("Governments & authorities", desktop only — two
  *  `whoItsFor` tags remain rich) and the band's `headingA`, `headingB`,
- *  `lede` and six `note`s. So 1563 strings, 14 rich-text + 5 functions. */
+ *  `lede` and six `note`s. So 1563 strings, 14 rich-text + 5 functions.
+ *  Dropping `oneInEight.compare` took 25 more strings: 1538. */
 check(
-  "sections: 1563 string leaves, 14 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1563 &&
+  "sections: 1538 string leaves, 14 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1538 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 19 &&
     [EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

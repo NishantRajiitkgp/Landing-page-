@@ -1,5 +1,5 @@
-/* Homepage v2 · 03 "One in eight" — the evidence table, the UV lamp, claimed
-   vs verified. Imported by `sections/OneInEight.tsx`; the interactive part is
+/* Homepage v2 · 03 "One in eight" — the evidence table and the UV lamp.
+   Imported by `sections/OneInEight.tsx`; the interactive part is
    `sections/OneInEightTable.tsx`. Ported from the canvas's
    `scripts/assemble_fraud.py`, prefix `ff-`.
 
@@ -111,37 +111,6 @@
   .ff-foot-acts { display: flex; align-items: center; gap: 14px; }
   .ff-hint { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; color: var(--muted); }
 
-  /* ── Claimed vs verified ────────────────────────────────────────────── */
-  .ff-compare { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); border-radius: 24px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 18px 40px -28px rgb(from var(--ink) r g b / .3); overflow: hidden; }
-  .ff-cmp-l { position: relative; padding: 44px; background: var(--v2-paper-hi); border-inline-end: 1px dashed var(--hair); display: flex; align-items: center; justify-content: center; }
-  .ff-big { position: relative; width: 100%; height: 300px; }
-  .ff-big .ff-face { font-size: 16px; padding: 22px 26px 18px; }
-  .ff-ring { position: absolute; border: 1.5px solid var(--ink); border-radius: 50%; opacity: 0; pointer-events: none; transition: opacity .4s ease .3s; }
-  .ff-ring-name { inset-inline: 26%; top: 43%; height: 17%; }
-  .ff-ring-seal { inset-inline-start: 50%; bottom: 10px; width: 66px; height: 66px; margin-inline-start: -24px; }
-  .ff-found .ff-big .ff-ring { opacity: .75; }
-  .ff-note { position: absolute; z-index: 2; display: flex; align-items: center; gap: 8px; padding: 4px 8px; border-radius: 4px; background: var(--white); box-shadow: 0 0 0 1px var(--ink); font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); opacity: 0; transition: opacity .4s; }
-  .ff-note-1 { inset-inline-end: 3%; top: 34%; }
-  .ff-note-2 { inset-inline-end: 6%; bottom: 80px; }
-  .ff-found .ff-note { opacity: 1; }
-  .ff-cmp-r { padding-block: 40px; padding-inline: 44px 48px; }
-  .ff-cmp-top { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-  .ff-seg { display: inline-flex; flex: none; padding: 4px; border-radius: 999px; background: var(--v2-leaf-lo); }
-  .ff-seg-b { height: 38px; padding: 0 20px; border: 0; border-radius: 999px; background: none; font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--muted); cursor: pointer; transition: background .25s, color .25s; }
-  .ff-seg-b:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-  .ff-seg-on { background: var(--white); color: var(--ink); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .12); }
-  .ff-ledger-box { margin-top: 22px; height: 262px; }
-  .ff-ledger-in { animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
-  .ff-lr { display: grid; grid-template-columns: 150px minmax(0, 1fr) 18px; gap: 14px; align-items: center; padding: 13px 0; border-top: 1px solid var(--hair); font-family: var(--mono); font-size: 12.5px; }
-  .ff-lr span { color: var(--muted); text-transform: uppercase; letter-spacing: .06em; font-size: 11px; }
-  .ff-lr b { font-weight: 500; color: var(--ink); }
-  .ff-x { width: 16px; height: 16px; color: var(--ink); }
-  .ff-bad b { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  .ff-verdict { display: flex; align-items: center; gap: 10px; padding-top: 16px; border-top: 1px solid var(--hair); font-family: var(--mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
-  .ff-verdict-claim { color: var(--muted); }
-  .ff-verdict-claim .dot { background: var(--tick-off); }
-  .ff-refdot { width: 9px; height: 9px; border-radius: 2px; background: var(--ink); }
-  .ff-mill { margin: 14px 0 0; font-size: 15px; line-height: 1.55; color: var(--ink-soft); text-wrap: pretty; }
   .ff-fn { margin: 22px 0 0; font-family: var(--mono); font-size: 11px; color: var(--muted); }
   .ff-fn sup { margin-inline-end: 4px; }
 }
