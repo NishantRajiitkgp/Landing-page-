@@ -40,7 +40,7 @@ export type Office = {
 export const OFFICES: Office[] = [
   { k: "manila", tz: "Asia/Manila", std: 480, ...px(14.6, 121.0), cl: 1014, ct: 104 },
   { k: "singapore", tz: "Asia/Singapore", std: 480, ...px(1.35, 103.8), cl: 872, ct: 318 },
-  { k: "noida", tz: "Asia/Kolkata", std: 330, ...px(28.5, 77.4), cl: 792, ct: 22 },
+  { k: "noida", tz: "Asia/Kolkata", std: 330, ...px(28.6, 77.2), cl: 792, ct: 22 }, // New Delhi (see `presence.offices`)
   { k: "dubai", tz: "Asia/Dubai", std: 240, ...px(25.2, 55.3), cl: 606, ct: 236 },
   { k: "cairo", tz: "Africa/Cairo", std: 120, ...px(30.0, 31.2), cl: 540, ct: 22 },
   { k: "newYork", tz: "America/New_York", std: -300, ...px(40.7, -74.0), cl: 384, ct: 132 },
