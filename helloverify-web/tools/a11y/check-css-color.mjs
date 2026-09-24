@@ -131,7 +131,7 @@ const root = new URL("../../", import.meta.url);
 const CENSUS = process.argv.includes("--census");
 
 /** Shipped stylesheets. Rule 1 is fatal here. */
-const SHEETS = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css"];
+const SHEETS = ["src/app/design.css", "src/app/pages.css", "src/app/globals.css", "src/app/v2.css"];
 
 /** The generator's inputs (`tools/port/build-css.py`). Rule 1 is reported and
  *  capped here — see the header. */
@@ -331,6 +331,19 @@ const BASELINE = {
   "decl #EC2E21": { n: 1, t: "red" },
   "decl #F6F4EF": { n: 2, t: "paper" },
   "decl #FFFFFF": { n: 2, t: "white" },
+
+  // ── homepage v2 (`src/app/v2.css`, Sep 2026): paper tints declared once as
+  //    `--v2-*` tokens so the rules below them carry no literal. Every one is a
+  //    SURFACE — the guilloche frame line, the door's paper and its shading,
+  //    the mint of an opened doorway, the kicker's dashed hairline — and none
+  //    is ever a text colour, which is why they are tints and not palette.
+  "decl #DAD4C8": { n: 1, why: "--v2-frame: the security-print frame line on the hero" },
+  "decl #FBFAF6": { n: 1, why: "--v2-paper-hi: the lit top of a door's paper" },
+  "decl #EFEBE3": { n: 1, why: "--v2-paper-lo: the shaded foot of a door's paper" },
+  "decl #FAF8F3": { n: 1, why: "--v2-leaf-mid: a door leaf's shading, mid-stop" },
+  "decl #F1EEE6": { n: 1, why: "--v2-leaf-lo: a door leaf's shading at the free edge" },
+  "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
+  "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the

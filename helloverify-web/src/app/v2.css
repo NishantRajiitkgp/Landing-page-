@@ -1,0 +1,154 @@
+/* Homepage v2 — the sections re-designed on the canvas after the original
+   port (HOMEPAGE-REVAMP-RESEARCH.md, Sep 2026).
+
+   WHY A SEPARATE SHEET. `design.css` is generated from the nine artboards by
+   `tools/port/build-css.py`, and a hand edit there is one regeneration from
+   gone (TASKS.md, "Still stale"). The v2 boards carry logic — state, pointer
+   handlers, canvas loops — that `h2jsx.py` was never written to convert, so
+   these sections are hand-ported and their CSS lives here, authored, not
+   generated. It is imported after `design.css` so the v2 rules win on equal
+   specificity; every selector here is prefixed per section (`hv-`, `dr-`, …)
+   so nothing in the generated sheet is overridden by accident.
+
+   GATES. This file is in `check-css-color.mjs`'s SHEETS and
+   `check-logical-css.mjs`'s FILES. Colour is written through tokens; a
+   translucent token is `rgb(from var(--x) r g b / a)`, the rewrite
+   `check-css-color.mjs` names for its "+a" rows. Inline-axis offsets are
+   logical properties; the one horizontal `translateX` goes through `--flip`.
+
+   Only the desktop tree (`.dsk`, ≥1081px) is v2 so far. The phone keeps the
+   generated `.mob` markup until its own part. */
+
+/* Horizontal gradients here are written `calc(var(--flip) * 90deg)`: each
+   one fades toward, or away from, something on the inline axis (the kicker's
+   hairlines toward the words, the door's shading away from its hinge), so it
+   has to mirror with the layout. `check-logical-css.mjs`'s gradient cap only
+   counts literal angles, and these are not exceptions to it but the fix it
+   asks for.
+
+   Paper tints the v2 boards use that are not on the original palette. Each is
+   a surface, never text: the guilloche frame line, the door's paper and its
+   shading, and the mint of an opened doorway. Declared once so the rules
+   below stay literal-free. */
+:root {
+  --v2-frame: #DAD4C8;
+  --v2-paper-hi: #FBFAF6;
+  --v2-paper-lo: #EFEBE3;
+  --v2-leaf-mid: #FAF8F3;
+  --v2-leaf-lo: #F1EEE6;
+  --v2-mint-pale: #F4FAF6;
+  --v2-dash: #BDB7AB;
+}
+
+@media (min-width: 1081px) {
+  /* ── Hero: security print ─────────────────────────────────────────────── */
+  .hv-hero { position: relative; height: 940px; overflow: hidden; --mx: 720px; --my: 300px; --uv: 0; }
+  .hv-guil { position: absolute; inset-inline-start: 120px; top: -290px; width: 1200px; height: 1200px; pointer-events: none; opacity: .72; transform-origin: 50% 50%; animation: hvSpin 260s linear infinite; }
+  @keyframes hvSpin { to { transform: rotate(360deg); } }
+  .hv-lamp { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; background: radial-gradient(circle 240px at var(--mx) var(--my), rgb(from var(--green-light) r g b / .3), rgb(from var(--green-light) r g b / 0) 72%); }
+  .hv-uv { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; -webkit-mask-image: radial-gradient(circle 210px at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); mask-image: radial-gradient(circle 210px at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); }
+  .hv-uv .hv-guil { opacity: 1; }
+  .hv-fibres { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hv-frame { position: absolute; top: 14px; inset-inline: 20px; bottom: 14px; border: 1px solid var(--v2-frame); pointer-events: none; }
+  .hv-frame-in { position: absolute; inset: 13px; border: 1px solid var(--hair); }
+  .hv-mt { position: absolute; inset-inline: 13px; height: 13px; overflow: hidden; white-space: nowrap; }
+  .hv-mt-top { top: 0; }
+  .hv-mt-bot { bottom: 0; }
+  .hv-mt-in { display: inline-block; font-family: var(--mono); font-size: 6.4px; line-height: 13px; letter-spacing: .34em; color: var(--muted); animation: hvMarq 140s linear infinite; }
+  /* Full-strength `--muted` (4.83:1 on paper), not the board's `opacity: .62`:
+     that measured 2.4:1 in `tools/e2e/a11y.spec.ts`, which keeps no allowlist
+     and fixes colour rather than excusing it — even for decorative microtext. */
+  .hv-mt-rev { animation-direction: reverse; }
+  @keyframes hvMarq { to { transform: translateX(calc(var(--flip) * -50%)); } }
+  .hv-reg { position: absolute; }
+  .hv-reg-tl { inset-inline-start: -8px; top: -8px; }
+  .hv-reg-tr { inset-inline-end: -8px; top: -8px; }
+  .hv-reg-bl { inset-inline-start: -8px; bottom: -8px; }
+  .hv-reg-br { inset-inline-end: -8px; bottom: -8px; }
+  .hv-note { position: absolute; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; pointer-events: none; }
+  .hv-note-tl { top: 42px; inset-inline-start: 54px; }
+  .hv-note-tr { top: 42px; inset-inline-end: 54px; }
+  .hv-note-bl { bottom: 42px; inset-inline-start: 54px; }
+  .hv-uvdot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); box-shadow: 0 0 0 3px rgb(from var(--green-light) r g b / .28); }
+
+  /* The headline: each line focuses in, the underline draws under "source",
+     and the seal stamps down beside "in minutes." (replayable). */
+  .hv-content { position: relative; padding-top: 84px; text-align: center; }
+  .hv-pill { display: inline-flex; align-items: center; gap: 10px; height: 38px; padding-block: 0; padding-inline: 14px 16px; border-radius: 999px; background: var(--white); border: 1px solid var(--hair); font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+  .hv-h1 { margin: 34px auto 0; max-width: 1080px; font-size: 112px; line-height: .96; letter-spacing: -.03em; font-weight: 400; text-wrap: balance; animation: hvNudge .34s ease 1.93s; }
+  @keyframes hvNudge { 30% { transform: translateY(2px); } 60% { transform: translateY(-1px); } }
+  .hv-l { display: block; animation: hvFocus 1.15s cubic-bezier(.16, 1, .3, 1) both; }
+  .hv-l1 { animation-delay: .12s; }
+  .hv-l2 { animation-delay: .34s; }
+  @keyframes hvFocus { 0% { opacity: 0; filter: blur(16px); transform: translateY(16px); } 55% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
+  .hv-src { position: relative; display: inline-block; }
+  .hv-ul { position: absolute; inset-inline: .02em .34em; top: .74em; height: .17em; overflow: visible; pointer-events: none; }
+  .hv-ul path { fill: none; stroke: var(--green); stroke-width: 4.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: hvDraw .95s cubic-bezier(.65, 0, .35, 1) 1.05s forwards; }
+  @keyframes hvDraw { to { stroke-dashoffset: 0; } }
+  .hv-em { position: relative; display: inline-block; font-style: italic; font-weight: 400; }
+  .hv-lede { margin: 36px auto 0; max-width: 640px; font-size: 21px; line-height: 1.45; color: var(--ink-soft); letter-spacing: -.005em; text-wrap: pretty; }
+  .hv-ctas { margin-top: 40px; display: flex; justify-content: center; align-items: center; gap: 14px; }
+  .hv-seal-btn { position: absolute; inset-inline-start: calc(100% + 4px); top: -36px; width: 168px; height: 168px; padding: 0; border: 0; background: none; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .hv-seal-btn svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .hv-seal-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+  .hv-seal { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; mix-blend-mode: multiply; }
+  .hv-shock { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; }
+  /* Two identical keyframe pairs so a replay is a class swap, not a reflow
+     hack: changing `animation-name` restarts an animation, re-setting the
+     same one does not. */
+  .hv-stampA .hv-seal { animation: hvStampA .62s cubic-bezier(.3, 1.35, .5, 1) 1.6s both; }
+  .hv-stampB .hv-seal { animation: hvStampB .62s cubic-bezier(.3, 1.35, .5, 1) 0s both; }
+  .hv-stampA .hv-shock { animation: hvShockA .8s cubic-bezier(.16, 1, .3, 1) 1.9s both; }
+  .hv-stampB .hv-shock { animation: hvShockB .8s cubic-bezier(.16, 1, .3, 1) .3s both; }
+  @keyframes hvStampA { 0% { opacity: 0; transform: scale(1.9) rotate(-2deg); } 55% { opacity: .96; transform: scale(.95) rotate(-15deg); } to { opacity: .93; transform: scale(1) rotate(-14deg); } }
+  @keyframes hvStampB { 0% { opacity: 0; transform: scale(1.9) rotate(-2deg); } 55% { opacity: .96; transform: scale(.95) rotate(-15deg); } to { opacity: .93; transform: scale(1) rotate(-14deg); } }
+  @keyframes hvShockA { 0% { opacity: .55; transform: scale(.9); } to { opacity: 0; transform: scale(1.55); } }
+  @keyframes hvShockB { 0% { opacity: .55; transform: scale(.9); } to { opacity: 0; transform: scale(1.55); } }
+
+  .hv-motion { position: absolute; inset-inline-end: 54px; bottom: 36px; display: flex; align-items: center; gap: 8px; padding: 6px 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .hv-motion:hover { color: var(--ink); }
+  .hv-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+  .hv-paused .hv-guil, .hv-paused .hv-mt-in, .hv-paused .dr-leaf { animation-play-state: paused; }
+
+  /* ── Hero doors: six audiences, one platform ─────────────────────────── */
+  .dr { position: absolute; inset-inline: 120px; top: 636px; display: flex; flex-direction: column; align-items: center; }
+  .dr-k { display: flex; align-items: center; gap: 16px; animation: rise .9s cubic-bezier(.2, .7, .2, 1) .8s both; }
+  .dr-k i { width: 44px; height: 1px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--v2-dash)); }
+  .dr-k i:last-child { background: linear-gradient(calc(var(--flip) * 90deg), var(--v2-dash), transparent); }
+  .dr-row { position: relative; margin-top: 22px; display: grid; grid-template-columns: repeat(6, 152px); gap: 22px; justify-content: center; }
+  .dr-floor { position: absolute; inset-inline: -36px; top: 118px; height: 1px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--tick-off) 8%, var(--tick-off) 92%, transparent); }
+  .dr-floor-go { position: absolute; inset-inline: -36px; top: 117.5px; height: 2px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green) 8%, var(--green) 92%, transparent); transform: scaleX(0); transform-origin: var(--origin-x) center; animation: hvGo 1.6s cubic-bezier(.65, 0, .35, 1) 2.2s forwards; opacity: .85; }
+  @keyframes hvGo { to { transform: scaleX(1); } }
+  .dr-d { position: relative; display: flex; flex-direction: column; align-items: center; color: var(--ink); text-decoration: none; animation: rise .9s cubic-bezier(.2, .7, .2, 1) calc(.95s + var(--i) * .08s) both; outline: none; }
+  .dr-arch { position: relative; width: 112px; height: 118px; border-radius: 56px 56px 4px 4px; background: linear-gradient(180deg, var(--v2-paper-hi), var(--v2-paper-lo)); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .18), inset 0 -10px 18px -12px rgb(from var(--ink) r g b / .18), 0 1px 0 rgb(from var(--white) r g b / .9); perspective: 420px; transition: box-shadow .5s; }
+  .dr-arch::before { content: ""; position: absolute; inset: 5px; border-radius: 51px 51px 2px 2px; box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1); pointer-events: none; }
+  .dr-in { position: absolute; inset: 6px; border-radius: 50px 50px 1px 1px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; padding-bottom: 18px; background: radial-gradient(ellipse at 50% 88%, rgb(from var(--green-light) r g b / .95), rgb(from var(--green-light) r g b / .35) 50%, var(--v2-mint-pale) 88%); }
+  .dr-t { font-family: var(--serif); font-style: italic; font-size: 17px; line-height: 1; color: var(--green); white-space: nowrap; }
+  .dr-go { width: 24px; height: 24px; border-radius: 50%; background: var(--green); color: var(--white); display: inline-flex; align-items: center; justify-content: center; transform: scale(.6); opacity: 0; transition: transform .4s cubic-bezier(.3, 1.5, .5, 1) .15s, opacity .3s .15s; }
+  /* The leaf hinges on the inline start, so it swings from the right in
+     Arabic — `--origin-x` is the transform-origin token `globals.css` keeps for
+     exactly this. The shading gradient runs across the leaf away from its
+     hinge and mirrors with it. */
+  .dr-leaf { position: absolute; inset: 6px; border-radius: 50px 50px 1px 1px; display: flex; align-items: center; justify-content: center; background: linear-gradient(calc(var(--flip) * 90deg), var(--white) 0, var(--v2-leaf-mid) 70%, var(--v2-leaf-lo) 100%); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1); transform-origin: var(--origin-x) 50%; transform: rotateY(0); transition: transform .75s cubic-bezier(.2, .8, .2, 1), box-shadow .75s; animation: drPeek 13.2s cubic-bezier(.45, 0, .3, 1) var(--pd) infinite; backface-visibility: hidden; }
+  .dr-leaf::before { content: ""; position: absolute; inset: 14px 12px 16px; border-radius: 40px 40px 2px 2px; box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .07); pointer-events: none; }
+  .dr-ic { width: 34px; height: 34px; stroke: rgb(from var(--ink) r g b / .72); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; transition: stroke .4s; }
+  .dr-knob { position: absolute; inset-inline-end: 13px; top: 60%; width: 5px; height: 5px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 2px rgb(from var(--green-light) r g b / .4); }
+  @keyframes drPeek { 0%, 9%, 100% { transform: rotateY(0); } 4.5% { transform: rotateY(calc(var(--flip) * -34deg)); } }
+  .dr-d:hover .dr-leaf, .dr-d:focus-visible .dr-leaf { animation: none; transform: rotateY(calc(var(--flip) * -74deg)); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .1), calc(var(--flip) * 18px) 0 22px -10px rgb(from var(--ink) r g b / .28); }
+  .dr-d:hover .dr-go, .dr-d:focus-visible .dr-go { transform: scale(1); opacity: 1; }
+  .dr-d:hover .dr-arch, .dr-d:focus-visible .dr-arch { box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .35), inset 0 -10px 18px -12px rgb(from var(--ink) r g b / .18), 0 18px 30px -18px rgb(from var(--green) r g b / .55); }
+  .dr-d:focus-visible .dr-arch { outline: 2px solid var(--ink); outline-offset: 4px; }
+  .dr-lab { position: relative; margin-top: 14px; width: 152px; height: 40px; text-align: center; }
+  .dr-a, .dr-b { position: absolute; inset-inline: 0; top: 0; transition: opacity .35s, transform .45s cubic-bezier(.16, 1, .3, 1); }
+  .dr-a { font-family: var(--serif); font-size: 18px; line-height: 1.15; letter-spacing: -.012em; color: var(--ink); }
+  .dr-b { font-size: 13px; line-height: 1.35; color: var(--ink-soft); opacity: 0; transform: translateY(6px); text-wrap: balance; }
+  .dr-d:hover .dr-a, .dr-d:focus-visible .dr-a { opacity: 0; transform: translateY(-6px); }
+  .dr-d:hover .dr-b, .dr-d:focus-visible .dr-b { opacity: 1; transform: none; }
+}
+
+@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+  .hv-lamp, .hv-uv { display: none; }
+  .hv-l { filter: none; }
+  .dr-leaf { animation: none; }
+  .dr-floor-go { animation: none; transform: scaleX(1); }
+}

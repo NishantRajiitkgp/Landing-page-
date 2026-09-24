@@ -48,18 +48,58 @@
  */
 
 export const en = {
-  /** `sections/Hero.tsx`. Six leaves for twelve renderings: the `.dsk` and
-   *  `.mob` trees of this band say exactly the same words, compared string
-   *  for string, so nothing here is duplicated per breakpoint. */
+  /** `sections/Hero.tsx`. The first six leaves are said by both trees,
+   *  string for string, so nothing is duplicated per breakpoint; everything
+   *  from `headlineLead` on is the v2 desktop tree only. */
   hero: {
     backedBy: "Backed by",
     /** Two leaves, not one: `<br />` sits between them on desktop and a
      *  `{' '}` on mobile, so the two children are the unit React separates. */
     headline: "Verified at the source,",
     headlineEm: "in minutes.",
+    /** v2 desktop splits `headline` once more: the last word carries the
+     *  hand-drawn underline, so it is its own node. `headlineLead` +
+     *  `headlineMark` joined by one space must read as `headline`; the copy test
+     *  pins that. No edge whitespace — the component supplies the gap. */
+    headlineLead: "Verified at the",
+    headlineMark: "source,",
     lede: "AI reads the documents. Our team confirms with the issuer — the university, the employer, the registry. You get an answer in as little as 15 minutes.",
     cta: "Talk to sales",
     checks: "See all 33 checks",
+    /** Homepage v2 (desktop). The corner notes of the security-print sheet
+     *  are decoration — `aria-hidden` in the component — but they are words
+     *  a translator must see, so they live here and not in the markup. */
+    notes: {
+      sheet: "Sheet 01 / 12",
+      series: "Series 2026 · Est. 2018",
+      uv: "Security print · move your cursor",
+    },
+    /** One repeat of the frame microtext; the component tiles it. Every
+     *  figure in it is one `numbers` already states. */
+    microtext: "VERIFIED AT THE SOURCE · 20M+ CHECKS COMPLETED SINCE 2018 · 120+ COUNTRIES · 2,000+ ENTERPRISE CLIENTS · PRIMARY SOURCE · HELLOVERIFY ·",
+    /** One repeat of the ring of text revealed under the UV lamp. */
+    uvRing: "VERIFIED AT THE SOURCE · HELLOVERIFY ·",
+    seal: {
+      replay: "Replay the verification stamp",
+      ring: "VERIFIED · AT THE SOURCE · HELLOVERIFY · EST. 2018 ·",
+      word: "Verified",
+    },
+    motion: { pause: "Pause motion", play: "Play motion" },
+    /** The six doors under the headline. `name` is what a door says at rest,
+     *  `line` and `time` what it shows when it opens — the audience strip's
+     *  existing one-liners and turnarounds, unchanged. */
+    doors: {
+      kicker: "Same platform, different door.",
+      label: "Solutions by audience",
+      items: {
+        governments: { name: "Governments", line: "Licences, visas and permits", time: "from 3 days" },
+        enterprise: { name: "Enterprise & SMB", line: "Every hire, white-collar and blue", time: "from 30 min" },
+        kyc: { name: "KYC", line: "Customers, verified at signup", time: "15 min" },
+        vendors: { name: "Vendors", line: "Know who you buy from", time: "from 2 days" },
+        premium: { name: "Premium services", line: "Visas and healthcare credentials", time: "assisted" },
+        consumer: { name: "Consumer", line: "The people in your home", time: "30 min" },
+      },
+    },
   },
 
   /** `sections/Compliance.tsx`. The four cards come from `CREDENTIAL_MARKS`
