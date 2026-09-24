@@ -414,6 +414,7 @@ const BASELINE = {
       "band depends on the other's stylesheet being on the page",
   },
   "decl #2A2823": { n: 1, why: "--v2-sm-press: the receipt printer's top face (the .btn-ink:hover lift off --ink)" },
+  "decl #145539": { n: 1, why: "--v2-sm-green-press: the spotlit package's Buy Now on hover (white label 7.9:1)" },
   "decl #050504": { n: 1, why: "--v2-sm-slot: the printer's paper slot, darker than --ink" },
   "decl #D8D3C9": { n: 1, why: "--v2-sm-dash: the printed receipt's dashed rules, .rc .sep's colour" },
   // ── homepage v2 · governments (`src/app/v2/govseals.css`,

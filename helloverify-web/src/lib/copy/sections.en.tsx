@@ -1542,7 +1542,12 @@ export const en = {
     lede: "Pick the plan, customize your checks and get full verification details on any individual.",
     mins: "60 mins",
     tot: (n: number) => `${n} checks · 60 mins`,
-    included: "Checks Included",
+    /** NEW MICROCOPY (conversion pass, 24 Sep 2026), not from the old site:
+     *  the stamp on the spotlit package and the per-check line under each
+     *  price (the amount is computed from the package price). "Checks
+     *  Included", the old filler beside the button, was dropped. */
+    best: "Best value",
+    perCheck: (amount: string) => `≈ ${amount} per check`,
     buy: "Buy Now",
     lines: {
       identity: "Identity Check",
