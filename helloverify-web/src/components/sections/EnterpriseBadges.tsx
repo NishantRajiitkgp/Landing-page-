@@ -25,9 +25,10 @@
     semi-implicit Euler does it, and the page-weight budget is tight. */
 
 import Image from "next/image";
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
 
 import { tint } from "@/lib/img";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 
 import { useMotionPaused } from "./BizMotion";
 
@@ -53,13 +54,6 @@ type Body = { th: number; om: number; y: number; vy: number; drag: boolean; phas
 
 type Phase = "rest" | "armed" | "run";
 
-const REDUCE = "(prefers-reduced-motion: reduce)";
-function subscribeReduce(cb: () => void) {
-  const mq = window.matchMedia(REDUCE);
-  mq.addEventListener("change", cb);
-  return () => mq.removeEventListener("change", cb);
-}
-const readReduce = () => window.matchMedia(REDUCE).matches;
 
 export function EnterpriseBadges({ cols, turn }: { cols: BadgeCol[]; turn: string }) {
   const paused = useMotionPaused();
@@ -71,7 +65,7 @@ export function EnterpriseBadges({ cols, turn }: { cols: BadgeCol[]; turn: strin
   const kick = useRef<number[]>([]);
   // True on the server and through hydration, so the HTML that hydrates is
   // the rest state — every check ticked, badges hanging still.
-  const reduce = useSyncExternalStore(subscribeReduce, readReduce, () => true);
+  const reduce = useReducedMotion();
   const moving = !paused && !reduce;
   const phase: Phase = moving ? seen : "rest";
 

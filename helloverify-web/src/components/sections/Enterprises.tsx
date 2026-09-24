@@ -9,15 +9,21 @@
     - the trust perimeter: pills and canvas rings that pick one of three
       panels (`./EnterprisePerimeter`, a client island; the panels are
       rendered here and passed in). The Employees panel's two workforces
-      are ID badges on lanyards (`./EnterpriseBadges`),
+      are ID badges on lanyards (`./EnterpriseBadges`); Customers is a phone
+      running the six KYC steps and Businesses a Certifier certificate that
+      fills in over its four, both on `./StepCycler`,
     - four stats,
     - the client letters (`./ClientLetters`, a client island).
 
     `MotionStage` (`./BizMotion`) wraps the band so one "Pause motion"
     control stops both the canvas and the letter shuffle (WCAG 2.2.2). */
+import Image from "next/image";
+import { Fragment } from "react";
+
 import { Arrow } from "@/components/brand/Arrow";
 import { Tick } from "@/components/brand/Tick";
 import { AppLink } from "@/components/chrome/AppLink";
+import { tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
 import "@/app/v2/enterprises.css";
@@ -25,30 +31,31 @@ import { MotionButton, MotionStage } from "./BizMotion";
 import { ClientLetters } from "./ClientLetters";
 import { EnterpriseBadges } from "./EnterpriseBadges";
 import { EnterprisePerimeter } from "./EnterprisePerimeter";
+import { StepCycler } from "./StepCycler";
 
-function Chips({ items }: { items: Record<string, string> }) {
+/** The KYC selfie, used on four of the phone's six screens. */
+const SELFIE = "/img/v2/en-selfie.jpg";
+/** The vendor on the Certifier certificate. */
+const VENDOR = "/img/v2/en-vendor.jpg";
+/** Faces on the phone and the certificate: 90px at most, 7vw at 1440. */
+const SIZES_EN_FACE = "(max-width: 1080px) 30vw, 7vw";
+
+function Face({ src, className }: { src: string; className: string }) {
   return (
-    <div className="en-chips">
-      {Object.entries(items).map(([k, v]) => (
-        <span key={k} className="en-chip">
-          {v}
-        </span>
-      ))}
-    </div>
+    <span className={className} style={{ background: tint(src) }}>
+      <Image className="pimg" src={src} alt="" fill sizes={SIZES_EN_FACE} />
+    </span>
   );
 }
 
-/** Numbered step cards; each rises in 80 ms after the last, from 150 ms. */
-function Steps({ items, cols }: { items: Record<string, string>; cols: 4 | 6 }) {
+/** Skeleton text: `n` bars, the last one short. */
+function Bars({ n, className = "kx-bars" }: { n: number; className?: string }) {
   return (
-    <ol className={`en-steps en-steps-${cols}`}>
-      {Object.entries(items).map(([k, v], i) => (
-        <li key={k} style={{ animationDelay: `${(0.15 + i * 0.08).toFixed(2)}s` }}>
-          <span className="en-sn">{String(i + 1).padStart(2, "0")}</span>
-          <span>{v}</span>
-        </li>
+    <span className={className}>
+      {Array.from({ length: n }, (_, i) => (
+        <i key={i} />
       ))}
-    </ol>
+    </span>
   );
 }
 
@@ -107,7 +114,59 @@ export async function Enterprises() {
         {c.hA} <em>{c.hB}</em>
       </h3>
       <p className="en-lead">{c.lead}</p>
-      <Steps items={c.steps} cols={6} />
+      <StepCycler
+        className="kx"
+        every={2100}
+        holdLast={1.6}
+        stepsLabel={c.stepsK}
+        steps={Object.values(c.steps)}
+        screens={[
+          <Fragment key="s0">
+            <span className="kx-cam">
+              <span className="kx-id">
+                <span className="kx-id-ph" />
+                <Bars n={3} />
+              </span>
+            </span>
+            <span className="kx-shutter" />
+          </Fragment>,
+          <Fragment key="s1">
+            <Face src={SELFIE} className="kx-oval" />
+            <span className="kx-shutter" />
+          </Fragment>,
+          <span key="s2" className="kx-match">
+            <span className="kx-id kx-id-sm">
+              <Face src={SELFIE} className="kx-id-ph" />
+              <Bars n={2} />
+            </span>
+            <span className="kx-link">
+              <i />
+              <i />
+              <i />
+            </span>
+            <Face src={SELFIE} className="kx-face" />
+            <span className="kx-ok">
+              <Tick tone="inverse" />
+            </span>
+          </span>,
+          <Fragment key="s3">
+            <span className="kx-live">
+              <Face src={SELFIE} className="kx-oval" />
+            </span>
+          </Fragment>,
+          <span key="s4" className="kx-seal">
+            <Tick tone="inverse" />
+          </span>,
+          <span key="s5" className="kx-welcome">
+            <Face src={SELFIE} className="kx-av" />
+            <Bars n={2} />
+            <span className="kx-acct">
+              <Tick tone="inverse" />
+              <Bars n={2} className="kx-bars kx-bars-w" />
+            </span>
+          </span>,
+        ]}
+      />
       <div className="en-grid6">
         {Object.entries(c.grid).map(([k, g]) => (
           <div key={k}>
@@ -124,8 +183,45 @@ export async function Enterprises() {
         <span className="en-tag">{b.tag}</span>
       </div>
       <h3 className="en-ph">{b.h}</h3>
-      <div className="en-sub-k">{b.stepsK}</div>
-      <Steps items={b.steps} cols={4} />
+      <StepCycler
+        className="bx"
+        every={2000}
+        holdLast={2.2}
+        stepsLabel={b.stepsK}
+        steps={Object.values(b.steps)}
+        screens={[
+          <span key="s0" className="bx-top">
+            <span className="bx-tag">{b.tag}</span>
+            <span className="bx-sent bx-real">
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M2 4.5h12v8H2zM2.5 5l5.5 4.2L13.5 5" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
+              </svg>
+              <Tick tone="inverse" />
+            </span>
+          </span>,
+          <span key="s1" className="bx-who">
+            <Bars n={3} className="bx-ghost kx-bars" />
+            <Bars n={3} className="bx-real kx-bars bx-ink" />
+          </span>,
+          <span key="s2" className="bx-map">
+            <span className="bx-real bx-pin" />
+          </span>,
+          <Fragment key="s3">
+            <span className="bx-photo">
+              <Face src={VENDOR} className="bx-real bx-face" />
+            </span>
+            <ul className="bx-cks">
+              {Object.entries(b.chips).map(([k, v], i) => (
+                <li key={k} style={{ ["--i" as string]: i }}>
+                  <Tick tone="inverse" />
+                  {v}
+                </li>
+              ))}
+            </ul>
+            <span className="bx-seal" />
+          </Fragment>,
+        ]}
+      />
       <div className="en-pts">
         {Object.entries(b.pts).map(([k, p]) => (
           <div key={k}>
@@ -134,7 +230,6 @@ export async function Enterprises() {
           </div>
         ))}
       </div>
-      <Chips items={b.chips} />
       <Foot href="/business/certifier" />
     </div>,
   ];

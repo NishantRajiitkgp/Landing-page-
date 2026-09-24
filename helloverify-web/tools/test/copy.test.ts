@@ -844,7 +844,7 @@ const BANDS: Record<string, readonly [number, number]> = {
   oneInEight: [0, 55],
   govSeals: [0, 115],
   govDossiers: [0, 165],
-  enterprises: [0, 103],
+  enterprises: [0, 104],
   smb: [0, 50],
   diligence: [0, 27],
   trustPlatform: [0, 52],
@@ -891,10 +891,11 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  added `smb.best` and `smb.perCheck` and dropped `smb.included`.
  *  1559 -> 1557 and blocks 77 -> 60: the closing band's form is the real
  *  `ContactForm` now, so `contact.k`, `contact.submit` and the whole
- *  `blocks.leadMock` mock (17 leaves) went. */
+ *  `blocks.leadMock` mock (17 leaves) went. 1557 -> 1558: the KYC phone's
+ *  step heading, `enterprises.customers.stepsK`. */
 check(
-  "sections holds 1557 leaves for 152 nodes and blocks 60 for 27 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1557 &&
+  "sections holds 1558 leaves for 152 nodes and blocks 60 for 27 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1558 &&
     leafPaths(EN_BLOCKS).length === 60 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 152 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 27,
@@ -919,10 +920,11 @@ check(
  *  Dropping `oneInEight.compare` took 25 more strings: 1538; the badges'
  *  "Turn over" added one: 1539. The SMB conversion pass swapped one string
  *  for another (`smb.best` for `smb.included`) and added a sixth function,
- *  `smb.perCheck`. The real closing-band form dropped two strings: 1537. */
+ *  `smb.perCheck`. The real closing-band form dropped two strings: 1537;
+ *  the KYC step heading added one: 1538. */
 check(
-  "sections: 1537 string leaves, 14 rich-text leaves and 6 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1537 &&
+  "sections: 1538 string leaves, 14 rich-text leaves and 6 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1538 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 20 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.tot, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

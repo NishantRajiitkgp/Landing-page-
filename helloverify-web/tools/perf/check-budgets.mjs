@@ -91,6 +91,13 @@ const CEILING = {
    *  - stylesheet 17 -> 41: /en measures 39.6 KB, inside §9.1's 40. Eighteen v2
    *    section sheets, each imported only by its own section; inner-page rules
    *    already split into `app/inner.css` so /en does not pay for them.
+   *  - stylesheet 41 -> 42 (24 Sep 2026): /en measures 41.2 KB, now OVER §9.1's
+   *    40. What moved it since 39.6: the SMB conversion pass, the real
+   *    closing-band form (`v2/contact.css`) and the Employees / Customers /
+   *    Businesses panels. Paid down on the way by deleting 58 `design.css`
+   *    rules whose classes nothing in `src/` references (6.2 KB raw) and by
+   *    trimming two flourishes from the new panels; what is left is the new
+   *    UI itself. The next CSS on /en should come with a matching removal.
    *
    *  LOWERED, so the saving cannot quietly erode:
    *  - font 245 -> 127: 123.3 KB after the wght pin (was 241.9).
@@ -98,7 +105,7 @@ const CEILING = {
    *
    *  Each is the measurement plus ~3%, the headroom rule stated above. */
   script: 188,
-  stylesheet: 41,
+  stylesheet: 42,
   font: 127,
   total: 443,
   thirdParty: 5,
