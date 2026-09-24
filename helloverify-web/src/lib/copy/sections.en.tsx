@@ -1429,6 +1429,9 @@ export const en = {
           liveness: "Liveness Check",
         },
       },
+      /** NEW MICROCOPY (24 Sep 2026), not from the old site: the button on
+       *  each ID badge that turns it to the description on its back. */
+      turn: "Turn over",
       intK: "Automated Workforce Onboarding",
       ints: {
         hrms: "HRMS API & Integration",

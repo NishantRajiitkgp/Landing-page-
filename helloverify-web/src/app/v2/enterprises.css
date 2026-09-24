@@ -15,6 +15,13 @@
   --v2-lt-paper: #FFFEFB;
   /* The letterhead's rule, one step lighter than `--hair`. */
   --v2-lt-rule: #ECE8DF;
+  /* The blue-collar badge's hi-vis webbing and print band. A surface, never
+     text. */
+  --v2-en-hivis: #F28A2E;
+  /* The badge seal's foil: three pastel stops around `--green-light`. */
+  --v2-en-foil-a: #EFA6D6;
+  --v2-en-foil-b: #9EBCFF;
+  --v2-en-foil-c: #FFDF73;
 }
 
 @media (min-width: 1081px) {
@@ -63,15 +70,86 @@
   .en-ph { margin: 18px 0 0; font-family: var(--serif); font-weight: 400; font-size: 25px; line-height: 1.12; letter-spacing: -.02em; text-wrap: balance; }
   .en-ph em { font-style: italic; color: var(--green); }
   .en-lead { margin: 12px 0 0; font-size: 15px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
-  .en-two { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .en-col { padding-top: 16px; border-top: 1px solid var(--hair); }
-  .en-ct { font-size: 16px; font-weight: 500; letter-spacing: -.01em; }
-  .en-cp { margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
   .en-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
   .en-chip { height: 28px; display: inline-flex; align-items: center; padding: 0 11px; border-radius: 999px; border: 1px solid var(--hair); font-family: var(--mono); font-size: 11px; color: var(--ink); background: var(--v2-paper-hi); }
-  .en-int { margin-top: 22px; padding: 16px 18px; border-radius: 14px; background: var(--v2-paper-hi); border: 1px solid var(--v2-paper-lo); display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 13.5px; }
-  .en-int span { display: inline-flex; align-items: center; gap: 6px; }
-  .en-int-k { width: 100%; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+  /* ── Employees: two ID badges on lanyards (`EnterpriseBadges.tsx`) ─────
+     The zone clips at its top edge — the rail — so a badge parked above it
+     for the drop is hidden, while the sides and the foot stay open for the
+     swing. Each `.en-bd` is one rigid pendulum pivoting at the top of its
+     strap; the island writes its transform. */
+  .en-bds { position: relative; flex: none; margin-top: 16px; height: 386px; display: flex; justify-content: center; gap: 30px; clip-path: inset(0 -40px -60px -40px); }
+  .en-bds-rail { position: absolute; inset-inline: 0; top: 0; height: 3px; border-radius: 3px; background: linear-gradient(var(--white), var(--tick-off)); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .08); }
+  .en-bd { position: relative; width: 244px; padding-top: 40px; transform-origin: 50% 0; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; will-change: transform; }
+  .en-bd:active { cursor: grabbing; }
+  .en-bd-strap { position: absolute; inset-inline-start: 50%; top: -4px; width: 22px; height: 38px; margin-inline-start: -11px; border-radius: 2px; background: repeating-linear-gradient(0deg, rgb(from var(--white) r g b / .12) 0 1px, transparent 1px 3px), var(--green); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .12); }
+  /* Hi-vis webbing with its reflective centre stripe. */
+  .en-bd-hivis .en-bd-strap { background: linear-gradient(calc(var(--flip) * 90deg), transparent 42%, rgb(from var(--white) r g b / .7) 42% 58%, transparent 58%), repeating-linear-gradient(0deg, rgb(from var(--white) r g b / .12) 0 1px, transparent 1px 3px), var(--v2-en-hivis); }
+  .en-bd-clip { position: absolute; z-index: 2; inset-inline-start: 50%; top: 26px; width: 30px; height: 22px; margin-inline-start: -15px; border-radius: 5px 5px 9px 9px; background: linear-gradient(var(--white), var(--tick-off) 55%, var(--muted)); box-shadow: 0 2px 3px rgb(from var(--ink) r g b / .28), inset 0 -2px 0 rgb(from var(--ink) r g b / .15); }
+  .en-bd-card { position: relative; height: 340px; transform-style: preserve-3d; transition: transform .8s cubic-bezier(.3, 1.25, .4, 1); }
+  .en-bd-flip { transform: rotateY(180deg); }
+  .en-bd-face { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 22px 14px 12px; border-radius: 14px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .06), 0 24px 40px -22px rgb(from var(--ink) r g b / .5), inset 0 0 0 1px rgb(from var(--ink) r g b / .07); backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; transition: visibility 0s .38s; }
+  /* The workforce's colour, as the badge's printed top band. */
+  .en-bd-face::before { content: ""; position: absolute; inset-inline: 0; top: 0; height: 5px; background: var(--green); }
+  .en-bd-hivis .en-bd-face::before { background: var(--v2-en-hivis); }
+  /* The hidden face is also `visibility: hidden` (swapped at the flip's
+     midpoint), so it is out of the tab order and the accessibility tree
+     rather than merely facing away. */
+  .en-bd-back { transform: rotateY(180deg); visibility: hidden; background: var(--v2-paper-hi); }
+  .en-bd-flip .en-bd-back { visibility: visible; }
+  .en-bd-flip .en-bd-front { visibility: hidden; }
+  .en-bd-slot { position: absolute; inset-inline-start: 50%; top: 9px; width: 34px; height: 6px; margin-inline-start: -17px; border-radius: 3px; background: var(--paper); box-shadow: inset 0 1px 2px rgb(from var(--ink) r g b / .28); }
+  .en-bd-ph { position: relative; display: block; flex: none; height: 104px; border-radius: 8px; overflow: hidden; }
+  .en-bd-ph .pimg { object-position: 50% 30%; pointer-events: none; }
+  .en-bd-t { margin: 10px 0 0; font-size: 14.5px; font-weight: 500; line-height: 1.2; letter-spacing: -.01em; color: var(--ink); }
+  .en-bd-cks { list-style: none; margin: 9px 0 0; padding: 0; display: grid; gap: 4px; }
+  .en-bd-cks li { display: flex; align-items: center; gap: 8px; font-size: 12.5px; line-height: 1.2; color: var(--ink-soft); }
+  .en-bd-ck { flex: none; width: 15px; height: 15px; display: grid; place-items: center; border-radius: 50%; background: var(--green); color: var(--white); }
+  .en-bd-ck svg { width: 13px; height: 13px; display: block; }
+  .en-bd-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; }
+  .en-bd-code { width: 92px; height: 18px; opacity: .75; background: repeating-linear-gradient(calc(var(--flip) * 90deg), var(--ink) 0 1px, transparent 1px 3px, var(--ink) 3px 5px, transparent 5px 6px, var(--ink) 6px 7px, transparent 7px 10px); }
+  .en-bd-code-back { margin-top: auto; }
+  /* The foil seal: an iridescent disc with a guilloche of fine rings and a
+     light sweep across it. */
+  .en-bd-foil { position: relative; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; background: repeating-radial-gradient(circle, transparent 0 2px, rgb(from var(--white) r g b / .18) 2px 3px), conic-gradient(var(--v2-en-foil-a), var(--v2-en-foil-b), var(--green-light), var(--v2-en-foil-c), var(--v2-en-foil-a)); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .7), 0 1px 3px rgb(from var(--ink) r g b / .22); }
+  .en-bd-foil::after { content: ""; position: absolute; inset: 0; background: linear-gradient(calc(var(--flip) * 115deg), transparent 35%, rgb(from var(--white) r g b / .85) 50%, transparent 65%) 0 0 / 300% 100%; animation: enFoil 3.6s ease-in-out infinite; }
+  @keyframes enFoil { 0%, 40% { background-position: 100% 0; } to { background-position: 0 0; } }
+  .en-bd-bt { position: relative; margin: 14px 0 0; font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1.12; letter-spacing: -.015em; color: var(--ink); }
+  .en-bd-p { position: relative; margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
+  .en-bd-turn { position: absolute; z-index: 3; inset-inline-end: 22px; top: 70px; height: 24px; display: inline-flex; align-items: center; gap: 5px; padding: 0 9px; border: 0; border-radius: 999px; background: rgb(from var(--white) r g b / .92); box-shadow: 0 1px 3px rgb(from var(--ink) r g b / .22); font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); cursor: pointer; }
+  /* On the back there is no photo to sit on; it moves to the foot, beside
+     the barcode, clear of the title. */
+  .en-bd-turn-back { top: auto; bottom: 14px; inset-inline-end: 14px; background: var(--white); }
+  .en-bd-turn svg { width: 11px; height: 11px; }
+  .en-bd-turn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  /* Entrance. Armed: the checks wait, unticked, and the seal is off the
+     card. Run: each check lands 0.26 s after the last (`--i`, set per row;
+     the second badge is half a step behind), then the seal is struck. With
+     neither class — the server HTML, reduced motion, paused — everything is
+     in its end state. */
+  .en-bds-armed .en-bd-ck { background: transparent; color: transparent; box-shadow: inset 0 0 0 1.2px var(--tick-off); }
+  .en-bds-armed .en-bd-cks li { color: var(--muted); }
+  .en-bds-armed .en-bd-foil { opacity: 0; }
+  .en-bds-run .en-bd-ck { animation: enTick .45s cubic-bezier(.3, 1.5, .5, 1) calc(.55s + var(--i) * .26s) both; }
+  .en-bds-run .en-bd-cks li { animation: enTickT .3s ease calc(.55s + var(--i) * .26s) both; }
+  .en-bds-run .en-bd-foil { animation: enSeal .55s cubic-bezier(.3, 1.4, .5, 1) calc(.8s + var(--i) * .26s) both; }
+  @keyframes enTick { 0% { background: transparent; color: transparent; box-shadow: inset 0 0 0 1.2px var(--tick-off); transform: scale(.6); } 60% { transform: scale(1.2); } to { background: var(--green); color: var(--white); box-shadow: none; transform: none; } }
+  @keyframes enTickT { from { color: var(--muted); } to { color: var(--ink-soft); } }
+  @keyframes enSeal { 0% { opacity: 0; transform: scale(2) rotate(-40deg); } 70% { opacity: 1; transform: scale(.9) rotate(6deg); } to { opacity: 1; transform: none; } }
+
+  /* Automated Workforce Onboarding, as the pipeline it is: four stations on
+     a rail with a pulse running along it. */
+  .en-flow { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--hair); }
+  .en-flow-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .en-flow-l { position: relative; list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+  .en-flow-l::before { content: ""; position: absolute; inset-inline: 10px; top: 10px; height: 1px; background: var(--hair); }
+  .en-flow-l::after { content: ""; position: absolute; top: 9px; inset-inline-start: 0; width: 56px; height: 3px; border-radius: 3px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green)); animation: enFlow 3.4s cubic-bezier(.6, 0, .4, 1) infinite; }
+  @keyframes enFlow { from { inset-inline-start: 0; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } to { inset-inline-start: calc(100% - 56px); opacity: 0; } }
+  .en-flow-l li { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 7px; font-size: 13px; line-height: 1.25; color: var(--ink); }
+  .en-flow-l .tick { width: 20px; height: 20px; padding: 3px; box-sizing: border-box; border-radius: 50%; background: var(--white); box-shadow: 0 0 0 1px var(--hair); }
+  .en-flow + .en-foot { padding-top: 6px; }
+  .en-paused .en-bd-foil::after, .en-paused .en-flow-l::after { animation-play-state: paused; }
   .en-foot { margin-top: auto; padding-top: 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
   .en-more { height: 40px; padding: 0 10px; font-size: 14px; }
   .en-steps { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 10px; }
@@ -158,4 +236,6 @@
      once, shuffling the letters as fast as React can render. */
   .lt-on .lt-sbar i { animation: none; transform: scaleX(1); }
   .lt-l, .lt-q mark { transition: none; }
+  .en-bd-card, .en-bd-face { transition: none; }
+  .en-bd-foil::after, .en-flow-l::after { animation: none; }
 }

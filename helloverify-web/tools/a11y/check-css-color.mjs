@@ -402,6 +402,10 @@ const BASELINE = {
   //    three sheets is a token. A tint within a couple of units of an existing
   //    `--v2-*` or palette value reuses it rather than appearing here.
   "decl #FFFEFB": { n: 1, why: "--v2-lt-paper: the client letters' warm paper" },
+  "decl #F28A2E": { n: 1, why: "--v2-en-hivis: the blue-collar ID badge's hi-vis webbing and print band" },
+  "decl #EFA6D6": { n: 1, why: "--v2-en-foil-a: a badge seal foil stop (pink)" },
+  "decl #9EBCFF": { n: 1, why: "--v2-en-foil-b: a badge seal foil stop (sky)" },
+  "decl #FFDF73": { n: 1, why: "--v2-en-foil-c: a badge seal foil stop (butter)" },
   "decl #ECE8DF": {
     n: 2,
     why:
