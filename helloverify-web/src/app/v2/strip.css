@@ -1,34 +1,17 @@
 /* Homepage v2 · people strip ("At the source"). Imported by
    `sections/PeopleStrip.tsx`; the behaviour is `sections/PeopleStripStage.tsx`.
 
-   The cards are the generated `.person` markup, unchanged. What v2 adds is a
-   checkpoint in the middle of the strip: the main track runs in greyscale and
-   a second, `aria-hidden` copy of it — the colour lane — is clipped to the
-   360px window under the brackets, so each photograph comes into colour as it
-   passes "the source". Once the island mounts (`.hv-js`), the CSS `drift` is
-   switched off and the island drives both tracks from one rAF loop: a curved
-   path, drag-and-fling, a velocity skew.
+   The cards are the generated `.person` markup, unchanged and in full colour.
+   Once the island mounts (`.hv-js`), the CSS `drift` is switched off and the
+   island drives the track from one rAF loop: a curved path, drag-and-fling, a
+   velocity skew. Before hydration, and with JS off, `drift` keeps running.
 
-   Before hydration, and with JS off, the generated `drift` keeps running and
-   everything here still reads; `.hv-js` only takes over from it. */
+   REMOVED (owner, 24 Sep 2026): the canvas's checkpoint — a greyscale track, a
+   colour copy clipped under corner brackets, and a scan line sweeping them.
+   Judged gimmicky; the label is all that is left of it. */
 @media (min-width: 1081px) {
   .hv-strip { position: relative; padding-block: 40px 8px; overflow: hidden; }
-  .hv-strip > .track { filter: grayscale(.88) contrast(.96) brightness(1.02); }
-  .hv-colorlane { position: absolute; top: 40px; inset-inline: 0; bottom: 8px; overflow: hidden; pointer-events: none; clip-path: inset(0 calc(50% - 180px)); }
-
-  /* The checkpoint: brackets, a label, and a scan line sweeping the window.
-     Centred on the strip, so it is the same in both directions. */
-  .hv-check { position: absolute; top: 40px; bottom: 8px; inset-inline-start: 50%; width: 360px; margin-inline-start: -180px; pointer-events: none; z-index: 5; }
-  .hv-check-k { position: absolute; top: -34px; inset-inline: 0; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
-  .hv-scanwrap { position: absolute; inset: 0; overflow: hidden; border-radius: 14px; }
-  .hv-scan { position: absolute; inset-inline: 0; top: 0; height: 2px; background: linear-gradient(calc(var(--flip) * 90deg), rgb(from var(--green) r g b / 0), rgb(from var(--green-light) r g b / .95), rgb(from var(--green) r g b / 0)); box-shadow: 0 0 18px 3px rgb(from var(--green-light) r g b / .45); animation: hvScan 3.8s ease-in-out infinite alternate; }
-  /* 466px: the window is the tallest card (470px) less the line and a hair. */
-  @keyframes hvScan { to { transform: translateY(466px); } }
-  .hv-br { position: absolute; width: 28px; height: 28px; border-color: var(--green); border-style: solid; border-width: 0; }
-  .hv-br-tl { inset-inline-start: -8px; top: -8px; border-inline-start-width: 2px; border-top-width: 2px; border-start-start-radius: 10px; }
-  .hv-br-tr { inset-inline-end: -8px; top: -8px; border-inline-end-width: 2px; border-top-width: 2px; border-start-end-radius: 10px; }
-  .hv-br-bl { inset-inline-start: -8px; bottom: -8px; border-inline-start-width: 2px; border-bottom-width: 2px; border-end-start-radius: 10px; }
-  .hv-br-br { inset-inline-end: -8px; bottom: -8px; border-inline-end-width: 2px; border-bottom-width: 2px; border-end-end-radius: 10px; }
+  .hv-strip-k { position: absolute; top: 8px; inset-inline: 0; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); pointer-events: none; }
 
   /* The island has taken over from `drift`. */
   .hv-strip.hv-js { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
@@ -37,11 +20,7 @@
   .hv-strip.hv-js .person { will-change: transform; transform-origin: 50% 60%; backface-visibility: hidden; }
   .hv-strip.hv-js .person img { pointer-events: none; -webkit-user-drag: none; }
 
-  /* The hero's "Pause motion" stops this strip too (the island reads it); the
-     scan line is the one CSS loop left here, so it is stopped the same way. */
-  .hv-strip-still .hv-scan, .hv-strip-still .dot.live { animation-play-state: paused; }
-}
-
-@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
-  .hv-scan { display: none; }
+  /* The hero's "Pause motion" stops this strip too (the island reads it),
+     including the label's live dot. */
+  .hv-strip-still .dot.live { animation-play-state: paused; }
 }
