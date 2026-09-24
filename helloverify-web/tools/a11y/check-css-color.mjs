@@ -351,6 +351,22 @@ const BASELINE = {
   "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
   "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
+  // ── homepage v2 · business bands (`app/v2/enterprises.css`, `smb.css`,
+  //    `diligence.css`, Sep 2026). Surfaces only; every text colour in the
+  //    three sheets is a token. A tint within a couple of units of an existing
+  //    `--v2-*` or palette value reuses it rather than appearing here.
+  "decl #FFFEFB": { n: 1, why: "--v2-lt-paper: the client letters' warm paper" },
+  "decl #ECE8DF": {
+    n: 2,
+    why:
+      "--v2-lt-rule (letterhead rule) and --v2-dd-rule (a scan tile's outline): " +
+      "the same one-step-under-hair line, declared once per sheet so neither " +
+      "band depends on the other's stylesheet being on the page",
+  },
+  "decl #2A2823": { n: 1, why: "--v2-sm-press: the receipt printer's top face (the .btn-ink:hover lift off --ink)" },
+  "decl #050504": { n: 1, why: "--v2-sm-slot: the printer's paper slot, darker than --ink" },
+  "decl #D8D3C9": { n: 1, why: "--v2-sm-dash: the printed receipt's dashed rules, .rc .sep's colour" },
+
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
   //    debt rule 3 pins: not a contrast failure, but colour nobody can
