@@ -62,8 +62,11 @@ export default async function Home({
         <PeopleStrip />
         <OneInEight />
         <HowWeKnow />
-        {/* v2 replaces Demo2 and HowItWorks on desktop (HowWeKnow); the phone
-            keeps both until the v2 phone part. Lead: finalise. */}
+        {/* Homepage v2 is desktop-first (TASKS.md Part 12). Three bands the
+            v2 desktop no longer shows stay on the phone, wrapped in `.mob`,
+            until the v2 phone pass: Demo2 and HowItWorks (both folded into
+            HowWeKnow) and WhoItsFor (its audiences now have their own bands —
+            GovSeals/GovDossiers, Enterprises, Smb, Diligence, Consumer). */}
         <div className="mob">
           <Demo2 />
         </div>
@@ -77,7 +80,9 @@ export default async function Home({
         <div className="mob">
           <HowItWorks />
         </div>
-        <WhoItsFor />
+        <div className="mob">
+          <WhoItsFor />
+        </div>
         <Enterprises />
         <Smb />
         <Diligence />

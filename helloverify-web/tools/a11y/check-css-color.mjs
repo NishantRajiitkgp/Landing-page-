@@ -369,7 +369,9 @@ const BASELINE = {
   "decl #DFF0EC": { n: 1, why: "--v2-wy-teal-t: the dashboards card's illustration tint" },
   "decl #E2E8F0": { n: 1, why: "--v2-wy-slate-t: the integration card's illustration tint" },
   // ── homepage v2 · Numbers (`src/app/v2/numbers.css`). A surface, never text.
-  "decl #EDE9E0": { n: 1, why: "--v2-nm-track: the pace bar's empty groove, a step lighter than --hair" },
+  // Declared by two v2 sheets (numbers.css, how.css) — merged into one row so
+  // the object has no duplicate key (a JS literal keeps only the last one).
+  "decl #EDE9E0": { n: 2, why: "--v2-nm-track and --v2-hw-rail: an empty groove/track, a step lighter than --hair" },
 
   // ── homepage v2 · Presence, follow the sun (`src/app/v2/presence.css`).
   //    Read at runtime by the canvas painter (`sections/sunPaint.ts`) so no
@@ -430,7 +432,8 @@ const BASELINE = {
 
   // ── homepage v2 · footer (`src/app/v2/footer.css`, every route): the UV
   //    lamp that reveals the giant wordmark. Surfaces and a glow, never text.
-  "decl #16132A": { n: 1, why: "--v2-fz-night: the UV lamp's dark disc over the wordmark" },
+  // Declared by two v2 sheets (footer.css, fraud.css) — one row, see #EDE9E0.
+  "decl #16132A": { n: 2, why: "--v2-fz-night and --v2-ff-uv-lo: the dark disc of a UV lamp" },
   "decl #6EE7B0": { n: 1, why: "--v2-fz-uv: the fluorescent glow of the revealed wordmark" },
   // ── homepage v2 · One in eight (`src/app/v2/fraud.css`): the synthetic
   //    certificates' paper, rules and gold seal, and the UV lamp's blacklight.
@@ -447,14 +450,12 @@ const BASELINE = {
   "decl #C2A25C": { n: 1, why: "--v2-ff-fgold: the forged seal's slightly-off gold" },
   "decl #A4864A": { n: 1, why: "--v2-ff-fgold-lo: the forged seal's slightly-off gold, shade" },
   "decl #221D3A": { n: 1, why: "--v2-ff-uv-hi: UV lamp pool, centre" },
-  "decl #16132A": { n: 1, why: "--v2-ff-uv-lo: UV lamp pool, edge" },
   "decl #1C1834": { n: 1, why: "--v2-ff-uv-cell: a genuine certificate under UV" },
   "decl #3B3659": { n: 1, why: "--v2-ff-uv-bad: the forgery under UV (no features)" },
 
   // ── homepage v2 · How we know (`src/app/v2/how.css`): the case file's table
   //    and rails, the specimen's hologram, and the custody orb. All surfaces.
   "decl #F4F1EA": { n: 1, why: "--v2-hw-table: the desk the specimen lies on" },
-  "decl #EDE9E0": { n: 1, why: "--v2-hw-rail: progress track, tile meters, custody rail" },
   "decl #E8D9FF": { n: 1, why: "--v2-hw-holo-1: specimen hologram, conic stop" },
   "decl #C7F0E0": { n: 1, why: "--v2-hw-holo-2: specimen hologram, conic stop" },
   "decl #FFF3C4": { n: 1, why: "--v2-hw-holo-3: specimen hologram, conic stop" },
