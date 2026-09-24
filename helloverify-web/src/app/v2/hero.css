@@ -55,7 +55,11 @@
   .hv-mt { position: absolute; inset-inline: 13px; height: 13px; overflow: hidden; white-space: nowrap; }
   .hv-mt-top { top: 0; }
   .hv-mt-bot { bottom: 0; }
-  .hv-mt-in { display: inline-block; font-family: var(--mono); font-size: 6.4px; line-height: 13px; letter-spacing: .34em; color: var(--muted); animation: hvMarq 140s linear infinite; }
+  /* `display: block; width: max-content`, not the board's `inline-block`: an
+     inline-block sits on the baseline of the band's own 16px/normal line box,
+     which put the 13px text 8px low and clipped it (measured: band top 216,
+     text top 224). `max-content` keeps the -50% marquee maths intact. */
+  .hv-mt-in { display: block; width: max-content; font-family: var(--mono); font-size: 6.4px; line-height: 13px; letter-spacing: .34em; color: var(--muted); animation: hvMarq 140s linear infinite; }
   /* Full-strength `--muted` (4.83:1 on paper), not the board's `opacity: .62`:
      that measured 2.4:1 in `tools/e2e/a11y.spec.ts`, which keeps no allowlist
      and fixes colour rather than excusing it — even for decorative microtext. */
