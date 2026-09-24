@@ -1,0 +1,161 @@
+/* Homepage v2 · Enterprises — the trust perimeter, the stats and the client
+   letters (`sections/Enterprises.tsx`, `EnterprisePerimeter.tsx`,
+   `ClientLetters.tsx`). Hand-ported from the Business board; the reasons a
+   v2 sheet lives here and not in `design.css` are in `hero.css`'s header.
+   Prefixes: `en-` (the band) and `lt-` (the letters), both the canvas's.
+
+   Colour is tokens throughout. Where the board had a paper tint the palette
+   lacks, the hero's `--v2-*` tints are reused when they are within a couple
+   of units (the board's #F1EEE7 chip is `--v2-leaf-lo` #F1EEE6, its #F4F8F5
+   core glow and #F7FBF8 are `--v2-mint-pale`, its #CFC9BD hover rule is
+   `--tick-off` #CFCAC0) rather than declaring near-duplicates. Two are new,
+   below. The rings themselves are canvas and read the palette from JS. */
+:root {
+  /* The letters' warm paper — whiter than `--paper`, warmer than `--white`. */
+  --v2-lt-paper: #FFFEFB;
+  /* The letterhead's rule, one step lighter than `--hair`. */
+  --v2-lt-rule: #ECE8DF;
+}
+
+@media (min-width: 1081px) {
+  /* ── Band ─────────────────────────────────────────────────────────────── */
+  .en { padding-top: 120px; padding-bottom: 140px; }
+  .en-mast { display: flex; justify-content: space-between; align-items: center; }
+  .en-mast-r { display: flex; align-items: center; gap: 22px; }
+  .en-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  /* The pause control (WCAG 2.2.2), styled as the hero's: a mono caption
+     that reads as part of the sheet's margin notes. 24px tall for 2.5.8. */
+  .en-motion { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .en-motion:hover { color: var(--ink); }
+  .en-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+  .en .en-head { margin-top: 22px; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); }
+  .en .en-h2 { font-size: 56px; }
+  .en .en-lede { margin-bottom: 8px; }
+  .en-it { font-style: italic; }
+
+  /* ── The perimeter ────────────────────────────────────────────────────── */
+  .en-main { margin-top: 72px; display: grid; grid-template-columns: 540px minmax(0, 1fr); gap: 56px; align-items: center; }
+  .en-sel { margin-bottom: 18px; text-align: center; }
+  .en-per { position: relative; width: 540px; height: 540px; }
+  /* 640 square, overhanging the 540 box by 50 each side so the halo and
+     the ripples are not clipped. Canvas coordinates are physical — the
+     drawing is point-symmetric, so it needs no mirroring under RTL. */
+  .en-wave { position: absolute; inset-inline-start: -50px; top: -50px; width: 640px; height: 640px; display: block; }
+  .en-per .en-core, .en-per .en-rb { z-index: 1; }
+  .en-core { position: absolute; inset-inline-start: 50%; top: 50%; width: 118px; height: 118px; margin-block: -59px 0; margin-inline: -59px 0; border-radius: 50%; background: radial-gradient(circle at 34% 28%, var(--white) 0, var(--white) 55%, var(--v2-mint-pale) 100%); box-shadow: 0 0 0 1px var(--hair), 0 0 0 7px rgb(from var(--white) r g b / .65), 0 0 0 8px rgb(from var(--green) r g b / .12), 0 18px 40px -20px rgb(from var(--ink) r g b / .45); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: var(--ink); }
+  .en-core span { font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: center; line-height: 1.25; max-width: 80px; }
+  .en-rb { position: absolute; inset-inline-start: 50%; transform: translateX(calc(var(--flip) * -50%)); height: 34px; display: inline-flex; align-items: center; gap: 8px; padding-block: 0; padding-inline: 10px 14px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; white-space: nowrap; box-shadow: 0 6px 14px -10px rgb(from var(--ink) r g b / .35); transition: border-color .25s, background .25s, color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .en-rb:hover { transform: translateX(calc(var(--flip) * -50%)) translateY(-2px); border-color: var(--tick-off); }
+  .en-rb:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .en-rb-n { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  .en-rb-on { background: var(--ink); border-color: var(--ink); color: var(--white); }
+  .en-rb-on:hover { border-color: var(--ink); }
+  .en-rb-on .en-rb-n { color: var(--green-light); }
+  .en-stop { margin: 22px 0 0; text-align: center; font-family: var(--serif); font-size: 26px; letter-spacing: -.015em; }
+  .en-stop em { font-style: italic; color: var(--green); }
+
+  /* ── The panels ───────────────────────────────────────────────────────── */
+  .en-panels { min-height: 760px; }
+  .en-panel { height: 760px; box-sizing: border-box; display: flex; flex-direction: column; padding: 36px 40px; border-radius: 24px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); animation: enIn .6s cubic-bezier(.16, 1, .3, 1) both; }
+  @keyframes enIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 20px)); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
+  .en-pk { display: flex; justify-content: space-between; align-items: center; }
+  .en-tag { height: 26px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: var(--v2-leaf-lo); font-family: var(--mono); font-size: 11px; color: var(--ink); }
+  .en-ph { margin: 18px 0 0; font-family: var(--serif); font-weight: 400; font-size: 25px; line-height: 1.12; letter-spacing: -.02em; text-wrap: balance; }
+  .en-ph em { font-style: italic; color: var(--green); }
+  .en-lead { margin: 12px 0 0; font-size: 15px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+  .en-two { margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .en-col { padding-top: 16px; border-top: 1px solid var(--hair); }
+  .en-ct { font-size: 16px; font-weight: 500; letter-spacing: -.01em; }
+  .en-cp { margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
+  .en-chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .en-chip { height: 28px; display: inline-flex; align-items: center; padding: 0 11px; border-radius: 999px; border: 1px solid var(--hair); font-family: var(--mono); font-size: 11px; color: var(--ink); background: var(--v2-paper-hi); }
+  .en-int { margin-top: 22px; padding: 16px 18px; border-radius: 14px; background: var(--v2-paper-hi); border: 1px solid var(--v2-paper-lo); display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; font-size: 13.5px; }
+  .en-int span { display: inline-flex; align-items: center; gap: 6px; }
+  .en-int-k { width: 100%; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .en-foot { margin-top: auto; padding-top: 20px; display: flex; justify-content: flex-end; align-items: center; gap: 10px; }
+  .en-more { height: 40px; padding: 0 10px; font-size: 14px; }
+  .en-steps { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 10px; }
+  .en-steps-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .en-steps-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .en-steps li { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 14px 14px 12px; border-radius: 14px; border: 1px solid var(--hair); background: var(--white); font-size: 13.5px; line-height: 1.35; animation: rise .6s cubic-bezier(.2, .7, .2, 1) both; }
+  .en-sn { font-family: var(--serif); font-style: italic; font-size: 20px; line-height: 1; color: var(--green); }
+  .en-grid6 { margin-top: 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 20px; }
+  .en-grid6 div { padding-top: 10px; border-top: 1px solid var(--hair); }
+  .en-grid6 b { display: block; font-size: 14px; font-weight: 500; }
+  .en-grid6 span { display: block; margin-top: 4px; font-family: var(--mono); font-size: 10.5px; line-height: 1.5; color: var(--muted); }
+  .en-sub-k { margin-top: 20px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .en-sub-k + .en-steps { margin-top: 10px; }
+  .en-pts { margin-top: 18px; display: grid; gap: 0; }
+  .en-pts div { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 16px; padding: 11px 0; border-top: 1px solid var(--hair); }
+  .en-pts b { font-size: 14.5px; font-weight: 500; }
+  .en-pts span { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+
+  /* ── Stats ────────────────────────────────────────────────────────────── */
+  .en-stats { margin-top: 88px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .en-stats div { padding: 28px 0 26px; display: flex; align-items: baseline; gap: 12px; }
+  .en-stats div:not(:first-child) { padding-inline-start: 32px; border-inline-start: 1px solid var(--hair); }
+  .en-stats b { font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+  .en-stats div:last-child b { font-size: 40px; }
+  .en-stats span { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+  /* ── Letters from our clients ─────────────────────────────────────────── */
+  .lt-letters { margin-top: 112px; padding-top: 64px; border-top: 1px solid var(--hair); display: grid; grid-template-columns: minmax(0, 4.4fr) minmax(0, 7.6fr); gap: 72px; align-items: center; }
+  .lt-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .lt-h { margin: 20px 0 0; font-family: var(--serif); font-weight: 400; font-size: 44px; line-height: 1.06; letter-spacing: -.028em; color: var(--ink); text-wrap: balance; }
+  .lt-h em { font-style: italic; color: var(--green); }
+  .lt-sel { margin-top: 40px; display: grid; }
+  .lt-s { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; align-items: center; padding-block: 18px 20px; padding-inline: 4px; border: 0; border-top: 1px solid var(--hair); background: none; text-align: start; cursor: pointer; font: inherit; color: var(--ink); transition: padding .35s cubic-bezier(.16, 1, .3, 1); }
+  .lt-s:last-child { border-bottom: 1px solid var(--hair); }
+  .lt-s:hover { padding-inline-start: 10px; }
+  .lt-s:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px; }
+  /* The idle ordinal is `--muted`, not the board's #BDB7AA: that measured
+     1.9:1 on paper and it is text (24px italic numerals, still under the
+     3:1 large-text bar). Active stays green, so the selection still reads. */
+  .lt-sn { font-family: var(--serif); font-style: italic; font-size: 24px; color: var(--muted); transition: color .4s; }
+  .lt-sx b { display: block; font-size: 17px; font-weight: 500; letter-spacing: -.01em; color: var(--ink-soft); transition: color .4s; }
+  .lt-sx em { display: block; margin-top: 4px; font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  /* Straddles the rule below the row; `z-index` so the next row's border,
+     painted later, does not cover its lower half. */
+  .lt-sbar { position: absolute; z-index: 1; inset-inline: 0; bottom: -1px; height: 2px; overflow: hidden; }
+  .lt-sbar i { position: absolute; inset: 0; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x) center; }
+  .lt-on .lt-sn { color: var(--green); }
+  .lt-on .lt-sx b { color: var(--ink); }
+  /* The 8 s bar IS the rotation timer: `animationend` advances the letter
+     (ClientLetters.tsx). Holding pauses it; a manual pick fills it. */
+  .lt-on .lt-sbar i { animation: ltBar 8s linear both; }
+  @keyframes ltBar { to { transform: scaleX(1); } }
+  .lt-hold .lt-on .lt-sbar i { animation-play-state: paused; }
+  .lt-manual .lt-on .lt-sbar i { animation: none; transform: scaleX(1); transition: transform .5s ease; }
+  .en-paused .lt-on .lt-sbar i { animation-play-state: paused; }
+  .lt-right { position: relative; }
+  .lt-stack { position: relative; height: 540px; }
+  .lt-l { position: absolute; inset-block: 0 34px; inset-inline: 0 34px; margin: 0; display: flex; flex-direction: column; padding: 34px 44px 34px; border-radius: 22px; background: var(--v2-lt-paper); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 30px 60px -38px rgb(from var(--ink) r g b / .45), inset 0 0 0 1px rgb(from var(--ink) r g b / .04); transform-origin: 50% 100%; transition: transform .8s cubic-bezier(.3, 1.2, .4, 1), opacity .6s ease, box-shadow .6s; overflow: hidden; }
+  .lt-l::before { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg, rgb(from var(--ink) r g b / .022) 0 1px, transparent 1px 34px); pointer-events: none; }
+  .lt-f0 { z-index: 3; transform: none; opacity: 1; }
+  .lt-f1 { z-index: 2; transform: translate(calc(var(--flip) * 18px), 16px) rotate(calc(var(--flip) * 1.6deg)); opacity: .85; }
+  .lt-f2 { z-index: 1; transform: translate(calc(var(--flip) * 34px), 30px) rotate(calc(var(--flip) * -1.2deg)); opacity: .6; }
+  .lt-f1 .lt-q, .lt-f2 .lt-q, .lt-f1 .lt-sig, .lt-f2 .lt-sig, .lt-f1 .lt-qm, .lt-f2 .lt-qm { opacity: 0; }
+  .lt-top { position: relative; display: flex; justify-content: space-between; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--v2-lt-rule); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .lt-top span:last-child { text-transform: none; letter-spacing: .02em; }
+  /* Fill and stroke sit on the `<svg>` and inherit into the `<use>`d
+     symbol; a selector on the symbol's own paths is not what a use-tree
+     reliably matches. */
+  .lt-seal { position: absolute; inset-inline-end: 34px; top: 64px; width: 88px; height: 88px; opacity: .9; pointer-events: none; fill: none; stroke: rgb(from var(--green) r g b / .16); stroke-width: .8; }
+  .lt-qm { position: relative; display: block; height: 54px; margin-top: 18px; font-family: var(--serif); font-size: 96px; line-height: 1; color: var(--green); transition: opacity .4s; }
+  .lt-q { position: relative; margin: 0; font-family: var(--serif); font-size: 25px; line-height: 1.42; letter-spacing: -.012em; color: var(--ink); text-wrap: pretty; transition: opacity .45s ease .15s; }
+  /* The highlighter: a mint band under the key phrase that sweeps in after
+     the letter lands. Grows along the inline axis, so it mirrors. */
+  .lt-q mark { color: inherit; background: linear-gradient(transparent 58%, rgb(from var(--green-light) r g b / .6) 58%) var(--origin-x) 0 / 0% 100% no-repeat; padding: 0 2px; transition: background-size 1.1s cubic-bezier(.65, 0, .35, 1); }
+  .lt-f0 .lt-q mark { background-size: 100% 100%; transition-delay: .7s; }
+  .lt-sig { position: relative; margin-top: auto; padding-top: 22px; display: flex; flex-direction: column; gap: 4px; transition: opacity .4s; }
+  .lt-sig b { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 24px; letter-spacing: -.01em; color: var(--ink); }
+  .lt-sig span { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+}
+
+@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+  /* No auto-advance: with no animation there is no `animationend`. The
+     global rule would otherwise shorten the bar to 0.01ms and fire it at
+     once, shuffling the letters as fast as React can render. */
+  .lt-on .lt-sbar i { animation: none; transform: scaleX(1); }
+  .lt-l, .lt-q mark { transition: none; }
+}

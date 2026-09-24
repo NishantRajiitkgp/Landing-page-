@@ -1,0 +1,108 @@
+/* Homepage v2 · Small & medium businesses — receipts on clips, and one that
+   prints (`sections/Smb.tsx`, `SmbBuilder.tsx`). Hand-ported from the
+   Business board; why a v2 sheet lives here is in `hero.css`'s header.
+   Prefix `sm-`, the canvas's. The package receipts are `design.css`'s `.rc`
+   with a scalloped tear and a fixed height added here.
+
+   Colour is tokens throughout. The board's near-palette tints map onto the
+   hero's `--v2-*` (#FBFAF6 `--v2-paper-hi`, #EFECE5 `--v2-paper-lo`
+   #EFEBE3, #F7FBF8 `--v2-mint-pale`) or the palette (#CFC9BD `--tick-off`
+   #CFCAC0). Three are new, below — each a surface of the printer or the
+   paper, none ever text. */
+:root {
+  /* The printer's top face, the lift off `--ink` `.btn-ink:hover` uses. */
+  --v2-sm-press: #2A2823;
+  /* The paper slot, darker than `--ink` so it reads as a hole in it. */
+  --v2-sm-slot: #050504;
+  /* The receipt's dashed rules — `.rc .sep`'s colour, one step past `--hair`. */
+  --v2-sm-dash: #D8D3C9;
+}
+
+@media (min-width: 1081px) {
+  .sm { padding-top: 120px; padding-bottom: 140px; }
+  .sm-mast { display: flex; justify-content: space-between; align-items: center; }
+  .sm-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .sm .sm-head { margin-top: 22px; }
+  .sm .sm-h2 { font-size: 60px; }
+  .sm .sm-lede { margin-bottom: 8px; }
+  .sm-it { font-style: italic; }
+
+  /* ── Receipts on clips ────────────────────────────────────────────────── */
+  .sm-pks { margin-top: 80px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; align-items: start; padding-top: 18px; }
+  /* Hung from the clip, so they pivot at the top centre; each tilts by its
+     own `--rot` and the tilt mirrors with the page. */
+  .sm-pk { position: relative; transform: rotate(calc(var(--flip) * var(--rot))); transform-origin: 50% 0; transition: transform .5s cubic-bezier(.16, 1, .3, 1); }
+  .sm-pk:hover { transform: rotate(0) translateY(-6px); }
+  .sm-clip { position: absolute; inset-inline-start: 50%; top: -22px; width: 64px; height: 34px; margin-inline-start: -32px; z-index: 3; filter: drop-shadow(0 4px 4px rgb(from var(--ink) r g b / .25)); }
+  .sm-rc { height: 560px; display: flex; flex-direction: column; box-sizing: border-box; }
+  .sm-rc .sub { min-height: 58px; line-height: 1.45; }
+  .sm-fill { flex: 1; }
+  /* A torn, scalloped foot instead of `.rc`'s zigzag. */
+  .sm-rc::after { content: ""; position: absolute; inset-inline: 0; bottom: -10px; height: 10px; background: radial-gradient(circle at 5px -1px, transparent 6px, var(--white) 6.5px) 0 0 / 10px 10px repeat-x; }
+  .sm-pk-buy { height: 36px; }
+
+  /* ── Three steps ──────────────────────────────────────────────────────── */
+  .sm-steps { margin-top: 96px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .sm-step { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; padding: 22px 24px; border-radius: 18px; border: 1px solid var(--hair); background: var(--v2-paper-hi); }
+  .sm-step:not(:last-child)::after { content: ""; position: absolute; inset-inline-end: -19px; top: 50%; width: 14px; height: 1px; background: var(--green); }
+  .sm-step-n { font-family: var(--serif); font-style: italic; font-size: 28px; line-height: 1; color: var(--green); }
+  .sm-step b { display: block; font-size: 17px; font-weight: 500; letter-spacing: -.01em; }
+  .sm-step p { margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
+
+  /* ── Build your package ───────────────────────────────────────────────── */
+  .sm-build { margin-top: 40px; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 56px; padding: 44px 48px; border-radius: 26px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); }
+  .sm-build-h { margin: 12px 0 0; font-family: var(--serif); font-weight: 400; font-size: 40px; line-height: 1.02; letter-spacing: -.025em; }
+  .sm-opts { margin-top: 26px; display: grid; gap: 10px; }
+  .sm-opt { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 18px; border-radius: 14px; border: 1px solid var(--hair); background: var(--white); font: inherit; color: inherit; text-align: start; cursor: pointer; transition: border-color .25s, background .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+  .sm-opt:hover { border-color: var(--tick-off); transform: translateX(calc(var(--flip) * 3px)); }
+  .sm-opt:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .sm-box { width: 22px; height: 22px; border-radius: 7px; border: 1.5px solid var(--tick-off); display: inline-flex; align-items: center; justify-content: center; color: transparent; transition: background .2s, border-color .2s, color .2s; }
+  .sm-box .tick { width: 14px; height: 14px; color: inherit; }
+  .sm-opt-n { font-size: 16px; font-weight: 500; letter-spacing: -.01em; }
+  .sm-opt-n i { display: block; margin-top: 3px; font-style: normal; font-size: 12.5px; font-weight: 400; color: var(--muted); }
+  .sm-opt-p { font-family: var(--mono); font-size: 14px; color: var(--ink); }
+  .sm-on { border-color: var(--green); background: var(--v2-mint-pale); }
+  .sm-on:hover { border-color: var(--green); }
+  .sm-on .sm-box { background: var(--green); border-color: var(--green); color: var(--white); }
+  .sm-quote { margin: 28px 0 0; padding-top: 22px; border-top: 1px solid var(--hair); font-size: 15px; line-height: 1.55; color: var(--ink-soft); text-wrap: pretty; }
+  .sm-quote b { display: block; margin-bottom: 6px; font-family: var(--serif); font-weight: 400; font-size: 24px; letter-spacing: -.015em; color: var(--ink); }
+
+  /* The printer and its receipt. */
+  .sm-build-r { position: relative; display: flex; flex-direction: column; align-items: center; }
+  .sm-printer { position: relative; z-index: 3; width: 100%; height: 46px; border-radius: 14px 14px 10px 10px; background: linear-gradient(var(--v2-sm-press), var(--ink)); box-shadow: 0 14px 26px -14px rgb(from var(--ink) r g b / .7), inset 0 1px 0 rgb(from var(--white) r g b / .08); display: flex; align-items: center; gap: 12px; padding: 0 18px; box-sizing: border-box; }
+  .sm-printer .dot { background: var(--green-light); }
+  .sm-slot { flex: 1; height: 5px; border-radius: 3px; background: var(--v2-sm-slot); box-shadow: inset 0 1px 2px rgb(from var(--v2-sm-slot) r g b / .8); }
+  /* `--tick-off`, not the board's #8A857A: text must be a token, and on the
+     printer's ink face `--tick-off` is 11:1 where `--muted` would be 3.3:1. */
+  .sm-pr-k { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--tick-off); }
+  .sm-paper-wrap { position: relative; width: calc(100% - 36px); margin-top: -8px; height: 470px; overflow: hidden; }
+  .sm-paper { position: relative; padding: 26px 24px 22px; background: var(--white); font-family: var(--mono); font-size: 12.5px; color: var(--ink); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .06), 0 24px 40px -26px rgb(from var(--ink) r g b / .45); border: 1px solid var(--v2-paper-lo); border-top: 0; }
+  .sm-paper::after { content: ""; position: absolute; inset-inline: 0; bottom: -10px; height: 10px; background: radial-gradient(circle at 5px -1px, transparent 6px, var(--white) 6.5px) 0 0 / 10px 10px repeat-x; }
+  /* A/B pairs: the class swaps per change, so the jolt restarts
+     (SmbBuilder.tsx). */
+  .sm-feedA { animation: smFeedA .5s cubic-bezier(.3, 1.3, .5, 1); }
+  .sm-feedB { animation: smFeedB .5s cubic-bezier(.3, 1.3, .5, 1); }
+  @keyframes smFeedA { 0% { transform: translateY(-14px); } to { transform: none; } }
+  @keyframes smFeedB { 0% { transform: translateY(-14px); } to { transform: none; } }
+  .sm-ph { display: flex; justify-content: space-between; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding-bottom: 12px; border-bottom: 1px dashed var(--v2-sm-dash); }
+  .sm-rlines { padding-top: 6px; }
+  .sm-rl { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 9px 0; font-family: var(--sans); font-size: 14.5px; animation: smPrint .45s cubic-bezier(.16, 1, .3, 1) both; }
+  .sm-rl b { font-family: var(--mono); font-weight: 500; font-size: 13px; }
+  @keyframes smPrint { 0% { opacity: 0; transform: translateY(-10px); clip-path: inset(0 0 100% 0); } to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); } }
+  .sm-empty { padding: 18px 0; font-family: var(--sans); font-size: 14px; color: var(--muted); }
+  .sm-sep { margin: 10px 0 12px; border-top: 1px dashed var(--v2-sm-dash); }
+  .sm-tot { display: flex; justify-content: space-between; align-items: baseline; }
+  .sm-tot span { font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .sm-tot b { font-family: var(--serif); font-weight: 400; font-style: italic; font-size: 40px; letter-spacing: -.02em; color: var(--green); }
+  .sm-totA { animation: smTotA .45s cubic-bezier(.3, 1.35, .5, 1); }
+  .sm-totB { animation: smTotB .45s cubic-bezier(.3, 1.35, .5, 1); }
+  @keyframes smTotA { 0% { opacity: .2; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @keyframes smTotB { 0% { opacity: .2; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .sm-note { margin-top: 6px; font-size: 10.5px; color: var(--muted); }
+  .sm-bc { height: 34px; margin-top: 16px; opacity: .85; }
+  .sm-buy { margin-top: 18px; width: 100%; box-sizing: border-box; font-family: var(--sans); letter-spacing: -.005em; }
+}
+
+@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+  .sm-pk, .sm-opt { transition: none; }
+}

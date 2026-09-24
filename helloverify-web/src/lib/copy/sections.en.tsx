@@ -776,4 +776,265 @@ export const en = {
       eu: { name: "European authorities", sub: "Verification workflows" },
     },
   },
+
+  /** `sections/Enterprises.tsx` — homepage v2, desktop only (the "trust
+   *  perimeter" board, Sep 2026). Every string is the canvas's, which took
+   *  them word for word from the old enterprise, employee-verification, KYC
+   *  and Certifier pages — capitalisation and spellings included
+   *  ("Liveliness Check", "What Our Client Speak"). Chips, steps and rows are
+   *  keyed by what they name, so a reorder is a component change. */
+  enterprises: {
+    kicker: "Large Enterprises",
+    sheet: "Sheet 06 / 12",
+    headingA: "Background Checks For",
+    headingB: "Every Part of Your Organization",
+    lede: "Our combination of AI-powered automation and dedicated in-house verification experts helps detect fraud while delivering a seamless experience for genuine applicants.",
+    select: "Select who you're screening",
+    core: "Your organization",
+    stopA: "Stop Bad Hires",
+    stopB: "Before They Happen",
+    explore: "Explore More",
+    sales: "Talk to Sales",
+    rings: { employees: "Employees", customers: "Customers", businesses: "Businesses" },
+    employees: {
+      k: "01 · Employees",
+      tag: "Large Enterprises",
+      h: "Unified verification for large-scale white-collar and blue-collar hiring with custom workflows, speed, accuracy, and compliance.",
+      white: {
+        t: "White-Collar Employee Verification",
+        p: "Verify professional credentials, employment history and identity to ensure trustworthy corporate hiring.",
+        chips: {
+          education: "Education Check",
+          employment: "Employment Check",
+          identity: "Identity Check",
+          criminal: "Criminal Record Check",
+          reference: "Reference Check",
+          global: "Global Database Check",
+        },
+      },
+      blue: {
+        t: "Blue-Collar Employee Verification",
+        p: "Fast and reliable blue-collar verification to reduce hiring risks and onboard trusted talent with confidence.",
+        chips: {
+          pan: "Pan Card Check",
+          rc: "Registration Certificate Check",
+          licence: "Driving License Verification",
+          criminal: "Criminal Records Check",
+          pennyDrop: "Penny Drop Check",
+          liveness: "Liveness Check",
+        },
+      },
+      intK: "Automated Workforce Onboarding",
+      ints: {
+        hrms: "HRMS API & Integration",
+        rules: "Automated Rules Engine",
+        tracking: "Real Time Tracking",
+        security: "Enterprise Grade Security",
+      },
+    },
+    customers: {
+      k: "02 · Customers",
+      tag: "KYC Platform",
+      hA: "Onboard faster.",
+      hB: "Detect fraud earlier.",
+      lead: "Our comprehensive KYC solution brings every step of the digital onboarding process together creating a seamless experience that keeps fraudsters out and genuine customers moving forward.",
+      steps: {
+        upload: "The user uploads a photo of their ID",
+        selfie: "User takes a Selfie",
+        face: "Facial Recognition",
+        liveliness: "Liveliness Check",
+        decision: "Get Decision",
+        onboard: "Onboard the Customer",
+      },
+      grid: {
+        kyc: { b: "KYC", s: "Identity Verification · Location Confirmation · Liveliness Check · Facial Recognition" },
+        kyb: { b: "KYB", s: "GST Verification · MCA Verification · Udyog/Udyam Aadhaar · Company PAN" },
+        underwriting: { b: "Underwriting", s: "GST-Lite & Advanced · Bank Statement Analysis · ITR Check · MCA Data Pull" },
+        fraud: { b: "Fraud & Risk", s: "Court Record Check · PAN Aadhaar Link · Email Risk Analysis · 1:N Face-Match" },
+        execute: { b: "Execute", s: "Bank Account Validation · E-sign · Device Fingerprinting · E-stamp" },
+        aml: { b: "AML", s: "Perform real-time screening · Monitor transactions continuously · Conduct comprehensive risk assessments" },
+      },
+    },
+    businesses: {
+      k: "03 · Businesses",
+      tag: "Certifier",
+      h: "We are redefining third-party verification for B2B businesses delivering fast, reliable authentication of identities and documents that modern enterprises demand.",
+      stepsK: "Verified in 4 steps, no paperwork",
+      steps: {
+        invite: "Send Invite",
+        info: "Enter Personal Information",
+        location: "Location Captured",
+        selfie: "Upload Selfie & ID Proof",
+      },
+      pts: {
+        blacklist: {
+          b: "Stop Previously Blacklisted vendors",
+          s: "Certifier raises the bar on vendor qualification identifying only those entities that are fully compliant, genuinely reliable and perfectly aligned with your company's standards.",
+        },
+        monitoring: { b: "Reduce Risk with Continuous Monitoring", s: "Never be caught off guard." },
+        brand: { b: "Protect Your Brand Integrity", s: "Bad actors don't stand a chance." },
+      },
+      chips: {
+        trade: "Trade License Check",
+        directors: "Defaulting Directors Check",
+        criminal: "Criminal Records Check",
+        credit: "Credit & Company Check",
+        gst: "GST Screening",
+        financial: "Financial Assessment",
+      },
+    },
+    stats: {
+      checks: { b: "30+", s: "Checks" },
+      countries: { b: "120+", s: "Countries" },
+      tat: { b: "1 to 7", s: "Working Days TAT" },
+      api: { b: "REST API", s: "+ bulk upload" },
+    },
+    /** The three client letters. The quotes are the old site's "What Our
+     *  Client Speak" cards (`about.base.json` → `sections[5].cards[]`),
+     *  verbatim including their punctuation, and de-identified as the old
+     *  site had them — role and company line, no name, no logo. `q` is rich
+     *  text because the canvas highlights one phrase per letter with `<mark>`. */
+    letters: {
+      kicker: "What Our Client Speak",
+      hA: "Trusted by India’s top IT/ITES companies for",
+      hB: "Background Verification",
+      from: "From",
+      items: {
+        hrShared: {
+          role: "HR Shared Services",
+          co: "@India’s largest IT company",
+          q: <>We are happy to be availing the services of HelloVerify and it&apos;s been a very fruitful journey so far. They are <mark>fast and accurate in running background checks</mark>, which have always helped us to make better hiring decisions. we wish to continue working with them in the future.</>,
+        },
+        people: {
+          role: "People Function",
+          co: "@ India’s largest IT company.",
+          q: <>I would like to extend my appreciation for the effort Helloverify has put into successfully closing critical verification cases across our key accounts. Their <mark>responsiveness, commitment, and turnaround time have been exceptional</mark> , the closure of the BGV on time has helped me get appreciations. Please keep it up as we require the same support in the coming future as well.</>,
+        },
+        associate: {
+          role: "Associate Lead",
+          co: "@India’s largest Fintech company.",
+          q: <>Thank you HelloVerify for your <mark>continuous assistance and support</mark>. Looking forward for the same support in upcoming days.</>,
+        },
+      },
+    },
+  },
+
+  /** `sections/Smb.tsx` — homepage v2, desktop only. Package names, prices,
+   *  descriptions and the à-la-carte list are the old SMB tab and
+   *  `/products/bgv-smb`, verbatim. `lines` is one flat table for every
+   *  receipt line, the shape `packages.lines` uses and for its reason. A
+   *  package price is a string because it is printed as written; the
+   *  à-la-carte prices are numbers in the component because the receipt adds
+   *  them up. */
+  smb: {
+    kicker: "Small and Medium Enterprises",
+    sheet: "Sheet 07 / 12",
+    headingA: "Background Checks For",
+    headingB: "Small & Medium Businesses",
+    lede: "Pick the plan, customize your checks and get full verification details on any individual.",
+    mins: "60 mins",
+    tot: (n: number) => `${n} checks · 60 mins`,
+    included: "Checks Included",
+    buy: "Buy Now",
+    lines: {
+      identity: "Identity Check",
+      criminal: "Criminal Check",
+      global: "Global Database Check",
+      address: "Current Address Check",
+      moonlighting: "Moonlighting Check",
+    },
+    packs: {
+      basic: {
+        name: "Basic Package",
+        tt: "Basic",
+        sub: "Verifies government-issued ID, screens criminal records, and cross-checks global watchlists for hidden risks.",
+        price: "₹1,799",
+      },
+      standard: {
+        name: "Standard Package",
+        tt: "Standard",
+        sub: "All Basic checks plus address verification, giving you a more complete background picture.",
+        price: "₹2,199",
+      },
+      premium: {
+        name: "Premium Package",
+        tt: "Premium",
+        sub: "All Standard checks plus a moonlighting detection to uncover any undisclosed secondary employment.",
+        price: "₹2,399",
+      },
+    },
+    steps: {
+      select: { b: "Select Checks", p: "Customize your order as per your requirement from our wide range of Checks" },
+      fill: { b: "Fill Information", p: "Provide Consent of Individual & relevant information for verification" },
+      result: { b: "Get Result", p: "Get intuitive reports for decision making" },
+    },
+    build: {
+      kicker: "Customize Your Package",
+      h: "Select Your Checks",
+      options: {
+        identity: "Identity Check",
+        employment: "Employment Check",
+        education: "Education Check-Highest Education",
+        address: "Address Check",
+        reference: "Professional Reference Check",
+      },
+      eduExtra: "Extra University Charges applicable",
+      quoteB: "Instant Checks. Confident Hires.",
+      quote: "Every hire carries risk. HelloVerify's instant background checks eliminate the guesswork—uncovering red flags before they ever walk through your door.",
+      printer: "HelloVerify",
+      receipt: "Custom package",
+      count: (n: number) => (n === 1 ? "1 check" : `${n} checks`),
+      empty: "Select a check to start your receipt",
+      total: "Total",
+      eduNote: "Education Check · Extra University Charges applicable",
+      /** The running total. The component groups the digits itself (Indian
+       *  grouping, no `Intl`), so the server and the browser print the same. */
+      rupees: (amount: string) => `₹${amount}`,
+    },
+  },
+
+  /** `sections/Diligence.tsx` — homepage v2, desktop only. Card copy is the
+   *  old Certifier product cards, verbatim; "Before you sign a supplier" and
+   *  "Before the first purchase order" are `packages.packs.*.sub`, and
+   *  "2 days" / "Certified vendor profile" that band's `ready` and `who`. */
+  diligence: {
+    kicker: "Vendor and Supplier",
+    sheet: "Certifier",
+    headingA: "Business Due",
+    headingB: "Diligence",
+    lede: "With Certifier, offered by HelloVerify, clients can enhance their profiling experience by accessing certified profiles.",
+    chip: "Vendors · Certifier",
+    included: "Checks Included",
+    scanning: "Scanning…",
+    low: "Low risk",
+    eta: "2 days",
+    etaLabel: "Certified vendor profile",
+    explore: "Explore More",
+    /** One repeat of the stamp's ring text. Decorative (`aria-hidden`). */
+    stamp: "CERTIFIED VENDOR PROFILE · CERTIFIER ·",
+    cards: {
+      trade: {
+        when: "Before you sign a supplier",
+        t: "Trade License Risk Assessment",
+        p: "Comprehensive business verification covering trade license validation and promoter background checks.",
+        checks: {
+          trade: "Trade License Check",
+          directors: "Defaulting Directors Check",
+          criminal: "Criminal Records Check",
+          credit: "Credit & Company Check",
+        },
+      },
+      vendor: {
+        when: "Before the first purchase order",
+        t: "Vendor Financial Risk Assessment",
+        p: "One platform you can trust. Vendor checks, credit evaluations, and financial assessments built for smarter decisions.",
+        checks: {
+          financial: "Financial Assessment",
+          gst: "GST Screening",
+          creditChecks: "Credit Checks",
+          promoter: "Promoter Criminal History Check",
+        },
+      },
+    },
+  },
 };
