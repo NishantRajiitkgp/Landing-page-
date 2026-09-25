@@ -91,17 +91,13 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  # `npm ci` writes its cache here rather than wherever the tracked
-  # helloverify-web/.npmrc points. Measured, because it is not what it looks
-  # like: that file's bytes are
-  #     b'allow-scripts=\ncache=D:\\Caches\npm\n'
-  # - somebody wrote `cache=D:\Caches\npm` through a tool that ate the `\n`, so
-  # the committed config is `cache=D:\Caches` followed by a junk line `pm`. On a
-  # Linux agent npm resolves that to a literal `./D:\Caches` directory, which
-  # works and caches nothing across runs. Setting NPM_CONFIG_CACHE overrides the
-  # project .npmrc for the pipeline. The .npmrc itself is the owner's to fix or
-  # delete - a machine-specific absolute cache path belongs in a user-level
-  # .npmrc, not in the repo.
+  # `npm ci` writes its cache here, where the Cache@2 step below can restore
+  # it between runs. The tracked helloverify-web/.npmrc used to carry a
+  # developer's machine path (`cache=D:\Caches\npm`), which on a Linux agent
+  # became a literal `./D:\Caches` directory that cached nothing; it was
+  # removed on 25 Sep 2026 (a machine-specific cache path belongs in a
+  # user-level ~/.npmrc). This stays explicit so the pipeline does not depend
+  # on any .npmrc for where its cache lives.
   - name: NPM_CONFIG_CACHE
     value: $(Pipeline.Workspace)/.npm
 
