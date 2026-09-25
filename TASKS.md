@@ -2058,7 +2058,7 @@ Still open here, and all of it needs access:
 
 ---
 
-## Part 12 — Homepage v2, ported from the redesign canvas · **12.1 DONE (24 Sep 2026)**
+## Part 12 — Homepage v2, ported from the redesign canvas · **12.1–12.5 DONE (24–25 Sep 2026)**
 
 The homepage was redesigned section by section on a Claude Design canvas
 (`HOMEPAGE-REVAMP-RESEARCH.md` is the brief). Those boards carry logic —
@@ -2127,14 +2127,68 @@ Ceilings reset with reasons in `check-budgets.mjs`.
 Verified: `check:all` 11/11, 722 unit, 290 e2e (4 skipped), contract 29,
 redirects 840, `tsc`, ESLint.
 
-### 12.3 — Open
+### 12.3 — Review changes after the port · DONE (24 Sep 2026)
 
-- **Phone pass.** v2 is desktop-first; the canvas has no 390px boards for it.
+Owner review of the running site, one change per request:
+- One in eight: the claimed-vs-verified application card removed (it retold
+  the table). Presence: the India office reads **New Delhi** on the map only —
+  the head office elsewhere (schema, llms.txt, /about, /contact, footer) is
+  still Noida.
+- Enterprises, all three panels rebuilt: Employees as two photo ID badges on
+  lanyards (pendulum drag, "Turn over", checks tick in, foil seal);
+  Customers as a phone running the six KYC steps; Businesses as a Certifier
+  certificate filling in over four steps — both on `StepCycler`, one small
+  island. Four new Higgsfield photos, cropped clear of generated lettering.
+- SMB conversion pass: Premium spotlit ("Best value", cheapest per check),
+  one line order with added checks highlighted, per-check price, full-width
+  Buy Now, a jump to the package builder.
+- The closing band's form is the real `ContactForm` + Server Action (was a
+  mock); the form follows the audience — Government and Individual get their
+  own labels, services and prompt (`SEGMENT_FORM`).
+
+### 12.4 — The phone pass · DONE (25 Sep 2026)
+
+Seven agents in parallel (shared brief), then merged here. Every v2 band is
+now **one tree at every width**: the `.dsk` wrapper removed, the old
+generated `.mob` tree deleted, each v2 sheet split into shared base /
+`min-width: 1081px` / `max-width: 1080px`. Desktop was screenshot-diffed
+before/after per section: identical except the intended Consumer change.
+- Touch: sideways drags scrub/rotate/swing and vertical swipes scroll
+  (`touch-action: pan-y`); hover reveals have tap equivalents; SMB receipts
+  and package cards are scroll-snap rows; the lamps are tap-driven.
+- Consumer: the greyscale on closed panels replaced by a paper veil in colour.
+- Demo2, HowItWorks and WhoItsFor (phone-only) deleted with their helpers and
+  copy; `copy.test.ts` re-pinned (sections 1558 → 1357 leaves, blocks 60 → 22).
+- 213 dead rules swept from `design.css`/`pages.css` (~27 KB raw).
+- Weight: /en total 435.7 → 427.8 KB; stylesheet 42.3 KB (ceiling 43, over
+  §9.1's 40 — reasons in `check-budgets.mjs`).
+
+Verified: `check:all` 11/11, 713 unit, 290 e2e (4 skipped), no horizontal
+scroll or console errors at 390/768.
+
+### 12.5 — Clean-up · DONE (25 Sep 2026)
+
+- 17 agent worktrees removed, 16 merged branches deleted; the unmerged RSC
+  experiment kept as `archive/perf-rsc-rejected`.
+- `helloverify-web/.npmrc`: the machine-specific `cache=D:\Caches\npm` removed
+  (it created `helloverify-web/D:\Caches\npm/` on macOS/Linux); the pipeline
+  keeps its explicit `NPM_CONFIG_CACHE`.
+
+### 12.6 — Open
+
 - **Owner confirmations:** "₹ — price to confirm" on four consumer services and
   every Basic tier; "1 in 8" / "12–14%" sources; the four non-driver HelloV chat
   scripts and globe card texts; the QR target; Cairo office days (board says
-  Mon–Fri); "30+ Checks" in Enterprises vs "33 checks" elsewhere.
-- `.npmrc`'s Windows cache path creates `helloverify-web/D:\Caches\npm/` on macOS.
+  Mon–Fri); "30+ Checks" in Enterprises vs "33 checks" elsewhere. New
+  microcopy awaiting sign-off: "Turn over", "Every step of digital
+  onboarding", "Best value", "≈ ₹N per check", the Government/Individual form
+  labels and prompts.
+- Head office Noida vs New Delhi: only the map label changed; decide whether
+  the whole site should follow.
+- Globe: the Saudi and UAE pins overlap when the globe faces India.
+- The phone page is ~39,000px tall; consider trimming bands for phones.
+- `lib/img.ts` still exports sizes only `tools/port` references
+  (`SIZES_WHY`, `SIZES_CCARD`, `SIZES_BENTO_*`, `AVATAR_GT`, …).
 
 ## Demo readiness · audited 22 Sep 2026
 
