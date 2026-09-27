@@ -481,12 +481,13 @@ console.log("7. the numbers this slice is measured by");
 /** Recorded so the next namespace has a baseline rather than a feeling. The
  *  `>text<` matcher in `lib/copy/index.ts`'s header is a 3x undercount — see
  *  that header — and this is the arithmetic behind it. */
+/** 104 -> 158 strings (105 -> 159 leaves) with the old site's mega-menu in the nav (54 leaves); hero 37 -> 17 with its doors removed (Sep 2026). */
 /** 76 -> 104 strings (77 -> 105 leaves) with homepage v2's footer
  *  (`chrome.footer.v2`: the sheet band, office clocks, seal captions and
  *  microtext — 28 leaves, all plain strings). */
 check(
-  "chrome/en holds 104 string leaves plus the one rich-text leaf",
-  stringLeaves(EN).length === 104 && leafPaths(EN).length === 105,
+  "chrome/en holds 158 string leaves plus the one rich-text leaf",
+  stringLeaves(EN).length === 158 && leafPaths(EN).length === 159,
   { strings: stringLeaves(EN).length, all: leafPaths(EN).length },
 );
 
@@ -497,8 +498,8 @@ check(
  *  `COLS`/`CERTS`, and `consent.body` — a real text node the matcher drops
  *  because the node contains a `{" "}`. */
 check(
-  "the >text< matcher saw 24 of them; 53 is the undercount (+28 v2 footer leaves)",
-  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 + 28 === leafPaths(EN).length,
+  "the >text< matcher saw 24 of them; 53 is the undercount (+28 v2 footer leaves, +54 nav mega-menu leaves)",
+  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 + 28 + 54 === leafPaths(EN).length,
   leafPaths(EN).length,
 );
 
@@ -827,7 +828,7 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  security-print notes, microtext, seal, motion labels and six doors (3
    *  leaves each). The matcher figure stays the migration-time 9 — it is the
    *  historical count the 152 below sums, not a re-measurement. */
-  hero: [9, 37],
+  hero: [9, 17],
   compliance: [4, 5],
   numbers: [14, 24],
   why: [8, 77],
@@ -885,8 +886,8 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  step heading, `enterprises.customers.stepsK`. 1558 -> 1357 and blocks
  *  60 -> 22: the phone pass (see `BANDS`). */
 check(
-  "sections holds 1357 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1357 &&
+  "sections holds 1337 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1337 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -920,8 +921,8 @@ check(
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. */
 check(
-  "sections: 1346 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1346 &&
+  "sections: 1326 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1326 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
