@@ -67,8 +67,8 @@ test.describe("navigation", () => {
     ).toBe(1);
     await page.evaluate(() => history.replaceState({}, "", "/en"));
 
-    await page.locator("nav[aria-label='Primary'] a", { hasText: "Business" }).click();
-    await expect(page).toHaveURL(/\/en\/business$/);
+    await page.locator("nav[aria-label='Primary'] > a", { hasText: "Technology" }).click();
+    await expect(page).toHaveURL(/\/en\/platform\/technology$/);
     await expect(page.locator("h1")).toBeVisible();
 
     // THIS ASSERTS THE ABSENCE OF CLIENT-SIDE ROUTING, deliberately, and the
@@ -99,12 +99,58 @@ test.describe("navigation", () => {
     test.skip(testInfo.project.name !== "desktop", "the .links nav is the desktop tree");
 
     await page.goto("/en");
-    await page.locator("nav[aria-label='Primary'] a", { hasText: "Platform" }).click();
-    await expect(page).toHaveURL(/\/en\/platform$/);
+    await page.locator("nav[aria-label='Primary'] > a", { hasText: "About us" }).click();
+    await expect(page).toHaveURL(/\/en\/about$/);
 
     await page.goBack();
     await expect(page).toHaveURL(/\/en$/);
     await expect(page.locator(".dsk").first()).toBeVisible();
+  });
+
+  test("a desktop dropdown opens from the keyboard and Escape closes it", async ({
+    page,
+  }, testInfo) => {
+    test.skip(testInfo.project.name !== "desktop", "the .links nav is the desktop tree");
+
+    await page.goto("/en");
+    // `chrome/NavDropdown.tsx`: hover opens it by CSS alone, so the mouse is
+    // parked off the bar first — this is the keyboard path, and a pointer
+    // resting on the trigger would make the panel visible for the wrong reason.
+    await page.mouse.move(5, 700);
+
+    const trigger = page.locator("nav[aria-label='Primary'] button", { hasText: "Products" });
+    const panel = page.locator(`#${await trigger.getAttribute("aria-controls")}`);
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(panel).toBeHidden();
+
+    await trigger.focus();
+    await page.keyboard.press("Enter");
+    await expect(trigger).toHaveAttribute("aria-expanded", "true");
+    await expect(panel).toBeVisible();
+
+    // Tab goes into the panel, not past it: the first product is next.
+    await page.keyboard.press("Tab");
+    await expect(panel.locator("a").first()).toBeFocused();
+
+    await page.keyboard.press("Escape");
+    await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await expect(trigger).toBeFocused();
+    await expect(panel).toBeHidden();
+
+    // A closed panel is `visibility: hidden`, so its links are out of the tab
+    // order: Tab from the trigger lands on the next trigger, not inside.
+    await page.keyboard.press("Tab");
+    await expect(page.locator("nav[aria-label='Primary'] button", { hasText: "Premium services" })).toBeFocused();
+  });
+
+  test("a desktop dropdown's links go where they say", async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== "desktop", "the .links nav is the desktop tree");
+
+    await page.goto("/en");
+    await page.locator("nav[aria-label='Primary'] button", { hasText: "Solutions" }).hover();
+    await page.locator("nav[aria-label='Primary'] a", { hasText: "Know your customer (KYC)" }).click();
+    await expect(page).toHaveURL(/\/en\/business\/customer-kyc$/);
+    await expect(page.locator("h1")).toBeVisible();
   });
 
   test("the mobile menu opens from the keyboard, not only the mouse", async ({
@@ -129,7 +175,9 @@ test.describe("navigation", () => {
     await page.keyboard.press("Space");
 
     await expect(menu).toBeVisible();
-    await expect(menu.locator("a").first()).toBeVisible();
+    // The first control is the Solutions group's `<summary>`; its links are
+    // inside a closed `<details>` until it is opened.
+    await expect(menu.locator("summary").first()).toBeVisible();
 
     await page.keyboard.press("Space");
     await expect(menu).toBeHidden();
@@ -144,9 +192,12 @@ test.describe("navigation", () => {
     // requires a checkbox to be visible and stable before checking it.
     await page.locator("label.burger").click();
 
+    // The groups are `<details>`: a link inside a closed one is not visible,
+    // so the visitor's path is open the group, then pick the link.
     const menu = page.locator("nav[aria-label='Primary, mobile']");
-    await menu.locator("a", { hasText: "Governments" }).click();
-    await expect(page).toHaveURL(/\/en\/governments$/);
+    await menu.locator("summary", { hasText: "Solutions" }).click();
+    await menu.locator("a", { hasText: "Health authorities" }).click();
+    await expect(page).toHaveURL(/\/en\/governments\/health$/);
     await expect(page.locator("h1")).toBeVisible();
   });
 

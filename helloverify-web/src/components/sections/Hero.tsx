@@ -3,13 +3,12 @@
     Homepage v2 (the canvas "security print" hero, Sep 2026), at every width:
     a turning guilloche, a UV lamp that follows the pointer and reveals a
     green print and paper fibres, a microtext frame, a stamp that lands beside
-    "in minutes." and replays on click, and six doors — one per audience —
-    in place of the old text rail. Hand-ported, not generated (see the header
+    "in minutes." and replays on click. Hand-ported, not generated (see the header
     of `app/v2/hero.css`); the interactive shell is `./HeroStage`.
 
     One tree since the phone pass: the generated `.mob` tree (a plain
     headline and two stacked buttons) is gone, and `hero.css` re-lays the
-    same markup out below 1081px — content in flow, doors in a 3×2 grid. On
+    same markup out below 1081px with the content in flow. On
     a touch screen the lamp rests lit and a tap moves it. */
 import { YCBadge } from "@/components/brand/YCBadge";
 // The ghost button's arrow is the shared `brand/Arrow.tsx` — an inline copy
@@ -25,19 +24,6 @@ import { SECTIONS } from "@/lib/copy/sections";
 import "@/app/v2/hero.css";
 import { HeroPrint } from "./HeroPrint";
 import { HeroStage } from "./HeroStage";
-
-type DoorId = "governments" | "enterprise" | "kyc" | "vendors" | "premium" | "consumer";
-
-/** Each door's destination and its line icon (32-unit box, stroked from CSS).
- *  The routes are the IA's own for each audience — `lib/seo/routes.ts`. */
-const DOORS: { id: DoorId; href: string; icon: React.ReactNode }[] = [
-  { id: "governments", href: "/governments", icon: <path d="M5 13.5L16 7l11 6.5M7 14.5v9M12.3 14.5v9M19.7 14.5v9M25 14.5v9M4.5 26h23M6 23.5h20" /> },
-  { id: "enterprise", href: "/business/enterprise", icon: <><rect x="5" y="11" width="22" height="14" rx="2.5" /><path d="M12 11V8.6c0-1 .8-1.6 1.6-1.6h4.8c.8 0 1.6.6 1.6 1.6V11M5 17h22M14 17v2h4v-2" /></> },
-  { id: "kyc", href: "/business/customer-kyc", icon: <><path d="M6 11V8.5A2.5 2.5 0 0 1 8.5 6H11M21 6h2.5A2.5 2.5 0 0 1 26 8.5V11M26 21v2.5a2.5 2.5 0 0 1-2.5 2.5H21M11 26H8.5A2.5 2.5 0 0 1 6 23.5V21" /><circle cx="16" cy="14" r="3.4" /><path d="M10.5 22.5c1.2-2.6 3.2-3.8 5.5-3.8s4.3 1.2 5.5 3.8" /></> },
-  { id: "vendors", href: "/business/certifier", icon: <><path d="M16 5.5l10 5v11l-10 5-10-5v-11z" /><path d="M6 10.5l10 5 10-5M16 15.5v11M11 8l10 5" /></> },
-  { id: "premium", href: "/individuals/immigration", icon: <><rect x="8" y="5" width="16" height="22" rx="2" /><circle cx="16" cy="14" r="4.2" /><path d="M11.8 14h8.4M16 9.8c1.4 1.3 1.4 7.1 0 8.4M16 9.8c-1.4 1.3-1.4 7.1 0 8.4M12 22.5h8" /></> },
-  { id: "consumer", href: "/individuals/hellov", icon: <><path d="M5.5 15L16 6.5 26.5 15M8.5 13v13h15V13" /><path d="M13.5 26v-6.5h5V26" /></> },
-];
 
 function Reg({ at }: { at: "tl" | "tr" | "bl" | "br" }) {
   return (
@@ -123,41 +109,6 @@ export async function Hero() {
           </AppLink>
         </div>
       </div>
-
-      <nav className="dr" aria-label={t.doors.label}>
-        <div className="dr-k"><i /><span className="k">{t.doors.kicker}</span><i /></div>
-        <div className="dr-row">
-          <span className="dr-floor" aria-hidden="true" />
-          <span className="dr-floor-go" aria-hidden="true" />
-          {DOORS.map(({ id, href, icon }, i) => {
-            const d = t.doors.items[id];
-            return (
-              <AppLink
-                key={id}
-                href={href}
-                className="dr-d"
-                // `--i` staggers the entrance and `--pd` offsets the idle
-                // peek so one door opens at a time along the row. Custom
-                // properties, set per element: the only per-door values.
-                style={{ "--i": i, "--pd": `${(4.2 + i * 2.2).toFixed(1)}s` } as React.CSSProperties}
-                aria-label={`${d.name}: ${d.line}, ${d.time}`}
-              >
-                <span className="dr-arch">
-                  <span className="dr-in">
-                    <span className="dr-t">{d.time}</span>
-                    <span className="dr-go"><Arrow size="14" /></span>
-                  </span>
-                  <span className="dr-leaf">
-                    <svg className="dr-ic" viewBox="0 0 32 32" fill="none" aria-hidden="true">{icon}</svg>
-                    <i className="dr-knob" />
-                  </span>
-                </span>
-                <span className="dr-lab"><span className="dr-a">{d.name}</span><span className="dr-b">{d.line}</span></span>
-              </AppLink>
-            );
-          })}
-        </div>
-      </nav>
     </HeroStage>
   );
 }

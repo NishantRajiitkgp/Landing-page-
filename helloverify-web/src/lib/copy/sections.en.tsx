@@ -83,21 +83,6 @@ export const en = {
       word: "Verified",
     },
     motion: { pause: "Pause motion", play: "Play motion" },
-    /** The six doors under the headline. `name` is what a door says at rest,
-     *  `line` and `time` what it shows when it opens — the audience strip's
-     *  existing one-liners and turnarounds, unchanged. */
-    doors: {
-      kicker: "Same platform, different door.",
-      label: "Solutions by audience",
-      items: {
-        governments: { name: "Governments", line: "Licences, visas and permits", time: "from 3 days" },
-        enterprise: { name: "Enterprise & SMB", line: "Every hire, white-collar and blue", time: "from 30 min" },
-        kyc: { name: "KYC", line: "Customers, verified at signup", time: "15 min" },
-        vendors: { name: "Vendors", line: "Know who you buy from", time: "from 2 days" },
-        premium: { name: "Premium services", line: "Visas and healthcare credentials", time: "assisted" },
-        consumer: { name: "Consumer", line: "The people in your home", time: "30 min" },
-      },
-    },
   },
 
   /** `sections/Compliance.tsx`. The four cards come from `CREDENTIAL_MARKS`

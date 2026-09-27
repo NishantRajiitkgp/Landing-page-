@@ -40,6 +40,52 @@ export const en = {
       "/platform": "Platform",
       "/resources": "Resources",
     },
+    /** The four dropdowns and the two plain links, from the old site's
+     *  menu (helloverify.com, Sep 2026). `SiteNav` owns the order, hrefs
+     *  and icons; this owns the words, keyed by item id. */
+    menus: {
+      solutions: {
+        label: "Solutions",
+        cols: {
+          gov: "Government authorities",
+          biz: "Enterprise & small business",
+          consumer: "Consumer service",
+        },
+      },
+      /** `all` is the panel's foot link to `/resources/checks`; the count is
+       *  the footer's own "All 33 checks". */
+      products: { label: "Products", all: "Browse all 33 checks" },
+      premium: {
+        label: "Premium services",
+        lede: "Dedicated one-to-one support for seamless verification and application submission.",
+      },
+      support: { label: "Support", col: "Contact us" },
+    },
+    items: {
+      govHealth: { t: "Health authorities", d: "Verify healthcare professionals' credentials from the primary source" },
+      govImmigration: { t: "Immigration authorities", d: "Streamlined pre-screening and verification of visa applications" },
+      govEducation: { t: "Manpower & education authorities", d: "Education qualifications verified at the primary source" },
+      govTrade: { t: "Business & trade authorities", d: "Business entities and directors verified for regulatory compliance" },
+      forBusiness: { t: "For business", d: "Verification for employees, vendors and partners, with continuous monitoring" },
+      forSmb: { t: "For SMB", d: "Reliable background verification packages for growing businesses" },
+      employee: { t: "Employee verification", d: "White-collar, blue-collar and gig workers alike" },
+      kyc: { t: "Know your customer (KYC)", d: "Identity verification with facial recognition and liveness checks" },
+      individuals: { t: "Verify individuals", d: "Drivers, home staff, tenants and nannies — within 30 minutes" },
+      visa: { t: "Start your visa screening", d: "Pre-screen documents for tourist, student and work visas" },
+      global: { t: "Global verification", d: "International verification checks across 120+ countries" },
+      bgvEnterprise: { t: "Background verification for enterprises", d: "For large-scale, diverse workforce needs" },
+      bgvSmb: { t: "Background verification for SMBs", d: "Fast, reliable checks tailored for growing businesses" },
+      certifier: { t: "Certifier — vendor due diligence", d: "Onboard vendors with structured due diligence and risk checks" },
+      immigrationDocs: { t: "Immigration documents pre-screening", d: "Built to support immigration and visa processing" },
+      hellov: { t: "HelloV — verify anyone", d: "Verify anyone instantly over WhatsApp" },
+      trust: { t: "Trust & safety — KYC", d: "Identity verification and onboarding with advanced KYC checks" },
+      premHealth: { t: "Doctors, dentists & health practitioners", d: "Accurate submissions for healthcare professionals applying to authorities" },
+      premImmigration: { t: "Immigration documents pre-screening", d: "Personal support for an accurate, hassle-free visa pre-screening" },
+      premConsumer: { t: "Consumer service", d: "An advanced package with extra checks for greater peace of mind" },
+      enquiry: { t: "Enquiry", d: "Talk to our team about your verification needs" },
+    },
+    about: "About us",
+    technology: "Technology",
     cta: "Talk to sales",
     /** Real text in a `.sr-only` span, not an `aria-label` — a `<label>` has
      *  no role that permits a name from `aria-label` (axe
