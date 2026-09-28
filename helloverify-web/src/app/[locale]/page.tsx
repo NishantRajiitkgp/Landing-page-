@@ -55,23 +55,32 @@ export default async function Home({
           Without it this is the one page of 56 with no main landmark, and the
           site-wide skip link has nothing to skip to (WCAG 2.4.1, 1.3.1). */}
       <main id="main-content">
+        {/* The order is the B2B homepage arc: hook, proof, problem,
+            solution, one block per buyer, pricing, scale, objections, ask
+            (28 Sep 2026). The seals are the proof, so they come before any
+            feature; the catalogue follows the mechanism; Certifier sits with
+            Enterprises; the numbers open the global block. The "Sheet NN / 12"
+            labels in `sections.en.tsx` follow this order — renumber them if it
+            changes. */}
         <Hero />
         <PeopleStrip />
+        <GovSeals />
         <OneInEight />
         <HowWeKnow />
-        <Numbers />
-        <Presence />
-        <GovSeals />
+        <Checks />
         <GovDossiers />
         <Why />
-        <Checks />
-        <Packages />
         <Enterprises />
-        <Smb />
         <Diligence />
-        <International />
+        <Smb />
+        <Packages />
         <Consumer />
+        {/* Renders nothing until a real, attributable story exists; this is
+            its slot: proof straight after the pitch, before the numbers. */}
         <CustomerStory />
+        <Numbers />
+        <International />
+        <Presence />
         <TrustPlatform />
         <Compliance />
         <Contact />

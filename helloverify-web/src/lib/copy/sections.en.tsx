@@ -120,7 +120,7 @@ export const en = {
      *  reused as they are; these are the words the v2 board adds around
      *  them. The odometer prints the checks' figure, so it has no `v`. */
     kicker: "Proof",
-    sheet: "Sheet 02 / 12",
+    sheet: "Sheet 08 / 12",
     /** The odometer's digits, one rolling column per digit. The component
      *  rolls every character that is a digit and prints the rest (the group
      *  separators) as is, so a locale that groups differently only edits
@@ -281,7 +281,7 @@ export const en = {
      *  said so on the page (`specimen`) and on the documents. */
     v2: {
       kicker: "HelloVerify AI",
-      sheet: "Sheet 04 / 12",
+      sheet: "Sheet 03 / 12",
       lede2: "Every document starts here. Fields, forgery checks and the issuing office — in about a second, before a person touches it.",
       switchLabel: "Choose a route through the same machine",
       specimen: "Specimen document · illustrative",
@@ -400,7 +400,7 @@ export const en = {
      *  service without `price` shows the placeholder, which is deliberate
      *  until the founder confirms the figure. */
     shop: {
-      sheet: "Sheet 08 / 12",
+      sheet: "Sheet 07 / 12",
       lede: "The nannies, house staff, drivers, and tenants you trust with your home deserve thorough verification. 100% digital, fast and accurate — so you never have to wonder about the people closest to your family.",
       whatsapp: "WhatsApp",
       eta: "30 mins",
@@ -908,7 +908,7 @@ export const en = {
    *  words are here because they are words on the page; which one is forged
    *  is the component's decision, not copy. */
   oneInEight: {
-    sheet: "Sheet 03 / 12",
+    sheet: "Sheet 02 / 12",
     flag: "Fraud",
     /** `headingEm` + " " + `heading` is the sentence; the italic figure is its
      *  own node. `fn` is the footnote mark both figures carry. */
@@ -1104,7 +1104,7 @@ export const en = {
    *  keyed by what they name, so a reorder is a component change. */
   enterprises: {
     kicker: "Large Enterprises",
-    sheet: "Sheet 06 / 12",
+    sheet: "Sheet 05 / 12",
     headingA: "Background Checks For",
     headingB: "Every Part of Your Organization",
     lede: "Our combination of AI-powered automation and dedicated in-house verification experts helps detect fraud while delivering a seamless experience for genuine applicants.",
@@ -1253,7 +1253,7 @@ export const en = {
    *  them up. */
   smb: {
     kicker: "Small and Medium Enterprises",
-    sheet: "Sheet 07 / 12",
+    sheet: "Sheet 06 / 12",
     headingA: "Background Checks For",
     headingB: "Small & Medium Businesses",
     lede: "Pick the plan, customize your checks and get full verification details on any individual.",
@@ -1488,7 +1488,7 @@ export const en = {
    *  pass, so they are not ported and have no leaves here. */
   govDossiers: {
     kicker: "Solutions",
-    sheet: "Sheet 05 / 12",
+    sheet: "Sheet 04 / 12",
     heading: "Government &",
     headingEm: "International Authorities",
     lede: "Verify individuals before they receive a work permit, immigration approval, professional licence, security clearance, or access to regulated professions.",
