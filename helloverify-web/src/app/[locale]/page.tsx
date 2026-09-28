@@ -65,6 +65,7 @@ export default async function Home({
         <Hero />
         <PeopleStrip />
         <GovSeals />
+        <Presence />
         <OneInEight />
         <HowWeKnow />
         <Checks />
@@ -80,7 +81,6 @@ export default async function Home({
         <CustomerStory />
         <Numbers />
         <International />
-        <Presence />
         <TrustPlatform />
         <Compliance />
         <Contact />
