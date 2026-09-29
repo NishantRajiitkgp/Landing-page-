@@ -55,7 +55,9 @@
 .sv-inlay { position: absolute; inset-inline-start: 50%; top: 50%; width: 104px; height: 104px; margin-block-start: -52px; margin-inline-start: -52px; border-radius: 50%; overflow: hidden; background: var(--white); box-shadow: 0 0 0 5px var(--white), 0 0 0 6px rgb(from var(--ink) r g b / .1), inset 0 2px 8px rgb(from var(--ink) r g b / var(--in, .18)), 0 10px 18px -10px rgb(from var(--ink) r g b / .5); }
 .sv-inlay svg { display: block; width: 100%; height: 100%; }
 .sv-inlay-logo { display: flex; align-items: center; justify-content: center; --in: .08; }
-.sv-inlay-logo img { display: block; width: 64px; height: 64px; object-fit: contain; }
+/* 78px of the 104px well: the coats of arms are wider than tall, and at the
+   old 64px Latvia's shrank to 64×51. */
+.sv-inlay-logo img { display: block; width: 78px; height: 78px; object-fit: contain; }
 /* Foil and sheen follow the pointer (`--fx`, `--lx/--ly`). The foil's
    sweep is paint, not layout, but it is written through `--flip` so the
    highlight travels the same way relative to reading order. */
@@ -90,6 +92,12 @@
 @keyframes svIn { 0% { opacity: 0; transform: translateY(24px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
 .sv-rec-k { display: flex; justify-content: space-between; gap: 20px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .sv-rec-k span:last-child { color: var(--green); text-align: end; }
+/* The challenge: why the authority needed this, as the record's first word.
+   A green rule on the start edge, the figure (or phrase) large. */
+.sv-prob { margin-top: 28px; padding-inline-start: 18px; border-inline-start: 2px solid var(--green); }
+.sv-prob .sv-out-k { margin-bottom: 8px; }
+.sv-prob-v { margin: 0; font-family: var(--serif); font-style: italic; font-size: clamp(32px, 4.07vw, 44px); line-height: 1; letter-spacing: -.03em; color: var(--ink); }
+.sv-prob-l { margin: 8px 0 0; max-width: 520px; font-size: 15px; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
 .sv-rec-h { margin: 30px 0 0; font-family: var(--serif); font-size: clamp(25px, 3.52vw, 38px); line-height: 1.1; letter-spacing: -.025em; color: var(--ink); text-wrap: balance; }
 .sv-rec-p { margin: 18px 0 0; font-size: 16px; line-height: 1.6; color: var(--muted); text-wrap: pretty; max-width: 620px; }
 .sv-facts { margin: 34px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; }
@@ -100,32 +108,42 @@
 .sv-rec-r { position: relative; background: linear-gradient(180deg, var(--v2-paper-hi), var(--paper)); display: flex; flex-direction: column; }
 .sv-emb { position: relative; width: 64px; height: 64px; }
 .sv-emb .sv-inlay { width: 64px; height: 64px; margin-block-start: -32px; margin-inline-start: -32px; box-shadow: 0 0 0 3px var(--white), 0 0 0 4px rgb(from var(--ink) r g b / .1), 0 8px 14px -8px rgb(from var(--ink) r g b / .5); }
-.sv-emb .sv-inlay-logo img { width: 40px; height: 40px; }
+.sv-emb .sv-inlay-logo img { width: 48px; height: 48px; }
 /* The chain of trust: the green line drops, then each link lights. */
-.sv-chain { list-style: none; margin: 30px 0 0; padding: 0; position: relative; }
+/* Scoped: `.sv-out-k`, declared later, would otherwise reset the margin. */
+.sv-rec-r .sv-deliver-k { margin: 30px 0 0; }
+.sv-chain { list-style: none; margin: 10px 0 0; padding: 0; position: relative; }
 .sv-chain::before { content: ""; position: absolute; inset-inline-start: 6px; top: 8px; bottom: 8px; width: 1.5px; background: var(--hair); }
 .sv-chain::after { content: ""; position: absolute; inset-inline-start: 6px; top: 8px; bottom: 8px; width: 1.5px; background: var(--green); transform-origin: top; transform: scaleY(0); animation: svDrop 1.3s cubic-bezier(.65, 0, .35, 1) .35s forwards; }
 @keyframes svDrop { to { transform: scaleY(1); } }
-.sv-chain li { position: relative; display: flex; align-items: center; gap: 16px; padding: 19px 0; font-family: var(--mono); font-size: 13.5px; letter-spacing: .02em; color: var(--muted); animation: svTxt .4s ease var(--d) forwards; }
-.sv-chain li:last-child { font-weight: 500; }
-.sv-chain i { position: relative; z-index: 1; flex: none; width: 13.5px; height: 13.5px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--tick-off); background: var(--white); animation: svDot .4s ease var(--d) forwards; }
+.sv-chain li { position: relative; display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; color: var(--muted); animation: svTxt .4s ease var(--d) forwards; }
+/* Each step: its name lights with the dot, its benefit stays quiet. */
+.sv-step { display: flex; flex-direction: column; gap: 4px; }
+.sv-step b { font-size: 15px; font-weight: 500; line-height: 1.35; }
+.sv-step span { font-size: 13.5px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+.sv-chain i { position: relative; z-index: 1; flex: none; margin-top: 3px; width: 13.5px; height: 13.5px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid var(--tick-off); background: var(--white); animation: svDot .4s ease var(--d) forwards; }
 @keyframes svTxt { to { color: var(--ink); } }
 @keyframes svDot { to { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green-light) r g b / .35); } }
-.sv-cap { margin: auto 0 0; padding-top: 26px; font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
 .sv-stamp-w { position: absolute; pointer-events: none; }
 .sv-stamp { display: block; width: 150px; height: 150px; color: var(--green); mix-blend-mode: multiply; opacity: 0; animation: svStamp .6s cubic-bezier(.3, 1.35, .5, 1) 1.6s both; }
 .sv-stamp text { font-family: var(--mono); }
 @keyframes svStamp { 0% { opacity: 0; transform: scale(1.9) rotate(6deg); } 55% { opacity: .9; transform: scale(.94) rotate(-13deg); } to { opacity: .82; transform: scale(1) rotate(-12deg); } }
 
-/* ── The closing line, with a hand-drawn underline ── */
-.sv-close { margin: clamp(64px, 11.11vw, 120px) auto 0; max-width: 1080px; text-align: center; font-family: var(--serif); font-size: clamp(28px, 4.45vw, 48px); line-height: 1.12; letter-spacing: -.028em; color: var(--ink); text-wrap: balance; }
-.sv-under { position: relative; display: inline-block; font-style: italic; color: var(--green); }
-.sv-under svg { position: absolute; inset-inline: 0; top: .9em; width: 100%; height: .22em; overflow: visible; }
-.sv-under path { fill: none; stroke: var(--green); stroke-width: 3.4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: svDraw 1.4s cubic-bezier(.65, 0, .35, 1) .6s forwards; }
-@keyframes svDraw { to { stroke-dashoffset: 0; } }
+/* The record's outcomes band, under both columns: the impact figures, then
+   why the authority chose HelloVerify. The items borrow `.sv-fact` for the
+   hairline and the staggered rise, so `sv-wait` holds them too. */
+.sv-rec-b { grid-column: 1 / -1; display: grid; gap: 32px; border-top: 1px dashed var(--hair); background: var(--v2-paper-hi); }
+.sv-out-k { margin: 0 0 4px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+.sv-imp, .sv-why { list-style: none; margin: 0; padding: 0; display: grid; gap: 0 36px; }
+.sv-imp li { display: flex; flex-direction: column; gap: 6px; }
+.sv-imp b { white-space: nowrap; font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 3.7vw, 40px); line-height: 1; letter-spacing: -.03em; color: var(--ink); }
+.sv-imp span { font-size: 14px; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
+.sv-why li { display: flex; flex-direction: column; gap: 6px; }
+.sv-why b { font-size: 15px; font-weight: 500; line-height: 1.35; color: var(--ink); }
+.sv-why span { font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
 
 /* Held until on screen (`GovSealsStage` adds and removes `sv-wait`). */
-.sv-wait :is(.sv-rec, .sv-fact, .sv-chain li, .sv-chain i, .sv-stamp, .sv-under path),
+.sv-wait :is(.sv-rec, .sv-fact, .sv-chain li, .sv-chain i, .sv-stamp),
 .sv-wait .sv-chain::after { animation-play-state: paused; }
 
 @media (min-width: 1081px) {
@@ -133,18 +151,27 @@
   .sv-stage { margin-top: 84px; height: 330px; }
   .sv-thread { position: absolute; inset-inline-start: 0; top: 0; width: 1200px; height: 260px; overflow: visible; pointer-events: none; }
   .sv-thread path { fill: none; stroke: rgb(from var(--ink) r g b / .18); stroke-width: 1; stroke-dasharray: 3 6; }
-  .sv-row { position: relative; display: grid; grid-template-columns: repeat(5, 208px); justify-content: space-between; }
+  .sv-row { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 208px; justify-content: space-between; }
   .sv-seal { transform: translateY(var(--lift)); }
-  .sv-name { white-space: nowrap; }
+  /* Two names run past one line ("Embassy of the Republic of Latvia"), so
+     each wraps, balanced, within its 208px column. */
+  .sv-name { max-width: 208px; text-wrap: balance; }
   .sv-motion { position: absolute; inset-inline-end: 0; top: -56px; }
   .sv-rec { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
   .sv-rec-l { padding: 48px 56px 50px; }
   .sv-rec-r { padding: 48px 48px 44px; border-inline-start: 1px dashed var(--hair); }
-  .sv-stamp-w { inset-inline-end: 40px; bottom: 132px; }
+  /* Beside the emblem at the top: the steps fill the column below it. */
+  .sv-stamp-w { inset-inline-end: 36px; top: 28px; }
+  .sv-stamp { width: 118px; height: 118px; }
+  /* Impact, then the reasons, each a full-width row of three: side by side
+     the figures had 150px each and "12–14%" ran into its neighbour. */
+  .sv-rec-b { padding: 40px 56px 44px; gap: 36px; }
+  .sv-imp { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 36px; }
+  .sv-why { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 36px; }
 }
 
-/* Phone and tablet: the five seals wrap three and two, centred, at half
-   size, so every authority is on screen and one tap away. REJECTED: a
+/* Phone and tablet: the four seals sit two by two, centred, at half size,
+   so every authority is on screen and one tap away. REJECTED: a
    swiped row of full-size seals — the auto-cycle would light seals
    scrolled out of view, and the choice is the point of the band. The
    arch and its thread are a 1200px drawing; they go. `zoom` rather than
@@ -156,13 +183,22 @@
   .sv-stage { margin-top: 28px; display: flex; flex-direction: column; }
   .sv-thread { display: none; }
   .sv-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 28px 12px; }
-  .sv-seal { flex: 0 1 calc(33.3% - 8px); max-width: 124px; }
+  .sv-seal { flex: 0 1 calc(50% - 6px); max-width: 150px; }
   .sv-disc { zoom: .5; }
   .sv-motion { order: -1; align-self: flex-end; margin-bottom: 12px; }
   .sv-rec-l, .sv-rec-r { padding: 28px 22px; }
   .sv-rec-k { flex-direction: column; gap: 6px; }
   .sv-rec-k span:last-child { text-align: start; }
   .sv-rec-r { border-top: 1px dashed var(--hair); }
+  /* A name wider than the column (MOHESR's is) wraps inside its own button;
+     the no-wrap span around button and punctuation still keeps the comma or
+     full stop from starting a line (a button is an atomic inline, so the
+     line could otherwise break right after it). */
+  .sv-ln { white-space: normal; max-width: calc(100% - .5em); }
+  .sv-rec-b { padding: 28px 22px; }
+  .sv-imp { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 14px; }
+  .sv-imp b { font-size: 26px; }
+  .sv-imp span { font-size: 12.5px; }
   /* Beside the emblem, clear of the chain, and far enough in that its
      1.9× landing stays inside a 390px screen (`rtl.spec` measures it). */
   .sv-stamp-w { inset-inline-end: 32px; top: 16px; }

@@ -4,9 +4,10 @@ import type { OfficeId } from "@/lib/copy/sections";
 
 /** Flag drawings shared across the homepage, one drawing per country.
  *
- *  The six office flags are `<use>`d by the v2 Presence map (its cards and
- *  its hour strip, `sections/Presence.tsx`); Saudi Arabia, the UAE and the EU
- *  are inlaid by the v2 seals (`sections/GovSeals.tsx`); India is used by both.
+ *  The six office flags are `<use>`d by the v2 Presence map's cards
+ *  (`sections/Presence.tsx`). The v2 seals (`sections/GovSeals.tsx`) used to
+ *  inlay flags from here too; since Sep 2026 every seal carries its
+ *  authority's own logo instead.
  *
  *  THE PHONE PASS (Sep 2026) DELETED THE BLOCKS THIS FILE WAS CUT FROM:
  *  `blocks/DayBand.tsx` and `blocks/Governments.tsx` drew only the old phone
@@ -27,40 +28,6 @@ export const FLAG_INDIA = (
     <rect width="30" height="6.7" fill="#FF9933" />
     <rect y="13.3" width="30" height="6.7" fill="#138808" />
     <circle cx="15" cy="10" r="2.3" fill="none" stroke="#000080" strokeWidth="0.8" />
-  </>
-);
-
-/** Saudi Arabia, the UAE and the EU, as the v2 seals inlay them. */
-export const FLAG_KSA = (
-  <>
-    <rect width="30" height="20" fill="#006C35" />
-    <rect x="7" y="7.2" width="16" height="1.3" fill="#FFFFFF" rx="0.6" />
-    <rect x="9" y="11" width="12" height="1.1" fill="#FFFFFF" rx="0.5" />
-  </>
-);
-
-export const FLAG_UAE = (
-  <>
-    <rect width="30" height="6.7" fill="#00732F" />
-    <rect y="6.7" width="30" height="6.6" fill="#FFFFFF" />
-    <rect y="13.3" width="30" height="6.7" fill="#15140F" />
-    <rect x="3" width="8" height="20" fill="#FF0000" />
-  </>
-);
-
-/** The twelve stars, clockwise from three o'clock on a radius of 6. */
-const EU_STARS = [
-  ["21.00", "10.00"], ["20.20", "13.00"], ["18.00", "15.20"], ["15.00", "16.00"],
-  ["12.00", "15.20"], ["9.80", "13.00"], ["9.00", "10.00"], ["9.80", "7.00"],
-  ["12.00", "4.80"], ["15.00", "4.00"], ["18.00", "4.80"], ["20.20", "7.00"],
-];
-
-export const FLAG_EU = (
-  <>
-    <rect width="30" height="20" fill="#003399" />
-    {EU_STARS.map(([cx, cy]) => (
-      <circle key={`${cx},${cy}`} cx={cx} cy={cy} r="1" fill="#FFCC00" />
-    ))}
   </>
 );
 

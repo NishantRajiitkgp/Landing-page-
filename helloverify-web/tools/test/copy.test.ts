@@ -827,8 +827,12 @@ const BANDS: Record<string, readonly [number, number]> = {
   /** 6 -> 38 with homepage v2 (Sep 2026): the desktop tree gained the
    *  security-print notes, microtext, seal, motion labels and six doors (3
    *  leaves each). The matcher figure stays the migration-time 9 — it is the
-   *  historical count the 152 below sums, not a re-measurement. */
-  hero: [9, 17],
+   *  historical count the 152 below sums, not a re-measurement. 17 -> 18
+   *  (29 Sep 2026): the "Trust Infrastructure platform" headline splits its
+   *  italic line so the seal rides on the last word, `headlineEmEnd`.
+   *  18 -> 24: the live ledger's six labels (`hero.ledger`); its figures
+   *  are `numbers`' own. */
+  hero: [9, 24],
   compliance: [4, 5],
   numbers: [14, 24],
   why: [8, 77],
@@ -843,7 +847,9 @@ const BANDS: Record<string, readonly [number, number]> = {
   peopleStrip: [2, 35],
   contact: [11, 12],
   customerStory: [15, 18],
-  presence: [8, 52],
+  /** 52 -> 45 (29 Sep 2026): the hour-coverage strip under the map went,
+   *  with its five axis labels, `sun.coverage` and `sun.hour`. */
+  presence: [8, 45],
   /** Bands homepage v2 added (Sep 2026). The first number is the migration-
    *  time `>text<` matcher count, which never saw them, so it is 0 and the
    *  152 sum below still describes the migration. The second is measured. */
@@ -853,10 +859,22 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  60 -> 69: the lens names what it rings — `uv.erasure` gave way to five
    *  two-line `uv.tags` (three alterations, two emblem callouts). */
   oneInEight: [0, 69],
-  govSeals: [0, 115],
+  /** 115 -> 147 (29 Sep 2026): five seals became four (MOM, Latvia, Italy,
+   *  MOHESR), and each record gained an impact label, three figures and
+   *  three reasons (+13 each), with one shared `whyK`. 147 -> 169: each
+   *  record became a pitch — a challenge (+2) and four delivery steps with
+   *  their benefits (+8) in place of the four-word chain and its caption
+   *  (-5) — with two more shared labels, `problemK` and `deliverK`. 169 ->
+   *  166: its closing line (three leaves) moved to `govWhy.items.trust.p`. */
+  govSeals: [0, 166],
+  /** New 29 Sep 2026: six reasons (12), the words inside their pictures
+   *  (17), the heading block (5), the certifications and the ask (2). */
+  govWhy: [0, 36],
   govDossiers: [0, 165],
   enterprises: [0, 105],
-  smb: [0, 50],
+  /** 50 -> 62 (29 Sep 2026): the Large ↔ Small & Medium toggle, `smb.seg` —
+   *  its labels and heading (8) and the KYC and Vendor cards (4). */
+  smb: [0, 62],
   diligence: [0, 27],
   trustPlatform: [0, 52],
 };
@@ -894,10 +912,14 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  step heading, `enterprises.customers.stepsK`. 1558 -> 1357 and blocks
  *  60 -> 22: the phone pass (see `BANDS`). 1337 -> 1322: the specimen
  *  scans (howItWorks -20, oneInEight +5, see `BANDS`). 1322 -> 1331: the
- *  lens callouts (oneInEight +9). */
+ *  lens callouts (oneInEight +9). 1332 -> 1333: `hero.headlineEmEnd`. 1333 -> 1326:
+ *  the presence hour strip (see `BANDS`). 1326 -> 1332: `hero.ledger`. 1332 -> 1364: the
+ *  four-seal governments band (see `BANDS`); 1364 -> 1386: its records
+ *  rewritten as pitches. 1386 -> 1419: the `govWhy` band (+36) and the
+ *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. */
 check(
-  "sections holds 1332 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1332 &&
+  "sections holds 1431 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1431 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -930,10 +952,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420. */
 check(
-  "sections: 1321 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1321 &&
+  "sections: 1420 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1420 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

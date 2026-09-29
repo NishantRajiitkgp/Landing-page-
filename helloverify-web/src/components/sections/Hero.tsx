@@ -1,10 +1,12 @@
-/** Hero - Verified at the source, in minutes.
+/** Hero - Trust Infrastructure platform for Instant AI-Powered Background Checks.
 
     Homepage v2 (the canvas "security print" hero, Sep 2026), at every width:
     a turning guilloche, a UV lamp that follows the pointer and reveals a
     green print and paper fibres, a microtext frame, a stamp that lands beside
-    "in minutes." and replays on click. Hand-ported, not generated (see the header
-    of `app/v2/hero.css`); the interactive shell is `./HeroStage`.
+    "Checks." and replays on click. Hand-ported, not generated (see the header
+    of `app/v2/hero.css`); the interactive shell is `./HeroStage`. Under the
+    buttons, `./HeroLedger` rolls in the Numbers band's four figures and
+    keeps the checks count running.
 
     One tree since the phone pass: the generated `.mob` tree (a plain
     headline and two stacked buttons) is gone, and `hero.css` re-lays the
@@ -22,6 +24,7 @@ import { SECTIONS } from "@/lib/copy/sections";
 // this sheet sat in `globals.css`: `/en/about` went to 16.1 KB of CSS against
 // the 16 KB ceiling for a hero it never renders.
 import "@/app/v2/hero.css";
+import { HeroLedger } from "./HeroLedger";
 import { HeroPrint } from "./HeroPrint";
 import { HeroStage } from "./HeroStage";
 
@@ -35,7 +38,10 @@ function Reg({ at }: { at: "tl" | "tr" | "bl" | "br" }) {
 }
 
 export async function Hero() {
-  const t = (await copy(SECTIONS)).hero;
+  const sections = await copy(SECTIONS);
+  const t = sections.hero;
+  // The ledger prints the Numbers band's figures, not copies of them.
+  const nm = sections.numbers;
   // Tiled microtext; each repeat ends in "·", so a space rejoins them.
   const micro = `${t.microtext} `.repeat(6);
 
@@ -71,32 +77,35 @@ export async function Hero() {
           </span>
           <span className="hv-l hv-l2">
             <em className="hv-em">
-              {t.headlineEm}
-              <button type="button" className="hv-seal-btn hv-stampA" aria-label={t.seal.replay}>
-                <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
-                  <defs>
-                    <filter id="hv-ink" x="-10%" y="-10%" width="120%" height="120%">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={2} seed={4} result="n" />
-                      <feDisplacementMap in="SourceGraphic" in2="n" scale={2} xChannelSelector="R" yChannelSelector="G" result="d" />
-                      <feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves={3} seed={9} result="n2" />
-                      <feColorMatrix in="n2" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.45" result="holes" />
-                      <feComposite in="d" in2="holes" operator="in" />
-                    </filter>
-                    <path id="hv-seal-arc" d="M100 100 m-71 0 a71 71 0 1 1 142 0 a71 71 0 1 1 -142 0" />
-                  </defs>
-                  <circle className="hv-shock" cx="100" cy="100" r="88" fill="none" stroke="#1B6B4A" strokeWidth="2" />
-                  <g className="hv-seal" filter="url(#hv-ink)" fill="none" stroke="#1B6B4A">
-                    <circle cx="100" cy="100" r="92" strokeWidth="3.4" />
-                    <circle cx="100" cy="100" r="85" strokeWidth="1.2" />
-                    <circle cx="100" cy="100" r="57" strokeWidth="1.2" />
-                    <text fill="#1B6B4A" stroke="none" fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="11.2" fontWeight="500" letterSpacing="1.4">
-                      <textPath href="#hv-seal-arc" textLength="440" lengthAdjust="spacing">{`${t.seal.ring} `}</textPath>
-                    </text>
-                    <path d="M75 92 l16 16 l34 -35" strokeWidth="8.5" strokeLinecap="round" strokeLinejoin="round" />
-                    <text x="100" y="134" textAnchor="middle" fill="#1B6B4A" stroke="none" fontFamily="newsreader, Georgia, serif" fontStyle="italic" fontSize="21">{t.seal.word}</text>
-                  </g>
-                </svg>
-              </button>
+              {t.headlineEm}{" "}
+              <span className="hv-em-end">
+                {t.headlineEmEnd}
+                <button type="button" className="hv-seal-btn hv-stampA" aria-label={t.seal.replay}>
+                  <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+                    <defs>
+                      <filter id="hv-ink" x="-10%" y="-10%" width="120%" height="120%">
+                        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves={2} seed={4} result="n" />
+                        <feDisplacementMap in="SourceGraphic" in2="n" scale={2} xChannelSelector="R" yChannelSelector="G" result="d" />
+                        <feTurbulence type="fractalNoise" baseFrequency="0.22" numOctaves={3} seed={9} result="n2" />
+                        <feColorMatrix in="n2" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.45" result="holes" />
+                        <feComposite in="d" in2="holes" operator="in" />
+                      </filter>
+                      <path id="hv-seal-arc" d="M100 100 m-71 0 a71 71 0 1 1 142 0 a71 71 0 1 1 -142 0" />
+                    </defs>
+                    <circle className="hv-shock" cx="100" cy="100" r="88" fill="none" stroke="#1B6B4A" strokeWidth="2" />
+                    <g className="hv-seal" filter="url(#hv-ink)" fill="none" stroke="#1B6B4A">
+                      <circle cx="100" cy="100" r="92" strokeWidth="3.4" />
+                      <circle cx="100" cy="100" r="85" strokeWidth="1.2" />
+                      <circle cx="100" cy="100" r="57" strokeWidth="1.2" />
+                      <text fill="#1B6B4A" stroke="none" fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="11.2" fontWeight="500" letterSpacing="1.4">
+                        <textPath href="#hv-seal-arc" textLength="440" lengthAdjust="spacing">{`${t.seal.ring} `}</textPath>
+                      </text>
+                      <path d="M75 92 l16 16 l34 -35" strokeWidth="8.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <text x="100" y="134" textAnchor="middle" fill="#1B6B4A" stroke="none" fontFamily="newsreader, Georgia, serif" fontStyle="italic" fontSize="21">{t.seal.word}</text>
+                    </g>
+                  </svg>
+                </button>
+              </span>
             </em>
           </span>
         </h1>
@@ -107,6 +116,20 @@ export async function Hero() {
             <span>{t.checks}</span>
             <Arrow />
           </AppLink>
+        </div>
+        <div className="rise d6 hv-lg-wrap">
+          <HeroLedger
+            checks={nm.odometer}
+            plus={nm.plus}
+            live={t.ledger.live}
+            checksLabel={t.ledger.checks}
+            pace={t.ledger.pace}
+            cells={[
+              { k: "clients", v: nm.figures.clients.v, l: t.ledger.clients },
+              { k: "countries", v: nm.figures.countries.v, l: t.ledger.countries },
+              { k: "catalogue", v: nm.figures.catalogue.v, l: t.ledger.catalogue },
+            ]}
+          />
         </div>
       </div>
     </HeroStage>

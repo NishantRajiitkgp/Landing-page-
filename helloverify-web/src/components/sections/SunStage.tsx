@@ -4,17 +4,15 @@
 
     A canvas world map with the real day/night terminator, a card per office
     with its local time and whether anyone is at a desk, the hand-off arc
-    between the office that just closed and the one that just opened, and a
-    24-column strip of who covers each UTC hour. Drag the sun (or pick an
-    hour) to scrub time; "Play 24 hours" runs a 14-second day, once on its
+    between the office that just closed and the one that just opened. Drag
+    the sun to scrub time; "Play 24 hours" runs a 14-second day, once on its
     own the first time the map is seen; "Back to now" returns to live. The
     clock and the loop are `./sunLoop`, the drawing `./sunPaint`.
 
     HYDRATION. Nothing on the server knows the reader's clock or zone, so the
     first render (server and hydration alike) has `now === null`: times read
     `clock` ("--:--"), the open count, statuses and hand-off sentence are held
-    invisible (`su-wait`), and the hour strip is drawn from standard-time
-    offsets. The real values arrive in the mount effect.
+    invisible (`su-wait`). The real values arrive in the mount effect.
 
     MOTION (WCAG 2.2.2). The rays, the marching arc, the travelling document
     and the breathing lamps move for as long as the map is visible, so the
@@ -26,13 +24,15 @@
     stacks the cards under it, and a touch only scrubs once it moves
     sideways or taps (`SunLoop.pointer`), so the map never traps a scroll.
 
-    KEYBOARD. Dragging has a single-pointer, keyboard-reachable equivalent
-    (WCAG 2.5.7): each hour of the strip is a button that sets the map to it. */
+    POINTER. Dragging has a single-pointer equivalent (WCAG 2.5.7): a click
+    or tap on the map sets the sun there (`SunLoop.pointer`). The hour strip
+    that was also the keyboard route was removed (29 Sep 2026); from the
+    keyboard, "Play 24 hours" still runs the day. */
 
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 
 import type { SectionsCopy } from "@/lib/copy/sections";
-import { OFFICES, MAP_W, MAP_H, STD_OFFSETS, coverage, hhmm, nextOpen, offsetsAt, worldAt } from "@/lib/sunMap";
+import { OFFICES, MAP_W, MAP_H, STD_OFFSETS, hhmm, nextOpen, offsetsAt, worldAt } from "@/lib/sunMap";
 import { SunLoop } from "./sunLoop";
 
 type Copy = SectionsCopy["presence"];
@@ -40,7 +40,6 @@ const DAYS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
 /** Fills `{name}` slots: the copy's templates cannot be functions, because a
  *  function cannot cross from the server parent to this island. */
 const fill = (s: string, v: Record<string, string | number>) => s.replace(/\{(\w+)\}/g, (_, k: string) => String(v[k] ?? ""));
-const pad = (h: number) => String(h).padStart(2, "0");
 
 function Flag({ k }: { k: string }) {
   return (
@@ -63,12 +62,10 @@ function PauseGlyph({ paused, size }: { paused: boolean; size: number }) {
 export function SunStage({
   sun,
   cities,
-  hours,
   motion,
 }: {
   sun: Copy["sun"];
   cities: Copy["offices"];
-  hours: Copy["hours"];
   motion: { pause: string; play: string };
 }) {
   const [now, setNow] = useState<number | null>(null);
@@ -121,12 +118,9 @@ export function SunStage({
   const shownT = scrub ?? now ?? 0;
   const off = mounted ? offsetsAt(shownT) : STD_OFFSETS;
   const w = mounted ? worldAt(shownT, off) : null;
-  const cov = coverage(off);
   const d = new Date(shownT);
-  const hourNow = mounted ? d.getUTCHours() : -1;
   const isLive = scrub === null;
   const wait = mounted ? "" : " su-wait";
-  const hourKeys = Object.keys(hours) as (keyof Copy["hours"])[];
 
   let relay = "";
   if (w?.from && w.to) {
@@ -212,29 +206,6 @@ export function SunStage({
           <PauseGlyph paused={still} size={10} />
           <span>{still ? motion.play : motion.pause}</span>
         </button>
-      </div>
-      <div className="su-cov">
-        <div className="su-cov-h">
-          <span className="su-cov-k">{fill(sun.coverage, { n: cov.hours })}</span>
-          <span className="su-cov-l">{hourKeys.map((h) => <span key={h}>{hours[h]}</span>)}</span>
-        </div>
-        <div className="su-cols">
-          {cov.on.map((row, h) => (
-            <button
-              key={h}
-              type="button"
-              className={h === hourNow ? "su-col su-h-on" : "su-col"}
-              aria-label={fill(sun.hour, { h: pad(h) })}
-              aria-current={h === hourNow ? "time" : undefined}
-              onClick={() => loop.current?.pickHour(h)}
-            >
-              <span className="su-stack">
-                {OFFICES.map((o, i) => (row[i] ? <span key={o.k} className="su-cf"><Flag k={o.k} /></span> : null))}
-              </span>
-              <span className="su-hr">{pad(h)}</span>
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   );

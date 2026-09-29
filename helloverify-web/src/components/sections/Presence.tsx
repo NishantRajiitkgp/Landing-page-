@@ -31,10 +31,10 @@ export async function Presence() {
           {t.lede}
         </p>
       </div>
-      {/* The six flags, drawn once and `<use>`d by the map's six cards and
-          by every covered hour of the strip (up to ~60 copies): ~80 bytes
-          per copy instead of ~400. The board's alternative was a CSS data
-          URI per flag, a second drawing of each one to keep in step. */}
+      {/* The six flags, drawn once and `<use>`d by the map's six cards:
+          ~80 bytes per copy instead of ~400. The board's alternative was a
+          CSS data URI per flag, a second drawing of each one to keep in
+          step. */}
       <svg className="su-defs" width="0" height="0" aria-hidden="true" focusable="false">
         <defs>
           {OFFICE_FLAGS.map((o) => (
@@ -42,7 +42,7 @@ export async function Presence() {
           ))}
         </defs>
       </svg>
-      <SunStage sun={t.sun} cities={t.offices} hours={t.hours} motion={motion} />
+      <SunStage sun={t.sun} cities={t.offices} motion={motion} />
     </div>
   );
 }

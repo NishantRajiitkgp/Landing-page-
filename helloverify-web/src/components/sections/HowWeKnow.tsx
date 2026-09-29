@@ -61,7 +61,9 @@ export async function HowWeKnow() {
           <div className="hw-ev-l">
             <div className="k">{v2.evKicker}</div>
             <p className="hw-promise">
-              {v2.promiseA} <em>{v2.promiseEm}</em>
+              {v2.promiseA}
+              <br />
+              <em>{v2.promiseEm}</em>
             </p>
           </div>
         }

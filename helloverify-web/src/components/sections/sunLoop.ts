@@ -162,14 +162,6 @@ export class SunLoop {
     this.kick();
   }
 
-  /** Half past hour `h` UTC, on the day being shown. */
-  pickHour(h: number) {
-    const base = this.scrub ?? Date.now();
-    this.stopPlay();
-    this.setScrub(base - (base % DAY_MS) + h * 3600000 + 1800000);
-    this.kick();
-  }
-
   setStill(on: boolean) {
     this.still = on;
     if (on) this.stopPlay();

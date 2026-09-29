@@ -144,8 +144,57 @@
 .sm-bc { height: 34px; margin-top: 16px; opacity: .85; }
 .sm-buy { margin-top: 18px; width: 100%; box-sizing: border-box; font-family: var(--sans); letter-spacing: -.005em; }
 
+/* ── Large ↔ Small & Medium (`SmbSegments.tsx`) ───────────────────────────
+   A segmented switch: two tabs on one track, and an ink thumb that slides
+   under whichever is chosen (its position is `sg-at-N` on the track, so it
+   moves with a transition and mirrors with the page). */
+.sg-bar { margin-top: clamp(28px, 4.1vw, 44px); display: flex; justify-content: center; }
+.sg-tabs { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: min(720px, 100%); padding: 6px; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair), 0 18px 40px -30px rgb(from var(--ink) r g b / .4); }
+.sg-thumb { position: absolute; top: 6px; bottom: 6px; inset-inline-start: 6px; width: calc(50% - 6px); border-radius: 999px; background: var(--ink); box-shadow: 0 10px 22px -12px rgb(from var(--ink) r g b / .7); transition: transform .5s cubic-bezier(.3, 1.25, .4, 1); }
+.sg-at-1 .sg-thumb { transform: translateX(calc(var(--flip) * 100%)); }
+.sg-tab { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 12px 18px 11px; border: 0; border-radius: 999px; background: none; font: inherit; color: var(--ink); cursor: pointer; transition: color .35s; }
+.sg-tab b { font-size: 16px; font-weight: 500; letter-spacing: -.01em; }
+.sg-tab span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); transition: color .35s; }
+.sg-tab-on { color: var(--white); }
+.sg-tab-on span { color: var(--green-light); }
+.sg-tab:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+/* A panel replays its entrance each time it is shown (it was `hidden`). Its
+   heading stands clear of the switch above it. */
+.sg-panel { animation: sgIn .55s cubic-bezier(.16, 1, .3, 1) both; }
+.sm .sg-panel > .sm-head { margin-top: clamp(36px, 5.2vw, 60px); }
+@keyframes sgIn { 0% { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* The four solution cards: photograph, audience tag, the pitch, four of the
+   checks it runs, and the way in. Each rises in turn on entry. */
+.sg-cards { list-style: none; margin: clamp(36px, 5.6vw, 64px) 0 0; padding: 0; display: grid; gap: 20px; }
+.sg-card { display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair), 0 30px 60px -48px rgb(from var(--ink) r g b / .5); transition: transform .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s; animation: sgIn .6s cubic-bezier(.16, 1, .3, 1) calc(.08s + var(--i, 0) * .08s) both; }
+.sg-ph { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; }
+.sg-ph .pimg { object-position: 50% 28%; transition: transform .8s cubic-bezier(.16, 1, .3, 1); }
+.sg-tag { position: absolute; inset-inline-start: 12px; top: 12px; display: inline-flex; align-items: center; gap: 8px; height: 28px; padding-inline: 10px 12px; border-radius: 999px; background: rgb(from var(--white) r g b / .9); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
+.sg-tag i { font-style: normal; color: var(--green); }
+.sg-body { flex: 1; display: flex; flex-direction: column; padding: 20px 22px 22px; }
+.sg-t { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 23px; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
+.sg-p { margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+.sg-chips { list-style: none; margin: 16px 0 0; padding: 14px 0 0; border-top: 1px dashed var(--v2-sm-dash); display: grid; gap: 7px; }
+.sg-chips li { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 1.3; color: var(--ink-soft); }
+.sg-chips .tick { flex: none; width: 14px; height: 14px; color: var(--green); }
+.sg-more { margin-top: auto; padding-top: 18px; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 15px; font-weight: 500; color: var(--ink); text-decoration: none; transition: gap .3s, color .3s; }
+.sg-more:hover { gap: 12px; color: var(--green); }
+.sg-more:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+
+/* The proof under the cards, and the ask beside it. */
+.sg-proof { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 32px; padding: 20px 26px; border-radius: 20px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--hair); }
+.sg-stats { margin: 0; display: flex; flex-wrap: wrap; gap: 14px 36px; }
+.sg-stats div { display: flex; flex-direction: column-reverse; gap: 2px; }
+.sg-stats dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sg-stats dd { margin: 0; font-family: var(--serif); font-size: 28px; line-height: 1; letter-spacing: -.02em; color: var(--ink); }
+.sg-sales { gap: 10px; }
+
 /* ── Desktop placements ─────────────────────────────────────────────────── */
 @media (min-width: 1081px) {
+  .sg-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .sg-card:hover { transform: translateY(-6px); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3), 0 40px 70px -40px rgb(from var(--ink) r g b / .5); }
+  .sg-card:hover .sg-ph .pimg { transform: scale(1.05); }
   .sm-rc { height: 588px; }
   .sm-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sm-step:not(:last-child)::after { inset-inline-end: -19px; top: 50%; width: 14px; height: 1px; }
@@ -161,6 +210,8 @@
    reach: each receipt's Buy Now link is in it. Premium is spotlit by its
    band, stamp and green button here; the -10px lift would only clip. */
 @media (max-width: 1080px) {
+  .sg-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .sg-proof { padding: 18px 20px; }
   .sm-pks { display: flex; align-items: stretch; gap: 16px; margin-inline: -20px; padding-block: 34px 26px; padding-inline: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: none; overscroll-behavior-x: contain; }
   .sm-pk { flex: 0 0 min(80%, 300px); scroll-snap-align: start; }
   .sm-pk-best, .sm-pk-best:hover { transform: none; }
@@ -175,7 +226,21 @@
   .sm-paper-wrap { width: calc(100% - 24px); height: auto; padding-bottom: 28px; }
 }
 
+/* Phone: the cards scroll sideways and snap, one and a bit in view, as the
+   receipts do on the other tab (stacked, four cards were 3,000px); the row
+   bleeds to the screen edges, undoing `.wrap`'s 20px. The switch keeps both
+   labels and drops the lines under them. */
+@media (max-width: 639px) {
+  .sg-cards { display: flex; gap: 14px; margin-inline: -20px; padding-inline: 20px; padding-bottom: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .sg-card { flex: 0 0 min(82%, 300px); scroll-snap-align: start; }
+  .sg-tab { padding: 11px 10px; }
+  .sg-tab b { font-size: 14px; text-align: center; line-height: 1.2; }
+  .sg-tab span { display: none; }
+  .sg-stats { gap: 14px 24px; }
+  .sg-sales { width: 100%; justify-content: center; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .sm-pk, .sm-opt, .sm-custom { transition: none; }
-  .sm-stamp { animation: none; }
+  .sm-pk, .sm-opt, .sm-custom, .sg-thumb, .sg-card { transition: none; }
+  .sm-stamp, .sg-panel, .sg-card { animation: none; }
 }

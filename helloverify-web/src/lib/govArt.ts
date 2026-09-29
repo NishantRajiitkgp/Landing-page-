@@ -66,13 +66,17 @@ export const WATERMARKS: Record<"health" | "immigration" | "manpower" | "trade",
   trade: [[156, 12, 40, 4], [100, 26, 16, 5], [50, 14, 10, 4]],
 };
 
-/** The dashed thread joining the seal centres (x 120 + 240i, y 104 + lift)
- *  across a 1200×260 box, entering and leaving at the edges. */
+/** The dashed thread joining the seal centres (y 104 + lift) across a
+ *  1200×260 box, entering and leaving at the edges. The seals are 208px
+ *  columns spread edge to edge (`space-between`), so the first centre is at
+ *  104, the last at 1096 and the rest evenly between, for any count. */
 export function threadPath(lift: readonly number[]): string {
-  const cx = lift.map((_, i) => 120 + i * 240);
+  const step = lift.length > 1 ? 992 / (lift.length - 1) : 0;
+  const cx = lift.map((_, i) => Math.round(104 + i * step));
   const cy = lift.map((l) => 104 + l);
+  const ease = Math.round(step * 0.37);
   let d = `M0 ${cy[0] + 30} C 60 ${cy[0] + 20}, 60 ${cy[0]}, ${cx[0]} ${cy[0]}`;
-  for (let i = 1; i < lift.length; i++) d += ` S ${cx[i] - 90} ${cy[i]}, ${cx[i]} ${cy[i]}`;
+  for (let i = 1; i < lift.length; i++) d += ` S ${cx[i] - ease} ${cy[i]}, ${cx[i]} ${cy[i]}`;
   const e = cy[cy.length - 1];
   return `${d} S 1140 ${e + 20}, 1200 ${e + 30}`;
 }

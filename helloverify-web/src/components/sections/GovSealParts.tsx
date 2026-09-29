@@ -3,7 +3,6 @@
     repeats as its emblem), and the record's stamp. No state; they render
     inside that client island. */
 import Image from "next/image";
-import type { ReactNode } from "react";
 
 export type SealItem = {
   name: string;
@@ -12,32 +11,32 @@ export type SealItem = {
   micro: string;
   record: string;
   role: string;
+  /** The challenge the authority faces: a big figure (or phrase) and its line. */
+  problem: { v: string; l: string };
   h: string;
   p: string;
   facts: { k: string; v: string }[];
-  chain: string[];
-  cap: string;
+  /** What HelloVerify delivers, step by step, each with its benefit. */
+  deliver: { t: string; p: string }[];
+  /** The record's outcomes band: its label (which says when the figures are
+   *  page-wide ones), three figures, and three reasons. */
+  impactK: string;
+  impact: { v: string; l: string }[];
+  why: { t: string; p: string }[];
   /** Guilloche lobe count (distinct per seal) and the seal's rise in px. */
   k: number;
   lift: number;
-  /** The flag drawing, or `undefined` for the ministry's logo. */
-  flag?: ReactNode;
+  /** The authority's official logo or emblem (`public/img/`). */
+  logo: string;
 };
 
-/** The centre of a seal, and the emblem on its record. The ministry's logo is
- *  `alt=""`: the seal's own label already names the ministry. */
+/** The centre of a seal, and the emblem on its record. The logo is `alt=""`:
+ *  the seal's own label already names the authority. */
 export function Inlay({ item, small }: { item: SealItem; small?: boolean }) {
-  if (item.flag) {
-    return (
-      <span className="sv-inlay">
-        <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice" aria-hidden="true">{item.flag}</svg>
-      </span>
-    );
-  }
-  const px = small ? 40 : 64;
+  const px = small ? 48 : 78;
   return (
     <span className="sv-inlay sv-inlay-logo">
-      <Image src="/img/mom.jpg" alt="" width={px} height={px} />
+      <Image src={item.logo} alt="" width={px} height={px} />
     </span>
   );
 }

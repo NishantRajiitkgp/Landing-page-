@@ -339,7 +339,7 @@
 
 /* ── Desktop placements: the board's fixed columns and heights ─────────── */
 @media (min-width: 1081px) {
-  .en-main { grid-template-columns: 540px minmax(0, 1fr); }
+  .en-bds { flex-wrap: nowrap; }
   .en-panels { min-height: 800px; }
   .en-panel { height: 800px; }
   .en-stats div:not(:first-child) { padding-inline-start: 32px; border-inline-start: 1px solid var(--hair); }
@@ -347,6 +347,18 @@
   .lt-letters { grid-template-columns: minmax(0, 4.4fr) minmax(0, 7.6fr); }
   .lt-stack { height: 540px; }
   .lt-l { position: absolute; inset-block: 0 34px; inset-inline: 0 34px; }
+}
+
+/* Perimeter beside its panel only where both fit. The panel is guaranteed
+   600px — two 244px ID badges, their 30px gap and the panel's 40px sides —
+   and the perimeter, which scales as one picture (`.en-per`), takes up to
+   its board 540px of what is left: 411px at 1280, measured (377 at 1240,
+   where its pills began to crowd the core). With the old fixed 540px first
+   column the panel was 471px at 1280 and 321px at 1100, and the badges fell
+   one under the other, the second hanging from no rail. Between 1081 and
+   1279 the two stack (the base single column), perimeter above. */
+@media (min-width: 1280px) {
+  .en-main { grid-template-columns: minmax(0, 540px) minmax(600px, 1fr); }
 }
 
 /* ── Phone and tablet: one column ─────────────────────────────────────────

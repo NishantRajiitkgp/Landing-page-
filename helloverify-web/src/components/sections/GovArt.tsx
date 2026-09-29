@@ -37,11 +37,13 @@ export function SealRim({ k }: { k: number }) {
   );
 }
 
-export function Rosette() {
+/** `className` lets another band reuse the drawing with its own styling (the
+ *  seals' `sv-rose` turns; `GovWhy`'s `gw-rose` holds still). */
+export function Rosette({ className = "sv-rose" }: { className?: string }) {
   const live = useMounted();
   const paths = useMemo(() => (live ? rosettePaths() : []), [live]);
   return (
-    <svg className="sv-rose" viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
+    <svg className={className} viewBox="0 0 1000 1000" aria-hidden="true" focusable="false">
       {paths.map((d, i) => <path key={i} d={d} />)}
     </svg>
   );
