@@ -3,9 +3,9 @@ import { Hero } from "@/components/sections/Hero";
 import { PeopleStrip } from "@/components/sections/PeopleStrip";
 import { OneInEight } from "@/components/sections/OneInEight";
 import { HowWeKnow } from "@/components/sections/HowWeKnow";
-import { Numbers } from "@/components/sections/Numbers";
 import { Presence } from "@/components/sections/Presence";
 import { GovSeals } from "@/components/sections/GovSeals";
+import { GovWhy } from "@/components/sections/GovWhy";
 import { GovDossiers } from "@/components/sections/GovDossiers";
 import { Why } from "@/components/sections/Why";
 import { Checks } from "@/components/sections/Checks";
@@ -59,12 +59,14 @@ export default async function Home({
             solution, one block per buyer, pricing, scale, objections, ask
             (28 Sep 2026). The seals are the proof, so they come before any
             feature; the catalogue follows the mechanism; Certifier sits with
-            Enterprises; the numbers open the global block. The "Sheet NN / 12"
+            Enterprises; the globe opens the global block. The "Sheet NN / 12"
             labels in `sections.en.tsx` follow this order — renumber them if it
             changes. */}
         <Hero />
         <PeopleStrip />
         <GovSeals />
+        {/* Why those governments chose us — the seals' argument, made. */}
+        <GovWhy />
         <Presence />
         <OneInEight />
         <HowWeKnow />
@@ -79,7 +81,10 @@ export default async function Home({
         {/* Renders nothing until a real, attributable story exists; this is
             its slot: proof straight after the pitch, before the numbers. */}
         <CustomerStory />
-        <Numbers />
+        {/* The Numbers band ("Built on trust. Proven by numbers.") came off
+            the homepage on 29 Sep 2026: its four figures, live checks count
+            included, now open the page in the hero's ledger. The component
+            and its copy remain — `numbers` is what the ledger reads. */}
         <International />
         <TrustPlatform />
         <Compliance />

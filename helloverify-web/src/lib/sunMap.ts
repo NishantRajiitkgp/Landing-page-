@@ -117,18 +117,6 @@ export function nextOpen(w: World): { row: Row; wait: number } {
   return { row, wait: mod(OPEN - row.m, DAY) };
 }
 
-/** Which offices are at a desk during each UTC hour (tested at half past),
- *  and how many of the 24 hours have anyone at all. */
-export function coverage(off: Offsets): { on: boolean[][]; hours: number } {
-  const on = Array.from({ length: 24 }, (_, h) =>
-    OFFICES.map((o) => {
-      const m = mod(h * 60 + 30 + off[o.k], DAY);
-      return m >= OPEN && m < CLOSE;
-    }),
-  );
-  return { on, hours: on.filter((r) => r.some(Boolean)).length };
-}
-
 export const hhmm = (m: number) => {
   const v = mod(Math.round(m), DAY);
   return `${String(Math.floor(v / 60)).padStart(2, "0")}:${String(v % 60).padStart(2, "0")}`;

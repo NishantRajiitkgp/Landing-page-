@@ -42,8 +42,10 @@ export type PersonSrc = keyof SectionsCopy["peopleStrip"]["people"];
 /** `Presence.tsx` — an office on the sun map (`lib/sunMap.ts`). */
 export type OfficeId = keyof SectionsCopy["presence"]["offices"];
 
-/** `GovSeals.tsx` — one of the five authorities. `GovDossiers.tsx` — one of
- *  the four dossiers. `GovMom.tsx` — a C2 scoring option. */
+/** `GovSeals.tsx` — one of the four authorities. `GovWhy.tsx` — one of its
+ *  six reasons. `GovDossiers.tsx` — one of the four dossiers. `GovMom.tsx` —
+ *  a C2 scoring option. */
 export type GovSealId = keyof SectionsCopy["govSeals"]["items"];
+export type GovWhyId = keyof SectionsCopy["govWhy"]["items"];
 export type GovDossierId = keyof SectionsCopy["govDossiers"]["items"];
 export type MomC2Id = keyof SectionsCopy["govDossiers"]["mom"]["c2"];

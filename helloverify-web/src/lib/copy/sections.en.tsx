@@ -53,14 +53,17 @@ export const en = {
    *  from `headlineLead` on is the v2 desktop tree only. */
   hero: {
     backedBy: "Backed by",
-    /** The headline in three nodes: the last word of the first line carries
-     *  the hand-drawn underline, and the italic second line carries the seal.
-     *  They read "Verified at the source, in minutes." No edge whitespace —
-     *  the component supplies the gaps. (The whole first line was once its
-     *  own `headline` leaf for the phone tree; one tree since Sep 2026.) */
-    headlineEm: "in minutes.",
-    headlineLead: "Verified at the",
-    headlineMark: "source,",
+    /** The headline in four nodes: the last word of the first line carries
+     *  the hand-drawn underline, and the italic second line carries the seal
+     *  on its last word (`headlineEmEnd`), which never wraps away from it.
+     *  They read "Trust Infrastructure platform for Instant AI-Powered
+     *  Background Checks." No edge whitespace — the component supplies the
+     *  gaps. (The whole first line was once its own `headline` leaf for the
+     *  phone tree; one tree since Sep 2026.) */
+    headlineEm: "for Instant AI-Powered Background",
+    headlineEmEnd: "Checks.",
+    headlineLead: "Trust Infrastructure",
+    headlineMark: "platform",
     lede: "AI reads the documents. Our team confirms with the issuer — the university, the employer, the registry. You get an answer in as little as 15 minutes.",
     cta: "Talk to sales",
     checks: "See all 33 checks",
@@ -83,6 +86,18 @@ export const en = {
       word: "Verified",
     },
     motion: { pause: "Pause motion", play: "Play motion" },
+    /** The live ledger under the buttons (`sections/HeroLedger.tsx`). Only
+     *  the labels: the figures are `numbers.odometer` and `numbers.figures`,
+     *  and `pace` restates `numbers.pace.note` — the count adds one at that
+     *  pace, so the two must move together. */
+    ledger: {
+      live: "Live",
+      checks: "Checks completed since 2018",
+      pace: "About one every 14 seconds, on average",
+      clients: "Enterprise clients",
+      countries: "Countries covered",
+      catalogue: "Verification checks",
+    },
   },
 
   /** `sections/Compliance.tsx`. The four cards come from `CREDENTIAL_MARKS`
@@ -292,8 +307,8 @@ export const en = {
       /** The ring of text on the stamp that lands on the document. */
       sealRing: "VERIFIED AT THE SOURCE · HELLOVERIFY ·",
       evKicker: "One result, and how we know",
-      promiseA: "Accuracy is not our feature.",
-      promiseEm: "It's our promise.",
+      promiseA: "Verified at the source,",
+      promiseEm: "in minutes.",
       ev: { read: "Read by", confirmed: "Confirmed", artefact: "Artefact", reviewed: "Reviewed" },
       routes: {
         licence: {
@@ -919,7 +934,7 @@ export const en = {
     bar: "Evidence table · 8 applications · 7 countries · illustrative, synthetic documents",
     /** The live status reads `${n} ${checked}` until the forgery is found. */
     checked: "of 8 checked",
-    found: "7 verified · 1 referred",
+    found: "7 verified · 1 flagged",
     /** `${checkCert} ${kind}, ${where}` — the accessible name of each
      *  document. `kind` and `where` are also its caption on the table. The
      *  eight are SYNTHETIC scans (Higgsfield, 29 Sep 2026): fictional
@@ -949,7 +964,7 @@ export const en = {
         genuine: { t: "UV emblem ✓", d: "Security fibres ✓" },
       },
     },
-    referred: "REFERRED",
+    referred: "FLAGGED",
     notVerified: "NOT VERIFIED",
     nakedA: "Identifies hidden inconsistencies",
     nakedEm: "invisible to the naked eye.",
@@ -963,8 +978,8 @@ export const en = {
      *  mask. */
     case: {
       k: "Case file · application 06 · Class XII marksheet, India",
-      title: "Why this marksheet was referred",
-      verdict: "Referred · not approved",
+      title: "Why this marksheet was flagged",
+      verdict: "Flagged · not approved",
       viewsLabel: "How to look at the document",
       views: { scan: "Scan", uv: "UV · 365 nm", heat: "Heatmap" },
       alt: "Synthetic Class XII statement of marks from application 06, with two altered marks",
@@ -1057,13 +1072,6 @@ export const en = {
     /** v2 swapped the last sentence, which described the old day band, for
      *  the map's instruction. */
     lede: "From Manila to New York, office hours overlap so a request filed at night in one place is picked up in the morning somewhere else. Drag the sun to see who is at a desk.",
-    hours: {
-      h00: "00:00",
-      h06: "06:00",
-      h12: "12:00",
-      h18: "18:00",
-      h24: "24:00 UTC",
-    },
     offices: {
       manila: "Manila",
       singapore: "Singapore",
@@ -1119,8 +1127,6 @@ export const en = {
       relay: "A request filed in {from} at {fromTime} is picked up in {to} at {toTime}.",
       allClosed: "Every desk is closed. {office} opens in {h}h {m}m.",
       allOpen: "Every office is at a desk.",
-      coverage: "Someone at a desk · {n} of 24 hours",
-      hour: "{h}:00 UTC",
     },
   },
 
@@ -1286,6 +1292,24 @@ export const en = {
   smb: {
     kicker: "Small and Medium Enterprises",
     sheet: "Sheet 06 / 12",
+    /** The Large ↔ SMB toggle (29 Sep 2026): the old home page's
+     *  `solutionsShowcase`, whose two segments were "Large Enterprise" and
+     *  "Small and Medium Enterprises". The Large panel's cards are that
+     *  segment's four; White- and Blue-Collar read `enterprises.employees`
+     *  (the same sentences), so only KYC's and Vendor's are here, verbatim
+     *  from `home.base.json`. `from` precedes the Basic package's price. */
+    seg: {
+      kicker: "Background checks for business",
+      label: "Choose your business size",
+      large: "Large Enterprises",
+      largeSub: "White & blue collar · KYC · Vendors",
+      small: "Small & Medium Businesses",
+      from: "Ready plans from",
+      headingA: "Background Checks For",
+      headingB: "Large Enterprises",
+      kyc: { t: "KYC Services", p: "Comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection." },
+      vendor: { t: "Vendor and Supplier", p: "With Certifier, offered by HelloVerify, clients can enhance their profiling experience by accessing certified profiles." },
+    },
     headingA: "Background Checks For",
     headingB: "Small & Medium Businesses",
     lede: "Pick the plan, customize your checks and get full verification details on any individual.",
@@ -1401,114 +1425,238 @@ export const en = {
   },
 
   /** `sections/GovSeals.tsx` — homepage v2 "Governments we work with", the
-   *  seals of state (desktop only). Every sentence is the canvas's, which took
-   *  it verbatim from the old site and the MOM page; the five `name`/`where`
-   *  pairs are `presence.govs` word for word. `micro` is one repeat of the
-   *  ring of microtext a seal turns, `stamp` one repeat of the stamp's. The
-   *  component supplies the joining spaces, so no leaf has edge whitespace. */
+   *  seals of state. Four authorities since 29 Sep 2026: MOM, the embassies
+   *  of Latvia and Italy, and the UAE's MOHESR (India, KSA, the UAE and the
+   *  combined "European authorities" seal went).
+   *
+   *  EACH RECORD IS A PITCH, in the order a buyer reads one: the challenge
+   *  the authority faces, what HelloVerify is to it, what we deliver step by
+   *  step, the impact, and why it chose us. Every claim and figure is on the
+   *  live site's two authority pages (helloverify.com/en/solutions/
+   *  manpower-and-education-authorities and …/immigration-authorities) or
+   *  the old site's per-authority content (`Application Frontend HV`). The
+   *  relationship words are theirs, not upgraded: MOM "officially
+   *  empanelled"; Latvia "has partnered with HelloVerify"; Italy's
+   *  applicants "are recommended to undertake … verification with service
+   *  provider HelloVerify", listed under "Our Partners"; MOHESR "authorized
+   *  verification partner", a featured client on the live education page.
+   *  `impactK` says when a figure is a page-wide one (the education page's
+   *  "12–14% of applications", the immigration page's "3×" and "99.2%")
+   *  rather than pinning it on one authority.
+   *
+   *  `micro` is one repeat of the ring of microtext a seal turns, `stamp` one
+   *  repeat of the stamp's. The component supplies the joining spaces, so no
+   *  leaf has edge whitespace. */
   govSeals: {
     kicker: "Governments we work with",
     kickerEnd: "Trust Infrastructure",
     heading: "Governments",
     headingEm: "We Work With",
-    ledeLead: "Trusted by leading enterprises and government authorities across",
+    ledeLead: "Trusted by government authorities and embassies, including",
     ledeAnd: "and",
-    closeLead: "Governments are not simply buying verification reports they are investing in",
-    closeMark: "national trust infrastructure",
-    closeTail: "that underpins every regulated interaction.",
     stamp: "PRIMARY SOURCE VERIFICATION · HELLOVERIFY ·",
+    /** The record's four section labels, shared by every authority. */
+    problemK: "The challenge",
+    deliverK: "What we deliver",
+    whyK: "Why they chose HelloVerify",
     items: {
       mom: {
         name: "Ministry of Manpower",
         where: "Singapore",
-        ledeName: "Singapore",
+        ledeName: "Singapore’s Ministry of Manpower",
         micro: "MINISTRY OF MANPOWER · SINGAPORE · COMPASS FRAMEWORK · PRIMARY SOURCE VERIFICATION ·",
-        record: "Record 01 / 05",
+        record: "Record 01 / 04",
         role: "Our Client — Ministry of Manpower (Singapore)",
-        h: "HelloVerify is officially empanelled by Singapore’s Ministry of Manpower (MOM) to provide Primary Source Verification (PSV) for educational qualifications under the COMPASS framework.",
-        p: "Empaneled PSV partner for Singapore Ministry of Manpower — EP, S Pass and COMPASS framework qualification verification.",
+        problem: { v: "1 in 8", l: "applicants misrepresent their academic credentials — and a forged certificate can look exactly like a real one." },
+        h: "Officially empanelled by Singapore’s Ministry of Manpower to verify the qualifications behind work pass applications.",
+        p: "Under the COMPASS framework, a work pass is only as sound as the qualification behind it. HelloVerify confirms the institution is accredited, verifies the qualification with the institution that issued it, and flags fraudulent documents before approval — so every decision rests on evidence, not paper.",
         facts: {
           f1: { k: "Framework", v: "COMPASS" },
-          f2: { k: "Work passes", v: "All Work Pass Types Supported" },
+          f2: { k: "Work passes", v: "EP · S Pass · ONE Pass · PEP · TEP" },
           f3: { k: "Qualifications", v: "Degrees · Diplomas · Transcripts · Marksheets" },
-          f4: { k: "Reach", v: "Degree equivalency assessments for 120+ countries" },
+          f4: { k: "Per application", v: "Up to 7 educational qualifications" },
         },
-        chain: { c1: "Institution", c2: "Accreditation body", c3: "Qualification record", c4: "Authority" },
-        cap: "PSV verifies qualifications directly at the source, ensuring accurate, tamper-proof validation that strengthens fraud detection, protects reputation, and supports compliance.",
+        deliver: {
+          d1: { t: "Accreditation check", p: "The institution is confirmed as accredited — a legitimate provider, not a diploma or degree mill." },
+          d2: { t: "Primary source verification", p: "Each degree, diploma, transcript and marksheet is confirmed directly with the institution that issued it." },
+          d3: { t: "Fraud flagged before approval", p: "Forged documents and discrepancies are caught before a work pass is decided." },
+          d4: { t: "MOM-compliant report", p: "An evidence-backed verification report, ready for the work pass submission." },
+        },
+        impactK: "Impact · across our manpower & education work",
+        impact: {
+          i1: { v: "12–14%", l: "of applications flagged for fraud" },
+          i2: { v: "≤ 7", l: "working days, express verification" },
+          i3: { v: "120+", l: "countries with degree equivalency assessments" },
+        },
+        why: {
+          w1: { t: "Officially recognised", p: "Recognised by Singapore’s Ministry of Manpower for qualification verification under the COMPASS framework, across eligible work pass categories." },
+          w2: { t: "Global verification network", p: "Operating across 120+ countries with direct access to thousands of universities and accredited institutions." },
+          w3: { t: "ISO 27001 information security", p: "Personal data, academic records and passport information are protected by enterprise-grade security and privacy controls." },
+        },
       },
-      india: {
-        name: "Government of India",
-        where: "Authorities",
-        ledeName: "India",
-        micro: "GOVERNMENT OF INDIA · AUTHORITIES · TRUST INFRASTRUCTURE · PRIMARY SOURCE VERIFICATION ·",
-        record: "Record 02 / 05",
-        role: "Government of India · Authorities",
-        h: "Verify individuals before they receive a work permit, immigration approval, professional licence, security clearance, or access to regulated professions.",
-        p: "Governments are not simply buying verification reports they are investing in national trust infrastructure that underpins every regulated interaction.",
+      latvia: {
+        name: "Embassy of the Republic of Latvia",
+        where: "Visa screening",
+        ledeName: "the Embassy of the Republic of Latvia",
+        micro: "EMBASSY OF THE REPUBLIC OF LATVIA · STUDENT & WORK VISAS · PRIMARY SOURCE VERIFICATION ·",
+        record: "Record 02 / 04",
+        role: "Our Partner — Embassy of the Republic of Latvia",
+        problem: { v: "10–15%", l: "of complex fraudulent cases are often missed by traditional checks." },
+        h: "The Embassy of the Republic of Latvia has partnered with HelloVerify to screen its student and work visa applicants before they apply.",
+        p: "Applicants from India, Sri Lanka, Nepal and Bangladesh complete HelloVerify’s screening first. Identity, education or employment and financial records are verified, forged documents are flagged, and the embassy decides on a verified file — not a stack of paper.",
         facts: {
-          f1: { k: "Head office", v: "Noida" },
-          f2: { k: "Coverage", v: "30+ checks across 120+ countries" },
-          f3: { k: "Reports", v: "Evidence-Backed Reports" },
-          f4: { k: "Platform", v: "AI Powered Trust Platform" },
+          f1: { k: "Visas", v: "Student Visa · D‑Work Visa" },
+          f2: { k: "Applicants from", v: "India · Sri Lanka · Nepal · Bangladesh" },
+          f3: { k: "Documents", v: "Passport · Education or employment · Income tax return · Bank statements" },
+          f4: { k: "Turnaround", v: "Typically 14 business days" },
         },
-        chain: { c1: "Source of issue", c2: "Primary Source Verification", c3: "Verification artefacts", c4: "Authority" },
-        cap: "Every verification is supported with clear remarks, verification artefacts and an auditable trail for confident decision making.",
+        deliver: {
+          d1: { t: "Screened before the visa", p: "Applicants complete HelloVerify’s screening before they file with the embassy." },
+          d2: { t: "Verified at the source", p: "Identity, education or employment, income tax and bank records are checked with their issuers." },
+          d3: { t: "Clear fraud alerts", p: "Forged documents, discrepancies, duplicate identities and high-risk applicants are flagged." },
+          d4: { t: "Audit-ready report", p: "A clear, traceable report that supports a faster, more confident visa decision." },
+        },
+        impactK: "Impact · across our embassy screening",
+        impact: {
+          i1: { v: "3×", l: "faster than the industry average" },
+          i2: { v: "99.2%", l: "verified report rate" },
+          i3: { v: "14", l: "business days, typical turnaround" },
+        },
+        why: {
+          w1: { t: "Customised to the embassy", p: "Our services are tailored in precise accordance with the embassy’s specific requirements from the applicant." },
+          w2: { t: "Data sovereignty", p: "Secure local data storage and processing, in line with data localisation laws, regulatory mandates and government security requirements." },
+          w3: { t: "Trusted compliance", p: "Certified under ISO/IEC 27001 and ISO/IEC 27701 and fully GDPR compliant, with complete audit traceability." },
+        },
       },
-      ksa: {
-        name: "Kingdom of Saudi Arabia",
-        where: "Authorities",
-        ledeName: "the Kingdom of Saudi Arabia",
-        micro: "KINGDOM OF SAUDI ARABIA · HEALTH AUTHORITY · HEALTHCARE WORKFORCE · PRIMARY SOURCE VERIFICATION ·",
-        record: "Record 03 / 05",
-        role: "Health Authorities · Kingdom of Saudi Arabia",
-        h: "HelloVerify is a globally recognised verification partner trusted by health authority in Saudi Arabia.",
-        p: "In the GCC’s fast-growing, highly regulated healthcare landscape, credentials are non-negotiable.",
+      italy: {
+        name: "Embassy of Italy",
+        where: "New Delhi",
+        ledeName: "the Embassy of Italy",
+        micro: "EMBASSY OF ITALY · NEW DELHI · NATIONAL VISA VERIFICATION · PRIMARY SOURCE VERIFICATION ·",
+        record: "Record 03 / 04",
+        role: "Our Partner — Embassy of Italy (New Delhi)",
+        problem: { v: "Tampered documents", l: "Counterfeit papers and fraudulent company submissions compromise immigration integrity and security." },
+        h: "Italian National Visa applicants are recommended to verify their documents with HelloVerify — to increase their credibility and ease visa processing.",
+        p: "For work, study, business and family visas across the Embassy of Italy’s New Delhi jurisdiction, HelloVerify verifies identity, education or employment, financial and company records before the application is filed — so the embassy receives documents it can trust, and genuine applicants move faster.",
         facts: {
-          f1: { k: "Programme", v: "Primary Source Verification for Healthcare Workforce" },
-          f2: { k: "Practitioners", v: "Doctor Practitioners · Non-physician · Pharmacists · Nurses and Midwives" },
-          f3: { k: "Accreditation", v: "Each issuing authority’s accreditation is verified from government regulatory organisation/ministry." },
-          f4: { k: "Reports", v: "Audit-ready reports that enable fast, defensible licensing decisions for government authorities." },
+          /** Non-breaking hyphens (U+2011): "D-" alone at a line end reads as a typo. */
+          f1: { k: "Visas", v: "D‑Work · D‑Student · D‑General · D‑Business" },
+          f2: { k: "Jurisdiction", v: "New Delhi, Haryana, Punjab, Rajasthan, Uttar Pradesh and five more" },
+          f3: { k: "Checks", v: "Identity · Education or employment · Bank statements · Company details" },
+          f4: { k: "Turnaround", v: "Typically 14 business days" },
         },
-        chain: { c1: "University", c2: "Accreditation body", c3: "Licensing authority", c4: "Health authority" },
-        cap: "Primary Source Verification (PSV) - each record is verified from the source of issue.",
+        deliver: {
+          d1: { t: "Verified before filing", p: "Visa support documents are verified before the application reaches the embassy." },
+          d2: { t: "Checked at the source", p: "Identity, education or employment, bank and company records are confirmed with their issuers." },
+          d3: { t: "Fraud caught early", p: "Tampered documents and fraudulent company submissions are flagged before a decision." },
+          d4: { t: "A credible application", p: "Genuine applicants arrive with verified documents, easing visa processing." },
+        },
+        impactK: "Impact · across our embassy screening",
+        impact: {
+          i1: { v: "3×", l: "faster than the industry average" },
+          i2: { v: "99.2%", l: "verified report rate" },
+          i3: { v: "14", l: "business days, typical turnaround" },
+        },
+        why: {
+          w1: { t: "Digital & paperless", p: "Application, document collection, verification, reporting and decision run through one secure, paperless workflow." },
+          w2: { t: "Audit-ready reports", p: "Clear, comprehensive and audit-ready reports enable faster, more confident decision making." },
+          w3: { t: "Clear fraud alerts", p: "Fraud intelligence and advanced document analysis detect forged documents, discrepancies and high-risk applicants." },
+        },
       },
-      uae: {
-        name: "United Arab Emirates",
-        where: "Authorities",
-        ledeName: "the United Arab Emirates",
-        micro: "UNITED ARAB EMIRATES · AUTHORITIES · LONG-TERM DIGITAL INFRASTRUCTURE · PRIMARY SOURCE VERIFICATION ·",
-        record: "Record 04 / 05",
-        role: "United Arab Emirates · Authorities",
-        h: "The long-term value lies in trusted digital infrastructure that governments and regulators can rely on for years to come.",
-        p: "The same platform verifies businesses, suppliers, contractors, and institutions unifying trust across public and private ecosystems.",
+      mohesr: {
+        name: "Ministry of Higher Education & Scientific Research",
+        where: "United Arab Emirates",
+        ledeName: "the UAE’s Ministry of Higher Education and Scientific Research",
+        micro: "MOHESR · UNITED ARAB EMIRATES · DEGREE RECOGNITION · PRIMARY SOURCE VERIFICATION ·",
+        record: "Record 04 / 04",
+        role: "Authorized Verification Partner — MOHESR (UAE)",
+        problem: { v: "Degree mills", l: "sell certificates that pass a visual check. Recognition has to be earned at the source." },
+        h: "An authorized verification partner for the UAE’s Ministry of Higher Education and Scientific Research.",
+        p: "MOHESR requires Primary Source Verification before it recognises any degree earned outside the UAE. HelloVerify confirms the university is accredited, verifies the degree with the university that awarded it, and delivers the Degree Verification Document the applicant needs for their Certificate of Recognition.",
         facts: {
-          f1: { k: "Office", v: "Dubai" },
-          f2: { k: "Checks", v: "Criminal Records · Passport Check · Entitlement to Work" },
-          f3: { k: "Reports", v: "Evidence-Backed Reports" },
-          f4: { k: "Platform", v: "AI Powered Trust Platform" },
+          f1: { k: "Requirement", v: "PSV for any degree earned outside the UAE" },
+          f2: { k: "Outcome", v: "Degree Verification Document for MOHESR" },
+          f3: { k: "Documents", v: "Degree certificate · Passport · Emirates ID (UAE residents)" },
+          f4: { k: "Sign-in", v: "UAE PASS" },
         },
-        chain: { c1: "Source of issue", c2: "Primary Source Verification", c3: "Verification artefacts", c4: "Authority" },
-        cap: "Every verification is supported with clear remarks, verification artefacts and an auditable trail for confident decision making.",
-      },
-      eu: {
-        name: "European authorities",
-        where: "Verification workflows",
-        ledeName: "European authority verification workflows",
-        micro: "EUROPEAN AUTHORITIES · EMBASSY OF LATVIA · EMBASSY OF ITALY · VERIFICATION WORKFLOWS ·",
-        record: "Record 05 / 05",
-        role: "Our Partners — Embassy of Latvia · Embassy of Italy",
-        h: "AI-Powered Verification for Faster, Safer Immigration Decisions.",
-        p: "Enable secure, compliant applicant screening with advanced fraud detection and real-time verification.",
-        facts: {
-          f1: { k: "Partners", v: "Embassy of Latvia · Embassy of Italy" },
-          f2: { k: "Visas", v: "Tourist · Student · Work visa" },
-          f3: { k: "Process", v: "Digital & Paperless Process" },
-          f4: { k: "Alerts", v: "Clear Fraud Alerts" },
+        deliver: {
+          d1: { t: "Accreditation check", p: "The university is confirmed as accredited and legitimate — not a diploma or degree mill." },
+          d2: { t: "Verified with the university", p: "The degree is confirmed directly with the institution that awarded it." },
+          d3: { t: "Degree Verification Document", p: "An evidence-backed document, issued for MOHESR." },
+          d4: { t: "Certificate of Recognition", p: "The applicant proceeds to MOHESR’s official recognition of their qualification." },
         },
-        chain: { c1: "Applicant", c2: "Document pre-screening", c3: "Issuing sources", c4: "Embassy" },
-        cap: "Real time verification of identity, education, employment, financial, criminal, and supporting records.",
+        impactK: "Impact · across our manpower & education work",
+        impact: {
+          i1: { v: "15", l: "calendar days, standard turnaround" },
+          i2: { v: "12–14%", l: "of applications flagged for fraud" },
+          i3: { v: "8+", l: "years of primary source verification" },
+        },
+        why: {
+          w1: { t: "Proven expertise", p: "8+ years of expertise in primary source verification, trusted by government authorities worldwide." },
+          w2: { t: "Global verification company", p: "Operating across 120+ countries with direct access to thousands of universities and accredited institutions." },
+          w3: { t: "Real-time tracking", p: "Applicants follow their application’s progress at every stage using their case number." },
+        },
       },
     },
+  },
+
+  /** `sections/GovWhy.tsx` — "Why Governments, Authorities or Large
+   *  Enterprise Customers Work With HelloVerify", straight after the seals
+   *  (29 Sep 2026). The six titles and bodies are the old site's card grid
+   *  word for word, with one edit: `govs` no longer names India and the
+   *  Kingdom of Saudi Arabia, which the seals above dropped. `trust`'s body
+   *  was the seals band's closing line until this band took it, so the page
+   *  says it once.
+   *
+   *  `viz` holds the words drawn inside each reason's picture
+   *  (`GovWhyArt.tsx`): visible text a translator must see, though the
+   *  pictures themselves are `aria-hidden` — the title and body say it. */
+  govWhy: {
+    kicker: "Why HelloVerify",
+    kickerEnd: "Six reasons · One infrastructure",
+    headingA: "Why Governments, Authorities & Large Enterprises",
+    headingB: "Work With HelloVerify",
+    lede: "The verification behind a work pass in Singapore, a visa decision at a European embassy and a degree recognised in the UAE is the same infrastructure large enterprises screen their workforce on.",
+    items: {
+      trust: {
+        t: "Trust Infrastructure",
+        p: "Governments are not simply buying verification reports they are investing in national trust infrastructure that underpins every regulated interaction.",
+      },
+      psv: {
+        t: "Primary Source Verification at Scale",
+        p: "Verify individuals before they receive a work permit, immigration approval, professional licence, security clearance, or access to regulated professions.",
+      },
+      platform: {
+        t: "AI Powered Trust Platform",
+        p: "The same platform verifies businesses, suppliers, contractors, and institutions unifying trust across public and private ecosystems.",
+      },
+      govs: {
+        t: "Governments We Work With",
+        p: "Trusted by leading enterprises and government authorities across Singapore, the United Arab Emirates and European authority verification workflows.",
+      },
+      longTerm: {
+        t: "Long-Term Digital Infrastructure",
+        p: "The long-term value lies in trusted digital infrastructure that governments and regulators can rely on for years to come.",
+      },
+      evidence: {
+        t: "Evidence-Backed Reports",
+        p: "Every verification is supported with clear remarks, verification artefacts and an auditable trail for confident decision making.",
+      },
+    },
+    viz: {
+      gates: { g1: "Work permit", g2: "Immigration", g3: "Licence", g4: "Clearance", g5: "Regulated role" },
+      core: "AI",
+      nodes: { n1: "Businesses", n2: "Suppliers", n3: "Contractors", n4: "Institutions" },
+      since: "2018",
+      today: "Today",
+      ahead: "Years to come",
+      stamp: "VERIFIED",
+      proofs: { p1: "Clear remarks", p2: "Verification artefacts", p3: "Auditable trail" },
+    },
+    /** The band's foot: the certifications the immigration page states, and
+     *  the ask. */
+    certs: "ISO/IEC 27001 · ISO/IEC 27701 · GDPR compliant",
+    cta: "Talk to our team",
   },
 
   /** `sections/GovDossiers.tsx` and `blocks/GovMom.tsx` — homepage v2

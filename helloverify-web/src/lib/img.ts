@@ -88,6 +88,10 @@ export const PLACEHOLDER_TINT: Record<string, string> = {
   "/img/people/06-supplier-cairo.jpg": "#736B5E",
   "/img/people/07-tenant-singapore.jpg": "#8E8A7B",
   "/img/people/08-cfo-london.jpg": "#898783",
+  /** `sections/GovDossiers.tsx`, the Health dossier: the nurse photo from
+   *  before the reshoot, restored 29 Sep 2026 so the dossier does not repeat
+   *  the people strip's nurse. Its original tint. */
+  "/img/02-nurse-abudhabi.jpg": "#B7C3B2",
   "/img/09-licensing-officer.jpg": "#8C8C7A",
   "/img/10-ministry-hall.jpg": "#B3B08F",
   "/img/11-office-first-day.jpg": "#D8CBB2",

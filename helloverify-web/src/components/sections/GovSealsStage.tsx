@@ -1,13 +1,13 @@
 "use client";
 
 /** The interactive part of "Governments we work with" (`sections/GovSeals.tsx`):
-    the linked names in the lede, the five seals and the record under them.
+    the linked names in the lede, the seals and the record under them.
 
     WHAT IT OWNS, and what the board did differently.
 
     1. **Which authority is shown.** One index drives the seal (`sv-on`), the
-       lede name (`sv-ln-on`) and the record. All five records are in the DOM
-       and four are `hidden`, rather than only the active one being mounted:
+       lede name (`sv-ln-on`) and the record. Every record is in the DOM and
+       all but one are `hidden`, rather than only the active one being mounted:
        unhiding restarts their CSS entrances exactly as a remount would, and
        every authority's facts are in the prerendered HTML.
     2. **The auto-cycle.** The board advanced on a 7 s `setInterval` beside a
@@ -33,22 +33,15 @@ import {
   type AnimationEvent,
   type FocusEvent,
   type PointerEvent,
-  type ReactNode,
 } from "react";
 
 import { Rosette, SealRim } from "./GovArt";
 import { Inlay, Stamp, type SealItem } from "./GovSealParts";
 
-/** The canvas's lede order, not the seal order: the sentence names India
- *  first and Singapore fourth. `tail` is the punctuation inside the no-wrap
- *  span, so a comma never starts a line. */
-const LEDE: { i: number; tail: string }[] = [
-  { i: 1, tail: "," },
-  { i: 2, tail: "," },
-  { i: 3, tail: "," },
-  { i: 0, tail: "" },
-  { i: 4, tail: "." },
-];
+/** The lede names the authorities in seal order: "A, B, C and D." `tail` is
+ *  the punctuation inside the no-wrap span, so a comma never starts a line. */
+const ledeOrder = (n: number) =>
+  Array.from({ length: n }, (_, i) => ({ i, tail: i === n - 1 ? "." : i < n - 2 ? "," : "" }));
 
 const TILT = ["--rx", "--ry", "--lx", "--ly", "--fx"];
 
@@ -58,19 +51,19 @@ export function GovSealsStage({
   ledeLead,
   ledeAnd,
   stamp,
+  labels,
   pauseLabel,
   playLabel,
-  children,
 }: {
   items: SealItem[];
   thread: string;
   ledeLead: string;
   ledeAnd: string;
   stamp: string;
+  /** The record's section labels: the challenge, the steps, the reasons. */
+  labels: { problem: string; deliver: string; why: string };
   pauseLabel: string;
   playLabel: string;
-  /** The closing line, server-rendered. */
-  children: ReactNode;
 }) {
   const [on, setOn] = useState(0);
   const [auto, setAuto] = useState(true);
@@ -95,11 +88,11 @@ export function GovSealsStage({
       { threshold: 0.35 },
     );
     io.observe(el);
-    // The record's entrance and the closing underline are one-shot and sit
-    // a screen or more below the seals: held until each is on screen, or
-    // they would have finished before anyone scrolled to them. Held from
-    // here rather than in the markup, so without script they simply play.
-    root.querySelectorAll(".sv-recs, .sv-close").forEach((t) => {
+    // The record's entrance is one-shot and sits a screen below the seals:
+    // held until it is on screen, or it would have finished before anyone
+    // scrolled to it. Held from here rather than in the markup, so without
+    // script it simply plays.
+    root.querySelectorAll(".sv-recs").forEach((t) => {
       t.classList.add("sv-wait");
       io.observe(t);
     });
@@ -140,6 +133,7 @@ export function GovSealsStage({
     TILT.forEach((k) => el?.style.removeProperty(k));
   }, []);
 
+  const LEDE = ledeOrder(items.length);
   const cls = ["sv-live", auto && seen ? "sv-auto" : "", paused ? "sv-paused" : ""].filter(Boolean).join(" ");
 
   return (
@@ -219,6 +213,11 @@ export function GovSealsStage({
           <div key={g.name} className="sv-rec" hidden={on !== i}>
             <div className="sv-rec-l">
               <div className="sv-rec-k"><span>{g.record}</span><span>{g.role}</span></div>
+              <div className="sv-prob">
+                <p className="sv-out-k">{labels.problem}</p>
+                <p className="sv-prob-v">{g.problem.v}</p>
+                <p className="sv-prob-l">{g.problem.l}</p>
+              </div>
               <p className="sv-rec-h">{g.h}</p>
               <p className="sv-rec-p">{g.p}</p>
               <dl className="sv-facts">
@@ -232,21 +231,47 @@ export function GovSealsStage({
             </div>
             <div className="sv-rec-r">
               <div className="sv-emb"><Inlay item={g} small /></div>
+              <p className="sv-out-k sv-deliver-k">{labels.deliver}</p>
               <ol className="sv-chain">
-                {g.chain.map((c, j) => (
-                  <li key={c} style={{ "--d": `${(0.35 + j * 0.32).toFixed(2)}s` } as React.CSSProperties}>
+                {g.deliver.map((c, j) => (
+                  <li key={c.t} style={{ "--d": `${(0.35 + j * 0.32).toFixed(2)}s` } as React.CSSProperties}>
                     <i aria-hidden="true" />
-                    <span>{c}</span>
+                    <span className="sv-step">
+                      <b>{c.t}</b>
+                      <span>{c.p}</span>
+                    </span>
                   </li>
                 ))}
               </ol>
-              <p className="sv-cap">{g.cap}</p>
               <div className="sv-stamp-w"><Stamp id={`svst${i}`} ring={stamp} /></div>
+            </div>
+            <div className="sv-rec-b">
+              <div className="sv-out">
+                <p className="sv-out-k">{g.impactK}</p>
+                <ul className="sv-imp">
+                  {g.impact.map((m, j) => (
+                    <li key={m.l} className="sv-fact" style={{ animationDelay: `${(0.6 + j * 0.08).toFixed(2)}s` }}>
+                      <b>{m.v}</b>
+                      <span>{m.l}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="sv-out">
+                <p className="sv-out-k">{labels.why}</p>
+                <ul className="sv-why">
+                  {g.why.map((w, j) => (
+                    <li key={w.t} className="sv-fact" style={{ animationDelay: `${(0.8 + j * 0.08).toFixed(2)}s` }}>
+                      <b>{w.t}</b>
+                      <span>{w.p}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         ))}
       </div>
-      {children}
     </div>
   );
 }
