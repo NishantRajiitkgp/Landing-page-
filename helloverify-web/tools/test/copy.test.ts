@@ -847,7 +847,7 @@ const BANDS: Record<string, readonly [number, number]> = {
   oneInEight: [0, 55],
   govSeals: [0, 115],
   govDossiers: [0, 165],
-  enterprises: [0, 104],
+  enterprises: [0, 105],
   smb: [0, 50],
   diligence: [0, 27],
   trustPlatform: [0, 52],
@@ -886,8 +886,8 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  step heading, `enterprises.customers.stepsK`. 1558 -> 1357 and blocks
  *  60 -> 22: the phone pass (see `BANDS`). */
 check(
-  "sections holds 1337 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1337 &&
+  "sections holds 1338 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1338 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -921,8 +921,8 @@ check(
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. */
 check(
-  "sections: 1326 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1326 &&
+  "sections: 1327 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1327 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

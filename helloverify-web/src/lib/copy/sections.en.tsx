@@ -1183,7 +1183,11 @@ export const en = {
     businesses: {
       k: "03 · Businesses",
       tag: "Certifier",
-      h: "We are redefining third-party verification for B2B businesses delivering fast, reliable authentication of identities and documents that modern enterprises demand.",
+      /** Split 28 Sep 2026: the founder's sentence was the heading and read as
+       *  a wall of serif. The short line is the heading; the sentence, verbatim,
+       *  is the lede under it. */
+      h: "A wrong vendor costs more than a check.",
+      lede: "We are redefining third-party verification for B2B businesses delivering fast, reliable authentication of identities and documents that modern enterprises demand.",
       stepsK: "Verified in 4 steps, no paperwork",
       steps: {
         invite: "Send Invite",
@@ -1200,12 +1204,12 @@ export const en = {
         brand: { b: "Protect Your Brand Integrity", s: "Bad actors don't stand a chance." },
       },
       chips: {
-        trade: "Trade License Check",
-        directors: "Defaulting Directors Check",
-        criminal: "Criminal Records Check",
-        credit: "Credit & Company Check",
-        gst: "GST Screening",
-        financial: "Financial Assessment",
+        trade: "Trade licence",
+        directors: "Defaulting directors",
+        criminal: "Criminal records",
+        credit: "Credit & company",
+        gst: "GST screening",
+        financial: "Financial assessment",
       },
     },
     stats: {
