@@ -63,7 +63,7 @@ export default async function CertifierPage({
       closing={{
         heading: c.closing.heading,
         sub: c.closing.sub,
-        img: "/img/06-supplier-cairo.jpg",
+        img: "/img/people/06-supplier-cairo.jpg",
       }}
     >
       <div className="wrap hero3">

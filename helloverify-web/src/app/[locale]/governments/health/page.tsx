@@ -147,7 +147,7 @@ export default async function Page({
       closing={{
         heading: d.closing.heading,
         sub: d.closing.sub,
-        img: "/img/02-nurse-abudhabi.jpg",
+        img: "/img/people/02-nurse-abudhabi.jpg",
       }}
     />
   );

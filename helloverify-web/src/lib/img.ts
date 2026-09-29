@@ -77,14 +77,17 @@ export const AVATAR_BYLINE = 40;
  *  a silently wrong box.
  */
 export const PLACEHOLDER_TINT: Record<string, string> = {
-  "/img/01-rider-bengaluru.jpg": "#CFA58E",
-  "/img/02-nurse-abudhabi.jpg": "#B7C3B2",
-  "/img/03-engineer-manila.jpg": "#ADB4BE",
-  "/img/04-nanny-gurugram.jpg": "#D8CBB2",
-  "/img/05-warehouse-pune.jpg": "#6E6C63",
-  "/img/06-supplier-cairo.jpg": "#B3B08F",
-  "/img/07-tenant-singapore.jpg": "#D6BCB2",
-  "/img/08-cfo-london.jpg": "#C9C2B4",
+  /** The people strip, reshot 29 Sep 2026 (Higgsfield) so each person and
+   *  street belongs to the city on the card. Mean colours, measured with
+   *  sharp `stats()` like the v2 set below. */
+  "/img/people/01-rider-bengaluru.jpg": "#77796F",
+  "/img/people/02-nurse-abudhabi.jpg": "#A09B90",
+  "/img/people/03-engineer-manila.jpg": "#8D8C88",
+  "/img/people/04-nanny-gurugram.jpg": "#837E77",
+  "/img/people/05-warehouse-pune.jpg": "#806F5D",
+  "/img/people/06-supplier-cairo.jpg": "#736B5E",
+  "/img/people/07-tenant-singapore.jpg": "#8E8A7B",
+  "/img/people/08-cfo-london.jpg": "#898783",
   "/img/09-licensing-officer.jpg": "#8C8C7A",
   "/img/10-ministry-hall.jpg": "#B3B08F",
   "/img/11-office-first-day.jpg": "#D8CBB2",
@@ -124,7 +127,7 @@ export const PLACEHOLDER_TINT: Record<string, string> = {
   "/img/v2/pkg-whitecollar.jpg": "#A9A297",
 };
 
-/** `tint("/img/01-rider-bengaluru.jpg")` -> its placeholder colour.
+/** `tint("/img/people/01-rider-bengaluru.jpg")` -> its placeholder colour.
  *
  *  Throws rather than returning a default: a missing entry means a photograph
  *  was added without one, and a wrong-coloured box is exactly the kind of thing
@@ -153,8 +156,8 @@ export function tint(src: string): string {
  *
  *  **Keyed by image because the tint is what decides it, measured rather than
  *  asserted.** Relative luminance of every tint that inverts the caption is
- *  <= 0.2574 (`#8C8C7A`, licensing officer) and of every tint that keeps the
- *  default is >= 0.4213 (`#CFA58E`, rider) - a clean gap with no photograph in
+ *  <= 0.3293 (`#A09B90`, nurse) and of every tint that keeps the default is
+ *  >= 0.4262 (`#B3B08F`, ministry hall) - a clean gap with no photograph in
  *  it. The call sites previously each carried their own trigger for the same
  *  fact (`p.live` in PeopleStrip, a `dimNote` field in WhoItsFor, nothing at
  *  all in the other three), so the colour and its cause could drift apart.
@@ -170,8 +173,17 @@ export function tint(src: string): string {
 const PLACEHOLDER_NOTE: Record<string, string> = {
   /** `sections/Why.tsx`, one tile. */
   "/img/09-licensing-officer.jpg": "rgba(255,255,255,0.4)",
-  /** `sections/PeopleStrip.tsx`, the live card at both breakpoints. */
-  "/img/05-warehouse-pune.jpg": "rgba(255,255,255,0.4)",
+  /** `sections/PeopleStrip.tsx`, all eight cards since the reshoot (29 Sep
+   *  2026): every new tint measures <= 0.3293 relative luminance, dark enough
+   *  for the white caption. Before it only the live card's did. */
+  "/img/people/01-rider-bengaluru.jpg": "rgba(255,255,255,0.4)",
+  "/img/people/02-nurse-abudhabi.jpg": "rgba(255,255,255,0.4)",
+  "/img/people/03-engineer-manila.jpg": "rgba(255,255,255,0.4)",
+  "/img/people/04-nanny-gurugram.jpg": "rgba(255,255,255,0.4)",
+  "/img/people/05-warehouse-pune.jpg": "rgba(255,255,255,0.4)",
+  "/img/people/06-supplier-cairo.jpg": "rgba(255,255,255,0.4)",
+  "/img/people/07-tenant-singapore.jpg": "rgba(255,255,255,0.4)",
+  "/img/people/08-cfo-london.jpg": "rgba(255,255,255,0.4)",
   /** `sections/International.tsx`, all five country cards. */
   "/img/16-united-kingdom.jpg": "rgba(255,255,255,0.45)",
   "/img/17-philippines.jpg": "rgba(255,255,255,0.45)",
@@ -182,12 +194,12 @@ const PLACEHOLDER_NOTE: Record<string, string> = {
   "/img/23-closing.jpg": "rgba(255,255,255,0.35)",
 };
 
-/** `noteInk("/img/05-warehouse-pune.jpg")` -> its caption colour, or
+/** `noteInk("/img/people/05-warehouse-pune.jpg")` -> its caption colour, or
  *  `undefined` where `design.css`'s default dark caption is the right one.
  *
  *  Undefined rather than throwing, which is the opposite of `tint()` above and
  *  deliberate: a missing tint is always a defect, whereas most photographs
- *  legitimately have no entry here - 15 of the 23 keep the default (the WhoItsFor factory-floor entry went with that band's desktop tree, Sep 2026). Callers
+ *  legitimately have no entry here - 8 of the 23 keep the default (the WhoItsFor factory-floor entry went with that band's desktop tree, Sep 2026). Callers
  *  must therefore leave the `style` prop off entirely rather than pass
  *  `undefined` through it where the markup never had one; see the flight-payload
  *  note in `sections/Packages.tsx`.

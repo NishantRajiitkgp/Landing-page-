@@ -30,7 +30,7 @@ const PATHS: readonly { k: IndividualsPathKey; href: string; span: string; img: 
   { k: "hellov", href: "/individuals/hellov", span: "span3", img: "/img/12-phone-signup.jpg" },
   { k: "immigration", href: "/individuals/immigration", span: "span3", img: "/img/14-visa-counter.jpg" },
   { k: "homeFamily", href: "/individuals/home-family", span: "span3", img: "/img/15-home-doorway.jpg" },
-  { k: "tenants", href: "/individuals/hellov", span: "span3", img: "/img/07-tenant-singapore.jpg" },
+  { k: "tenants", href: "/individuals/hellov", span: "span3", img: "/img/people/07-tenant-singapore.jpg" },
 ];
 
 export default async function IndividualsHub({

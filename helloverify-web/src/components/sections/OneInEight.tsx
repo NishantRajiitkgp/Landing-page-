@@ -1,9 +1,11 @@
 /** One in eight — the fraud band (homepage v2, Sep 2026; canvas sheet 03).
 
-    Eight synthetic certificates on an evidence table, one of them forged. A
-    UV lamp follows the pointer and shows the security features the genuine
-    seven carry and the forgery lacks; clicking a certificate checks it, and
-    the forgery is referred.
+    Eight synthetic document scans from seven countries on an evidence table,
+    one of them forged (a Class XII marksheet with two marks retyped). A UV
+    lamp follows the pointer and shows each sheet under 365 nm — fibres and a
+    UV-ink emblem on the genuine seven, two glowing erasures on the forgery.
+    Clicking a document checks it; the forgery is referred and its case file
+    opens with the findings drawn on the sheet.
 
     One tree at every width: the canvas has no phone artboard for it, so the
     phone layout is the same table reflowed to two columns (`app/v2/fraud.css`).

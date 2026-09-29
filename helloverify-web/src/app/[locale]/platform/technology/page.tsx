@@ -39,7 +39,7 @@ export default async function TechnologyPage({
       closing={{
         heading: d.closing.heading,
         sub: d.closing.sub,
-        img: "/img/03-engineer-manila.jpg",
+        img: "/img/people/03-engineer-manila.jpg",
       }}
     >
       <div className="wrap hero3">

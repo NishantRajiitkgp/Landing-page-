@@ -27,10 +27,10 @@ export async function generateMetadata({
  *  so nothing in the flight payload moves. A destination added without a card
  *  is TS2322 on this array in every locale at once. */
 const VERTICALS: readonly { href: PathHref; span: string; img: string }[] = [
-  { href: "/governments/health", span: "span3", img: "/img/02-nurse-abudhabi.jpg" },
+  { href: "/governments/health", span: "span3", img: "/img/people/02-nurse-abudhabi.jpg" },
   { href: "/governments/immigration", span: "span3", img: "/img/14-visa-counter.jpg" },
   { href: "/governments/manpower-education", span: "span3", img: "/img/10-ministry-hall.jpg" },
-  { href: "/governments/trade", span: "span3", img: "/img/06-supplier-cairo.jpg" },
+  { href: "/governments/trade", span: "span3", img: "/img/people/06-supplier-cairo.jpg" },
 ];
 
 export default async function GovernmentsHub({
