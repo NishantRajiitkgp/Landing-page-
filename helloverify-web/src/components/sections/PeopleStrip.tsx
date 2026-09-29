@@ -22,8 +22,8 @@ import { PeopleStripStage } from "./PeopleStripStage";
  *  same eight people and the same words; the cards are scaled by `--ps` in
  *  `strip.css` (1 on desktop, .66 on the phone — 300×420 → 198×277, the old
  *  mobile card's size). The longest chip still fits the narrowest card:
- *  "Global database · 15 min" at the phone's 10px mono measures ~175px of
- *  a 205px card.
+ *  "Driving licence verified" (24 characters, as long as the old "Global
+ *  database · 15 min") at the phone's 10px mono.
  *
  *  The seam is `[...PEOPLE, ...PEOPLE]`: one component over one record list,
  *  where there were once 28 hand-written cards.
@@ -49,22 +49,22 @@ type Person = {
 };
 
 const PEOPLE: readonly Person[] = [
-  { src: "/img/01-rider-bengaluru.jpg", w: 300, h: 420 },
-  { src: "/img/02-nurse-abudhabi.jpg", w: 340, h: 470 },
-  { src: "/img/03-engineer-manila.jpg", w: 290, h: 390 },
-  { src: "/img/04-nanny-gurugram.jpg", w: 320, h: 440 },
-  { src: "/img/05-warehouse-pune.jpg", w: 300, h: 400, live: true },
-  { src: "/img/06-supplier-cairo.jpg", w: 330, h: 460 },
-  { src: "/img/07-tenant-singapore.jpg", w: 290, h: 410 },
-  { src: "/img/08-cfo-london.jpg", w: 310, h: 430 },
+  { src: "/img/people/01-rider-bengaluru.jpg", w: 300, h: 420 },
+  { src: "/img/people/02-nurse-abudhabi.jpg", w: 340, h: 470 },
+  { src: "/img/people/03-engineer-manila.jpg", w: 290, h: 390 },
+  { src: "/img/people/04-nanny-gurugram.jpg", w: 320, h: 440 },
+  { src: "/img/people/05-warehouse-pune.jpg", w: 300, h: 400, live: true },
+  { src: "/img/people/06-supplier-cairo.jpg", w: 330, h: 460 },
+  { src: "/img/people/07-tenant-singapore.jpg", w: 290, h: 410 },
+  { src: "/img/people/08-cfo-london.jpg", w: 310, h: 430 },
 ];
 
 function PersonCard({ p, w, loading }: { p: Person; w: Words; loading: "eager" | "lazy" }) {
-  /** The caption inverts because `/img/05-warehouse-pune.jpg`'s tint is dark
-   *  (`#6E6C63`, relative luminance 0.1494), not because that card is the
-   *  live one — keyed by photograph beside the tint in `lib/img.ts`, so a
-   *  reshuffle of which card is live cannot leave a white caption on a pale
-   *  tile. The ternary keeps its `undefined` branch rather than becoming a
+  /** The caption inverts because the photograph's tint is dark (all eight
+   *  since the 29 Sep 2026 reshoot, <= 0.3293 relative luminance), not
+   *  because a card is the live one — keyed by photograph beside the tint in
+   *  `lib/img.ts`, so a reshuffle of which card is live cannot leave a white
+   *  caption on a pale tile. The ternary keeps its `undefined` branch rather than becoming a
    *  spread: both render the same HTML, but they differ in the flight
    *  payload (see the note in `sections/Packages.tsx`). */
   const noteColour = noteInk(p.src);

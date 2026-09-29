@@ -31,9 +31,9 @@ export async function generateMetadata({
 const PATHS: readonly { href: PathHref; span: string; img: string }[] = [
   { href: "/business/enterprise", span: "span3", img: "/img/11-office-first-day.jpg" },
   { href: "/business/smb", span: "span3", img: "/img/13-factory-floor.jpg" },
-  { href: "/business/employee-verification", span: "span2", img: "/img/05-warehouse-pune.jpg" },
+  { href: "/business/employee-verification", span: "span2", img: "/img/people/05-warehouse-pune.jpg" },
   { href: "/business/customer-kyc", span: "span2", img: "/img/12-phone-signup.jpg" },
-  { href: "/business/certifier", span: "span2", img: "/img/06-supplier-cairo.jpg" },
+  { href: "/business/certifier", span: "span2", img: "/img/people/06-supplier-cairo.jpg" },
 ];
 
 export default async function BusinessHub({

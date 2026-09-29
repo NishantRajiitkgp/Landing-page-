@@ -832,7 +832,10 @@ const BANDS: Record<string, readonly [number, number]> = {
   compliance: [4, 5],
   numbers: [14, 24],
   why: [8, 77],
-  howItWorks: [5, 161],
+  /** 161 -> 141 (29 Sep 2026): the two specimens are scans now, so the
+   *  words the SVG drew on them (title, microtext, field labels and values,
+   *  issuer, signature line) went; each route keeps its four box tags. */
+  howItWorks: [5, 141],
   consumer: [10, 136],
   checks: [7, 59],
   international: [6, 117],
@@ -844,7 +847,12 @@ const BANDS: Record<string, readonly [number, number]> = {
   /** Bands homepage v2 added (Sep 2026). The first number is the migration-
    *  time `>text<` matcher count, which never saw them, so it is 0 and the
    *  152 sum below still describes the migration. The second is measured. */
-  oneInEight: [0, 55],
+  /** 55 -> 60 (29 Sep 2026): eight scans replace the drawn certificates
+   *  (`inst`/`deg`/`name`/`yr` -> `kind`/`where`, the `certify` line and the
+   *  UV microtext gone: -36, +17) and the case file adds 24 strings.
+   *  60 -> 69: the lens names what it rings — `uv.erasure` gave way to five
+   *  two-line `uv.tags` (three alterations, two emblem callouts). */
+  oneInEight: [0, 69],
   govSeals: [0, 115],
   govDossiers: [0, 165],
   enterprises: [0, 104],
@@ -884,10 +892,12 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  `ContactForm` now, so `contact.k`, `contact.submit` and the whole
  *  `blocks.leadMock` mock (17 leaves) went. 1557 -> 1558: the KYC phone's
  *  step heading, `enterprises.customers.stepsK`. 1558 -> 1357 and blocks
- *  60 -> 22: the phone pass (see `BANDS`). */
+ *  60 -> 22: the phone pass (see `BANDS`). 1337 -> 1322: the specimen
+ *  scans (howItWorks -20, oneInEight +5, see `BANDS`). 1322 -> 1331: the
+ *  lens callouts (oneInEight +9). */
 check(
-  "sections holds 1337 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1337 &&
+  "sections holds 1331 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1331 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -919,10 +929,11 @@ check(
  *  (`packages.tot`, with the receipt tree it labelled). What is left: six
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
- *  functions. */
+ *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
+ *  and the lens callouts to 1320. */
 check(
-  "sections: 1326 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1326 &&
+  "sections: 1320 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1320 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

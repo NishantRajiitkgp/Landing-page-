@@ -135,7 +135,7 @@ export default async function Page({
       closing={{
         heading: d.closing.heading,
         sub: d.closing.sub,
-        img: "/img/06-supplier-cairo.jpg",
+        img: "/img/people/06-supplier-cairo.jpg",
       }}
     />
   );

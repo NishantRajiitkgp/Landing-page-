@@ -13,10 +13,8 @@
       so nothing is ever hidden by a stopped animation. The pause button uses
       the hero's words; this is the page's second long loop, and it is far
       enough from the hero's control to need its own (WCAG 2.2.2).
-    - **The specimens** are drawn here, not shipped as markup: the guilloche
-      waves are one SVG pattern tile and the rosettes are computed from their
-      ring formula, for the reason `HeroPrint` gives — the formula ships, not
-      a few kilobytes of path data twice (HTML and flight payload). */
+    - **The specimens** are synthetic scans (`./HowWeKnowDocs`); the field
+      boxes are placed on their printed values. */
 
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -25,7 +23,7 @@ import { Tick } from "@/components/brand/Tick";
 import type { SectionsCopy } from "@/lib/copy/sections";
 import { tint } from "@/lib/img";
 
-import { Degree, Licence, Seal } from "./HowWeKnowDocs";
+import { Seal, Specimen } from "./HowWeKnowDocs";
 
 type V2 = SectionsCopy["howItWorks"]["v2"];
 type RouteId = keyof V2["routes"];
@@ -35,15 +33,17 @@ type Labels = { upload: string; read: string; confirm: string; report: string };
 const SIZES_HW_AV = "64px";
 
 const AVATAR: Record<RouteId, string> = {
-  licence: "/img/01-rider-bengaluru.jpg",
-  degree: "/img/02-nurse-abudhabi.jpg",
+  licence: "/img/people/01-rider-bengaluru.jpg",
+  degree: "/img/people/02-nurse-abudhabi.jpg",
 };
 
-/** Where each field box sits over its specimen, in the SVG's 470×300 units
- *  (canvas `BOX_L` / `BOX_D`). Converted to percentages of the document. */
+/** Where each field box sits over its specimen, in the stage's 470×300
+ *  units, measured from the ink of each scan's printed value (name, number,
+ *  class, validity; name, degree, register number, award date). Converted
+ *  to percentages of the document. */
 const BOXES: Record<RouteId, readonly [number, number, number, number][]> = {
-  licence: [[154, 92, 170, 18], [154, 134, 170, 18], [154, 176, 130, 18], [154, 218, 150, 18]],
-  degree: [[160, 120, 150, 26], [110, 152, 250, 18], [185, 176, 100, 14], [150, 194, 170, 14]],
+  licence: [[223.8, 102.3, 81.2, 14.1], [224.8, 82.8, 128.6, 14.1], [290.1, 219.3, 82.0, 13.9], [289.1, 197.9, 74.6, 14.1]],
+  degree: [[190, 153, 92, 12.5], [137, 186.5, 199, 12.5], [58.5, 237, 100, 12.5], [58.5, 250.5, 80, 11]],
 };
 
 /** Where the four stage names sit along the case's progress track. */
@@ -81,7 +81,7 @@ function CaseFile({ route, t, labels, children }: { route: RouteId; t: V2; label
       <div className="hw2-body">
         <div className="hw2-table">
           <div className="hw2-doc">
-            {route === "licence" ? <Licence d={t.routes.licence.doc} /> : <Degree d={t.routes.degree.doc} />}
+            <Specimen route={route} />
             {BOXES[route].map(([x, y, w, h], k) => (
               <span
                 key={k}

@@ -297,7 +297,7 @@ export const en = {
       ev: { read: "Read by", confirmed: "Confirmed", artefact: "Artefact", reviewed: "Reviewed" },
       routes: {
         licence: {
-          chip: "Driving licence · 30 min",
+          chip: "Licence verified · 30\u00a0min",
           role: "Delivery rider",
           city: "Bengaluru",
           caseNo: "CASE HV-0417 · DRIVING LICENCE · KARNATAKA",
@@ -326,21 +326,17 @@ export const en = {
           evConfirmed: "RTO Karnataka · 10:08",
           evArtefact: "Sarathi record · PDF · hashed",
           evReviewed: "K.S. · audit trail, 5 events",
-          /** The words printed on the specimen licence, and the tags on the
-           *  four fields the scan boxes. Decorative (`aria-hidden`). */
+          /** The tags on the four fields the scan boxes. The words on the
+           *  specimen itself are in the scan. Decorative (`aria-hidden`). */
           doc: {
-            title: "DRIVING LICENCE",
-            specimen: "SPECIMEN",
-            micro: "SAMPLE DOCUMENT · ILLUSTRATIVE · NOT A REAL LICENCE · SAMPLE DOCUMENT · ILLUSTRATIVE",
-            f1: { l: "NAME", v: "A. RAMESH", tag: "NAME" },
-            f2: { l: "LICENCE NO.", v: "KA05 •••• 4812", tag: "LICENCE" },
-            f3: { l: "CLASS", v: "LMV · MCWG", tag: "CLASS" },
-            f4: { l: "VALID TILL", v: "13 · 03 · 2039", tag: "VALID" },
-            sign: "HOLDER SIGNATURE",
+            f1: { tag: "NAME" },
+            f2: { tag: "LICENCE" },
+            f3: { tag: "CLASS" },
+            f4: { tag: "VALID" },
           },
         },
         degree: {
-          chip: "Degree · 3 days",
+          chip: "Degree verified · 3\u00a0days",
           role: "Nurse",
           city: "Abu Dhabi",
           cap: "A nurse's degree, start to finish. Three days, on loop.",
@@ -371,14 +367,10 @@ export const en = {
           evArtefact: "Registrar letter · PDF · hashed",
           evReviewed: "M.A. · audit trail, 9 events",
           doc: {
-            specimen: "SPECIMEN",
-            issuer: "ISSUING UNIVERSITY · ILLUSTRATIVE",
-            certify: "This is to certify that",
-            f1: { v: "S. Mathew", tag: "NAME" },
-            f2: { v: "Bachelor of Science in Nursing", tag: "DEGREE" },
-            f3: { v: "REG · 2291", tag: "REF." },
-            f4: { v: "AWARDED 12 · 06 · 2016", tag: "AWARDED" },
-            sign: "REGISTRAR",
+            f1: { tag: "NAME" },
+            f2: { tag: "DEGREE" },
+            f3: { tag: "REF." },
+            f4: { tag: "AWARDED" },
           },
         },
       },
@@ -844,54 +836,61 @@ export const en = {
     checkpoint: "At the source",
     /** One table since the phone pass: the phone shows the same eight
      *  cards and words (the six-card `mob` table, with its shorter chips,
-     *  went with the mobile track). Keyed by photograph. */
+     *  went with the mobile track). Keyed by photograph.
+     *
+     *  The chip names what WE did ("Trade licence verified"), never the
+     *  document alone: "Trade licence · 2 days" read as the person being
+     *  issued a licence in two days (owner, 29 Sep 2026). The time moved to
+     *  `city` as "done in …" because a verb plus a time overflows the
+     *  narrowest phone card (24 characters of 10px mono is the ceiling). The
+     *  no-break space keeps "2 days" from wrapping as "2 / days". */
     people: {
-      "/img/01-rider-bengaluru.jpg": {
+      "/img/people/01-rider-bengaluru.jpg": {
         role: "Delivery rider",
-        city: "Bengaluru",
-        chip: "Driving licence · 30 min",
+        city: "Bengaluru · done in 30\u00a0min",
+        chip: "Driving licence verified",
         note: "photo · delivery rider",
       },
-      "/img/02-nurse-abudhabi.jpg": {
+      "/img/people/02-nurse-abudhabi.jpg": {
         role: "Nurse",
-        city: "Abu Dhabi",
-        chip: "Degree · 3 days",
+        city: "Abu Dhabi · done in 3\u00a0days",
+        chip: "Nursing degree verified",
         note: "photo · nurse",
       },
-      "/img/03-engineer-manila.jpg": {
+      "/img/people/03-engineer-manila.jpg": {
         role: "Software engineer",
-        city: "Manila",
-        chip: "Employment · 60 min",
+        city: "Manila · done in 60\u00a0min",
+        chip: "Employment verified",
         note: "photo · engineer",
       },
-      "/img/04-nanny-gurugram.jpg": {
+      "/img/people/04-nanny-gurugram.jpg": {
         role: "Nanny",
-        city: "Gurugram",
-        chip: "Criminal · 30 min",
+        city: "Gurugram · done in 30\u00a0min",
+        chip: "Criminal record checked",
         note: "photo · nanny",
       },
-      "/img/05-warehouse-pune.jpg": {
+      "/img/people/05-warehouse-pune.jpg": {
         role: "Warehouse associate",
         city: "Pune · identity check, 00:41 elapsed",
-        chip: "Reading Aadhaar…",
+        chip: "Verifying Aadhaar…",
         note: "photo · warehouse",
       },
-      "/img/06-supplier-cairo.jpg": {
+      "/img/people/06-supplier-cairo.jpg": {
         role: "Textile supplier",
-        city: "Cairo",
-        chip: "Trade licence · 2 days",
+        city: "Cairo · done in 2\u00a0days",
+        chip: "Trade licence verified",
         note: "photo · supplier",
       },
-      "/img/07-tenant-singapore.jpg": {
+      "/img/people/07-tenant-singapore.jpg": {
         role: "Tenant",
-        city: "Singapore",
-        chip: "Identity · 15 min",
+        city: "Singapore · done in 15\u00a0min",
+        chip: "Identity verified",
         note: "photo · tenant",
       },
-      "/img/08-cfo-london.jpg": {
+      "/img/people/08-cfo-london.jpg": {
         role: "Chief financial officer",
-        city: "London",
-        chip: "Global database · 15 min",
+        city: "London · done in 15\u00a0min",
+        chip: "Global database checked",
         note: "photo · executive",
       },
     },
@@ -917,30 +916,38 @@ export const en = {
     lede: "We flag fraudulent documents before approval. Our system detects fraud in 12–14% of applications.",
     fn: "1",
     footnote: "Figures as published on HelloVerify’s authority pages. Source and period to be confirmed before launch.",
-    bar: "Evidence table · 8 applications · illustrative, synthetic documents",
+    bar: "Evidence table · 8 applications · 7 countries · illustrative, synthetic documents",
     /** The live status reads `${n} ${checked}` until the forgery is found. */
     checked: "of 8 checked",
     found: "7 verified · 1 referred",
-    certify: "This is to certify that",
-    /** `${checkCert} ${inst}` — the accessible name of each certificate. */
-    checkCert: "Check the certificate from",
+    /** `${checkCert} ${kind}, ${where}` — the accessible name of each
+     *  document. `kind` and `where` are also its caption on the table. The
+     *  eight are SYNTHETIC scans (Higgsfield, 29 Sep 2026): fictional
+     *  institutions and people, no state emblems. */
+    checkCert: "Check the",
     certs: {
-      aldermoor: { inst: "Aldermoor University", deg: "Bachelor of Science in Nursing", name: "A. Rahman", yr: "2018" },
-      kestrel: { inst: "Kestrel Institute of Technology", deg: "Bachelor of Technology", name: "P. Iyer", yr: "2017" },
-      meridia: { inst: "University of Meridia", deg: "Master of Business Administration", name: "L. Santos", yr: "2020" },
-      lindenfield: { inst: "Lindenfield College of Health", deg: "Diploma in Pharmacy", name: "M. Haddad", yr: "2016" },
-      harbourline: { inst: "Harbourline University", deg: "Bachelor of Commerce", name: "S. Tan", yr: "2019" },
-      westmarch: { inst: "Westmarch International University", deg: "Bachelor of Science in Nursing", name: "R. Menon", yr: "2019" },
-      crestvale: { inst: "Crestvale School of Medicine", deg: "Doctor of Medicine", name: "N. Farouk", yr: "2015" },
-      aurelian: { inst: "St. Aurelian College", deg: "Bachelor of Arts", name: "J. Cruz", yr: "2021" },
+      be: { kind: "B.E. degree", where: "India" },
+      ae: { kind: "Grade 12 transcript, Arabic", where: "UAE" },
+      ph: { kind: "Transcript of records", where: "Philippines" },
+      eg: { kind: "Pharmacy degree, Arabic", where: "Egypt" },
+      uk: { kind: "MBA degree", where: "UK" },
+      xii: { kind: "Class XII marksheet", where: "India" },
+      sg: { kind: "Polytechnic diploma", where: "Singapore" },
+      pk: { kind: "MBBS degree", where: "Pakistan" },
     },
-    /** What the UV lamp shows. Decorative (`aria-hidden`); `uvTop` is
-     *  followed by the certificate's institution, upper-cased by CSS. */
+    /** What the UV lamp shows. Decorative (`aria-hidden`): the fibres and
+     *  UV-ink emblems are in the photographs; `tags` are the callouts the
+     *  lens draws on them — what was done, and to which figure, on the
+     *  forgery; the security features, on every sheet. */
     uv: {
-      top: "VERIFIED AT SOURCE ·",
-      bottom: "PRIMARY SOURCE · HELLOVERIFY · PRIMARY SOURCE ·",
-      none: "no UV features",
       loupe: "UV · 365 nm",
+      tags: {
+        scraped: { t: "Scraped, retyped", d: "Maths 062 → 092" },
+        washed: { t: "Chemical wash", d: "Physics 058 → 088" },
+        pasted: { t: "Pasted-over slip", d: "Total 415 → 475" },
+        paper: { t: "UV emblem ✓", d: "Genuine board paper" },
+        genuine: { t: "UV emblem ✓", d: "Security fibres ✓" },
+      },
     },
     referred: "REFERRED",
     notVerified: "NOT VERIFIED",
@@ -949,6 +956,27 @@ export const en = {
     hint: "Move the lamp over the documents, or",
     reveal: "Show me the forgery",
     reset: "Reset the table",
+    /** `sections/OneInEightCase.tsx`: the case file that opens once the
+     *  forgery is found. Every finding is true of the specimen — it was
+     *  altered three ways the way a forger would (scrape, wash, paste-over;
+     *  `tools/img/specimens/forge.cjs`), and the heatmap is those edits' own
+     *  mask. */
+    case: {
+      k: "Case file · application 06 · Class XII marksheet, India",
+      title: "Why this marksheet was referred",
+      verdict: "Referred · not approved",
+      viewsLabel: "How to look at the document",
+      views: { scan: "Scan", uv: "UV · 365 nm", heat: "Heatmap" },
+      alt: "Synthetic Class XII statement of marks from application 06, with two altered marks",
+      zoomAlt: "The marks column at three times size: the retyped 9 and 8 print thinner and sit low, the 8 in a bleached halo",
+      findings: {
+        f1: { t: "Maths was scraped and retyped", d: "062 → 092. The 9 prints thinner and sits low, and the scraped paper glows under UV.", by: "Image forensics · UV" },
+        f2: { t: "Physics was washed and retyped", d: "058 → 088. A solvent bleached a halo round the digit: dark under UV, with a bright tide line where it dried.", by: "UV · 365 nm" },
+        f3: { t: "The total is a pasted-over slip", d: "A slip printed 475 is glued over the figure. Its paper and glue fluoresce; the sheet's own paper does not.", by: "UV · 365 nm" },
+        f4: { t: "Figures and words disagree", d: "“092” sits beside “SIXTY TWO”, “088” beside “FIFTY EIGHT”, and “475” beside “FOUR HUNDRED FIFTEEN”.", by: "HelloVerify AI · read" },
+        f5: { t: "The board's record disagrees", d: "Roll No. 4127033: Mathematics 62, Physics 58, total 415.", by: "Source · the issuing board" },
+      },
+    },
   },
 
   /** `sections/Contact.tsx`.

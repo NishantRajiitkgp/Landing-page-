@@ -92,7 +92,7 @@ export default async function PlatformHub({
             `chrome.footer.links`' shape. */}
         <div className="body3 paths3">
           <AppLink href="/platform/technology" className="cell ph span3">
-            <Image className="pimg" src="/img/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />
+            <Image className="pimg" src="/img/people/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />
             <div className="scrim" />
             <span className="tag">{t.hub.paths["/platform/technology"].tag}</span>
             <span className="from">{t.hub.paths["/platform/technology"].from}</span>

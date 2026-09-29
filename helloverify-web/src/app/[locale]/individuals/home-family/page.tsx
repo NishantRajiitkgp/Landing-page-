@@ -130,7 +130,7 @@ export default async function Page({
         sub: c.closing.sub,
         ctaLabel: c.closing.ctaLabel,
         ctaHref: "https://app.helloverify.com",
-        img: "/img/04-nanny-gurugram.jpg",
+        img: "/img/people/04-nanny-gurugram.jpg",
       }}
     />
   );

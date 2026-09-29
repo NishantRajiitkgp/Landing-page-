@@ -334,7 +334,10 @@ const BASELINE = {
   "decl #8FD3B3": { n: 2, t: "green-light" },
   "decl #CFCAC0": { n: 2, t: "tick-off" },
   "decl #E3DFD6": { n: 2, t: "hair" },
-  "decl #EC2E21": { n: 1, t: "red" },
+  // --red was desktop-only until 29 Sep 2026, when the evidence table's
+  // tamper marks became its first use at both widths (it rendered black on
+  // phones, `var()` of an undefined property).
+  "decl #EC2E21": { n: 2, t: "red" },
   "decl #F6F4EF": { n: 2, t: "paper" },
   "decl #FFFFFF": { n: 2, t: "white" },
 
@@ -440,32 +443,15 @@ const BASELINE = {
   // Declared by two v2 sheets (footer.css, fraud.css) — one row, see #EDE9E0.
   "decl #16132A": { n: 2, why: "--v2-fz-night and --v2-ff-uv-lo: the dark disc of a UV lamp" },
   "decl #6EE7B0": { n: 1, why: "--v2-fz-uv: the fluorescent glow of the revealed wordmark" },
-  // ── homepage v2 · One in eight (`src/app/v2/fraud.css`): the synthetic
-  //    certificates' paper, rules and gold seal, and the UV lamp's blacklight.
-  //    All surfaces; the certificates' words are `--ink`/`--ink-soft`/`--muted`.
-  "decl #FBF8F0": { n: 1, why: "--v2-ff-paper: certificate paper" },
-  "decl #E3DCCB": { n: 1, why: "--v2-ff-edge: certificate edge" },
-  "decl #DCD2BC": { n: 1, why: "--v2-ff-rule: certificate inner rule" },
-  "decl #E8E0CE": { n: 1, why: "--v2-ff-rule-lo: certificate inner rule, second line" },
-  "decl #E6D3A0": { n: 1, why: "--v2-ff-gold-hi: gold seal, highlight" },
-  "decl #B99A5B": { n: 1, why: "--v2-ff-gold: gold seal" },
-  "decl #9C7F45": { n: 1, why: "--v2-ff-gold-lo: gold seal, shade" },
-  "decl #C8B07A": { n: 1, why: "--v2-ff-gold-rim: gold seal rim" },
-  "decl #E9D59C": { n: 1, why: "--v2-ff-fgold-hi: the forged seal's slightly-off gold, highlight" },
-  "decl #C2A25C": { n: 1, why: "--v2-ff-fgold: the forged seal's slightly-off gold" },
-  "decl #A4864A": { n: 1, why: "--v2-ff-fgold-lo: the forged seal's slightly-off gold, shade" },
+  // ── homepage v2 · One in eight (`src/app/v2/fraud.css`): the paper behind
+  //    the REFERRED stamp and the UV lamp's blacklight. The documents are
+  //    photographs since 29 Sep 2026, so their paper and seals left the sheet.
+  "decl #FBF8F0": { n: 1, why: "--v2-ff-paper: the REFERRED stamp's paper" },
   "decl #221D3A": { n: 1, why: "--v2-ff-uv-hi: UV lamp pool, centre" },
-  "decl #1C1834": { n: 1, why: "--v2-ff-uv-cell: a genuine certificate under UV" },
-  "decl #3B3659": { n: 1, why: "--v2-ff-uv-bad: the forgery under UV (no features)" },
 
   // ── homepage v2 · How we know (`src/app/v2/how.css`): the case file's table
-  //    and rails, the specimen's hologram, and the custody orb. All surfaces.
+  //    and rails, and the custody orb. All surfaces.
   "decl #F4F1EA": { n: 1, why: "--v2-hw-table: the desk the specimen lies on" },
-  "decl #E8D9FF": { n: 1, why: "--v2-hw-holo-1: specimen hologram, conic stop" },
-  "decl #C7F0E0": { n: 1, why: "--v2-hw-holo-2: specimen hologram, conic stop" },
-  "decl #FFF3C4": { n: 1, why: "--v2-hw-holo-3: specimen hologram, conic stop" },
-  "decl #FFD6E6": { n: 1, why: "--v2-hw-holo-4: specimen hologram, conic stop" },
-  "decl #CFE4FF": { n: 1, why: "--v2-hw-holo-5: specimen hologram, conic stop" },
   "decl #E9F7EF": { n: 1, why: "--v2-hw-orb-hi: the spinning mint orb, highlight" },
   "decl #9AD8BA": { n: 1, why: "--v2-hw-orb-mid: the spinning mint orb" },
   "decl #2E8A62": { n: 1, why: "--v2-hw-orb-lo: the spinning mint orb, shade" },

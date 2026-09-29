@@ -16,17 +16,12 @@
    over the last few percent before the loop restarts — are kept.
 
    THE SPECIMEN DOES NOT MIRROR. `.hw2-doc` is `direction: ltr`: it is a
-   picture of a physical document, its SVG is drawn left to right, and the
-   field boxes over it are placed in the SVG's own coordinates. Everything
+   scan of a physical document, printed left to right, and the field boxes
+   over it are placed in its own 470×300 coordinates. Everything
    around it — the track, the ledger, the route line — is logical and mirrors. */
 :root {
   --v2-hw-table: #F4F1EA;
   --v2-hw-rail: #EDE9E0;
-  --v2-hw-holo-1: #E8D9FF;
-  --v2-hw-holo-2: #C7F0E0;
-  --v2-hw-holo-3: #FFF3C4;
-  --v2-hw-holo-4: #FFD6E6;
-  --v2-hw-holo-5: #CFE4FF;
   --v2-hw-orb-hi: #E9F7EF;
   --v2-hw-orb-mid: #9AD8BA;
   --v2-hw-orb-lo: #2E8A62;
@@ -66,12 +61,10 @@
 .hw2-st::before { content: ""; position: absolute; inset-inline-start: 0; top: -12px; width: 1px; height: 8px; background: var(--tick-off); }
 .hw2-table { position: relative; background-color: var(--v2-hw-table); background-image: linear-gradient(rgb(from var(--ink) r g b / .045) 1px, transparent 1px), linear-gradient(calc(var(--flip) * 90deg), rgb(from var(--ink) r g b / .045) 1px, transparent 1px); background-size: 24px 24px; }
 .hw2-doc { position: relative; direction: ltr; aspect-ratio: 470 / 300; filter: drop-shadow(0 24px 30px rgb(from var(--ink) r g b / .22)) drop-shadow(0 2px 3px rgb(from var(--ink) r g b / .12)); }
-.hw2-doc-svg { display: block; width: 100%; height: 100%; }
-/* The holographic patch sits on the printed one, placed in % of the 470×300
-   document so it stays there at any scale (the same pixels at 470px). */
-.hw2-doc::after { content: ""; position: absolute; inset-inline-end: 6.383%; bottom: 6%; width: 13.617%; aspect-ratio: 1; border-radius: 50%; background: conic-gradient(from 0deg, var(--v2-hw-holo-1), var(--v2-hw-holo-2), var(--v2-hw-holo-3), var(--v2-hw-holo-4), var(--v2-hw-holo-5), var(--v2-hw-holo-1)); mix-blend-mode: multiply; opacity: .55; }
-.hw2-b .hw2-doc::after { inset-inline-end: 8.511%; bottom: 8.667%; width: 11.064%; }
-@keyframes hw2Holo { to { transform: rotate(360deg); } }
+/* The scans carry their own holograms, so there is no painted one. The
+   licence is a cut-out with transparent sides, which is why the shadow above
+   is a `drop-shadow` filter rather than a box-shadow. */
+.hw2-doc-img { object-fit: contain; }
 .hw2-box { position: absolute; inset-inline-start: var(--x); top: var(--y); width: var(--w); height: var(--h); border: 1.3px solid var(--green); border-radius: 3px; background: rgb(from var(--green) r g b / .05); }
 .hw2-box i { position: absolute; inset-inline-end: -6px; top: 50%; transform: translate(100%, -50%); font-style: normal; font-family: var(--mono); font-size: 9px; letter-spacing: .08em; color: var(--green); background: var(--white); padding: 2px 5px; border-radius: 3px; box-shadow: 0 0 0 1px rgb(from var(--green) r g b / .35); white-space: nowrap; }
 .hw2-scan { position: absolute; inset-inline: -10px; top: 0; height: 2px; background: linear-gradient(calc(var(--flip) * 90deg), transparent, var(--green-light), transparent); box-shadow: 0 0 16px 3px rgb(from var(--green-light) r g b / .55); opacity: 0; }
@@ -156,7 +149,6 @@
 .hw-seal span { font-family: var(--serif); font-style: italic; font-size: 17px; }
 
 /* ── The run: one 16s loop, every element keyed to the same clock ──── */
-.hw-run .hw2-doc::after { animation: hw2Holo 5s linear infinite; }
 @keyframes hw2Fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .hw-run .hw2-fill { animation: hw2Fill 16s linear infinite; }
 @keyframes hw2Doc { 0% { filter: blur(7px) drop-shadow(0 24px 30px rgb(from var(--ink) r g b / .22)); transform: perspective(900px) rotateX(8deg) rotateY(-9deg) scale(.97); } 9%, 95% { filter: blur(0) drop-shadow(0 24px 30px rgb(from var(--ink) r g b / .22)) drop-shadow(0 2px 3px rgb(from var(--ink) r g b / .12)); transform: none; } 100% { filter: blur(4px); transform: scale(.99); } }

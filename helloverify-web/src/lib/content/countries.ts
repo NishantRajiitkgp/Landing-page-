@@ -29,7 +29,7 @@ export const COUNTRIES: Country[] = [
     region: "South & Southeast Asia",
     turnaround: "15 min – 3 days",
     office: "Noida",
-    img: "/img/01-rider-bengaluru.jpg",
+    img: "/img/people/01-rider-bengaluru.jpg",
     summary:
       "The most digitally verifiable country we operate in. Identity, licence and provident-fund records answer in minutes; universities and courts still set the pace for everything else.",
     notes: [

@@ -48,7 +48,7 @@ const DOSSIERS: {
   cta: Cta;
   href: string;
 }[] = [
-  { id: "health", img: "/img/02-nurse-abudhabi.jpg", pos: "50% 30%", Stamp: StampRound, cta: "talk", href: "/governments/health" },
+  { id: "health", img: "/img/people/02-nurse-abudhabi.jpg", pos: "50% 30%", Stamp: StampRound, cta: "talk", href: "/governments/health" },
   { id: "immigration", img: "/img/14-visa-counter.jpg", pos: "50% 40%", Stamp: StampRect, cta: "authority", href: "/governments/immigration" },
   { id: "manpower", img: "/img/19-singapore.jpg", pos: "50% 35%", Stamp: StampOct, cta: "mom", href: "/governments/manpower-education" },
   { id: "trade", img: "/img/13-factory-floor.jpg", pos: "50% 45%", Stamp: StampOval, cta: "talk", href: "/governments/trade" },
