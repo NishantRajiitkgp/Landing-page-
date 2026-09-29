@@ -33,7 +33,14 @@ import { htmlPages } from "./build-output.mjs";
 const root = new URL("../../", import.meta.url);
 
 /** Routes Next prerendered but that are not pages a person can visit. */
-const NOT_PAGES = new Set(["/_global-error", "/_not-found", "/favicon.ico"]);
+const NOT_PAGES = new Set([
+  "/_global-error",
+  "/_not-found",
+  "/favicon.ico",
+  /** The frozen homepage snapshot (`src/app/landing-page/`): internal,
+   *  `noindex`, deliberately kept out of the sitemap. */
+  "/landing-page",
+]);
 const NOT_PAGE_SUFFIXES = [
   "/opengraph-image", // an asset of a page, not a page
   "/sitemap.xml",

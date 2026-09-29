@@ -1,0 +1,203 @@
+/* HelloVerify — styles for everything built AFTER the canvas port that EVERY
+   page loads: the nav, the footer, the homepage demo and the form controls.
+   The breadcrumb, the closing CTA and the per-page sections are in
+   `inner.css`, which only the inner pages load (Sep 2026 perf pass). Written as ONE
+   responsive tree (breakpoint 1080px), unlike the ported homepage sections.
+   Tokens and component classes come from design.css; rules live in DESIGN.md.
+   No hex may appear here that is not in DESIGN.md §2.1.
+
+   The 29 rules here that read the removed third text tier now read --muted.
+   That tier measured 2.43:1 on --paper where AA 1.4.3 wants 4.5:1 for body
+   text and 3:1 for large text - it missed both, so no type size could have
+   saved it - and the lightest passing colour on its hue is 1.06:1 from
+   --muted, the same colour to the eye. TASKS.md Part 2a; DESIGN.md §2.1. */
+
+/* ============ NAV (the old site's menu as mega-menus) ============
+   Classes are `nv-`-prefixed: section sheets are unscoped and `.dd`/`.dd-card`
+   belong to `v2/diligence.css` (see `chrome/SiteNav.tsx`). Panel alignment:
+   `nv-wide` spans the bar's content box, so it lines up with the wordmark and
+   the CTA; `nv-mid`/`nv-narrow` hang from their trigger's inline start. */
+.nav2 { position: relative; z-index: 60; }
+.nav2 .nbar { position: relative; height: 84px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.nav2 .links { display: flex; align-items: center; gap: 2px; align-self: stretch; }
+.nav2 .nv-l, .nav2 .nv-btn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 13px; border: 0; border-radius: 999px; background: none; font-family: var(--sans); font-size: 15px; font-weight: 500; line-height: 1; color: var(--ink-soft); white-space: nowrap; cursor: pointer; transition: background .2s, color .2s; }
+.nav2 .nv-l:hover, .nav2 .nv-btn:hover, .nav2 .nv-dd.is-open .nv-btn { color: var(--ink); background: rgb(from var(--ink) r g b / .055); }
+.nav2 .nv-car { flex: none; opacity: .6; transition: transform .25s cubic-bezier(.2, .8, .2, 1); }
+.nav2 .nv-dd.is-open .nv-car { transform: rotate(180deg); }
+.nav2 .nv-dd { position: relative; display: flex; align-items: center; height: 100%; }
+.nav2 .nv-wide { position: static; }
+
+/* The panel starts 14px above the bar's foot; its 8px top padding is the hover bridge
+   between the trigger and the card, which sits 18px under the pill. */
+.nav2 .nv-pan { position: absolute; top: calc(100% - 14px); inset-inline-start: 0; padding-top: 8px; opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .16s ease, transform .22s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .22s; }
+.nav2 .nv-wide .nv-pan { inset-inline: clamp(24px, 8.334vw, 120px); }
+.nav2 .nv-dd.is-open .nv-pan { opacity: 1; visibility: visible; transform: none; transition: opacity .16s ease, transform .22s cubic-bezier(.2, .8, .2, 1), visibility 0s; }
+@media (hover: hover) {
+  .nav2 .nv-dd:not(.is-shut):hover .nv-btn { color: var(--ink); background: rgb(from var(--ink) r g b / .055); }
+  .nav2 .nv-dd:not(.is-shut):hover .nv-car { transform: rotate(180deg); }
+  .nav2 .nv-dd:not(.is-shut):hover .nv-pan { opacity: 1; visibility: visible; transform: none; transition: opacity .16s ease .06s, transform .22s cubic-bezier(.2, .8, .2, 1) .06s, visibility 0s .06s; }
+}
+
+.nav2 .nv-card { padding: 14px; border-radius: 18px; background: var(--white); border: 1px solid var(--hair); box-shadow: 0 24px 48px -24px rgb(from var(--ink) r g b / .28), 0 6px 14px -8px rgb(from var(--ink) r g b / .12); }
+.nav2 .nv-wide .nv-card { padding: 22px 18px; }
+.nav2 .nv-mid .nv-card { width: 760px; }
+.nav2 .nv-narrow .nv-card { width: 360px; }
+
+.nav2 .nv-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.nav2 .nv-cols .nv-col { display: flex; flex-direction: column; gap: 2px; padding-inline: 10px; }
+.nav2 .nv-cols .nv-col + .nv-col { border-inline-start: 1px solid var(--hair); }
+.nav2 .nv-grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, auto); grid-auto-flow: column; gap: 2px 8px; }
+
+.nav2 .nv-h { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; padding: 6px 12px 0; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .08em; line-height: 1.4; text-transform: uppercase; color: var(--muted); }
+.nav2 .nv-hl { align-self: flex-start; }
+.nav2 .nv-hl:hover { color: var(--green); }
+.nav2 .nv-arr { flex: none; transition: transform .2s; }
+.nav2 .nv-hl .nv-arr { opacity: 0; transform: translateX(calc(var(--flip) * -3px)) scaleX(var(--flip)); }
+.nav2 .nv-hl:hover .nv-arr, .nav2 .nv-hl:focus-visible .nv-arr { opacity: 1; transform: scaleX(var(--flip)); }
+.nav2 .nv-lede { margin: -2px 0 8px; padding-inline: 12px; font-size: 13.5px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
+
+.nav2 .nv-i { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; padding: 11px 12px; border-radius: 12px; color: var(--ink); transition: background .18s; }
+.nav2 .nv-i:hover, .nav2 .nv-i:focus-visible { color: var(--ink); background: var(--paper); }
+.nav2 .nv-ic { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); transition: background .18s, box-shadow .18s; }
+.nav2 .nv-i:hover .nv-ic, .nav2 .nv-i:focus-visible .nv-ic { background: var(--green); box-shadow: inset 0 0 0 1px var(--green); }
+/* The icon is a graphic, so its colour is `stroke`, not `color` (which the
+   contrast gate reads as text). White on --green is 6.4:1 either way. */
+.nav2 .nv-i:hover .nv-ic svg, .nav2 .nv-i:focus-visible .nv-ic svg { stroke: var(--white); }
+.nav2 .nv-ic svg { width: 20px; height: 20px; stroke: var(--green); transition: stroke .18s; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.nav2 .nv-tx { display: flex; flex-direction: column; gap: 3px; min-width: 0; padding-top: 1px; }
+.nav2 .nv-t { font-size: 15px; font-weight: 500; line-height: 1.3; letter-spacing: -.005em; }
+.nav2 .nv-d { font-size: 13px; line-height: 1.45; color: var(--muted); text-wrap: pretty; }
+.nav2 .nv-foot { display: flex; align-items: center; gap: 8px; margin: 10px -14px -14px; padding: 14px 26px; border-top: 1px solid var(--hair); border-radius: 0 0 18px 18px; background: var(--paper); font-size: 14px; font-weight: 500; color: var(--ink); }
+.nav2 .nv-foot:hover { color: var(--green); }
+.nav2 .nv-foot .nv-arr { transform: scaleX(var(--flip)); }
+.nav2 .nv-foot:hover .nv-arr { transform: translateX(calc(var(--flip) * 3px)) scaleX(var(--flip)); }
+
+.nav2 .acts { display: flex; align-items: center; gap: 22px; }
+.nav2 .lang { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: var(--ink-soft); }
+.nav2 .burger { display: none; }
+.nav2 .menu { display: none; }
+.vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* 1081–1279px: six items, the wordmark and the CTA fit only without the
+   language switcher and with the items tightened. Measured at 1081. */
+@media (min-width: 1081px) and (max-width: 1279px) {
+  .nav2 .nbar { gap: 16px; }
+  .nav2 .nv-l, .nav2 .nv-btn { padding-inline: 9px; font-size: 14.5px; }
+  .nav2 .lang { display: none; }
+  /* At full size the Products and Support cards pass the CTA's edge here
+     (measured at 1081 and 1100); narrower, the titles wrap instead. */
+  .nav2 .nv-mid .nv-card { width: 660px; }
+  .nav2 .nv-narrow .nv-card { width: 320px; }
+}
+
+@media (max-width: 1080px) {
+  .nav2 .nbar { height: 64px; }
+  .nav2 .links, .nav2 .lang { display: none; }
+  .nav2 .acts { gap: 10px; }
+  .nav2 .burger { display: flex; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--hair); align-items: center; justify-content: center; cursor: pointer; background: transparent; }
+  /* CSS-only disclosure: the burger checkbox opens the panel and each group
+     is a `<details>`. It scrolls within the screen once a group is open. */
+  .nav2 .menu { display: block; position: absolute; inset-inline: 0; top: 100%; z-index: 50;
+                background: var(--paper); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
+                box-shadow: 0 30px 60px -40px rgb(from var(--ink) r g b / .4);
+                max-height: 0; overflow: hidden; visibility: hidden; }
+  .nav2 .mtoggle:checked ~ .menu { max-height: calc(100dvh - 64px); overflow-y: auto; overscroll-behavior: contain; visibility: visible; }
+  .nav2 .menu > .nv-ml, .nav2 .menu summary { display: flex; align-items: center; justify-content: space-between; padding: 16px clamp(24px, 8.334vw, 120px); font-size: 16px; font-weight: 500; color: var(--ink); border-bottom: 1px solid var(--hair); cursor: pointer; list-style: none; }
+  .nav2 .menu summary::-webkit-details-marker { display: none; }
+  .nav2 .menu details[open] > summary { border-bottom-color: transparent; }
+  .nav2 .menu details[open] > summary .nv-car { transform: rotate(180deg); }
+  .nav2 .menu details[open] { padding-bottom: 12px; border-bottom: 1px solid var(--hair); }
+  .nav2 .menu .nv-col { display: flex; flex-direction: column; padding-inline: calc(clamp(24px, 8.334vw, 120px) - 12px); }
+  .nav2 .menu .nv-col + .nv-col { margin-top: 10px; }
+  .nav2 .menu .nv-hl .nv-arr { opacity: 1; transform: scaleX(var(--flip)); }
+  .nav2 .menu .nv-i { padding-block: 10px; }
+  .nav2 .menu .nv-i:hover { background: rgb(from var(--ink) r g b / .04); }
+  .nav2 .menu .nv-ic { width: 36px; height: 36px; background: var(--white); }
+  .nav2 .menu .nv-i { grid-template-columns: 36px minmax(0, 1fr); }
+  .nav2 .menu .nv-foot { margin: 4px 0 0; padding: 12px; border: 0; border-radius: 12px; background: none; }
+  .nav2 .menu > .nv-ml:last-child { border-bottom: 0; }
+  .nav2 .menu .nv-ml .k { font-size: 10px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav2 .nv-pan, .nav2 .nv-car, .nav2 .nv-arr { transition: none !important; }
+}
+
+/* ============ FOOTER (canvas footer, columns regrouped to the IA) ============ */
+.foot2 { }
+.foot2 .cols { display: grid; grid-template-columns: minmax(0, 2.2fr) repeat(5, minmax(0, 1fr)); gap: 40px; padding: 64px 0 56px; }
+.foot2 .fcol2 { display: flex; flex-direction: column; gap: 11px; }
+.foot2 .fcol2 .h { font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--ink); }
+.foot2 .fcol2 a { font-size: 14px; color: var(--muted); line-height: 1.35; }
+.foot2 .fcol2 a:hover { color: var(--ink); }
+.foot2 .blurb { margin: 18px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); max-width: 240px; }
+.foot2 .socials { margin-top: 18px; display: flex; gap: 10px; }
+.foot2 .co { margin-top: 22px; display: flex; flex-direction: column; gap: 9px; }
+.foot2 .co a { font-size: 14px; font-weight: 500; color: #3D3B35; } .foot2 .co a:hover { color: var(--ink); }
+.foot2 .certline { display: flex; align-items: center; gap: 14px; padding: 20px 0; border-top: 1px solid var(--hair); }
+.foot2 .certline img { width: 34px; height: 34px; object-fit: contain; border-radius: 8px; border: 1px solid var(--hair); background: #FFFFFF; padding: 4px; filter: grayscale(1); opacity: 0.8; }
+.foot2 .certline .t { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.foot2 .base { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; padding: 18px 0 26px; border-top: 1px solid var(--hair); }
+.foot2 .base .cr { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.foot2 .base .lg { display: flex; gap: 18px; }
+.foot2 .base .lg a { font-size: 12.5px; font-weight: 500; color: var(--muted); } .foot2 .base .lg a:hover { color: var(--ink); }
+.foot2 .base .offices { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; color: var(--muted); }
+@media (max-width: 1080px) {
+  .foot2 .cols { grid-template-columns: 1fr 1fr; gap: 8px 24px; padding: 40px 0 28px; }
+  .foot2 .cols > .brandcol { grid-column: 1 / -1; }
+  .foot2 .fcol2 { padding: 16px 0; border-top: 1px solid var(--hair); }
+  .foot2 .brandcol { border-top: 0; }
+  .foot2 .base { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+
+/* The canvas drew .inp as a styled div. These are real controls now: make them
+   fill their grid cell, keep the paper field look, and strip UA chrome. */
+input.inp, select.inp, textarea.inp { width: 100%; display: block; font-family: var(--sans); color: var(--ink); appearance: none; -webkit-appearance: none; }
+/* var(--muted), not the canvas's #7D796F: 3.95:1 on --paper fails AA's 4.5:1,
+   --muted (#6F6B62) measures 4.83:1. These are the REAL contact form's
+   placeholders, where design.css's .inp is only the homepage mock, so the same
+   literal had to go in both files - and this pair is the one a user types into.
+   The WCAG placeholder exemption DESIGN.md leaned on does not apply once the
+   colour is free: it excuses a low-contrast placeholder whose information is
+   repeated in the label, not a low-contrast placeholder for its own sake. */
+input.inp::placeholder, textarea.inp::placeholder { color: var(--muted); }
+textarea.inp { min-height: 96px; line-height: 1.5; }
+select.inp { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'><path d='M1 1l5 5 5-5' stroke='%236F6B62' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>"); background-repeat: no-repeat; background-position: right 16px center; padding-inline-end: 40px; }
+/* The chevron is a background image, and CSS has no logical
+   `background-position`. `padding-inline-end: 40px` above already moves the
+   space it sits in, so without this the arrow stays on the right while the
+   gap opens on the left. Found by rendering, not reading: `check:logical`
+   matches property names and `background-position` is on its own declared
+   exemption list (paint positioning), so no gate could have reported it.
+   REJECTED: a native `<select>` appearance, which flips on its own - the
+   canvas specifies this chevron and dropping it is a design change, not an
+   RTL fix. */
+[dir="rtl"] select.inp { background-position: left 16px center; }
+select.inp:invalid, select.inp option[value=""] { color: var(--muted); }
+.inp:focus-visible, .btn:focus-visible, a:focus-visible, summary:focus-visible, .seg:focus-within { outline: 2px solid var(--ink); outline-offset: 2px; }
+.ct3 .seg { cursor: pointer; }
+.ct3 .seg:hover { border-color: var(--ink); }
+
+/* The canvas drew the selected segment as a static .seg.on class, and the radios
+   it drew carried no value at all — the form posted segment=on and the pill never
+   moved. Real radios now, with the selected state derived from :checked so it
+   works with no JavaScript. Property list matches design.css's .seg.on exactly. */
+.ct3 .seg:has(input:checked) { border-color: var(--ink); color: var(--ink); font-weight: 500; }
+
+/* Validation states. DESIGN.md 2.1: red exists only inside the logo, so failure
+   is carried by ink and by words, never by colour. The inset shadow thickens the
+   border visually without changing the box, so an error cannot reflow the form.
+   :user-invalid rather than :invalid — the latter marks every empty required
+   field before the user has typed anything. */
+.inp[aria-invalid="true"], .inp:user-invalid { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.ct3 .err { margin-top: 6px; font-size: 12.5px; line-height: 1.5; font-weight: 500; color: var(--ink); }
+
+/* Submission outcome. Green marks a concluded thing (DESIGN.md 2.1) and appears
+   only on success; every other outcome is ink on panel with the message doing
+   the work. */
+.ct3 .status { margin-top: 18px; padding: 13px 15px; border: 1px solid var(--hair); border-radius: 12px; background: #FBFAF6; font-size: 13.5px; line-height: 1.55; color: var(--ink); }
+.ct3 .status.ok::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 999px; background: var(--green); margin-inline-end: 9px; vertical-align: 1px; }
+
+.btn[disabled] { opacity: 0.6; cursor: default; }
+.btn-ink[disabled]:hover { background: var(--ink); }
