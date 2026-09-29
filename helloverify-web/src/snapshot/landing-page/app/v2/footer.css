@@ -1,0 +1,122 @@
+/* Homepage v2 · footer ("the last page of the document"), imported by
+   `chrome/SiteFooter.tsx` — so, unlike the other v2 sheets, it loads on every
+   route. Hand-ported from the Desktop4 board (`assemble_footer.py`); the
+   header of `hero.css` says why v2 sheets are authored, not generated.
+
+   Only the board's VISUAL treatment is ported. The footer's columns, routes
+   and copy are the IA's (an approved deviation from the board), so these
+   rules restyle the existing `.foot2` tree at ≥1081px and add the v2-only
+   blocks, rather than replacing its markup. Selectors are `.foot2.fz …`
+   (one class more than `pages.css`'s `.foot2 …`) so they win without
+   depending on which sheet the bundler emits first.
+
+   Prefix `fz-`, the canvas's own. Two literals, declared once below; both
+   are the UV lamp's, and neither is ever text. */
+:root {
+  --v2-fz-night: #16132A;
+  --v2-fz-uv: #6EE7B0;
+}
+
+/* The phone keeps the footer it had: the v2-only blocks are not drawn. */
+@media (max-width: 1080px) {
+  .fz-guil, .fz-top, .fz-offices-h, .fz-offices, .fz-mark, .fz-micro, .fz-arr, .fz-seal-l, .foot2 .fcol2 .h i { display: none; }
+}
+
+@media (min-width: 1081px) {
+  .foot2.fz { position: relative; overflow: hidden; background: var(--paper); }
+  .fz-guil { position: absolute; inset-inline: 0; top: 0; height: 10px; opacity: .8; background: repeating-linear-gradient(calc(var(--flip) * 90deg), transparent 0 6px, rgb(from var(--ink) r g b / .12) 6px 7px), repeating-linear-gradient(0deg, transparent 0 3px, rgb(from var(--green) r g b / .18) 3px 4px); }
+
+  /* ── Closing band and back-to-top seal ────────────────────────────────── */
+  .fz-top { display: flex; justify-content: space-between; align-items: center; gap: 40px; padding-top: 88px; }
+  .fz-end { display: flex; flex-direction: column; gap: 14px; }
+  .fz-end-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .fz-end-t { font-family: var(--serif); font-size: 56px; line-height: 1; letter-spacing: -.03em; color: var(--ink); }
+  .fz-end-t em { font-style: italic; color: var(--green); }
+  .fz-back { position: relative; flex: none; width: 120px; height: 120px; border-radius: 50%; color: var(--ink); text-decoration: none; }
+  /* The ring turns only while the seal is hovered or focused. The board spun
+     it forever (24s a turn); on every page of the site that is a loop longer
+     than five seconds with no pause control (WCAG 2.2.2), so the idle spin
+     is dropped and the board's hover speed kept. */
+  .fz-back-ring { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fz-back:hover .fz-back-ring, .fz-back:focus-visible .fz-back-ring { animation: fzSpin 6s linear infinite; }
+  @keyframes fzSpin { to { transform: rotate(360deg); } }
+  .fz-back-c { position: absolute; inset-inline-start: 50%; top: 50%; width: 62px; height: 62px; margin-block-start: -31px; margin-inline-start: -31px; border-radius: 50%; background: var(--ink); color: var(--white); display: flex; align-items: center; justify-content: center; transition: transform .45s cubic-bezier(.16, 1, .3, 1), background .3s; }
+  .fz-back:hover .fz-back-c { transform: translateY(-6px); background: var(--green); }
+  .fz-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  /* ── Six offices, live ────────────────────────────────────────────────── */
+  .fz-offices-h { margin-top: 72px; display: flex; justify-content: space-between; align-items: center; }
+  .fz-open { display: inline-flex; align-items: center; gap: 8px; min-height: 16px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--green); }
+  .fz-offices { margin-top: 16px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); }
+  .fz-off { padding-block: 20px 18px; padding-inline: 18px; transition: background .3s; }
+  .fz-off + .fz-off { border-inline-start: 1px solid var(--hair); }
+  .fz-off:hover { background: var(--white); }
+  .fz-off-t { display: flex; align-items: center; gap: 10px; }
+  .fz-off-t b { font-family: var(--serif); font-weight: 400; font-size: 38px; line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .fz-live { width: 8px; height: 8px; border-radius: 50%; background: var(--tick-off); flex: none; }
+  .fz-on .fz-live { background: var(--green); animation: pulse 1.6s ease-in-out infinite; }
+  .fz-off-c { margin-top: 10px; font-size: 15px; font-weight: 500; }
+  .fz-off-k { margin-top: 3px; min-height: 1.2em; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  .fz-on .fz-off-k span { color: var(--green); }
+
+  /* ── Brand and the IA's columns, restyled ─────────────────────────────── */
+  /* 356px = the board's 320px brand column plus the 36px its 64px gap has
+     over the 28px between link columns: a margin cannot widen a grid track. */
+  .foot2.fz .cols { margin-top: 72px; padding: 0; grid-template-columns: 356px repeat(5, minmax(0, 1fr)); gap: 28px; }
+  .foot2.fz .brandcol { margin-inline-end: 36px; gap: 0; }
+  .foot2.fz .fz-logo svg { width: 150px; height: auto; }
+  .foot2.fz .blurb { margin: 22px 0 0; max-width: none; font-size: 16px; line-height: 1.55; color: var(--muted); }
+  .foot2.fz .socials { margin-top: 22px; }
+  .foot2.fz .soc { width: 48px; height: 48px; background: var(--white); transition: background .25s, color .25s, transform .35s cubic-bezier(.16, 1, .3, 1), border-color .25s; }
+  .foot2.fz .soc:hover { background: var(--ink); border-color: var(--ink); color: var(--white); transform: translateY(-3px) rotate(-6deg); }
+  .foot2.fz .soc:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .foot2.fz .co { margin-top: 26px; gap: 12px; }
+  .foot2.fz .co a { font-size: 15px; color: var(--ink); }
+  .foot2.fz .co a:hover { color: var(--green); }
+  .foot2.fz .fcol2 { gap: 0; }
+  .foot2.fz .fcol2:not(.brandcol) .h { display: flex; justify-content: space-between; align-items: baseline; margin: 0 0 10px; padding-bottom: 12px; border-bottom: 1px solid var(--ink); font-size: 15px; letter-spacing: -.01em; }
+  .foot2.fz .fcol2 .h i { font-style: normal; font-family: var(--mono); font-size: 10.5px; font-weight: 400; color: var(--muted); }
+  .foot2.fz .fcol2:not(.brandcol) a { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-block: 7px; font-size: 14.5px; color: var(--ink-soft); transition: color .25s, padding .35s cubic-bezier(.16, 1, .3, 1); }
+  .foot2.fz .fcol2:not(.brandcol) a:hover { color: var(--ink); padding-inline-start: 6px; }
+  .foot2.fz .fcol2 a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+  /* A wrapper, because `brand/Arrow`'s svg already carries the RTL mirror
+     transform (`globals.css`) and a transform on it would replace that. */
+  .fz-arr { display: inline-flex; flex: none; color: var(--green); opacity: 0; transform: translateX(calc(var(--flip) * -6px)); transition: opacity .25s, transform .35s cubic-bezier(.16, 1, .3, 1); }
+  .foot2.fz .fcol2 a:hover .fz-arr, .foot2.fz .fcol2 a:focus-visible .fz-arr { opacity: 1; transform: none; }
+
+  /* ── Embossed seals ───────────────────────────────────────────────────── */
+  .foot2.fz .certline { margin-top: 72px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; padding: 28px 0; }
+  .foot2.fz .certline .t { display: none; }
+  .fz-seal { display: flex; align-items: center; gap: 14px; }
+  .fz-seal-d { width: 64px; height: 64px; flex: none; border-radius: 50%; background: var(--paper); display: flex; align-items: center; justify-content: center; box-shadow: inset 2px 2px 4px rgb(from var(--ink) r g b / .12), inset -2px -2px 4px rgb(from var(--white) r g b / .9), 0 0 0 1px var(--hair); transition: box-shadow .35s; }
+  .foot2.fz .fz-seal-d img { width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: none; object-fit: cover; filter: grayscale(1) contrast(1.05); opacity: .75; mix-blend-mode: multiply; transition: filter .35s, opacity .35s; }
+  .fz-seal:hover .fz-seal-d { box-shadow: inset 1px 1px 2px rgb(from var(--ink) r g b / .1), inset -1px -1px 2px rgb(from var(--white) r g b / .9), 0 0 0 1px var(--green), 0 10px 22px -14px rgb(from var(--green) r g b / .6); }
+  .foot2.fz .fz-seal:hover img { filter: none; opacity: 1; }
+  .fz-seal-l { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+  /* ── Base line ────────────────────────────────────────────────────────── */
+  .foot2.fz .base { flex-wrap: nowrap; gap: 24px; padding-block: 22px 30px; }
+  .foot2.fz .base .cr, .foot2.fz .base .offices { font-size: 11.5px; letter-spacing: 0; }
+  .foot2.fz .base .lg { gap: 24px; }
+  .foot2.fz .base .lg a { font-size: 13.5px; font-weight: 400; color: var(--ink-soft); }
+  .foot2.fz .base .lg a:hover { color: var(--green); }
+
+  /* ── The engraved wordmark and its UV lamp ────────────────────────────── */
+  .fz-mark { position: relative; height: 300px; margin-top: 6px; padding-inline: 40px; overflow: hidden; cursor: crosshair; --mx: -500px; --my: -500px; --uv: 0; }
+  .fz-defs { position: absolute; }
+  .fz-mark svg { display: block; width: 100%; height: auto; }
+  .fz-mark-eng path { fill: url(#fz-eng); }
+  .fz-mark-eng path:last-child { fill: url(#fz-eng-r); }
+  .fz-mark-uv { position: absolute; inset: 0; padding-inline: 40px; pointer-events: none; opacity: var(--uv); transition: opacity .4s; background: radial-gradient(circle 190px at var(--mx) var(--my), rgb(from var(--v2-fz-night) r g b / .95), rgb(from var(--v2-fz-night) r g b / .88) 97%, transparent 98%); -webkit-mask-image: radial-gradient(circle 190px at var(--mx) var(--my), var(--ink) 98%, transparent 100%); mask-image: radial-gradient(circle 190px at var(--mx) var(--my), var(--ink) 98%, transparent 100%); }
+  .fz-mark-uv path { fill: url(#fz-uv); }
+  .fz-mark-uv svg { filter: drop-shadow(0 0 6px rgb(from var(--v2-fz-uv) r g b / .8)); }
+  .fz-mark-hint { position: absolute; inset-inline-end: 48px; top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  /* Static microtext, tiled. The board scrolled it (120s a loop); on every
+     route that is moving text with no pause, so it is set still. */
+  .fz-micro { overflow: hidden; white-space: nowrap; border-top: 1px solid var(--hair); padding-block: 6px; font-family: var(--mono); font-size: 6.5px; letter-spacing: .32em; color: var(--muted); }
+}
+
+@media (min-width: 1081px) and (prefers-reduced-motion: reduce) {
+  .fz-back:hover .fz-back-ring, .fz-back:focus-visible .fz-back-ring, .fz-on .fz-live { animation: none; }
+  .fz-mark-uv { display: none; }
+}
