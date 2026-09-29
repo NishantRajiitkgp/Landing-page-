@@ -183,6 +183,7 @@ export async function Enterprises() {
         <span className="en-tag">{b.tag}</span>
       </div>
       <h3 className="en-ph">{b.h}</h3>
+      <p className="en-lede">{b.lede}</p>
       <StepCycler
         className="bx"
         every={2000}

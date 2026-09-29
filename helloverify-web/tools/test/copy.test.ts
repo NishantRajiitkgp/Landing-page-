@@ -855,7 +855,7 @@ const BANDS: Record<string, readonly [number, number]> = {
   oneInEight: [0, 69],
   govSeals: [0, 115],
   govDossiers: [0, 165],
-  enterprises: [0, 104],
+  enterprises: [0, 105],
   smb: [0, 50],
   diligence: [0, 27],
   trustPlatform: [0, 52],
@@ -896,8 +896,8 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  scans (howItWorks -20, oneInEight +5, see `BANDS`). 1322 -> 1331: the
  *  lens callouts (oneInEight +9). */
 check(
-  "sections holds 1331 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1331 &&
+  "sections holds 1332 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1332 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -932,8 +932,8 @@ check(
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
  *  and the lens callouts to 1320. */
 check(
-  "sections: 1320 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1320 &&
+  "sections: 1321 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1321 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

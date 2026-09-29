@@ -29,6 +29,7 @@ export const config = {
   /** Everything except API routes, Next's own assets, and any path that looks
    *  like a file. Without a matcher this runs on every static asset request —
    *  the docs are explicit that it would otherwise sit in front of CSS, JS and
-   *  images. */
-  matcher: ["/((?!api|_next|_vercel|.*\\..*).*)"],
+   *  images. `landing-page` is the frozen homepage snapshot, which has its
+   *  own root layout and no locale prefix (see `app/landing-page/layout.tsx`). */
+  matcher: ["/((?!api|_next|_vercel|landing-page|.*\\..*).*)"],
 };
