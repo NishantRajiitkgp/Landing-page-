@@ -40,6 +40,46 @@ export function Inlay({ item, small }: { item: SealItem; small?: boolean }) {
   );
 }
 
+export type PartnerCopy = {
+  k: string;
+  h: string;
+  model: Record<string, { t: string; p: string }>;
+  cta: string;
+  caseCta: string;
+};
+
+/** The pitch to the next authority at the foot of a record: what makes the
+ *  programme easy to adopt, and the ask. Plain anchors (hrefs arrive
+ *  localised), so it renders inside the client stage and on the server
+ *  pages alike. `caseHref` is omitted on the case page itself. */
+export function PartnerPitch({ c, contactHref, caseHref }: { c: PartnerCopy; contactHref: string; caseHref?: string }) {
+  return (
+    <div className="sv-pp">
+      <div className="sv-pp-l">
+        <p className="sv-out-k">{c.k}</p>
+        <p className="sv-pp-h">{c.h}</p>
+        <div className="sv-pp-acts">
+          <a href={contactHref} className="sv-pp-cta">
+            {c.cta}
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+          {caseHref && <a href={caseHref} className="sv-pp-case">{c.caseCta}</a>}
+        </div>
+      </div>
+      <ul className="sv-pp-model">
+        {Object.values(c.model).map((m) => (
+          <li key={m.t}>
+            <b>{m.t}</b>
+            <span>{m.p}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export function Stamp({ id, ring }: { id: string; ring: string }) {
   return (
     <svg className="sv-stamp" viewBox="0 0 160 160" aria-hidden="true" focusable="false">

@@ -163,6 +163,11 @@ const STATIC_COPY: Record<string, PageCopy> = {
     description:
       "Nannies, drivers, cooks, carers and tutors — identity, criminal record and address confirmed at the source in about 30 minutes, with their consent.",
   },
+  "/ai": {
+    title: "HelloVerify AI — see how our AI checks work",
+    description:
+      "Follow one address check step by step: our AI flags what doesn't add up, a local expert visits in person, and the evidence becomes a full report.",
+  },
   "/platform/technology": {
     title: "Technology & APIs — HelloVerify",
     description:

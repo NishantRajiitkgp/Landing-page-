@@ -3,7 +3,6 @@ import { Hero } from "@/components/sections/Hero";
 import { PeopleStrip } from "@/components/sections/PeopleStrip";
 import { OneInEight } from "@/components/sections/OneInEight";
 import { HowWeKnow } from "@/components/sections/HowWeKnow";
-import { FieldCase } from "@/components/sections/FieldCase";
 import { Presence } from "@/components/sections/Presence";
 import { GovSeals } from "@/components/sections/GovSeals";
 import { GovWhy } from "@/components/sections/GovWhy";
@@ -15,7 +14,6 @@ import { IntlGrid } from "@/components/sections/IntlGrid";
 import { Enterprises } from "@/components/sections/Enterprises";
 import { Smb } from "@/components/sections/Smb";
 import { Diligence } from "@/components/sections/Diligence";
-import { International } from "@/components/sections/International";
 import { Consumer } from "@/components/sections/Consumer";
 import { CustomerStory } from "@/components/sections/CustomerStory";
 import { TrustPlatform } from "@/components/sections/TrustPlatform";
@@ -79,9 +77,8 @@ export default async function Home({
         {/* The rest, in their previous order, to be arranged later. */}
         <OneInEight />
         <HowWeKnow />
-        {/* One address check in Foumban, from request to report: evidence
-            gathered at the door, processed in-country (30 Sep 2026). */}
-        <FieldCase />
+        {/* The field case (one address check in Foumban) moved to its own
+            page, `/ai`, on 30 Sep 2026. */}
         {/* "33 checks. Most take minutes." hidden from the homepage
             (30 Sep 2026), not deleted: restore <Checks /> here. */}
         {/* "Why governments work with us." hidden from the homepage
@@ -94,7 +91,9 @@ export default async function Home({
             the homepage on 29 Sep 2026: its four figures, live checks count
             included, now open the page in the hero's ledger. The component
             and its copy remain — `numbers` is what the ledger reads. */}
-        <International />
+        {/* The globe ("Hire from anywhere. Verified at the source, in 120+
+            countries.") moved to `/ai`, after the field case, on 1 Oct
+            2026. */}
         <TrustPlatform />
         {/* The Compliance band ("The unexciting part, done properly.") came
             off the homepage on 30 Sep 2026. The component and its copy

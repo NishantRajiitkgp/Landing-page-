@@ -3,21 +3,25 @@
     plate. Decorative: every one is `aria-hidden`, because the reason's title
     and body beside it say the same thing in words.
 
-    EACH ONE LOOPS (29 Sep 2026, on review: "animation should be continuous").
-    A picture builds, holds, and resets on a 6 s cycle, or — where the idea is
-    flow rather than assembly — keeps moving: packets out along the AI
-    platform's spokes, the thread through the authorities' marks, the dashes
-    of the years to come. `govwhy.css` owns every keyframe; this file only
-    places the parts and hands each its stagger on `--i`.
+    EACH PICTURE SHOWS ITS REASON LITERALLY (1 Oct 2026, on the founder's
+    review: the portico, the gates and the empty page were "just for the
+    sake of having it"). Trust infrastructure is one verified record that
+    every agency relies on; scale is the company's own numbers; the
+    governments are their own official marks, untouched, beside their full
+    names; the long
+    term is the checks piling up since 2018; the report has a source, a
+    result and remarks in it.
 
-    STATIC BY DEFAULT. The resting markup is the finished drawing; the loops
-    exist only under `.gw-go`, which `./GovWhyStage` adds once the grid is
-    near the viewport, and they pause with the band's "Pause motion", when
-    the grid is off screen, and under `prefers-reduced-motion` (which shows
-    this final frame instead).
+    EACH ONE LOOPS on a 6 s cycle, or keeps flowing. `govwhy.css` owns every
+    keyframe; this file only places the parts and hands each its stagger on
+    `--i`. STATIC BY DEFAULT: the resting markup is the finished drawing; the
+    loops exist only under `.gw-go` (`./GovWhyStage`), pause with the band's
+    control and off screen, and give way to this final frame under
+    `prefers-reduced-motion`.
 
     `pathLength={1}` on every drawn stroke so one dash rule draws any of
     them, whatever its real length. */
+import Image from "next/image";
 import type { CSSProperties } from "react";
 
 import type { SectionsCopy } from "@/lib/copy/sections";
@@ -25,48 +29,63 @@ import type { SectionsCopy } from "@/lib/copy/sections";
 type Viz = SectionsCopy["govWhy"]["viz"];
 const d = (i: number) => ({ "--i": i }) as CSSProperties;
 
-/** 01 · Trust Infrastructure — a civic portico: the steps, five columns
- *  rising in turn, the entablature and pediment drawn over them. */
-export function ArtTrust() {
-  const cols = [80, 107, 134, 161, 188];
+function Tick({ x, y }: { x: number; y: number }) {
+  return (
+    <g className="gw-tickmark">
+      <circle cx={x} cy={y} r="5.5" />
+      <path d={`M${x - 2.4} ${y + 0.2}l1.6 1.6 3.2-3.4`} />
+    </g>
+  );
+}
+
+/** 01 · Trust Infrastructure — one verified record (degree, licence,
+ *  identity) and the agencies that rely on it: the record is checked once,
+ *  and the same answer flows out to every one of them. */
+export function ArtTrust({ t }: { t: Viz["trust"] }) {
+  const rows = Object.values(t.rows);
+  const to = Object.values(t.to);
+  const ys = [30, 70, 110];
   return (
     <svg className="gw-art" viewBox="0 0 280 140" aria-hidden="true" focusable="false">
-      <path className="gw-build gw-dim" pathLength={1} d="M40 132h200M48 124h184M56 116h168" style={d(0)} />
-      {cols.map((x, i) => (
-        <rect key={x} className="gw-col" x={x} y="58" width="12" height="56" rx="1.5" style={d(i + 1)} />
+      {ys.map((y, i) => (
+        <g key={y}>
+          <path className="gw-spoke" d={`M112 70C140 70 140 ${y} 166 ${y}`} />
+          <path className="gw-packet" pathLength={1} d={`M112 70C140 70 140 ${y} 166 ${y}`} style={d(i)} />
+        </g>
       ))}
-      <path className="gw-build" pathLength={1} d="M66 58h148v-8H66zM62 50 140 18l78 32z" style={d(6)} />
-      <circle className="gw-beacon" cx="140" cy="38" r="4" style={d(8)} />
+      <rect className="gw-doc" x="4" y="18" width="108" height="104" rx="9" />
+      <text className="gw-lab gw-lab-hot gw-lab-s" x="14" y="38">{t.k}</text>
+      {rows.map((r, i) => (
+        <g key={r}>
+          <Tick x={25} y={58 + i * 22} />
+          <text x="36" y={61.5 + i * 22}>{r}</text>
+        </g>
+      ))}
+      {to.map((a, i) => (
+        <g key={a} className="gw-node" style={d(i)}>
+          <rect className="gw-pill" x="166" y={ys[i] - 13} width="106" height="26" rx="13" />
+          <text x="219" y={ys[i] + 3.5} textAnchor="middle">{a}</text>
+        </g>
+      ))}
     </svg>
   );
 }
 
-/** 02 · Primary Source Verification at Scale — an applicant travels the
- *  line; each gate lights as they reach it, and the run starts over. Each
- *  gate has its own keyframes (`gwGate0`…`gwGate4` in the CSS) so all five
- *  reset together at the end of the run. */
-export function ArtGates({ g }: { g: Viz["gates"] }) {
-  const gates = Object.values(g);
-  // 36–244, not 30–250: "Regulated role", centred on the last gate, touched
-  // the edge of the 275px tablet box.
-  const xs = [36, 88, 140, 192, 244];
+/** 02 · Primary Source Verification at Scale — the scale as the numbers:
+ *  20M+ checks, 120+ countries, and a field of sources lighting up as each
+ *  one confirms. */
+export function ArtScale({ s }: { s: Viz["scale"] }) {
+  const cols = 11;
+  const dots = Array.from({ length: cols * 5 }, (_, k) => ({ x: 150 + (k % cols) * 11.5, y: 34 + Math.floor(k / cols) * 13, c: k % cols }));
   return (
     <svg className="gw-art" viewBox="0 0 280 140" aria-hidden="true" focusable="false">
-      <path className="gw-line" d="M10 70h260" />
-      <path className="gw-trail" pathLength={1} d="M36 70h208" />
-      {xs.map((x, i) => (
-        <g key={x} className="gw-gate">
-          <circle className="gw-gate-o" cx={x} cy="70" r="11" />
-          {/* One class per gate, not `.gw-gateN .gw-gate-on`: every loop
-              rule stays at two classes, so the pause rule outranks it. */}
-          <g className={`gw-gate-on gw-on${i}`}>
-            <circle cx={x} cy="70" r="11" />
-            <path d={`M${x - 4.5} 70.4l3 3 6-6.4`} />
-          </g>
-          <text x={x} y={i % 2 ? 104 : 44} textAnchor="middle">{gates[i]}</text>
-        </g>
+      <text className="gw-big" x="10" y="64">{s.big}</text>
+      <text x="12" y="84">{s.bigL}</text>
+      <text className="gw-lab gw-lab-hot" x="12" y="102">{s.countries}</text>
+      <text className="gw-small" x="12" y="120">{s.sources}</text>
+      {dots.map((p, k) => (
+        <circle key={k} className="gw-src" cx={p.x} cy={p.y} r="3.2" style={d(p.c)} />
       ))}
-      <circle className="gw-runner" cx="36" cy="70" r="5" />
     </svg>
   );
 }
@@ -102,69 +121,74 @@ export function ArtPlatform({ core, nodes }: { core: string; nodes: Viz["nodes"]
   );
 }
 
-/** 04 · Governments We Work With — the four authorities' own marks (the
- *  seals band's files) floating on a flowing thread, a spotlight passing
- *  from one to the next. */
-export function ArtGovs({ logos }: { logos: readonly string[] }) {
-  const xs = [44, 108, 172, 236];
+/** 04 · Governments We Work With — each authority's official mark beside
+ *  its full name (the seals band's `name`). The marks are shown exactly as
+ *  issued: whole, at their own proportions (`object-fit: contain`), full
+ *  colour, never cropped to a circle, filtered or animated — 1 Oct 2026, on
+ *  review: "don't mess with their logos". This one picture is HTML, not
+ *  SVG, so the long names wrap. */
+export function ArtGovs({ govs }: { govs: readonly { name: string; logo: string; w: number; h: number }[] }) {
+  return (
+    <ul className="gw-govs" aria-hidden="true">
+      {govs.map((g) => (
+        <li key={g.logo}>
+          <span className="gw-govs-m">
+            <Image src={g.logo} alt="" width={g.w} height={g.h} unoptimized />
+          </span>
+          <span className="gw-govs-n">{g.name}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** 05 · Long-Term Digital Infrastructure — checks piling up since 2018:
+ *  the curve climbs to today's 20M+, and the years to come keep going. */
+export function ArtTimeline({ since, today, ahead }: { since: string; today: string; ahead: string }) {
+  const curve = "M20 112C70 111 110 104 140 88S178 52 196 34";
   return (
     <svg className="gw-art" viewBox="0 0 280 140" aria-hidden="true" focusable="false">
-      <path className="gw-thread" pathLength={1} d="M4 82C40 60 70 60 108 72S200 88 276 60" />
-      {xs.map((x, i) => (
-        <g key={x} className="gw-float" style={d(i)}>
-          <circle className="gw-spot" cx={x} cy="70" r="31" style={d(i)} />
-          <circle className="gw-well" cx={x} cy="70" r="25" />
-          <image href={logos[i]} x={x - 17} y="53" width="34" height="34" preserveAspectRatio="xMidYMid meet" />
+      <path className="gw-line" d="M20 112h240" />
+      <path className="gw-area" d={`${curve}V112H20Z`} />
+      <path className="gw-build" pathLength={1} d={curve} />
+      <path className="gw-ahead" pathLength={1} d="M200 31C222 18 240 12 262 8" />
+      <circle className="gw-ripple" cx="196" cy="34" r="6" style={d(0)} />
+      <circle className="gw-ripple" cx="196" cy="34" r="6" style={d(1)} />
+      <circle className="gw-now" cx="196" cy="34" r="6" />
+      <text className="gw-lab" x="20" y="130">{since}</text>
+      <text className="gw-lab gw-lab-hot" x="184" y="30" textAnchor="end">{today}</text>
+      <text className="gw-lab" x="260" y="130" textAnchor="end">{ahead}</text>
+    </svg>
+  );
+}
+
+/** 06 · Evidence-Backed Reports — a report with its source, result and
+ *  remarks written in, the stamp landing on its corner, and the three
+ *  proofs that come with it. */
+export function ArtReport({ r, stamp, proofs }: { r: Viz["report"]; stamp: string; proofs: Viz["proofs"] }) {
+  const p = Object.values(proofs);
+  const rows = [r.r1, r.r2, r.r3];
+  return (
+    <svg className="gw-art" viewBox="0 0 280 140" aria-hidden="true" focusable="false">
+      <rect className="gw-doc" x="4" y="8" width="154" height="124" rx="8" />
+      <text className="gw-lab gw-lab-hot" x="16" y="28">{r.k}</text>
+      <path className="gw-line" d="M16 36h130" />
+      {rows.map((t, i) => (
+        <g key={t} className="gw-row" style={d(i)}>
+          <Tick x={21} y={52 + i * 19} />
+          <text className="gw-small" x="32" y={55.5 + i * 19}>{t}</text>
         </g>
       ))}
-    </svg>
-  );
-}
-
-/** 05 · Long-Term Digital Infrastructure — a year axis: the record grows
- *  from 2018 to today, today's mark ripples, and the dashes of the years to
- *  come keep moving on. */
-export function ArtTimeline({ since, today, ahead }: { since: string; today: string; ahead: string }) {
-  const ticks = Array.from({ length: 13 }, (_, i) => 20 + i * 20);
-  return (
-    <svg className="gw-art" viewBox="0 0 280 140" aria-hidden="true" focusable="false">
-      {ticks.map((x, i) => (
-        <path key={x} className="gw-tick" d={`M${x} ${i % 4 ? 66 : 60}v${i % 4 ? 8 : 20}`} />
-      ))}
-      <path className="gw-line" d="M20 70h240" />
-      <path className="gw-grow" d="M20 70h160" />
-      <path className="gw-ahead" pathLength={1} d="M188 70h72" />
-      <circle className="gw-ripple" cx="180" cy="70" r="6" style={d(0)} />
-      <circle className="gw-ripple" cx="180" cy="70" r="6" style={d(1)} />
-      <circle className="gw-now" cx="180" cy="70" r="6" />
-      <text className="gw-lab" x="20" y="104">{since}</text>
-      {/* Above the axis: below it, "Today" ran into "Years to come". */}
-      <text className="gw-lab gw-lab-hot" x="180" y="46" textAnchor="middle">{today}</text>
-      <text className="gw-lab" x="260" y="104" textAnchor="end">{ahead}</text>
-    </svg>
-  );
-}
-
-/** 06 · Evidence-Backed Reports — the report writes its lines, the stamp
- *  lands on its corner, the three proofs arrive; then a fresh report. */
-export function ArtReport({ stamp, proofs }: { stamp: string; proofs: Viz["proofs"] }) {
-  const p = Object.values(proofs);
-  return (
-    <svg className="gw-art" viewBox="0 0 280 140" aria-hidden="true" focusable="false">
-      <rect className="gw-doc" x="16" y="10" width="104" height="120" rx="7" />
-      {[30, 44, 58, 72, 86].map((y, i) => (
-        <path key={y} className="gw-write" pathLength={1} d={`M30 ${y}h${i === 0 ? 48 : i % 2 ? 76 : 64}`} style={d(i)} />
-      ))}
       <g className="gw-stamp">
-        <circle cx="100" cy="104" r="22" />
-        <circle cx="100" cy="104" r="17.5" />
-        <text x="100" y="106" textAnchor="middle">{stamp}</text>
+        <circle cx="134" cy="112" r="16" />
+        <circle cx="134" cy="112" r="12.5" />
+        <text x="134" y="114" textAnchor="middle">{stamp}</text>
       </g>
       {p.map((t, i) => (
         <g key={t} className="gw-proof" style={d(i)}>
-          <rect x="138" y={22 + i * 36} width="130" height="26" rx="13" />
-          <circle cx="152" cy={35 + i * 36} r="5" />
-          <text x="164" y={39 + i * 36}>{t}</text>
+          <rect x="166" y={22 + i * 36} width="108" height="26" rx="13" />
+          <circle cx="179" cy={35 + i * 36} r="4.5" />
+          <text x="189" y={38.5 + i * 36}>{t}</text>
         </g>
       ))}
     </svg>

@@ -1023,85 +1023,85 @@ export const en = {
       next: "Next case",
       files: {
         be: {
-          title: "Why this degree was flagged",
+          title: "Name changed on a photocopy",
           alt: "Synthetic B.E. degree from application 01: a colour copy with the holder's name replaced",
           zoomAlt: "The holder's name at twice size: the letters sit low and spaced wider than the print around them",
           findings: {
-            f1: { t: "The name was replaced", d: "PRANAV K. IYER is retyped over cloned paper. It sits 2px low and is spaced wider than every other line on the sheet.", by: "Image forensics" },
-            f2: { t: "It is a colour copy", d: "Under UV the paper glows blue-white like office stock, with no security fibres and no UV emblem. A copier cannot reproduce UV ink.", by: "UV · 365 nm" },
-            f3: { t: "The USN belongs to someone else", d: "The university's register lists USN 2DT13CS047 under a different graduate.", by: "Source · the issuing university" },
+            f1: { t: "Someone else’s name was typed in", d: "The real name was covered up and PRANAV K. IYER typed over it. It sits a little lower and more spread out than every other line.", by: "Spotted in the scan" },
+            f2: { t: "It’s a photocopy, not the original", d: "Real certificates have hidden marks that glow under UV light. This paper has none — it glows like ordinary office paper.", by: "Seen under UV light" },
+            f3: { t: "The ID number is someone else’s", d: "The university says USN 2DT13CS047 belongs to a different student.", by: "Checked with the university" },
           },
         },
         ae: {
-          title: "Why this transcript was flagged",
+          title: "Marks edited with a pen",
           alt: "Synthetic Grade 12 transcript from application 02, with two marks altered in pen",
           zoomAlt: "The Mathematics mark at four times size: the upper loop of the 8 is a second, bluer ink",
           findings: {
-            f1: { t: "Two 6s were closed into 8s", d: "Mathematics 64 → 84 and Physics 61 → 81. One pen stroke each, drawn over the printed digit.", by: "Image forensics" },
-            f2: { t: "The new strokes are a second ink", d: "Under UV the added loops fluoresce orange. The school's printed figures stay dark.", by: "UV · 365 nm" },
-            f3: { t: "The school's record disagrees", d: "Mariam Khalid Al Hosani, 2019–2020: Mathematics 64, Physics 61.", by: "Source · the issuing school" },
+            f1: { t: "Two marks were changed by pen", d: "Maths 64 became 84 and Physics 61 became 81 — someone drew over the 6s to turn them into 8s.", by: "Spotted in the scan" },
+            f2: { t: "The extra lines are a different ink", d: "Under UV light the added pen strokes glow orange. The school’s printed marks don’t.", by: "Seen under UV light" },
+            f3: { t: "The school has the real marks", d: "The school’s records say Maths 64 and Physics 61.", by: "Checked with the school" },
           },
         },
         ph: {
-          title: "Why this transcript was flagged",
+          title: "Failing grade whited out",
           alt: "Synthetic transcript of records from application 03, with one grade under correction fluid",
           zoomAlt: "The Pharmacology grade at three times size: a raised white blot under a 2 that sits off true",
           findings: {
-            f1: { t: "A failing grade is under correction fluid", d: "Pharmacology read 5.00, a fail. The fluid is a dead-black blot under UV, where the paper around it glows.", by: "UV · 365 nm" },
-            f2: { t: "The retyped 2 does not match", d: "It is a size larger than every other grade on the sheet and sits a degree off true.", by: "HelloVerify AI · read" },
-            f3: { t: "The registrar's record disagrees", d: "NCM 106 Pharmacology: 5.00, failed.", by: "Source · the registrar" },
+            f1: { t: "A failing grade was whited out", d: "Pharmacology said 5.00 — a fail. It was covered with correction fluid, which shows up as a dark patch under UV light.", by: "Seen under UV light" },
+            f2: { t: "The new grade doesn’t match", d: "The 2 typed on top is bigger than every other grade and slightly tilted.", by: "Spotted by our AI" },
+            f3: { t: "The college has the real grade", d: "The college’s records say Pharmacology 5.00 — failed.", by: "Checked with the college" },
           },
         },
         eg: {
-          title: "Why this certificate was flagged",
+          title: "Fake seal — printed, not stamped",
           alt: "Synthetic pharmacy graduation certificate from application 04, with a printed faculty seal",
           zoomAlt: "The faculty seal at three times size: a screen of even violet dots, with none of a rubber stamp's pooling",
           findings: {
-            f1: { t: "The seal is printed, not stamped", d: "Magnified, it is a dot screen of one flat violet. A rubber stamp pools ink at its edges and fades where it lifts.", by: "Image forensics" },
-            f2: { t: "The seal has no UV ink", d: "It stays dark under the lamp, while the revenue stamp beside it glows as a genuine one should.", by: "UV · 365 nm" },
-            f3: { t: "No such graduate", d: "The faculty has no record of Nour Mohamed Farouk in the May 2015 session.", by: "Source · the issuing faculty" },
+            f1: { t: "The seal was printed, not stamped", d: "Up close it’s made of tiny printer dots. A real rubber stamp leaves uneven ink at its edges.", by: "Spotted in the scan" },
+            f2: { t: "The seal fails the UV test", d: "A real seal glows under UV light. This one stays dark, while the genuine stamp next to it glows.", by: "Seen under UV light" },
+            f3: { t: "This person never graduated there", d: "The university has no record of Nour Mohamed Farouk graduating in May 2015.", by: "Checked with the university" },
           },
         },
         uk: {
-          title: "Why this degree was flagged",
+          title: "Fake university, sticker seal",
           alt: "Synthetic MBA degree from application 05, from an unrecognised institution, with a sticker seal",
           zoomAlt: "The edge of the gold seal under UV, enlarged: a bright ring of adhesive round the sticker",
           findings: {
-            f1: { t: "The seal is a stationery sticker", d: "A ring of adhesive glows round its edge under UV, and a hairline in the scan shows where it lifts.", by: "UV · 365 nm" },
-            f2: { t: "No security features at all", d: "No fibres and no UV emblem. The paper is plain stock that anyone can buy.", by: "UV · 365 nm" },
-            f3: { t: "The university is not recognised", d: "University of Aldermoor is not on the UK's register of recognised degree-awarding bodies.", by: "Source · UK register" },
+            f1: { t: "The gold seal is a sticker", d: "Under UV light you can see the glue around its edge, and one corner is lifting.", by: "Seen under UV light" },
+            f2: { t: "It’s printed on ordinary paper", d: "No hidden fibres, no UV marks — just paper anyone can buy.", by: "Seen under UV light" },
+            f3: { t: "The university isn’t real", d: "University of Aldermoor is not on the UK’s official list of universities. It’s a degree mill.", by: "Checked with the UK register" },
           },
         },
         xii: {
-          title: "Why this marksheet was flagged",
+          title: "Marks edited, total pasted over",
           alt: "Synthetic Class XII statement of marks from application 06, with two altered marks",
           zoomAlt: "The marks column at three times size: the retyped 9 and 8 print thinner and sit low, the 8 in a bleached halo",
           findings: {
-            f1: { t: "Maths was scraped and retyped", d: "062 → 092. The 9 prints thinner and sits low, and the scraped paper glows under UV.", by: "Image forensics · UV" },
-            f2: { t: "Physics was washed and retyped", d: "058 → 088. A solvent bleached a halo round the digit: dark under UV, with a bright tide line where it dried.", by: "UV · 365 nm" },
-            f3: { t: "The total is a pasted-over slip", d: "A slip printed 475 is glued over the figure. Its paper and glue fluoresce; the sheet's own paper does not.", by: "UV · 365 nm" },
-            f4: { t: "Figures and words disagree", d: "“092” sits beside “SIXTY TWO”, “088” beside “FIFTY EIGHT”, and “475” beside “FOUR HUNDRED FIFTEEN”.", by: "HelloVerify AI · read" },
-            f5: { t: "The board's record disagrees", d: "Roll No. 4127033: Mathematics 62, Physics 58, total 415.", by: "Source · the issuing board" },
+            f1: { t: "The Maths mark was scratched off and retyped", d: "62 became 92. The new 9 is thinner and sits lower, and the scraped paper shows under UV light.", by: "Spotted in the scan" },
+            f2: { t: "The Physics mark was chemically erased", d: "58 became 88. The chemical left a dark ring around the number under UV light.", by: "Seen under UV light" },
+            f3: { t: "A new total was glued on top", d: "A small slip showing 475 is stuck over the real total. The slip glows under UV light; the sheet doesn’t.", by: "Seen under UV light" },
+            f4: { t: "The numbers and words don’t match", d: "It says 92 but “SIXTY TWO”, 88 but “FIFTY EIGHT”, and 475 but “FOUR HUNDRED FIFTEEN”.", by: "Spotted by our AI" },
+            f5: { t: "The board has the real marks", d: "The exam board’s records say Maths 62, Physics 58, total 415.", by: "Checked with the exam board" },
           },
         },
         sg: {
-          title: "Why this diploma was flagged",
+          title: "Year changed from 2021 to 2019",
           alt: "Synthetic polytechnic diploma from application 07, with its year altered",
           zoomAlt: "The date at three times size: the 19 prints a hair heavier and lower than the 20 beside it",
           findings: {
-            f1: { t: "The year was lifted and reprinted", d: "2021 → 2019. Tape lifted the printed 21 and took paper fibres with it; they glow under UV. The 19 is a hair heavier and sits 2px low.", by: "Image forensics · UV" },
-            f2: { t: "The serial number disagrees", d: "HP21-PHS-00318 is a 2021 serial. The date above it says 2019.", by: "HelloVerify AI · read" },
-            f3: { t: "The polytechnic's record disagrees", d: "Tan Wei Ling, Diploma in Pharmaceutical Science with Merit, awarded 2 May 2021.", by: "Source · the issuing polytechnic" },
+            f1: { t: "The year was changed", d: "2021 became 2019. The old digits were peeled off with tape, which tore the paper — the damage glows under UV light.", by: "Spotted in the scan" },
+            f2: { t: "The serial number gives it away", d: "HP21-PHS-00318 is a 2021 serial number, but the date says 2019.", by: "Spotted by our AI" },
+            f3: { t: "The college has the real date", d: "The polytechnic’s records say it was awarded on 2 May 2021.", by: "Checked with the polytechnic" },
           },
         },
         pk: {
-          title: "Why this degree was flagged",
+          title: "Signature forged",
           alt: "Synthetic MBBS degree from application 08, with a traced signature",
           zoomAlt: "The Controller's signature, enlarged: the strokes tremble and a grey pencil line runs beside them",
           findings: {
-            f1: { t: "The Controller's signature is traced", d: "Drawn slowly over a copy: every stroke trembles, starts and stops bluntly, and never tapers the way a signed line does.", by: "Image forensics" },
-            f2: { t: "A pencil guide sits under the ink", d: "Under UV the graphite outline shows a few pixels off every stroke.", by: "UV · 365 nm" },
-            f3: { t: "The registration number is not on the roll", d: "MUHS-2011-0827 is not in the university's register of graduates.", by: "Source · the issuing university" },
+            f1: { t: "The signature was traced", d: "It was copied slowly over another signature — the lines are shaky, not smooth like a real one.", by: "Spotted in the scan" },
+            f2: { t: "There’s a pencil outline underneath", d: "Under UV light you can see the pencil guide drawn before the ink.", by: "Seen under UV light" },
+            f3: { t: "This person isn’t on the university’s list", d: "Registration number MUHS-2011-0827 is not in the university’s list of graduates.", by: "Checked with the university" },
           },
         },
       },
@@ -1120,10 +1120,12 @@ export const en = {
    *  `acts.a3` and `chips` (local processing, encryption, retention) and the
    *  field partner's languages must be confirmed before launch. */
   fieldCase: {
-    k: "Evidence · anywhere",
-    headingA: "Some checks end at a database.",
-    headingEm: "Ours go to the door.",
-    lede: "Follow one address check in Foumban, Cameroon, from the request to a report built on coordinates, satellite captures and what the neighbourhood says.",
+    k: "HelloVerify AI · at work",
+    /** 30 Sep 2026: "Some checks end at a database. Ours go to the door."
+     *  read as a riddle to a first-time visitor; this says what happens. */
+    headingA: "Our AI finds what doesn’t add up.",
+    headingEm: "A local expert checks it in person.",
+    lede: "Follow one address check in Foumban, Cameroon, step by step — from the request to the final report.",
     /** Kept, short: the case is an example (see this block's header), and a
      *  page pitching governments must not pass it off as a client file. */
     note: "Example case",
@@ -1211,6 +1213,14 @@ export const en = {
       },
     },
     motion: { pause: "Pause motion", play: "Play motion" },
+  },
+
+  /** `app/[locale]/ai/page.tsx`: the field case on a page of its own. Its
+   *  heading is the case's (`fieldCase.headingA`), set as the page's h1. */
+  aiPage: {
+    crumb: "HelloVerify AI",
+    closingH: "Want AI-powered checks for your team?",
+    closingSub: "Tell us what you need to verify. We’ll show you how it works for you.",
   },
 
   /** `sections/Contact.tsx`.
@@ -1324,7 +1334,7 @@ export const en = {
         countries: "countries sending or receiving",
       },
       pick: "Your candidate's papers are in",
-      countries: { in: "India", ph: "Philippines", eg: "Egypt", pk: "Pakistan", ae: "UAE", gb: "UK" },
+      countries: { in: "India", ph: "Philippines", eg: "Egypt", ng: "Nigeria", bd: "Bangladesh", ae: "UAE", gb: "UK" },
       map: "World map following one verification request from a hirer to the office that issued the document and back, over the six HelloVerify desks as day and night pass",
       /** The five steps: short on the timeline, told in full on the map. */
       steps: { filed: "Uploaded", desk: "Our desk", reached: "The source", confirmed: "Confirmed", verified: "Verified" },
@@ -1341,15 +1351,16 @@ export const en = {
       tags: { source: "Issued it", hirer: "Asked for it", verified: "Verified" },
       /** Each holder is the name printed on the specimen that flies
        *  (`lib/relayData.ts` `doc`): Sneha Mathew's nursing degree, Jerome
-       *  Cruz's transcript, Nour Farouk's pharmacy degree, Hamza Ali
-       *  Qureshi's MBBS, Mariam Al Hosani's Grade 12 transcript, Laura
+       *  Cruz's transcript, Nour Farouk's pharmacy degree, Chiamaka
+       *  Okafor's nursing degree, Rahim Hossain's engineering degree, Mariam Al Hosani's Grade 12 transcript, Laura
        *  Santos's MBA. `to` is the hirer's city; the UAE journey's "hirer"
        *  is a university's admissions office. */
       journeys: {
         in: { who: "Sneha", doc: "nursing degree", source: "university registrar", from: "Thrissur", client: "hospital group", to: "Abu Dhabi" },
         ph: { who: "Jerome", doc: "transcript of records", source: "college registrar", from: "Iloilo", client: "hospital", to: "Riyadh" },
         eg: { who: "Nour", doc: "pharmacy degree", source: "university registrar", from: "Asyut", client: "pharmacy chain", to: "Kuwait City" },
-        pk: { who: "Hamza", doc: "MBBS degree", source: "medical university", from: "Islamabad", client: "health authority", to: "Doha" },
+        ng: { who: "Chiamaka", doc: "nursing degree", source: "university registrar", from: "Lagos", client: "hospital trust", to: "London" },
+        bd: { who: "Rahim", doc: "engineering degree", source: "university registrar", from: "Dhaka", client: "construction firm", to: "Dubai" },
         ae: { who: "Mariam", doc: "Grade 12 transcript", source: "school", from: "Abu Dhabi", client: "university admissions office", to: "London" },
         gb: { who: "Laura", doc: "MBA degree", source: "university registrar", from: "Manchester", client: "bank", to: "Tokyo" },
       },
@@ -1686,6 +1697,15 @@ export const en = {
    *  "12–14% of applications", the immigration page's "3×" and "99.2%")
    *  rather than pinning it on one authority.
    *
+   *  PLAIN ENGLISH (30 Sep 2026): rewritten for a reader who has never heard
+   *  of HelloVerify — "hard to understand" was the verdict on the first
+   *  draft. Short sentences, everyday words: "empanelled" is "officially
+   *  approved", "primary source verification" is "confirmed with the place
+   *  that issued it", "accredited" is "genuine and recognised", COMPASS is
+   *  glossed. The claims and figures are unchanged; only the wording moved.
+   *  Then cut to a few words a line ("who's gonna read all these"): a
+   *  heading is one claim, every body line fits a glance.
+   *
    *  `micro` is one repeat of the ring of microtext a seal turns, `stamp` one
    *  repeat of the stamp's. The component supplies the joining spaces, so no
    *  leaf has edge whitespace. */
@@ -1697,9 +1717,29 @@ export const en = {
     ledeLead: "Trusted by government authorities and embassies, including",
     ledeAnd: "and",
     stamp: "PRIMARY SOURCE VERIFICATION · HELLOVERIFY ·",
+    /** The pitch to the NEXT authority, at the foot of every record (30 Sep
+     *  2026: "these cards are the pitch for other authorities"). Every line
+     *  is the old or live site's own: applicants pay HelloVerify for their
+     *  screening and apply "first at HelloVerify and then at VFS" (the old
+     *  immigration FAQ); checks "tailored in precise accordance with the
+     *  embassy's specific requirements" and local data processing ("Why We
+     *  Stand Out"); "a named contact … pilots scoped within two weeks" (the
+     *  live governments page); "Partner with Us" (the old partners CTA). */
+    partner: {
+      k: "For your authority",
+      h: "Want this for your authority?",
+      model: {
+        m1: { t: "Applicants pay", p: "They pay for their own checks." },
+        m2: { t: "Fits your process", p: "Checked before files reach you." },
+        m3: { t: "Your rules", p: "Data stored locally." },
+        m4: { t: "Live in weeks", p: "Pilots planned within two weeks." },
+      },
+      cta: "Partner with HelloVerify",
+      caseCta: "See the full case",
+    },
     /** The record's four section labels, shared by every authority. */
-    problemK: "The challenge",
-    deliverK: "What we deliver",
+    problemK: "The problem",
+    deliverK: "What we do",
     whyK: "Why they chose HelloVerify",
     items: {
       mom: {
@@ -1707,32 +1747,32 @@ export const en = {
         ledeName: "Singapore’s Ministry of Manpower",
         micro: "MINISTRY OF MANPOWER · SINGAPORE · COMPASS FRAMEWORK · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 01 / 04",
-        role: "Our Client — Ministry of Manpower (Singapore)",
-        problem: { v: "1 in 8", l: "applicants misrepresent their academic credentials — and a forged certificate can look exactly like a real one." },
-        h: "Officially empanelled by Singapore’s Ministry of Manpower to verify the qualifications behind work pass applications.",
-        p: "Under the COMPASS framework, a work pass is only as sound as the qualification behind it. HelloVerify confirms the institution is accredited, verifies the qualification with the institution that issued it, and flags fraudulent documents before approval — so every decision rests on evidence, not paper.",
+        role: "Our client — Ministry of Manpower, Singapore",
+        problem: { v: "1 in 8", l: "applicants lie about their education." },
+        h: "Officially approved by Singapore’s Ministry of Manpower.",
+        p: "We check the degrees of people applying to work in Singapore.",
         facts: {
-          f1: { k: "Framework", v: "COMPASS" },
+          f1: { k: "Scheme", v: "COMPASS points test" },
           f2: { k: "Work passes", v: "EP · S Pass · ONE Pass · PEP · TEP" },
-          f3: { k: "Qualifications", v: "Degrees · Diplomas · Transcripts · Marksheets" },
-          f4: { k: "Per application", v: "Up to 7 educational qualifications" },
+          f3: { k: "We check", v: "Degrees · Diplomas · Transcripts · Mark sheets" },
+          f4: { k: "Per applicant", v: "Up to 7 qualifications" },
         },
         deliver: {
-          d1: { t: "Accreditation check", p: "The institution is confirmed as accredited — a legitimate provider, not a diploma or degree mill." },
-          d2: { t: "Primary source verification", p: "Each degree, diploma, transcript and marksheet is confirmed directly with the institution that issued it." },
-          d3: { t: "Fraud flagged before approval", p: "Forged documents and discrepancies are caught before a work pass is decided." },
-          d4: { t: "MOM-compliant report", p: "An evidence-backed verification report, ready for the work pass submission." },
+          d1: { t: "Real college?", p: "Not a fake degree seller." },
+          d2: { t: "Real degree?", p: "Confirmed with the college that issued it." },
+          d3: { t: "Fakes caught", p: "Before the work pass is approved." },
+          d4: { t: "Ready report", p: "Meets MOM’s rules, ready to submit." },
         },
-        impactK: "Impact · across our manpower & education work",
+        impactK: "Across all our education checks",
         impact: {
           i1: { v: "12–14%", l: "of applications flagged for fraud" },
-          i2: { v: "≤ 7", l: "working days, express verification" },
-          i3: { v: "120+", l: "countries with degree equivalency assessments" },
+          i2: { v: "≤ 7", l: "working days (express)" },
+          i3: { v: "120+", l: "countries covered" },
         },
         why: {
-          w1: { t: "Officially recognised", p: "Recognised by Singapore’s Ministry of Manpower for qualification verification under the COMPASS framework, across eligible work pass categories." },
-          w2: { t: "Global verification network", p: "Operating across 120+ countries with direct access to thousands of universities and accredited institutions." },
-          w3: { t: "ISO 27001 information security", p: "Personal data, academic records and passport information are protected by enterprise-grade security and privacy controls." },
+          w1: { t: "Officially approved", p: "By Singapore’s Ministry of Manpower." },
+          w2: { t: "120+ countries", p: "Direct access to thousands of universities." },
+          w3: { t: "ISO 27001 certified", p: "Your data stays secure." },
         },
       },
       latvia: {
@@ -1740,32 +1780,32 @@ export const en = {
         ledeName: "the Embassy of the Republic of Latvia",
         micro: "EMBASSY OF THE REPUBLIC OF LATVIA · STUDENT & WORK VISAS · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 02 / 04",
-        role: "Our Partner — Embassy of the Republic of Latvia",
-        problem: { v: "10–15%", l: "of complex fraudulent cases are often missed by traditional checks." },
-        h: "The Embassy of the Republic of Latvia has partnered with HelloVerify to screen its student and work visa applicants before they apply.",
-        p: "Applicants from India, Sri Lanka, Nepal and Bangladesh complete HelloVerify’s screening first. Identity, education or employment and financial records are verified, forged documents are flagged, and the embassy decides on a verified file — not a stack of paper.",
+        role: "Our partner — Embassy of the Republic of Latvia",
+        problem: { v: "10–15%", l: "of clever fraud cases slip past normal checks." },
+        h: "Partnered with the Embassy of Latvia to check visa applicants.",
+        p: "Student and work visa applicants are checked by us before they apply.",
         facts: {
           f1: { k: "Visas", v: "Student Visa · D‑Work Visa" },
           f2: { k: "Applicants from", v: "India · Sri Lanka · Nepal · Bangladesh" },
-          f3: { k: "Documents", v: "Passport · Education or employment · Income tax return · Bank statements" },
-          f4: { k: "Turnaround", v: "Typically 14 business days" },
+          f3: { k: "We check", v: "Passport · Education or job · Tax · Bank" },
+          f4: { k: "Time taken", v: "Usually 14 working days" },
         },
         deliver: {
-          d1: { t: "Screened before the visa", p: "Applicants complete HelloVerify’s screening before they file with the embassy." },
-          d2: { t: "Verified at the source", p: "Identity, education or employment, income tax and bank records are checked with their issuers." },
-          d3: { t: "Clear fraud alerts", p: "Forged documents, discrepancies, duplicate identities and high-risk applicants are flagged." },
-          d4: { t: "Audit-ready report", p: "A clear, traceable report that supports a faster, more confident visa decision." },
+          d1: { t: "Checked first", p: "Before the embassy sees the file." },
+          d2: { t: "Confirmed at source", p: "ID, education, job, tax and bank records." },
+          d3: { t: "Fraud flagged", p: "Fakes, mismatches and double identities." },
+          d4: { t: "Clear report", p: "For a faster, confident decision." },
         },
-        impactK: "Impact · across our embassy screening",
+        impactK: "Across all our visa checks",
         impact: {
-          i1: { v: "3×", l: "faster than the industry average" },
-          i2: { v: "99.2%", l: "verified report rate" },
-          i3: { v: "14", l: "business days, typical turnaround" },
+          i1: { v: "3×", l: "faster than industry average" },
+          i2: { v: "99.2%", l: "of reports verified" },
+          i3: { v: "14", l: "working days" },
         },
         why: {
-          w1: { t: "Customised to the embassy", p: "Our services are tailored in precise accordance with the embassy’s specific requirements from the applicant." },
-          w2: { t: "Data sovereignty", p: "Secure local data storage and processing, in line with data localisation laws, regulatory mandates and government security requirements." },
-          w3: { t: "Trusted compliance", p: "Certified under ISO/IEC 27001 and ISO/IEC 27701 and fully GDPR compliant, with complete audit traceability." },
+          w1: { t: "Built for the embassy", p: "We check exactly what it asks for." },
+          w2: { t: "Data stays local", p: "Stored and processed in-country." },
+          w3: { t: "Certified", p: "ISO 27001, ISO 27701 and GDPR." },
         },
       },
       italy: {
@@ -1773,33 +1813,33 @@ export const en = {
         ledeName: "the Embassy of Italy",
         micro: "EMBASSY OF ITALY · NEW DELHI · NATIONAL VISA VERIFICATION · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 03 / 04",
-        role: "Our Partner — Embassy of Italy (New Delhi)",
-        problem: { v: "Tampered documents", l: "Counterfeit papers and fraudulent company submissions compromise immigration integrity and security." },
-        h: "Italian National Visa applicants are recommended to verify their documents with HelloVerify — to increase their credibility and ease visa processing.",
-        p: "For work, study, business and family visas across the Embassy of Italy’s New Delhi jurisdiction, HelloVerify verifies identity, education or employment, financial and company records before the application is filed — so the embassy receives documents it can trust, and genuine applicants move faster.",
+        role: "Our partner — Embassy of Italy, New Delhi",
+        problem: { v: "Fake documents", l: "put visa decisions at risk." },
+        h: "Recommended for Italian National Visa applicants.",
+        p: "We check documents before they reach the Embassy of Italy in New Delhi.",
         facts: {
           /** Non-breaking hyphens (U+2011): "D-" alone at a line end reads as a typo. */
           f1: { k: "Visas", v: "D‑Work · D‑Student · D‑General · D‑Business" },
-          f2: { k: "Jurisdiction", v: "New Delhi, Haryana, Punjab, Rajasthan, Uttar Pradesh and five more" },
-          f3: { k: "Checks", v: "Identity · Education or employment · Bank statements · Company details" },
-          f4: { k: "Turnaround", v: "Typically 14 business days" },
+          f2: { k: "Covers", v: "New Delhi, Haryana, Punjab and more" },
+          f3: { k: "We check", v: "ID · Education or job · Bank · Company" },
+          f4: { k: "Time taken", v: "Usually 14 working days" },
         },
         deliver: {
-          d1: { t: "Verified before filing", p: "Visa support documents are verified before the application reaches the embassy." },
-          d2: { t: "Checked at the source", p: "Identity, education or employment, bank and company records are confirmed with their issuers." },
-          d3: { t: "Fraud caught early", p: "Tampered documents and fraudulent company submissions are flagged before a decision." },
-          d4: { t: "A credible application", p: "Genuine applicants arrive with verified documents, easing visa processing." },
+          d1: { t: "Checked first", p: "Before the embassy sees the file." },
+          d2: { t: "Confirmed at source", p: "ID, education, job, bank and company records." },
+          d3: { t: "Fakes caught", p: "Before a decision is made." },
+          d4: { t: "Stronger application", p: "Honest applicants get through faster." },
         },
-        impactK: "Impact · across our embassy screening",
+        impactK: "Across all our visa checks",
         impact: {
-          i1: { v: "3×", l: "faster than the industry average" },
-          i2: { v: "99.2%", l: "verified report rate" },
-          i3: { v: "14", l: "business days, typical turnaround" },
+          i1: { v: "3×", l: "faster than industry average" },
+          i2: { v: "99.2%", l: "of reports verified" },
+          i3: { v: "14", l: "working days" },
         },
         why: {
-          w1: { t: "Digital & paperless", p: "Application, document collection, verification, reporting and decision run through one secure, paperless workflow." },
-          w2: { t: "Audit-ready reports", p: "Clear, comprehensive and audit-ready reports enable faster, more confident decision making." },
-          w3: { t: "Clear fraud alerts", p: "Fraud intelligence and advanced document analysis detect forged documents, discrepancies and high-risk applicants." },
+          w1: { t: "Fully online", p: "No paperwork, start to finish." },
+          w2: { t: "Clear reports", p: "Easy to read, every step shown." },
+          w3: { t: "Fraud alerts", p: "Fakes and high-risk applicants flagged." },
         },
       },
       mohesr: {
@@ -1807,32 +1847,32 @@ export const en = {
         ledeName: "the UAE’s Ministry of Higher Education and Scientific Research",
         micro: "MOHESR · UNITED ARAB EMIRATES · DEGREE RECOGNITION · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 04 / 04",
-        role: "Authorized Verification Partner — MOHESR (UAE)",
-        problem: { v: "Degree mills", l: "sell certificates that pass a visual check. Recognition has to be earned at the source." },
-        h: "An authorized verification partner for the UAE’s Ministry of Higher Education and Scientific Research.",
-        p: "MOHESR requires Primary Source Verification before it recognises any degree earned outside the UAE. HelloVerify confirms the university is accredited, verifies the degree with the university that awarded it, and delivers the Degree Verification Document the applicant needs for their Certificate of Recognition.",
+        role: "Authorized verification partner — MOHESR, UAE",
+        problem: { v: "Degree mills", l: "sell fake degrees that look real." },
+        h: "Authorized partner of the UAE’s Ministry of Higher Education.",
+        p: "We confirm degrees earned abroad, so the UAE can recognise them.",
         facts: {
-          f1: { k: "Requirement", v: "PSV for any degree earned outside the UAE" },
-          f2: { k: "Outcome", v: "Degree Verification Document for MOHESR" },
-          f3: { k: "Documents", v: "Degree certificate · Passport · Emirates ID (UAE residents)" },
-          f4: { k: "Sign-in", v: "UAE PASS" },
+          f1: { k: "The rule", v: "Foreign degrees must be confirmed at source" },
+          f2: { k: "You get", v: "Degree Verification Document" },
+          f3: { k: "Documents", v: "Degree · Passport · Emirates ID" },
+          f4: { k: "Sign in with", v: "UAE PASS" },
         },
         deliver: {
-          d1: { t: "Accreditation check", p: "The university is confirmed as accredited and legitimate — not a diploma or degree mill." },
-          d2: { t: "Verified with the university", p: "The degree is confirmed directly with the institution that awarded it." },
-          d3: { t: "Degree Verification Document", p: "An evidence-backed document, issued for MOHESR." },
-          d4: { t: "Certificate of Recognition", p: "The applicant proceeds to MOHESR’s official recognition of their qualification." },
+          d1: { t: "Real university?", p: "Not a fake degree seller." },
+          d2: { t: "Real degree?", p: "Confirmed with the university itself." },
+          d3: { t: "Verification document", p: "Issued for MOHESR." },
+          d4: { t: "Recognition", p: "Get your Certificate of Recognition." },
         },
-        impactK: "Impact · across our manpower & education work",
+        impactK: "Across all our education checks",
         impact: {
-          i1: { v: "15", l: "calendar days, standard turnaround" },
+          i1: { v: "15", l: "calendar days" },
           i2: { v: "12–14%", l: "of applications flagged for fraud" },
-          i3: { v: "8+", l: "years of primary source verification" },
+          i3: { v: "8+", l: "years of experience" },
         },
         why: {
-          w1: { t: "Proven expertise", p: "8+ years of expertise in primary source verification, trusted by government authorities worldwide." },
-          w2: { t: "Global verification company", p: "Operating across 120+ countries with direct access to thousands of universities and accredited institutions." },
-          w3: { t: "Real-time tracking", p: "Applicants follow their application’s progress at every stage using their case number." },
+          w1: { t: "8+ years", p: "Trusted by governments worldwide." },
+          w2: { t: "120+ countries", p: "Direct access to thousands of universities." },
+          w3: { t: "Live tracking", p: "Follow your case at every step." },
         },
       },
     },
@@ -1880,13 +1920,28 @@ export const en = {
         p: "Every verification is supported with clear remarks, verification artefacts and an auditable trail for confident decision making.",
       },
     },
+    /** 1 Oct 2026, on the founder's review ("not at all relevant… just for
+     *  the sake of having it"): every picture now shows its reason
+     *  literally, with the company's own figures (`lib/content/company.ts`:
+     *  20M+ checks, 120+ countries, since 2018). The governments plate shows
+     *  each authority's official mark untouched beside its full name, both
+     *  taken from `govSeals` (its `name`), so it has no words of its own. */
     viz: {
-      gates: { g1: "Work permit", g2: "Immigration", g3: "Licence", g4: "Clearance", g5: "Regulated role" },
+      /** 01 · one verified record, relied on by every agency. */
+      trust: {
+        k: "Verified record",
+        rows: { r1: "Degree", r2: "Licence", r3: "Identity" },
+        to: { a1: "Labour ministry", a2: "Immigration", a3: "Health regulator" },
+      },
+      /** 02 · the scale, as the numbers. */
+      scale: { big: "20M+", bigL: "checks at the source", countries: "in 120+ countries", sources: "Universities · Police · Registrars · Employers" },
       core: "AI",
       nodes: { n1: "Businesses", n2: "Suppliers", n3: "Contractors", n4: "Institutions" },
       since: "2018",
-      today: "Today",
+      today: "Today · 20M+ checks",
       ahead: "Years to come",
+      /** 06 · a report with something in it. */
+      report: { k: "Verification report", r1: "Source · Registrar", r2: "Result · Genuine", r3: "Remarks · Name matches" },
       stamp: "VERIFIED",
       proofs: { p1: "Clear remarks", p2: "Verification artefacts", p3: "Auditable trail" },
     },
