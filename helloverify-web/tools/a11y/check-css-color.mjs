@@ -385,7 +385,6 @@ const BASELINE = {
   "decl #FFE6A3": { n: 1, why: "--v2-su-core-hi: the sun disc's lit edge, and the wash's outer stop" },
   "decl #F2A92E": { n: 1, why: "--v2-su-core-lo: the sun disc's shaded edge" },
   "decl #D69628": { n: 1, why: "--v2-su-amber: the sun's rays and the dashed noon meridian" },
-  "decl #B07014": { n: 1, why: "--v2-su-amber-ink: the NOON label drawn on the canvas" },
   "decl #2C3A54": { n: 1, why: "--v2-su-night: the night side, the midnight meridian and its label" },
   "decl #787C8C": { n: 1, why: "--v2-su-dusk: a land dot on the night side (green by day)" },
   // ── homepage v2 · international globe (`src/app/v2/globe.css`). Surfaces
@@ -448,6 +447,20 @@ const BASELINE = {
   //    photographs since 29 Sep 2026, so their paper and seals left the sheet.
   "decl #FBF8F0": { n: 1, why: "--v2-ff-paper: the REFERRED stamp's paper" },
   "decl #221D3A": { n: 1, why: "--v2-ff-uv-hi: UV lamp pool, centre" },
+
+  // ── homepage v2 · the field case (`src/app/v2/field.css`, 30 Sep 2026):
+  //    the survey sheet and the satellite captures, read by the canvas
+  //    painter (`sections/fieldWorld.ts`). Surfaces and strokes, never text.
+  "decl #E6EEE2": { n: 1, why: "--v2-fc-low: the survey sheet's lowland tint" },
+  "decl #F5EEDC": { n: 1, why: "--v2-fc-high: the survey sheet's upland tint" },
+  "decl #B8683F": { n: 1, why: "--v2-fc-road: laterite roads on the sheet" },
+  "decl #4F8FA0": { n: 1, why: "--v2-fc-river: the river on the sheet" },
+  "decl #2F4A2A": { n: 1, why: "--v2-fc-veg1: bush and tree crowns in a capture" },
+  "decl #56703A": { n: 1, why: "--v2-fc-veg2: gardens in a capture" },
+  "decl #8D9A55": { n: 1, why: "--v2-fc-veg3: dry grass in a capture" },
+  "decl #A8603A": { n: 1, why: "--v2-fc-earth: bare red earth in a capture" },
+  "decl #A9ADAF": { n: 1, why: "--v2-fc-roof: tin roofs in a capture" },
+  "decl #8A5236": { n: 1, why: "--v2-fc-rust: rusted tin roofs in a capture" },
 
   // ── homepage v2 · How we know (`src/app/v2/how.css`): the case file's table
   //    and rails, and the custody orb. All surfaces.

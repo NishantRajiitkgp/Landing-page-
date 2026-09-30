@@ -3,6 +3,7 @@ import { Hero } from "@/components/sections/Hero";
 import { PeopleStrip } from "@/components/sections/PeopleStrip";
 import { OneInEight } from "@/components/sections/OneInEight";
 import { HowWeKnow } from "@/components/sections/HowWeKnow";
+import { FieldCase } from "@/components/sections/FieldCase";
 import { Presence } from "@/components/sections/Presence";
 import { GovSeals } from "@/components/sections/GovSeals";
 import { GovWhy } from "@/components/sections/GovWhy";
@@ -17,7 +18,6 @@ import { International } from "@/components/sections/International";
 import { Consumer } from "@/components/sections/Consumer";
 import { CustomerStory } from "@/components/sections/CustomerStory";
 import { TrustPlatform } from "@/components/sections/TrustPlatform";
-import { Compliance } from "@/components/sections/Compliance";
 import { Contact } from "@/components/sections/Contact";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { setRequestLocale } from "next-intl/server";
@@ -70,6 +70,9 @@ export default async function Home({
         <Presence />
         <OneInEight />
         <HowWeKnow />
+        {/* One address check in Foumban, from request to report: evidence
+            gathered at the door, processed in-country (30 Sep 2026). */}
+        <FieldCase />
         <Checks />
         <GovDossiers />
         <Why />
@@ -87,7 +90,9 @@ export default async function Home({
             and its copy remain — `numbers` is what the ledger reads. */}
         <International />
         <TrustPlatform />
-        <Compliance />
+        {/* The Compliance band ("The unexciting part, done properly.") came
+            off the homepage on 30 Sep 2026. The component and its copy
+            remain. */}
         <Contact />
       </main>
       <SiteFooter />

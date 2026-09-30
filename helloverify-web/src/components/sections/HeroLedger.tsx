@@ -2,19 +2,23 @@
 
 /** The hero's live ledger: the four figures of the Numbers band on one
     counterfoil under the buttons. Every figure rolls in on an odometer; the
-    checks figure then keeps counting, one more about every 14 seconds — the
-    average pace `numbers.pace.note` states — so the page reads as work in
+    checks figure then keeps counting, so the page reads as work in
     progress, not a poster. The other three stay put once they land: clients
     and countries do not change by the second, and a count that pretended to
     would be invented.
 
-    THE COUNT IS DRIVEN BY THE RING, as `./NumbersPace`'s is by its bar: each
-    `animationiteration` of the 14s ring adds one, so the hero's "Pause
-    motion" (`hv-paused`, `./HeroStage`) stops ring and count together. The
-    ring starts part-way round, so the first tick lands within seconds rather
-    than a full 14 — when it falls is a phase, not the pace. Under
-    `prefers-reduced-motion` the ring does not run, and a 14s interval that
-    checks for `hv-paused` keeps the count honest instead.
+    THE COUNT RUNS FROM A CLOCK, not from the page load (30 Sep 2026). It
+    reads `checks` (20,000,000) at `ANCHOR` and one more for every `PACE` ms
+    since — the average pace `numbers.pace.note` states — so it opens on an
+    unround figure (20,4xx,xxx in autumn 2026), every visitor sees the same
+    one, and a reload never winds it back. After that it ticks at random
+    gaps (`gap()`, exponential about the same mean), the way finished checks
+    actually arrive, and catches up with the clock when a hidden tab comes
+    back. The figure is illustrative of that pace; a live feed would replace
+    `since()` and nothing else.
+
+    The hero's "Pause motion" (`hv-paused`, `./HeroStage`) holds the count:
+    a tick that falls while paused is skipped, not banked.
 
     THE ODOMETER. Each digit is a column whose strip holds 0-9 five times
     (generated content, `hero.css`) and rests on the fourth pass, `30 + d`,
@@ -24,11 +28,27 @@
     from the right, so a new leading digit does not remount the others.
 
     The server renders every figure at its resting value, so without JS, and
-    to a crawler, the ledger reads 20,000,000+ / 2,000+ / 120+ / 33+. The
-    rolling digits are `aria-hidden`; each figure has a static `sr-only`
-    twin, so a screen reader is not read a number that changes every 14s. */
+    to a crawler, the ledger reads 20,000,000+ / 2,000+ / 120+ / 33+; the
+    clock's figure is read through `useSyncExternalStore`, whose client
+    snapshot replaces the server's before the first paint, so the entrance
+    spins straight to it. The rolling digits are `aria-hidden`;
+    each figure has a static `sr-only` twin, so a screen reader is not read
+    a number that keeps changing. */
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
+
+/** When the count read exactly `checks`, and the average pace since. */
+const ANCHOR = Date.UTC(2026, 6, 19, 7, 23);
+const PACE = 14000;
+const since = (base: number) => base + Math.max(0, Math.floor((Date.now() - ANCHOR) / PACE));
+/** The wait before the next check lands: exponential about `PACE`, so
+ *  bursts and lulls both happen, held between 2.5s and 40s. */
+const gap = () => Math.min(40000, Math.max(2500, -Math.log(1 - Math.random()) * PACE));
+/** The clock's figure when this page opened, read once: after that the
+ *  random ticks carry the count, so the two never add up to twice the pace. */
+let opened: number | undefined;
+const openedAt = (base: number) => (opened ??= since(base));
+const still = () => () => {};
 
 /** Groups `n` the way `like` is grouped ("20,000,000"): a locale that
  *  writes another separator edits the copy string, not this. */
@@ -90,7 +110,6 @@ export function HeroLedger({
   cells,
   live,
   checksLabel,
-  pace,
 }: {
   /** The checks figure as the copy prints it, "20,000,000". */
   checks: string;
@@ -98,52 +117,48 @@ export function HeroLedger({
   cells: { k: string; v: string; l: string }[];
   live: string;
   checksLabel: string;
-  pace: string;
 }) {
-  const [ticks, setTicks] = useState(0);
-  const ringRef = useRef<SVGCircleElement>(null);
   const base = Number(checks.replace(/\D/g, ""));
+  // The server's snapshot is the copy's figure, so hydration matches; the
+  // client's is the clock's, swapped in before the first paint.
+  const start = useSyncExternalStore(still, () => openedAt(base), () => base);
+  /** `n` counts ticks, to key the "+1" float; `add` is how far past `start`. */
+  const [{ n, add }, setCount] = useState({ n: 0, add: 0 });
+  const v = start + add;
+  const cell = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Start the ring 0-9s into its 14s turn: the first tick lands in 5-14s.
-    ringRef.current?.style.setProperty("animation-delay", `-${(Math.random() * 9).toFixed(1)}s`);
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (!mq.matches) return;
-    const id = setInterval(() => {
-      if (!ringRef.current?.closest(".hv-paused")) setTicks((t) => t + 1);
-    }, 14000);
-    return () => clearInterval(id);
-  }, []);
+    let id: ReturnType<typeof setTimeout>;
+    const tick = () => {
+      if (!document.hidden && !cell.current?.closest(".hv-paused")) setCount((c) => ({ n: c.n + 1, add: c.add + 1 }));
+      id = setTimeout(tick, gap());
+    };
+    // The first one lands soon, so the figure is seen to move.
+    id = setTimeout(tick, 2500 + Math.random() * 3500);
+    const back = () => {
+      if (!document.hidden) setCount((c) => ({ n: c.n, add: Math.max(c.add, since(base) - openedAt(base)) }));
+    };
+    document.addEventListener("visibilitychange", back);
+    return () => {
+      clearTimeout(id);
+      document.removeEventListener("visibilitychange", back);
+    };
+  }, [base]);
 
   return (
     <dl className="hv-lg">
-      <div className="hv-lg-cell hv-lg-live">
+      <div ref={cell} className="hv-lg-cell hv-lg-live">
         <dt className="hv-lg-k">
           <span className="dot live" />
           <b>{live}</b>
           <span>{checksLabel}</span>
         </dt>
         <dd className="hv-lg-n">
-          <Odometer value={group(base + ticks, checks)} />
+          <Odometer value={group(v, checks)} />
           <i aria-hidden="true">{plus}</i>
-          {/* Keyed on the count, so each tick remounts it and replays the float. */}
-          {ticks > 0 && <span key={ticks} className="hv-lg-bump" aria-hidden="true">+1</span>}
+          {/* Keyed on the tick, so each one remounts it and replays the float. */}
+          {n > 0 && <span key={n} className="hv-lg-bump" aria-hidden="true">+1</span>}
           <span className="sr-only">{`${checks}${plus}`}</span>
-        </dd>
-        <dd className="hv-lg-pace">
-          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
-            <circle cx="7" cy="7" r="5.5" className="hv-lg-track" />
-            <circle
-              ref={ringRef}
-              cx="7"
-              cy="7"
-              r="5.5"
-              pathLength={1}
-              className="hv-lg-ring"
-              onAnimationIteration={() => setTicks((t) => t + 1)}
-            />
-          </svg>
-          {pace}
         </dd>
       </div>
       {cells.map((c) => (

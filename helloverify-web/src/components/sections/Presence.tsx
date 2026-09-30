@@ -1,24 +1,21 @@
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
-import { OFFICE_FLAGS } from "@/components/blocks/Flag";
 import "@/app/v2/presence.css";
-import { SunStage } from "./SunStage";
+import { RelayStage } from "./RelayStage";
 
-/** Where HelloVerify operates: homepage v2's "follow the sun" — a live world
- *  map with the day/night line over the six offices. The map is the client
- *  island `./SunStage`; this server half is the heading and the flag defs.
+/** Where HelloVerify operates, and what that does for a hirer: homepage v2's
+ *  relay (29 Sep 2026). It replaced "Six offices. Twelve hours apart." — a
+ *  map of who was at a desk — with what the desks do: the visitor picks
+ *  where their candidate's papers are and watches that request go to the
+ *  source and come back verified, while the world turns under it. The map
+ *  is the client island `./RelayStage`; this server half is the heading.
+ *  The flags are the countries' own (`public/flags`, flag-icons, MIT).
  *
- *  ONE TREE AT EVERY WIDTH since the phone pass (Sep 2026). The old phone
- *  band (a UTC day band and the "Governments we work with" tiles,
- *  `blocks/DayBand.tsx` and `blocks/Governments.tsx`) is gone: v2 gives the
- *  governments a section of their own, and below 1081px `presence.css` crops
- *  the map to the offices and lists the office cards under it.
- */
+ *  ONE TREE AT EVERY WIDTH; `presence.css` reflows it for the phone. */
 
 export async function Presence() {
   const sections = await copy(SECTIONS);
   const t = sections.presence;
-  const motion = sections.hero.motion;
   return (
     <div className="wrap hair-top su-band">
       <div className="sec-head">
@@ -31,18 +28,7 @@ export async function Presence() {
           {t.lede}
         </p>
       </div>
-      {/* The six flags, drawn once and `<use>`d by the map's six cards:
-          ~80 bytes per copy instead of ~400. The board's alternative was a
-          CSS data URI per flag, a second drawing of each one to keep in
-          step. */}
-      <svg className="su-defs" width="0" height="0" aria-hidden="true" focusable="false">
-        <defs>
-          {OFFICE_FLAGS.map((o) => (
-            <g key={o.k} id={`su-fl-${o.k}`}>{o.flag}</g>
-          ))}
-        </defs>
-      </svg>
-      <SunStage sun={t.sun} cities={t.offices} motion={motion} />
+      <RelayStage r={t.relay} cities={t.offices} />
     </div>
   );
 }

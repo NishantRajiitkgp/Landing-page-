@@ -1,11 +1,12 @@
-/** One in eight — the fraud band (homepage v2, Sep 2026; canvas sheet 03).
+/** The fraud band (homepage v2, Sep 2026; canvas sheet 03), once "1 in 8".
 
     Eight synthetic document scans from seven countries on an evidence table,
-    one of them forged (a Class XII marksheet with two marks retyped). A UV
-    lamp follows the pointer and shows each sheet under 365 nm — fibres and a
-    UV-ink emblem on the genuine seven, two glowing erasures on the forgery.
-    Clicking a document checks it; the forgery is referred and its case file
-    opens with the findings drawn on the sheet.
+    every one forged, each with a different trick: a swapped name, pen
+    strokes, correction fluid, a printed seal, a degree-mill sticker, a
+    scraped mark, a tape-lifted year, a traced signature. A UV lamp follows
+    the pointer and shows each sheet under 365 nm, where each trick shows
+    its own way. Clicking a document flags it and opens its case file with
+    the findings drawn on the sheet.
 
     One tree at every width: the canvas has no phone artboard for it, so the
     phone layout is the same table reflowed to two columns (`app/v2/fraud.css`).
@@ -30,7 +31,6 @@ export async function OneInEight() {
       <div className="sec-head" style={{ marginTop: "22px" }}>
         <h2 className="h2">
           <em className="ff-one">{t.headingEm}</em> {t.heading}
-          <sup className="ff-sup">{t.fn}</sup>
         </h2>
         <p className="lede" style={{ marginBottom: "8px" }}>
           {t.lede}

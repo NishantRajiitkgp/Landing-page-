@@ -831,8 +831,9 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  (29 Sep 2026): the "Trust Infrastructure platform" headline splits its
    *  italic line so the seal rides on the last word, `headlineEmEnd`.
    *  18 -> 24: the live ledger's six labels (`hero.ledger`); its figures
-   *  are `numbers`' own. */
-  hero: [9, 24],
+   *  are `numbers`' own. 24 -> 23 (30 Sep 2026): `ledger.pace`, the "About
+   *  one every 14 seconds" line under the count, went. */
+  hero: [9, 23],
   compliance: [4, 5],
   numbers: [14, 24],
   why: [8, 77],
@@ -849,7 +850,11 @@ const BANDS: Record<string, readonly [number, number]> = {
   customerStory: [15, 18],
   /** 52 -> 45 (29 Sep 2026): the hour-coverage strip under the map went,
    *  with its five axis labels, `sun.coverage` and `sun.hour`. */
-  presence: [8, 45],
+  /** 45 -> 108 (29 Sep 2026): the relay replaced the follow-the-sun map —
+   *  the `sun` strings (clock, controls, statuses, countries) went, and the
+   *  counters, the country chips, six journeys told in five captions, the
+   *  timeline, the desk cards and the stamp's ring (`seal`) came. */
+  presence: [8, 93],
   /** Bands homepage v2 added (Sep 2026). The first number is the migration-
    *  time `>text<` matcher count, which never saw them, so it is 0 and the
    *  152 sum below still describes the migration. The second is measured. */
@@ -857,8 +862,12 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  (`inst`/`deg`/`name`/`yr` -> `kind`/`where`, the `certify` line and the
    *  UV microtext gone: -36, +17) and the case file adds 24 strings.
    *  60 -> 69: the lens names what it rings — `uv.erasure` gave way to five
-   *  two-line `uv.tags` (three alterations, two emblem callouts). */
-  oneInEight: [0, 69],
+   *  two-line `uv.tags` (three alterations, two emblem callouts).
+   *  69 -> 177 (30 Sep 2026): every document on the table is forged. Eight
+   *  case files (title, alt, zoom alt and 3-5 findings each) in place of
+   *  one, ten more lens callouts, `flagged`, and the case file's previous /
+   *  next (`navLabel`, `prev`, `next`); the shared `case.k` became a prefix. */
+  oneInEight: [0, 177],
   /** 115 -> 147 (29 Sep 2026): five seals became four (MOM, Latvia, Italy,
    *  MOHESR), and each record gained an impact label, three figures and
    *  three reasons (+13 each), with one shared `whyK`. 147 -> 169: each
@@ -877,6 +886,14 @@ const BANDS: Record<string, readonly [number, number]> = {
   smb: [0, 62],
   diligence: [0, 27],
   trustPlatform: [0, 52],
+  /** New 30 Sep 2026: the field case — heading block and rail label (7),
+   *  the case card (3), HUD and pins (10), the distance and three AI flags
+   *  (4), two pieces of evidence (8), the in-country frame and four chips
+   *  (5), five acts (20), the report (15), the outro and its five places
+   *  (13), the pause (2). 87 -> 106 (30 Sep 2026): the orbit — a sixth act
+   *  (4), the globe's places, region, six offices and counter (11), the
+   *  loupe (2), the HUD's view (1) and the translation label (1). */
+  fieldCase: [0, 106],
 };
 
 const BLOCK_FILES: Record<string, readonly [number, number]> = {
@@ -916,10 +933,13 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  the presence hour strip (see `BANDS`). 1326 -> 1332: `hero.ledger`. 1332 -> 1364: the
  *  four-seal governments band (see `BANDS`); 1364 -> 1386: its records
  *  rewritten as pitches. 1386 -> 1419: the `govWhy` band (+36) and the
- *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. */
+ *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
+ *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
+ *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit. */
 check(
-  "sections holds 1431 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1431 &&
+  "sections holds 1692 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1692 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -952,10 +972,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681. */
 check(
-  "sections: 1420 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1420 &&
+  "sections: 1681 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1681 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

@@ -123,7 +123,6 @@ export async function Hero() {
             plus={nm.plus}
             live={t.ledger.live}
             checksLabel={t.ledger.checks}
-            pace={t.ledger.pace}
             cells={[
               { k: "clients", v: nm.figures.clients.v, l: t.ledger.clients },
               { k: "countries", v: nm.figures.countries.v, l: t.ledger.countries },

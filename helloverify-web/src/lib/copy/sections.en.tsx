@@ -87,13 +87,12 @@ export const en = {
     },
     motion: { pause: "Pause motion", play: "Play motion" },
     /** The live ledger under the buttons (`sections/HeroLedger.tsx`). Only
-     *  the labels: the figures are `numbers.odometer` and `numbers.figures`,
-     *  and `pace` restates `numbers.pace.note` — the count adds one at that
-     *  pace, so the two must move together. */
+     *  the labels: the figures are `numbers.odometer` and `numbers.figures`.
+     *  The count keeps the pace `numbers.pace.note` states, at random gaps;
+     *  the line that said so under it went on 30 Sep 2026. */
     ledger: {
       live: "Live",
       checks: "Checks completed since 2018",
-      pace: "About one every 14 seconds, on average",
       clients: "Enterprise clients",
       countries: "Countries covered",
       catalogue: "Verification checks",
@@ -911,30 +910,35 @@ export const en = {
     },
   },
 
-  /** `sections/OneInEight.tsx` (homepage v2, desktop only — a new band with
-   *  no phone tree yet). The canvas's wording, verbatim. The two figures
-   *  (`1 in 8`, `12–14%`) carry footnote `1`, whose own text says the source
-   *  is still to be confirmed; they are the authority pages' claims, not new
-   *  ones.
+  /** `sections/OneInEight.tsx` (homepage v2). The lede keeps the canvas's
+   *  wording and its figure (`12–14%`) carries footnote `1`, whose own text
+   *  says the source is still to be confirmed.
+   *
+   *  NEW COPY (30 Sep 2026, not founder-verbatim): `headingEm` + `heading`,
+   *  `reveal`, the status line and every case file but application 06's.
+   *  The heading used to be "1 in 8 applicants misrepresent their academic
+   *  credentials."; the table now shows eight forgeries, one trick each, so
+   *  the sentence changed with it.
    *
    *  The eight certificates are SYNTHETIC — fictional institutions and people,
-   *  said so in `bar` — and the sixth (`westmarch`) is the forgery. Their
-   *  words are here because they are words on the page; which one is forged
-   *  is the component's decision, not copy. */
+   *  said so in `bar` — and every one is forged (`tools/img/specimens/`).
+   *  Every finding below is true of its image. */
   oneInEight: {
     sheet: "Sheet 02 / 12",
     flag: "Fraud",
     /** `headingEm` + " " + `heading` is the sentence; the italic figure is its
-     *  own node. `fn` is the footnote mark both figures carry. */
-    headingEm: "1 in 8",
-    heading: "applicants misrepresent their academic credentials.",
+     *  own node. `fn` is the footnote mark the lede's figure carries. */
+    headingEm: "8 of 8",
+    heading: "documents here are forged, each a different way.",
     lede: "We flag fraudulent documents before approval. Our system detects fraud in 12–14% of applications.",
     fn: "1",
     footnote: "Figures as published on HelloVerify’s authority pages. Source and period to be confirmed before launch.",
     bar: "Evidence table · 8 applications · 7 countries · illustrative, synthetic documents",
-    /** The live status reads `${n} ${checked}` until the forgery is found. */
+    /** The live status reads `${n} ${checked} · ${n} ${flagged}` until all
+     *  eight are checked, then `found`. */
     checked: "of 8 checked",
-    found: "7 verified · 1 flagged",
+    flagged: "flagged",
+    found: "8 of 8 flagged · 0 verified",
     /** `${checkCert} ${kind}, ${where}` — the accessible name of each
      *  document. `kind` and `where` are also its caption on the table. The
      *  eight are SYNTHETIC scans (Higgsfield, 29 Sep 2026): fictional
@@ -950,18 +954,28 @@ export const en = {
       sg: { kind: "Polytechnic diploma", where: "Singapore" },
       pk: { kind: "MBBS degree", where: "Pakistan" },
     },
-    /** What the UV lamp shows. Decorative (`aria-hidden`): the fibres and
-     *  UV-ink emblems are in the photographs; `tags` are the callouts the
-     *  lens draws on them — what was done, and to which figure, on the
-     *  forgery; the security features, on every sheet. */
+    /** What the UV lamp shows. Decorative (`aria-hidden`): the fibres, UV-ink
+     *  emblems and glowing alterations are in the photographs; `tags` are the
+     *  callouts the lens draws on them — what was done, and to which figure;
+     *  the security paper, where the sheet is on it. */
     uv: {
       loupe: "UV · 365 nm",
       tags: {
+        renamed: { t: "Name retyped", d: "Over cloned paper" },
+        copied: { t: "No UV emblem ✗", d: "Office paper, no fibres" },
+        inked: { t: "Second ink", d: "64 → 84 · 61 → 81" },
+        fluid: { t: "Correction fluid", d: "Pharmacology 5.00 → 2.00" },
+        deadSeal: { t: "Seal: no UV ink ✗", d: "Printed, not stamped" },
+        revenue: { t: "Revenue stamp ✓", d: "Its UV print glows" },
+        sticker: { t: "Adhesive ring", d: "The seal is a sticker" },
+        bare: { t: "No UV emblem ✗", d: "No security fibres" },
+        lifted: { t: "Tape-lifted", d: "Year 2021 → 2019" },
+        serial: { t: "Serial HP21", d: "Issued 2021, not 2019" },
+        pencil: { t: "Pencil guide", d: "Signature traced" },
         scraped: { t: "Scraped, retyped", d: "Maths 062 → 092" },
         washed: { t: "Chemical wash", d: "Physics 058 → 088" },
         pasted: { t: "Pasted-over slip", d: "Total 415 → 475" },
-        paper: { t: "UV emblem ✓", d: "Genuine board paper" },
-        genuine: { t: "UV emblem ✓", d: "Security fibres ✓" },
+        genuine: { t: "UV emblem ✓", d: "Genuine paper, altered" },
       },
     },
     referred: "FLAGGED",
@@ -969,29 +983,208 @@ export const en = {
     nakedA: "Identifies hidden inconsistencies",
     nakedEm: "invisible to the naked eye.",
     hint: "Move the lamp over the documents, or",
-    reveal: "Show me the forgery",
+    reveal: "Show me every forgery",
     reset: "Reset the table",
-    /** `sections/OneInEightCase.tsx`: the case file that opens once the
-     *  forgery is found. Every finding is true of the specimen — it was
-     *  altered three ways the way a forger would (scrape, wash, paste-over;
-     *  `tools/img/specimens/forge.cjs`), and the heatmap is those edits' own
-     *  mask. */
+    /** `sections/OneInEightCase.tsx`: the case file that opens under the
+     *  table for the document last checked. `k` is followed by the
+     *  application number and the document's caption. Every finding is true
+     *  of its specimen — each was altered the way a forger would
+     *  (`tools/img/specimens/forge.cjs`, `forge-all.cjs`), and each heatmap
+     *  is its edits' own mask. */
     case: {
-      k: "Case file · application 06 · Class XII marksheet, India",
-      title: "Why this marksheet was flagged",
+      k: "Case file · application",
       verdict: "Flagged · not approved",
       viewsLabel: "How to look at the document",
       views: { scan: "Scan", uv: "UV · 365 nm", heat: "Heatmap" },
-      alt: "Synthetic Class XII statement of marks from application 06, with two altered marks",
-      zoomAlt: "The marks column at three times size: the retyped 9 and 8 print thinner and sit low, the 8 in a bleached halo",
-      findings: {
-        f1: { t: "Maths was scraped and retyped", d: "062 → 092. The 9 prints thinner and sits low, and the scraped paper glows under UV.", by: "Image forensics · UV" },
-        f2: { t: "Physics was washed and retyped", d: "058 → 088. A solvent bleached a halo round the digit: dark under UV, with a bright tide line where it dried.", by: "UV · 365 nm" },
-        f3: { t: "The total is a pasted-over slip", d: "A slip printed 475 is glued over the figure. Its paper and glue fluoresce; the sheet's own paper does not.", by: "UV · 365 nm" },
-        f4: { t: "Figures and words disagree", d: "“092” sits beside “SIXTY TWO”, “088” beside “FIFTY EIGHT”, and “475” beside “FOUR HUNDRED FIFTEEN”.", by: "HelloVerify AI · read" },
-        f5: { t: "The board's record disagrees", d: "Roll No. 4127033: Mathematics 62, Physics 58, total 415.", by: "Source · the issuing board" },
+      navLabel: "Case files",
+      prev: "Previous case",
+      next: "Next case",
+      files: {
+        be: {
+          title: "Why this degree was flagged",
+          alt: "Synthetic B.E. degree from application 01: a colour copy with the holder's name replaced",
+          zoomAlt: "The holder's name at twice size: the letters sit low and spaced wider than the print around them",
+          findings: {
+            f1: { t: "The name was replaced", d: "PRANAV K. IYER is retyped over cloned paper. It sits 2px low and is spaced wider than every other line on the sheet.", by: "Image forensics" },
+            f2: { t: "It is a colour copy", d: "Under UV the paper glows blue-white like office stock, with no security fibres and no UV emblem. A copier cannot reproduce UV ink.", by: "UV · 365 nm" },
+            f3: { t: "The USN belongs to someone else", d: "The university's register lists USN 2DT13CS047 under a different graduate.", by: "Source · the issuing university" },
+          },
+        },
+        ae: {
+          title: "Why this transcript was flagged",
+          alt: "Synthetic Grade 12 transcript from application 02, with two marks altered in pen",
+          zoomAlt: "The Mathematics mark at four times size: the upper loop of the 8 is a second, bluer ink",
+          findings: {
+            f1: { t: "Two 6s were closed into 8s", d: "Mathematics 64 → 84 and Physics 61 → 81. One pen stroke each, drawn over the printed digit.", by: "Image forensics" },
+            f2: { t: "The new strokes are a second ink", d: "Under UV the added loops fluoresce orange. The school's printed figures stay dark.", by: "UV · 365 nm" },
+            f3: { t: "The school's record disagrees", d: "Mariam Khalid Al Hosani, 2019–2020: Mathematics 64, Physics 61.", by: "Source · the issuing school" },
+          },
+        },
+        ph: {
+          title: "Why this transcript was flagged",
+          alt: "Synthetic transcript of records from application 03, with one grade under correction fluid",
+          zoomAlt: "The Pharmacology grade at three times size: a raised white blot under a 2 that sits off true",
+          findings: {
+            f1: { t: "A failing grade is under correction fluid", d: "Pharmacology read 5.00, a fail. The fluid is a dead-black blot under UV, where the paper around it glows.", by: "UV · 365 nm" },
+            f2: { t: "The retyped 2 does not match", d: "It is a size larger than every other grade on the sheet and sits a degree off true.", by: "HelloVerify AI · read" },
+            f3: { t: "The registrar's record disagrees", d: "NCM 106 Pharmacology: 5.00, failed.", by: "Source · the registrar" },
+          },
+        },
+        eg: {
+          title: "Why this certificate was flagged",
+          alt: "Synthetic pharmacy graduation certificate from application 04, with a printed faculty seal",
+          zoomAlt: "The faculty seal at three times size: a screen of even violet dots, with none of a rubber stamp's pooling",
+          findings: {
+            f1: { t: "The seal is printed, not stamped", d: "Magnified, it is a dot screen of one flat violet. A rubber stamp pools ink at its edges and fades where it lifts.", by: "Image forensics" },
+            f2: { t: "The seal has no UV ink", d: "It stays dark under the lamp, while the revenue stamp beside it glows as a genuine one should.", by: "UV · 365 nm" },
+            f3: { t: "No such graduate", d: "The faculty has no record of Nour Mohamed Farouk in the May 2015 session.", by: "Source · the issuing faculty" },
+          },
+        },
+        uk: {
+          title: "Why this degree was flagged",
+          alt: "Synthetic MBA degree from application 05, from an unrecognised institution, with a sticker seal",
+          zoomAlt: "The edge of the gold seal under UV, enlarged: a bright ring of adhesive round the sticker",
+          findings: {
+            f1: { t: "The seal is a stationery sticker", d: "A ring of adhesive glows round its edge under UV, and a hairline in the scan shows where it lifts.", by: "UV · 365 nm" },
+            f2: { t: "No security features at all", d: "No fibres and no UV emblem. The paper is plain stock that anyone can buy.", by: "UV · 365 nm" },
+            f3: { t: "The university is not recognised", d: "University of Aldermoor is not on the UK's register of recognised degree-awarding bodies.", by: "Source · UK register" },
+          },
+        },
+        xii: {
+          title: "Why this marksheet was flagged",
+          alt: "Synthetic Class XII statement of marks from application 06, with two altered marks",
+          zoomAlt: "The marks column at three times size: the retyped 9 and 8 print thinner and sit low, the 8 in a bleached halo",
+          findings: {
+            f1: { t: "Maths was scraped and retyped", d: "062 → 092. The 9 prints thinner and sits low, and the scraped paper glows under UV.", by: "Image forensics · UV" },
+            f2: { t: "Physics was washed and retyped", d: "058 → 088. A solvent bleached a halo round the digit: dark under UV, with a bright tide line where it dried.", by: "UV · 365 nm" },
+            f3: { t: "The total is a pasted-over slip", d: "A slip printed 475 is glued over the figure. Its paper and glue fluoresce; the sheet's own paper does not.", by: "UV · 365 nm" },
+            f4: { t: "Figures and words disagree", d: "“092” sits beside “SIXTY TWO”, “088” beside “FIFTY EIGHT”, and “475” beside “FOUR HUNDRED FIFTEEN”.", by: "HelloVerify AI · read" },
+            f5: { t: "The board's record disagrees", d: "Roll No. 4127033: Mathematics 62, Physics 58, total 415.", by: "Source · the issuing board" },
+          },
+        },
+        sg: {
+          title: "Why this diploma was flagged",
+          alt: "Synthetic polytechnic diploma from application 07, with its year altered",
+          zoomAlt: "The date at three times size: the 19 prints a hair heavier and lower than the 20 beside it",
+          findings: {
+            f1: { t: "The year was lifted and reprinted", d: "2021 → 2019. Tape lifted the printed 21 and took paper fibres with it; they glow under UV. The 19 is a hair heavier and sits 2px low.", by: "Image forensics · UV" },
+            f2: { t: "The serial number disagrees", d: "HP21-PHS-00318 is a 2021 serial. The date above it says 2019.", by: "HelloVerify AI · read" },
+            f3: { t: "The polytechnic's record disagrees", d: "Tan Wei Ling, Diploma in Pharmaceutical Science with Merit, awarded 2 May 2021.", by: "Source · the issuing polytechnic" },
+          },
+        },
+        pk: {
+          title: "Why this degree was flagged",
+          alt: "Synthetic MBBS degree from application 08, with a traced signature",
+          zoomAlt: "The Controller's signature, enlarged: the strokes tremble and a grey pencil line runs beside them",
+          findings: {
+            f1: { t: "The Controller's signature is traced", d: "Drawn slowly over a copy: every stroke trembles, starts and stops bluntly, and never tapers the way a signed line does.", by: "Image forensics" },
+            f2: { t: "A pencil guide sits under the ink", d: "Under UV the graphite outline shows a few pixels off every stroke.", by: "UV · 365 nm" },
+            f3: { t: "The registration number is not on the roll", d: "MUHS-2011-0827 is not in the university's register of graduates.", by: "Source · the issuing university" },
+          },
+        },
       },
     },
+  },
+
+  /** `sections/FieldCase.tsx` (homepage v2, 30 Sep 2026): one address check
+   *  in Foumban, Cameroon, followed across five acts on a survey map.
+   *
+   *  NEW COPY, NOT FOUNDER-VERBATIM, except `outro.line`, which is the
+   *  founder's core message word for word. The case is ILLUSTRATIVE: the
+   *  candidate, the employer, the times and both statements are a composed
+   *  example, and the section says so in `note`. The in-country claims in
+   *  `acts.a3` and `chips` (local processing, encryption, retention) and the
+   *  field partner's languages must be confirmed before launch. */
+  fieldCase: {
+    k: "Evidence · anywhere",
+    headingA: "Some checks end at a database.",
+    headingEm: "Ours go to the door.",
+    lede: "Follow one address check in Foumban, Cameroon, from the request to a report built on coordinates, satellite captures and what the neighbourhood says.",
+    note: "An illustrative case: the people, times and statements are composed.",
+    hint: "Scroll to follow the case",
+    railLabel: "Steps of the case",
+    caseK: "Case 4417 · address + site visit",
+    caseWhere: "Foumban, West Region, Cameroon",
+    caseFor: "For a hospital group in Riyadh · workforce mobility",
+    hud: { lat: "Lat", lon: "Lon", plus: "Plus code", alt: "Alt", view: "View" },
+    pins: {
+      declared: "Declared address",
+      declaredSub: "Behind the central market",
+      shared: "Location she shared",
+      sharedSub: "Over WhatsApp",
+      partner: "Field partner",
+      partnerSub: "Foumban desk",
+    },
+    distance: "1.7 km apart",
+    anomalies: {
+      far: "Locations 1.7 km apart",
+      bill: "Utility bill in another name",
+      exif: "Photo metadata stripped",
+    },
+    evidence: {
+      sat: "Satellite capture",
+      sealed: "Sealed in-country",
+      tr: "Translated from French",
+      a: { k: "Declared address · 10:58 WAT", quote: "« Elle a déménagé en 2024. »", en: "“She moved out in 2024.” The landlord" },
+      b: { k: "Where she lives · 11:36 WAT", quote: "« Elle habite ici depuis mars 2024. »", en: "“She has lived here since March 2024.” The quarter head" },
+    },
+    jurisdiction: "Processed in Cameroon",
+    acts: {
+      a0: { k: "Initiated", clock: "00:00:00", t: "A request lands.", d: "A hospital group in Riyadh is hiring a nurse from Foumban, 4,358 km away. They open an address check with a site visit, from the dashboard or over WhatsApp." },
+      a1: { k: "AI reads", clock: "00:00:04", t: "The AI finds what doesn’t fit.", d: "It places the declared address on the map and compares it with the location she shared. They are 1.7 km apart, the utility bill is in another name, and the photo she sent has no metadata." },
+      a2: { k: "On the ground", clock: "Day 1 · 10:42 WAT", t: "A local verifier goes to both doors.", d: "Our field partner in Foumban works in French, English and Shüpamom. At the declared address the landlord says she moved out; at the new one, the quarter head confirms she lives there. Every stop is timestamped and geotagged." },
+      a3: { k: "Stays local", clock: "Day 1 · 14:10 WAT", t: "The evidence stays where the law says.", d: "Captures, statements and coordinates are processed in Cameroon, encrypted, and kept only as long as local rules allow. Her consent has been on record since the first step." },
+      a4: { k: "The report", clock: "Day 1 · 16:05 WAT", t: "Not a tick. A dossier.", d: "Seven sections of evidence, from the coordinates to the chain of custody. Verified, with the address corrected, and the employer can see exactly why." },
+      a5: { k: "One of 20M+", clock: "Right now", t: "One door of twenty million.", d: "Case 4417 closed at 16:05. The same platform is already at the next door, in 120+ countries, from six offices and a network of local experts who work in their own languages." },
+    },
+    /** The orbit the case opens on and pulls back out to. The offices are
+     *  the relay's six (`presence.offices`). */
+    globe: {
+      riyadh: "Riyadh",
+      foumban: "Foumban",
+      region: "WEST REGION · CAMEROON",
+      offices: { manila: "Manila", singapore: "Singapore", newDelhi: "New Delhi", dubai: "Dubai", cairo: "Cairo", newYork: "New York" },
+      big: "20,000,000+",
+      bigLabel: "checks completed since 2018",
+    },
+    loupe: { label: "Satellite · 2×", hint: "Move the pointer over the map to see it from above" },
+    chips: { consent: "Consent on record", local: "Processed in-country", enc: "Encrypted at rest", keep: "Retention by local law" },
+    report: {
+      k: "Verification report · case 4417",
+      verdict: "Verified",
+      verdictSub: "Address corrected",
+      resolved: "Resolved",
+      pages: {
+        summary: "Summary",
+        location: "Location",
+        visit: "Site visit",
+        statements: "Statements",
+        ai: "AI anomaly log",
+        custody: "Chain of custody",
+        compliance: "Compliance",
+      },
+      rows: {
+        identity: "Identity matched",
+        address: "Current address confirmed",
+        visit: "Two doors visited",
+        flags: "3 flags raised, 3 resolved",
+      },
+    },
+    outro: {
+      /** Verbatim; the hyphen in "AI‑powered" is U+2011, the non-breaking
+       *  one, so the line never breaks inside the word. */
+      line: "Global scale, local expertise, AI‑powered intelligence and deep evidence—delivered through one verification platform.",
+      scale: "20M+ checks of sources, research and field knowledge stand behind every new one.",
+      also: "The same platform, elsewhere today",
+      places: {
+        sd: { city: "Khartoum", what: "Degree, from the university" },
+        sy: { city: "Aleppo", what: "Employment, from the employer" },
+        eg: { city: "Cairo", what: "Pharmacy licence" },
+        ph: { city: "Davao", what: "Site visit" },
+        sa: { city: "Riyadh", what: "Professional licence" },
+      },
+    },
+    motion: { pause: "Pause motion", play: "Play motion" },
   },
 
   /** `sections/Contact.tsx`.
@@ -1067,16 +1260,18 @@ export const en = {
    *  the band — the component positions them at `i * 25%`. The offsets, the
    *  flags and the stagger stay in the component. */
   presence: {
-    headingA: "Six offices.",
-    headingB: "Twelve hours apart.",
-    /** v2 swapped the last sentence, which described the old day band, for
-     *  the map's instruction. */
-    lede: "From Manila to New York, office hours overlap so a request filed at night in one place is picked up in the morning somewhere else. Drag the sun to see who is at a desk.",
+    /** The relay (29 Sep 2026) replaced "Six offices. Twelve hours apart.":
+     *  the founder's brief was to show what the offices DO — the requests
+     *  crossing borders to the source and back, and what that is worth to a
+     *  hirer — not that they exist. */
+    headingA: "Hire from 120 countries.",
+    headingB: "Never wait for their morning.",
+    lede: "People cross borders; their papers stay with the university, the police and the registrar that issued them. Six HelloVerify desks, awake around the clock, go back to that source for you — so a nurse from Kochi starts in Abu Dhabi in a day, not a quarter.",
     offices: {
       manila: "Manila",
       singapore: "Singapore",
       /** Labelled New Delhi on the homepage map on review (24 Sep 2026); the
-       *  key stays `noida`, which the sun map and the flag defs share. The
+       *  key stays `noida`, which the relay map and the flag defs share. The
        *  head office everywhere else (schema, llms.txt, /about, /contact) is
        *  still Noida. */
       noida: "New Delhi",
@@ -1084,49 +1279,69 @@ export const en = {
       cairo: "Cairo",
       newYork: "New York",
     },
-    /** Homepage v2: the follow-the-sun map (`sections/SunStage.tsx`,
-     *  a client island, so every string reaches it as a prop). A `{name}` is
-     *  filled in by the island; a function leaf cannot cross the server/client
-     *  boundary. The cities are `offices` above and the axis is `hours`. */
-    sun: {
-      hint: "Drag the sun",
-      back: "Back to now",
-      play: "Play 24 hours",
-      pause: "Pause",
-      map: "World map showing day and night over the six HelloVerify offices",
-      /** Drawn on the canvas, which is `role="img"` with `map` as its name. */
-      noon: "NOON",
-      midnight: "MIDNIGHT",
-      /** What the clock and the office times show before the page knows the
-       *  time: the server cannot, and must not guess (hydration). */
+    /** Homepage v2: the relay (`sections/RelayStage.tsx`, a client island,
+     *  so every string reaches it as a prop; `{name}` slots are filled
+     *  there). The visitor picks where their candidate's papers are and
+     *  watches that one request travel, told in five captions, while the
+     *  world turns under it. PLACEHOLDER FIGURES: the counters are modelled
+     *  and the journeys and their times are illustrative (`lib/relayData.ts`)
+     *  until the founder's numbers replace them — `fn` says so on the page. */
+    relay: {
+      live: "Live · today so far, UTC",
+      /** Shown in a counter or a clock before the page knows the time. */
+      pending: "—",
       clock: "--:--",
-      yourTime: "{day} · your time",
-      days: { sun: "Sun", mon: "Mon", tue: "Tue", wed: "Wed", thu: "Thu", fri: "Fri", sat: "Sat" },
-      utc: "{time} UTC",
-      open: "{n} of 6 offices open",
-      openNow: "{n} of 6 offices open now",
-      atDesk: "at a desk now",
-      closed: "closed",
-      countries: {
-        manila: "Philippines",
-        singapore: "Singapore",
-        noida: "India",
-        dubai: "UAE",
-        cairo: "Egypt",
-        newYork: "USA",
+      stats: {
+        checks: "checks completed",
+        borders: "crossed a border to reach the source",
+        forged: "forgeries stopped before a hire",
+        countries: "countries sending or receiving",
       },
-      /** The same countries as they read after "in": "filed in the USA". */
-      countriesIn: {
-        manila: "the Philippines",
-        singapore: "Singapore",
-        noida: "India",
-        dubai: "the UAE",
-        cairo: "Egypt",
-        newYork: "the USA",
+      pick: "Your candidate's papers are in",
+      countries: { in: "India", ph: "Philippines", eg: "Egypt", pk: "Pakistan", ae: "UAE", gb: "UK" },
+      map: "World map following one verification request from a hirer to the office that issued the document and back, over the six HelloVerify desks as day and night pass",
+      /** The five steps: short on the timeline, told in full on the map. */
+      steps: { filed: "Uploaded", desk: "Our desk", reached: "The source", confirmed: "Confirmed", verified: "Verified" },
+      say: {
+        filed: "A {client} in {to} uploads {who}'s {doc}.",
+        desk: "Our {desk} desk takes it straight to the source.",
+        reached: "The {source} in {from}, which issued it, checks its own records.",
+        confirmed: "Confirmed genuine. The answer goes back to {to}.",
+        verified: "Verified at the source. {who} is cleared.",
       },
-      relay: "A request filed in {from} at {fromTime} is picked up in {to} at {toTime}.",
-      allClosed: "Every desk is closed. {office} opens in {h}h {m}m.",
-      allOpen: "Every office is at a desk.",
+      /** The running clock: time since the upload, in the journey's hours. */
+      since: "since upload",
+      units: { d: "d", h: "h", m: "m" },
+      tags: { source: "Issued it", hirer: "Asked for it", verified: "Verified" },
+      /** Each holder is the name printed on the specimen that flies
+       *  (`lib/relayData.ts` `doc`): Sneha Mathew's nursing degree, Jerome
+       *  Cruz's transcript, Nour Farouk's pharmacy degree, Hamza Ali
+       *  Qureshi's MBBS, Mariam Al Hosani's Grade 12 transcript, Laura
+       *  Santos's MBA. `to` is the hirer's city; the UAE journey's "hirer"
+       *  is a university's admissions office. */
+      journeys: {
+        in: { who: "Sneha", doc: "nursing degree", source: "university registrar", from: "Thrissur", client: "hospital group", to: "Abu Dhabi" },
+        ph: { who: "Jerome", doc: "transcript of records", source: "college registrar", from: "Iloilo", client: "hospital", to: "Riyadh" },
+        eg: { who: "Nour", doc: "pharmacy degree", source: "university registrar", from: "Asyut", client: "pharmacy chain", to: "Kuwait City" },
+        pk: { who: "Hamza", doc: "MBBS degree", source: "medical university", from: "Islamabad", client: "health authority", to: "Doha" },
+        ae: { who: "Mariam", doc: "Grade 12 transcript", source: "school", from: "Abu Dhabi", client: "university admissions office", to: "London" },
+        gb: { who: "Laura", doc: "MBA degree", source: "university registrar", from: "Manchester", client: "bank", to: "Tokyo" },
+      },
+      /** The ring of text on the stamp that lands on the document. */
+      seal: "VERIFIED AT THE SOURCE · HELLOVERIFY ·",
+      /** The six desks under the map, on the journey's clock. */
+      desks: {
+        k: "Our six desks, on this journey's clock",
+        open: "at a desk",
+        closed: "closed",
+        working: "on this request",
+        country: { manila: "Philippines", singapore: "Singapore", noida: "India", dubai: "UAE", cairo: "Egypt", newYork: "USA" },
+      },
+      play: "Play",
+      pause: "Pause",
+      replay: "Replay",
+      scrub: "Journey progress: {doc} from {country}",
+      fn: "Illustrative. Today's counts are modelled on 20M+ checks since 2018; the journeys and their times are examples. Live figures to be connected before launch.",
     },
   },
 

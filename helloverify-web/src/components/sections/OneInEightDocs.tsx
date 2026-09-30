@@ -6,10 +6,10 @@
       tenths of a degree askew, and carries whatever is placed on it
       (stamps, lens callouts) in its own left-to-right percentages.
     - **Its UV twin** is a photograph of the same sheet at the same size
-      (`tools/img/specimens/pipeline.cjs`): fibres and a UV-ink emblem on
-      every sheet, and on the forgery the three alterations, each glowing its
-      own way. The lens rings each one and names it — what was done, and to
-      which figure — with a leader line to the spot. */
+      (`tools/img/specimens/pipeline.cjs`). Every sheet is forged, one trick
+      each, and each trick shows its own way under the lamp. The lens rings
+      each alteration and names it, with a leader line to the spot; where a
+      sheet is on genuine security paper it also rings the UV-ink emblem. */
 import Image from "next/image";
 import type { ReactNode } from "react";
 
@@ -20,45 +20,70 @@ export type CertId = keyof T["certs"];
 type TagId = keyof T["uv"]["tags"];
 
 export const ORDER: CertId[] = ["be", "ae", "ph", "eg", "uk", "xii", "sg", "pk"];
-/** Application 06, the forgery. */
-export const FORGED: CertId = "xii";
 
-/** Each scan's file stem under `/img/docs/` (`-uv` is its UV photograph),
- *  its pixel size, the few tenths of a degree it lies askew, and where its
- *  UV-ink emblem is: centre and radius in % of the sheet's width. */
-const DOCS: Record<CertId, { f: string; w: number; h: number; tilt: number; emblem: readonly [number, number, number] }> = {
-  be: { f: "ev-01-be-in", w: 1000, h: 747, tilt: -0.8, emblem: [50, 17, 9] },
-  ae: { f: "ev-02-transcript-ae", w: 747, h: 1000, tilt: 0.6, emblem: [50, 8.5, 11] },
-  ph: { f: "ev-03-tor-ph", w: 747, h: 1000, tilt: -0.4, emblem: [50, 7, 12] },
-  eg: { f: "ev-04-pharmacy-eg", w: 1000, h: 747, tilt: 0.9, emblem: [50, 47, 10] },
-  uk: { f: "ev-05-mba-uk", w: 1000, h: 747, tilt: 0.5, emblem: [50, 13, 8] },
-  xii: { f: "ev-06-marksheet-in", w: 1045, h: 1400, tilt: -0.7, emblem: [50, 9, 11] },
-  sg: { f: "ev-07-diploma-sg", w: 1000, h: 747, tilt: -0.5, emblem: [56, 50, 10] },
-  pk: { f: "ev-08-mbbs-pk", w: 747, h: 1000, tilt: 0.7, emblem: [50, 33, 12] },
+/** Each scan's file stem under `/img/docs/` (`-uv`, `-heat` and `-zoom` are
+ *  its other photographs), its pixel size, the few tenths of a degree it
+ *  lies askew, and — on security paper — where its UV-ink emblem is: centre
+ *  and radius in % of the sheet's width. */
+export const DOCS: Record<CertId, { f: string; w: number; h: number; tilt: number; emblem: readonly [number, number, number] | null }> = {
+  be: { f: "fx-01-be-in", w: 1000, h: 747, tilt: -0.8, emblem: null },
+  ae: { f: "fx-02-transcript-ae", w: 747, h: 1000, tilt: 0.6, emblem: [50, 8.5, 11] },
+  ph: { f: "fx-03-tor-ph", w: 747, h: 1000, tilt: -0.4, emblem: [50, 7, 12] },
+  eg: { f: "fx-04-pharmacy-eg", w: 1000, h: 747, tilt: 0.9, emblem: [50, 47, 10] },
+  uk: { f: "fx-05-mba-uk", w: 1000, h: 747, tilt: 0.5, emblem: null },
+  xii: { f: "fx-06-marksheet-in", w: 1045, h: 1400, tilt: -0.7, emblem: [50, 9, 11] },
+  sg: { f: "fx-07-diploma-sg", w: 1000, h: 747, tilt: -0.5, emblem: [56, 50, 10] },
+  pk: { f: "fx-08-mbbs-pk", w: 747, h: 1000, tilt: 0.7, emblem: [50, 33, 12] },
 };
 /** A table cell is ~290px on desktop and ~45vw on a phone. */
 const SIZES_DOC = "(max-width: 1080px) 45vw, 300px";
 
 /** A lens callout: the ring round the spot (left, top, width, height, in % of
- *  the sheet) and where its label starts (left, top). */
-type Tag = { id: TagId; ring: readonly [number, number, number, number]; at: readonly [number, number]; kind: "bad" | "slip" | "ok" };
+ *  the sheet) and where its label starts (left, top). `flip` hangs the label
+ *  to the LEFT of that point, for rings near the sheet's right edge. */
+type Tag = { id: TagId; ring: readonly [number, number, number, number]; at: readonly [number, number]; kind: "bad" | "slip" | "ok"; flip?: boolean };
 
-/** The forgery's three alterations, from the masks `forge.cjs` wrote (the
- *  1792×2400 render: Maths digit x 872-940 y 1172-1220; the wash halo
- *  x 846-966 y 1236-1308; the slip x 846-962 y 1479-1533). */
-const FORGED_TAGS: readonly Tag[] = [
-  { id: "scraped", ring: [48.7, 48.8, 3.8, 2.0], at: [59, 42.5], kind: "bad" },
-  { id: "washed", ring: [47.2, 51.5, 6.7, 3.0], at: [59, 55], kind: "bad" },
-  { id: "pasted", ring: [47.2, 61.6, 6.5, 2.25], at: [59, 66.5], kind: "slip" },
-];
+/** Each sheet's alterations, from the masks `forge.cjs` and `forge-all.cjs`
+ *  wrote (in % of the 2400-long render: landscape 2400×1792, portrait
+ *  1792×2400). */
+const TAGS: Record<CertId, readonly Tag[]> = {
+  be: [
+    { id: "renamed", ring: [40.1, 46.5, 20.2, 3], at: [62, 43.5], kind: "bad" },
+    { id: "copied", ring: [41, 5, 18, 24.1], at: [61, 14], kind: "bad" },
+  ],
+  ae: [{ id: "inked", ring: [76.3, 52, 3.6, 6.8], at: [74, 50], kind: "bad", flip: true }],
+  ph: [{ id: "fluid", ring: [72.4, 56.1, 3, 2.6], at: [70, 53.6], kind: "bad", flip: true }],
+  eg: [
+    { id: "deadSeal", ring: [34, 69.1, 13.5, 18.1], at: [49, 64], kind: "bad" },
+    { id: "revenue", ring: [85, 75.1, 7.9, 13.7], at: [83, 90], kind: "ok", flip: true },
+  ],
+  uk: [
+    { id: "sticker", ring: [42.2, 76, 14.8, 19.9], at: [58.5, 73], kind: "bad" },
+    { id: "bare", ring: [42.1, 8.9, 15.8, 21.2], at: [59.5, 14], kind: "bad" },
+  ],
+  // The 1792×2400 render: Maths digit x 872-940 y 1172-1220; the wash halo
+  // x 846-966 y 1236-1308; the slip x 846-962 y 1479-1533.
+  xii: [
+    { id: "scraped", ring: [48.7, 48.8, 3.8, 2.0], at: [59, 42.5], kind: "bad" },
+    { id: "washed", ring: [47.2, 51.5, 6.7, 3.0], at: [59, 55], kind: "bad" },
+    { id: "pasted", ring: [47.2, 61.6, 6.5, 2.25], at: [59, 66.5], kind: "slip" },
+  ],
+  sg: [
+    { id: "lifted", ring: [18.4, 59.2, 2.9, 3.7], at: [23, 56.5], kind: "bad" },
+    { id: "serial", ring: [82.7, 90.2, 9.3, 2.1], at: [81, 84.5], kind: "slip", flip: true },
+  ],
+  pk: [{ id: "pencil", ring: [63.6, 81.25, 22, 3.8], at: [61, 76], kind: "bad", flip: true }],
+};
 
-/** The emblem callout, on every sheet: a ring round the UV emblem and its
- *  label to the right. The emblem's radius is in % of the width, so its
- *  height in % of the sheet is scaled by the sheet's proportions. */
-function emblemTag(id: CertId): Tag {
-  const { w, h, emblem: [cx, cy, r] } = DOCS[id];
+/** The emblem callout, on every sheet of security paper: a ring round the
+ *  UV emblem and its label to the right. The emblem's radius is in % of the
+ *  width, so its height in % of the sheet is scaled by the proportions. */
+function emblemTag(id: CertId): Tag[] {
+  const { w, h, emblem } = DOCS[id];
+  if (!emblem) return [];
+  const [cx, cy, r] = emblem;
   const ry = (r * w) / h;
-  return { id: id === FORGED ? "paper" : "genuine", ring: [cx - r, cy - ry, 2 * r, 2 * ry], at: [cx + r + 2, cy - 3], kind: "ok" };
+  return [{ id: "genuine", ring: [cx - r, cy - ry, 2 * r, 2 * ry], at: [cx + r + 2, cy - 3], kind: "ok" }];
 }
 
 const pct = (v: number) => `${v}%`;
@@ -91,12 +116,17 @@ function Tags({ tags, t }: { tags: readonly Tag[]; t: T }) {
   return (
     <>
       <svg className="ff-tag-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-        {tags.map(({ id, ring: [x, y, w, h], at: [lx, ly], kind }) => (
-          <polyline key={id} className={`ff-tag-line ff-tag-${kind}`} points={`${x + w},${y + h / 2} ${lx - 1.5},${ly + 3} ${lx},${ly + 3}`} vectorEffect="non-scaling-stroke" />
+        {tags.map(({ id, ring: [x, y, w, h], at: [lx, ly], kind, flip }) => (
+          <polyline
+            key={id}
+            className={`ff-tag-line ff-tag-${kind}`}
+            points={flip ? `${x},${y + h / 2} ${lx + 1.5},${ly + 3} ${lx},${ly + 3}` : `${x + w},${y + h / 2} ${lx - 1.5},${ly + 3} ${lx},${ly + 3}`}
+            vectorEffect="non-scaling-stroke"
+          />
         ))}
       </svg>
-      {tags.map(({ id, ring: [x, y, w, h], at: [lx, ly], kind }) => (
-        <span key={id} className={`ff-tag ff-tag-${kind}`}>
+      {tags.map(({ id, ring: [x, y, w, h], at: [lx, ly], kind, flip }) => (
+        <span key={id} className={flip ? `ff-tag ff-tag-${kind} ff-tag-flip` : `ff-tag ff-tag-${kind}`}>
           <i className="ff-tag-ring" style={{ "--x": pct(x), "--y": pct(y), "--w": pct(w), "--h": pct(h) } as React.CSSProperties} />
           <em className="ff-tag-k" style={{ "--x": pct(lx), "--y": pct(ly) } as React.CSSProperties}>
             <b>{t.uv.tags[id].t}</b>
@@ -110,11 +140,10 @@ function Tags({ tags, t }: { tags: readonly Tag[]; t: T }) {
 
 /** A cell of the lamp layer, the mirror of a table cell. */
 export function Uv({ id, i, t }: { id: CertId; i: number; t: T }) {
-  const tags = id === FORGED ? [...FORGED_TAGS, emblemTag(id)] : [emblemTag(id)];
   return (
-    <span className={id === FORGED ? "ff-uvc ff-uvc-bad" : "ff-uvc"}>
+    <span className="ff-uvc ff-uvc-bad">
       <Doc id={id} uv>
-        <Tags tags={tags} t={t} />
+        <Tags tags={[...TAGS[id], ...emblemTag(id)]} t={t} />
       </Doc>
       <Caption id={id} i={i} t={t} />
     </span>

@@ -1,8 +1,7 @@
-/** The follow-the-sun map's data and time maths (homepage v2, Presence).
- *
- *  Pure and DOM-free, so `sections/SunStage.tsx` (the client island) and its
- *  painter `sections/sunPaint.ts` share one statement of where each office is,
- *  when it is open and which request is being handed on.
+/** The six desks' places and hours, and the map projection (homepage v2,
+ *  Presence). Pure and DOM-free: the relay map (`sections/RelayStage.tsx`,
+ *  its loop and painter, and `lib/relayData`) reads where each office is
+ *  and whether it is open.
  *
  *  THE MAP IS AN EQUIRECTANGULAR 1200 x 434 BOX spanning 74°N to 56°S — the
  *  board's projection (`scripts/assemble_sun.py`), cropped to where the land
@@ -14,9 +13,6 @@ import type { OfficeId } from "@/lib/copy/sections";
 
 export const MAP_W = 1200;
 export const MAP_H = 434;
-/** Card box, px, on the 1200 x 434 map. */
-export const CARD_W = 172;
-export const CARD_H = 54;
 
 export const px = (lat: number, lon: number) => ({ x: ((lon + 180) / 360) * MAP_W, y: ((74 - lat) / 130) * MAP_H });
 
@@ -29,21 +25,16 @@ export type Office = {
   std: number;
   x: number;
   y: number;
-  /** The card's top-left on the map, placed by hand on the board so no card
-   *  covers another office's lamp. */
-  cl: number;
-  ct: number;
 };
 
-/** East to west — the board's order, which is also the hour strip's stack
- *  order, bottom up. */
+/** East to west. */
 export const OFFICES: Office[] = [
-  { k: "manila", tz: "Asia/Manila", std: 480, ...px(14.6, 121.0), cl: 1014, ct: 104 },
-  { k: "singapore", tz: "Asia/Singapore", std: 480, ...px(1.35, 103.8), cl: 872, ct: 318 },
-  { k: "noida", tz: "Asia/Kolkata", std: 330, ...px(28.6, 77.2), cl: 792, ct: 22 }, // New Delhi (see `presence.offices`)
-  { k: "dubai", tz: "Asia/Dubai", std: 240, ...px(25.2, 55.3), cl: 606, ct: 236 },
-  { k: "cairo", tz: "Africa/Cairo", std: 120, ...px(30.0, 31.2), cl: 540, ct: 22 },
-  { k: "newYork", tz: "America/New_York", std: -300, ...px(40.7, -74.0), cl: 384, ct: 132 },
+  { k: "manila", tz: "Asia/Manila", std: 480, ...px(14.6, 121.0) },
+  { k: "singapore", tz: "Asia/Singapore", std: 480, ...px(1.35, 103.8) },
+  { k: "noida", tz: "Asia/Kolkata", std: 330, ...px(28.6, 77.2) }, // New Delhi (see `presence.offices`)
+  { k: "dubai", tz: "Asia/Dubai", std: 240, ...px(25.2, 55.3) },
+  { k: "cairo", tz: "Africa/Cairo", std: 120, ...px(30.0, 31.2) },
+  { k: "newYork", tz: "America/New_York", std: -300, ...px(40.7, -74.0) },
 ];
 
 /** A desk is staffed 09:00–18:00 local, minutes after midnight. */
@@ -110,14 +101,3 @@ export function worldAt(t: number, off: Offsets): World {
   }
   return { rows, open, from, to, utc };
 }
-
-/** The closed office that opens next, and in how many minutes. */
-export function nextOpen(w: World): { row: Row; wait: number } {
-  const row = w.rows.reduce((a, b) => (mod(OPEN - b.m, DAY) < mod(OPEN - a.m, DAY) ? b : a));
-  return { row, wait: mod(OPEN - row.m, DAY) };
-}
-
-export const hhmm = (m: number) => {
-  const v = mod(Math.round(m), DAY);
-  return `${String(Math.floor(v / 60)).padStart(2, "0")}:${String(v % 60).padStart(2, "0")}`;
-};
