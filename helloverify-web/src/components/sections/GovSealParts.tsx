@@ -6,7 +6,6 @@ import Image from "next/image";
 
 export type SealItem = {
   name: string;
-  where: string;
   ledeName: string;
   micro: string;
   record: string;

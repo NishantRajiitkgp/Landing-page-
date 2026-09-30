@@ -14,7 +14,7 @@
 
 import { useCallback, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
-export type Segment = { key: string; label: string; sub: string; panel: ReactNode };
+export type Segment = { key: string; label: string; panel: ReactNode };
 
 export function SmbSegments({ label, segments, initial = 0 }: { label: string; segments: Segment[]; initial?: number }) {
   const [on, setOn] = useState(initial);
@@ -62,7 +62,6 @@ export function SmbSegments({ label, segments, initial = 0 }: { label: string; s
               onClick={() => setOn(i)}
             >
               <b>{s.label}</b>
-              <span>{s.sub}</span>
             </button>
           ))}
         </div>

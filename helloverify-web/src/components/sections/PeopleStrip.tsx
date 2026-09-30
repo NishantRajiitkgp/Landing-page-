@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
 
+import { AppLink } from "@/components/chrome/AppLink";
 import { SIZES_PERSON, noteInk, tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type PersonSrc } from "@/lib/copy/sections";
@@ -9,8 +10,10 @@ import { SECTIONS, type PersonSrc } from "@/lib/copy/sections";
 import "@/app/v2/strip.css";
 import { PeopleStripStage } from "./PeopleStripStage";
 
-/** Drifting strip of verified people; the track is duplicated so the loop is
- *  seamless.
+/** Individual Checks: a drifting strip of six single checks, one per card,
+ *  each with its turnaround, what it verifies, its price and a Buy button
+ *  (30 Sep 2026 — the strip used to show people and places but not what
+ *  was being sold). The track is duplicated so the loop is seamless.
  *
  *  Homepage v2: the cards, in colour, on a curved path you can drag and
  *  fling, under an "At the source" label — `./PeopleStripStage` and
@@ -29,15 +32,22 @@ import { PeopleStripStage } from "./PeopleStripStage";
  *  where there were once 28 hand-written cards.
  */
 
-/** The words on a card, keyed by photograph in `lib/copy/sections`. */
+/** The words on a card, keyed by photograph in `lib/copy/sections`: the
+ *  check's name (`role`), what it verifies (`city`), its turnaround
+ *  (`chip`) and its price. */
 type Words = {
   readonly role: string;
   readonly city: string;
   readonly chip: string;
+  readonly price: string;
   /** The small caption over the photograph; `design.css` hides it once the
    *  photograph is there (`.ph:has(.pimg) .note`). */
   readonly note?: string;
 };
+type Chrome = { per: string; buy: string };
+
+/** Single checks are bought where the site sells à-la-carte checks. */
+const BUY_HREF = "/business/smb";
 
 type Person = {
   readonly src: PersonSrc;
@@ -48,18 +58,19 @@ type Person = {
   readonly live?: boolean;
 };
 
+/** Six checks, the old home page's order: identity-type checks between the
+ *  longer ones so neighbouring cards differ. Heights vary so the drum keeps
+ *  its rhythm; every card is tall enough for the name, line and price row. */
 const PEOPLE: readonly Person[] = [
-  { src: "/img/people/01-rider-bengaluru.jpg", w: 300, h: 420 },
-  { src: "/img/people/02-nurse-abudhabi.jpg", w: 340, h: 470 },
-  { src: "/img/people/03-engineer-manila.jpg", w: 290, h: 390 },
-  { src: "/img/people/04-nanny-gurugram.jpg", w: 320, h: 440 },
-  { src: "/img/people/05-warehouse-pune.jpg", w: 300, h: 400, live: true },
-  { src: "/img/people/06-supplier-cairo.jpg", w: 330, h: 460 },
-  { src: "/img/people/07-tenant-singapore.jpg", w: 290, h: 410 },
-  { src: "/img/people/08-cfo-london.jpg", w: 310, h: 430 },
+  { src: "/img/people/02-nurse-abudhabi.jpg", w: 310, h: 450 },
+  { src: "/img/people/01-rider-bengaluru.jpg", w: 300, h: 430 },
+  { src: "/img/people/03-engineer-manila.jpg", w: 320, h: 460 },
+  { src: "/img/people/05-warehouse-pune.jpg", w: 300, h: 430, live: true },
+  { src: "/img/people/04-nanny-gurugram.jpg", w: 320, h: 460 },
+  { src: "/img/people/07-tenant-singapore.jpg", w: 310, h: 440 },
 ];
 
-function PersonCard({ p, w, loading }: { p: Person; w: Words; loading: "eager" | "lazy" }) {
+function PersonCard({ p, w, c, loading }: { p: Person; w: Words; c: Chrome; loading: "eager" | "lazy" }) {
   /** The caption inverts because the photograph's tint is dark (all eight
    *  since the 29 Sep 2026 reshoot, <= 0.3293 relative luminance), not
    *  because a card is the live one — keyed by photograph beside the tint in
@@ -84,17 +95,28 @@ function PersonCard({ p, w, loading }: { p: Person; w: Words; loading: "eager" |
       )}
       <div className="scrim"></div>
       <div className="chip">
-        <span className={p.live ? "dot live" : "dot"}></span>
+        <svg className="ic-bolt" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+          <path d="M7 1 2.5 7H6l-1 4L9.5 5H6z" fill="currentColor" />
+        </svg>
         {w.chip}
       </div>
       <div className="who">
-        <div className="role">{w.role}</div>
-        <div className="city">{w.city}</div>
+        <h3 className="role">{w.role}</h3>
+        <p className="city">{w.city}</p>
         {p.live && (
           <div className="progress">
             <span></span>
           </div>
         )}
+        <div className="ic-buy">
+          <span className="ic-price">
+            <b>{w.price}</b>
+            <i>{c.per}</i>
+          </span>
+          <AppLink href={BUY_HREF} className="ic-btn" aria-label={`${c.buy}: ${w.role}, ${w.price}`}>
+            {c.buy}
+          </AppLink>
+        </div>
       </div>
     </div>
   );
@@ -112,13 +134,22 @@ function PersonCard({ p, w, loading }: { p: Person; w: Words; loading: "eager" |
  *
  *  The visible half stays eager on purpose: the strip animates from first
  *  paint, and a lazy first card pops in under the reader's eye. */
-function Track({ words }: { words: Readonly<Record<PersonSrc, Words>> }) {
+function Track({ words, c }: { words: Readonly<Record<PersonSrc, Words>>; c: Chrome }) {
   return (
     <div className="track">
       {[...PEOPLE, ...PEOPLE].map((p, i) => (
         <Fragment key={i}>
           {" "}
-          <PersonCard p={p} w={words[p.src]} loading={i < PEOPLE.length ? "eager" : "lazy"} />
+          {/* The second copy exists only for the seamless loop: hidden from
+              assistive tech so each check is announced once, and its Buy
+              links are out of the tab order. */}
+          {i < PEOPLE.length ? (
+            <PersonCard p={p} w={words[p.src]} c={c} loading="eager" />
+          ) : (
+            <div className="ic-dupe" aria-hidden="true" inert>
+              <PersonCard p={p} w={words[p.src]} c={c} loading="lazy" />
+            </div>
+          )}
         </Fragment>
       ))}{" "}
     </div>
@@ -127,21 +158,30 @@ function Track({ words }: { words: Readonly<Record<PersonSrc, Words>> }) {
 
 export async function PeopleStrip() {
   const t = (await copy(SECTIONS)).peopleStrip;
+  const c: Chrome = { per: t.per, buy: t.buy };
 
   return (
-    <>
+    <section className="ic" aria-labelledby="ic-h">
+      <div className="wrap sec-head ic-head">
+        <h2 className="h2" id="ic-h">
+          {t.headingA}
+          <br />
+          <em className="ic-it">{t.headingEm}</em>
+        </h2>
+        <p className="lede">{t.lede}</p>
+      </div>
       {/* The canvas also had a greyscale track with a colour copy clipped
           under a scanning "checkpoint"; the owner dropped it as gimmicky
           (24 Sep 2026), which also removed that second, `aria-hidden` copy
           of every card. */}
       <PeopleStripStage checkpoint={t.checkpoint}>
         {" "}
-        <Track words={t.people} />{" "}
+        <Track words={t.people} c={c} />{" "}
       </PeopleStripStage>{" "}
       <div className="wrap hv-strip-cap">
         <span>{t.strip}</span>
         <span className="mono">{t.times}</span>
       </div>
-    </>
+    </section>
   );
 }

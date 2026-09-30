@@ -28,12 +28,18 @@ const C2: { id: MomC2Id; pts: number }[] = [
  *  immigration page — the hero's "Premium services" door goes there too. */
 const PREMIUM = ["health", "immigration"] as const;
 
+/** The MOM case is hidden from the homepage (30 Sep 2026), not deleted: set
+ *  this to `true` to bring it back. The premium services band below it
+ *  still renders. */
+const SHOW_MOM = false;
+
 export async function GovMom() {
   const t = (await copy(SECTIONS)).govDossiers;
   const m = t.mom;
 
   return (
     <>
+      {SHOW_MOM && (
       <div className="mw">
         <div className="mw-kick">
           <span className="mw-logo"><Image src="/img/mom.jpg" alt={m.logoAlt} width={30} height={30} /></span>
@@ -99,6 +105,7 @@ export async function GovMom() {
           </div>
         </div>
       </div>
+      )}
       <div className="mw-prem">
         <div>
           <div className="k">{t.premium.kicker}</div>

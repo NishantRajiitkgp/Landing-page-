@@ -26,7 +26,7 @@ import { SECTIONS, type GovDossierId } from "@/lib/copy/sections";
 import { tint } from "@/lib/img";
 import "@/app/v2/govdossier.css";
 import { Watermark } from "./GovArt";
-import { GovAuthorityMenu, GovDossierTabs } from "./GovDossierTabs";
+import { GovDossierTabs } from "./GovDossierTabs";
 import { GovMom } from "./GovMom";
 import { InkFilter, StampOct, StampOval, StampRect, StampRound, type StampWords } from "./GovStamps";
 
@@ -63,21 +63,40 @@ export async function GovDossiers() {
     if (cta === "talk") {
       return <AppLink href="/contact" className="btn btn-ink btn-sm">{t.talk}</AppLink>;
     }
-    if (cta === "mom") {
-      return (
-        <AppLink href={MOM_PAGE} className="gv-mom-cta">
-          <Image src="/img/mom.jpg" alt="" width={22} height={22} />
-          <span>{t.momCta}</span>
-          <Arrow />
-        </AppLink>
-      );
-    }
-    // There is no page per embassy yet; both lead to the immigration page.
+    return null;
+  };
+
+  /** The authorities a dossier names, as logo cards under it: the seals
+   *  band's marks. Only MOM has a page of its own; the others open their
+   *  dossier's vertical page. */
+  const AUTH: Partial<Record<GovDossierId, { name: string; logo: string; href: string }[]>> = {
+    immigration: [
+      { name: t.authorities.latvia, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration" },
+      { name: t.authorities.italy, logo: "/img/italy-emblem.png", href: "/governments/immigration" },
+    ],
+    manpower: [
+      { name: t.momCta, logo: "/img/mom.jpg", href: MOM_PAGE },
+      { name: t.authorities.mohesr, logo: "/img/mohesr-emblem.png", href: "/governments/manpower-education" },
+    ],
+  };
+  const authCards = (id: GovDossierId) => {
+    const list = AUTH[id];
+    if (!list) return null;
     return (
-      <GovAuthorityMenu label={t.selectAuthority}>
-        <AppLink href="/governments/immigration">{t.authorities.latvia}</AppLink>
-        <AppLink href="/governments/immigration">{t.authorities.italy}</AppLink>
-      </GovAuthorityMenu>
+      <div className="gv-auth">
+        <div className="gv-auth-k">{t.selectAuthority}</div>
+        <ul className="gv-auth-list">
+          {list.map((a) => (
+            <li key={a.name}>
+              <AppLink href={a.href} className="gv-auth-card">
+                <span className="gv-auth-logo"><Image src={a.logo} alt="" width={44} height={44} /></span>
+                <span className="gv-auth-n">{a.name}</span>
+                <span className="gv-auth-go" aria-hidden="true"><Arrow /></span>
+              </AppLink>
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   };
 
@@ -133,6 +152,7 @@ export async function GovDossiers() {
               ))}
             </ol>
           </div>
+          {authCards(id)}
           <div className="gv-foot">
             <div className="gv-ctas">
               <AppLink href={href} className="btn btn-ghost gv-explore">
@@ -140,6 +160,9 @@ export async function GovDossiers() {
                 <Arrow />
               </AppLink>
               {ctas(cta)}
+              {cta !== "talk" && (
+                <AppLink href="/contact" className="btn btn-ink btn-sm">{t.talk}</AppLink>
+              )}
             </div>
           </div>
         </div>

@@ -198,7 +198,7 @@ export const en = {
       atDesk: "at a desk now",
       closed: "closed",
       cities: {
-        noida: { city: "Noida", country: "India" },
+        noida: { city: "New Delhi", country: "India" },
         dubai: { city: "Dubai", country: "United Arab Emirates" },
         singapore: { city: "Singapore", country: "Singapore" },
         manila: { city: "Manila", country: "Philippines" },

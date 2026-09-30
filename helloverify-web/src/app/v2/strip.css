@@ -31,7 +31,41 @@
    including the label's live dot. */
 .hv-strip-still .dot.live { animation-play-state: paused; }
 
+/* ── Individual Checks (30 Sep 2026) ────────────────────────────────────
+   The band's heading, and each card turned from a person into a check you
+   can buy: turnaround chip, name, what it verifies, price and button. */
+.ic { padding-top: clamp(72px, 10vw, 112px); padding-bottom: clamp(24px, 4vw, 40px); }
+.ic .ic-head { margin-bottom: clamp(20px, 3vw, 36px); }
+.ic-it { font-style: italic; color: var(--green); }
+/* The loop's second copy: a wrapper the drum measures and turns like a card. */
+.ic-dupe { display: flex; flex: 0 0 auto; }
+.hv-strip .person .chip { gap: 6px; }
+.hv-strip .ic-bolt { width: 11px; height: 11px; color: var(--green); }
+/* A column: `design.css` has a site-wide `.who { display: flex }` (a row,
+   for the testimonial byline) that laid the name, line and price side by
+   side. */
+.hv-strip .person .who { bottom: 16px; display: flex; flex-direction: column; align-items: stretch; gap: 0; }
+.hv-strip .person .who .role { margin: 0; font-weight: 400; }
+.hv-strip .person .who .city { margin: 8px 0 0; line-height: 1.45; text-wrap: pretty; }
+/* Price and button on one row, on a frosted plate so the price reads over
+   any photograph. */
+.ic-buy { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 8px; padding-inline: 14px 8px; border-radius: 999px; background: rgb(from var(--white) r g b / .14); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .22); text-shadow: none; }
+.ic-price { display: flex; align-items: baseline; gap: 6px; }
+.ic-price b { font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1; letter-spacing: -.02em; color: var(--white); }
+.ic-price i { font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: rgb(from var(--white) r g b / .78); }
+.ic-btn { flex: none; display: inline-flex; align-items: center; height: 34px; padding-inline: 16px; border-radius: 999px; background: var(--white); color: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 500; text-decoration: none; transition: background .25s, color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+.ic-btn:hover { background: var(--green-light); transform: translateY(-1px); }
+.ic-btn:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
+.hv-strip.hv-js .ic-btn { cursor: pointer; }
+
 @media (max-width: 1080px) {
   .hv-strip { padding-block: 34px 4px; --ps: .66px; }
   .hv-strip-cap { padding-top: 14px; font-size: 13px; }
+  /* The phone card is .66 of the desktop box: the line under the name goes
+     (the name, time and price are the decision), and the price row tightens. */
+  .hv-strip .person .who .city { display: none; }
+  .ic-buy { margin-top: 10px; padding-block: 6px; padding-inline: 10px 6px; }
+  .ic-price b { font-size: 19px; }
+  .ic-price i { font-size: 9px; }
+  .ic-btn { height: 28px; padding-inline: 11px; font-size: 12.5px; }
 }

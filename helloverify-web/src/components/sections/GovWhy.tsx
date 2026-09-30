@@ -46,7 +46,6 @@ export async function GovWhy() {
         <h2 className="gw-h" id="gw-h">
           {t.headingA} <em>{t.headingB}</em>
         </h2>
-        <p className="gw-lede">{t.lede}</p>
         <GovWhyStage pauseLabel={all.hero.motion.pause} playLabel={all.hero.motion.play}>
           {ORDER.map((id, i) => (
             <article key={id} className="gw-plate">

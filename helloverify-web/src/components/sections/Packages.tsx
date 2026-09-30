@@ -52,11 +52,7 @@ export async function Packages() {
   return (
     <div className="wrap hair-top pq">
       <div className="sec-head">
-        <h2 className="h2">
-          {t.headingA}
-          <br />
-          {t.headingB}
-        </h2>
+        <h2 className="h2">{t.headingA}</h2>
         <p className="lede">{t.lede}</p>
       </div>
       {/* On a phone a scroll-snap row. It needs no tabindex of its own:

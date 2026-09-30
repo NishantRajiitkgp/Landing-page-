@@ -27,6 +27,9 @@ const fmt = (v: number, dp: number) => v.toFixed(dp);
 
 type Pt = readonly [number, number];
 type Cam = { lat: number; lon: number; ls: number };
+/** Foumban's centre (`fieldRegion.ts`, `fieldWorld.ts`'s ORIGIN): what the
+ *  HUD prints while the view is wider than the town. */
+const FOUMBAN = { lat: 5.727, lon: 10.9004 };
 export type LoopLabels = { dive: GlobeLabels; finale: GlobeLabels; loupe: string; region: string };
 
 export function run(el: HTMLDivElement, setAct: (n: number) => void, setLive: (b: boolean) => void, pausedRef: { current: boolean }, L: LoopLabels) {
@@ -197,12 +200,18 @@ export function run(el: HTMLDivElement, setAct: (n: number) => void, setLive: (b
     if (frame++ % 3 === 0) hudTick(mcam, scale, mapA);
   };
 
-  // The HUD: where the camera is, how high, and the scale bar.
+  // The HUD: the location being checked, its height, the map's width and
+  // the scale bar. It names the CASE's location, not the camera's centre:
+  // on the globe the camera sits between Riyadh and Foumban, and printing
+  // that point (8.9° N, 18.6° E — Chad) read as the case being somewhere
+  // it is not. Zoomed out it shows Foumban; once the town sheet is in view
+  // (under 50 km across) it follows the camera round the town.
   const hudTick = (mc: { x: number; y: number }, scale: number, mapA: number) => {
     const view = w / scale;
     const viewTxt = view >= 10000 ? `${Math.round(view / 1000).toLocaleString("en")} km` : view >= 1000 ? `${(view / 1000).toFixed(1)} km` : `${Math.round(view)} m`;
     const alt = mapA > 0.5 && mc.x > 0 && mc.y > 0 && mc.x < W.MAP_W && mc.y < W.MAP_H ? `${Math.round(W.altAt(sheet, mc.x, mc.y)).toLocaleString("en")} m` : "—";
-    const txt = `${fmt(cam.lat, 5)}|${fmt(cam.lon, 5)}|${W.plusCode(cam.lat, cam.lon)}|${alt}|${viewTxt}`;
+    const at = view < 50000 ? cam : FOUMBAN;
+    const txt = `${fmt(at.lat, 5)}|${fmt(at.lon, 5)}|${W.plusCode(at.lat, at.lon)}|${alt}|${viewTxt}`;
     if (txt !== hudTxt) {
       hudTxt = txt;
       const [la, lo, pc, al, vw] = txt.split("|");

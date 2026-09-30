@@ -172,7 +172,7 @@ export function GovSealsStage({
               className={on === i ? "sv-seal sv-on" : "sv-seal"}
               style={{ "--lift": `${g.lift}px` } as React.CSSProperties}
               aria-pressed={on === i}
-              aria-label={`${g.name}, ${g.where}`}
+              aria-label={g.name}
               onClick={() => pick(i)}
               onPointerMove={tilt}
               onPointerLeave={untilt}
@@ -192,7 +192,6 @@ export function GovSealsStage({
                 <span className="sv-sheen" aria-hidden="true" />
               </span>
               <span className="sv-name">{g.name}</span>
-              <span className="sv-where">{g.where}</span>
             </button>
           ))}
         </div>
