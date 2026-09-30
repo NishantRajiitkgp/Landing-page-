@@ -250,8 +250,8 @@ export async function Smb() {
       <SmbSegments
         label={t.seg.label}
         segments={[
-          { key: "large", label: t.seg.large, sub: t.seg.largeSub, panel: <LargePanel /> },
-          { key: "small", label: t.seg.small, sub: `${t.seg.from} ${t.packs.basic.price}`, panel: smbPanel },
+          { key: "large", label: t.seg.large, panel: <LargePanel /> },
+          { key: "small", label: t.seg.small, panel: smbPanel },
         ]}
       />
     </div>

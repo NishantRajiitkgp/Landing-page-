@@ -65,7 +65,6 @@
 .sv-sheen { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; background: radial-gradient(circle at var(--lx, 32%) var(--ly, 24%), rgb(from var(--white) r g b / .9), rgb(from var(--white) r g b / 0) 42%); mix-blend-mode: screen; opacity: .75; transition: opacity .5s; }
 .sv-seal:hover .sv-foil { opacity: .55; }
 .sv-name { margin-top: clamp(12px, 2.41vw, 26px); font-family: var(--serif); font-size: clamp(15px, 1.95vw, 21px); line-height: 1.1; letter-spacing: -.015em; text-align: center; transition: color .4s; }
-.sv-where { margin-top: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .sv-on .sv-disc { --sc: 1.07; box-shadow: inset 2px 3px 3px rgb(from var(--white) r g b / .95), inset -4px -6px 10px rgb(from var(--ink) r g b / .07), 0 0 0 1px rgb(from var(--green) r g b / .18), 0 0 0 12px rgb(from var(--green-light) r g b / .16), 0 40px 60px -30px rgb(from var(--green) r g b / .55); }
 .sv-on .sv-g { stroke: rgb(from var(--green) r g b / .7); }
 .sv-on .sv-ln1 { stroke: rgb(from var(--green) r g b / .45); }

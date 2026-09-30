@@ -64,7 +64,7 @@ export const en = {
     headlineEmEnd: "Checks.",
     headlineLead: "Trust Infrastructure",
     headlineMark: "platform",
-    lede: "AI reads the documents. Our team confirms with the issuer — the university, the employer, the registry. You get an answer in as little as 15 minutes.",
+    lede: "Streamline background verification with AI-powered checks that ensure accuracy, speed, and fraud prevention.",
     cta: "Talk to sales",
     checks: "See all 33 checks",
     /** Homepage v2. The corner notes of the security-print sheet
@@ -395,8 +395,8 @@ export const en = {
   /** `sections/ConsumerShop.tsx` (composed as `Consumer`). */
   consumer: {
     k: "Consumer · HelloV",
-    headingA: "Verify anyone.",
-    headingB: "From your phone, in 30 minutes.",
+    headingA: "Consumer Services",
+    headingB: "Verify anyone, from your phone, in 30 minutes.",
     lede: "Send a photo of the document over WhatsApp. We do the rest and message you back with the report.",
     /** Homepage v2: the HelloV storefront, at every width — eight photo panels,
      *  a price card, the QR steps and the phone. `k`, `headingA`, `headingB`
@@ -628,7 +628,7 @@ export const en = {
       pins: {
         in: {
           name: "India",
-          role: "Head office · Noida",
+          role: "Head office · New Delhi",
           head: "Trusted by India’s top IT/ITES companies for Background Verification",
           rows: [
             { k: "Checks", v: "20M+ completed since 2018" },
@@ -743,8 +743,7 @@ export const en = {
    *  invisible in review. A function keeps the whole sentence in one place
    *  and lets a locale put the number anywhere in it. */
   packages: {
-    headingA: "Or take a package.",
-    headingB: "One upload, one answer.",
+    headingA: "Key Verification Solutions",
     lede: "A fixed set of checks with one turnaround. Everything runs in parallel, so a package is only as slow as its slowest check.",
     /** The count over a card's check list, and the label on the
      *  photograph's glass chip. Server-rendered, so the count can be a
@@ -835,78 +834,88 @@ export const en = {
     },
   },
 
-  /** `sections/PeopleStrip.tsx`. TWO tables, not one with overrides, because
-   *  the two breakpoints genuinely say different things — the desktop chip
-   *  reads "Driving licence · 30 min" where the phone's reads
-   *  "Licence · 30 min", and the phone drops the caption entirely. That is
-   *  the measurement that file's header already carried; folding them here
-   *  would have re-invented the shared string it refused to invent. Keyed by
-   *  photograph, and `mob` is a subset of `dsk`'s keys by design. */
+  /** `sections/PeopleStrip.tsx` — "Individual Checks" (30 Sep 2026). The
+   *  drum of photo cards now sells the old home page's six single checks
+   *  (`home.base.json` → `key-verification-solutions`, the 3-column grid):
+   *  each card is one check, with its name and line verbatim, its
+   *  turnaround and its price, and a Buy button. Keyed by photograph; the
+   *  photograph is someone that check is typically run on. */
   peopleStrip: {
-    strip: "Hires, tenants, drivers, suppliers, nannies. Anyone you need to trust.",
+    headingA: "Individual Checks",
+    headingEm: "Get verified in minutes, not days!",
+    lede: "Need just one check? Pick it, pay per check, and get the result on your dashboard. No package, no contract.",
+    strip: "Pay per check. Anyone you need to trust.",
     times: "Times shown are from upload to report",
-    /** v2: the label over the strip the photographs pass
-     *  through. Decorative (`aria-hidden`), but a word a translator sees. */
-    checkpoint: "At the source",
-    /** One table since the phone pass: the phone shows the same eight
-     *  cards and words (the six-card `mob` table, with its shorter chips,
-     *  went with the mobile track). Keyed by photograph.
-     *
-     *  The chip names what WE did ("Trade licence verified"), never the
-     *  document alone: "Trade licence · 2 days" read as the person being
-     *  issued a licence in two days (owner, 29 Sep 2026). The time moved to
-     *  `city` as "done in …" because a verb plus a time overflows the
-     *  narrowest phone card (24 characters of 10px mono is the ceiling). The
-     *  no-break space keeps "2 days" from wrapping as "2 / days". */
+    /** The label over the strip the cards pass through. Decorative
+     *  (`aria-hidden`), but a word a translator sees. */
+    checkpoint: "Single checks",
+    /** Above each price: "₹199 / per check". */
+    per: "per check",
+    buy: "Buy now",
+    /** `chip` is the turnaround; the no-break space keeps "15 min"
+     *  together on the phone's narrow card. */
     people: {
       "/img/people/01-rider-bengaluru.jpg": {
-        role: "Delivery rider",
-        city: "Bengaluru · done in 30\u00a0min",
-        chip: "Driving licence verified",
+        role: "Driving License Check",
+        city: "Verifies driver name, license number and validity of license instantly.",
+        chip: "Verified in 30\u00a0min",
+        price: "₹299",
         note: "photo · delivery rider",
       },
-      "/img/people/02-nurse-abudhabi.jpg": {
-        role: "Nurse",
-        city: "Abu Dhabi · done in 3\u00a0days",
-        chip: "Nursing degree verified",
-        note: "photo · nurse",
-      },
       "/img/people/03-engineer-manila.jpg": {
-        role: "Software engineer",
-        city: "Manila · done in 60\u00a0min",
-        chip: "Employment verified",
+        role: "Digital Employment Check",
+        city: "Verifies applicant’s previous employer name, dates of joining and relieving instantly.",
+        chip: "Verified in 60\u00a0min",
+        price: "₹299",
         note: "photo · engineer",
       },
       "/img/people/04-nanny-gurugram.jpg": {
-        role: "Nanny",
-        city: "Gurugram · done in 30\u00a0min",
-        chip: "Criminal record checked",
+        role: "Criminal Record Check",
+        city: "Checks court records for any cases against the candidate.",
+        chip: "Verified in 30\u00a0min",
+        price: "₹899",
         note: "photo · nanny",
       },
       "/img/people/05-warehouse-pune.jpg": {
-        role: "Warehouse associate",
-        city: "Pune · identity check, 00:41 elapsed",
-        chip: "Verifying Aadhaar…",
+        role: "PAN Card Check",
+        city: "Authenticate PAN card information to confirm identity and prevent fraud.",
+        chip: "Verified in 15\u00a0min",
+        price: "₹299",
         note: "photo · warehouse",
       },
-      "/img/people/06-supplier-cairo.jpg": {
-        role: "Textile supplier",
-        city: "Cairo · done in 2\u00a0days",
-        chip: "Trade licence verified",
-        note: "photo · supplier",
-      },
       "/img/people/07-tenant-singapore.jpg": {
-        role: "Tenant",
-        city: "Singapore · done in 15\u00a0min",
-        chip: "Identity verified",
+        role: "Digital Address Check",
+        city: "Verifies address digitally through documents & live geo location.",
+        chip: "Verified in 60\u00a0min",
+        price: "₹299",
         note: "photo · tenant",
       },
-      "/img/people/08-cfo-london.jpg": {
-        role: "Chief financial officer",
-        city: "London · done in 15\u00a0min",
-        chip: "Global database checked",
-        note: "photo · executive",
+      "/img/people/02-nurse-abudhabi.jpg": {
+        role: "Age Verification",
+        city: "Establishes candidate’s age by verifying government-issued documents containing date of birth.",
+        chip: "Verified in 15\u00a0min",
+        price: "₹199",
+        note: "photo · nurse",
       },
+    },
+  },
+
+  /** `sections/IntlGrid.tsx` — "International Background Verification"
+   *  (30 Sep 2026), the old home page's `internationalGrid` block, which the
+   *  v2 homepage had dropped. The country names and the five lines are the
+   *  old site's, verbatim; each card's turnaround is its country guide's
+   *  (`lib/content/countries.ts`), not copy. */
+  intlGrid: {
+    heading: "International Background Verification",
+    lede: "Five of the 120+ countries where we confirm records with the authority that issued them — each with its own guide to what to expect.",
+    turnK: "Typical turnaround",
+    cta: "Explore More",
+    items: {
+      uk: { name: "United Kingdom", p: "Hire drivers you can trust." },
+      ph: { name: "Philippines", p: "Know your tenant before you rent." },
+      ae: { name: "United Arab Emirates", p: "Screen for criminal records with confidence." },
+      sg: { name: "Singapore", p: "Verify education credentials in minutes." },
+      eg: { name: "Egypt", p: "Confirm employment history before you hire." },
     },
   },
 
@@ -1092,7 +1101,9 @@ export const en = {
    *  NEW COPY, NOT FOUNDER-VERBATIM, except `outro.line`, which is the
    *  founder's core message word for word. The case is ILLUSTRATIVE: the
    *  candidate, the employer, the times and both statements are a composed
-   *  example, and the section says so in `note`. The in-country claims in
+   *  example, and the section says so in `note` (shortened to "Example case"
+   *  on 30 Sep 2026, when the copy was rewritten in plain English as a case
+   *  file; the French quotes are now given in English). The in-country claims in
    *  `acts.a3` and `chips` (local processing, encryption, retention) and the
    *  field partner's languages must be confirmed before launch. */
   fieldCase: {
@@ -1100,13 +1111,15 @@ export const en = {
     headingA: "Some checks end at a database.",
     headingEm: "Ours go to the door.",
     lede: "Follow one address check in Foumban, Cameroon, from the request to a report built on coordinates, satellite captures and what the neighbourhood says.",
-    note: "An illustrative case: the people, times and statements are composed.",
+    /** Kept, short: the case is an example (see this block's header), and a
+     *  page pitching governments must not pass it off as a client file. */
+    note: "Example case",
     hint: "Scroll to follow the case",
     railLabel: "Steps of the case",
     caseK: "Case 4417 · address + site visit",
     caseWhere: "Foumban, West Region, Cameroon",
     caseFor: "For a hospital group in Riyadh · workforce mobility",
-    hud: { lat: "Lat", lon: "Lon", plus: "Plus code", alt: "Alt", view: "View" },
+    hud: { lat: "Latitude", lon: "Longitude", plus: "Plus code", alt: "Altitude", view: "Map width" },
     pins: {
       declared: "Declared address",
       declaredSub: "Behind the central market",
@@ -1124,18 +1137,18 @@ export const en = {
     evidence: {
       sat: "Satellite capture",
       sealed: "Sealed in-country",
-      tr: "Translated from French",
-      a: { k: "Declared address · 10:58 WAT", quote: "« Elle a déménagé en 2024. »", en: "“She moved out in 2024.” The landlord" },
-      b: { k: "Where she lives · 11:36 WAT", quote: "« Elle habite ici depuis mars 2024. »", en: "“She has lived here since March 2024.” The quarter head" },
+      tr: "Recorded in French · translated",
+      a: { k: "Declared address · 10:58 WAT", quote: "She moved out of this house in 2024.", en: "The landlord" },
+      b: { k: "Current address · 11:36 WAT", quote: "She has lived here since March 2024.", en: "The quarter head (local community leader)" },
     },
     jurisdiction: "Processed in Cameroon",
     acts: {
-      a0: { k: "Initiated", clock: "00:00:00", t: "A request lands.", d: "A hospital group in Riyadh is hiring a nurse from Foumban, 4,358 km away. They open an address check with a site visit, from the dashboard or over WhatsApp." },
-      a1: { k: "AI reads", clock: "00:00:04", t: "The AI finds what doesn’t fit.", d: "It places the declared address on the map and compares it with the location she shared. They are 1.7 km apart, the utility bill is in another name, and the photo she sent has no metadata." },
-      a2: { k: "On the ground", clock: "Day 1 · 10:42 WAT", t: "A local verifier goes to both doors.", d: "Our field partner in Foumban works in French, English and Shüpamom. At the declared address the landlord says she moved out; at the new one, the quarter head confirms she lives there. Every stop is timestamped and geotagged." },
-      a3: { k: "Stays local", clock: "Day 1 · 14:10 WAT", t: "The evidence stays where the law says.", d: "Captures, statements and coordinates are processed in Cameroon, encrypted, and kept only as long as local rules allow. Her consent has been on record since the first step." },
-      a4: { k: "The report", clock: "Day 1 · 16:05 WAT", t: "Not a tick. A dossier.", d: "Seven sections of evidence, from the coordinates to the chain of custody. Verified, with the address corrected, and the employer can see exactly why." },
-      a5: { k: "One of 20M+", clock: "Right now", t: "One door of twenty million.", d: "Case 4417 closed at 16:05. The same platform is already at the next door, in 120+ countries, from six offices and a network of local experts who work in their own languages." },
+      a0: { k: "Request", clock: "00:00:00", t: "The check is opened.", d: "A hospital group in Riyadh is hiring a nurse who lives in Foumban, Cameroon, 4,358 km away. HR opens an address check with a site visit, from the dashboard or over WhatsApp." },
+      a1: { k: "AI review", clock: "00:00:04", t: "Three things don’t match.", d: "Our AI puts the address she declared on the map and compares it with the live location she shared. They are 1.7 km apart, the utility bill is in someone else’s name, and her photo carries no location data." },
+      a2: { k: "Site visit", clock: "Day 1 · 10:42 WAT", t: "A local verifier visits both addresses.", d: "Our field partner in Foumban speaks French, English and Bamum, the local language. At the declared address, the landlord says she moved out in 2024. At the new address, the quarter head confirms she lives there. Every visit is time-stamped and geotagged." },
+      a3: { k: "Data protection", clock: "Day 1 · 14:10 WAT", t: "The evidence stays in Cameroon.", d: "Photos, statements and coordinates are processed in Cameroon, encrypted, and kept only as long as local law allows. Her consent was recorded before the check began." },
+      a4: { k: "Report", clock: "Day 1 · 16:05 WAT", t: "Not just a tick. Full evidence.", d: "A seven-section report, from the coordinates to the chain of custody. Result: verified, with the address corrected, and HR can see exactly how we got there." },
+      a5: { k: "At scale", clock: "Right now", t: "One check out of 20 million.", d: "Case 4417 closed the same day, at 16:05. Right now the same platform is running the next check, in 120+ countries, through six offices and local experts who work in their own languages." },
     },
     /** The orbit the case opens on and pulls back out to. The offices are
      *  the relay's six (`presence.offices`). */
@@ -1517,9 +1530,7 @@ export const en = {
       kicker: "Background checks for business",
       label: "Choose your business size",
       large: "Large Enterprises",
-      largeSub: "White & blue collar · KYC · Vendors",
       small: "Small & Medium Businesses",
-      from: "Ready plans from",
       headingA: "Background Checks For",
       headingB: "Large Enterprises",
       kyc: { t: "KYC Services", p: "Comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection." },
@@ -1676,8 +1687,7 @@ export const en = {
     whyK: "Why they chose HelloVerify",
     items: {
       mom: {
-        name: "Ministry of Manpower",
-        where: "Singapore",
+        name: "Ministry of Manpower Singapore",
         ledeName: "Singapore’s Ministry of Manpower",
         micro: "MINISTRY OF MANPOWER · SINGAPORE · COMPASS FRAMEWORK · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 01 / 04",
@@ -1711,7 +1721,6 @@ export const en = {
       },
       latvia: {
         name: "Embassy of the Republic of Latvia",
-        where: "Visa screening",
         ledeName: "the Embassy of the Republic of Latvia",
         micro: "EMBASSY OF THE REPUBLIC OF LATVIA · STUDENT & WORK VISAS · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 02 / 04",
@@ -1745,7 +1754,6 @@ export const en = {
       },
       italy: {
         name: "Embassy of Italy",
-        where: "New Delhi",
         ledeName: "the Embassy of Italy",
         micro: "EMBASSY OF ITALY · NEW DELHI · NATIONAL VISA VERIFICATION · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 03 / 04",
@@ -1779,8 +1787,7 @@ export const en = {
         },
       },
       mohesr: {
-        name: "Ministry of Higher Education & Scientific Research",
-        where: "United Arab Emirates",
+        name: "Ministry of Higher Education & Scientific Research (UAE)",
         ledeName: "the UAE’s Ministry of Higher Education and Scientific Research",
         micro: "MOHESR · UNITED ARAB EMIRATES · DEGREE RECOGNITION · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 04 / 04",
@@ -1831,7 +1838,6 @@ export const en = {
     kickerEnd: "Six reasons · One infrastructure",
     headingA: "Why Governments, Authorities & Large Enterprises",
     headingB: "Work With HelloVerify",
-    lede: "The verification behind a work pass in Singapore, a visa decision at a European embassy and a degree recognised in the UAE is the same infrastructure large enterprises screen their workforce on.",
     items: {
       trust: {
         t: "Trust Infrastructure",
@@ -1892,8 +1898,16 @@ export const en = {
     next: "Next dossier",
     explore: "Explore More",
     talk: "Talk to Sales",
-    selectAuthority: "Select Authority",
-    authorities: { latvia: "Embassy of Latvia", italy: "Embassy of Italy" },
+    /** Over the authority cards at the foot of the Immigration and the
+     *  Manpower & Education dossiers (30 Sep 2026: the "Select Authority"
+     *  dropdown and the lone MOM pill became visible logo cards, as on the
+     *  old site's solution cards). */
+    selectAuthority: "Authorities we work with",
+    authorities: {
+      latvia: "Embassy of the Republic of Latvia",
+      italy: "Embassy of Italy",
+      mohesr: "Ministry of Higher Education & Scientific Research (UAE)",
+    },
     momCta: "Ministry of Manpower (Singapore)",
     items: {
       health: {

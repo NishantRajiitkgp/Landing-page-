@@ -48,7 +48,6 @@ export async function GovSeals() {
     const g = t.items[id];
     return {
       name: g.name,
-      where: g.where,
       ledeName: g.ledeName,
       micro: g.micro,
       record: g.record,

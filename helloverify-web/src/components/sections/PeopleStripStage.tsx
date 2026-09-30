@@ -134,7 +134,10 @@ export function PeopleStripStage({ checkpoint, children }: { checkpoint: string;
 
     const down = (e: PointerEvent) => {
       if (e.button !== 0) return;
-      drag = { x: e.clientX, t: performance.now(), v: 0, v0: v };
+      // A press on a card's Buy button is a click, not a drag: capturing the
+      // pointer here would retarget it and the link would never fire.
+      if ((e.target as Element).closest("a, button")) return;
+      drag ={ x: e.clientX, t: performance.now(), v: 0, v0: v };
       strip.classList.add("hv-grab");
       strip.setPointerCapture(e.pointerId);
     };

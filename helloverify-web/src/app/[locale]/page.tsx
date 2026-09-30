@@ -11,6 +11,7 @@ import { GovDossiers } from "@/components/sections/GovDossiers";
 import { Why } from "@/components/sections/Why";
 import { Checks } from "@/components/sections/Checks";
 import { Packages } from "@/components/sections/Packages";
+import { IntlGrid } from "@/components/sections/IntlGrid";
 import { Enterprises } from "@/components/sections/Enterprises";
 import { Smb } from "@/components/sections/Smb";
 import { Diligence } from "@/components/sections/Diligence";
@@ -55,32 +56,33 @@ export default async function Home({
           Without it this is the one page of 56 with no main landmark, and the
           site-wide skip link has nothing to skip to (WCAG 2.4.1, 1.3.1). */}
       <main id="main-content">
-        {/* The order is the B2B homepage arc: hook, proof, problem,
-            solution, one block per buyer, pricing, scale, objections, ask
-            (28 Sep 2026). The seals are the proof, so they come before any
-            feature; the catalogue follows the mechanism; Certifier sits with
-            Enterprises; the globe opens the global block. The "Sheet NN / 12"
-            labels in `sections.en.tsx` follow this order — renumber them if it
-            changes. */}
+        {/* The order is the one set on 30 Sep 2026 (sections 1–10 below),
+            replacing the 28 Sep B2B arc. The "Sheet NN / 12" labels in
+            `sections.en.tsx` still follow the old order — renumber them once
+            the rest is arranged. */}
+        {/* 1–10: the order set on 30 Sep 2026. */}
         <Hero />
-        <PeopleStrip />
-        <GovSeals />
-        {/* Why those governments chose us — the seals' argument, made. */}
         <GovWhy />
+        <GovSeals />
+        <GovDossiers />
+        <Smb />
+        <Consumer />
+        <Packages />
+        {/* Individual Checks, then the old home page's country grid,
+            restored (30 Sep 2026). */}
+        <PeopleStrip />
+        <IntlGrid />
+        <Diligence />
         <Presence />
+        {/* The rest, in their previous order, to be arranged later. */}
         <OneInEight />
         <HowWeKnow />
         {/* One address check in Foumban, from request to report: evidence
             gathered at the door, processed in-country (30 Sep 2026). */}
         <FieldCase />
         <Checks />
-        <GovDossiers />
         <Why />
         <Enterprises />
-        <Diligence />
-        <Smb />
-        <Packages />
-        <Consumer />
         {/* Renders nothing until a real, attributable story exists; this is
             its slot: proof straight after the pitch, before the numbers. */}
         <CustomerStory />

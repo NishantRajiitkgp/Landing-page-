@@ -844,8 +844,15 @@ const BANDS: Record<string, readonly [number, number]> = {
   consumer: [10, 136],
   checks: [7, 59],
   international: [6, 117],
-  packages: [7, 56],
-  peopleStrip: [2, 35],
+  /* 56 -> 55 (30 Sep 2026): one-line heading, "Key Verification Solutions". */
+  packages: [7, 55],
+  /** New 30 Sep 2026: the old site's country grid — heading, lede, the
+   *  turnaround label, the CTA and five countries' name and line. */
+  intlGrid: [0, 14],
+  /** 35 -> 38 (30 Sep 2026): the strip became "Individual Checks" — six
+   *  checks (name, line, turnaround, price) and its heading, lede and
+   *  price-row labels, in place of eight people. */
+  peopleStrip: [2, 38],
   contact: [11, 12],
   customerStory: [15, 18],
   /** 52 -> 45 (29 Sep 2026): the hour-coverage strip under the map went,
@@ -875,15 +882,20 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  their benefits (+8) in place of the four-word chain and its caption
    *  (-5) — with two more shared labels, `problemK` and `deliverK`. 169 ->
    *  166: its closing line (three leaves) moved to `govWhy.items.trust.p`. */
-  govSeals: [0, 166],
+  /* 166 -> 162 (30 Sep 2026): the seals' sub-lines (`where`) went; the
+   *  country now sits in the name where it is needed. */
+  govSeals: [0, 162],
   /** New 29 Sep 2026: six reasons (12), the words inside their pictures
    *  (17), the heading block (5), the certifications and the ask (2). */
-  govWhy: [0, 36],
-  govDossiers: [0, 165],
+  /* 36 -> 35 (30 Sep 2026): the lede under the heading went. */
+  govWhy: [0, 35],
+  /* 165 -> 166 (30 Sep 2026): authority cards add MOHESR. */
+  govDossiers: [0, 166],
   enterprises: [0, 105],
   /** 50 -> 62 (29 Sep 2026): the Large ↔ Small & Medium toggle, `smb.seg` —
    *  its labels and heading (8) and the KYC and Vendor cards (4). */
-  smb: [0, 62],
+  /* 62 -> 60 (30 Sep 2026): the toggle sub-lines went. */
+  smb: [0, 60],
   diligence: [0, 27],
   trustPlatform: [0, 52],
   /** New 30 Sep 2026: the field case — heading block and rail label (7),
@@ -936,10 +948,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
  *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
- *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit. */
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`. */
 check(
-  "sections holds 1692 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1692 &&
+  "sections holds 1702 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1702 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -972,10 +984,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693. */
 check(
-  "sections: 1681 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1681 &&
+  "sections: 1691 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1691 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

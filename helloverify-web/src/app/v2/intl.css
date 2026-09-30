@@ -1,0 +1,53 @@
+/* Homepage v2 · International Background Verification
+   (`sections/IntlGrid.tsx`). Authored — `hero.css`'s header says why and
+   which gates read every `app/v2/*.css`. Prefix `ig-`.
+
+   The flag is never styled beyond a border and a shadow: no radius beyond
+   the 2px that softens its corners, no filter, no opacity, no blend, no
+   gradient over it. It sits on the text plate, above the scrim. */
+
+.ig { padding-top: clamp(64px, 9vw, 112px); padding-bottom: clamp(48px, 7vw, 96px); }
+.ig-head { margin-bottom: clamp(28px, 4vw, 48px); }
+.ig-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+.ig-card { position: relative; min-height: 240px; border-radius: 22px; overflow: hidden; box-shadow: 0 30px 60px -44px rgb(from var(--ink) r g b / .55); }
+.ig-link { position: absolute; inset: 0; display: block; color: var(--white); text-decoration: none; }
+.ig-link:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 22px; }
+.ig-ph { position: absolute; inset: 0; display: block; }
+.ig-ph .pimg { object-fit: cover; transition: transform .9s cubic-bezier(.16, 1, .3, 1); }
+/* The scrim darkens the photograph under the words; the flag sits on top of it. */
+.ig-scrim { position: absolute; inset: 0; background: linear-gradient(to top, rgb(from var(--ink) r g b / .88) 0%, rgb(from var(--ink) r g b / .55) 42%, rgb(from var(--ink) r g b / .08) 78%); }
+.ig-body { position: absolute; inset-inline: 24px; bottom: 22px; display: flex; flex-direction: column; gap: 8px; }
+.ig-title { display: flex; align-items: center; gap: 14px; }
+.ig-flag { flex: none; display: block; width: 40px; height: 30px; border-radius: 2px; overflow: hidden; box-shadow: 0 0 0 2px var(--white), 0 6px 14px -6px rgb(from var(--ink) r g b / .7); }
+.ig-flag img { display: block; width: 100%; height: 100%; }
+.ig-title b { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.2vw, 30px); line-height: 1.05; letter-spacing: -.02em; }
+.ig-p { font-size: 15px; line-height: 1.45; color: rgb(from var(--white) r g b / .86); }
+.ig-tat { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; margin-top: 4px; height: 26px; padding-inline: 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .14); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-family: var(--mono); font-size: 11px; letter-spacing: .04em; }
+.ig-tat i { font-style: normal; text-transform: uppercase; letter-spacing: .08em; color: var(--green-light); }
+.ig-go { position: absolute; inset-inline-end: 20px; top: 20px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--white); color: var(--ink); opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s cubic-bezier(.16, 1, .3, 1); }
+.ig-card:hover .ig-go, .ig-link:focus-visible .ig-go { opacity: 1; transform: none; }
+.ig-card:hover .pimg { transform: scale(1.05); }
+.ig-foot { margin-top: 32px; display: flex; justify-content: center; }
+.ig-more { gap: 10px; }
+
+/* Desktop: the featured country tall on the left, four in a 2×2 beside it. */
+@media (min-width: 1081px) {
+  .ig-grid { grid-template-columns: 1.45fr 1fr 1fr; grid-auto-rows: 260px; }
+  .ig-big { grid-row: span 2; }
+  .ig-big .ig-title b { font-size: 38px; }
+  .ig-big .ig-flag { width: 52px; height: 39px; }
+}
+/* Tablet: featured full width, the rest two up. */
+@media (min-width: 640px) and (max-width: 1080px) {
+  .ig-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 240px; }
+  .ig-big { grid-column: 1 / -1; min-height: 300px; }
+}
+/* Phone: one column. */
+@media (max-width: 639px) {
+  .ig-grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 220px; gap: 14px; }
+  .ig-body { inset-inline: 18px; bottom: 18px; }
+  .ig-p { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ig-ph .pimg, .ig-go { transition: none; }
+}
