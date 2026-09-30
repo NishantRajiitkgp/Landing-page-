@@ -266,14 +266,8 @@ export async function Enterprises() {
         rings={[t.rings.employees, t.rings.customers, t.rings.businesses]}
         panels={panels}
       />
-      <div className="en-stats">
-        {Object.entries(t.stats).map(([k, s]) => (
-          <div key={k}>
-            <b>{s.b}</b>
-            <span>{s.s}</span>
-          </div>
-        ))}
-      </div>
+      {/* The 30+ / 120+ / 1 to 7 / REST API row went (30 Sep 2026): the
+          Large Enterprises panel already carries the same four figures. */}
       <ClientLetters
         kicker={L.kicker}
         heading={

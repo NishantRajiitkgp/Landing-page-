@@ -189,7 +189,9 @@ export class GlobeEngine {
       if (!el) return;
       // A focused pin always shows, even mid-turn from the far side.
       const focused = el === document.activeElement;
-      const fade = p[2] > 0.12 ? Math.min(1, (p[2] - 0.12) * 4) : 0;
+      // A short fade (0.12 -> 0.2 of facing), not a long one: a flag is shown
+      // whole or has turned away, never left half-transparent at the limb.
+      const fade = p[2] > 0.12 ? Math.min(1, (p[2] - 0.12) * 12) : 0;
       el.style.transform = `translate(${(p[0] * this.s).toFixed(1)}px,${(p[1] * this.s).toFixed(1)}px) translate(-50%,-50%) scale(${(0.78 + Math.max(0, p[2]) * 0.28).toFixed(3)})`;
       el.style.opacity = String(focused ? 1 : fade);
       el.style.pointerEvents = focused || p[2] > 0.12 ? "auto" : "none";

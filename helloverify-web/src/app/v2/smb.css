@@ -189,6 +189,25 @@
 .sg-stats dt { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .sg-stats dd { margin: 0; font-family: var(--serif); font-size: 28px; line-height: 1; letter-spacing: -.02em; color: var(--ink); }
 .sg-sales { gap: 10px; }
+/* The client strip under the proof: a line of heading, a row of logos in
+   their own colours (never greyed), each fitted to a 40px-tall slot. */
+/* Under the cards, above the stats row (swapped 30 Sep 2026). */
+.sg-trust + .sg-proof { margin-top: 20px; }
+.sg-trust { margin-top: 28px; display: grid; gap: 14px 32px; align-items: center; padding: 18px 26px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair); }
+.sg-trust-h { margin: 0; font-family: var(--serif); font-size: 19px; line-height: 1.25; letter-spacing: -.01em; color: var(--ink); text-wrap: balance; }
+.sg-trust-h em { font-style: italic; color: var(--green); }
+.sg-logos { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 28px; }
+.sg-logos li { display: flex; align-items: center; height: 40px; }
+.sg-logos img { width: auto; max-width: 130px; height: auto; max-height: 34px; object-fit: contain; }
+/* Wipro's mark is nearly square: at the shared height it read smallest. */
+.sg-logos img[src*="wipro"] { max-height: 44px; }
+@media (min-width: 1081px) {
+  .sg-trust { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); }
+}
+@media (max-width: 639px) {
+  .sg-logos { justify-content: center; gap: 14px 22px; }
+  .sg-logos img { max-width: 96px; max-height: 26px; }
+}
 
 /* ── Desktop placements ─────────────────────────────────────────────────── */
 @media (min-width: 1081px) {

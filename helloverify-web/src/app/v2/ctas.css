@@ -1,0 +1,57 @@
+/* Homepage v2 · one call-to-action system (30 Sep 2026: "make the CTAs
+   prominent"). Scoped to the homepage (`.page.hv-home`, set in
+   `app/[locale]/page.tsx`) so the other 55 pages are untouched; the extra
+   class outranks each section sheet's own button rule.
+
+   Two kinds, everywhere on the page:
+   - PRIMARY — Talk to sales / our team, Buy now: a filled green pill, 52px
+     (48 where it sits in a card), a soft green shadow, lifting on hover.
+     White on `--green` is 7.9:1.
+   - SECONDARY — Explore More, See all 33 checks: a white pill with an ink
+     outline, filling ink on hover, so it reads as a button, not a word. */
+
+/* ── Primary ── */
+.page.hv-home :is(.btn-ink, .gw-cta, .pq-buy) {
+  min-height: 52px; height: auto; padding-inline: 28px; gap: 10px;
+  border-radius: 999px; background: var(--green); color: var(--white);
+  font-size: 16px; font-weight: 500;
+  box-shadow: 0 14px 30px -14px rgb(from var(--green) r g b / .75);
+  transition: background .25s, transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s;
+}
+.page.hv-home :is(.btn-ink, .gw-cta, .pq-buy):hover {
+  background: var(--v2-sm-green-press); color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 36px -16px rgb(from var(--green) r g b / .8);
+}
+.page.hv-home :is(.btn-ink, .gw-cta, .pq-buy):focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* The small ones, in card and dossier footers, are only a step smaller. */
+.page.hv-home .btn-ink.btn-sm, .page.hv-home .pq-buy { min-height: 46px; padding-inline: 22px; font-size: 15px; }
+
+/* ── Secondary ── */
+.page.hv-home :is(.btn-ghost, .sg-more, .pq-more) {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 48px; height: auto; padding-block: 0; padding-inline: 24px;
+  border-radius: 999px; background: var(--white); color: var(--ink);
+  box-shadow: inset 0 0 0 1.5px var(--ink);
+  font-size: 15.5px; font-weight: 500; text-decoration: none;
+  transition: background .25s, color .25s, transform .3s cubic-bezier(.16, 1, .3, 1);
+}
+.page.hv-home :is(.btn-ghost, .sg-more, .pq-more):hover { background: var(--ink); color: var(--white); transform: translateY(-2px); }
+.page.hv-home :is(.btn-ghost, .sg-more, .pq-more):focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+/* In cards, a step smaller. */
+.page.hv-home :is(.sg-more, .pq-more, .gv-explore, .en-more) { min-height: 44px; padding-inline: 20px; font-size: 15px; }
+/* `.sg-more` sat flush to the card's start as a text link; as a button it
+   keeps its place at the foot. */
+.page.hv-home .sg-more { align-self: flex-start; margin-top: auto; }
+
+/* The Individual Checks button sits on a photograph: it stays white, a
+   touch larger, and fills green on hover. */
+.page.hv-home .ic-btn { height: 38px; padding-inline: 18px; font-weight: 600; }
+.page.hv-home .ic-btn:hover { background: var(--green); color: var(--white); }
+
+@media (max-width: 639px) {
+  .page.hv-home :is(.btn-ink, .gw-cta) { min-height: 50px; padding-inline: 24px; font-size: 15.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page.hv-home :is(.btn-ink, .gw-cta, .pq-buy, .btn-ghost, .sg-more, .pq-more) { transition: none; }
+}

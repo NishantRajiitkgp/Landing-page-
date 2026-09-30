@@ -141,6 +141,14 @@
 .sv-why b { font-size: 15px; font-weight: 500; line-height: 1.35; color: var(--ink); }
 .sv-why span { font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
 
+/* An authority's own page (`AuthorityPage.tsx`): the mark over the name,
+   then the record. */
+.au-mark { display: grid; place-items: center; width: 96px; height: 96px; margin-bottom: 18px; border-radius: 50%; background: var(--white); box-shadow: 0 0 0 1px var(--hair), 0 18px 40px -24px rgb(from var(--ink) r g b / .5); }
+.au-mark img { width: 64px; height: 64px; object-fit: contain; }
+.au-body { padding-bottom: clamp(56px, 8vw, 96px); }
+.sv-recs-page { margin-top: 0; }
+a.sv-seal, a.sv-ln { text-decoration: none; }
+
 /* Held until on screen (`GovSealsStage` adds and removes `sv-wait`). */
 .sv-wait :is(.sv-rec, .sv-fact, .sv-chain li, .sv-chain i, .sv-stamp),
 .sv-wait .sv-chain::after { animation-play-state: paused; }

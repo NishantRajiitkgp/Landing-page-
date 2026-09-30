@@ -5,65 +5,52 @@
 
     The words and the flags are rendered here, on the server; the canvas, the
     pins' positions and the card that opens are `./GlobeStage`. */
-import type { ReactNode } from "react";
+import { getLocale } from "next-intl/server";
 
 import { Arrow } from "@/components/brand/Arrow";
 import { AppLink } from "@/components/chrome/AppLink";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
+import { localise } from "@/lib/i18n/href";
 import "@/app/v2/globe.css";
 import { GlobeStage, type GlobePin } from "./GlobeStage";
 
 type PinId = "in" | "sa" | "ae" | "sg" | "ph" | "eg" | "gb" | "it" | "lv" | "us";
 
-/** Where each pin sits, and its flag. India comes first because every route
- *  starts there. Flag hex stays literal — facts about the world, not palette
- *  (the exemption `check:tokens` was given in Part 3); Saudi Arabia has no
- *  drawing on the board, so its pin shows a code. */
-const PINS: { id: PinId; lat: number; lon: number; flag?: ReactNode }[] = [
-  {
-    id: "in", lat: 28.5, lon: 77.4,
-    flag: <><rect width="30" height="6.7" fill="#FF9933" /><rect y="6.7" width="30" height="6.6" fill="#FFFFFF" /><rect y="13.3" width="30" height="6.7" fill="#138808" /><circle cx="15" cy="10" r="2.4" fill="none" stroke="#000080" strokeWidth="0.7" /></>,
-  },
-  { id: "sa", lat: 24.7, lon: 46.7 },
-  {
-    id: "ae", lat: 25.2, lon: 55.3,
-    flag: <><rect width="30" height="6.7" fill="#00732F" /><rect y="6.7" width="30" height="6.6" fill="#FFFFFF" /><rect y="13.3" width="30" height="6.7" fill="#15140F" /><rect x="3" width="8" height="20" fill="#FF0000" /></>,
-  },
-  {
-    id: "sg", lat: 1.35, lon: 103.8,
-    flag: <><rect width="30" height="10" fill="#EF3340" /><rect y="10" width="30" height="10" fill="#FFFFFF" /><circle cx="9.5" cy="5" r="2.8" fill="#FFFFFF" /><circle cx="10.6" cy="5" r="2.4" fill="#EF3340" /></>,
-  },
-  {
-    id: "ph", lat: 14.6, lon: 121.0,
-    flag: <><rect width="30" height="10" fill="#0038A8" /><rect y="10" width="30" height="10" fill="#CE1126" /><polygon points="3,0 16,10 3,20" fill="#FFFFFF" /><circle cx="8" cy="10" r="1.7" fill="#FCD116" /></>,
-  },
-  {
-    id: "eg", lat: 30.0, lon: 31.2,
-    flag: <><rect width="30" height="6.7" fill="#CE1126" /><rect y="6.7" width="30" height="6.6" fill="#FFFFFF" /><rect y="13.3" width="30" height="6.7" fill="#15140F" /><circle cx="15" cy="10" r="1.8" fill="#C09300" /></>,
-  },
-  {
-    id: "gb", lat: 51.5, lon: -0.13,
-    flag: <><rect width="30" height="20" fill="#012169" /><path d="M0 0L30 20M30 0L0 20" stroke="#FFFFFF" strokeWidth="4" /><path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" strokeWidth="1.5" /><rect x="12.5" width="5" height="20" fill="#FFFFFF" /><rect y="7.5" width="30" height="5" fill="#FFFFFF" /><rect x="13.5" width="3" height="20" fill="#C8102E" /><rect y="8.5" width="30" height="3" fill="#C8102E" /></>,
-  },
-  {
-    id: "it", lat: 41.9, lon: 12.5,
-    flag: <><rect width="10" height="20" fill="#009246" /><rect x="10" width="10" height="20" fill="#FFFFFF" /><rect x="20" width="10" height="20" fill="#CE2B37" /></>,
-  },
-  {
-    id: "lv", lat: 56.95, lon: 24.1,
-    flag: <><rect width="30" height="20" fill="#9E3039" /><rect y="8" width="30" height="4" fill="#FFFFFF" /></>,
-  },
-  {
-    id: "us", lat: 40.7, lon: -74.0,
-    // Seven stripes on white, 1.54 tall every 3.08 — the board's drawing.
-    flag: <><rect width="30" height="20" fill="#FFFFFF" />{[0, 1, 2, 3, 4, 5, 6].map((k) => <rect key={k} y={(k * 3.08).toFixed(2)} width="30" height="1.54" fill="#B22234" />)}<rect width="13" height="10.8" fill="#3C3B6E" /></>,
-  },
+/** Each country's own guide, where one exists (`lib/content/countries.ts`). */
+const GUIDE: Partial<Record<PinId, string>> = {
+  in: "/countries/india",
+  ph: "/countries/philippines",
+  sg: "/countries/singapore",
+  ae: "/countries/united-arab-emirates",
+  eg: "/countries/egypt",
+  gb: "/countries/united-kingdom",
+};
+
+/** Where each pin sits, and its flag. The flag is the country's official
+ *  flag from `public/flags/` (the MIT-licensed flag-icons set, the files the
+ *  relay and the country grid use) — never a hand-drawn approximation: the
+ *  pins used to carry simplified drawings (India's chakra without its
+ *  spokes, a misproportioned UAE flag, and no flag at all for Saudi Arabia,
+ *  shown as "KSA"). India comes first because every route starts there. */
+const PINS: { id: PinId; lat: number; lon: number; flag: string }[] = [
+  { id: "in", lat: 28.5, lon: 77.4, flag: "in" },
+  { id: "sa", lat: 24.7, lon: 46.7, flag: "sa" },
+  { id: "ae", lat: 25.2, lon: 55.3, flag: "ae" },
+  { id: "sg", lat: 1.35, lon: 103.8, flag: "sg" },
+  { id: "ph", lat: 14.6, lon: 121.0, flag: "ph" },
+  { id: "eg", lat: 30.0, lon: 31.2, flag: "eg" },
+  { id: "gb", lat: 51.5, lon: -0.13, flag: "gb" },
+  { id: "it", lat: 41.9, lon: 12.5, flag: "it" },
+  { id: "lv", lat: 56.95, lon: 24.1, flag: "lv" },
+  { id: "us", lat: 40.7, lon: -74.0, flag: "us" },
 ];
 
 export async function Globe() {
   const t = (await copy(SECTIONS)).international;
   const g = t.globe;
+  const locale = await getLocale();
+  const L = (href: string) => localise(href, locale);
   const c = g.compass;
   const coord = (lat: number, lon: number) =>
     `${Math.abs(lat).toFixed(2)}° ${lat >= 0 ? c.n : c.s} · ${Math.abs(lon).toFixed(2)}° ${lon >= 0 ? c.e : c.w}`;
@@ -73,14 +60,15 @@ export async function Globe() {
     return {
       id,
       name: p.name,
-      flag,
-      code: "code" in p ? p.code : undefined,
+      flag: `/flags/${flag}.svg`,
       lat,
       lon,
       role: p.role,
       head: p.head,
       rows: p.rows,
       coord: coord(lat, lon),
+      buy: L("/contact"),
+      guide: GUIDE[id] ? L(GUIDE[id]) : undefined,
     };
   });
 
@@ -90,6 +78,21 @@ export async function Globe() {
       <div className="gb-role">{w.k}</div>
       <div className="gb-big">{w.big}<span>{w.plus}</span></div>
       <p className="gb-big-p">{w.line}</p>
+      <dl className="gb-imp">
+        {Object.values(w.impact).map((m) => (
+          <div key={m.l}>
+            <dt>{m.l}</dt>
+            <dd>{m.v}</dd>
+          </div>
+        ))}
+      </dl>
+      <div className="gb-acts">
+        <a href={L("/contact")} className="gb-buy">
+          {w.cta}
+          <Arrow />
+        </a>
+        <a href={L("/resources/countries")} className="gb-guide">{w.ctaAlt}</a>
+      </div>
       <div className="gb-offk">{w.officesK}</div>
       <ul className="gb-offs">
         {w.offices.map((o) => <li key={o}>{o}</li>)}
@@ -115,7 +118,7 @@ export async function Globe() {
       <GlobeStage
         pins={pins}
         world={world}
-        labels={{ canvas: g.canvas, hud: g.hud, compass: c, legend: g.legend, spin: g.spin, speeds: g.speeds, close: g.close }}
+        labels={{ pinCta: g.pinCta, guide: g.guide, canvas: g.canvas, hud: g.hud, compass: c, legend: g.legend, spin: g.spin, speeds: g.speeds, close: g.close }}
       />
       <div className="gb-foot">
         <span>{t.courts}</span>

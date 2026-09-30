@@ -16,55 +16,66 @@
     One tree at every width: the board had no 390px artboard, so the phone
     layout (seals two by two at half size, the record in one column) is
     `govseals.css`'s own, below 1081px. */
+import { getLocale } from "next-intl/server";
+
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type GovSealId } from "@/lib/copy/sections";
 import { threadPath } from "@/lib/govArt";
+import { localise } from "@/lib/i18n/href";
 import "@/app/v2/govseals.css";
 import type { SealItem } from "./GovSealParts";
 import { GovSealsStage } from "./GovSealsStage";
 
-/** Seal order, with each seal's guilloche lobe count, how far it drops (px)
- *  and its official mark. The drops make a shallow arch — the outer seals
- *  low, the centre high — and the thread between the centres is drawn from
- *  the same numbers. The marks: MOM's and MOHESR's emblems and Latvia's arms
- *  are the old site's files; Italy's is the Republic's emblem, cropped from
- *  the embassy lockup (whose script line names Washington, not New Delhi). */
-const SEALS: { id: GovSealId; k: number; lift: number; logo: string }[] = [
-  { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg" },
-  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png" },
-  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png" },
-  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png" },
+/** Seal order, with each seal's guilloche lobe count, how far it drops (px),
+ *  its official mark and its authority's own page. The drops make a shallow
+ *  arch — the outer seals low, the centre high — and the thread between the
+ *  centres is drawn from the same numbers. The marks: MOM's and MOHESR's
+ *  emblems and Latvia's arms are the old site's files; Italy's is the
+ *  Republic's emblem, cropped from the embassy lockup (whose script line names
+ *  Washington, not New Delhi). Since 30 Sep 2026 a seal opens its page rather
+ *  than a record under the row. */
+export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string }[] = [
+  { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/governments/manpower-education/ministry-of-manpower" },
+  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration/embassy-of-latvia" },
+  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/governments/immigration/embassy-of-italy" },
+  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/governments/manpower-education/mohesr" },
 ];
 
 /** The four marks in seal order, for `./GovWhy`'s "Governments we work
  *  with" picture: one list, so the two bands cannot show different ones. */
 export const SEAL_LOGOS = SEALS.map((s) => s.logo);
 
+/** One authority's words and marks, as the seal and its page both need them. */
+export async function sealItem(id: GovSealId): Promise<SealItem> {
+  const t = (await copy(SECTIONS)).govSeals;
+  const s = SEALS.find((x) => x.id === id)!;
+  const g = t.items[id];
+  return {
+    name: g.name,
+    ledeName: g.ledeName,
+    micro: g.micro,
+    record: g.record,
+    role: g.role,
+    problem: g.problem,
+    h: g.h,
+    p: g.p,
+    facts: Object.values(g.facts),
+    deliver: Object.values(g.deliver),
+    impactK: g.impactK,
+    impact: Object.values(g.impact),
+    why: Object.values(g.why),
+    k: s.k,
+    lift: s.lift,
+    logo: s.logo,
+  };
+}
+
 export async function GovSeals() {
   const all = await copy(SECTIONS);
   const t = all.govSeals;
-
-  const items: SealItem[] = SEALS.map(({ id, k, lift, logo }) => {
-    const g = t.items[id];
-    return {
-      name: g.name,
-      ledeName: g.ledeName,
-      micro: g.micro,
-      record: g.record,
-      role: g.role,
-      problem: g.problem,
-      h: g.h,
-      p: g.p,
-      facts: Object.values(g.facts),
-      deliver: Object.values(g.deliver),
-      impactK: g.impactK,
-      impact: Object.values(g.impact),
-      why: Object.values(g.why),
-      k,
-      lift,
-      logo,
-    };
-  });
+  const locale = await getLocale();
+  const items = await Promise.all(SEALS.map((s) => sealItem(s.id)));
+  const hrefs = SEALS.map((s) => localise(s.href, locale));
 
   return (
     <section className="wrap sv" aria-labelledby="sv-h">
@@ -78,11 +89,10 @@ export async function GovSeals() {
       </h2>
       <GovSealsStage
         items={items}
+        hrefs={hrefs}
         thread={threadPath(SEALS.map((s) => s.lift))}
         ledeLead={t.ledeLead}
         ledeAnd={t.ledeAnd}
-        stamp={t.stamp}
-        labels={{ problem: t.problemK, deliver: t.deliverK, why: t.whyK }}
         pauseLabel={all.hero.motion.pause}
         playLabel={all.hero.motion.play}
       />

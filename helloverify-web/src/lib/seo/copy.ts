@@ -123,6 +123,21 @@ const STATIC_COPY: Record<string, PageCopy> = {
     description:
       "Foreign-worker credentials verified for work-pass decisions — the workflow running in production with Singapore's Ministry of Manpower.",
   },
+  "/governments/manpower-education/mohesr": {
+    title: "UAE Ministry of Higher Education & Scientific Research — HelloVerify",
+    description:
+      "HelloVerify is an authorized verification partner for the UAE's MOHESR: degrees earned outside the UAE confirmed with the issuing university before recognition.",
+  },
+  "/governments/immigration/embassy-of-latvia": {
+    title: "Embassy of the Republic of Latvia — HelloVerify",
+    description:
+      "How HelloVerify screens student and work visa applicants for the Embassy of Latvia: identity, education or employment and financial records verified before the visa.",
+  },
+  "/governments/immigration/embassy-of-italy": {
+    title: "Embassy of Italy, New Delhi — HelloVerify",
+    description:
+      "Visa support document verification for Italian National Visa applicants in the New Delhi jurisdiction: identity, education, employment, bank and company records.",
+  },
   "/governments/manpower-education/ministry-of-manpower": {
     title: "Ministry of Manpower, Singapore — HelloVerify",
     description:
