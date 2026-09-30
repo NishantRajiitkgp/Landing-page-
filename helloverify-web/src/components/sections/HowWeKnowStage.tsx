@@ -31,6 +31,8 @@ type Labels = { upload: string; read: string; confirm: string; report: string };
 
 /** The route avatar is a fixed 64px box. */
 const SIZES_HW_AV = "64px";
+/** The "One result, and how we know" evidence card under the case file. */
+const SHOW_EVIDENCE = false;
 
 const AVATAR: Record<RouteId, string> = {
   licence: "/img/people/01-rider-bengaluru.jpg",
@@ -245,6 +247,9 @@ export function HowWeKnowStage({
 
       {caps}
 
+      {/* "One result, and how we know" — hidden from the homepage
+          (30 Sep 2026), not deleted: set SHOW_EVIDENCE to bring it back. */}
+      {SHOW_EVIDENCE && (
       <div className="hw-ev">
         {evLead}
         <div className="hw-ev-r">
@@ -260,6 +265,7 @@ export function HowWeKnowStage({
           <div className="hw-seal" aria-hidden="true"><span>{t.verified}</span></div>
         </div>
       </div>
+      )}
     </div>
   );
 }

@@ -143,6 +143,20 @@ async function LargePanel() {
           );
         })}
       </ul>
+      {/* The old enterprise page's client strip, compact: one line of
+          heading, one row of logos. */}
+      <div className="sg-trust">
+        <p className="sg-trust-h">
+          {e.letters.hA} <em>{e.letters.hB}</em>
+        </p>
+        <ul className="sg-logos">
+          {(Object.keys(s.clients) as (keyof typeof s.clients)[]).map((k) => (
+            <li key={k}>
+              <Image src={`/img/clients/${k}.png`} alt={s.clients[k]} width={150} height={40} />
+            </li>
+          ))}
+        </ul>
+      </div>
       <div className="sg-proof">
         <dl className="sg-stats">
           {Object.entries(e.stats).map(([k, st]) => (

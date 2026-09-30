@@ -843,7 +843,9 @@ const BANDS: Record<string, readonly [number, number]> = {
   howItWorks: [5, 141],
   consumer: [10, 136],
   checks: [7, 59],
-  international: [6, 117],
+  /* 117 -> 127 (30 Sep 2026): sales pass: impact figures and actions. */
+  /* 127 -> 126 (30 Sep 2026): the KSA code went: Saudi Arabia shows its flag. */
+  international: [6, 126],
   /* 56 -> 55 (30 Sep 2026): one-line heading, "Key Verification Solutions". */
   packages: [7, 55],
   /** New 30 Sep 2026: the old site's country grid — heading, lede, the
@@ -895,7 +897,8 @@ const BANDS: Record<string, readonly [number, number]> = {
   /** 50 -> 62 (29 Sep 2026): the Large ↔ Small & Medium toggle, `smb.seg` —
    *  its labels and heading (8) and the KYC and Vendor cards (4). */
   /* 62 -> 60 (30 Sep 2026): the toggle sub-lines went. */
-  smb: [0, 60],
+  /* 60 -> 66 (30 Sep 2026): client logo names added. */
+  smb: [0, 66],
   diligence: [0, 27],
   trustPlatform: [0, 52],
   /** New 30 Sep 2026: the field case — heading block and rail label (7),
@@ -950,8 +953,8 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
  *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`. */
 check(
-  "sections holds 1702 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1702 &&
+  "sections holds 1717 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1717 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -986,8 +989,8 @@ check(
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
  *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693. */
 check(
-  "sections: 1691 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1691 &&
+  "sections: 1706 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1706 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

@@ -595,9 +595,14 @@ export const en = {
    *  the component — they are drawings, and their hex is the `check:tokens`
    *  exemption. */
   international: {
-    headingA: "Verified in 120 countries.",
-    headingB: "With a time you can plan around.",
-    lede: "Local sources — the same courts, registries and licensing bodies a local employer would call. Start now and the report lands by the time shown.",
+    /** Sales pass (30 Sep 2026): the band sells the cross-border check —
+     *  the problem, the proof and the ask — instead of describing the map.
+     *  Every figure below is one the live site states: 20M+ and 120+ (the
+     *  hero), 12–14% (the manpower & education page), 3× (the immigration
+     *  page). */
+    headingA: "Hire from anywhere.",
+    headingB: "Verified at the source, in 120+ countries.",
+    lede: "Cross-border hires are where fraud hides — a degree from another country, an employer you can’t call. We verify with the issuer in their own country, and you get an evidence-backed report on a turnaround you can plan around.",
     courts: "Criminal records are checked across Supreme, High and District Courts and tribunals. Times are from upload, in your local time.",
     all: "All countries",
     /** Homepage v2: the globe, at every width. Each pin's card
@@ -616,11 +621,21 @@ export const en = {
       spin: "Spin",
       speeds: { still: "Still", slow: "Slow", steady: "Steady", fast: "Fast" },
       close: "Back to the world view",
+      /** The two actions on every country's card. */
+      pinCta: "Verify a hire from here",
+      guide: "Country guide",
       world: {
         k: "International Background Verification",
         big: "120",
         plus: "+",
         line: "countries where we can reach the issuing authority.",
+        impact: {
+          i1: { v: "20M+", l: "checks completed since 2018" },
+          i2: { v: "12–14%", l: "of applications flagged for fraud" },
+          i3: { v: "3×", l: "faster than the industry average" },
+        },
+        cta: "Start an international check",
+        ctaAlt: "Turnaround by country",
         officesK: "Our Offices",
         offices: ["Egypt", "India", "Philippines", "Singapore", "United Arab Emirates", "United States"],
         tip: "Drag the globe · click a flag",
@@ -639,8 +654,6 @@ export const en = {
         },
         sa: {
           name: "Saudi Arabia",
-          /** The pin has no flag drawing; it shows this code instead. */
-          code: "KSA",
           role: "Health authority · Primary Source Verification",
           head: "HelloVerify is a globally recognised verification partner trusted by health authority in Saudi Arabia.",
           rows: [
@@ -1531,6 +1544,9 @@ export const en = {
       label: "Choose your business size",
       large: "Large Enterprises",
       small: "Small & Medium Businesses",
+      /** The client logos under the Large panel, as the old enterprise page
+       *  (`/products/bgv-enterprise`) shows them; each is its logo's alt. */
+      clients: { cognizant: "Cognizant", infosys: "Infosys", accenture: "Accenture", reliance: "Reliance Retail", wipro: "Wipro", hcl: "HCL" },
       headingA: "Background Checks For",
       headingB: "Large Enterprises",
       kyc: { t: "KYC Services", p: "Comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection." },

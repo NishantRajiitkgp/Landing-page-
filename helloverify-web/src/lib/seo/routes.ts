@@ -64,6 +64,9 @@ export const STATIC_ROUTES: readonly RouteEntry[] = [
   r("/governments/immigration", "monthly", 0.8),
   r("/governments/manpower-education", "monthly", 0.8),
   r("/governments/manpower-education/ministry-of-manpower", "monthly", 0.8),
+  r("/governments/manpower-education/mohesr", "monthly", 0.7),
+  r("/governments/immigration/embassy-of-latvia", "monthly", 0.7),
+  r("/governments/immigration/embassy-of-italy", "monthly", 0.7),
   r("/governments/trade", "monthly", 0.8),
 
   // Individual verticals

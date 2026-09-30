@@ -8,8 +8,8 @@ import { Presence } from "@/components/sections/Presence";
 import { GovSeals } from "@/components/sections/GovSeals";
 import { GovWhy } from "@/components/sections/GovWhy";
 import { GovDossiers } from "@/components/sections/GovDossiers";
-import { Why } from "@/components/sections/Why";
-import { Checks } from "@/components/sections/Checks";
+// import { Why } from "@/components/sections/Why"; — hidden, see below.
+// import { Checks } from "@/components/sections/Checks"; — hidden, see below.
 import { Packages } from "@/components/sections/Packages";
 import { IntlGrid } from "@/components/sections/IntlGrid";
 import { Enterprises } from "@/components/sections/Enterprises";
@@ -24,6 +24,8 @@ import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { setRequestLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
+// One CTA system for the homepage (`.hv-home`), after every section sheet.
+import "@/app/v2/ctas.css";
 
 /** The homepage inherited its title and description from the root layout and
  *  needed no export of its own — until §8.1, because a canonical cannot be
@@ -50,7 +52,7 @@ export default async function Home({
   setRequestLocale(locale);
 
   return (
-    <div className="page">
+    <div className="page hv-home">
       <SiteNav />
       {/* The homepage does not use PageShell, so it carries its own <main>.
           Without it this is the one page of 56 with no main landmark, and the
@@ -80,8 +82,10 @@ export default async function Home({
         {/* One address check in Foumban, from request to report: evidence
             gathered at the door, processed in-country (30 Sep 2026). */}
         <FieldCase />
-        <Checks />
-        <Why />
+        {/* "33 checks. Most take minutes." hidden from the homepage
+            (30 Sep 2026), not deleted: restore <Checks /> here. */}
+        {/* "Why governments work with us." hidden from the homepage
+            (30 Sep 2026), not deleted: restore <Why /> here. */}
         <Enterprises />
         {/* Renders nothing until a real, attributable story exists; this is
             its slot: proof straight after the pitch, before the numbers. */}

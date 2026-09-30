@@ -39,18 +39,23 @@ const loadEngine = () => Promise.all([import("@/lib/globeEngine"), import("@/lib
 export type GlobePin = {
   id: string;
   name: string;
-  /** Flag drawing (the `<svg>`'s children), or `code` when there is none. */
-  flag?: ReactNode;
-  code?: string;
+  /** The country's flag file (`/flags/xx.svg`), shown whole, 4:3. */
+  flag: string;
   lat: number;
   lon: number;
   role: string;
   head: string;
   rows: { k: string; v: string }[];
   coord: string;
+  /** Localised links for the card's two actions: start a check, and the
+   *  country's guide where one exists. */
+  buy: string;
+  guide?: string;
 };
 
 export type GlobeLabels = {
+  pinCta: string;
+  guide: string;
   canvas: string;
   hud: string;
   compass: { n: string; s: string; e: string; w: string };
@@ -61,11 +66,12 @@ export type GlobeLabels = {
 };
 
 function Badge({ pin, lg = false }: { pin: GlobePin; lg?: boolean }) {
-  const cls = lg ? "gb-fl gb-fl-lg" : "gb-fl";
-  if (!pin.flag) return <span className={`${cls} gb-code`} aria-hidden="true">{pin.code}</span>;
+  // Whole and uncropped, in the flag's own 4:3 — never a circle, never
+  // recoloured. Decorative: the country's name is on the pin and the card.
   return (
-    <span className={`fl ${cls}`} aria-hidden="true">
-      <svg viewBox="0 0 30 20" preserveAspectRatio="xMidYMid slice">{pin.flag}</svg>
+    <span className={lg ? "gb-flag gb-flag-lg" : "gb-flag"} aria-hidden="true">
+      {/* eslint-disable-next-line @next/next/no-img-element -- a 2 KB SVG; next/image adds nothing */}
+      <img src={pin.flag} alt="" width={lg ? 48 : 32} height={lg ? 36 : 24} draggable={false} />
     </span>
   );
 }
@@ -218,6 +224,15 @@ export function GlobeStage({ pins, labels, world }: { pins: GlobePin[]; labels: 
                 </div>
               ))}
             </dl>
+            <div className="gb-acts">
+              <a href={p.buy} className="gb-buy">
+                {labels.pinCta}
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+              {p.guide && <a href={p.guide} className="gb-guide">{labels.guide}</a>}
+            </div>
             <div className="gb-coord">{p.coord}</div>
           </div>
         ) : (

@@ -37,9 +37,10 @@
 .gb-canvas, .gb-pins { position: absolute; top: 0; inset-inline-start: 0; }
 .gb-canvas { display: block; }
 .gb-pins { pointer-events: none; }
-.gb-pin { direction: ltr; position: absolute; inset-inline-start: 0; top: 0; display: block; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; pointer-events: auto; opacity: 0; transition: opacity .25s; will-change: transform; }
-.gb-fl { width: 28px !important; height: 28px !important; box-shadow: 0 0 0 2.5px var(--white), 0 0 0 3.5px rgb(from var(--ink) r g b / .14), 0 6px 14px -4px rgb(from var(--ink) r g b / .35); transition: filter .35s, box-shadow .3s, transform .35s cubic-bezier(.16, 1, .3, 1); }
-.gb-code { display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--green); color: var(--white); font-family: var(--mono); font-size: 7.5px; letter-spacing: .04em; }
+.gb-pin { direction: ltr; position: absolute; inset-inline-start: 0; top: 0; display: block; padding: 0; border: 0; border-radius: 3px; background: none; cursor: pointer; pointer-events: auto; opacity: 0; transition: opacity .25s; will-change: transform; }
+/* A pin's flag: whole, 4:3, square-cornered but for a 2px softening — the
+   circle crop squashed India's chakra and cut the UK's saltires. */
+.gb-flag { display: block; width: 32px; height: 24px; border-radius: 2px; overflow: hidden; box-shadow: 0 0 0 2.5px var(--white), 0 0 0 3.5px rgb(from var(--ink) r g b / .14), 0 6px 14px -4px rgb(from var(--ink) r g b / .35); transition: filter .35s, box-shadow .3s, transform .35s cubic-bezier(.16, 1, .3, 1); }
 /* The label is out of flow, so the button's box is the 28px flag alone —
    a label-wide box would overlap its neighbours (UAE and Saudi Arabia sit
    ~30px apart) and fail axe `target-size`. Centred with both insets and
@@ -47,10 +48,10 @@
    flip. */
 .gb-pin-l { position: absolute; top: calc(100% + 6px); inset-inline: -120px; margin-inline: auto; width: max-content; font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); white-space: nowrap; padding: 4px 8px; border-radius: 999px; background: var(--white); box-shadow: 0 0 0 1px var(--hair), 0 8px 18px -10px rgb(from var(--ink) r g b / .4); opacity: 0; transform: translateY(-4px); transition: opacity .25s, transform .3s cubic-bezier(.16, 1, .3, 1); pointer-events: none; }
 .gb-pin:hover .gb-pin-l, .gb-pin:focus-visible .gb-pin-l { opacity: 1; transform: none; }
-.gb-pin:hover .gb-fl, .gb-pin:focus-visible .gb-fl { transform: scale(1.18); box-shadow: 0 0 0 2.5px var(--white), 0 0 0 4px rgb(from var(--green) r g b / .55), 0 10px 22px -6px rgb(from var(--green) r g b / .5); }
+.gb-pin:hover .gb-flag, .gb-pin:focus-visible .gb-flag { transform: scale(1.18); box-shadow: 0 0 0 2.5px var(--white), 0 0 0 4px rgb(from var(--green) r g b / .55), 0 10px 22px -6px rgb(from var(--green) r g b / .5); }
 .gb-pin:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
 .gb-pin:focus-visible .gb-pin-l { box-shadow: 0 0 0 2px var(--ink); }
-.gb-on .gb-fl { transform: scale(1.32); box-shadow: 0 0 0 3px var(--white), 0 0 0 4.5px var(--green), 0 12px 24px -6px rgb(from var(--ink) r g b / .45); }
+.gb-on .gb-flag { transform: scale(1.32); box-shadow: 0 0 0 3px var(--white), 0 0 0 4.5px var(--green), 0 12px 24px -6px rgb(from var(--ink) r g b / .45); }
 .gb-on .gb-pin-l { background: var(--ink); color: var(--white); box-shadow: none; opacity: 1; transform: none; }
 
 .gb-hud { display: flex; gap: 6px; pointer-events: none; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
@@ -68,7 +69,8 @@
 .gb-card { box-sizing: border-box; display: flex; flex-direction: column; padding: 28px 28px 24px; border-radius: 22px; background: rgb(from var(--white) r g b / .86); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: 0 0 0 1px var(--hair), 0 30px 60px -36px rgb(from var(--ink) r g b / .4); color: var(--ink); animation: gbIn .6s cubic-bezier(.16, 1, .3, 1) .15s both; }
 @keyframes gbIn { 0% { opacity: 0; transform: translateX(calc(var(--flip) * 16px)); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
 .gb-card-top { display: flex; align-items: center; gap: 14px; }
-.gb-fl-lg { width: 44px !important; height: 44px !important; flex: none; font-size: 10px; }
+.gb-flag-lg { width: 48px; height: 36px; flex: none; }
+.gb-flag img { display: block; width: 100%; height: 100%; }
 .gb-role { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--green); }
 .gb-cn { margin: 4px 0 0; font-family: var(--serif); font-weight: 400; font-size: 30px; line-height: 1.02; letter-spacing: -.02em; color: var(--ink); }
 .gb-x { margin-inline-start: auto; align-self: flex-start; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--hair); background: var(--white); color: var(--ink); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
@@ -80,10 +82,22 @@
 .gb-row dt { font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .gb-row dd { margin: 4px 0 0; font-weight: 500; font-size: 14px; line-height: 1.4; color: var(--ink); }
 .gb-coord { margin-top: auto; padding-top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; color: var(--muted); }
-.gb-big { margin-top: 22px; font-family: var(--serif); font-size: clamp(88px, 24vw, 120px); line-height: .88; letter-spacing: -.05em; color: var(--ink); }
+/* Sales pass (30 Sep 2026): the world card sells — the headline figure a
+   size smaller, three proof figures under it, then the two actions. */
+.gb-imp { margin: 18px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-top: 16px; border-top: 1px solid var(--hair); }
+.gb-imp div { display: flex; flex-direction: column-reverse; gap: 4px; }
+.gb-imp dd { margin: 0; font-family: var(--serif); font-size: 26px; line-height: 1; letter-spacing: -.02em; color: var(--green); }
+.gb-imp dt { font-size: 12px; line-height: 1.35; color: var(--muted); }
+.gb-acts { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.gb-buy { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding-inline: 22px; border-radius: 999px; background: var(--green); color: var(--white); font-size: 15px; font-weight: 500; text-decoration: none; box-shadow: 0 14px 28px -14px rgb(from var(--green) r g b / .75); transition: background .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+.gb-buy:hover { background: var(--v2-sm-green-press); transform: translateY(-2px); }
+.gb-buy:focus-visible, .gb-guide:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.gb-guide { font-size: 14.5px; font-weight: 500; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgb(from var(--ink) r g b / .3); }
+.gb-guide:hover { color: var(--green); text-decoration-color: var(--green); }
+.gb-big { margin-top: 18px; font-family: var(--serif); font-size: clamp(72px, 20vw, 92px); line-height: .88; letter-spacing: -.05em; color: var(--ink); }
 .gb-big span { font-size: .45em; vertical-align: top; margin-inline-start: 4px; color: var(--green); }
 .gb-big-p { margin: 14px 0 0; font-size: 15px; line-height: 1.5; color: var(--ink-soft); }
-.gb-offk { margin-top: 26px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.gb-offk { margin-top: 20px; font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .gb-offs { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .gb-offs li { height: 28px; display: inline-flex; align-items: center; padding-inline: 11px; border-radius: 999px; box-shadow: inset 0 0 0 1px var(--hair); font-size: 12.5px; color: var(--ink); background: var(--white); }
 .gb-tip { margin: auto 0 0; display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink); }
@@ -127,7 +141,7 @@
      orb; the rows below are positioned to paint over it, and the canvas
      lets taps through to them (the stage handles the drag). */
   .gb-canvas { height: auto; pointer-events: none; }
-  .gb-fl { width: 24px !important; height: 24px !important; }
+  .gb-flag { width: 28px; height: 21px; }
   .gb-hud, .gb-speed, .gb-legend { position: relative; justify-content: center; flex-wrap: wrap; margin-top: 12px; padding-inline: 20px; }
   .gb-legend { gap: 8px 16px; }
   .gb-panel { margin: 20px 20px 0; }

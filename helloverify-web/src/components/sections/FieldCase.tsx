@@ -23,6 +23,8 @@ import { FieldCaseScene } from "./FieldCaseScene";
 import { FieldCaseStage } from "./FieldCaseStage";
 
 const ELSEWHERE = ["sd", "sy", "eg", "ph", "sa"] as const;
+/** The closing block under the case (`fc-outro`). */
+const SHOW_OUTRO = false;
 
 export async function FieldCase() {
   const t = (await copy(SECTIONS)).fieldCase;
@@ -58,6 +60,9 @@ export async function FieldCase() {
         <FieldCaseScene t={t} />
       </FieldCaseStage>
 
+      {/* The closing line and "The same platform, elsewhere today" — hidden
+          from the homepage (30 Sep 2026), not deleted: set SHOW_OUTRO. */}
+      {SHOW_OUTRO && (
       <div className="fc-outro">
         <p className="fc-line">{t.outro.line}</p>
         <p className="fc-scale-l">{t.outro.scale}</p>
@@ -74,6 +79,7 @@ export async function FieldCase() {
           </ul>
         </div>
       </div>
+      )}
     </div>
   );
 }

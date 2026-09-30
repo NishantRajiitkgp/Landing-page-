@@ -28,10 +28,10 @@ const C2: { id: MomC2Id; pts: number }[] = [
  *  immigration page — the hero's "Premium services" door goes there too. */
 const PREMIUM = ["health", "immigration"] as const;
 
-/** The MOM case is hidden from the homepage (30 Sep 2026), not deleted: set
- *  this to `true` to bring it back. The premium services band below it
- *  still renders. */
+/** Both parts are hidden from the homepage (30 Sep 2026), not deleted: set
+ *  either to `true` to bring it back. */
 const SHOW_MOM = false;
+const SHOW_PREMIUM = false;
 
 export async function GovMom() {
   const t = (await copy(SECTIONS)).govDossiers;
@@ -106,6 +106,7 @@ export async function GovMom() {
         </div>
       </div>
       )}
+      {SHOW_PREMIUM && (
       <div className="mw-prem">
         <div>
           <div className="k">{t.premium.kicker}</div>
@@ -121,6 +122,7 @@ export async function GovMom() {
           ))}
         </div>
       </div>
+      )}
     </>
   );
 }
