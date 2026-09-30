@@ -3,10 +3,12 @@
     seals link here. MOM keeps its longer case study page; Latvia, Italy and
     MOHESR use this. */
 import Image from "next/image";
+import { getLocale } from "next-intl/server";
 
 import { PageShell } from "@/components/chrome/PageShell";
 import { copy } from "@/lib/copy/request";
 import { GOVERNMENTS } from "@/lib/copy/governments";
+import { localise } from "@/lib/i18n/href";
 import { SECTIONS, type GovSealId } from "@/lib/copy/sections";
 import { AuthorityRecord } from "./AuthorityRecord";
 import { sealItem } from "./GovSeals";
@@ -27,7 +29,7 @@ export async function AuthorityPage({ id, parent }: { id: GovSealId; parent: { l
         <h1 className="h1">{g.name}</h1>
       </div>
       <div className="wrap au-body">
-        <AuthorityRecord g={g} stamp={t.stamp} labels={{ problem: t.problemK, deliver: t.deliverK, why: t.whyK }} />
+        <AuthorityRecord g={g} stamp={t.stamp} labels={{ problem: t.problemK, deliver: t.deliverK, why: t.whyK }} partner={t.partner} contactHref={localise("/contact", await getLocale())} />
       </div>
     </PageShell>
   );

@@ -32,8 +32,8 @@ import { GovSealsStage } from "./GovSealsStage";
  *  centres is drawn from the same numbers. The marks: MOM's and MOHESR's
  *  emblems and Latvia's arms are the old site's files; Italy's is the
  *  Republic's emblem, cropped from the embassy lockup (whose script line names
- *  Washington, not New Delhi). Since 30 Sep 2026 a seal opens its page rather
- *  than a record under the row. */
+ *  Washington, not New Delhi). A seal opens its record under the row; `href`
+ *  is the authority's own page, which renders the same record. */
 export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string }[] = [
   { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/governments/manpower-education/ministry-of-manpower" },
   { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration/embassy-of-latvia" },
@@ -73,9 +73,10 @@ export async function sealItem(id: GovSealId): Promise<SealItem> {
 export async function GovSeals() {
   const all = await copy(SECTIONS);
   const t = all.govSeals;
-  const locale = await getLocale();
+  // Clicking a seal opens its record card under the row again (restored
+  // 30 Sep 2026); the authority pages stay, reachable from elsewhere.
   const items = await Promise.all(SEALS.map((s) => sealItem(s.id)));
-  const hrefs = SEALS.map((s) => localise(s.href, locale));
+  const locale = await getLocale();
 
   return (
     <section className="wrap sv" aria-labelledby="sv-h">
@@ -89,10 +90,14 @@ export async function GovSeals() {
       </h2>
       <GovSealsStage
         items={items}
-        hrefs={hrefs}
         thread={threadPath(SEALS.map((s) => s.lift))}
         ledeLead={t.ledeLead}
         ledeAnd={t.ledeAnd}
+        stamp={t.stamp}
+        labels={{ problem: t.problemK, deliver: t.deliverK, why: t.whyK }}
+        partner={t.partner}
+        contactHref={localise("/contact", locale)}
+        caseHrefs={SEALS.map((s) => localise(s.href, locale))}
         pauseLabel={all.hero.motion.pause}
         playLabel={all.hero.motion.play}
       />

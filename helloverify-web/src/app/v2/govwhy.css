@@ -90,6 +90,25 @@
 .gw-proof rect { fill: var(--white); stroke: var(--hair); stroke-width: 1.2; }
 .gw-proof circle { fill: var(--green); }
 .gw-art .gw-proof text { font-size: 9.5px; }
+/* 1 Oct 2026: the literal pictures (`GovWhyArt.tsx` header). */
+.gw-tickmark circle { fill: var(--green); }
+.gw-tickmark path { fill: none; stroke: var(--white); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.gw-art .gw-big { font-family: var(--serif); font-size: 46px; letter-spacing: -.03em; fill: var(--ink); }
+.gw-src { fill: var(--green); }
+.gw-area { fill: rgb(from var(--green) r g b / .1); }
+.gw-art .gw-small { font-size: 9.5px; }
+.gw-art .gw-lab-s { font-size: 8.5px; }
+.gw-row { transform-box: fill-box; }
+/* 04: each authority's mark, exactly as issued, beside its name. Static:
+   nothing here moves, fades or recolours a mark. */
+/* Four columns, the mark over the full name, so the longest name
+   ("Ministry of Higher Education & Scientific Research (UAE)") wraps
+   without being shortened. */
+.gw-govs { list-style: none; margin: 0; padding: 10px; width: 100%; height: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.gw-govs li { display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0; padding: 10px 5px 8px; border-radius: 12px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair); text-align: center; }
+.gw-govs-m { flex: none; display: flex; align-items: center; justify-content: center; width: 42px; height: 42px; }
+.gw-govs-m img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.gw-govs-n { font-size: 9.5px; line-height: 1.25; font-weight: 500; color: var(--ink); overflow-wrap: anywhere; hyphens: none; }
 
 /* ── The loops, armed by `.gw-go` ── */
 .gw-go .gw-build { animation: gwBuild 6s cubic-bezier(.65, 0, .35, 1) calc(var(--i, 0) * .12s) infinite both; }
@@ -117,6 +136,9 @@
 .gw-go .gw-write { animation: gwWrite 6s cubic-bezier(.65, 0, .35, 1) calc(var(--i, 0) * .22s) infinite both; }
 .gw-go .gw-stamp { animation: gwStamp 6s cubic-bezier(.3, 1.35, .5, 1) infinite both; }
 .gw-go .gw-proof { animation: gwProof 6s cubic-bezier(.16, 1, .3, 1) calc(var(--i, 0) * .25s) infinite both; }
+.gw-go .gw-src { animation: gwSrc 6s ease calc(var(--i, 0) * .14s) infinite both; }
+.gw-go .gw-area { animation: gwArea 6s ease infinite both; }
+.gw-go .gw-row { animation: gwProof 6s cubic-bezier(.16, 1, .3, 1) calc(var(--i, 0) * .3s - 1.6s) infinite both; }
 
 /* Build, hold, fade: the shape most of the pictures share. */
 @keyframes gwBuild { 0% { stroke-dashoffset: 1; opacity: 1; } 30%, 84% { stroke-dashoffset: 0; opacity: 1; } 94%, 100% { stroke-dashoffset: 0; opacity: 0; } }
@@ -149,6 +171,10 @@
 @keyframes gwStamp { 0%, 26% { opacity: 0; transform: rotate(-2deg) scale(1.9); } 32% { opacity: 1; transform: rotate(-14deg) scale(.94); } 35%, 84% { opacity: 1; transform: rotate(-12deg) scale(1); } 94%, 100% { opacity: 0; transform: rotate(-12deg) scale(1); } }
 @keyframes gwProof { 0%, 36% { opacity: 0; transform: translate(12px, 0); } 44%, 84% { opacity: 1; transform: translate(0, 0); } 94%, 100% { opacity: 0; } }
 
+/* A wave across the field of sources: each column confirms in turn. */
+@keyframes gwSrc { 0% { fill: rgb(from var(--ink) r g b / .14); } 12%, 84% { fill: var(--green); } 94%, 100% { fill: rgb(from var(--ink) r g b / .14); } }
+@keyframes gwArea { 0%, 10% { opacity: 0; } 40%, 84% { opacity: 1; } 94%, 100% { opacity: 0; } }
+
 /* Paused, or off screen: every loop holds where it is. After the rules
    above, at their specificity, so it wins. */
 .gw-grid.gw-still * { animation-play-state: paused; }
@@ -169,6 +195,11 @@
 @media (max-width: 639px) {
   .gw-grid { border-radius: 20px; }
   .gw-viz { height: 140px; }
+  /* The six-line MOHESR name needs the room on a phone. */
+  .gw-govs { padding: 7px; gap: 5px; }
+  .gw-govs li { gap: 5px; padding: 7px 3px 6px; }
+  .gw-govs-m { width: 32px; height: 32px; }
+  .gw-govs-n { font-size: 8.5px; }
   .gw-foot { justify-content: center; text-align: center; }
 }
 

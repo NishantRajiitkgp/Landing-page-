@@ -1,5 +1,5 @@
-/** The field case — "Some checks end at a database. Ours go to the door."
-    Homepage v2, 30 Sep 2026, from the founder's brief: global scale, local
+/** The field case — "Our AI finds what doesn't add up. A local expert checks
+    it in person." The `/ai` page (it left the homepage on 30 Sep 2026), from the founder's brief: global scale, local
     expertise, AI-powered intelligence and deep evidence, through one
     platform.
 
@@ -26,7 +26,8 @@ const ELSEWHERE = ["sd", "sy", "eg", "ph", "sa"] as const;
 /** The closing block under the case (`fc-outro`). */
 const SHOW_OUTRO = false;
 
-export async function FieldCase() {
+/** `heading="h1"` on `/ai`, where the case is the page; `h2` elsewhere. */
+export async function FieldCase({ heading: H = "h2" }: { heading?: "h1" | "h2" } = {}) {
   const t = (await copy(SECTIONS)).fieldCase;
   // What the engine paints as words: office and place names, the loupe's.
   const g = t.globe, pl = t.outro.places;
@@ -44,11 +45,11 @@ export async function FieldCase() {
         <span className="fc-note">{t.note}</span>
       </div>
       <div className="sec-head fc-head">
-        <h2 className="h2">
+        <H className="h2">
           {t.headingA}
           <br />
           <em className="fc-em">{t.headingEm}</em>
-        </h2>
+        </H>
         <p className="lede">{t.lede}</p>
       </div>
       <p className="fc-hint">

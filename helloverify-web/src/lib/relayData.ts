@@ -1,5 +1,5 @@
 /** The relay's data (homepage v2, Presence): the network the map draws, the
- *  six journeys a visitor can pick by where their candidate's papers are,
+ *  seven journeys a visitor can pick by where their candidate's papers are,
  *  the flights' geometry, the camera that follows them, and today's modelled
  *  counts. Pure and DOM-free, shared by `sections/RelayStage.tsx`, its loop
  *  and its painter.
@@ -68,7 +68,7 @@ export const WEB: readonly (readonly [CityId, CityId])[] = [
   ["mumbai", "berlin"], ["cairo", "dubai"],
 ];
 
-export type JourneyId = "in" | "ph" | "eg" | "pk" | "ae" | "gb";
+export type JourneyId = "in" | "ph" | "eg" | "ng" | "bd" | "ae" | "gb";
 /** Below its point — the document rises ABOVE its point as it grows, so a
  *  tag there would be covered — and `br` nudged right, clear of a pin just
  *  west of it (Iloilo, beside Singapore). `t` is kept for a point with no
@@ -96,7 +96,11 @@ export const JOURNEYS: Record<JourneyId, Journey> = {
   in: { src: "thrissur", dst: "abuDhabi", desk: "noida", startUtc: 5, mins: [0, 14, 148, 1371, 1409], tag: ["b", "b"], doc: { f: "hw-degree-kl.jpg", w: 470, h: 300 } },
   ph: { src: "iloilo", dst: "riyadh", desk: "manila", startUtc: 6, mins: [0, 9, 72, 1620, 1690], tag: ["br", "b"], doc: { f: "ev-03-tor-ph.jpg", ...PORT } },
   eg: { src: "asyut", dst: "kuwait", desk: "cairo", startUtc: 7, mins: [0, 6, 64, 1100, 1142], tag: ["b", "b"], doc: { f: "ev-04-pharmacy-eg.jpg", ...LAND } },
-  pk: { src: "islamabad", dst: "doha", desk: "dubai", startUtc: 6, mins: [0, 20, 185, 4140, 4200], tag: ["b", "b"], doc: { f: "ev-08-mbbs-pk.jpg", ...PORT } },
+  // Nigeria replaced Pakistan and Bangladesh joined (30 Sep 2026). Their
+  // specimens are code-drawn stand-ins (`rl-degree-*`, marked SPECIMEN),
+  // not Higgsfield scans like the rest; swap in a scan when one is made.
+  ng: { src: "lagos", dst: "london", desk: "cairo", startUtc: 8, mins: [0, 15, 120, 1500, 1560], tag: ["b", "b"], doc: { f: "rl-degree-ng.jpg", ...PORT } },
+  bd: { src: "dhaka", dst: "dubai", desk: "noida", startUtc: 5, mins: [0, 10, 95, 1250, 1300], tag: ["b", "b"], doc: { f: "rl-degree-bd.jpg", ...PORT } },
   ae: { src: "abuDhabi", dst: "london", desk: "dubai", startUtc: 8, mins: [0, 12, 40, 1210, 1260], tag: ["b", "b"], doc: { f: "ev-02-transcript-ae.jpg", ...PORT } },
   gb: { src: "manchester", dst: "tokyo", desk: "singapore", startUtc: 0, mins: [0, 60, 610, 1330, 1395], tag: ["b", "b"], doc: { f: "ev-05-mba-uk.jpg", ...LAND } },
 };

@@ -46,7 +46,9 @@ const PINS: { id: PinId; lat: number; lon: number; flag: string }[] = [
   { id: "us", lat: 40.7, lon: -74.0, flag: "us" },
 ];
 
-export async function Globe() {
+/** `sheet={false}` on `/ai`: "Sheet 09 / 12" numbers the homepage's sheets
+ *  and means nothing on a page of its own. */
+export async function Globe({ sheet = true }: { sheet?: boolean } = {}) {
   const t = (await copy(SECTIONS)).international;
   const g = t.globe;
   const locale = await getLocale();
@@ -105,7 +107,7 @@ export async function Globe() {
     <div className="wrap hair-top gb">
       <div className="gb-mast">
         <span className="k">{g.kicker}</span>
-        <span className="gb-sheet">{g.sheet}</span>
+        {sheet && <span className="gb-sheet">{g.sheet}</span>}
       </div>
       <div className="sec-head gb-sh">
         <h2 className="h2">

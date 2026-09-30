@@ -4,16 +4,20 @@
     to its authority's own page, and that page renders this. Server-only; the
     entrances are CSS (`govseals.css`) and play on load. */
 import "@/app/v2/govseals.css";
-import { Inlay, Stamp, type SealItem } from "./GovSealParts";
+import { Inlay, PartnerPitch, Stamp, type PartnerCopy, type SealItem } from "./GovSealParts";
 
 export function AuthorityRecord({
   g,
   stamp,
   labels,
+  partner,
+  contactHref,
 }: {
   g: SealItem;
   stamp: string;
   labels: { problem: string; deliver: string; why: string };
+  partner: PartnerCopy;
+  contactHref: string;
 }) {
   return (
     <div className="sv-recs sv-recs-page">
@@ -76,6 +80,7 @@ export function AuthorityRecord({
             </ul>
           </div>
         </div>
+        <PartnerPitch c={partner} contactHref={contactHref} />
       </div>
     </div>
   );

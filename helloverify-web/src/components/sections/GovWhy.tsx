@@ -15,9 +15,18 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type GovWhyId } from "@/lib/copy/sections";
 import "@/app/v2/govwhy.css";
-import { SEAL_LOGOS } from "./GovSeals";
-import { ArtGates, ArtGovs, ArtPlatform, ArtReport, ArtTimeline, ArtTrust } from "./GovWhyArt";
+import { ArtGovs, ArtPlatform, ArtReport, ArtScale, ArtTimeline, ArtTrust } from "./GovWhyArt";
+import { SEALS } from "./GovSeals";
 import { GovWhyStage } from "./GovWhyStage";
+
+/** Each mark's own pixel size (`public/img/`), so it renders at its true
+ *  proportions and is never stretched. */
+const MARK_SIZE: Record<string, [number, number]> = {
+  "/img/mom.jpg": [240, 240],
+  "/img/latvia-coat-of-arms.png": [197, 158],
+  "/img/italy-emblem.png": [180, 200],
+  "/img/mohesr-emblem.png": [220, 264],
+};
 
 /** Plate order: the old site's grid, read left to right, top to bottom. */
 const ORDER: readonly GovWhyId[] = ["trust", "psv", "platform", "govs", "longTerm", "evidence"];
@@ -27,12 +36,12 @@ export async function GovWhy() {
   const t = all.govWhy;
   const v = t.viz;
   const art: Record<GovWhyId, React.ReactNode> = {
-    trust: <ArtTrust />,
-    psv: <ArtGates g={v.gates} />,
+    trust: <ArtTrust t={v.trust} />,
+    psv: <ArtScale s={v.scale} />,
     platform: <ArtPlatform core={v.core} nodes={v.nodes} />,
-    govs: <ArtGovs logos={SEAL_LOGOS} />,
+    govs: <ArtGovs govs={SEALS.map((s) => ({ name: all.govSeals.items[s.id].name, logo: s.logo, w: MARK_SIZE[s.logo][0], h: MARK_SIZE[s.logo][1] }))} />,
     longTerm: <ArtTimeline since={v.since} today={v.today} ahead={v.ahead} />,
-    evidence: <ArtReport stamp={v.stamp} proofs={v.proofs} />,
+    evidence: <ArtReport r={v.report} stamp={v.stamp} proofs={v.proofs} />,
   };
 
   return (

@@ -75,6 +75,7 @@ export const STATIC_ROUTES: readonly RouteEntry[] = [
   r("/individuals/home-family", "monthly", 0.7),
 
   // Platform
+  r("/ai", "monthly", 0.8),
   r("/platform/technology", "monthly", 0.8),
   r("/platform/coverage", "monthly", 0.9),
   r("/platform/security-compliance", "monthly", 0.8),

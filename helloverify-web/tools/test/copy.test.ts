@@ -863,7 +863,9 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  the `sun` strings (clock, controls, statuses, countries) went, and the
    *  counters, the country chips, six journeys told in five captions, the
    *  timeline, the desk cards and the stamp's ring (`seal`) came. */
-  presence: [8, 93],
+  /* 93 -> 100 (30 Sep 2026): Nigeria replaced Pakistan and Bangladesh joined
+   *  the relay: one country name and six journey words each. */
+  presence: [8, 100],
   /** Bands homepage v2 added (Sep 2026). The first number is the migration-
    *  time `>text<` matcher count, which never saw them, so it is 0 and the
    *  152 sum below still describes the migration. The second is measured. */
@@ -886,11 +888,17 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  166: its closing line (three leaves) moved to `govWhy.items.trust.p`. */
   /* 166 -> 162 (30 Sep 2026): the seals' sub-lines (`where`) went; the
    *  country now sits in the name where it is needed. */
-  govSeals: [0, 162],
+  /* 162 -> 174 (30 Sep 2026): the partner pitch closing every record. */
+  govSeals: [0, 174],
   /** New 29 Sep 2026: six reasons (12), the words inside their pictures
    *  (17), the heading block (5), the certifications and the ask (2). */
   /* 36 -> 35 (30 Sep 2026): the lede under the heading went. */
-  govWhy: [0, 35],
+  /* 35 -> 53 (1 Oct 2026): the pictures show their reasons literally — the
+   *  five gates went; the verified record, the numbers, the four authorities
+   *  in words and the report's contents came. */
+  /* 53 -> 45 (1 Oct 2026): the governments plate reads the seals' names,
+   *  so its eight country words went. */
+  govWhy: [0, 45],
   /* 165 -> 166 (30 Sep 2026): authority cards add MOHESR. */
   govDossiers: [0, 166],
   enterprises: [0, 105],
@@ -909,6 +917,9 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  (4), the globe's places, region, six offices and counter (11), the
    *  loupe (2), the HUD's view (1) and the translation label (1). */
   fieldCase: [0, 106],
+  /** New 30 Sep 2026: the field case moved to `/ai`; the page's crumb and
+   *  closing band. */
+  aiPage: [0, 3],
 };
 
 const BLOCK_FILES: Record<string, readonly [number, number]> = {
@@ -953,8 +964,8 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
  *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`. */
 check(
-  "sections holds 1717 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1717 &&
+  "sections holds 1749 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1749 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -989,8 +1000,8 @@ check(
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
  *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693. */
 check(
-  "sections: 1706 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1706 &&
+  "sections: 1738 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1738 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

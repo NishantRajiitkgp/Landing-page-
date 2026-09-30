@@ -6,6 +6,6 @@ import { Globe } from "./Globe";
  *  grid — until the v2 phone pass (Sep 2026) sized the globe for 390px. The
  *  cards, and the copy only they read, went with it; the globe's cards say
  *  more about more countries. This name stays because the page composes it. */
-export function International() {
-  return <Globe />;
+export function International({ sheet }: { sheet?: boolean } = {}) {
+  return <Globe sheet={sheet} />;
 }
