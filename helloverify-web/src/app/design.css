@@ -39,7 +39,7 @@
       a:hover { color: #1B6B4A; }
       * { box-sizing: border-box; }
 
-      .page { width: 100%; max-width: 1440px; margin: 0 auto; min-height: 100%; background: var(--paper); overflow: hidden; }
+      .page { width: 100%; max-width: 1440px; margin: 0 auto; min-height: 100%; background: var(--paper); overflow: hidden; overflow: clip; }
       .wrap { padding-inline-start: clamp(24px, 8.334vw, 120px); padding-inline-end: clamp(24px, 8.334vw, 120px); }
       .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; }
       .mono { font-family: var(--mono); font-size: 12px; letter-spacing: 0.02em; }
@@ -336,7 +336,7 @@
       body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: antialiased; }
       a { color: #15140F; text-decoration: none; } a:hover { color: #1B6B4A; }
       * { box-sizing: border-box; }
-      .page { width: 100%; margin: 0 auto; min-height: 100%; background: var(--paper); overflow: hidden; }
+      .page { width: 100%; margin: 0 auto; min-height: 100%; background: var(--paper); overflow: hidden; overflow: clip; }
       .wrap { padding-inline-start: 20px; padding-inline-end: 20px; }
       .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; }
       .mono { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.02em; }

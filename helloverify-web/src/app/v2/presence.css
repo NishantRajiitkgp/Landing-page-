@@ -1,129 +1,197 @@
-/* Homepage v2 · Presence, "follow the sun". Imported by
+/* Homepage v2 · Presence, "the relay". Imported by
    `components/sections/Presence.tsx`; the header of `hero.css` explains why
-   v2 sheets are per-section and hand-written. Every selector is `su-`.
+   v2 sheets are per-section and hand-written. Selectors are `rl-` (the band
+   keeps `su-band` for its padding).
 
-   THE MAP IS GEOGRAPHY, NOT READING ORDER. On desktop `.su-stage` is
-   `direction: ltr`, so under `dir="rtl"` New York stays west of Cairo;
-   inside it the cards' `inset-inline-start` is therefore the physical left
-   the canvas is drawn against. Everything outside the stage (the controls,
-   the hour strip) mirrors as usual.
+   Top to bottom: today's counters; "your candidate's papers are in" and
+   its flag chips; the map (a canvas, the six desks' flag pins and the
+   journey's two ends over it) with the step's caption and the running clock
+   under it; the timeline; the six desk cards; the footnote.
 
-   ONE TREE AT EVERY WIDTH (phone pass, Sep 2026). Base rules hold at both
-   sizes; the `min-width: 1081px` block is the board's layout and the
-   `max-width: 1080px` block the phone's. At 390px the whole 1200px map
-   would be 127px tall with 4px lettering on the cards, so the phone crops
-   the canvas to the six offices and lists the cards under it instead. */
+   `--rl-p` (0-1, the journey's progress) is written on `.rl` by the loop
+   every frame; the timeline's fill and thumb read it.
+
+   THE MAP IS GEOGRAPHY, NOT READING ORDER. `.rl-stage` is `direction: ltr`,
+   so under `dir="rtl"` New York stays west of Cairo, and the pins and tags
+   inside it are placed in physical percentages of the map. Everything
+   outside the stage, the timeline included, mirrors as usual. */
 
 /* The sun and the night, as tints the canvas painter reads at runtime
-   (`sections/sunPaint.ts` → `getComputedStyle`), so no colour is typed in
-   TypeScript. All are surfaces drawn on the canvas; none is CSS text. */
+   (`sections/relayWorld.ts` → `getComputedStyle`), so no colour is typed in
+   TypeScript. Surfaces drawn on the canvas; `--v2-su-amber` also rings the
+   source's tag. */
 :root {
   --v2-su-glow: #FFD682;
   --v2-su-sun: #FFC450;
   --v2-su-core-hi: #FFE6A3;
   --v2-su-core-lo: #F2A92E;
   --v2-su-amber: #D69628;
-  --v2-su-amber-ink: #B07014;
   --v2-su-night: #2C3A54;
   --v2-su-dusk: #787C8C;
 }
 
-.su-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-.su { margin-top: 8px; }
-/* Held invisible, keeping their box, until the island knows the time. */
-.su-wait { visibility: hidden; }
+.rl-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.rl { margin-top: 28px; }
+.rl-live-d { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .15); animation: rlBlink 2s ease-in-out infinite; }
+@keyframes rlBlink { 50% { box-shadow: 0 0 0 7px rgb(from var(--green) r g b / .04); } }
+.rl-still .rl-live-d { animation: none; }
 
-/* ── Clock, open count, controls ──────────────────────────────────────── */
-.su-clock { display: flex; align-items: flex-end; gap: 14px; }
-.su-big { font-family: var(--serif); font-size: 64px; line-height: .9; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
-.su-sub { display: flex; flex-direction: column; gap: 4px; padding-bottom: 6px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-.su-sub b { font-weight: 500; color: var(--ink); }
-.su-open { display: inline-flex; align-items: center; gap: 10px; height: 36px; padding: 0 16px; border-radius: 999px; background: var(--white); box-shadow: 0 0 0 1px var(--hair); font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); margin-bottom: 4px; white-space: nowrap; }
-.su-open-d { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .15); animation: suBlink 2s ease-in-out infinite; }
-@keyframes suBlink { 50% { box-shadow: 0 0 0 7px rgb(from var(--green) r g b / .05); } }
-.su-ctl { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 4px; }
-.su-hint { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-inline-end: 6px; white-space: nowrap; }
-.su-btn { height: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 13.5px; font-weight: 500; color: var(--ink); cursor: pointer; white-space: nowrap; transition: background .25s, color .25s, border-color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
-.su-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.su-play { background: var(--ink); border-color: var(--ink); color: var(--white); }
-.su-play.su-playing { background: var(--white); color: var(--ink); border-color: var(--hair); }
-.su-play:disabled { cursor: default; }
+/* ── Today's counters ─────────────────────────────────────────────────── */
+.rl-live { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 14px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+.rl-stats dl { display: grid; margin: 0; border-top: 1px solid var(--hair); }
+/* The label comes first in the markup, as a list needs; the figure shows on top. */
+.rl-stat { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
+.rl-stat dd { margin: 0; font-family: var(--serif); line-height: 1; letter-spacing: -.03em; font-variant-numeric: tabular-nums; color: var(--ink); animation: rlTick .7s ease-out; }
+@keyframes rlTick { from { color: var(--green); } }
+.rl-stat dt { margin-top: 8px; font-size: 13.5px; line-height: 1.35; color: var(--muted); max-width: 24ch; }
+
+/* A country's own flag, whole, in its 4:3 — never cropped to a circle. */
+.rl-flag { display: block; flex: none; width: 24px; height: 18px; border-radius: 3px; object-fit: cover; box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .14); }
+
+/* ── "Your candidate's papers are in" ─────────────────────────────────── */
+.rl-pick { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; margin-top: 40px; }
+.rl-pick-k { font-family: var(--serif); font-size: 24px; letter-spacing: -.015em; color: var(--ink); }
+.rl-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rl-chip { display: inline-flex; align-items: center; gap: 10px; height: 42px; padding-inline: 12px 16px; border: 0; border-radius: 999px; background: var(--white); box-shadow: 0 0 0 1px var(--hair); font-family: var(--sans); font-size: 14.5px; font-weight: 500; color: var(--ink); cursor: pointer; transition: box-shadow .25s, background .25s, color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
+.rl-chip .rl-flag { width: 26px; height: 19.5px; }
+.rl-chip:hover { box-shadow: 0 0 0 1px var(--tick-off); transform: translateY(-1px); }
+.rl-chip.is-on { background: var(--ink); color: var(--white); box-shadow: 0 10px 22px -12px rgb(from var(--ink) r g b / .7); }
+.rl-chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* ── The map ──────────────────────────────────────────────────────────── */
-.su-stage { position: relative; width: 100%; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
-.su-cv { display: block; }
-.su-card { box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding-inline: 10px 12px; border-radius: 14px; background: rgb(from var(--white) r g b / .72); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .07); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); pointer-events: none; transition: background .5s, box-shadow .5s, transform .5s cubic-bezier(.16, 1, .3, 1); }
-.su-fl { width: 26px; height: 26px; filter: grayscale(.6); opacity: .7; transition: filter .5s, opacity .5s; }
-.su-cx { display: flex; flex-direction: column; min-width: 0; line-height: 1.15; }
-.su-cx b { font-size: 14.5px; font-weight: 500; letter-spacing: -.01em; color: var(--muted); transition: color .5s; }
-.su-meta { font-family: var(--mono); font-size: 10.5px; color: var(--muted); white-space: nowrap; }
-.su-meta em { font-style: normal; font-variant-numeric: tabular-nums; }
-/* `--muted`, not the board's #A8A294: that measured 2.5:1 on the card, and
-   text colour here must be a token (`check-css-color.mjs`, rule 1). The
-   closed state still reads as off through the hollow dot and grey flag. */
-.su-st { display: inline-flex; align-items: center; gap: 5px; margin-top: 2px; font-family: var(--mono); font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-.su-st i { width: 6px; height: 6px; border-radius: 50%; border: 1px solid var(--v2-dash); box-sizing: border-box; }
-.su-on { background: var(--white); box-shadow: 0 0 0 1px rgb(from var(--green) r g b / .28), 0 16px 30px -18px rgb(from var(--green) r g b / .55); transform: translateY(-2px); }
-.su-on .su-fl { filter: none; opacity: 1; }
-.su-on .su-cx b, .su-on .su-meta { color: var(--ink); }
-.su-on .su-st { color: var(--green); }
-.su-on .su-st i { background: var(--green); border-color: var(--green); box-shadow: 0 0 0 3px rgb(from var(--green) r g b / .16); }
+.rl-stage { position: relative; direction: ltr; margin-top: 18px; border-radius: 22px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .06); overflow: hidden; }
+.rl-map { position: relative; aspect-ratio: 1200 / 434; overflow: hidden; }
+.rl-cv { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+/* Everything placed on the map follows the camera (the names are `rl-`
+   prefixed: `hero.css` registers `--mx`/`--my` as lengths): `--rl-mx`/`--rl-my` is its map
+   point, `--rl-cx`/`--rl-cy` the map point at the view's centre and `--rl-ck` CSS px
+   per map px, all written by the loop (defaults: the desktop's first frame). */
+.rl-map { --rl-cx: 720; --rl-cy: 180; --rl-ck: 1.43; }
+.rl-on { position: absolute; inset-inline-start: calc(50% + (var(--rl-mx) - var(--rl-cx)) * var(--rl-ck) * 1px); top: calc(50% + (var(--rl-my) - var(--rl-cy)) * var(--rl-ck) * 1px); }
+/* A desk: its flag on its city, its name beside it (green while open).
+   Flags are never dimmed or desaturated: a country's flag is shown as it is. */
+.rl-pin { width: 0; height: 0; pointer-events: none; z-index: 1; }
+.rl-pin .rl-flag { position: absolute; inset-inline-start: -13px; top: -10px; width: 26px; height: 19.5px; box-shadow: 0 0 0 2px var(--white), 0 3px 8px -2px rgb(from var(--ink) r g b / .45); transition: box-shadow .5s; }
+.rl-pin.is-busy .rl-flag { box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--green), 0 6px 14px -4px rgb(from var(--green) r g b / .7); }
+.rl-pin em { position: absolute; top: -8px; padding-block: 1px; padding-inline: 5px; border-radius: 4px; background: rgb(from var(--white) r g b / .85); font-family: var(--mono); font-size: 10px; font-style: normal; line-height: 14px; color: var(--muted); white-space: nowrap; }
+.rl-pin.is-open em { color: var(--green); }
+.rl-pin-r em { inset-inline-start: 18px; }
+.rl-pin-l em { inset-inline-end: 18px; }
+.rl-pin-t em { top: -34px; inset-inline-start: 0; transform: translateX(-50%); }
+.rl-pin-b em { top: 16px; inset-inline-start: 0; transform: translateX(-50%); }
+/* The journey's two ends, above (`-t`) or below (`-b`) their points. Ringed
+   gold once the map reaches them, green once confirmed. */
+.rl-tag { z-index: 2; display: grid; padding-block: 7px 8px; padding-inline: 11px; border-radius: 12px; background: var(--white); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .08), 0 14px 26px -14px rgb(from var(--ink) r g b / .55); white-space: nowrap; pointer-events: none; transition: box-shadow .4s; animation: rlTagIn .5s cubic-bezier(.16, 1, .3, 1); }
+.rl-tag-t { transform: translate(-50%, calc(-100% - 20px)); }
+.rl-tag-b { transform: translate(-50%, 16px); }
+.rl-tag-br { transform: translate(-18%, 16px); }
+@keyframes rlTagIn { from { opacity: 0; } }
+.rl-tag i { font-family: var(--mono); font-size: 9.5px; font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.rl-tag b { display: block; margin-top: 1px; font-size: 13.5px; font-weight: 500; color: var(--ink); }
+.rl-tag b::first-letter { text-transform: uppercase; }
+.rl-tag span { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.rl-tag.is-on { box-shadow: 0 0 0 1.5px var(--v2-su-amber), 0 14px 26px -14px rgb(from var(--ink) r g b / .55); }
+.rl-tag.is-ok { box-shadow: 0 0 0 1.5px var(--green), 0 14px 26px -12px rgb(from var(--green) r g b / .6); }
+.rl-tag.is-ok i { color: var(--green); }
+.rl-tag-src { opacity: calc(var(--rl-sv, 1) * (1 - var(--rl-fade, 0))); transition: box-shadow .4s, opacity .4s; }
+.rl-tag-dst { opacity: var(--rl-dv, 1); transition: box-shadow .4s, opacity .4s; }
 
-/* ── The hand-off sentence and the motion switch ──────────────────────── */
-.su-relay { margin-top: 16px; display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--ink); min-height: 24px; }
-.su-doc { flex: none; width: 18px; height: 22px; border-radius: 3px; background: var(--white); box-shadow: 0 0 0 1.3px var(--green); position: relative; }
-.su-doc::before, .su-doc::after { content: ""; position: absolute; inset-inline: 4px; height: 1.3px; background: var(--green); top: 7px; }
-.su-doc::after { top: 12px; inset-inline-end: 7px; }
-/* The hero's "Pause motion" control (`hero.css` `.hv-motion`), placed at
-   the end of this row rather than over the map. */
-.su-motion { margin-inline-start: auto; display: flex; align-items: center; gap: 8px; min-height: 24px; padding: 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
-.su-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
-.su-still .su-open-d { animation-play-state: paused; }
+/* The document: the specimen itself, riding the flights (`--rl-dx`/`--rl-dy`).
+   `--rl-ds` (the loop) grows it at the source and on landing, and it rises
+   above its point as it grows, clear of the tag below. A scan line reads it
+   while the source checks; the green stamp lands once confirmed. */
+.rl-doc { position: absolute; z-index: 3; inset-inline-start: calc(50% + (var(--rl-dx) - var(--rl-cx)) * var(--rl-ck) * 1px); top: calc(50% + (var(--rl-dy) - var(--rl-cy)) * var(--rl-ck) * 1px); height: 40px; aspect-ratio: var(--ar); pointer-events: none; transform: translate(-50%, calc(-50% - (var(--rl-ds, 1) - 1) * 26px - 10px)) scale(var(--rl-ds, 1)); }
+.rl-doc-page { position: absolute; inset: 0; overflow: hidden; border-radius: 2px; background: var(--white); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .12), 0 10px 22px -8px rgb(from var(--ink) r g b / .55); }
+.rl-doc-page img { object-fit: cover; }
+.rl-doc-scan { position: absolute; inset-inline: 0; top: 0; height: 2px; background: var(--green-light); box-shadow: 0 0 8px 2px rgb(from var(--green-light) r g b / .8); opacity: 0; }
+.rl-doc.is-check .rl-doc-scan { opacity: 1; animation: rlScan 1.1s ease-in-out infinite alternate; }
+@keyframes rlScan { from { top: 0; } to { top: calc(100% - 2px); } }
+.rl-doc-seal { position: absolute; inset-inline-end: -14%; bottom: -18%; width: 62%; aspect-ratio: 1; opacity: 0; transform: scale(1.8) rotate(0deg); mix-blend-mode: multiply; }
+.rl-doc-seal .hw2-seal { position: static; display: block; width: 100%; height: 100%; opacity: 1; transform: none; }
+.rl-doc.is-stamped .rl-doc-seal { opacity: .95; transform: scale(1) rotate(-12deg); transition: opacity .2s, transform .45s cubic-bezier(.3, 1.35, .5, 1); }
+.rl-still .rl-doc-scan { animation: none; top: 50%; }
+
+/* The step, told; and the clock since upload. */
+.rl-say { display: flex; align-items: center; gap: 18px; padding-block: 16px; padding-inline: 22px; border-top: 1px solid rgb(from var(--ink) r g b / .06); background: var(--white); }
+.rl-say-n { flex: none; font-family: var(--serif); font-size: 30px; line-height: 1; color: var(--green); font-variant-numeric: tabular-nums; }
+.rl-say-n small { font-size: 14px; color: var(--muted); }
+.rl-say p { flex: 1; margin: 0; font-size: 17px; line-height: 1.4; color: var(--ink); animation: rlIn .45s cubic-bezier(.16, 1, .3, 1); }
+@keyframes rlIn { from { opacity: 0; transform: translateY(5px); } }
+.rl-clock { flex: none; display: flex; flex-direction: column; align-items: flex-end; }
+.rl-clock b { font-family: var(--serif); font-size: 28px; font-weight: 400; line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--ink); }
+.rl-clock span { margin-top: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* ── The timeline ─────────────────────────────────────────────────────── */
+.rl-tl { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 28px; margin-top: 20px; }
+.rl-play { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; border: 1px solid var(--ink); border-radius: 999px; background: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--white); cursor: pointer; white-space: nowrap; transition: background .25s, color .25s; }
+.rl-play.is-on { background: var(--white); color: var(--ink); border-color: var(--hair); }
+.rl-play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* The slider: a rail, its fill, five step marks and a thumb. `touch-action`
+   is off only here, so dragging the thumb does not scroll the page. */
+.rl-track { position: relative; height: 46px; margin-top: 6px; cursor: pointer; touch-action: none; }
+.rl-track:focus-visible { outline: 2px solid var(--ink); outline-offset: 6px; border-radius: 6px; }
+.rl-rail { position: absolute; inset-inline: 0; top: 7px; height: 4px; border-radius: 2px; background: var(--hair); overflow: hidden; }
+.rl-fill { display: block; width: calc(var(--rl-p, 1) * 100%); height: 100%; background: var(--green); }
+.rl-mk { position: absolute; top: 2px; transform: translateX(calc(var(--flip) * -50%)); display: flex; flex-direction: column; align-items: center; }
+.rl-mk i { width: 14px; height: 14px; border: 2px solid var(--tick-off); border-radius: 50%; background: var(--white); box-sizing: border-box; transition: border-color .3s, background .3s; }
+.rl-mk em { margin-top: 8px; font-family: var(--mono); font-size: 10px; font-style: normal; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); white-space: nowrap; transition: color .3s; }
+.rl-mk.is-done i { border-color: var(--green); background: var(--green); }
+.rl-mk.is-done em { color: var(--ink); }
+.rl-thumb { position: absolute; top: 1px; inset-inline-start: calc(var(--rl-p, 1) * 100%); width: 16px; height: 16px; margin-inline-start: -8px; border-radius: 50%; background: var(--white); box-shadow: 0 0 0 2.5px var(--green), 0 3px 8px rgb(from var(--ink) r g b / .3); }
+
+/* ── The six desks, on the journey's clock ────────────────────────────── */
+.rl-desks { margin-top: 30px; }
+.rl-desks-k { margin: 0 0 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.rl-desks ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.rl-desk { display: flex; align-items: center; gap: 10px; min-height: 58px; padding-block: 8px; padding-inline: 10px 12px; border-radius: 14px; background: rgb(from var(--white) r g b / .72); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .07); transition: background .5s, box-shadow .5s; }
+.rl-desk .rl-flag { width: 28px; height: 21px; }
+.rl-desk-t { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.rl-desk-t b { font-size: 14.5px; font-weight: 500; letter-spacing: -.01em; color: var(--muted); transition: color .5s; }
+.rl-desk-t > span { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.rl-desk-t em { font-style: normal; font-variant-numeric: tabular-nums; }
+.rl-desk-t > .rl-desk-st { display: inline-flex; align-items: center; gap: 5px; margin-top: 2px; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; }
+.rl-desk-st i { width: 6px; height: 6px; border: 1px solid var(--v2-dash); border-radius: 50%; box-sizing: border-box; }
+.rl-desk.is-open { background: var(--white); box-shadow: 0 0 0 1px rgb(from var(--green) r g b / .28); }
+.rl-desk.is-open b, .rl-desk.is-open .rl-desk-t > span { color: var(--ink); }
+.rl-desk.is-open .rl-desk-st { color: var(--green); }
+.rl-desk.is-open .rl-desk-st i { background: var(--green); border-color: var(--green); }
+.rl-desk.is-busy { box-shadow: 0 0 0 2px var(--green), 0 16px 30px -18px rgb(from var(--green) r g b / .7); }
+
+.rl-fn { margin: 20px 0 0; font-family: var(--mono); font-size: 11px; line-height: 1.5; color: var(--muted); }
 
 @media (min-width: 1081px) {
   .su-band { padding-top: 120px; padding-bottom: 140px; }
-  .su-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 24px; margin-bottom: 18px; }
-  .su-btn:hover { transform: translateY(-1px); border-color: var(--tick-off); }
-  .su-play:hover { border-color: var(--ink); }
-  /* Fluid width, fixed shape: the drawing inside is the board's 1200 x 434
-     box, scaled by `--su-k` (column width / 1200, set by the island). */
-  .su-stage { direction: ltr; aspect-ratio: 1200 / 434; border-radius: 22px; background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .06); overflow: hidden; cursor: grab; }
-  .su-stage:active { cursor: grabbing; }
-  .su-map { position: absolute; top: 0; inset-inline-start: 0; width: 1200px; height: 434px; transform: scale(var(--su-k, 1)); transform-origin: 0 0; }
-  .su-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .su-card { position: absolute; width: 172px; height: 54px; padding-block: 0; }
-  .su-motion:hover { color: var(--ink); }
-}
-
-/* Between 1081 and ~1280px the controls' column is too narrow for the hint
-   and both buttons; the hint is the one that repeats the lede, so it goes.
-   The phone drops it for the same reason. */
-@media (max-width: 1279px) {
-  .su-hint { display: none; }
+  .rl-stats dl { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .rl-stat { padding-block: 20px 4px; padding-inline: 24px; border-inline-start: 1px solid var(--hair); }
+  .rl-stat:first-child { padding-inline-start: 0; border-inline-start: 0; }
+  .rl-stat dd { font-size: 56px; }
+  .rl-desks ul { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 
 @media (max-width: 1080px) {
   .su-band { padding-top: 72px; padding-bottom: 72px; }
-  /* Clock on its own row; the open count and the buttons share the next. */
-  .su-top { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 10px; margin: 24px 0 16px; }
-  .su-clock { flex: 1 0 100%; }
-  .su-big { font-size: 52px; }
-  .su-open, .su-ctl { margin: 0; }
-  /* Beside the pill where they fit (768px), under it at 390px; flush with
-     the start edge either way, since a lone button pushed to the end of a
-     wrapped row read as stray. */
-  .su-ctl { justify-content: flex-start; }
-  /* The cards leave the map for a list under it; the stage is only the box
-     the drag is listened on. */
-  .su-map { display: grid; grid-template-columns: repeat(auto-fit, minmax(max(148px, 30%), 1fr)); gap: 8px; }
-  /* x 280-1080 of the 1200px map: New York to Manila with a margin, 190px
-     tall at 390px rather than 127. `object-fit` crops the drawing; the two
-     custom properties tell `SunLoop.pointer` which slice is showing. */
-  .su-cv { --su-x0: 280; --su-xw: 800; grid-column: 1 / -1; width: 100%; height: auto; aspect-ratio: 800 / 434; object-fit: cover; object-position: 70% 0; margin-bottom: 6px; border-radius: 18px; background: var(--v2-paper-hi); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .06); cursor: grab; }
-  .su-card { min-height: 54px; padding-block: 8px; }
-  .su-meta { white-space: normal; }
-  .su-relay { flex-wrap: wrap; align-items: flex-start; }
-  /* The sentence takes the row; the motion switch drops to the end of the
-     next, instead of squeezing the sentence to three lines at 390px. */
-  .su-relay > span[aria-live] { flex: 1 1 calc(100% - 30px); }
+  .rl { margin-top: 20px; }
+  .rl-stats dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+  .rl-stat { padding-block: 16px 2px; }
+  .rl-stat dd { font-size: 38px; }
+  .rl-stat dt { font-size: 12.5px; }
+  .rl-pick { margin-top: 30px; }
+  .rl-pick-k { font-size: 20px; }
+  .rl-chip { height: 38px; font-size: 13.5px; }
+  /* A taller view, so the camera has room to frame a flight at 390px; the
+     names and tags leave it — the caption says the same. */
+  .rl-stage { margin-top: 14px; border-radius: 18px; }
+  .rl-map { aspect-ratio: 4 / 3; --rl-cx: 720; --rl-cy: 217; --rl-ck: .45; }
+  .rl-pin em, .rl-tag { display: none; }
+  .rl-pin .rl-flag { width: 20px; height: 15px; inset-inline-start: -10px; top: -7.5px; }
+  .rl-chip .rl-flag { width: 22px; height: 16.5px; }
+  .rl-doc { height: 28px; }
+  .rl-say { flex-wrap: wrap; gap: 8px 14px; padding: 14px 16px; }
+  .rl-say p { flex: 1 1 calc(100% - 60px); font-size: 15px; }
+  .rl-clock { flex-direction: row; align-items: baseline; gap: 8px; margin-inline-start: 50px; }
+  .rl-clock b { font-size: 22px; }
+  .rl-tl { gap: 16px; }
+  .rl-mk em { display: none; }
+  .rl-track { height: 22px; }
+  .rl-desks ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 }

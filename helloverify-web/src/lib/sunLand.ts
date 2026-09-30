@@ -1,4 +1,4 @@
-/** The follow-the-sun map's land (`sections/sunPaint.ts`), apart from the
+/** The relay map's land (`sections/relayWorld.ts`), apart from the
  *  time maths in `./sunMap` because only the painter needs it, and the
  *  painter is fetched as the map approaches rather than with the page.
  *

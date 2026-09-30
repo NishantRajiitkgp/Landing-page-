@@ -129,15 +129,9 @@
 .hv-lg-n { position: relative; width: fit-content; margin: 0; display: flex; align-items: flex-start; font-family: var(--serif); font-size: 40px; line-height: 1; letter-spacing: -.03em; color: var(--ink); }
 .hv-lg-n i { font-style: normal; font-size: .55em; line-height: 1.3; margin-inline-start: .06em; color: var(--green); }
 .hv-lg-live .hv-lg-n { color: var(--green); }
-.hv-lg-pace { margin: 0; display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .04em; color: var(--muted); }
-.hv-lg-pace svg { flex: none; transform: rotate(-90deg); }
-.hv-lg-track, .hv-lg-ring { fill: none; stroke-width: 2; }
-.hv-lg-track { stroke: var(--hair); }
-.hv-lg-ring { stroke: var(--green); stroke-linecap: round; stroke-dasharray: 1; animation: hvLgRing 14s linear infinite; }
-@keyframes hvLgRing { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 .hv-lg-bump { position: absolute; inset-inline-start: 100%; top: -.1em; margin-inline-start: 4px; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--green); pointer-events: none; animation: hvLgBump 1.6s cubic-bezier(.16, 1, .3, 1) forwards; }
 @keyframes hvLgBump { 0% { opacity: 0; transform: translateY(18px); } 20% { opacity: 1; } to { opacity: 0; transform: translateY(0); } }
-.hv-paused .hv-lg-ring, .hv-paused .hv-lg .dot.live { animation-play-state: paused; }
+.hv-paused .hv-lg .dot.live { animation-play-state: paused; }
 
 /* The odometer. `direction: ltr` so a right-to-left page does not print the
    number backwards. The strip is 0-9 five times: rests on the fourth pass,
@@ -233,6 +227,6 @@
   .hv-l { filter: none; }
   /* The ledger still counts (on an interval, `HeroLedger`); the digits
      change in place instead of rolling, and the ring rests full. */
-  .hv-od-s, .hv-lg-bump, .hv-lg-ring { animation: none; transition: none; }
+  .hv-od-s, .hv-lg-bump { animation: none; transition: none; }
   .hv-lg-bump { display: none; }
 }

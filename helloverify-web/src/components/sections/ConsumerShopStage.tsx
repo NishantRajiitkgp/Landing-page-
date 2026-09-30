@@ -13,16 +13,13 @@
     - A closed panel's caption and card, and the tier that is not showing,
       are `visibility: hidden` rather than only transparent, so they leave
       the tab order and the accessibility tree (`consumer.css`).
-    - The phone replays its chat on a 14 s loop, so it has a pause (WCAG
-      2.2.2). Paused, it holds the finished conversation rather than stopping
-      mid-message; `consumer.css` does it with a negative delay.
 
-    The phone for each service is server-rendered (`blocks/HelloVPhone`) and
-    arrives as `phones`; switching remounts it by key, which restarts its CSS
-    animations — the board's `sc-if` did the same. */
+
+    The QR steps and the WhatsApp phone that sat under the panels came off
+    on 30 Sep 2026. */
 
 import Image from "next/image";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 
 export type ShopService = {
   id: string;
@@ -40,8 +37,6 @@ export type ShopService = {
   bg: string;
   /** The photo's focal point, as the board set it. */
   pos: string;
-  /** Which of `phones` plays for this service. */
-  chat: number;
 };
 
 export type ShopLabels = {
@@ -54,7 +49,6 @@ export type ShopLabels = {
   tbc: { mark: string; note: string };
   buy: string;
   pick: string;
-  motion: { pause: string; play: string };
 };
 
 /** The open panel is ~636px wide by 600px tall at 1440 and the photos are
@@ -108,21 +102,13 @@ export function ConsumerShopStage({
   services,
   labels: l,
   buyHref,
-  phones,
-  how,
 }: {
   services: ShopService[];
   labels: ShopLabels;
   buyHref: string;
-  phones: ReactNode[];
-  how: ReactNode;
 }) {
   const [open, setOpen] = useState(0);
   const [tier, setTier] = useState<0 | 1>(1);
-  const [paused, setPaused] = useState(false);
-  // Bumped on "play", so the chat restarts from its first message.
-  const [run, setRun] = useState(0);
-  const chat = services[open].chat;
 
   return (
     <>
@@ -177,32 +163,6 @@ export function ConsumerShopStage({
             </div>
           );
         })}
-      </div>
-      <div className="cx-row">
-        {how}
-        <div className="cx-phonecol">
-          <div className={paused ? "fm-phone cx-paused" : "fm-phone"} key={`${chat}-${run}`}>
-            {phones[chat]}
-          </div>
-          <button
-            type="button"
-            className="cx-motion"
-            aria-pressed={paused}
-            onClick={() => {
-              if (paused) setRun((r) => r + 1);
-              setPaused((p) => !p);
-            }}
-          >
-            <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
-              {paused ? (
-                <path d="M2.5 1.5v7l6-3.5z" fill="currentColor" />
-              ) : (
-                <path d="M2.5 1.5v7M7.5 1.5v7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              )}
-            </svg>
-            <span>{paused ? l.motion.play : l.motion.pause}</span>
-          </button>
-        </div>
       </div>
     </>
   );

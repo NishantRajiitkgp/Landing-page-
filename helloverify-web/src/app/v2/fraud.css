@@ -54,16 +54,12 @@
 .ff-cap { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: .03em; color: var(--muted); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ff-cap b { font-weight: 500; color: var(--ink); }
 
-/* The stamps. Resting state is hidden; `.is-ok` / `.is-ref` land them. */
-.ff-ok { position: absolute; z-index: 2; inset-inline-end: -14px; top: -16px; width: 58px; height: 58px; opacity: 0; transform: scale(1.8) rotate(-10deg); pointer-events: none; mix-blend-mode: multiply; }
-.ff-ok svg { display: block; width: 100%; height: 100%; }
-.is-ok .ff-ok { opacity: .92; transform: scale(1) rotate(-10deg); animation: ffStampIn .5s cubic-bezier(.3, 1.35, .5, 1) both; }
+/* The stamp. Resting state is hidden; `.is-ref` lands it. */
 .ff-ref { position: absolute; z-index: 2; inset-inline-start: 50%; top: 50%; white-space: nowrap; padding: 9px 16px 8px; border: 2.5px solid var(--ink); border-radius: 6px; color: var(--ink); font-family: var(--mono); text-align: center; background: var(--v2-ff-paper); box-shadow: 0 0 0 4px var(--v2-ff-paper); opacity: 0; transform: translate(calc(var(--flip) * -50%), -50%) scale(1.8) rotate(-9deg); pointer-events: none; }
 .is-ref .ff-doc-img { opacity: .55; filter: grayscale(.5); }
 .ff-ref span { display: block; font-size: 17px; font-weight: 500; letter-spacing: .14em; }
 .ff-ref i { display: block; margin-top: 2px; font-style: normal; font-size: 8.5px; letter-spacing: .2em; }
 .is-ref .ff-ref { opacity: .95; transform: translate(calc(var(--flip) * -50%), -50%) scale(1) rotate(-9deg); animation: ffRefIn .55s cubic-bezier(.3, 1.35, .5, 1) .15s both; }
-@keyframes ffStampIn { 0% { opacity: 0; transform: scale(1.8) rotate(2deg); } 60% { opacity: .95; transform: scale(.94) rotate(-12deg); } to { opacity: .92; transform: scale(1) rotate(-10deg); } }
 @keyframes ffRefIn { 0% { opacity: 0; transform: translate(calc(var(--flip) * -50%), -50%) scale(1.8) rotate(-2deg); } 60% { opacity: 1; transform: translate(calc(var(--flip) * -50%), -50%) scale(.95) rotate(-10deg); } to { opacity: .95; transform: translate(calc(var(--flip) * -50%), -50%) scale(1) rotate(-9deg); } }
 
 /* The UV layer: a blacklight circle that follows the pointer. Its padding
@@ -95,6 +91,9 @@
 .ff-tag-k b { font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
 .ff-tag-k span { color: var(--muted); }
 .ff-tag-ok .ff-tag-k { border-inline-start-color: var(--green); }
+/* A label hung to the left of its point, for rings near the right edge. */
+.ff-tag-flip .ff-tag-k { transform: translateX(calc(var(--flip) * -100%)); border-inline-start: 0; border-inline-end: 2px solid var(--red); }
+.ff-tag-ok.ff-tag-flip .ff-tag-k { border-inline-end-color: var(--green); }
 /* Placed from the physical top-left on purpose: `--mx`/`--my` are pointer
    coordinates from the stage's physical left edge, in either direction, so
    a logical inset here would put the loupe on the wrong side in Arabic. */
@@ -112,7 +111,14 @@
    cross-fade, and the marks are an SVG in the scan's pixel grid. */
 .ff-case { border-top: 1px solid var(--hair); background: var(--white); animation: ffCaseIn .5s cubic-bezier(.16, 1, .3, 1) both; }
 .ff-case-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 20px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
-.ff-case-verdict { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+.ff-case-nav { display: inline-flex; align-items: center; gap: 10px; }
+.ff-case-step { display: grid; place-items: center; width: 28px; height: 28px; padding: 0; border: 1px solid var(--hair); border-radius: 50%; background: var(--white); color: var(--ink); cursor: pointer; transition: border-color .2s; }
+.ff-case-step:hover { border-color: var(--ink); }
+.ff-case-step:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.ff-case-step svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+[dir="rtl"] .ff-case-step svg { transform: scaleX(-1); }
+.ff-case-n { color: var(--ink); white-space: nowrap; }
+.ff-case-verdict { margin-inline-end: 6px; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
 .ff-case-verdict::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 3px rgb(from var(--red) r g b / .18); }
 .ff-case-body { display: grid; }
 .ff-case-views { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
@@ -120,7 +126,7 @@
 .ff-view:hover { color: var(--ink); }
 .ff-view.is-on { background: var(--ink); color: var(--white); }
 .ff-view:focus-visible, .ff-find:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.ff-case-doc { position: relative; margin-top: 14px; aspect-ratio: 1045 / 1400; direction: ltr; border-radius: 3px; overflow: hidden; background: var(--v2-ff-uv-lo); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .16), 0 30px 50px -30px rgb(from var(--ink) r g b / .55); }
+.ff-case-doc { position: relative; margin-top: 14px; aspect-ratio: var(--ar, 1045 / 1400); direction: ltr; border-radius: 3px; overflow: hidden; background: var(--v2-ff-uv-lo); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .16), 0 30px 50px -30px rgb(from var(--ink) r g b / .55); }
 .ff-case-img { object-fit: cover; opacity: 0; transition: opacity .35s ease; }
 .ff-case-img.is-on { opacity: 1; }
 .ff-case-marks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -140,6 +146,8 @@
 .ff-find-t { font-size: 15px; font-weight: 500; line-height: 1.3; color: var(--ink); }
 .ff-find-d { margin-top: 3px; font-size: 13.5px; line-height: 1.45; color: var(--muted); }
 .ff-find-by { margin-top: 6px; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--green); }
+.ff-findings li.ff-find-wide { grid-template-columns: minmax(0, 1fr); }
+.ff-find-wide .ff-zoom { max-width: 340px; }
 .ff-zoom { display: block; overflow: hidden; border: 1px solid var(--hair); border-radius: 10px; }
 .ff-zoom img { display: block; width: 100%; height: auto; }
 @keyframes ffCaseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
@@ -179,7 +187,6 @@
   .ff-grid { grid-template-columns: repeat(auto-fill, minmax(max(136px, 22%), 1fr)); gap: 12px; }
   .ff-cert, .ff-uvc { aspect-ratio: 10 / 11; gap: 8px; }
   .ff-cap { font-size: 9px; line-height: 1.35; white-space: normal; text-wrap: balance; }
-  .ff-ok { inset-inline-end: -8px; top: -10px; width: 44px; height: 44px; }
   .ff-ref { padding: 6px 10px 5px; }
   .ff-ref span { font-size: 12px; }
   .ff-ref i { font-size: 7px; }

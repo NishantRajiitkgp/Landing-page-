@@ -13,16 +13,20 @@ edges just visible, true colours, fine paper texture, faint scanner noise. All
 text sharp, legible and correctly spelled. Fictional institution: an
 illustrative specimen for a background-verification company's website demo."*
 
-| File (`public/img/docs/`) | Document | Aspect |
-|---|---|---|
-| `ev-01-be-in` | B.E. degree, "Deccan Technological University", Belagavi | 4:3 |
-| `ev-02-transcript-ae` | Grade 12 transcript in Arabic and English, "Al Waha Private School", Abu Dhabi | 3:4 |
-| `ev-03-tor-ph` | Transcript of records, BS Nursing, "Colegio de San Rafael", Iloilo | 3:4 |
-| `ev-04-pharmacy-eg` | Pharmacy graduation certificate in Arabic, "Middle Nile University" | 4:3 |
-| `ev-05-mba-uk` | MBA parchment, "University of Aldermoor" | 4:3 |
-| `ev-06-marksheet-in` | Class XII statement of marks, "Deccan Board", Chennai: **the forgery** | 3:4 |
-| `ev-07-diploma-sg` | Diploma, "Harbourline Polytechnic", Singapore | 4:3 |
-| `ev-08-mbbs-pk` | MBBS degree, "Margalla University of Health Sciences", Islamabad | 3:4 |
+| File (`public/img/docs/`) | Document | Aspect | Source | The forgery (since 30 Sep 2026) |
+|---|---|---|---|---|
+| `ev-01-be-in` | B.E. degree, "Deccan Technological University", Belagavi | 4:3 | `d1` | name retyped, colour-copied |
+| `ev-02-transcript-ae` | Grade 12 transcript in Arabic and English, "Al Waha Private School", Abu Dhabi | 3:4 | `d2` | two 6s closed into 8s in a second ink |
+| `ev-03-tor-ph` | Transcript of records, BS Nursing, "Colegio de San Rafael", Iloilo | 3:4 | `d3` | a 5.00 under correction fluid, retyped 2.00 |
+| `ev-04-pharmacy-eg` | Pharmacy graduation certificate in Arabic, "Middle Nile University" | 4:3 | `d4b` | faculty seal printed as a halftone |
+| `ev-05-mba-uk` | MBA parchment, "University of Aldermoor" | 4:3 | `d5` | degree mill: plain paper, sticker seal |
+| `ev-06-marksheet-in` | Class XII statement of marks, "Deccan Board", Chennai | 3:4 | `d6` | scrape, wash and paste-over (`forge.cjs`) |
+| `ev-07-diploma-sg` | Diploma, "Harbourline Polytechnic", Singapore | 4:3 | `d7` | year tape-lifted, 2021 → 2019 |
+| `ev-08-mbbs-pk` | MBBS degree, "Margalla University of Health Sciences", Islamabad | 3:4 | `d8` | Controller's signature traced over pencil |
+
+The `ev-` files are the scans as generated (the marksheet already forged) and
+are still used by the presence relay (`lib/relayData.ts`). The evidence table
+uses the `fx-` exports below, where **every** document is forged.
 | `hw-licence-ka` | Karnataka driving-licence card, holder "A. RAMESH", marked SPECIMEN | 3:2, cut out |
 | `hw-degree-kl` | B.Sc. Nursing degree, "Malabar University of Health Sciences", marked SPECIMEN | 3:2 |
 
@@ -45,7 +49,17 @@ untouched.
    left alone, so the findings in the case file are true of the image. It
    writes `d6-forged.png`, one mask per technique and their union
    `d6-mask.png`.
-2. **`pipeline.cjs <dir> <out>`** exports the eight table scans. It also
+2. **`forge-all.cjs <dir>`** forges the other seven, one trick each (the
+   table above; the script's header has the detail). Each writes
+   `dN-forged.png` and `dN-mask.png`.
+3. **`pipeline.cjs <dir> <out>`** exports the eight table scans as
+   `fx-NN-*.jpg`, each with `-uv`, `-heat` and `-zoom`. The UV pass draws the
+   paper as security stock (violet, fibres, a UV-ink rosette), office paper
+   (glows blue-white, nothing else: the colour copy) or plain stock (dull,
+   nothing: the degree mill), then each sheet's alteration its own way. The
+   paragraphs below describe the marksheet's, the first one made.
+
+   The original export, kept for the record: It also
    writes a `-uv` photograph of each at the same size: paper deep violet, ink
    near-black, and fluorescent fibres from a seeded PRNG so reruns match. The
    genuine sheets get a UV-ink rosette, and so does the forgery (its paper is
@@ -56,7 +70,7 @@ untouched.
 
    Last, it writes `ev-06-marksheet-in-heat.jpg`: the union mask, blurred, over
    the sheet's own high-frequency energy.
-3. **`card2.cjs <src> <out>`** cuts the licence card off the scanner bed with
+4. **`card2.cjs <src> <out>`** cuts the licence card off the scanner bed with
    its rounded corners and centres it on a transparent 470:300 canvas. The
    stage's drop shadow then follows the card. The card-edge constants were
    measured from that one render.
@@ -67,9 +81,10 @@ the forged scan, enlarged 3×.
 If a scan is regenerated, re-measure what is placed on it:
 
 - the field boxes in `HowWeKnowStage.tsx` (`BOXES`);
-- the finding marks in `OneInEightCase.tsx` (`MARKS`);
+- the finding marks in `OneInEightCase.tsx` (`MARKS`) and the zoom sizes
+  (`ZOOM`, which `pipeline.cjs` prints);
 - the lens callouts and emblem positions in `OneInEightDocs.tsx`
-  (`FORGED_TAGS`, `DOCS[].emblem`).
+  (`TAGS`, `DOCS[].emblem`).
 
 They were read from the ink with a column- and row-run scan of each value.
 
