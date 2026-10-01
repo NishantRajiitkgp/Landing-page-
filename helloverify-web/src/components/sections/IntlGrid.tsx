@@ -23,13 +23,24 @@ import "@/app/v2/intl.css";
 type Key = "uk" | "ph" | "ae" | "sg" | "eg";
 
 /** Grid order, the old site's: the featured card first. `flag` is the file
- *  in `public/flags/`, `slug` the country guide. */
-const CARDS: { k: Key; flag: string; slug: string; big?: true }[] = [
-  { k: "uk", flag: "gb", slug: "united-kingdom", big: true },
-  { k: "ph", flag: "ph", slug: "philippines" },
-  { k: "ae", flag: "ae", slug: "united-arab-emirates" },
-  { k: "sg", flag: "sg", slug: "singapore" },
-  { k: "eg", flag: "eg", slug: "egypt" },
+ *  in `public/flags/`, `slug` the country guide.
+ *
+ *  THE PHOTOGRAPHS (Higgsfield, 1 Oct 2026) are this grid's own, each its
+ *  card's line acted out in that country: a chauffeur on a Notting Hill
+ *  street, keys handed to tenants in Makati, a security hire in a Dubai
+ *  tower, a graduate on a Singapore campus, a hiring handshake over the
+ *  Nile. The country guides keep theirs (`lib/content/countries.ts`, also
+ *  the platform pages' and the dossiers'). Composed for the measured boxes:
+ *  the featured card is 488×540 at 1440 and 680×300 on a tablet, so its
+ *  chauffeur stands in the middle third; the others are 336×260 with the
+ *  words over their lower half, so faces sit in the top third and `pos`
+ *  keeps them there as a phone's 1.46:1 box crops the 4:3 picture. */
+const CARDS: { k: Key; flag: string; slug: string; img: string; pos: string; big?: true }[] = [
+  { k: "uk", flag: "gb", slug: "united-kingdom", img: "/img/v2/ig-uk.jpg", pos: "45% 15%", big: true },
+  { k: "ph", flag: "ph", slug: "philippines", img: "/img/v2/ig-ph.jpg", pos: "50% 25%" },
+  { k: "ae", flag: "ae", slug: "united-arab-emirates", img: "/img/v2/ig-ae.jpg", pos: "50% 25%" },
+  { k: "sg", flag: "sg", slug: "singapore", img: "/img/v2/ig-sg.jpg", pos: "50% 20%" },
+  { k: "eg", flag: "eg", slug: "egypt", img: "/img/v2/ig-eg.jpg", pos: "50% 30%" },
 ];
 
 const SIZES_BIG = "(max-width: 639px) 92vw, (max-width: 1080px) 92vw, 600px";
@@ -45,15 +56,14 @@ export async function IntlGrid() {
         <p className="lede">{t.lede}</p>
       </div>
       <ul className="ig-grid">
-        {CARDS.map(({ k, flag, slug, big }) => {
+        {CARDS.map(({ k, flag, slug, img, pos, big }) => {
           const it = t.items[k];
           const c = getCountry(slug);
-          const img = c?.img ?? "";
           return (
             <li key={k} className={big ? "ig-card ig-big" : "ig-card"}>
               <AppLink href={`/countries/${slug}`} className="ig-link">
                 <span className="ig-ph" style={{ background: tint(img) }}>
-                  {img && <Image className="pimg" src={img} alt="" fill sizes={big ? SIZES_BIG : SIZES_SMALL} />}
+                  <Image className="pimg" src={img} alt="" fill sizes={big ? SIZES_BIG : SIZES_SMALL} style={{ objectPosition: pos }} />
                 </span>
                 <span className="ig-scrim" aria-hidden="true" />
                 <span className="ig-body">

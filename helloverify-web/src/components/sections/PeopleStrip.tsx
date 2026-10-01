@@ -62,17 +62,17 @@ type Person = {
  *  longer ones so neighbouring cards differ. Heights vary so the drum keeps
  *  its rhythm; every card is tall enough for the name, line and price row. */
 const PEOPLE: readonly Person[] = [
-  { src: "/img/people/02-nurse-abudhabi.jpg", w: 310, h: 450 },
-  { src: "/img/people/01-rider-bengaluru.jpg", w: 300, h: 430 },
-  { src: "/img/people/03-engineer-manila.jpg", w: 320, h: 460 },
-  { src: "/img/people/05-warehouse-pune.jpg", w: 300, h: 430, live: true },
-  { src: "/img/people/04-nanny-gurugram.jpg", w: 320, h: 460 },
-  { src: "/img/people/07-tenant-singapore.jpg", w: 310, h: 440 },
+  { src: "/img/v2/ic-age.jpg", w: 310, h: 450 },
+  { src: "/img/v2/ic-licence.jpg", w: 300, h: 430 },
+  { src: "/img/v2/ic-employment.jpg", w: 320, h: 460 },
+  { src: "/img/v2/ic-pan.jpg", w: 300, h: 430, live: true },
+  { src: "/img/v2/ic-criminal.jpg", w: 320, h: 460 },
+  { src: "/img/v2/ic-address.jpg", w: 310, h: 440 },
 ];
 
 function PersonCard({ p, w, c, loading }: { p: Person; w: Words; c: Chrome; loading: "eager" | "lazy" }) {
-  /** The caption inverts because the photograph's tint is dark (all eight
-   *  since the 29 Sep 2026 reshoot, <= 0.3293 relative luminance), not
+  /** The caption inverts because the photograph's tint is dark (all six
+   *  check photographs of 1 Oct 2026, <= 0.1390 relative luminance), not
    *  because a card is the live one — keyed by photograph beside the tint in
    *  `lib/img.ts`, so a reshuffle of which card is live cannot leave a white
    *  caption on a pale tile. The ternary keeps its `undefined` branch rather than becoming a

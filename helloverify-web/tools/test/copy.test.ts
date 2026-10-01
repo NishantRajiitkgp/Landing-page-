@@ -906,7 +906,9 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  its labels and heading (8) and the KYC and Vendor cards (4). */
   /* 62 -> 60 (30 Sep 2026): the toggle sub-lines went. */
   /* 60 -> 66 (30 Sep 2026): client logo names added. */
-  smb: [0, 66],
+  /* 66 -> 69 (1 Oct 2026): `smb.demo`, the how-it-works screen's step-list
+   *  name and two lines drawn on it. */
+  smb: [0, 69],
   diligence: [0, 27],
   trustPlatform: [0, 52],
   /** New 30 Sep 2026: the field case — heading block and rail label (7),
@@ -962,10 +964,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
  *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
- *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`. */
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`. */
 check(
-  "sections holds 1749 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1749 &&
+  "sections holds 1752 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1752 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -998,10 +1000,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741. */
 check(
-  "sections: 1738 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1738 &&
+  "sections: 1741 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1741 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

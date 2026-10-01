@@ -34,9 +34,14 @@ const SIZES_HW_AV = "64px";
 /** The "One result, and how we know" evidence card under the case file. */
 const SHOW_EVIDENCE = false;
 
+/** Square close-ups shot for this box (Higgsfield, 1 Oct 2026): the face
+ *  and one telling garment — the rider's helmet, the nurse's scrubs and
+ *  stethoscope — on a plain soft ground. The 3:4 street portraits they
+ *  replaced were whole scenes, unreadable at 64px; they stay on the inner
+ *  pages that use them. */
 const AVATAR: Record<RouteId, string> = {
-  licence: "/img/people/01-rider-bengaluru.jpg",
-  degree: "/img/people/02-nurse-abudhabi.jpg",
+  licence: "/img/v2/hw-rider.jpg",
+  degree: "/img/v2/hw-nurse.jpg",
 };
 
 /** Where each field box sits over its specimen, in the stage's 470×300

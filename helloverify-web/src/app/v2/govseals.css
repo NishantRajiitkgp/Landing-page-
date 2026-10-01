@@ -184,7 +184,11 @@ a.sv-seal, a.sv-ln { text-decoration: none; }
 
 @media (min-width: 1081px) {
   .sv { padding-top: 128px; padding-bottom: 150px; }
-  .sv-stage { margin-top: 84px; height: 330px; }
+  .sv-stage { margin-top: 64px; height: 280px; }
+  /* Full-size 208px discs took the whole screen (1 Oct 2026); on desktop
+     they sit at two-thirds. `zoom` for the reason given below. */
+  .sv-disc { zoom: .66; }
+  .sv-seal { padding-top: 35px; }
   .sv-thread { position: absolute; inset-inline-start: 0; top: 0; width: 1200px; height: 260px; overflow: visible; pointer-events: none; }
   .sv-thread path { fill: none; stroke: rgb(from var(--ink) r g b / .18); stroke-width: 1; stroke-dasharray: 3 6; }
   .sv-row { position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 208px; justify-content: space-between; }

@@ -38,6 +38,7 @@ export function StepCycler({
   holdLast = 1,
   start = 0,
   stepsLabel,
+  lead,
 }: {
   className: string;
   screens: ReactNode[];
@@ -49,6 +50,11 @@ export function StepCycler({
   start?: number;
   /** The step list's accessible name. */
   stepsLabel: string;
+  /** Server-rendered content set before the steps, as its own grid item
+   *  (`.cy-lead`): the Small & Medium walk-through's heading (`./Smb`).
+   *  Omitted, nothing renders, so the KYC phone and the certificate are
+   *  byte-identical. */
+  lead?: ReactNode;
 }) {
   const [step, setStep] = useState(start);
   const [held, setHeld] = useState(false);
@@ -90,6 +96,7 @@ export function StepCycler({
           </div>
         ))}
       </div>
+      {lead && <div className="cy-lead">{lead}</div>}
       <ol
         className="cy-steps"
         aria-label={stepsLabel}

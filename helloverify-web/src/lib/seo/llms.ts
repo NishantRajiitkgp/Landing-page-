@@ -80,7 +80,9 @@ const SECTIONS: readonly { heading: string; match: (path: string) => boolean }[]
   { heading: "For business", match: (p) => p === "/business" || p.startsWith("/business/") },
   { heading: "For governments", match: (p) => p === "/governments" || p.startsWith("/governments/") },
   { heading: "For individuals and families", match: (p) => p === "/individuals" || p.startsWith("/individuals/") },
-  { heading: "The platform", match: (p) => p === "/platform" || p.startsWith("/platform/") },
+  /* `/ai` (the field case and the globe, 1 Oct 2026) is the platform's AI at
+   * work, and `routes.ts` lists it with the platform pages. */
+  { heading: "The platform", match: (p) => p === "/platform" || p === "/ai" || p.startsWith("/platform/") },
   { heading: "Verification checks", match: (p) => p.startsWith("/checks/") },
   { heading: "Country guides", match: (p) => p.startsWith("/countries/") },
   { heading: "Resources", match: (p) => p === "/resources" || p.startsWith("/resources/") },

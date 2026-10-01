@@ -25,7 +25,9 @@
 /* ── The eight panels ─────────────────────────────────────────────────── */
 .cx-stage { display: flex; gap: 10px; }
 .cx-p { position: relative; min-width: 0; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px -30px rgb(from var(--ink) r g b / .45); }
-.cx-p .cx-img { object-fit: cover; transform: scale(1.08); transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
+/* `--pos` / `--pos-on` are each photograph's focal points (`ConsumerShop.tsx`):
+   the face for a closed slice, and on desktop the open panel's view. */
+.cx-p .cx-img { object-fit: cover; object-position: var(--pos); transform: scale(1.08); transition: transform 1.4s cubic-bezier(.16, 1, .3, 1), object-position 1.1s cubic-bezier(.16, 1, .3, 1); }
 /* A closed panel sits under a soft paper veil, in full colour. The board
    greyed them (`grayscale(.85)`); the brief is real colour, never grey. The
    veil is the shade's background-colour, which paints under its gradient,
@@ -120,6 +122,7 @@
   .cx-cap { position: absolute; inset-inline-start: 30px; bottom: 28px; width: 300px; }
   .cx-card { position: absolute; inset-inline-end: 18px; bottom: 18px; width: 290px; }
   .cx-on, .cx-on:hover { flex-grow: 9; }
+  .cx-on .cx-img { object-position: var(--pos-on); }
   .cx-row { margin-top: 56px; grid-template-columns: minmax(0, 1fr) auto; gap: 56px; }
 }
 
