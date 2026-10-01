@@ -35,8 +35,11 @@ export type ShopService = {
   popular: boolean;
   src: string;
   bg: string;
-  /** The photo's focal point, as the board set it. */
+  /** The photo's focal point: the face a closed panel's slice shows. */
   pos: string;
+  /** Where the open panel looks instead, on desktop, where the price card
+   *  covers the photo's right half; the photo pans there as it opens. */
+  posOn: string;
 };
 
 export type ShopLabels = {
@@ -117,7 +120,7 @@ export function ConsumerShopStage({
           const on = i === open;
           return (
             <div key={s.id} className={on ? "cx-p cx-on" : "cx-p"} style={{ background: s.bg }}>
-              <Image className="cx-img" src={s.src} alt="" fill sizes={SIZES_CX} style={{ objectPosition: s.pos }} />
+              <Image className="cx-img" src={s.src} alt="" fill sizes={SIZES_CX} style={{ "--pos": s.pos, "--pos-on": s.posOn } as React.CSSProperties} />
               <div className="cx-shade" />
               <button
                 type="button"

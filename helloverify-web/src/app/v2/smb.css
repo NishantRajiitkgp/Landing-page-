@@ -1,8 +1,11 @@
-/* Homepage v2 · Small & medium businesses — receipts on clips, and one that
-   prints (`sections/Smb.tsx`, `SmbBuilder.tsx`). Hand-ported from the
-   Business board; why a v2 sheet lives here is in `hero.css`'s header.
-   Prefix `sm-`, the canvas's. The package receipts are `design.css`'s `.rc`
-   with a scalloped tear and a fixed height added here.
+/* Homepage v2 · the business band (`sections/Smb.tsx`): the Large ↔ Small &
+   Medium switch, the Large cards, the Small & Medium package cards and
+   How it works (`SmbPacks.tsx`, `SmbHow.tsx`, since 1 Oct 2026), and the
+   à-la-carte builder that prints (`SmbBuilder.tsx`, off the homepage).
+   Hand-ported from the Business board; why a v2 sheet lives here is in
+   `hero.css`'s header.
+   Prefixes: `sm-` (the canvas's, and the builder's), `sg-` (the switch and
+   the Large cards), `sp-` (the package cards) and `sx-` (How it works).
 
    Colour is tokens throughout. The board's near-palette tints map onto the
    hero's `--v2-*` (#FBFAF6 `--v2-paper-hi`, #EFECE5 `--v2-paper-lo`
@@ -12,7 +15,7 @@
 
    One sheet for every width, as `enterprises.css`: fluid sizes in the
    base, the board's columns in `min-width: 1081px`, the phone's column
-   (and its sideways row of receipts) in `max-width: 1080px`. */
+   (and its sideways rows of cards) in `max-width: 1080px`. */
 :root {
   /* The printer's top face, the lift off `--ink` `.btn-ink:hover` uses. */
   --v2-sm-press: #2A2823;
@@ -33,46 +36,14 @@
 .sm .sm-lede { margin-bottom: 8px; }
 .sm-it { font-style: italic; }
 
-/* ── Receipts on clips ────────────────────────────────────────────────── */
-.sm-pks { margin-top: clamp(40px, 7.5vw, 80px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; align-items: start; padding-top: 18px; }
-/* Hung from the clip, so they pivot at the top centre; each tilts by its
-   own `--rot` and the tilt mirrors with the page. */
-.sm-pk { position: relative; transform: rotate(calc(var(--flip) * var(--rot))); transform-origin: 50% 0; transition: transform .5s cubic-bezier(.16, 1, .3, 1); }
-.sm-pk:hover { transform: rotate(0) translateY(-6px); }
-.sm-clip { position: absolute; inset-inline-start: 50%; top: -22px; width: 64px; height: 34px; margin-inline-start: -32px; z-index: 3; filter: drop-shadow(0 4px 4px rgb(from var(--ink) r g b / .25)); }
-.sm-rc { display: flex; flex-direction: column; box-sizing: border-box; }
-.sm-rc .sub { min-height: 58px; line-height: 1.45; }
-.sm-fill { flex: 1; }
-/* A torn, scalloped foot instead of `.rc`'s zigzag. */
-.sm-rc::after { content: ""; position: absolute; inset-inline: 0; bottom: -10px; height: 10px; background: radial-gradient(circle at 5px -1px, transparent 6px, var(--white) 6.5px) 0 0 / 10px 10px repeat-x; }
-
-/* The turnaround, said once, as a chip — it was printed twice per receipt. */
-.sm-tat { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding: 0 8px; border-radius: 999px; background: var(--v2-mint-pale); color: var(--green); letter-spacing: .06em; }
-.sm-tat svg { width: 11px; height: 11px; }
-
 /* What this tier adds over the one below: a mint highlighter under the
    line, the same mark the client letters use. */
 .sm-add span { background: linear-gradient(transparent 55%, rgb(from var(--green-light) r g b / .55) 55%); padding: 0 2px; margin-inline-start: -2px; }
 
-/* Price, then what it comes to per check, then the button — nothing
-   between the number and the action. */
-.sm-rc .tot .v { font-size: 38px; }
-.sm-each { margin-top: 2px; text-align: end; font-size: 11px; letter-spacing: .02em; color: var(--muted); }
-.sm-pk-buy { margin-top: 16px; width: 100%; height: 46px; box-sizing: border-box; justify-content: center; gap: 10px; font-family: var(--sans); font-size: 15px; font-weight: 500; }
-.sm-pk-buy .arrow, .sm-pk-buy svg { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
-.sm-pk-buy:hover svg { transform: translateX(calc(var(--flip) * 3px)); }
-.sm-rc .bc { margin-top: 16px; height: 20px; opacity: .55; }
+/* What the price comes to per check, under it. */
+.sm-each { margin-top: 2px; text-align: end; font-family: var(--mono); font-size: 11px; letter-spacing: .02em; color: var(--muted); }
 
-/* The spotlit package: hangs straight and raised, with a green print band
-   along its top (an outline would not follow the torn foot), a deeper
-   shadow, a green button and a rubber stamp. */
-.sm-pk-best { z-index: 1; transform: translateY(-10px); }
-.sm-pk-best:hover { transform: translateY(-16px); }
-.sm-pk-best .sm-rc { box-shadow: inset 0 5px 0 var(--green), 0 1px 0 rgb(from var(--ink) r g b / .06), 0 36px 60px -30px rgb(from var(--ink) r g b / .45); }
-.sm-pk-buy-best { background: var(--green); color: var(--white); }
-.sm-pk-buy-best:hover { background: var(--v2-sm-green-press); color: var(--white); }
-.sm-pk-buy-best:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.sm-tt { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+/* The rubber stamp beside the spotlit package's name. */
 .sm-stamp { flex: none; margin-inline-end: 4px; padding: 5px 10px 4px; font-family: var(--mono); border: 2px solid var(--green); border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--green); transform: rotate(calc(var(--flip) * -7deg)); box-shadow: inset 0 0 0 1.5px var(--white), inset 0 0 0 3px rgb(from var(--green) r g b / .35); animation: smStamp .5s cubic-bezier(.3, 1.4, .5, 1) .4s both; }
 @keyframes smStamp { 0% { opacity: 0; transform: rotate(calc(var(--flip) * -18deg)) scale(1.8); } to { opacity: 1; transform: rotate(calc(var(--flip) * -7deg)); } }
 
@@ -83,13 +54,133 @@
 .sm-custom:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .sm-build { scroll-margin-top: 96px; }
 
-/* ── Three steps ──────────────────────────────────────────────────────── */
-.sm-steps { margin-top: clamp(48px, 6.7vw, 72px); display: grid; gap: 24px; }
-.sm-step { position: relative; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; padding: 22px 24px; border-radius: 18px; border: 1px solid var(--hair); background: var(--v2-paper-hi); }
-.sm-step:not(:last-child)::after { content: ""; position: absolute; background: var(--green); }
-.sm-step-n { font-family: var(--serif); font-style: italic; font-size: 28px; line-height: 1; color: var(--green); }
-.sm-step b { display: block; font-size: 17px; font-weight: 500; letter-spacing: -.01em; }
-.sm-step p { margin: 6px 0 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
+/* ── Small & Medium: three package cards (`SmbPacks.tsx`) ─────────────────
+   The Large panel's card (`.sg-card`, below) with a 3:2 photograph, the
+   turnaround as a glass chip, and a receipt stub at the foot: a dashed
+   perforation with a notch cut from each edge (circles of the page's paper,
+   halved by the card's own clip), the price, the per-check line, Buy Now
+   and a barcode. The lift uses `translate`, not `transform`, because the
+   card's entrance (`sgIn`, `both`) holds `transform` for good. */
+.sp-ph { aspect-ratio: 3 / 2; }
+.sp-ph .pimg { object-position: 50% 40%; }
+.sp-tat { position: absolute; inset-inline-end: 12px; top: 12px; display: inline-flex; align-items: center; gap: 6px; height: 28px; padding-inline: 10px 12px; border-radius: 999px; background: rgb(from var(--white) r g b / .9); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+.sp-tat svg { width: 12px; height: 12px; }
+/* The body takes the slack, so the three stubs line up along one tear. */
+.sp-body { flex: 1; padding-bottom: 22px; }
+.sp-body .sg-chips { margin-bottom: 0; }
+.sp-tt { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sp-tt .sg-t { font-size: 30px; }
+.sp-stub { position: relative; padding: 20px 22px 18px; background: var(--v2-paper-hi); border-top: 1.5px dashed var(--v2-sm-dash); }
+.sp-stub::before, .sp-stub::after { content: ""; position: absolute; top: -11px; width: 20px; height: 20px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
+.sp-stub::before { inset-inline-start: -10px; }
+.sp-stub::after { inset-inline-end: -10px; }
+.sp-tot { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.sp-lb { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.sp-v { font-family: var(--serif); font-style: italic; font-size: 40px; line-height: 1; letter-spacing: -.02em; color: var(--green); white-space: nowrap; }
+.sp-buy { margin-top: 16px; width: 100%; box-sizing: border-box; justify-content: center; }
+.sp-buy svg { transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
+.sp-buy:hover svg { transform: translateX(calc(var(--flip) * 3px)); }
+.sp-bc { display: block; margin-top: 14px; height: 18px; background: repeating-linear-gradient(90deg, var(--ink) 0 2px, transparent 2px 5px, var(--ink) 5px 6px, transparent 6px 9px, var(--ink) 9px 12px, transparent 12px 14px); opacity: .45; }
+/* The spotlit package: a green band along its top, a green-tinted ring and
+   shadow, a mint stub, and the rubber stamp beside its name. */
+.sp-best { position: relative; box-shadow: inset 0 0 0 1.5px rgb(from var(--green) r g b / .4), 0 40px 70px -40px rgb(from var(--green) r g b / .6); }
+.sp-best::after { content: ""; position: absolute; z-index: 2; inset-inline: 0; top: 0; height: 5px; background: var(--green); }
+.sp-best .sp-stub { background: var(--v2-mint-pale); }
+
+/* ── How it works (`SmbHow.tsx`) ──────────────────────────────────────────
+   A white board: the heading, the three steps and a drawn browser window
+   whose screen follows the current step. Everything on the screen moves by
+   transitions keyed on `.is-on` (`StepCycler`), staggered by `--d`, so a
+   stopped animation can never leave a screen blank. Scoped under `.cy.sx-cy`
+   because `enterprises.css` styles the same cycler for the KYC phone. */
+.sx { position: relative; margin-top: clamp(28px, 4.4vw, 48px); padding: clamp(24px, 4vw, 48px) clamp(20px, 4.4vw, 56px); border-radius: 26px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair), 0 40px 80px -60px rgb(from var(--ink) r g b / .45); overflow: hidden; }
+.sx::before { content: ""; position: absolute; inset-inline-end: -160px; top: -160px; width: 620px; height: 620px; border-radius: 50%; background: radial-gradient(circle, rgb(from var(--green-light) r g b / .3), transparent 64%); pointer-events: none; }
+.cy.sx-cy { position: relative; display: grid; gap: 28px; align-items: start; grid-template-areas: "ld" "sg" "st"; }
+.sx-cy .cy-lead { grid-area: ld; }
+.sx-k { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sx-k .k { color: var(--green); }
+.sx-motion { display: flex; align-items: center; gap: 8px; min-height: 24px; padding: 6px 0; border: 0; background: none; cursor: pointer; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sx-motion:hover { color: var(--ink); }
+.sx-motion:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+.sx-h { margin: 14px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 1.9vw + 20px, 46px); line-height: 1.02; letter-spacing: -.025em; color: var(--ink); text-wrap: balance; }
+.sx-p { margin: 14px 0 0; max-width: 470px; font-size: 15.5px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+
+/* The steps. */
+.sx-cy .cy-steps { grid-area: st; list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.sx-cy .cy-st button { position: relative; width: 100%; display: grid; grid-template-columns: 46px minmax(0, 1fr); align-items: start; gap: 8px; padding: 16px 18px 18px; border: 0; border-radius: 16px; background: none; font: inherit; color: var(--muted); text-align: start; cursor: pointer; transition: background .3s, color .3s, box-shadow .3s; }
+.sx-cy .cy-st button:hover { color: var(--ink-soft); }
+.sx-cy .cy-st button:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.sx-cy .cy-n { font-family: var(--serif); font-style: italic; font-size: 30px; line-height: 1; color: var(--tick-off); transition: color .3s; }
+.sx-cy .cy-st:is(.is-on, .is-done) .cy-n { color: var(--green); }
+.sx-cy .cy-st.is-on button { background: var(--v2-paper-hi); color: var(--ink-soft); box-shadow: inset 0 0 0 1px var(--hair); }
+.sx-st b { display: block; font-size: 17px; font-weight: 500; letter-spacing: -.01em; color: var(--ink); }
+.sx-st > span { display: block; margin-top: 4px; font-size: 14px; line-height: 1.45; }
+.sx-cy .cy-bar { position: absolute; inset-inline: 18px; bottom: 8px; height: 2px; overflow: hidden; border-radius: 2px; opacity: 0; background: var(--hair); }
+.sx-cy .cy-bar i { display: block; height: 100%; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x) center; }
+.sx-cy .cy-st.is-on .cy-bar { opacity: 1; }
+.sx-cy.cy-run .cy-st.is-on .cy-bar i { animation: sxBar var(--cy-dur) linear both; }
+@keyframes sxBar { to { transform: scaleX(1); } }
+
+/* The browser window: a title bar with three dots and an address pill. */
+.sx-cy .cy-stage { grid-area: sg; position: relative; height: 420px; border-radius: 18px; background: var(--white); box-shadow: 0 0 0 1px rgb(from var(--ink) r g b / .08), 0 40px 70px -36px rgb(from var(--ink) r g b / .5); overflow: hidden; }
+.sx-cy .cy-stage::before { content: ""; position: absolute; inset: 0 0 auto; height: 40px; border-bottom: 1px solid var(--hair); background: radial-gradient(circle at 20px 20px, var(--tick-off) 4.5px, transparent 5px), radial-gradient(circle at 36px 20px, var(--tick-off) 4.5px, transparent 5px), radial-gradient(circle at 52px 20px, var(--tick-off) 4.5px, transparent 5px), var(--v2-paper-hi); }
+.sx-cy .cy-stage::after { content: ""; position: absolute; top: 12px; inset-inline-start: 31%; width: 38%; height: 16px; border-radius: 8px; background: var(--v2-paper-lo); }
+.sx-cy .cy-scr { position: absolute; inset: 40px 0 0; padding: 24px 26px; box-sizing: border-box; opacity: 0; transform: translateY(10px); transition: opacity .4s ease, transform .6s cubic-bezier(.16, 1, .3, 1); }
+.sx-cy .cy-scr.is-on { opacity: 1; transform: none; }
+.sx-sel, .sx-fill, .sx-rep { display: flex; flex-direction: column; height: 100%; }
+
+/* 01 · the Premium order's checks tick on, then the total prints. */
+.sx-pill { align-self: flex-start; display: inline-flex; align-items: center; height: 26px; padding: 0 12px; border-radius: 999px; background: var(--v2-mint-pale); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .25); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+.sx-rows { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 7px; }
+.sx-rows li { display: flex; align-items: center; gap: 12px; padding: 9px 14px; border-radius: 12px; border: 1px solid var(--hair); font-size: 14.5px; color: var(--ink); transition: border-color .3s, background .3s; }
+.sx-box { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--tick-off); box-sizing: border-box; transition: background .25s, border-color .25s; }
+.sx-box .tick { width: 13px; height: 13px; opacity: 0; transform: scale(.4); transition: opacity .2s, transform .35s cubic-bezier(.3, 1.5, .5, 1); }
+.sx-cy .is-on .sx-rows li { border-color: rgb(from var(--green) r g b / .3); background: var(--v2-mint-pale); }
+.sx-cy .is-on .sx-box { background: var(--green); border-color: var(--green); }
+.sx-cy .is-on .sx-box .tick { opacity: 1; transform: none; }
+.sx-cy .is-on :is(.sx-rows li, .sx-box, .sx-box .tick) { transition-delay: calc(.3s + var(--d, 0) * .26s); }
+.sx-sum { margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--v2-sm-dash); display: flex; justify-content: space-between; align-items: baseline; }
+.sx-sum span, .sx-ready span { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sx-sum b { font-family: var(--serif); font-weight: 400; font-style: italic; font-size: 36px; line-height: 1; letter-spacing: -.02em; color: var(--green); opacity: 0; transform: translateY(8px); transition: opacity .4s, transform .5s cubic-bezier(.3, 1.35, .5, 1); }
+.sx-cy .is-on .sx-sum b { opacity: 1; transform: none; transition-delay: 1.75s; }
+
+/* 02 · the candidate fills in three answers and switches consent on. */
+.sx-who { display: flex; align-items: center; gap: 14px; }
+.sx-av { position: relative; flex: none; width: 52px; height: 52px; border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 3px var(--white), 0 0 0 4px var(--hair); }
+.sx-bars { flex: 1; display: grid; gap: 7px; }
+.sx-bars i { display: block; width: 34%; height: 9px; border-radius: 5px; background: var(--v2-paper-lo); }
+.sx-bars i:first-child { width: 52%; background: var(--tick-off); }
+.sx-field { display: grid; gap: 8px; margin-top: 14px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--hair); transition: border-color .3s; }
+.sx-field i { display: block; height: 8px; border-radius: 4px; }
+.sx-field i:first-child { width: 22%; background: var(--v2-paper-lo); }
+.sx-field i:last-child { width: 0; background: rgb(from var(--ink) r g b / .5); transition: width .7s cubic-bezier(.65, 0, .35, 1); }
+.sx-cy .is-on .sx-field i:last-child { width: calc(68% - var(--d, 0) * 14%); transition-delay: calc(.3s + var(--d, 0) * .42s); }
+.sx-consent { margin-top: auto; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: var(--v2-paper-hi); font-size: 14px; color: var(--ink-soft); }
+.sx-sw { position: relative; flex: none; width: 36px; height: 20px; border-radius: 999px; background: var(--tick-off); transition: background .3s; }
+.sx-sw i { position: absolute; top: 2px; inset-inline-start: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--white); box-shadow: 0 1px 3px rgb(from var(--ink) r g b / .3); transition: transform .35s cubic-bezier(.3, 1.4, .5, 1); }
+.sx-cy .is-on .sx-sw { background: var(--green); transition-delay: 1.75s; }
+.sx-cy .is-on .sx-sw i { transform: translateX(calc(var(--flip) * 16px)); transition-delay: 1.75s; }
+
+/* 03 · the report: each check comes back verified, the seal lands. */
+.sx-seal { flex: none; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 5px rgb(from var(--green-light) r g b / .3), 0 10px 20px -8px rgb(from var(--green) r g b / .7); opacity: 0; transform: scale(1.8) rotate(-20deg); transition: opacity .3s, transform .5s cubic-bezier(.3, 1.4, .5, 1); }
+.sx-seal .tick { width: 22px; height: 22px; }
+.sx-cy .is-on .sx-seal { opacity: 1; transform: none; transition-delay: 1.8s; }
+.sx-res { list-style: none; margin: 12px 0 0; padding: 0; }
+.sx-res li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--v2-sm-dash); font-size: 14px; color: var(--ink); }
+.sx-ok { display: inline-flex; align-items: center; gap: 5px; height: 22px; padding-inline: 6px 9px; border-radius: 999px; background: var(--v2-mint-pale); font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); opacity: 0; transform: translateX(calc(var(--flip) * 8px)); transition: opacity .3s, transform .4s cubic-bezier(.16, 1, .3, 1); }
+.sx-ok .tick { width: 12px; height: 12px; }
+.sx-cy .is-on .sx-ok { opacity: 1; transform: none; transition-delay: calc(.3s + var(--d, 0) * .24s); }
+.sx-ready { margin-top: auto; padding-top: 10px; display: flex; justify-content: space-between; align-items: baseline; }
+.sx-ready b { font-family: var(--serif); font-weight: 400; font-style: italic; font-size: 26px; line-height: 1; color: var(--green); }
+
+/* ── Facts and the ask (`SmbPacks.tsx`) ── the Large panel's stats row, with
+   `/business/smb`'s strip: a big figure over a small line, and GST's dot. */
+.sp-proof { margin-top: 20px; }
+.sp-facts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 40px; }
+.sp-facts li { display: flex; flex-direction: column; max-width: 200px; font-family: var(--mono); font-size: 10.5px; line-height: 1.4; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.sp-facts b { margin-bottom: 4px; font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1; letter-spacing: -.02em; text-transform: none; color: var(--ink); }
+.sp-facts .dot { width: 12px; height: 12px; margin-block: 8px 12px; margin-inline: 4px 0; box-shadow: 0 0 0 5px rgb(from var(--green-light) r g b / .35); }
+.sp-acts { display: flex; flex-wrap: wrap; gap: 12px; }
 
 /* ── Build your package ───────────────────────────────────────────────── */
 .sm-build { margin-top: 40px; display: grid; gap: clamp(36px, 5.2vw, 56px); padding: clamp(24px, 4.1vw, 44px) clamp(20px, 4.5vw, 48px); border-radius: 26px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 40px 80px -50px rgb(from var(--ink) r g b / .45); }
@@ -167,7 +258,7 @@
 /* The four solution cards: photograph, audience tag, the pitch, four of the
    checks it runs, and the way in. Each rises in turn on entry. */
 .sg-cards { list-style: none; margin: clamp(36px, 5.6vw, 64px) 0 0; padding: 0; display: grid; gap: 20px; }
-.sg-card { display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair), 0 30px 60px -48px rgb(from var(--ink) r g b / .5); transition: transform .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s; animation: sgIn .6s cubic-bezier(.16, 1, .3, 1) calc(.08s + var(--i, 0) * .08s) both; }
+.sg-card { display: flex; flex-direction: column; border-radius: 22px; overflow: hidden; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair), 0 30px 60px -48px rgb(from var(--ink) r g b / .5); transition: translate .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s; animation: sgIn .6s cubic-bezier(.16, 1, .3, 1) calc(.08s + var(--i, 0) * .08s) both; }
 .sg-ph { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; }
 .sg-ph .pimg { object-position: 50% 28%; transition: transform .8s cubic-bezier(.16, 1, .3, 1); }
 .sg-tag { position: absolute; inset-inline-start: 12px; top: 12px; display: inline-flex; align-items: center; gap: 8px; height: 28px; padding-inline: 10px 12px; border-radius: 999px; background: rgb(from var(--white) r g b / .9); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink); }
@@ -175,7 +266,10 @@
 .sg-body { flex: 1; display: flex; flex-direction: column; padding: 20px 22px 22px; }
 .sg-t { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 23px; line-height: 1.1; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
 .sg-p { margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
-.sg-chips { list-style: none; margin: 16px 0 0; padding: 14px 0 0; border-top: 1px dashed var(--v2-sm-dash); display: grid; gap: 7px; }
+/* 22px under the list: the Explore More button's `margin-top: auto`
+   (`ctas.css`) comes to 0 in the tallest card, and Blue-Collar's last
+   check sat flush on the button (1 Oct 2026). */
+.sg-chips { list-style: none; margin: 16px 0 22px; padding: 14px 0 0; border-top: 1px dashed var(--v2-sm-dash); display: grid; gap: 7px; }
 .sg-chips li { display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 1.3; color: var(--ink-soft); }
 .sg-chips .tick { flex: none; width: 14px; height: 14px; color: var(--green); }
 .sg-more { margin-top: auto; padding-top: 18px; display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font-size: 15px; font-weight: 500; color: var(--ink); text-decoration: none; transition: gap .3s, color .3s; }
@@ -212,43 +306,50 @@
 /* ── Desktop placements ─────────────────────────────────────────────────── */
 @media (min-width: 1081px) {
   .sg-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .sg-card:hover { transform: translateY(-6px); box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3), 0 40px 70px -40px rgb(from var(--ink) r g b / .5); }
+  /* `translate`, not `transform`: the entrance (`sgIn`, fill `both`) holds
+     `transform: none` over any rule, so the -6px lift never showed —
+     measured 0px on hover before 1 Oct 2026, -6px after. */
+  .sg-card:hover { translate: 0 -6px; box-shadow: inset 0 0 0 1px rgb(from var(--green) r g b / .3), 0 40px 70px -40px rgb(from var(--ink) r g b / .5); }
   .sg-card:hover .sg-ph .pimg { transform: scale(1.05); }
-  .sm-rc { height: 588px; }
-  .sm-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .sm-step:not(:last-child)::after { inset-inline-end: -19px; top: 50%; width: 14px; height: 1px; }
+  .sg-cards.sp-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  /* Premium stands 10px proud of the other two, and every card lifts on
+     hover by `translate` (see the cards' header above). */
+  .sp-best { translate: 0 -10px; }
+  .sp-card:hover { translate: 0 -6px; }
+  .sp-best:hover { translate: 0 -16px; box-shadow: inset 0 0 0 1.5px rgb(from var(--green) r g b / .55), 0 48px 80px -40px rgb(from var(--green) r g b / .65); }
+  .cy.sx-cy { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); grid-template-areas: "ld sg" "st sg"; column-gap: clamp(40px, 5vw, 72px); row-gap: 26px; }
+  /* The window sits centred on the heading and the steps together;
+     stretched to their full height it was a third empty under the list. */
+  .sx-cy .cy-stage { align-self: center; height: 450px; }
   .sm-build { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
 }
 
 /* ── Phone and tablet ─────────────────────────────────────────────────────
-   The receipts hang in a row that scrolls sideways and snaps, one and a
-   bit in view, as receipts pegged along a line; stacked they were three
-   screens of receipt before the builder. It bleeds to the screen edges
-   (the negative margin undoes `.wrap`'s 20px) and is padded so the clips
-   and the tilt are not cut off. The row needs no tabindex for keyboard
-   reach: each receipt's Buy Now link is in it. Premium is spotlit by its
-   band, stamp and green button here; the -10px lift would only clip. */
+   The three package cards scroll sideways and snap, one and a bit in view
+   (three stacked were three screens of card); the row bleeds to the screen
+   edges (the negative margin undoes `.wrap`'s 20px) and is padded so the
+   cards' shadows are not cut off. The row needs no tabindex for keyboard
+   reach: each card's Buy Now link is in it. Premium keeps its band, ring
+   and stamp; the lift would only clip. How it works stacks: the heading,
+   the window, then the steps under it. */
 @media (max-width: 1080px) {
   .sg-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .sg-proof { padding: 18px 20px; }
-  .sm-pks { display: flex; align-items: stretch; gap: 16px; margin-inline: -20px; padding-block: 34px 26px; padding-inline: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: none; overscroll-behavior-x: contain; }
-  .sm-pk { flex: 0 0 min(80%, 300px); scroll-snap-align: start; }
-  .sm-pk-best, .sm-pk-best:hover { transform: none; }
-  .sm-rc { height: 100%; }
+  .sg-cards.sp-cards { display: flex; gap: 14px; margin-inline: -20px; padding: 6px 20px 18px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .sp-card { flex: 0 0 min(82%, 340px); scroll-snap-align: start; }
+  .sp-v { font-size: 34px; }
   .sm-custom { margin-top: 28px; }
-  .sm-step { padding: 18px 20px; }
-  /* The connector turns to run down between stacked steps. */
-  .sm-step:not(:last-child)::after { inset-inline-start: 43px; bottom: -25px; width: 1px; height: 24px; }
-  .sm-rc .tot .v { font-size: 30px; }
+  .sx-cy .cy-stage { height: 400px; }
+  .sx-cy .cy-scr { padding: 20px; }
+  .sx-cy .cy-st button { padding: 13px 14px 15px; grid-template-columns: 40px minmax(0, 1fr); }
   /* As tall as the order, not a fixed 470px (half of it blank with one
      check); the padding keeps the torn foot and its shadow unclipped. */
   .sm-paper-wrap { width: calc(100% - 24px); height: auto; padding-bottom: 28px; }
 }
 
-/* Phone: the cards scroll sideways and snap, one and a bit in view, as the
-   receipts do on the other tab (stacked, four cards were 3,000px); the row
-   bleeds to the screen edges, undoing `.wrap`'s 20px. The switch keeps both
-   labels and drops the lines under them. */
+/* Phone: the Large cards scroll sideways and snap too, one and a bit in
+   view (stacked, four cards were 3,000px), bleeding to the screen edges.
+   The switch keeps both labels and drops the lines under them. */
 @media (max-width: 639px) {
   .sg-cards { display: flex; gap: 14px; margin-inline: -20px; padding-inline: 20px; padding-bottom: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; scrollbar-width: none; overscroll-behavior-x: contain; }
   .sg-card { flex: 0 0 min(82%, 300px); scroll-snap-align: start; }
@@ -257,9 +358,14 @@
   .sg-tab span { display: none; }
   .sg-stats { gap: 14px 24px; }
   .sg-sales { width: 100%; justify-content: center; }
+  .sp-acts { width: 100%; }
+  .sp-acts > * { flex: 1 1 auto; justify-content: center; }
+  .sp-facts { gap: 16px 28px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sm-pk, .sm-opt, .sm-custom, .sg-thumb, .sg-card { transition: none; }
+  .sm-opt, .sm-custom, .sg-thumb, .sg-card, .sp-card, .sp-buy svg { transition: none; }
   .sm-stamp, .sg-panel, .sg-card { animation: none; }
+  /* The walk-through's screens switch without their staggered build. */
+  .sx-cy :is(.cy-scr, .sx-rows li, .sx-box, .sx-box .tick, .sx-sum b, .sx-field i, .sx-sw, .sx-sw i, .sx-seal, .sx-ok) { transition: none; }
 }

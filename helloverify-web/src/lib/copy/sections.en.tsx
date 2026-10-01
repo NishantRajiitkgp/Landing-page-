@@ -852,7 +852,10 @@ export const en = {
    *  (`home.base.json` → `key-verification-solutions`, the 3-column grid):
    *  each card is one check, with its name and line verbatim, its
    *  turnaround and its price, and a Buy button. Keyed by photograph; the
-   *  photograph is someone that check is typically run on. */
+   *  photograph is someone that check is typically run on — shot for it on
+   *  1 Oct 2026 (Higgsfield, `/img/v2/ic-*`): the city portraits it used
+   *  before showed a nurse on Age Verification and a nanny on Criminal Record
+   *  Check, and they stay on the inner pages that use them. */
   peopleStrip: {
     headingA: "Individual Checks",
     headingEm: "Get verified in minutes, not days!",
@@ -868,47 +871,47 @@ export const en = {
     /** `chip` is the turnaround; the no-break space keeps "15 min"
      *  together on the phone's narrow card. */
     people: {
-      "/img/people/01-rider-bengaluru.jpg": {
+      "/img/v2/ic-licence.jpg": {
         role: "Driving License Check",
         city: "Verifies driver name, license number and validity of license instantly.",
         chip: "Verified in 30\u00a0min",
         price: "₹299",
-        note: "photo · delivery rider",
+        note: "photo · chauffeur",
       },
-      "/img/people/03-engineer-manila.jpg": {
+      "/img/v2/ic-employment.jpg": {
         role: "Digital Employment Check",
         city: "Verifies applicant’s previous employer name, dates of joining and relieving instantly.",
         chip: "Verified in 60\u00a0min",
         price: "₹299",
-        note: "photo · engineer",
+        note: "photo · job interview",
       },
-      "/img/people/04-nanny-gurugram.jpg": {
+      "/img/v2/ic-criminal.jpg": {
         role: "Criminal Record Check",
         city: "Checks court records for any cases against the candidate.",
         chip: "Verified in 30\u00a0min",
         price: "₹899",
-        note: "photo · nanny",
+        note: "photo · security guard",
       },
-      "/img/people/05-warehouse-pune.jpg": {
+      "/img/v2/ic-pan.jpg": {
         role: "PAN Card Check",
         city: "Authenticate PAN card information to confirm identity and prevent fraud.",
         chip: "Verified in 15\u00a0min",
         price: "₹299",
-        note: "photo · warehouse",
+        note: "photo · bank desk",
       },
-      "/img/people/07-tenant-singapore.jpg": {
+      "/img/v2/ic-address.jpg": {
         role: "Digital Address Check",
         city: "Verifies address digitally through documents & live geo location.",
         chip: "Verified in 60\u00a0min",
         price: "₹299",
-        note: "photo · tenant",
+        note: "photo · front door",
       },
-      "/img/people/02-nurse-abudhabi.jpg": {
+      "/img/v2/ic-age.jpg": {
         role: "Age Verification",
         city: "Establishes candidate’s age by verifying government-issued documents containing date of birth.",
         chip: "Verified in 15\u00a0min",
         price: "₹199",
-        note: "photo · nurse",
+        note: "photo · admissions desk",
       },
     },
   },
@@ -1606,6 +1609,16 @@ export const en = {
       select: { b: "Select Checks", p: "Customize your order as per your requirement from our wide range of Checks" },
       fill: { b: "Fill Information", p: "Provide Consent of Individual & relevant information for verification" },
       result: { b: "Get Result", p: "Get intuitive reports for decision making" },
+    },
+    /** NEW MICROCOPY (1 Oct 2026), not from the old site: the how-it-works
+     *  screen under the packages. Its heading and paragraph are `build.quoteB`
+     *  and `build.quote`, its steps the three above, and its "Verified" is
+     *  `hero.seal.word`; only these three are new — the step list's name and
+     *  two lines drawn on the screen. */
+    demo: {
+      stepsK: "How it works",
+      consent: "Consent given",
+      ready: "Report ready",
     },
     build: {
       kicker: "Customize Your Package",

@@ -109,6 +109,16 @@ export const PLACEHOLDER_TINT: Record<string, string> = {
   "/img/23-closing.jpg": "#6B6E5B",
   /** Homepage v2 photographs (Higgsfield, Sep 2026). Each tint is the
    *  photograph's mean colour, measured with sharp `stats()`, not picked. */
+  /** The consumer panels' photographs (Higgsfield, 1 Oct 2026), measured
+   *  the same way; the `cs-*` set they replaced is the snapshot's. */
+  "/img/v2/cx-anyone.jpg": "#8A7F6E",
+  "/img/v2/cx-contact.jpg": "#A39788",
+  "/img/v2/cx-cyber.jpg": "#8D8882",
+  "/img/v2/cx-driver.jpg": "#9B9688",
+  "/img/v2/cx-identity.jpg": "#A79F8D",
+  "/img/v2/cx-nanny.jpg": "#A28F79",
+  "/img/v2/cx-staff.jpg": "#917B63",
+  "/img/v2/cx-tenant.jpg": "#988D7F",
   "/img/v2/cs-anyone.jpg": "#93887B",
   "/img/v2/cs-contact.jpg": "#7F725F",
   "/img/v2/cs-cyber.jpg": "#8F7D75",
@@ -129,6 +139,32 @@ export const PLACEHOLDER_TINT: Record<string, string> = {
   "/img/v2/pkg-vendor.jpg": "#8F8277",
   "/img/v2/pkg-visa.jpg": "#8C8A83",
   "/img/v2/pkg-whitecollar.jpg": "#A9A297",
+  /** The Small & Medium packages (Higgsfield, 1 Oct 2026): a first day at a
+   *  café, a fabric shop and a startup, and the new hire's face from the
+   *  last, for the how-it-works report. Measured the same way. */
+  "/img/v2/sm-cafe.jpg": "#655743",
+  "/img/v2/sm-shop.jpg": "#5D473A",
+  "/img/v2/sm-office.jpg": "#78715F",
+  "/img/v2/sm-hire.jpg": "#817263",
+  /** "Then we get to work": the two route avatars (Higgsfield, 1 Oct 2026). */
+  "/img/v2/hw-nurse.jpg": "#8B877E",
+  "/img/v2/hw-rider.jpg": "#6C6B54",
+  /** The International grid's five (Higgsfield, 1 Oct 2026). */
+  "/img/v2/ig-ae.jpg": "#8C8275",
+  "/img/v2/ig-eg.jpg": "#868983",
+  "/img/v2/ig-ph.jpg": "#948B7B",
+  "/img/v2/ig-sg.jpg": "#605F45",
+  "/img/v2/ig-uk.jpg": "#7B786C",
+  /** The Large panel's KYC card (Higgsfield, 1 Oct 2026). */
+  "/img/v2/sg-kyc.jpg": "#AD9C8B",
+  /** Individual Checks, one photograph per check (Higgsfield, 1 Oct 2026),
+   *  measured the same way. */
+  "/img/v2/ic-address.jpg": "#6C6653",
+  "/img/v2/ic-age.jpg": "#73665B",
+  "/img/v2/ic-criminal.jpg": "#636051",
+  "/img/v2/ic-employment.jpg": "#5F5D4F",
+  "/img/v2/ic-licence.jpg": "#605C52",
+  "/img/v2/ic-pan.jpg": "#646053",
 };
 
 /** `tint("/img/people/01-rider-bengaluru.jpg")` -> its placeholder colour.
@@ -177,9 +213,10 @@ export function tint(src: string): string {
 const PLACEHOLDER_NOTE: Record<string, string> = {
   /** `sections/Why.tsx`, one tile. */
   "/img/09-licensing-officer.jpg": "rgba(255,255,255,0.4)",
-  /** `sections/PeopleStrip.tsx`, all eight cards since the reshoot (29 Sep
-   *  2026): every new tint measures <= 0.3293 relative luminance, dark enough
-   *  for the white caption. Before it only the live card's did. */
+  /** The eight city portraits, the people strip's from the reshoot (29 Sep
+   *  2026) until its check photographs below replaced them (1 Oct 2026):
+   *  every tint measures <= 0.3293 relative luminance, dark enough for the
+   *  white caption. Before the reshoot only the live card's did. */
   "/img/people/01-rider-bengaluru.jpg": "rgba(255,255,255,0.4)",
   "/img/people/02-nurse-abudhabi.jpg": "rgba(255,255,255,0.4)",
   "/img/people/03-engineer-manila.jpg": "rgba(255,255,255,0.4)",
@@ -188,6 +225,14 @@ const PLACEHOLDER_NOTE: Record<string, string> = {
   "/img/people/06-supplier-cairo.jpg": "rgba(255,255,255,0.4)",
   "/img/people/07-tenant-singapore.jpg": "rgba(255,255,255,0.4)",
   "/img/people/08-cfo-london.jpg": "rgba(255,255,255,0.4)",
+  /** `sections/PeopleStrip.tsx` since 1 Oct 2026: its six check photographs,
+   *  0.1075–0.1390 relative luminance, dark like the portraits above. */
+  "/img/v2/ic-address.jpg": "rgba(255,255,255,0.4)",
+  "/img/v2/ic-age.jpg": "rgba(255,255,255,0.4)",
+  "/img/v2/ic-criminal.jpg": "rgba(255,255,255,0.4)",
+  "/img/v2/ic-employment.jpg": "rgba(255,255,255,0.4)",
+  "/img/v2/ic-licence.jpg": "rgba(255,255,255,0.4)",
+  "/img/v2/ic-pan.jpg": "rgba(255,255,255,0.4)",
   /** `sections/International.tsx`, all five country cards. */
   "/img/16-united-kingdom.jpg": "rgba(255,255,255,0.45)",
   "/img/17-philippines.jpg": "rgba(255,255,255,0.45)",

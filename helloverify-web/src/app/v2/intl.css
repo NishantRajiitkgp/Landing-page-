@@ -22,7 +22,7 @@
 .ig-flag img { display: block; width: 100%; height: 100%; }
 .ig-title b { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.2vw, 30px); line-height: 1.05; letter-spacing: -.02em; }
 .ig-p { font-size: 15px; line-height: 1.45; color: rgb(from var(--white) r g b / .86); }
-.ig-tat { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; margin-top: 4px; height: 26px; padding-inline: 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .14); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-family: var(--mono); font-size: 11px; letter-spacing: .04em; }
+.ig-tat { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; white-space: nowrap; margin-top: 4px; height: 26px; padding-inline: 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .14); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-family: var(--mono); font-size: 11px; letter-spacing: .04em; }
 .ig-tat i { font-style: normal; text-transform: uppercase; letter-spacing: .08em; color: var(--green-light); }
 .ig-go { position: absolute; inset-inline-end: 20px; top: 20px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--white); color: var(--ink); opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s cubic-bezier(.16, 1, .3, 1); }
 .ig-card:hover .ig-go, .ig-link:focus-visible .ig-go { opacity: 1; transform: none; }
@@ -37,14 +37,17 @@
   .ig-big .ig-title b { font-size: 38px; }
   .ig-big .ig-flag { width: 52px; height: 39px; }
 }
-/* Tablet: featured full width, the rest two up. */
+/* Tablet: featured full width, the rest two up. Rows grow to their card:
+   fixed at 240px, the featured card's 300px ran 60px under the next row
+   and hid its own turnaround (measured at 900px, 1 Oct 2026). */
 @media (min-width: 640px) and (max-width: 1080px) {
-  .ig-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 240px; }
+  .ig-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: minmax(240px, auto); }
   .ig-big { grid-column: 1 / -1; min-height: 300px; }
 }
-/* Phone: one column. */
+/* Phone: one column; rows grow to the card's 240px minimum, which ran 20px
+   into the next card in a fixed 220px row. */
 @media (max-width: 639px) {
-  .ig-grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: 220px; gap: 14px; }
+  .ig-grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: minmax(220px, auto); gap: 14px; }
   .ig-body { inset-inline: 18px; bottom: 18px; }
   .ig-p { font-size: 14px; }
 }

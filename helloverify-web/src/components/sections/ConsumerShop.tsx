@@ -19,16 +19,30 @@ import { ConsumerShopStage, type ShopService } from "./ConsumerShopStage";
 type ServiceKey = "driver" | "homeStaff" | "tenant" | "nanny" | "verifyAnyone" | "cyberIdentity" | "knowIdentity" | "knowContact";
 
 /** Order, photograph and focal point — layout, not copy. The first four are
- *  "In your home", the rest "Online". */
-const SERVICES: { id: ServiceKey; src: string; pos: string }[] = [
-  { id: "driver", src: "/img/v2/cs-driver.jpg", pos: "50% 40%" },
-  { id: "homeStaff", src: "/img/v2/cs-staff.jpg", pos: "50% 30%" },
-  { id: "tenant", src: "/img/v2/cs-tenant.jpg", pos: "50% 35%" },
-  { id: "nanny", src: "/img/v2/cs-nanny.jpg", pos: "45% 40%" },
-  { id: "verifyAnyone", src: "/img/v2/cs-anyone.jpg", pos: "45% 40%" },
-  { id: "cyberIdentity", src: "/img/v2/cs-cyber.jpg", pos: "45% 40%" },
-  { id: "knowIdentity", src: "/img/v2/cs-identity.jpg", pos: "55% 40%" },
-  { id: "knowContact", src: "/img/v2/cs-contact.jpg", pos: "60% 40%" },
+ *  "In your home", the rest "Online".
+ *
+ *  THE PHOTOGRAPHS (Higgsfield, 1 Oct 2026) each act out their panel's line,
+ *  across eight countries: a chauffeur in cap and tie at the wheel, the
+ *  family buckling in behind him (Lagos), a new cook in a family kitchen (Dubai), a tenant taking the keys
+ *  (Seoul), a nanny at play (Mexico City), a home tutor (Bengaluru), a man
+ *  weighing a message he doubts (Berlin), a card photographed for checking
+ *  (Cairo) and a woman holding up a contact's photo to match him (Jakarta).
+ *  `pos` is the face: a closed panel is a 100px slice of the photograph, so
+ *  it shows the face rather than a wall. `posOn` is where the open panel
+ *  looks on desktop, where the price card covers the photograph's right
+ *  half: it pans the picture (at most a fifth of its width, all `cover`
+ *  allows) so the thing the line is about — the card being photographed,
+ *  the profile photo on the phone — stays clear of the card. The `cs-*` set
+ *  they replaced stays for the `/landing-page` snapshot. */
+const SERVICES: { id: ServiceKey; src: string; pos: string; posOn?: string }[] = [
+  { id: "driver", src: "/img/v2/cx-driver.jpg", pos: "20% 35%", posOn: "45% 35%" },
+  { id: "homeStaff", src: "/img/v2/cx-staff.jpg", pos: "41% 25%" },
+  { id: "tenant", src: "/img/v2/cx-tenant.jpg", pos: "45% 35%", posOn: "100% 35%" },
+  { id: "nanny", src: "/img/v2/cx-nanny.jpg", pos: "32% 35%" },
+  { id: "verifyAnyone", src: "/img/v2/cx-anyone.jpg", pos: "30% 45%", posOn: "100% 45%" },
+  { id: "cyberIdentity", src: "/img/v2/cx-cyber.jpg", pos: "43% 30%", posOn: "100% 30%" },
+  { id: "knowIdentity", src: "/img/v2/cx-identity.jpg", pos: "27% 35%", posOn: "85% 35%" },
+  { id: "knowContact", src: "/img/v2/cx-contact.jpg", pos: "45% 40%", posOn: "100% 40%" },
 ];
 
 export async function ConsumerShop() {
@@ -36,7 +50,7 @@ export async function ConsumerShop() {
   const t = all.shop;
   const locale = await getLocale();
 
-  const services: ShopService[] = SERVICES.map(({ id, src, pos }, i) => {
+  const services: ShopService[] = SERVICES.map(({ id, src, pos, posOn }, i) => {
     const s = t.services[id];
     const price = "price" in s ? s.price : undefined;
     return {
@@ -53,6 +67,7 @@ export async function ConsumerShop() {
       src,
       bg: tint(src),
       pos,
+      posOn: posOn ?? pos,
     };
   });
 
