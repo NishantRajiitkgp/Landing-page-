@@ -47,6 +47,30 @@ const CARDS: Card[] = [
  *  tablet, the column on a phone. */
 const SIZES_SG_CARD = "(max-width: 639px) 92vw, (max-width: 1080px) 45vw, 290px";
 
+/** The blue-collar card's proof, under the pitch: the half hour, then the
+ *  two shift clients' own marks. The photograph stays clear. */
+function BlueFloor({
+  shift,
+}: {
+  shift: { n: string; u: string; l: string; houses: Record<string, string> };
+}) {
+  return (
+    <div className="sg-floor">
+      <p className="sg-floor-k">{shift.l}</p>
+      <p className="sg-floor-n">
+        <b>{shift.n}</b> {shift.u}
+      </p>
+      <ul className="sg-houses">
+        {Object.entries(shift.houses).map(([id, name]) => (
+          <li key={id} className={`sg-house sg-house-${id}`}>
+            <Image src={`/img/clients/${id}.svg`} alt={name} width={id === "starbucks" ? 64 : 148} height={32} unoptimized />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 async function LargePanel() {
   const all = await copy(SECTIONS);
   const s = all.smb.seg;
@@ -68,7 +92,7 @@ async function LargePanel() {
           <br />
           <em className="sm-it">{s.headingB}</em>
         </h2>
-        <p className="lede sm-lede">{em.h}</p>
+        <p className="lede sm-lede">{s.lede}</p>
       </div>
       <ul className="sg-cards">
         {CARDS.map((c, i) => {
@@ -85,6 +109,7 @@ async function LargePanel() {
               <div className="sg-body">
                 <h3 className="sg-t">{b.t}</h3>
                 <p className="sg-p">{b.p}</p>
+                {c.id === "blue" ? <BlueFloor shift={s.shift} /> : null}
                 <ul className="sg-chips">
                   {b.chips.map((ch) => (
                     <li key={ch}>

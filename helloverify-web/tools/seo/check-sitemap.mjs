@@ -41,6 +41,8 @@ const NOT_PAGES = new Set([
    *  `noindex`, deliberately kept out of the sitemap. */
   "/landing-page",
 ]);
+/** Gated account shells — prerendered, noindex, not in `allRoutes()`. */
+const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings)$/;
 const NOT_PAGE_SUFFIXES = [
   "/opengraph-image", // an asset of a page, not a page
   "/sitemap.xml",
@@ -63,7 +65,10 @@ function fail(msg, detail) {
 const prerender = JSON.parse(await readFile(new URL(".next/prerender-manifest.json", root), "utf8"));
 const built = new Set(
   Object.keys(prerender.routes ?? {}).filter(
-    (p) => !NOT_PAGES.has(p) && !NOT_PAGE_SUFFIXES.some((s) => p.endsWith(s)),
+    (p) =>
+      !NOT_PAGES.has(p) &&
+      !ACCOUNT_PAGE.test(p) &&
+      !NOT_PAGE_SUFFIXES.some((s) => p.endsWith(s)),
   ),
 );
 
@@ -280,7 +285,9 @@ note.push(`page canonicals checked: ${canonicalsChecked}`);
 // rather than a live constraint: it is what would catch a `not-found.tsx` that
 // grows metadata of its own, or a change in how Next resolves inherited
 // `alternates`. Cheap enough to keep on that basis alone.
-const nonPages = [...pageFiles].filter(([path]) => !sitemapEntries.has(path));
+const nonPages = [...pageFiles].filter(
+  ([path]) => !sitemapEntries.has(path) && !ACCOUNT_PAGE.test(path),
+);
 const canonicalOnNonPage = [];
 for (const [path, file] of nonPages) {
   const html = await readFile(new URL(file, root), "utf8");

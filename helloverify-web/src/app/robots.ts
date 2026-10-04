@@ -32,12 +32,9 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // The old site disallowed the four SPA paths below (wildcarded over
-        // the locale segment). Those paths now 308 to app.helloverify.com
-        // (item 3), so there is nothing here to crawl — but they stay listed
-        // so a crawler holding the old URL does not spend a fetch to learn
-        // that. /api/ is disallowed because a route handler is never a
-        // destination.
+        // Account pages are noindex (session, not marketing). They stay
+        // disallowed so a crawler holding an old SPA URL does not fetch them.
+        // /api/ is disallowed because a route handler is never a destination.
         //
         // Line comments, not a block: a robots wildcard contains the sequence
         // that would close one early.

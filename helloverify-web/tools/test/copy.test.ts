@@ -32,21 +32,54 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 
 import { pick, type Dictionary } from "../../src/lib/copy/index.ts";
 import { CHROME } from "../../src/lib/copy/chrome.ts";
+import { hi as chromeHi } from "../../src/lib/copy/chrome.hi.tsx";
+import { ar as chromeAr } from "../../src/lib/copy/chrome.ar.tsx";
 import { BUSINESS } from "../../src/lib/copy/business.ts";
+import { hi as businessHi } from "../../src/lib/copy/business.hi.tsx";
+import { ar as businessAr } from "../../src/lib/copy/business.ar.tsx";
 import { TEMPLATES } from "../../src/lib/copy/templates.ts";
+import { hi as templatesHi } from "../../src/lib/copy/templates.hi.tsx";
+import { ar as templatesAr } from "../../src/lib/copy/templates.ar.tsx";
 import { SECTIONS } from "../../src/lib/copy/sections.ts";
+import { hi as sectionsHi } from "../../src/lib/copy/sections.hi.tsx";
+import { ar as sectionsAr } from "../../src/lib/copy/sections.ar.tsx";
 import { BLOCKS } from "../../src/lib/copy/blocks.ts";
-import { FAQ_ORDER } from "../../src/app/[locale]/business/enterprise/content.ts";
+import { hi as blocksHi } from "../../src/lib/copy/blocks.hi.tsx";
+import { ar as blocksAr } from "../../src/lib/copy/blocks.ar.tsx";
+import { FAQ_ORDER } from "../../src/app/[locale]/products/bgv-enterprise/content.ts";
 import { ABOUT } from "../../src/lib/copy/about.ts";
+import { hi as aboutHi } from "../../src/lib/copy/about.hi.tsx";
+import { ar as aboutAr } from "../../src/lib/copy/about.ar.tsx";
 import { CONTACT } from "../../src/lib/copy/contact.ts";
+import { hi as contactHi } from "../../src/lib/copy/contact.hi.tsx";
+import { ar as contactAr } from "../../src/lib/copy/contact.ar.tsx";
 import { CHECKS_COPY } from "../../src/lib/copy/checks.ts";
+import { hi as checksHi } from "../../src/lib/copy/checks.hi.tsx";
+import { ar as checksAr } from "../../src/lib/copy/checks.ar.tsx";
 import { COUNTRIES_COPY } from "../../src/lib/copy/countries.ts";
+import { hi as countriesHi } from "../../src/lib/copy/countries.hi.tsx";
+import { ar as countriesAr } from "../../src/lib/copy/countries.ar.tsx";
 import { LEGAL_COPY } from "../../src/lib/copy/legal.ts";
+import { hi as legalHi } from "../../src/lib/copy/legal.hi.tsx";
+import { ar as legalAr } from "../../src/lib/copy/legal.ar.tsx";
 import { ROOT } from "../../src/lib/copy/root.ts";
+import { hi as rootHi } from "../../src/lib/copy/root.hi.tsx";
+import { ar as rootAr } from "../../src/lib/copy/root.ar.tsx";
 import { PLATFORM } from "../../src/lib/copy/platform.ts";
+import { hi as platformHi } from "../../src/lib/copy/platform.hi.tsx";
+import { ar as platformAr } from "../../src/lib/copy/platform.ar.tsx";
 import { GOVERNMENTS } from "../../src/lib/copy/governments.ts";
+import { hi as governmentsHi } from "../../src/lib/copy/governments.hi.tsx";
+import { ar as governmentsAr } from "../../src/lib/copy/governments.ar.tsx";
 import { INDIVIDUALS } from "../../src/lib/copy/individuals.ts";
+import { hi as individualsHi } from "../../src/lib/copy/individuals.hi.tsx";
+import { ar as individualsAr } from "../../src/lib/copy/individuals.ar.tsx";
 import { RESOURCES } from "../../src/lib/copy/resources.ts";
+import { hi as resourcesHi } from "../../src/lib/copy/resources.hi.tsx";
+import { ar as resourcesAr } from "../../src/lib/copy/resources.ar.tsx";
+import { FORMS } from "../../src/lib/copy/forms.ts";
+import { ACCOUNT } from "../../src/lib/copy/account.ts";
+import { AUTHORITY } from "../../src/lib/copy/authority.ts";
 import {
   ARTEFACT_ORDER,
   CERT_IDS,
@@ -89,6 +122,9 @@ const NAMESPACES: readonly { name: string; dict: Dictionary<unknown> }[] = [
   { name: "governments", dict: GOVERNMENTS },
   { name: "individuals", dict: INDIVIDUALS },
   { name: "resources", dict: RESOURCES },
+  { name: "forms", dict: FORMS },
+  { name: "account", dict: ACCOUNT },
+  { name: "authority", dict: AUTHORITY },
 ];
 
 /** Dotted paths to every LEAF. A leaf is anything that is not a plain object:
@@ -370,12 +406,9 @@ for (const ns of NAMESPACES) {
 
 console.log("6. breaking each guard on purpose — a check that cannot fail is not one");
 
-/** Sections 2 and 5 are no-ops with one locale served. Rather than ship two
- *  assertions that have never been red, the drifted states are constructed
- *  here and the PREDICATES are run against them directly. This is the shape
- *  `locales.test.ts` uses for `localeContractDrift`: the guard takes its
- *  inputs as parameters, so a failing world can be built without editing a
- *  source file. */
+/** Sections 2 and 5 now run for real — `hi` and `ar` are served (Part 9b.7).
+ *  The drifted states below still construct a failing world without editing
+ *  a source file, so a check that cannot fail is still not one. */
 
 const EN = pick(CHROME, DEFAULT);
 
@@ -476,6 +509,466 @@ check(
   threw,
 );
 
+console.log("6b. chrome + root hi/ar exist before those locales are served (Part 9b.2)");
+
+/** The files have to land BEFORE `"hi"` is added to `routing.locales`.
+ *  Section 5 only reads modules for served locales, so without this block
+ *  a missing `chrome.hi.tsx` is invisible until the switch, at which point
+ *  fifteen namespaces fail at once and the cause is lost. */
+const PENDING: readonly { ns: string; locale: "hi" | "ar"; dict: unknown }[] = [
+  { ns: "chrome", locale: "hi", dict: chromeHi },
+  { ns: "chrome", locale: "ar", dict: chromeAr },
+  { ns: "root", locale: "hi", dict: rootHi },
+  { ns: "root", locale: "ar", dict: rootAr },
+];
+const PENDING_EN: Record<string, unknown> = {
+  chrome: pick(CHROME, DEFAULT),
+  root: pick(ROOT, DEFAULT),
+};
+
+for (const row of PENDING) {
+  const mod = localeModule(row.ns, row.locale);
+  check(
+    `${row.ns}.${row.locale} exists on disk`,
+    mod !== null,
+    `src/lib/copy/${row.ns}.${row.locale}.{tsx,ts}`,
+  );
+  check(
+    `${row.ns}.${row.locale} is annotated (recipe step 1b)`,
+    mod !== null && annotationVerdict(mod.source),
+    mod?.source.split("\n").find((l) => l.startsWith("export const")),
+  );
+  check(
+    `${row.ns}.${row.locale} has the same leaf paths as en`,
+    leafPaths(row.dict).join("\n") === leafPaths(PENDING_EN[row.ns]).join("\n"),
+  );
+  const leaves = stringLeaves(row.dict);
+  const entities = leaves.filter(([, v]) => ENTITY.test(v));
+  check(`${row.ns}.${row.locale} spells no HTML entities`, entities.length === 0, entities);
+}
+
+check(
+  "chrome.hi.nav.cta is Hindi, not a paste of English",
+  /[\u0900-\u097F]/.test(chromeHi.nav.cta) && chromeHi.nav.cta !== pick(CHROME, DEFAULT).nav.cta,
+  chromeHi.nav.cta,
+);
+check(
+  "chrome.ar.nav.cta is Arabic, not a paste of English",
+  /[\u0600-\u06FF]/.test(chromeAr.nav.cta) && chromeAr.nav.cta !== pick(CHROME, DEFAULT).nav.cta,
+  chromeAr.nav.cta,
+);
+check(
+  "chrome.hi.nav.signUp is Hindi, not a paste of English",
+  /[\u0900-\u097F]/.test(chromeHi.nav.signUp) && chromeHi.nav.signUp !== pick(CHROME, DEFAULT).nav.signUp,
+  chromeHi.nav.signUp,
+);
+check(
+  "chrome.ar.nav.signUp is Arabic, not a paste of English",
+  /[\u0600-\u06FF]/.test(chromeAr.nav.signUp) && chromeAr.nav.signUp !== pick(CHROME, DEFAULT).nav.signUp,
+  chromeAr.nav.signUp,
+);
+check(
+  "root.hi.skipToContent is Devanagari",
+  /[\u0900-\u097F]/.test(rootHi.skipToContent),
+  rootHi.skipToContent,
+);
+check(
+  "root.ar.skipToContent is Arabic",
+  /[\u0600-\u06FF]/.test(rootAr.skipToContent),
+  rootAr.skipToContent,
+);
+check(
+  "both chrome locales keep the {open} placeholder the clocks fill",
+  chromeHi.footer.v2.openNow.includes("{open}") && chromeAr.footer.v2.openNow.includes("{open}"),
+  { hi: chromeHi.footer.v2.openNow, ar: chromeAr.footer.v2.openNow },
+);
+
+console.log("6c. sections hi/ar exist before those locales are served (Part 9b.3)");
+
+for (const row of [
+  { locale: "hi" as const, dict: sectionsHi },
+  { locale: "ar" as const, dict: sectionsAr },
+]) {
+  const mod = localeModule("sections", row.locale);
+  check(
+    `sections.${row.locale} exists on disk`,
+    mod !== null,
+    `src/lib/copy/sections.${row.locale}.tsx`,
+  );
+  check(
+    `sections.${row.locale} is annotated (recipe step 1b)`,
+    mod !== null && annotationVerdict(mod.source),
+    mod?.source.split("\n").find((l) => l.startsWith("export const")),
+  );
+  check(
+    `sections.${row.locale} has the same leaf paths as en`,
+    leafPaths(row.dict).join("\n") === leafPaths(pick(SECTIONS, DEFAULT)).join("\n"),
+  );
+  const leaves = stringLeaves(row.dict);
+  const entities = leaves.filter(([, v]) => ENTITY.test(v));
+  check(`sections.${row.locale} spells no HTML entities`, entities.length === 0, entities);
+}
+
+check(
+  "sections.hi.hero.cta is Hindi, not a paste of English",
+  /[\u0900-\u097F]/.test(sectionsHi.hero.cta) && sectionsHi.hero.cta !== pick(SECTIONS, DEFAULT).hero.cta,
+  sectionsHi.hero.cta,
+);
+check(
+  "sections.ar.hero.cta is Arabic, not a paste of English",
+  /[\u0600-\u06FF]/.test(sectionsAr.hero.cta) && sectionsAr.hero.cta !== pick(SECTIONS, DEFAULT).hero.cta,
+  sectionsAr.hero.cta,
+);
+check(
+  "both sections locales keep the client-island placeholders",
+  sectionsHi.why.deck.cardOf.includes("{k}") &&
+    sectionsHi.why.deck.cardOf.includes("{n}") &&
+    sectionsAr.why.deck.cardOf.includes("{k}") &&
+    sectionsAr.why.deck.cardOf.includes("{n}") &&
+    sectionsHi.presence.relay.say.filed.includes("{who}") &&
+    sectionsAr.presence.relay.say.filed.includes("{who}"),
+  { hi: sectionsHi.why.deck.cardOf, ar: sectionsAr.why.deck.cardOf },
+);
+check(
+  "both sections locales keep the five function leaves",
+  [sectionsHi.smb.perCheck, sectionsHi.packages.count, sectionsHi.smb.tot, sectionsHi.smb.build.count, sectionsHi.smb.build.rupees, sectionsAr.smb.perCheck, sectionsAr.packages.count, sectionsAr.smb.tot, sectionsAr.smb.build.count, sectionsAr.smb.build.rupees].every(
+    (f) => typeof f === "function",
+  ),
+);
+
+console.log("6d. business hi/ar exist before those locales are served (Part 9b.4)");
+
+for (const row of [
+  { locale: "hi" as const, dict: businessHi },
+  { locale: "ar" as const, dict: businessAr },
+]) {
+  const mod = localeModule("business", row.locale);
+  check(
+    `business.${row.locale} exists on disk`,
+    mod !== null,
+    `src/lib/copy/business.${row.locale}.tsx`,
+  );
+  check(
+    `business.${row.locale} is annotated (recipe step 1b)`,
+    mod !== null && annotationVerdict(mod.source),
+    mod?.source.split("\n").find((l) => l.startsWith("export const")),
+  );
+  check(
+    `business.${row.locale} has the same leaf paths as en`,
+    leafPaths(row.dict).join("\n") === leafPaths(pick(BUSINESS, DEFAULT)).join("\n"),
+  );
+  const leaves = stringLeaves(row.dict);
+  const entities = leaves.filter(([, v]) => ENTITY.test(v));
+  check(`business.${row.locale} spells no HTML entities`, entities.length === 0, entities);
+}
+
+check(
+  "business.hi.hub.hero.cta is Hindi, not a paste of English",
+  /[\u0900-\u097F]/.test(businessHi.hub.hero.cta) &&
+    businessHi.hub.hero.cta !== pick(BUSINESS, DEFAULT).hub.hero.cta,
+  businessHi.hub.hero.cta,
+);
+check(
+  "business.ar.hub.hero.cta is Arabic, not a paste of English",
+  /[\u0600-\u06FF]/.test(businessAr.hub.hero.cta) &&
+    businessAr.hub.hero.cta !== pick(BUSINESS, DEFAULT).hub.hero.cta,
+  businessAr.hub.hero.cta,
+);
+check(
+  "business crumbs match the chrome nav label for /business",
+  businessHi.crumb === chromeHi.nav.links["/business"] &&
+    businessAr.crumb === chromeAr.nav.links["/business"],
+  { hi: businessHi.crumb, ar: businessAr.crumb },
+);
+check(
+  "both business locales keep the three function leaves",
+  [
+    businessHi.enterprise.note,
+    businessHi.smb.card.readyIn,
+    businessHi.smb.pricenote,
+    businessAr.enterprise.note,
+    businessAr.smb.card.readyIn,
+    businessAr.smb.pricenote,
+  ].every((f) => typeof f === "function"),
+);
+check(
+  "both business locales keep &amp; in the JSX faqHead (the inverted rule)",
+  localeModule("business", "hi")!.source.includes("&amp;") &&
+    localeModule("business", "ar")!.source.includes("&amp;"),
+);
+
+console.log("6e. governments + individuals + platform hi/ar exist before those locales are served (Part 9b.5)");
+
+const PENDING_9B5: readonly {
+  ns: "governments" | "individuals" | "platform";
+  locale: "hi" | "ar";
+  dict: unknown;
+  en: unknown;
+}[] = [
+  { ns: "governments", locale: "hi", dict: governmentsHi, en: pick(GOVERNMENTS, DEFAULT) },
+  { ns: "governments", locale: "ar", dict: governmentsAr, en: pick(GOVERNMENTS, DEFAULT) },
+  { ns: "individuals", locale: "hi", dict: individualsHi, en: pick(INDIVIDUALS, DEFAULT) },
+  { ns: "individuals", locale: "ar", dict: individualsAr, en: pick(INDIVIDUALS, DEFAULT) },
+  { ns: "platform", locale: "hi", dict: platformHi, en: pick(PLATFORM, DEFAULT) },
+  { ns: "platform", locale: "ar", dict: platformAr, en: pick(PLATFORM, DEFAULT) },
+];
+
+for (const row of PENDING_9B5) {
+  const mod = localeModule(row.ns, row.locale);
+  check(
+    `${row.ns}.${row.locale} exists on disk`,
+    mod !== null,
+    `src/lib/copy/${row.ns}.${row.locale}.tsx`,
+  );
+  check(
+    `${row.ns}.${row.locale} is annotated (recipe step 1b)`,
+    mod !== null && annotationVerdict(mod.source),
+    mod?.source.split("\n").find((l) => l.startsWith("export const")),
+  );
+  check(
+    `${row.ns}.${row.locale} has the same leaf paths as en`,
+    leafPaths(row.dict).join("\n") === leafPaths(row.en).join("\n"),
+  );
+  const leaves = stringLeaves(row.dict);
+  const entities = leaves.filter(([, v]) => ENTITY.test(v));
+  check(`${row.ns}.${row.locale} spells no HTML entities`, entities.length === 0, entities);
+}
+
+check(
+  "governments.hi.hub.hero.cta is Hindi, not a paste of English",
+  /[\u0900-\u097F]/.test(governmentsHi.hub.hero.cta) &&
+    governmentsHi.hub.hero.cta !== pick(GOVERNMENTS, DEFAULT).hub.hero.cta,
+  governmentsHi.hub.hero.cta,
+);
+check(
+  "governments.ar.hub.hero.cta is Arabic, not a paste of English",
+  /[\u0600-\u06FF]/.test(governmentsAr.hub.hero.cta) &&
+    governmentsAr.hub.hero.cta !== pick(GOVERNMENTS, DEFAULT).hub.hero.cta,
+  governmentsAr.hub.hero.cta,
+);
+check(
+  "9b.5 crumbs match the chrome nav labels",
+  governmentsHi.crumb === chromeHi.nav.links["/governments"] &&
+    governmentsAr.crumb === chromeAr.nav.links["/governments"] &&
+    individualsHi.crumb === chromeHi.nav.links["/individuals"] &&
+    individualsAr.crumb === chromeAr.nav.links["/individuals"] &&
+    platformHi.crumb === chromeHi.nav.links["/platform"] &&
+    platformAr.crumb === chromeAr.nav.links["/platform"],
+  {
+    hi: { g: governmentsHi.crumb, i: individualsHi.crumb, p: platformHi.crumb },
+    ar: { g: governmentsAr.crumb, i: individualsAr.crumb, p: platformAr.crumb },
+  },
+);
+check(
+  "both governments locales keep the four function leaves",
+  [
+    governmentsHi.health.note,
+    governmentsHi.immigration.note,
+    governmentsHi.manpowerEducation.note,
+    governmentsHi.trade.note,
+    governmentsAr.health.note,
+    governmentsAr.immigration.note,
+    governmentsAr.manpowerEducation.note,
+    governmentsAr.trade.note,
+  ].every((f) => typeof f === "function"),
+);
+check(
+  "both governments locales keep &amp; in the JSX immigration strip (the inverted rule)",
+  localeModule("governments", "hi")!.source.includes("&amp;") &&
+    localeModule("governments", "ar")!.source.includes("&amp;"),
+);
+check(
+  "both individuals locales keep the tableNote function leaf",
+  typeof individualsHi.immigration.tableNote === "function" &&
+    typeof individualsAr.immigration.tableNote === "function",
+);
+check(
+  "both individuals locales keep a bare & on hub.hero.k",
+  individualsHi.hub.hero.k.includes("&") &&
+    !individualsHi.hub.hero.k.includes("&amp;") &&
+    individualsAr.hub.hero.k.includes("&") &&
+    !individualsAr.hub.hero.k.includes("&amp;"),
+  {
+    hi: individualsHi.hub.hero.k,
+    ar: individualsAr.hub.hero.k,
+  },
+);
+check(
+  "both platform locales keep the coverage.note function leaf",
+  typeof platformHi.coverage.note === "function" &&
+    typeof platformAr.coverage.note === "function",
+);
+check(
+  "both platform locales keep a bare & on hub.hero.cta",
+  platformHi.hub.hero.cta.includes("&") &&
+    !platformHi.hub.hero.cta.includes("&amp;") &&
+    platformAr.hub.hero.cta.includes("&") &&
+    !platformAr.hub.hero.cta.includes("&amp;"),
+  { hi: platformHi.hub.hero.cta, ar: platformAr.hub.hero.cta },
+);
+
+console.log("6f. remaining namespaces hi/ar exist before those locales are served (Part 9b.6)");
+
+const PENDING_9B6: readonly {
+  ns: string;
+  locale: "hi" | "ar";
+  dict: unknown;
+  en: unknown;
+}[] = [
+  { ns: "resources", locale: "hi", dict: resourcesHi, en: pick(RESOURCES, DEFAULT) },
+  { ns: "resources", locale: "ar", dict: resourcesAr, en: pick(RESOURCES, DEFAULT) },
+  { ns: "checks", locale: "hi", dict: checksHi, en: pick(CHECKS_COPY, DEFAULT) },
+  { ns: "checks", locale: "ar", dict: checksAr, en: pick(CHECKS_COPY, DEFAULT) },
+  { ns: "countries", locale: "hi", dict: countriesHi, en: pick(COUNTRIES_COPY, DEFAULT) },
+  { ns: "countries", locale: "ar", dict: countriesAr, en: pick(COUNTRIES_COPY, DEFAULT) },
+  { ns: "about", locale: "hi", dict: aboutHi, en: pick(ABOUT, DEFAULT) },
+  { ns: "about", locale: "ar", dict: aboutAr, en: pick(ABOUT, DEFAULT) },
+  { ns: "contact", locale: "hi", dict: contactHi, en: pick(CONTACT, DEFAULT) },
+  { ns: "contact", locale: "ar", dict: contactAr, en: pick(CONTACT, DEFAULT) },
+  { ns: "legal", locale: "hi", dict: legalHi, en: pick(LEGAL_COPY, DEFAULT) },
+  { ns: "legal", locale: "ar", dict: legalAr, en: pick(LEGAL_COPY, DEFAULT) },
+  { ns: "blocks", locale: "hi", dict: blocksHi, en: pick(BLOCKS, DEFAULT) },
+  { ns: "blocks", locale: "ar", dict: blocksAr, en: pick(BLOCKS, DEFAULT) },
+  { ns: "templates", locale: "hi", dict: templatesHi, en: pick(TEMPLATES, DEFAULT) },
+  { ns: "templates", locale: "ar", dict: templatesAr, en: pick(TEMPLATES, DEFAULT) },
+];
+
+for (const row of PENDING_9B6) {
+  const mod = localeModule(row.ns, row.locale);
+  check(
+    `${row.ns}.${row.locale} exists on disk`,
+    mod !== null,
+    `src/lib/copy/${row.ns}.${row.locale}.tsx`,
+  );
+  check(
+    `${row.ns}.${row.locale} is annotated (recipe step 1b)`,
+    mod !== null && annotationVerdict(mod.source),
+    mod?.source.split("\n").find((l) => l.startsWith("export const")),
+  );
+  check(
+    `${row.ns}.${row.locale} has the same leaf paths as en`,
+    leafPaths(row.dict).join("\n") === leafPaths(row.en).join("\n"),
+  );
+  const leaves = stringLeaves(row.dict);
+  const entities = leaves.filter(([, v]) => ENTITY.test(v));
+  check(`${row.ns}.${row.locale} spells no HTML entities`, entities.length === 0, entities);
+}
+
+check(
+  "resources crumbs match chrome nav /resources",
+  resourcesHi.crumb === chromeHi.nav.links["/resources"] &&
+    resourcesAr.crumb === chromeAr.nav.links["/resources"],
+  { hi: resourcesHi.crumb, ar: resourcesAr.crumb },
+);
+check(
+  "checks and countries resource crumbs match resources.crumb",
+  checksHi.crumbs.resources === resourcesHi.crumb &&
+    checksAr.crumbs.resources === resourcesAr.crumb &&
+    countriesHi.crumbs.resources === resourcesHi.crumb &&
+    countriesAr.crumbs.resources === resourcesAr.crumb,
+);
+check(
+  "about crumbs match chrome about labels",
+  aboutHi.crumb === chromeHi.nav.about && aboutAr.crumb === chromeAr.nav.about,
+  { hi: aboutHi.crumb, ar: aboutAr.crumb },
+);
+check(
+  "resources.hi.hub.hero.k is Hindi, not a paste of English",
+  /[\u0900-\u097F]/.test(resourcesHi.hub.hero.k) &&
+    resourcesHi.hub.hero.k !== pick(RESOURCES, DEFAULT).hub.hero.k,
+  resourcesHi.hub.hero.k,
+);
+check(
+  "resources.ar.hub.hero.k is Arabic, not a paste of English",
+  /[\u0600-\u06FF]/.test(resourcesAr.hub.hero.k) &&
+    resourcesAr.hub.hero.k !== pick(RESOURCES, DEFAULT).hub.hero.k,
+  resourcesAr.hub.hero.k,
+);
+check(
+  "9b.6 function leaves stay functions",
+  [
+    resourcesHi.row.min,
+    resourcesHi.hub.cards.checks.m,
+    resourcesHi.countries.officeIn,
+    resourcesAr.row.min,
+    resourcesAr.hub.cards.checks.m,
+    resourcesAr.countries.officeIn,
+    checksHi.closing.heading,
+    checksHi.closing.sub,
+    checksHi.fields.h,
+    checksHi.answer.lede,
+    checksAr.closing.heading,
+    checksAr.closing.sub,
+    checksAr.fields.h,
+    checksAr.answer.lede,
+    countriesHi.hero.h1,
+    countriesHi.nearby.officeIn,
+    countriesAr.hero.h1,
+    countriesAr.nearby.officeIn,
+    legalHi.doc.effective,
+    legalHi.doc.pending.counted,
+    legalHi.other.sections,
+    legalAr.doc.effective,
+    legalAr.doc.pending.counted,
+    legalAr.other.sections,
+  ].every((f) => typeof f === "function"),
+);
+check(
+  "both templates locales keep a bare & on bands.table",
+  templatesHi.bands.table.includes("&") &&
+    !templatesHi.bands.table.includes("&amp;") &&
+    templatesAr.bands.table.includes("&") &&
+    !templatesAr.bands.table.includes("&amp;"),
+  { hi: templatesHi.bands.table, ar: templatesAr.bands.table },
+);
+check(
+  "resources glossary TERMS stay JSX with the inverted entities",
+  localeModule("resources", "hi")!.source.includes("&ldquo;") &&
+    localeModule("resources", "ar")!.source.includes("&ldquo;"),
+);
+
+console.log("6g. Arabic go-cues do not keep an unmirrored → (After 9b)");
+
+/** U+2192 in Arabic copy. Unicode does not mirror it, so a "go" cue that
+ *  still uses it points backwards. Isolated markup arrows (`.xa`, `.nv-ml
+ *  .k`, `.fwd`) are flipped in CSS with `--flip`; these leaves cannot be,
+ *  because the glyph sits inside a text node. Two populations keep `→`:
+ *  the One-in-Eight UV tags (`64 → 84`) are from-to ranges, and the
+ *  technology page's `→ id, status` blurbs are API specimen. Everything
+ *  else is a nav cue and is `←` in `ar`. */
+function arrowLeaves(value: unknown, prefix = ""): string[] {
+  if (typeof value === "string") return value.includes("→") ? [prefix] : [];
+  if (typeof value === "function") return String(value).includes("→") ? [prefix] : [];
+  if (value === null || typeof value !== "object") return [];
+  if (Object.prototype.hasOwnProperty.call(value, "$$typeof")) {
+    return arrowLeaves(
+      (value as { props?: { children?: unknown } }).props?.children,
+      prefix,
+    );
+  }
+  if (Array.isArray(value)) {
+    return value.flatMap((v, i) => arrowLeaves(v, `${prefix}[${i}]`));
+  }
+  return Object.entries(value as Record<string, unknown>).flatMap(([k, v]) =>
+    arrowLeaves(v, prefix ? `${prefix}.${k}` : k),
+  );
+}
+
+function allowedArArrow(path: string): boolean {
+  if (path.includes(".uv.tags.") && path.endsWith(".d")) return true;
+  if (path.includes(".api.") && path.endsWith(".ret")) return true;
+  return false;
+}
+
+const arArrows = NAMESPACES.flatMap((ns) => arrowLeaves(pick(ns.dict, "ar"), ns.name));
+const strayArArrows = arArrows.filter((p) => !allowedArArrow(p));
+check("Arabic go-cues do not keep U+2192", strayArArrows.length === 0, strayArArrows);
+check(
+  "the allowlist is not vacuous — specimen ranges and API rets still use →",
+  arArrows.filter(allowedArArrow).length === 11,
+  arArrows.filter(allowedArArrow),
+);
+
 console.log("7. the numbers this slice is measured by");
 
 /** Recorded so the next namespace has a baseline rather than a feeling. The
@@ -485,10 +978,22 @@ console.log("7. the numbers this slice is measured by");
 /** 76 -> 104 strings (77 -> 105 leaves) with homepage v2's footer
  *  (`chrome.footer.v2`: the sheet band, office clocks, seal captions and
  *  microtext — 28 leaves, all plain strings). */
+/** 158 -> 199 strings (159 -> 200 leaves) with OTP login + Sign Up / user menu
+ *  (41 leaves: nav.signUp, nav.account, four userMenu rows, login + errors). */
 check(
-  "chrome/en holds 158 string leaves plus the one rich-text leaf",
-  stringLeaves(EN).length === 158 && leafPaths(EN).length === 159,
+  "chrome/en holds 199 string leaves plus the one rich-text leaf",
+  stringLeaves(EN).length === 199 && leafPaths(EN).length === 200,
   { strings: stringLeaves(EN).length, all: leafPaths(EN).length },
+);
+
+check(
+  "account/en holds 87 string leaves (cart pay + orders + candidate invite)",
+  stringLeaves(pick(ACCOUNT, DEFAULT)).length === 87 &&
+    leafPaths(pick(ACCOUNT, DEFAULT)).length === 87,
+  {
+    strings: stringLeaves(pick(ACCOUNT, DEFAULT)).length,
+    all: leafPaths(pick(ACCOUNT, DEFAULT)).length,
+  },
 );
 
 /** 24 of those 77 are what the `>text<` matcher found. The other 53 are the
@@ -498,8 +1003,8 @@ check(
  *  `COLS`/`CERTS`, and `consent.body` — a real text node the matcher drops
  *  because the node contains a `{" "}`. */
 check(
-  "the >text< matcher saw 24 of them; 53 is the undercount (+28 v2 footer leaves, +54 nav mega-menu leaves)",
-  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 + 28 + 54 === leafPaths(EN).length,
+  "the >text< matcher saw 24 of them; 53 is the undercount (+28 v2 footer leaves, +54 nav mega-menu leaves, +41 login)",
+  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 + 28 + 54 + 41 === leafPaths(EN).length,
   leafPaths(EN).length,
 );
 
@@ -539,7 +1044,7 @@ check(
  *  is the hole section 5 exists to close, reproduced on `contact`. */
 const SLICE: readonly { name: string; dict: Dictionary<unknown>; matched: number; leaves: number }[] = [
   { name: "about", dict: ABOUT, matched: 47, leaves: 57 },
-  { name: "contact", dict: CONTACT, matched: 34, leaves: 39 },
+  { name: "contact", dict: CONTACT, matched: 34, leaves: 66 },
   { name: "checks", dict: CHECKS_COPY, matched: 16, leaves: 25 },
   { name: "countries", dict: COUNTRIES_COPY, matched: 19, leaves: 25 },
   { name: "legal", dict: LEGAL_COPY, matched: 4, leaves: 14 },
@@ -554,15 +1059,16 @@ for (const ns of SLICE) {
   );
 }
 
-/** 161 for 124 is 1.30x, against chrome's 3.2x, and the spread inside the six
- *  is the interesting part: `legal` is 3.5x and `about` is 1.21x. The header's
- *  rule predicts it — `legal`'s page is almost entirely `d.sections.map(…)`
- *  over a catalogue, so what little copy it has is in attributes and next to
- *  interpolations where the matcher cannot see it, while `/about` is 200 lines
- *  of hand-written prose that the matcher reads almost completely. */
+/** 188 for 124 is 1.52x (was 161 / 1.30x before the contact tabs). Against
+ *  chrome's 3.2x, and the spread inside the six is the interesting part:
+ *  `legal` is 3.5x and `about` is 1.21x. The header's rule predicts it —
+ *  `legal`'s page is almost entirely `d.sections.map(…)` over a catalogue, so
+ *  what little copy it has is in attributes and next to interpolations where
+ *  the matcher cannot see it, while `/about` is 200 lines of hand-written
+ *  prose that the matcher reads almost completely. */
 check(
-  "the six route namespaces total 161 leaves for 124 matched nodes",
-  SLICE.reduce((a, b) => a + b.leaves, 0) === 161 &&
+  "the six route namespaces total 188 leaves for 124 matched nodes",
+  SLICE.reduce((a, b) => a + b.leaves, 0) === 188 &&
     SLICE.reduce((a, b) => a + b.matched, 0) === 124,
   { leaves: SLICE.reduce((a, b) => a + b.leaves, 0), matched: SLICE.reduce((a, b) => a + b.matched, 0) },
 );
@@ -746,7 +1252,7 @@ check(
 
 /** THE ONE COUPLING THIS SLICE ADDED, and section 4's argument applies
  *  unchanged: two modules agreeing with no type between them.
- *  `app/[locale]/business/enterprise/content.ts` now holds the ORDER of the
+ *  `app/[locale]/products/bgv-enterprise/content.ts` now holds the ORDER of the
  *  five questions and `business.enterprise.faqs` holds the words. A key
  *  renamed on one side IS a tsc error — `FAQ_ORDER` is typed
  *  `keyof …["faqs"]`. What tsc cannot say is that the order is COMPLETE:
@@ -840,7 +1346,8 @@ const BANDS: Record<string, readonly [number, number]> = {
   /** 161 -> 141 (29 Sep 2026): the two specimens are scans now, so the
    *  words the SVG drew on them (title, microtext, field labels and values,
    *  issuer, signature line) went; each route keeps its four box tags. */
-  howItWorks: [5, 141],
+  /* 141 -> 143 (4 Oct 2026): the licence route names its two shift clients. */
+  howItWorks: [5, 143],
   consumer: [10, 136],
   checks: [7, 59],
   /* 117 -> 127 (30 Sep 2026): sales pass: impact figures and actions. */
@@ -850,7 +1357,8 @@ const BANDS: Record<string, readonly [number, number]> = {
   packages: [7, 55],
   /** New 30 Sep 2026: the old site's country grid — heading, lede, the
    *  turnaround label, the CTA and five countries' name and line. */
-  intlGrid: [0, 14],
+  /* 14 -> 13 (1 Oct 2026): the lede under the heading went. */
+  intlGrid: [0, 13],
   /** 35 -> 38 (30 Sep 2026): the strip became "Individual Checks" — six
    *  checks (name, line, turnaround, price) and its heading, lede and
    *  price-row labels, in place of eight people. */
@@ -889,7 +1397,14 @@ const BANDS: Record<string, readonly [number, number]> = {
   /* 166 -> 162 (30 Sep 2026): the seals' sub-lines (`where`) went; the
    *  country now sits in the name where it is needed. */
   /* 162 -> 174 (30 Sep 2026): the partner pitch closing every record. */
-  govSeals: [0, 174],
+  /* 174 -> 129 (1 Oct 2026): the client's wording — each record's four
+   *  delivery steps (-8) and its impact label and figures (-7) became one
+   *  to two call-to-action cards (+14 in all), three sub-lines went (-3),
+   *  `deliverK` became `startK`, and the four button labels came (+4). */
+  /* 129 -> 104 (1 Oct 2026): each record's three reasons (-6 each) and
+   *  the shared `whyK` went. 104 -> 106: Latvia's employers & agencies card. 106 -> 94: the partner
+   *  pitch closing every record (12) went. */
+  govSeals: [0, 94],
   /** New 29 Sep 2026: six reasons (12), the words inside their pictures
    *  (17), the heading block (5), the certifications and the ask (2). */
   /* 36 -> 35 (30 Sep 2026): the lede under the heading went. */
@@ -898,17 +1413,33 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  in words and the report's contents came. */
   /* 53 -> 45 (1 Oct 2026): the governments plate reads the seals' names,
    *  so its eight country words went. */
-  govWhy: [0, 45],
+  /* 45 -> 44 (1 Oct 2026): the certifications line by the ask went. */
+  /* 44 -> 47 (3 Oct 2026): plate 01 became the nation in cross-section —
+   *  a fourth institution (the employer) and the names of its two strata. */
+  /* 47 -> 52 (3 Oct 2026): plate 02 became the checkpoint — the five
+   *  things its gate's sign rolls through. */
+  /* 52 -> 54 (3 Oct 2026): plate 03 named the two ecosystems it unifies. */
+  /* 54 -> 56 (4 Oct 2026): plate 04 names the two kinds of seat. The
+   *  crests went; a mark does not survive a longer list. */
+  govWhy: [0, 56],
   /* 165 -> 166 (30 Sep 2026): authority cards add MOHESR. */
   govDossiers: [0, 166],
-  enterprises: [0, 105],
+  /* 105 -> 117 (1 Oct 2026): the sales pass — each panel's three figures
+   *  and their caption (+7 a panel, +21) for Employees' onboarding rail
+   *  (-5) and Certifier's benefit cards (-6); Employees' heading split in
+   *  two and gained a lede (+2). */
+  enterprises: [0, 117],
   /** 50 -> 62 (29 Sep 2026): the Large ↔ Small & Medium toggle, `smb.seg` —
    *  its labels and heading (8) and the KYC and Vendor cards (4). */
   /* 62 -> 60 (30 Sep 2026): the toggle sub-lines went. */
   /* 60 -> 66 (30 Sep 2026): client logo names added. */
   /* 66 -> 69 (1 Oct 2026): `smb.demo`, the how-it-works screen's step-list
    *  name and two lines drawn on it. */
-  smb: [0, 69],
+  /* 69 -> 70 (1 Oct 2026): `smb.seg.lede`, the Large panel's lede, which
+   *  had been `enterprises.employees.h`. */
+  /* 70 -> 75 (4 Oct 2026): the blue-collar punch clock — 30, min,
+   *  onboarded, and the two shift clients. */
+  smb: [0, 75],
   diligence: [0, 27],
   trustPlatform: [0, 52],
   /** New 30 Sep 2026: the field case — heading block and rail label (7),
@@ -964,10 +1495,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
  *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
- *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`. */
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients. */
 check(
-  "sections holds 1752 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1752 &&
+  "sections holds 1702 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1702 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -1000,10 +1531,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691. */
 check(
-  "sections: 1741 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1741 &&
+  "sections: 1691 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1691 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
@@ -1349,7 +1880,7 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
 /** The totals, and the ONE leaf each namespace holds outside its per-page
  *  tables: `platform.crumb`, the "Platform" rung all four pages render, and
  *  `governments.crumb` plus `governments.coverageLink`, the label on the link
- *  into `/platform/coverage` that all four vertical pages share. Both are the
+ *  into `/international` that all four vertical pages share. Both are the
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
@@ -1436,7 +1967,7 @@ for (const [page, fn] of [
  *  `key=` expression must keep resolving to the string it resolved to before,
  *  and these two subtrees moved 79 of them into dictionaries:
  *
- *    - `/platform/coverage` keys its three region blocks on the region heading
+ *    - `/international` keys its three region blocks on the region heading
  *      and its 24 country rows on the country name;
  *    - `/platform/security-compliance` keys four residency rows on `nm` and six
  *      artefact rows on `t`;
@@ -1552,7 +2083,7 @@ for (const [page, want] of Object.entries(VERTICAL_KEYS)) {
  *  typechecks perfectly and silently stops rendering a row, and for the FAQ
  *  `<FaqSection>` builds the `FAQPage` node from the same array, so the page and
  *  the structured data would go quiet together — §9 records exactly that for
- *  `/business/enterprise`.
+ *  `/products/bgv-enterprise`.
  *
  *  `CERT_IDS` is the fourth and is a different shape: it is `CredentialId[]`,
  *  so tsc gates it against `lib/content/company.ts` and NOT against the seven
@@ -1709,15 +2240,18 @@ console.log("15. the numbers for `individuals` and `resources`, and the keys the
  *  slice counted 71 and 44 against this run's 105 and 90 — the same
  *  disagreement §7 and §9 record, stated rather than reconciled.
  *
- *      individuals  105 nodes -> 309 leaves  2.94x
- *      resources     90       ->  98        1.09x
+ *      individuals  105 nodes -> 367 leaves
+ *      resources     90       ->  98
  *
  *  AND THE SPREAD IS INSIDE `individuals`, not between the two:
  *
- *      individuals/page.tsx       22 nodes ->  52 leaves   2.4x
- *      individuals/hellov         59       ->  77          1.3x
- *      individuals/home-family    11       ->  86          7.8x
- *      individuals/immigration    13       ->  93          7.2x
+ *      individuals/page.tsx       22 nodes ->  52 leaves
+ *      individuals/hellov         59       -> 135
+ *      individuals/home-family    11       ->  86
+ *      individuals/immigration    13       ->  93
+ *
+ *  HelloV's leaf count moved in the content-restore Part 1 (old CMS
+ *  catalogue). The node counts are still the pre-migration matcher.
  *
  *  `home-family` and `immigration` are `VerticalPage` clients: their copy is
  *  almost entirely PROPS — `lanes`, `pills`, `rows`, `steps`, `faqs`, four
@@ -1739,7 +2273,7 @@ const EN_RES = pick(RESOURCES, DEFAULT);
 const IND_FILES: Record<string, readonly [number, number]> = {
   crumb: [0, 1],
   hub: [22, 52],
-  hellov: [59, 77],
+  hellov: [59, 135],
   homeFamily: [11, 86],
   immigration: [13, 93],
 };
@@ -1774,8 +2308,8 @@ for (const [k, v] of Object.entries(EN_RES)) {
 }
 
 check(
-  "individuals holds 309 leaves for 105 nodes and resources 98 for 90",
-  leafPaths(EN_IND).length === 309 &&
+  "individuals holds 367 leaves for 105 nodes and resources 98 for 90",
+  leafPaths(EN_IND).length === 367 &&
     leafPaths(EN_RES).length === 98 &&
     Object.values(IND_FILES).reduce((a, b) => a + b[0], 0) === 105 &&
     Object.values(RES_FILES).reduce((a, b) => a + b[0], 0) === 90,
@@ -1798,8 +2332,8 @@ check(
  *  than a node because it replaced a template literal in an attribute-shaped
  *  position. */
 check(
-  "individuals: 281 string leaves and 28 rich-text or function leaves",
-  stringLeaves(EN_IND).length === 281 &&
+  "individuals: 339 string leaves and 28 rich-text or function leaves",
+  stringLeaves(EN_IND).length === 339 &&
     leafPaths(EN_IND).length - stringLeaves(EN_IND).length === 28,
   { strings: stringLeaves(EN_IND).length, all: leafPaths(EN_IND).length },
 );
@@ -2161,4 +2695,14 @@ check(
     !CATALOGUE_PROSE.has("30 min") &&
     CATALOGUE_PROSE.has(CHECKS[0].answers),
   { answers: CHECKS[0].answers },
+);
+
+const driftedArrow = {
+  ...aboutAr,
+  credentials: { ...aboutAr.credentials, momStory: "القصة →" },
+};
+check(
+  "the Arabic go-cue guard WOULD fail on a leftover →",
+  arrowLeaves(driftedArrow, "about").filter((p) => !allowedArArrow(p)).length === 1,
+  arrowLeaves(driftedArrow, "about"),
 );

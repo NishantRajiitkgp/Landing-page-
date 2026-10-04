@@ -1813,25 +1813,87 @@ migrated, not after.
 
 ### Part 9b — what is left, and what it is blocked on
 
-- **The copy layer.** ~556 text nodes across 48 files into typed per-locale
-  modules, and an `IntlMessages`-equivalent guarantee so §7's type-error claim
-  becomes true. `ContactForm.tsx` is the only `"use client"` file and takes its
-  strings as props.
-- **Translated copy for the new IA.** Blocked on the owner. The old bundles are
-  reference, not source, for everything except nav, footer, the homepage hero and
-  the contact form.
-- **Fonts, and a broken tool.** No face this site ships carries a Devanagari or
-  Arabic glyph. Worst page today is **241.9 KB of font against a 245 KB ceiling
-  and a 60 KB §9.1 budget** — 3.1 KB of headroom, so any new face breaks the
-  ceiling on `hi`/`ar` pages. Worse, **`npm run build:fonts` cannot run**:
-  `subset-fonts.mjs`'s `FACES` array matches four `next/font/google` content
-  hashes (`^d38f3bca7db33566-s\.p\.` and three siblings) that no longer exist —
-  the layout is `next/font/local` now, and the four files in
-  `.next/static/media` are **byte-identical** to `src/fonts/*.woff2`
-  (16640 / 23528 / 109692 / 97864). The unsubset sources are not in the tree, so
-  the glyph census can never be re-run and glyphs can never be added back. Same
-  hazard class as `tools/port/build-css.py`, and it has to be settled before a
-  locale ships.
+- **The copy layer.** English is done — 15 namespaces registered in
+  `copy.test.ts`. What is left is a `*.hi.tsx` and `*.ar.tsx` per namespace,
+  annotated `: <Ns>Copy`, then one switch: `"hi"` / `"ar"` on
+  `routing.locales` and every registry in the same change. Do not flip the
+  switch early: a locale with no dictionary is TS2741, and a locale with
+  English under `/hi` is duplicate content. `ContactForm.tsx` is still the
+  only `"use client"` file; forms stay unmigrated (see `lib/copy/index.ts`).
+- **Translated copy for the new IA.** The old `public/cms/{hi,ar}` bundles
+  are reference for nav, footer, hero and the contact form; everything else
+  is new and has to be written. Started in 9b.2.
+
+### 9b.1 — Script fonts · **DONE (4 Oct 2026)**
+
+The blocker that said a locale cannot ship. Noto faces vendored, subset tool
+reads `design-src/fonts/`, layout loads them only for `hi` / `ar`. Measured
+after subset: Devanagari 39.4 + 40.5 KB, Arabic 26.1 + 30.7 KB. English
+pages do not reference them.
+
+### 9b.2 — Chrome + root copy · **DONE (4 Oct 2026)**
+
+`chrome.hi.tsx`, `chrome.ar.tsx`, `root.hi.tsx`, `root.ar.tsx` written and
+annotated. Not in the registries. Old-IA wording from the old CMS globals
+bundles; new hub labels written here. Brand names, cert marks and `{open}`
+stay Latin. Gated in `copy.test.ts` §6b so a missing file is visible before
+the switch.
+
+### 9b.3 — Homepage sections · **DONE (4 Oct 2026)**
+
+`sections.hi.tsx` and `sections.ar.tsx` written and annotated (~1,700
+leaves). Not in the registry. Gated in `copy.test.ts` §6c: same leaf
+paths as `en`, no HTML entities, script on `hero.cta`, placeholders and
+the five function leaves kept.
+
+### 9b.4 — Business · **DONE (4 Oct 2026)**
+
+`business.hi.tsx` and `business.ar.tsx` written and annotated (475
+leaves). Not in the registry. Gated in `copy.test.ts` §6d: same leaf
+paths as `en`, no HTML entities in strings, script on `hub.hero.cta`,
+crumbs match chrome's `/business` label, the three function leaves kept,
+and `&amp;` kept in the JSX `customerKyc.faqHead`.
+
+### 9b.5 — Governments, individuals, platform · **DONE (4 Oct 2026)**
+
+`governments`, `individuals` and `platform` hi/ar files written and
+annotated (495 + 309 + 290 leaves). Not in the registries. Gated in
+`copy.test.ts` §6e: same leaf paths as `en`, no HTML entities in strings,
+crumbs match chrome, function leaves kept, inverted `&amp;` on the
+immigration strip, bare `&` on `identityPhotoMatch` and `hub.hero.cta`.
+
+### 9b.6 — Remaining namespaces · **DONE (4 Oct 2026)**
+
+`resources`, `checks`, `countries`, `about`, `contact`, `legal`, `blocks`
+and `templates` hi/ar files written and annotated. Not in the registries.
+Gated in `copy.test.ts` §6f: same leaf paths as `en`, no HTML entities in
+strings, crumbs aligned with chrome / resources, function leaves kept,
+bare `&` on template bands, glossary JSX keeps `&ldquo;`.
+
+### 9b.7 — Flip the locales · **DONE (4 Oct 2026)**
+
+`"hi"` and `"ar"` are on `routing.locales` and `SERVED_LOCALES` (same
+sequence). All 15 registries are `{ en, hi, ar }`. `messages/{hi,ar}.json`
+exist so `request.ts` can load. `LEGACY_LOCALES` stayed `["en","hi","ar"]`
+— append-only; served locales no longer hit the `/hi/:path*` catch-all.
+
+### After 9b — still open
+
+Legal counsel on `lib/content/legal.ts` (policy text, not chrome).
+Latin font re-subset. Zoho/GA4/deploy.
+
+---
+- ~~**Fonts, and a broken tool.**~~ **DONE for the script faces (4 Oct 2026),
+  Latin re-subset still optional.** Noto Sans/Serif Devanagari and Noto
+  Sans/Naskh Arabic are vendored under `design-src/fonts/` (OFL-1.1,
+  fontsource 400 script subsets, 49–52 KB each). `subset-fonts.mjs` reads
+  those, never `.next/static/media`. `layout.tsx` loads two faces per locale
+  behind `scriptStackOf`, with `preload: false`, so `/en` does not fetch
+  them and the 127 KB English ceiling is untouched. `hi` / `ar` stack the
+  script face behind Newsreader / Instrument Sans (`globals.css`), so brand
+  Latin stays. **Still open:** the four Latin unsubset sources were never
+  checked in; adding `design-src/fonts/latin/<out>` turns that face back on
+  without any other edit. The English 123.3 KB figure is unchanged.
 - ~~**Arrows.**~~ **DONE (22 Sep).** `brand/Arrow.tsx` mirrors under RTL and the
   six hand-inlined copies are retired. The mechanism is one rule in
   `globals.css`: `svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) { transform:
@@ -1865,16 +1927,37 @@ migrated, not after.
   code.** Broken afterwards by changing one digit of the path in the selector:
   the arrow reports `none` under RTL and the run fails by name.
 
-  Still owed: the literal `→` glyphs. Re-counted — **25 in rendered copy across
-  14 files**, plus 36 more in comments that emit nothing. Unicode does not mirror
-  `→` in RTL text, and several are the only directional cue in their component,
-  so this is a decision for whoever writes the Arabic copy rather than a
-  find-and-replace.
+  ~~Still owed: the literal `→` glyphs.~~ **DONE (4 Oct 2026).** Unicode does
+  not mirror `→`, so two mechanisms, one per place the glyph lives:
+
+  - **Isolated markup** (`.idx3 .xa`, `.nv-ml .k`, and `.fwd` on the
+    How-we-know route label) uses the same `scaleX(var(--flip))` as the SVG
+    arrow. English HTML is unchanged except the route label, which had to
+    wrap the glyph so flipping it does not mirror the source name.
+  - **Arabic go-cues** in copy (`the story →`, `HelloV →`, resources
+    cards, and the two that already shipped as `←`) use `←`. Hindi and
+    English keep `→`.
+  - **Not flipped, on purpose:** One-in-Eight UV tags (`64 → 84`) and the
+    How-we-know clock are from-to ranges; the technology page's `→ id,
+    status` blurbs are API specimen.
+
+  Gated three ways: `copy.test.ts` §6g (Arabic `→` only on the allowlist;
+  broken by putting `→` back on `about.ar` `momStory`), `locales.test.ts`
+  §9 (every painted markup `→` sits in a flipped box or a range; broken
+  by a bare `→` in JSX), `rtl.spec.ts` now measures the glyph boxes with
+  the SVG arrows.
 - **The 10 sweeps and 14 gradients** in the capped inventory, which need eyes
   rather than a gate.
-- **`og:locale` is hardcoded `en`** in the root layout's static `metadata`
-  export. Correct while `en` is the only served locale; wrong the moment `hi` or
-  `ar` ships. The fix is `generateMetadata` reading `params`.
+- ~~**`og:locale` is hardcoded `en`**~~ **DONE** — `generateMetadata` reads
+  `params` and `openGraphLocales(locale)`.
+- ~~**SEO copy still English under `/hi` and `/ar`.**~~ **DONE (4 Oct 2026).**
+  `copyFor(path, locale)` keys the 28 static rows; `hi`/`ar` tables are
+  typed against the English keys. Dynamic check/country wrappers translate;
+  catalogue names, posts and legal stay Latin (counsel owns legal body
+  text). `llms.txt` still calls `copyFor(path)` and stays English.
+- ~~**Forms/leads unmigrated.**~~ **DONE (4 Oct 2026).** `forms` namespace
+  is the UI; `constraints.ts` keeps English CRM labels for Zoho. The form
+  takes `t` as a prop. Status messages follow the posted `locale`.
 - **Three lists must move together.** `routing.locales`, `SERVED_LOCALES` and
   `LEGACY_LOCALES` in `lib/seo/legacy-urls.ts`. The 56 indexed `/hi` and `/ar`
   URLs 308 onto English today, so shipping a locale means removing it from

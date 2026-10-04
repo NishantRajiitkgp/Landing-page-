@@ -16,28 +16,31 @@ import { submitLead } from "@/app/[locale]/contact/actions";
 import {
   ELAPSED_FIELD,
   HONEYPOT_FIELD,
-  INTEREST_LABELS,
   INTEREST_VALUES,
   type InterestValue,
   LIMITS,
-  SEGMENT_LABELS,
   SEGMENT_VALUES,
   type LeadField,
   type SegmentValue,
 } from "@/lib/leads/constraints";
 import { Field, SEGMENT_FORM, TEXT_FIELDS } from "@/components/forms/LeadFields";
+import type { FormsUi } from "@/lib/copy/forms";
 import { INITIAL_LEAD_FORM_STATE } from "@/lib/leads/state";
 import { localise } from "@/lib/i18n/href";
 
 /** `locale` is a prop rather than a hook: reading it from next-intl on the
  *  client would require NextIntlClientProvider at the root, which ships
- *  next-intl's client runtime to every page for the sake of three hrefs. */
+ *  next-intl's client runtime to every page for the sake of three hrefs.
+ *  `t` is the same idea for the words — the copy layer cannot be imported
+ *  here (`./index` "Zero client bytes"). */
 export function ContactForm({
   locale,
+  t,
   idPrefix = "",
   consent,
 }: {
   locale: string;
+  t: FormsUi;
   /** For a page that renders the form twice (the homepage's desktop and
    *  phone trees), so the two copies' ids do not collide. */
   idPrefix?: string;
@@ -127,15 +130,15 @@ export function ContactForm({
     return (
       <div className="form">
         <div className="fld-l" style={{ marginBottom: 10 }}>
-          Talk to sales
+          {t.kicker}
         </div>
         <div className="status ok" role="status">
           {state.message}
         </div>
         <p className="consent">
-          In the meantime, the <a href={L("/platform/security-compliance")}>compliance pack</a> lists
-          what we can send before a call, and <a href={L("/resources/checks")}>the check library</a>{" "}
-          covers turnaround times per check.
+          {t.success.lead}{" "}
+          <a href={L("/platform/security-compliance")}>{t.success.pack}</a> {t.success.mid}{" "}
+          <a href={L("/resources/checks")}>{t.success.library}</a> {t.success.end}
         </p>
       </div>
     );
@@ -145,10 +148,10 @@ export function ContactForm({
     <form className="form" action={formAction} onInput={stampElapsed} onFocus={stampElapsed}>
       <div className="form-top">
         <div className="fld-l" style={{ marginBottom: 10 }}>
-          Talk to sales
+          {t.kicker}
         </div>
 
-        <div className="segs" role="radiogroup" aria-label="Who is asking">
+        <div className="segs" role="radiogroup" aria-label={t.who}>
           {SEGMENT_VALUES.map((value) => (
             <label className="seg" key={value}>
               <input
@@ -159,7 +162,7 @@ export function ContactForm({
                 checked={segment === value}
                 onChange={() => setSegment(value)}
               />
-              {SEGMENT_LABELS[value]}
+              {t.segments[value]}
             </label>
           ))}
         </div>
@@ -167,7 +170,16 @@ export function ContactForm({
 
       <div className={`fgrid fgrid-${segment}`} style={{ marginTop: 22 }}>
         {TEXT_FIELDS.map((base) => {
-          const words = base.id === "company" ? cfg.company : base.id === "email" ? cfg.email : base;
+          const words =
+            base.id === "company"
+              ? segment === "individual"
+                ? undefined
+                : t.audiences[segment].company
+              : base.id === "email"
+                ? t.audiences[segment].email
+                : base.id === "name"
+                  ? t.fields.name
+                  : t.fields.mobile;
           if (!words) return null;
           const f = { ...base, ...words };
           return (
@@ -192,7 +204,7 @@ export function ContactForm({
 
         {/* Beside Mobile for an individual, who has no company row to fill
             the grid; across both columns otherwise. */}
-        <Field id="interest" label="Services of interest" wide={segment !== "individual"} message={errorFor("interest")} idPrefix={idPrefix}>
+        <Field id="interest" label={t.interest} wide={segment !== "individual"} message={errorFor("interest")} idPrefix={idPrefix}>
           {/* `key` forces a remount on each submission, and it is doing real
               work. React resets the form once the action resolves; for an
               <input> that is harmless because `defaultValue` becomes the value
@@ -212,23 +224,23 @@ export function ContactForm({
             {...invalidProps("interest")}
           >
             <option value="" disabled>
-              {cfg.interestPlaceholder}
+              {t.audiences[segment].interestPlaceholder}
             </option>
             {cfg.interests.map((value) => (
               <option key={value} value={value}>
-                {INTEREST_LABELS[value]}
+                {t.interests[value]}
               </option>
             ))}
           </select>
         </Field>
 
-        <Field id="message" label="Message" wide message={errorFor("message")} idPrefix={idPrefix}>
+        <Field id="message" label={t.message} wide message={errorFor("message")} idPrefix={idPrefix}>
           <textarea
             className="inp"
             id={id("message")}
             name="message"
             rows={3}
-            placeholder={cfg.message}
+            placeholder={t.audiences[segment].prompt}
             maxLength={LIMITS.message.max}
             defaultValue={state.values?.message ?? ""}
             style={{
@@ -261,6 +273,7 @@ export function ContactForm({
         defaultValue=""
       />
       <input ref={elapsed} type="hidden" name={ELAPSED_FIELD} defaultValue="" />
+      <input type="hidden" name="locale" value={locale} />
 
       {state.status !== "idle" && state.message ? (
         <div key={state.token} className="status" role="status" aria-live="polite">
@@ -270,15 +283,15 @@ export function ContactForm({
 
       {consent ?? (
         <p className="consent">
-          By submitting, you consent to HelloVerify processing your data for lead generation and
-          related communications, per our <a href={L("/legal/privacy-policy")}>Privacy Policy</a>. We&apos;ll
-          never share your brand.
+          {t.consent.lead}{" "}
+          <a href={L("/legal/privacy-policy")}>{t.consent.policy}</a>
+          {t.consent.end}
         </p>
       )}
 
       <div style={{ marginTop: 18 }}>
         <button type="submit" className="btn btn-ink" disabled={pending}>
-          {pending ? "Sending…" : "Submit"}
+          {pending ? t.sending : t.submit}
         </button>
       </div>
     </form>

@@ -14,7 +14,7 @@
    Judged gimmicky; the label is all that is left of it. */
 .hv-strip { position: relative; padding-block: 40px 8px; overflow: hidden; --ps: 1px; }
 .hv-strip .person { width: calc(var(--pw) * var(--ps)); height: calc(var(--ph) * var(--ps)); }
-.hv-strip-k { position: absolute; top: 8px; inset-inline: 0; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); pointer-events: none; }
+.hv-strip-k { position: absolute; top: 8px; inset-inline: 0; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--primary-ink); pointer-events: none; }
 /* Wraps to two lines on the phone rather than squeezing both into one. */
 .hv-strip-cap { padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 24px; font-size: 14px; color: var(--muted); }
 
@@ -36,11 +36,11 @@
    can buy: turnaround chip, name, what it verifies, price and button. */
 .ic { padding-top: clamp(72px, 10vw, 112px); padding-bottom: clamp(24px, 4vw, 40px); }
 .ic .ic-head { margin-bottom: clamp(20px, 3vw, 36px); }
-.ic-it { font-style: italic; color: var(--green); }
+.ic-it { font-style: italic; color: var(--primary-ink); }
 /* The loop's second copy: a wrapper the drum measures and turns like a card. */
 .ic-dupe { display: flex; flex: 0 0 auto; }
 .hv-strip .person .chip { gap: 6px; }
-.hv-strip .ic-bolt { width: 11px; height: 11px; color: var(--green); }
+.hv-strip .ic-bolt { width: 11px; height: 11px; color: var(--primary-ink); }
 /* A column: `design.css` has a site-wide `.who { display: flex }` (a row,
    for the testimonial byline) that laid the name, line and price side by
    side. */
@@ -54,7 +54,7 @@
 .ic-price b { font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1; letter-spacing: -.02em; color: var(--white); }
 .ic-price i { font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: rgb(from var(--white) r g b / .78); }
 .ic-btn { flex: none; display: inline-flex; align-items: center; height: 34px; padding-inline: 16px; border-radius: 999px; background: var(--white); color: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 500; text-decoration: none; transition: background .25s, color .25s, transform .3s cubic-bezier(.16, 1, .3, 1); }
-.ic-btn:hover { background: var(--green-light); transform: translateY(-1px); }
+.ic-btn:hover { background: var(--primary-light); transform: translateY(-1px); }
 .ic-btn:focus-visible { outline: 2px solid var(--white); outline-offset: 2px; }
 .hv-strip.hv-js .ic-btn { cursor: pointer; }
 

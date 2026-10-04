@@ -26,7 +26,7 @@ function watchViolations(page: import("@playwright/test").Page): string[] {
   return seen;
 }
 
-const PAGES = ["/en", "/en/contact", "/en/platform/technology", "/en/legal/privacy-policy"];
+const PAGES = ["/en", "/en/contact", "/en/technology", "/en/legal/privacy-policy"];
 
 for (const path of PAGES) {
   test(`${path}: hash-based script-src, no violations, hydrated`, async ({ page }) => {

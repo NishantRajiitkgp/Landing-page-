@@ -23,12 +23,14 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./chrome.en";
+import { hi } from "./chrome.hi";
+import { ar } from "./chrome.ar";
 
 /** The English object IS the schema. Every other locale is checked against
  *  this, which is the whole type guarantee — see `./index`. */
 export type ChromeCopy = typeof en;
 
-export const CHROME: Dictionary<ChromeCopy> = { en };
+export const CHROME: Dictionary<ChromeCopy> = { en, hi, ar };
 
 /** A destination `SiteNav` may list. */
 export type NavHref = keyof ChromeCopy["nav"]["links"];

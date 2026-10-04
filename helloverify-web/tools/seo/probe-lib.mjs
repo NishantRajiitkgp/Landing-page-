@@ -35,9 +35,14 @@ export async function hop(path) {
   const location = res.headers.get("location");
   return {
     status: res.status,
-    // Next emits an absolute Location; compare on the path so the probe works
-    // against localhost and against production unchanged.
-    location: location ? new URL(location, BASE).pathname : null,
+    // Next emits an absolute Location; compare on path + query so a dest like
+    // `/products/immigration?tab=applicant` is not truncated to pathname.
+    location: location
+      ? (() => {
+          const u = new URL(location, BASE);
+          return `${u.pathname}${u.search}`;
+        })()
+      : null,
   };
 }
 
@@ -87,7 +92,7 @@ export async function assertOneHop(source, expected) {
  *
  *  Next registers its own `/:path+/` -> `/:path+` rule with `priority: true`,
  *  so it is matched BEFORE anything `redirects()` returns. `/en/smb/`
- *  therefore 308s to `/en/smb` and only then 308s to `/en/business/smb`. Two
+ *  therefore 308s to `/en/smb` and only then 308s to `/en/products/bgv-smb`. Two
  *  hops, and no ordering of our own rules can pre-empt a priority rule.
  *
  *  The only lever that removes it is `skipTrailingSlashRedirect: true`, and

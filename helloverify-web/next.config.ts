@@ -106,10 +106,29 @@ const nextConfig: NextConfig = {
         " https://*.analytics.google.com https://www.googletagmanager.com"
       : "";
 
+    /** Razorpay checkout.js, and ONLY when live travel commerce is on.
+     *
+     *  Mock carts (`TRAVEL_AUTH_BASE` unset, or `TRAVEL_AUTH_MOCK=1`) never
+     *  load the script — they write the order in sessionStorage — so widening
+     *  `script-src` / `frame-src` / `connect-src` for it unconditionally would
+     *  add third-party origins to every page for a widget that is not there.
+     *  Same posture as GA4 above. Duplicated in `tools/ci/inject-csp.mjs`
+     *  because the document meta is the intersection that actually governs
+     *  `script-src`; `tools/test/csp-origins.test.ts` is the drift check. */
+    const mockForced = ["1", "true", "yes"].includes(
+      (process.env.TRAVEL_AUTH_MOCK ?? "").trim().toLowerCase(),
+    );
+    const liveTravel = Boolean(process.env.TRAVEL_AUTH_BASE?.trim()) && !mockForced;
+    const rzp = liveTravel ? " https://checkout.razorpay.com" : "";
+    const rzpConnect = liveTravel
+      ? " https://api.razorpay.com https://lumberjack.razorpay.com https://checkout.razorpay.com"
+      : "";
+    const rzpFrame = liveTravel ? "https://api.razorpay.com https://checkout.razorpay.com" : "'none'";
+
     const csp = [
       "default-src 'self'",
       // See the long note above. Everything else in this policy is strict.
-      `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}${ga ? ` ${ga}` : ""}`,
+      `script-src 'self' 'unsafe-inline'${dev ? " 'unsafe-eval'" : ""}${ga ? ` ${ga}` : ""}${rzp}`,
       // Stylesheets come from this origin only. The 30 `style=` attributes the
       // ported canvas uses are governed by `style-src-attr`, which is relaxed
       // separately so that the stylesheet directive itself stays tight.
@@ -129,14 +148,14 @@ const nextConfig: NextConfig = {
       // The lead form posts to a Server Action on this origin. Nothing else
       // makes a network call — §9.4 measures zero third-party origins. In
       // development the HMR websocket needs `ws:` on the same origin.
-      `connect-src 'self'${dev ? " ws:" : ""}${gaConnect}`,
+      `connect-src 'self'${dev ? " ws:" : ""}${gaConnect}${rzpConnect}`,
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
       // §13: frame-ancestors 'none'. The modern spelling of X-Frame-Options,
       // which is also sent below for older agents that ignore this.
       "frame-ancestors 'none'",
-      "frame-src 'none'",
+      `frame-src ${rzpFrame}`,
       "upgrade-insecure-requests",
     ].join("; ");
 

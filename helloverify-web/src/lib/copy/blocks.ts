@@ -14,11 +14,13 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./blocks.en";
+import { hi } from "./blocks.hi";
+import { ar } from "./blocks.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type BlocksCopy = typeof en;
 
-export const BLOCKS: Dictionary<BlocksCopy> = { en };
+export const BLOCKS: Dictionary<BlocksCopy> = { en, hi, ar };
 
 /** A message in the HelloV thread. */
 export type PhoneMsgId = keyof BlocksCopy["helloVPhone"]["msgs"];

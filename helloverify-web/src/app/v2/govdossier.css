@@ -33,7 +33,7 @@
 
 /* ── The folder: tabs, pager, and a stack of sheets ── */
 .gv-dossier { margin-top: clamp(36px, 6.67vw, 72px); }
-.gv-tabs-row { display: flex; justify-content: space-between; align-items: flex-end; position: relative; z-index: 3; }
+.gv-tabs-row { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; position: relative; z-index: 3; }
 .gv-tabs { display: flex; gap: 8px; align-items: flex-end; }
 /* `--ink-soft` on an unselected tab, not the board's `--muted`: that is
    4.3:1 on the tab's card stock, under 1.4.3's 4.5 (axe, `/en`). */
@@ -41,12 +41,16 @@
 .gv-tab:hover { transform: translateY(2px); color: var(--ink); }
 .gv-tab-n { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink-soft); }
 .gv-tab-on { background: var(--white); color: var(--ink); transform: none; height: 62px; border-color: var(--white); box-shadow: 0 -10px 24px -18px rgb(from var(--ink) r g b / .35); }
-.gv-tab-on .gv-tab-n { color: var(--green); }
+.gv-tab-on .gv-tab-n { color: var(--primary-ink); }
 .gv-tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.gv-pager { display: flex; align-items: center; gap: 10px; padding-bottom: 12px; }
+/* `flex: none`: the pager never gives way to the tabs. Between 1081 and
+   ~1320px the four labels and the pager are wider than the column, and the
+   count was the only thing in the row that could shrink — "04 / 04" broke
+   across two lines. The strip scrolls instead (see the desktop block). */
+.gv-pager { flex: none; display: flex; align-items: center; gap: 10px; padding-bottom: 12px; }
 /* A figure pair reads left to right in Arabic too; without this the bidi
    algorithm shows "01 / 04" as "04 / 01" under `dir="rtl"` (measured). */
-.gv-count { direction: ltr; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted); margin-inline-end: 6px; }
+.gv-count { direction: ltr; white-space: nowrap; font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted); margin-inline-end: 6px; }
 .gv-arrow { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hair); background: var(--white); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); transition: border-color .25s, transform .25s; }
 .gv-arrow:hover { border-color: var(--ink); transform: translateY(-1px); }
 .gv-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
@@ -81,14 +85,17 @@
 .gv-photo .scrim { height: 60%; border-radius: 0 0 18px 18px; }
 .gv-photo.ph::after { border-radius: 18px; }
 .gv-chips { position: absolute; inset-inline: 16px; bottom: 16px; z-index: 3; display: flex; flex-wrap: wrap; gap: 6px; }
-.gv-chip { height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); font-family: var(--mono); font-size: 11px; color: var(--ink); }
+/* `min-height`, not `height`: the trade dossier's "For Hiring Agents and
+   Recruitment Intermediaries" wraps to two lines on a 320px photo, and a
+   fixed 26px pill left the second line hanging below it. */
+.gv-chip { min-height: 26px; display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); font-family: var(--mono); font-size: 11px; line-height: 1.3; color: var(--ink); text-wrap: balance; }
 .gv-stamp-wrap { position: absolute; z-index: 4; pointer-events: none; }
-.gv-stamp { display: block; width: 150px; height: 150px; overflow: visible; mix-blend-mode: multiply; transform-origin: 50% 50%; animation: gvStamp .6s cubic-bezier(.3, 1.35, .5, 1) .55s both; }
+.gv-stamp { display: block; width: 150px; height: 150px; overflow: visible; color: var(--primary); mix-blend-mode: multiply; transform-origin: 50% 50%; animation: gvStamp .6s cubic-bezier(.3, 1.35, .5, 1) .55s both; }
 .gv-stamp-wide { width: 196px; height: auto; }
 @keyframes gvStamp { 0% { opacity: 0; transform: scale(1.8) rotate(4deg); } 55% { opacity: .97; transform: scale(.95) rotate(-11deg); } to { opacity: .95; transform: scale(1) rotate(-10deg); } }
 .gv-proof { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-size: 14.5px; line-height: 1.45; color: var(--ink-soft); }
 .gv-proof img { flex: none; border-radius: 6px; }
-.gv-proof-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgb(from var(--green) r g b / .12); }
+.gv-proof-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgb(from var(--primary) r g b / .12); }
 
 /* ── The contents page: rows that open, the chain at the foot ── */
 .gv-contents { position: relative; box-sizing: border-box; display: flex; flex-direction: column; }
@@ -102,8 +109,8 @@
    but never matches `:focus-visible`, and a touch screen has no hover, so
    this is what opens a row there. 120px is four lines of the phone's
    300px column; the board's 80 held two. */
-.gv-row:is(:hover, :focus)::after { transform: rotate(45deg); color: var(--green); }
-.gv-row:is(:hover, :focus) .gv-row-t { color: var(--green); }
+.gv-row:is(:hover, :focus)::after { transform: rotate(45deg); color: var(--primary-ink); }
+.gv-row:is(:hover, :focus) .gv-row-t { color: var(--primary-ink); }
 .gv-row:is(:hover, :focus) .gv-row-p { max-height: 120px; opacity: 1; margin-top: 6px; }
 .gv-row:focus-visible { box-shadow: inset 0 0 0 2px var(--ink); border-radius: 6px; }
 .gv-chain-box { margin-top: auto; padding: 18px 20px 14px; border-radius: 16px; background: var(--v2-paper-hi); border: 1px solid var(--v2-paper-lo); }
@@ -116,9 +123,9 @@
 .gv-node b { font-weight: 500; }
 /* Grows from the chain's start: `scaleX(0)` across on desktop, `scaleY(0)`
    down on the phone, and the one keyframe undoes either. */
-.gv-link { position: absolute; background: var(--green); animation: gvLink .5s cubic-bezier(.65, 0, .35, 1) both; }
+.gv-link { position: absolute; background: var(--primary); animation: gvLink .5s cubic-bezier(.65, 0, .35, 1) both; }
 @keyframes gvLink { to { transform: none; } }
-@keyframes gvNodeDot { to { background: var(--green); border-color: var(--green); } }
+@keyframes gvNodeDot { to { background: var(--primary); border-color: var(--primary); } }
 .gv-foot { position: relative; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 16px 20px; }
 .gv-ctas { display: flex; align-items: center; gap: 10px; }
 .gv-explore { height: 40px; padding: 0 10px; font-size: 14px; }
@@ -128,16 +135,16 @@
 /* The authorities a dossier names, as logo cards (30 Sep 2026): replaced the
    "Select Authority" dropdown and the MOM pill. Each card is the whole link. */
 .gv-auth { margin-top: 18px; }
-.gv-auth-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+.gv-auth-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--primary-ink); }
 .gv-auth-list { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
 .gv-auth-card { display: flex; align-items: center; gap: 14px; min-height: 68px; padding-block: 10px; padding-inline: 10px 14px; border-radius: 16px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair), 0 10px 24px -18px rgb(from var(--ink) r g b / .45); color: var(--ink); text-decoration: none; transition: box-shadow .3s, transform .35s cubic-bezier(.16, 1, .3, 1); }
-.gv-auth-card:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--green), 0 18px 30px -18px rgb(from var(--green) r g b / .55); }
+.gv-auth-card:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px var(--primary), 0 18px 30px -18px rgb(from var(--primary) r g b / .55); }
 .gv-auth-card:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .gv-auth-logo { flex: none; width: 48px; height: 48px; display: grid; place-items: center; border-radius: 12px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair); }
 .gv-auth-logo img { width: 36px; height: 36px; object-fit: contain; }
 .gv-auth-n { flex: 1; font-size: 14.5px; font-weight: 500; line-height: 1.3; }
 .gv-auth-go { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: var(--white); transition: background .3s, transform .3s cubic-bezier(.16, 1, .3, 1); }
-.gv-auth-card:hover .gv-auth-go { background: var(--green); transform: translateX(calc(var(--flip) * 2px)); }
+.gv-auth-card:hover .gv-auth-go { background: var(--primary); transform: translateX(calc(var(--flip) * 2px)); }
 .gv-sel-btn { display: inline-flex; align-items: center; gap: 10px; height: 44px; padding-block: 0; padding-inline: 8px 14px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; }
 .gv-sel-btn:hover { border-color: var(--ink); }
 .gv-sel-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
@@ -159,7 +166,7 @@
 .mw-kick i { flex: 1; height: 1px; background: var(--hair); margin-inline-start: 12px; }
 .mw-head { margin-top: 40px; display: grid; gap: clamp(24px, 6.67vw, 72px); align-items: end; }
 .mw-h { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(44px, 7.04vw, 76px); line-height: .98; letter-spacing: -.04em; color: var(--ink); }
-.mw-h em { font-style: italic; color: var(--green); }
+.mw-h em { font-style: italic; color: var(--primary-ink); }
 .mw-intro p { margin: 0; font-size: 17px; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
 .mw-passes { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--hair); }
 .mw-pk { display: block; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
@@ -168,13 +175,13 @@
 .mw-card { margin-top: clamp(36px, 5.93vw, 64px); display: grid; border-radius: 30px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 90px -60px rgb(from var(--ink) r g b / .45); overflow: hidden; }
 .mw-lp { margin: 14px 0 0; max-width: 560px; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
 .mw-track { position: relative; list-style: none; margin: 34px 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-.mw-track::before { content: ""; position: absolute; inset-inline: 18px calc(50% + 10px); top: 17px; height: 1.5px; background: linear-gradient(calc(var(--flip) * 90deg), var(--tick-off), var(--green)); }
+.mw-track::before { content: ""; position: absolute; inset-inline: 18px calc(50% + 10px); top: 17px; height: 1.5px; background: linear-gradient(calc(var(--flip) * 90deg), var(--tick-off), var(--primary)); }
 .mw-st { position: relative; display: flex; flex-direction: column; gap: 14px; }
 .mw-sn { position: relative; z-index: 1; width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--white); box-shadow: inset 0 0 0 1.5px var(--tick-off); font-family: var(--serif); font-size: 18px; color: var(--ink); }
 .mw-st b { display: block; font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .mw-st div span { display: block; margin-top: 6px; font-size: 15px; line-height: 1.5; color: var(--ink); }
-.mw-st-on .mw-sn { background: var(--green); color: var(--white); box-shadow: 0 0 0 6px rgb(from var(--green-light) r g b / .3); }
-.mw-st-on b { color: var(--green); }
+.mw-st-on .mw-sn { background: var(--primary-ink); color: var(--white); box-shadow: 0 0 0 6px rgb(from var(--primary-light) r g b / .3); }
+.mw-st-on b { color: var(--primary-ink); }
 .mw-c2 { margin-top: 40px; padding-top: 32px; border-top: 1px dashed var(--hair); display: grid; gap: 32px; align-items: center; }
 .mw-c2-k { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .mw-opts { margin-top: 12px; display: grid; gap: 6px; }
@@ -184,10 +191,10 @@
 .mw-opt i { width: 16px; height: 16px; border-radius: 50%; box-sizing: border-box; box-shadow: inset 0 0 0 1.5px var(--tick-off); transition: box-shadow .25s; }
 .mw-opt b { font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--muted); }
 .mw-on { background: var(--v2-mint-pale); color: var(--ink); }
-.mw-on i { box-shadow: inset 0 0 0 5px var(--green); }
-.mw-on b { color: var(--green); }
+.mw-on i { box-shadow: inset 0 0 0 5px var(--primary); }
+.mw-on b { color: var(--primary-ink); }
 .mw-c2-r { text-align: center; }
-.mw-pts { display: flex; align-items: baseline; justify-content: center; gap: 6px; color: var(--green); }
+.mw-pts { display: flex; align-items: baseline; justify-content: center; gap: 6px; color: var(--primary-ink); }
 .mw-pts span { font-family: var(--serif); font-size: clamp(72px, 8.89vw, 96px); line-height: .9; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
 .mw-pts em { font-family: var(--serif); font-style: italic; font-size: 26px; }
 .mw-ptsA { animation: mwPtsA .5s cubic-bezier(.3, 1.4, .5, 1); }
@@ -195,14 +202,14 @@
 @keyframes mwPtsA { 0% { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes mwPtsB { 0% { opacity: .2; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 .mw-bar { margin: 16px auto 0; width: 150px; height: 6px; border-radius: 999px; background: var(--v2-paper-lo); overflow: hidden; }
-.mw-bar i { display: block; height: 100%; border-radius: 999px; background: var(--green); transition: width .6s cubic-bezier(.16, 1, .3, 1); }
+.mw-bar i { display: block; height: 100%; border-radius: 999px; background: var(--primary); transition: width .6s cubic-bezier(.16, 1, .3, 1); }
 .mw-note { margin: 26px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
-.mw-hl { color: var(--ink); background: linear-gradient(transparent 62%, rgb(from var(--green-light) r g b / .55) 62%); padding: 0 2px; }
+.mw-hl { color: var(--ink); background: linear-gradient(transparent 62%, rgb(from var(--primary-light) r g b / .55) 62%); padding: 0 2px; }
 .mw-r { background: linear-gradient(180deg, var(--v2-paper-hi), var(--paper)); display: flex; flex-direction: column; }
 .mw-rk { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .mw-tt { margin-top: 18px; font-family: var(--serif); font-size: 32px; line-height: 1.05; letter-spacing: -.025em; color: var(--ink); }
 .mw-sub { margin: 10px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); }
-.mw-price { margin-top: 36px; display: flex; align-items: flex-start; gap: 8px; color: var(--green); }
+.mw-price { margin-top: 36px; display: flex; align-items: flex-start; gap: 8px; color: var(--primary-ink); }
 .mw-cur { margin-top: 14px; font-family: var(--mono); font-size: 14px; font-weight: 500; letter-spacing: .06em; }
 .mw-amt { font-family: var(--serif); font-size: clamp(88px, 10.18vw, 110px); line-height: .85; letter-spacing: -.05em; }
 .mw-per { margin-top: 12px; font-family: var(--mono); font-size: 11.5px; letter-spacing: .02em; color: var(--muted); }
@@ -222,13 +229,20 @@
 .gv-prem-row { display: grid; grid-template-columns: 36px minmax(0, 1fr) 20px; gap: 14px; align-items: center; padding: 18px 4px; border-top: 1px solid var(--hair); color: var(--ink); text-decoration: none; transition: padding .3s cubic-bezier(.16, 1, .3, 1); }
 .gv-prem-row:first-child { border-top: 0; padding-top: 4px; }
 .gv-prem-row:hover { padding-inline-start: 12px; }
-.gv-prem-row:hover svg { color: var(--green); }
+.gv-prem-row:hover svg { color: var(--primary-ink); }
 .gv-prem-n { font-family: var(--serif); font-style: italic; font-size: 22px; color: var(--muted); }
 .gv-prem-row b { display: block; font-size: 16px; font-weight: 500; }
 .gv-prem-row i { display: block; margin-top: 4px; font-style: normal; font-size: 14px; line-height: 1.45; color: var(--muted); }
 .gv-prem-row:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 8px; }
 
 @media (min-width: 1081px) {
+  /* The strip may shrink and scroll sideways when the column is too narrow
+     for all four tabs beside the pager (1081–~1320px). The top padding
+     leaves room for the open tab's shadow; the bottom padding, pulled back
+     by the margin, keeps the 6px a closed tab drops over the sheet's edge
+     rather than clipped. A no-op where everything fits. */
+  .gv-tabs { min-width: 0; overflow: auto hidden; scrollbar-width: none; padding-block: 12px 6px; margin-block-end: -6px; }
+  .gv-tabs::-webkit-scrollbar { display: none; }
   .gv-sheet-in { height: 700px; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
   .gv-cover { padding: 40px 44px 32px; border-inline-end: 1px dashed var(--hair); }
   .gv-stamp-wrap { inset-inline-end: -34px; top: -40px; }

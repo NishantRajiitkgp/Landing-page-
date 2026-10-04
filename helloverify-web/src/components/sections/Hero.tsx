@@ -1,9 +1,9 @@
-/** Hero - Trust Infrastructure platform for Instant AI-Powered Background Checks.
+/** Hero - AI-Powered Trust Infrastructure for Global Workforces and Businesses.
 
     Homepage v2 (the canvas "security print" hero, Sep 2026), at every width:
     a turning guilloche, a UV lamp that follows the pointer and reveals a
     green print and paper fibres, a microtext frame, a stamp that lands beside
-    "Checks." and replays on click. Hand-ported, not generated (see the header
+    "Businesses" and replays on click. Hand-ported, not generated (see the header
     of `app/v2/hero.css`); the interactive shell is `./HeroStage`. Under the
     buttons, `./HeroLedger` rolls in the Numbers band's four figures and
     keeps the checks count running.
@@ -92,16 +92,16 @@ export async function Hero() {
                       </filter>
                       <path id="hv-seal-arc" d="M100 100 m-71 0 a71 71 0 1 1 142 0 a71 71 0 1 1 -142 0" />
                     </defs>
-                    <circle className="hv-shock" cx="100" cy="100" r="88" fill="none" stroke="#1B6B4A" strokeWidth="2" />
-                    <g className="hv-seal" filter="url(#hv-ink)" fill="none" stroke="#1B6B4A">
+                    <circle className="hv-shock" cx="100" cy="100" r="88" fill="none" stroke="currentColor" strokeWidth="2" />
+                    <g className="hv-seal" filter="url(#hv-ink)" fill="none" stroke="currentColor">
                       <circle cx="100" cy="100" r="92" strokeWidth="3.4" />
                       <circle cx="100" cy="100" r="85" strokeWidth="1.2" />
                       <circle cx="100" cy="100" r="57" strokeWidth="1.2" />
-                      <text fill="#1B6B4A" stroke="none" fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="11.2" fontWeight="500" letterSpacing="1.4">
+                      <text fill="currentColor" stroke="none" fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="11.2" fontWeight="500" letterSpacing="1.4">
                         <textPath href="#hv-seal-arc" textLength="440" lengthAdjust="spacing">{`${t.seal.ring} `}</textPath>
                       </text>
                       <path d="M75 92 l16 16 l34 -35" strokeWidth="8.5" strokeLinecap="round" strokeLinejoin="round" />
-                      <text x="100" y="134" textAnchor="middle" fill="#1B6B4A" stroke="none" fontFamily="newsreader, Georgia, serif" fontStyle="italic" fontSize="21">{t.seal.word}</text>
+                      <text x="100" y="134" textAnchor="middle" fill="currentColor" stroke="none" fontFamily="newsreader, Georgia, serif" fontStyle="italic" fontSize="21">{t.seal.word}</text>
                     </g>
                   </svg>
                 </button>

@@ -62,17 +62,12 @@ export default async function Page({
       eyebrow={c.eyebrow}
       h1={c.h1}
       sub={c.sub}
-      primary={{ label: c.primary, href: "https://app.helloverify.com" }}
-      secondary={{ label: c.secondary, href: "#turnaround" }}
+      primary={{ label: c.primary, href: "/products/hellov#plans" }}
+      secondary={{ label: c.secondary, href: "/products/hellov#singles" }}
       strip={[c.strip.thirtyMin, c.strip.price, c.strip.whatsapp, c.strip.consent]}
-      /* ANSWER BLOCKS (BUILD-SPEC §11a.2). `VerticalPage` renders each of these
-         four head/lede pairs as the section's H2 and lede, so the conversion is
-         a prop change rather than markup: statement heading becomes the
-         question a family types, lede becomes the self-contained answer at 43,
-         39, 41 and 41 words. Each names the household check rather than "all
-         three" or "the whole thing", which pointed outside the block and made
-         it unciteable (§11a.2 rule 3).
-         Every figure is one of this page's own `lanes` pills or `rows`. */
+      /* ANSWER BLOCKS (BUILD-SPEC §11a.2). Figures are the live HelloV
+         catalogue — same SKUs as `/products/hellov`. No second household
+         package is invented here; CTAs go to that page. */
       verifyHead={c.verifyHead}
       verifyLede={c.verifyLede}
       laneCols={3}
@@ -97,7 +92,7 @@ export default async function Page({
           ...c.lanes.address,
           pills: [
             { ...c.pills.currentAddress, fast: true },
-            { ...c.pills.previousEmployment },
+            { ...c.pills.previousEmployment, fast: true },
           ],
         },
       ]}
@@ -112,7 +107,7 @@ export default async function Page({
         { ...c.rows.licence, fast: true },
         { ...c.rows.criminal, fast: true },
         { ...c.rows.address, fast: true },
-        { ...c.rows.previousEmployment },
+        { ...c.rows.previousEmployment, fast: true },
       ]}
       tableNote={c.tableNote}
       /* This section renders `VerticalPage`'s certification cards, so the
@@ -129,7 +124,7 @@ export default async function Page({
         heading: c.closing.heading,
         sub: c.closing.sub,
         ctaLabel: c.closing.ctaLabel,
-        ctaHref: "https://app.helloverify.com",
+        ctaHref: "/products/hellov#plans",
         img: "/img/people/04-nanny-gurugram.jpg",
       }}
     />

@@ -56,6 +56,8 @@ function origins(code: string): string[] {
 }
 
 const GA_SCRIPT_ORIGIN = "https://www.googletagmanager.com";
+const RZP_SCRIPT_ORIGIN = "https://checkout.razorpay.com";
+const RZP_GATE = "TRAVEL_AUTH_BASE";
 
 check(
   "next.config.ts grants GA4's script origin when the measurement id is set",
@@ -93,8 +95,33 @@ check(
  *  §13 asks for; a second origin appearing here is a policy written in two
  *  places, which is how they come to disagree. */
 check(
-  "inject-csp.mjs names no origin other than GA4's",
-  origins(injectorCode).every((o) => o === GA_SCRIPT_ORIGIN),
+  "next.config.ts grants Razorpay's script origin when travel auth is live",
+  configCode.includes(RZP_SCRIPT_ORIGIN),
+  origins(configCode),
+);
+
+check(
+  "inject-csp.mjs grants the same Razorpay origin to the per-page meta",
+  injectorCode.includes(RZP_SCRIPT_ORIGIN),
+  origins(injectorCode),
+);
+
+check(
+  "next.config.ts gates Razorpay on TRAVEL_AUTH_BASE",
+  configCode.includes(RZP_GATE),
+  RZP_GATE,
+);
+
+check(
+  "inject-csp.mjs gates Razorpay on the same variable, so neither grants it alone",
+  injectorCode.includes(RZP_GATE) &&
+    injectorCode.indexOf(RZP_GATE) < injectorCode.indexOf(RZP_SCRIPT_ORIGIN),
+  { hasGate: injectorCode.includes(RZP_GATE) },
+);
+
+check(
+  "inject-csp.mjs names no origin other than GA4's and Razorpay's",
+  origins(injectorCode).every((o) => o === GA_SCRIPT_ORIGIN || o === RZP_SCRIPT_ORIGIN),
   origins(injectorCode),
 );
 

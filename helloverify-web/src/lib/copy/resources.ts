@@ -33,8 +33,10 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./resources.en";
+import { hi } from "./resources.hi";
+import { ar } from "./resources.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type ResourcesCopy = typeof en;
 
-export const RESOURCES: Dictionary<ResourcesCopy> = { en };
+export const RESOURCES: Dictionary<ResourcesCopy> = { en, hi, ar };

@@ -1,0 +1,32 @@
+/** Arabic templates copy, annotated, not in registry, Part 9b.6.
+ *
+ *  `export const ar: TemplatesCopy` — recipe step 1b in `./index`. Not in
+ *  `TEMPLATES`; `routing.locales` is `["en"]`. Both sides move in Part 9b.7.
+ */
+import type { TemplatesCopy } from "./templates";
+
+export const ar: TemplatesCopy = {
+  talkToSales: "اتصل بالمبيعات",
+  bands: {
+    verify: "ما الذي نتحقق منه",
+    steps: "كيف يعمل",
+    table: "المدة & التغطية",
+    compliance: "الامتثال & الأمن",
+  },
+  table: {
+    check: "الفحص",
+    turnaround: "المدة",
+    confirmedWith: "مؤكَّد لدى",
+  },
+  compliance: {
+    head: (
+      <>
+        الجزء غير المثير،<br />منجزاً كما ينبغي.
+      </>
+    ),
+    lede:
+      "كل فحص يشمل أكثر وثائق الشخص خصوصية. الموافقة تأتي أولاً، " +
+      "وللاحتفاظ حدود، وكل ذلك قابل للتدقيق.",
+  },
+  securityInFull: "الأمن & الامتثال، بالكامل — DPA، الإقامة، المطابقة",
+};

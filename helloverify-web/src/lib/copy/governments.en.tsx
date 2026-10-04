@@ -86,7 +86,7 @@ export const en = {
    *  preambles around it genuinely differ ("qualifications", "documents",
    *  "credentials", "company records" verified in the country of issue) and
    *  are four leaves below, while this is the label on a link to
-   *  `/platform/coverage` — the shape `chrome.footer.links` uses, a label per
+   *  `/international` — the shape `chrome.footer.links` uses, a label per
    *  destination. Four identical leaves would let a translator give one page a
    *  different name for the same page. */
   coverageLink: "global coverage",
@@ -162,25 +162,25 @@ export const en = {
      *  images and the grid spans, and keeps `key={c.href}`, so no rendered key
      *  changes. */
     paths: {
-      "/governments/health": {
+      "/solutions/health-authorities": {
         tag: "Health authorities",
         from: "medical credentials",
         h: "Health",
         p: "Every nurse and doctor's degree, licence and history — confirmed with the issuing council before they touch a patient.",
       },
-      "/governments/immigration": {
+      "/solutions/immigration-authorities": {
         tag: "Immigration authorities",
         from: "visas & permits",
         h: "Immigration",
         p: "Applicant documents screened at the source, in the country that issued them — before the stamp.",
       },
-      "/governments/manpower-education": {
+      "/solutions/manpower-and-education-authorities": {
         tag: "Manpower & education",
         from: "work passes",
         h: "Manpower & education",
         p: "Foreign-worker credentials verified for work-pass decisions — the workflow running with Singapore's Ministry of Manpower.",
       },
-      "/governments/trade": {
+      "/solutions/trade-authorities": {
         tag: "Trade & business",
         from: "licences & registries",
         h: "Trade & business",
@@ -256,7 +256,7 @@ export const en = {
     },
   },
 
-  /** `/governments/health` — Template 3 via `components/templates/VerticalPage`.
+  /** `/solutions/health-authorities` — Template 3 via `components/templates/VerticalPage`.
    *
    *  THE FOUR VERTICAL PAGES ALL HAVE THIS SHAPE, and the split between what is
    *  here and what stays in the page is the one `business/enterprise/page.tsx`
@@ -353,7 +353,7 @@ export const en = {
     },
   },
 
-  /** `/governments/immigration`. */
+  /** `/solutions/immigration-authorities`. */
   immigration: {
     crumb: "Immigration authorities",
     eyebrow: "Governments · Immigration authorities",
@@ -440,7 +440,7 @@ export const en = {
     },
   },
 
-  /** `/governments/manpower-education`. */
+  /** `/solutions/manpower-and-education-authorities`. */
   manpowerEducation: {
     crumb: "Manpower & education",
     eyebrow: "Governments · Manpower & education",
@@ -522,7 +522,7 @@ export const en = {
     },
   },
 
-  /** `/governments/trade`. */
+  /** `/solutions/trade-authorities`. */
   trade: {
     crumb: "Trade & business",
     eyebrow: "Governments · Trade & business authorities",
@@ -603,7 +603,7 @@ export const en = {
     },
   },
 
-  /** `/governments/manpower-education/ministry-of-manpower` — the case study,
+  /** `/solutions/manpower-and-education-authorities/ministry-of-manpower` — the case study,
    *  the single strongest proof artefact for the government buyer (IA §4.1).
    *  Real facts only; nothing here is a figure awaiting sign-off. */
   mom: {

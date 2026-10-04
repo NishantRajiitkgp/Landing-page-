@@ -22,13 +22,13 @@
  *    - `src/config/seo-routes.json`  the 28 paths that are in the sitemap
  *    - `public/sitemap.xml`          84 indexed URLs (28 paths x 3 locales)
  *
- *  ON §6.2 — that spec block predates the audience-first IA and its targets
- *  point at routes that do not exist (`/products/bgv-smb`, `/products/hellov`,
- *  `/solutions/trade-authorities`, ...). Targets below follow IA §9, which is
- *  newer. Where the two disagree on the hubs — §6.2 sends `/solutions` and
- *  `/products` to the homepage, IA §9 sends them to `/governments` and
- *  `/business` — IA wins: those are real hub pages now, and dumping the
- *  strongest commercial keyword on the site onto `/` throws the signal away.
+ *  ON CANONICALS — ROUTE-LOGIN-TASKS Part 1 puts the old App.tsx paths back
+ *  as the live URLs (new design, old path). Audience-first verticals this
+ *  rebuild invented (`/business/enterprise`, `/governments/health`, …) 308
+ *  onto those. Hubs (`/governments`, `/business`) stay: §6.2 sent `/solutions`
+ *  and `/products` to the homepage, and dumping those keywords on `/` still
+ *  throws the signal away. Blog and legal stay grouped under `/resources` and
+ *  `/legal` until Part 6.
  */
 
 /** A legacy path and its successor, both written WITHOUT a locale prefix and
@@ -72,7 +72,7 @@ export const LEGACY_LOCALES: readonly string[] = ["en", "hi", "ar"];
  *  the previous version of this comment claimed `unservedLocales()` kept the
  *  two from drifting, which was false: that function compares this list to
  *  `LEGACY_LOCALES` and never sees `routing.locales` at all. */
-export const SERVED_LOCALES: readonly string[] = ["en"];
+export const SERVED_LOCALES: readonly string[] = ["en", "hi", "ar"];
 
 /** Where an unprefixed or unserved-locale path lands. Mirror of
  *  `routing.ts#routing.defaultLocale`, same reason, same guard. */
@@ -159,28 +159,28 @@ export function localeContractDrift(
 /** The old React SPA, which moves to its own host (BUILD-SPEC decision 1:
  *  "Marketing only. Old SPA -> app.helloverify.com").
  *
- *  These are the only cross-host rules on the site. Two of them carry live
- *  state rather than ranking equity — `passwordrecovery` holds a one-time
- *  token in the path, and `PaymentSuccess1` is a payment gateway's return URL,
- *  which is also why every rule here is a 308 rather than a 302: 308 preserves
- *  the request method, so a POSTed payment callback stays a POST.
+ *  Parts 3–5 pulled `/cart`, `/orders`, `/profile-settings`,
+ *  `/orders/candidate`, and `/orders/smb-candidates` back onto this host.
+ *  Two unprefixed rules still carry live state rather than ranking equity
+ *  — `passwordrecovery` holds a one-time token in the path, and
+ *  `PaymentSuccess1` is a payment gateway's return URL — which is also why
+ *  every rule here is a 308 rather than a 302: 308 preserves the request
+ *  method, so a POSTed payment callback stays a POST.
  *
  *  NOTE — this host must be live before cutover. A 308 is cached by the
  *  browser forever, so shipping these against a host that does not resolve
  *  yet makes them permanently dead for anyone who hits one first. */
 export const APP_HOST = "https://app.helloverify.com";
 
+/** Old immigration-applicant CTA (`immigrationMigrationService.base.json`).
+ *  Visa screening is a separate product — not the www cart. */
+export const VISA_HOST = "https://visa.helloverify.com/";
+
 /** Locale-prefixed SPA routes (they lived under `/:lang` in the old App.tsx).
  *  The locale is preserved rather than consolidated onto `en` — the app has
  *  its own locale handling and none of this is indexed (robots.txt disallows
  *  all of it), so there is no consolidation to do. */
-export const APP_ROUTES: readonly LegacyRoute[] = [
-  { from: "/cart", to: "/cart", why: "App.tsx ProtectedRoute" },
-  { from: "/cartlist", to: "/cart", why: "App.tsx LocaleRedirect to /cart" },
-  { from: "/orders", to: "/orders", why: "App.tsx ProtectedRoute" },
-  { from: "/orders/:path*", to: "/orders/:path*", why: "App.tsx — candidate, smb-candidates, profile-settings" },
-  { from: "/profile-settings", to: "/profile-settings", why: "App.tsx ProtectedRoute" },
-];
+export const APP_ROUTES: readonly LegacyRoute[] = [];
 
 /** SPA routes the old server handled WITHOUT a locale prefix — these were
  *  `<rewrite>` rules in web.config matching `^consumer/...`, not React routes,
@@ -199,46 +199,46 @@ export const APP_ROUTES_UNPREFIXED: readonly LegacyRoute[] = [
 ];
 
 export const LEGACY_ROUTES: readonly LegacyRoute[] = [
-  // Business
-  { from: "/enterprise", to: "/business/enterprise", why: "IA §9 — duplicate of /products/bgv-enterprise, consolidate" },
-  { from: "/products/bgv-enterprise", to: "/business/enterprise", why: "IA §9 — same component, two URLs" },
-  { from: "/products/bgv-smb", to: "/business/smb", why: "IA §9 — moved under audience hub" },
-  { from: "/smb", to: "/business/smb", why: "web.config rule Redirect Obsolete SMB Hub" },
-  { from: "/employee-verification", to: "/business/employee-verification", why: "IA §9 — moved under audience hub" },
-  { from: "/products/customer-kyc", to: "/business/customer-kyc", why: "IA §9 — moved under audience hub" },
-  { from: "/kyc", to: "/business/customer-kyc", why: "web.config rule Redirect Obsolete Kyc Paths" },
-  { from: "/products/trust-safety", to: "/business/customer-kyc", why: "web.config rule Redirect Obsolete Kyc Paths" },
-  { from: "/products/certifier", to: "/business/certifier", why: "IA §9 — moved under audience hub" },
-
-  // Governments
-  { from: "/solutions/health-authorities", to: "/governments/health", why: "IA §9 — moved under audience hub" },
-  { from: "/solutions/immigration-authorities", to: "/governments/immigration", why: "IA §9 — moved under audience hub" },
-  { from: "/solutions/manpower-and-education-authorities", to: "/governments/manpower-education", why: "IA §9 — shorter, same meaning" },
+  // Audience-first URLs this rebuild invented. The old SPA paths are canonical
+  // again (ROUTE-LOGIN-TASKS Part 1) — new design, old URL. Exact-path 308s;
+  // children such as /governments/immigration/embassy-of-latvia stay put.
+  { from: "/business/enterprise", to: "/products/bgv-enterprise", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/business/smb", to: "/products/bgv-smb", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/business/employee-verification", to: "/employee-verification", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/business/customer-kyc", to: "/products/customer-kyc", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/business/certifier", to: "/products/certifier", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/governments/health", to: "/solutions/health-authorities", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/governments/immigration", to: "/solutions/immigration-authorities", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/governments/manpower-education", to: "/solutions/manpower-and-education-authorities", why: "Part 1 — old App.tsx path is canonical" },
   {
-    from: "/solutions/manpower-and-education-authorities/ministry-of-manpower",
-    to: "/governments/manpower-education/ministry-of-manpower",
-    why: "IA §9 — deepest indexed URL on the old site",
+    from: "/governments/manpower-education/ministry-of-manpower",
+    to: "/solutions/manpower-and-education-authorities/ministry-of-manpower",
+    why: "Part 1 — old App.tsx path is canonical",
   },
-  { from: "/solutions/trade-authorities", to: "/governments/trade", why: "IA §9 — moved under audience hub" },
-  { from: "/solutions/business-trade", to: "/governments/trade", why: "web.config rule Redirect Obsolete Trade Authorities" },
+  { from: "/governments/trade", to: "/solutions/trade-authorities", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/individuals/hellov", to: "/products/hellov", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/individuals/immigration", to: "/products/immigration", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/platform/technology", to: "/technology", why: "Part 1 — old App.tsx path is canonical" },
+  { from: "/platform/coverage", to: "/international", why: "Part 1 — old App.tsx path is canonical" },
 
-  // Individuals
-  { from: "/products/hellov", to: "/individuals/hellov", why: "IA §9 — moved under audience hub" },
-  { from: "/consumer", to: "/individuals/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
-  { from: "/consumer/basic", to: "/individuals/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
-  { from: "/consumer/premium", to: "/individuals/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
-  { from: "/premium/consumer-service", to: "/individuals/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
-  { from: "/products/immigration", to: "/individuals/immigration", why: "IA §9 — moved under audience hub" },
-  { from: "/visa-screening", to: "/individuals/immigration", why: "web.config rule Redirect Obsolete Visa Screening" },
+  { from: "/cartlist", to: "/cart", why: "App.tsx LocaleRedirect; cart now lives on this host" },
+
+  // Old aliases — destinations match App.tsx, not the audience-first tree.
+  { from: "/enterprise", to: "/products/bgv-enterprise", why: "App.tsx duplicate of /products/bgv-enterprise; sitemap listed one" },
+  { from: "/smb", to: "/products/bgv-smb", why: "web.config rule Redirect Obsolete SMB Hub" },
+  { from: "/kyc", to: "/products/customer-kyc", why: "web.config rule Redirect Obsolete Kyc Paths" },
+  { from: "/products/trust-safety", to: "/products/customer-kyc", why: "web.config rule Redirect Obsolete Kyc Paths" },
+  { from: "/solutions/business-trade", to: "/solutions/trade-authorities", why: "web.config rule Redirect Obsolete Trade Authorities" },
+  { from: "/consumer", to: "/products/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
+  { from: "/consumer/basic", to: "/products/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
+  { from: "/consumer/premium", to: "/products/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
+  { from: "/premium/consumer-service", to: "/products/hellov", why: "web.config rule Redirect Obsolete Consumer Paths" },
+  { from: "/visa-screening", to: "/products/immigration", why: "web.config rule Redirect Obsolete Visa Screening" },
   {
     from: "/premium/immigration-applicant",
-    to: "/individuals/immigration",
-    why: "web.config rule Redirect Obsolete Immigration Applicant; its ?tab=applicant has no equivalent — the new page is not tabbed",
+    to: "/products/immigration?tab=applicant",
+    why: "App.tsx LocaleRedirect to the applicant tab (visa portal CTA)",
   },
-
-  // Platform
-  { from: "/technology", to: "/platform/technology", why: "IA §9 — moved under platform hub" },
-  { from: "/international", to: "/platform/coverage", why: "IA §9 — renamed, same subject" },
 
   // Resources
   { from: "/blog", to: "/resources/blog", why: "IA §9 — blog becomes resources" },
@@ -308,8 +308,8 @@ export const LEGACY_ROUTES: readonly LegacyRoute[] = [
   { from: "/premium/health-practitioners", to: "/", why: "App.tsx — temporarily hidden, redirect direct access to home" },
   {
     from: "/solutions/manpower-and-education-authorities/educationae",
-    to: "/",
-    why: "App.tsx — keep path, redirect direct access to home until Client AE go-live",
+    to: "/governments/manpower-education/mohesr",
+    why: "Part 10 — old AE alias; MOHESR is live",
   },
 ];
 
@@ -334,11 +334,10 @@ export const LEGACY_ROUTES: readonly LegacyRoute[] = [
  *
  *  The tracking tab was real — `ContactUsUnified.tsx` L738-L879 has an
  *  `'enquiry' | 'track'` tab pair — but it was reachable only from
- *  `/contact?tab=track`, never from `/support/track`. So there is no
- *  destination to invent: this URL's production behaviour was "go to the
- *  contact page", the new contact page is not tabbed (same reason the
- *  `/premium/immigration-applicant` row drops its `?tab=applicant`), and the
- *  row above states exactly that. Closed 23 Sep 2026.
+ *  `/contact?tab=track`, never from `/support/track`. Part 6 restored that
+ *  pair on `/contact`. This URL's production behaviour stays "go to the
+ *  contact page" (enquiry is the default), which is what both old authorities
+ *  did. Closed 23 Sep 2026; tabs live on `/contact` as of 5 Oct 2026.
  */
 export const PENDING_DECISIONS: readonly {
   readonly from: string;

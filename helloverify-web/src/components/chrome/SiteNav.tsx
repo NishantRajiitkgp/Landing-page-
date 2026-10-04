@@ -15,6 +15,9 @@
  * The ORDER, hrefs and icons stay here; the words are in `lib/copy/chrome`,
  * keyed by item id so an entry without a label is a type error.
  */
+import { getLocale } from "next-intl/server";
+
+import { NavAuth } from "@/components/auth/NavAuth";
 import { Logo } from "@/components/brand/Logo";
 import { AppLink } from "@/components/chrome/AppLink";
 import { LocaleSwitch } from "@/components/chrome/LocaleSwitch";
@@ -50,38 +53,38 @@ const ICONS: Record<IconId, React.ReactNode> = {
 /** Solutions: three audiences, each column heading linking to its hub. */
 const SOLUTIONS: { col: ColId; hub: string; items: Item[] }[] = [
   { col: "gov", hub: "/governments", items: [
-    { id: "govHealth", href: "/governments/health", icon: "heart" },
-    { id: "govImmigration", href: "/governments/immigration", icon: "bank" },
-    { id: "govEducation", href: "/governments/manpower-education", icon: "doc" },
-    { id: "govTrade", href: "/governments/trade", icon: "building" },
+    { id: "govHealth", href: "/solutions/health-authorities", icon: "heart" },
+    { id: "govImmigration", href: "/solutions/immigration-authorities", icon: "bank" },
+    { id: "govEducation", href: "/solutions/manpower-and-education-authorities", icon: "doc" },
+    { id: "govTrade", href: "/solutions/trade-authorities", icon: "building" },
   ] },
   { col: "biz", hub: "/business", items: [
-    { id: "forBusiness", href: "/business/enterprise", icon: "case" },
-    { id: "forSmb", href: "/business/smb", icon: "store" },
-    { id: "employee", href: "/business/employee-verification", icon: "user" },
-    { id: "kyc", href: "/business/customer-kyc", icon: "id" },
+    { id: "forBusiness", href: "/products/bgv-enterprise", icon: "case" },
+    { id: "forSmb", href: "/products/bgv-smb", icon: "store" },
+    { id: "employee", href: "/employee-verification", icon: "user" },
+    { id: "kyc", href: "/products/customer-kyc", icon: "id" },
   ] },
   { col: "consumer", hub: "/individuals", items: [
     { id: "individuals", href: "/individuals/home-family", icon: "star" },
-    { id: "visa", href: "/individuals/immigration", icon: "passport" },
-    { id: "global", href: "/platform/coverage", icon: "globe" },
+    { id: "visa", href: "/products/immigration?tab=applicant", icon: "passport" },
+    { id: "global", href: "/international", icon: "globe" },
   ] },
 ];
 
 /** The old site's two columns: businesses on the left, people on the right.
  *  `.nv-grid2` fills column-first, so this order is left column, then right. */
 const PRODUCTS: Item[] = [
-  { id: "bgvEnterprise", href: "/business/enterprise", icon: "case" },
-  { id: "bgvSmb", href: "/business/smb", icon: "store" },
-  { id: "certifier", href: "/business/certifier", icon: "badge" },
-  { id: "immigrationDocs", href: "/governments/immigration", icon: "bank" },
-  { id: "hellov", href: "/individuals/hellov", icon: "chat" },
-  { id: "trust", href: "/business/customer-kyc", icon: "shield" },
+  { id: "bgvEnterprise", href: "/products/bgv-enterprise", icon: "case" },
+  { id: "bgvSmb", href: "/products/bgv-smb", icon: "store" },
+  { id: "certifier", href: "/products/certifier", icon: "badge" },
+  { id: "immigrationDocs", href: "/products/immigration?tab=applicant", icon: "bank" },
+  { id: "hellov", href: "/products/hellov", icon: "chat" },
+  { id: "trust", href: "/products/customer-kyc", icon: "shield" },
 ];
 
 const PREMIUM: Item[] = [
-  { id: "premHealth", href: "/governments/health", icon: "heart" },
-  { id: "premImmigration", href: "/individuals/immigration", icon: "passport" },
+  { id: "premHealth", href: "/solutions/health-authorities", icon: "heart" },
+  { id: "premImmigration", href: "/products/immigration?tab=applicant", icon: "passport" },
   { id: "premConsumer", href: "/individuals/home-family", icon: "id" },
 ];
 
@@ -111,8 +114,16 @@ function Arrow() {
 }
 
 export async function SiteNav() {
-  const t = (await copy(CHROME)).nav;
+  const chrome = await copy(CHROME);
+  const t = chrome.nav;
   const m = t.menus;
+  const locale = await getLocale();
+  const auth = {
+    locale,
+    signUp: t.signUp,
+    account: t.account,
+    userMenu: t.userMenu,
+  };
 
   return (
     <header className="nav2">
@@ -147,11 +158,12 @@ export async function SiteNav() {
             <p className="nv-h">{m.support.col}</p>
             {SUPPORT.map((it) => <Entry key={it.id} item={it} t={t} />)}
           </NavDropdown>
-          <AppLink href="/platform/technology" className="nv-l">{t.technology}</AppLink>
+          <AppLink href="/technology" className="nv-l">{t.technology}</AppLink>
         </nav>
         <div className="acts">
           {/* `LocaleSwitch` turns into a real switcher on one array entry — see its header. */}
           <LocaleSwitch />
+          <NavAuth {...auth} placement="bar" />
           <AppLink href="/contact" className="btn btn-ink btn-sm">{t.cta}</AppLink>
           {/* Real text, not `aria-label`: a <label> has no role that permits
               a name from `aria-label` (axe `aria-prohibited-attr`, serious). */}
@@ -196,7 +208,9 @@ export async function SiteNav() {
             {SUPPORT.map((it) => <Entry key={it.id} item={it} t={t} />)}
           </div>
         </details>
-        <AppLink href="/platform/technology" className="nv-ml"><span>{t.technology}</span><span className="k">→</span></AppLink>
+        <AppLink href="/technology" className="nv-ml"><span>{t.technology}</span><span className="k">→</span></AppLink>
+        <NavAuth {...auth} placement="menu" />
+        <LocaleSwitch />
       </nav>
     </header>
   );

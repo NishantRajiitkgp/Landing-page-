@@ -32,7 +32,7 @@
   --v2-wy-rose: #C2463B;
   --v2-wy-teal: #1F7A6D;
   --v2-wy-slate: #3F5F8F;
-  --v2-wy-mint-t: #E2F2E9;
+  --v2-wy-mint-t: var(--primary-pale);
   --v2-wy-sky-t: #E1ECF8;
   --v2-wy-sand-t: #F2E8D6;
   --v2-wy-lilac-t: #EAE3F5;
@@ -58,13 +58,13 @@
 
 .wy-vis { position: relative; height: 310px; flex: none; overflow: hidden; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--tint) 35%, var(--white)), var(--tint) 70%); }
 .wy-vis::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgb(from var(--ink) r g b / .07) 1px, transparent 1.2px); background-size: 18px 18px; -webkit-mask-image: linear-gradient(180deg, var(--ink), transparent 90%); mask-image: linear-gradient(180deg, var(--ink), transparent 90%); pointer-events: none; }
-.wy-mint { --acc: var(--green); --tint: var(--v2-wy-mint-t); }
+.wy-mint { --acc: var(--primary); --tint: var(--v2-wy-mint-t); }
 .wy-sky { --acc: var(--v2-wy-sky); --tint: var(--v2-wy-sky-t); }
 .wy-sand { --acc: var(--v2-wy-sand); --tint: var(--v2-wy-sand-t); }
 .wy-lilac { --acc: var(--v2-wy-lilac); --tint: var(--v2-wy-lilac-t); }
 .wy-rose { --acc: var(--v2-wy-rose); --tint: var(--v2-wy-rose-t); }
 .wy-teal { --acc: var(--v2-wy-teal); --tint: var(--v2-wy-teal-t); }
-.wy-paper { --acc: var(--green); --tint: var(--v2-paper-lo); }
+.wy-paper { --acc: var(--primary); --tint: var(--v2-paper-lo); }
 .wy-slate { --acc: var(--v2-wy-slate); --tint: var(--v2-wy-slate-t); }
 
 .wy-body { position: relative; flex: 1; padding: 26px 34px 30px; display: flex; flex-direction: column; }
@@ -144,7 +144,7 @@
    typed two off-palette hexes here; these are the card's accent at .7 and
    the sand accent, within a few units and with no new literal. */
 .wy-cl .wy-ck { background: rgb(from var(--acc) r g b / .7); }
-.wy-cl .wy-cs { background: var(--green); }
+.wy-cl .wy-cs { background: var(--primary); }
 .wy-cl .wy-cv { background: var(--v2-wy-sand); }
 .wy-sys { display: grid; gap: 10px; }
 .wy-sys span { display: block; padding: 10px 14px; border-radius: 12px; background: var(--white); font-family: var(--mono); font-size: 11px; color: var(--ink); box-shadow: 0 10px 22px -14px rgb(from var(--ink) r g b / .4); position: relative; }
@@ -160,7 +160,7 @@
    height is hit area only. */
 .wy-b { width: 34px; height: 24px; padding: 0; border: 0; background: none; cursor: pointer; display: flex; align-items: center; }
 .wy-b i { position: relative; display: block; width: 100%; height: 3px; border-radius: 3px; background: var(--hair); overflow: hidden; }
-.wy-b i::after { content: ""; position: absolute; inset: 0; background: var(--green); transform: scaleX(0); transform-origin: var(--origin-x); }
+.wy-b i::after { content: ""; position: absolute; inset: 0; background: var(--primary); transform: scaleX(0); transform-origin: var(--origin-x); }
 .wy-b:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 3px; }
 .wy-done i::after { transform: scaleX(1); }
 /* The progress runs only once the island has mounted (`wy-run`), and its

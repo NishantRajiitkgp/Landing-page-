@@ -27,7 +27,7 @@
  *                                        (+1: the shared `crumb` leaf)
  *
  *  `./index`'s rule predicts the shape and gets it right in both directions.
- *  `/platform/coverage` is 3.0x because 51 of its 99 leaves are the region
+ *  `/international` is 3.0x because 51 of its 99 leaves are the region
  *  table — three region headings and 24 country/time pairs living as string
  *  properties, which a `>text<` matcher cannot see at all. The hub is BELOW 1x
  *  for the opposite reason and it is the same reason §10 records for `Hero`:
@@ -41,7 +41,7 @@
  *    lives in `lib/seo/copy.ts`, which `check:sitemap` compares. §8.1's table
  *    owns what the `<head>` says; this one owns the `<body>`.
  *
- *  - **The two `<pre>` samples on `/platform/technology`.** A JSON request
+ *  - **The two `<pre>` samples on `/technology`.** A JSON request
  *    body and a webhook payload are CODE, not copy: `"driving_licence"`,
  *    `"callback_url"` and `"2026-09-16T10:08Z"` are the API's own spelling and
  *    are identical in every locale, exactly as an href is. They stay as the
@@ -135,7 +135,7 @@ export const en = {
      *  `business.hub.paths` these three are written out LONGHAND in the page
      *  rather than mapped, so no `key=` is involved at all. */
     paths: {
-      "/platform/technology": {
+      "/technology": {
         tag: "Technology",
         from: "API & pipeline",
         h: "Technology & APIs",
@@ -147,7 +147,7 @@ export const en = {
         h: "Security & compliance",
         p: "Certifications, data residency, sub-processors, accessibility conformance — the file your committee asks for.",
       },
-      "/platform/coverage": {
+      "/international": {
         tag: "Coverage",
         from: "120+ countries",
         h: "Global coverage",
@@ -156,7 +156,7 @@ export const en = {
     },
   },
 
-  /** `/platform/coverage` — where a document can be confirmed at its source. */
+  /** `/international` — where a document can be confirmed at its source. */
   coverage: {
     crumb: "Global coverage",
 
@@ -247,7 +247,7 @@ export const en = {
      *  page casts it away — and a cast in the one place the type gate is
      *  supposed to bite is worse than no gate. Which region a country belongs
      *  to is the page's ordered list either way, the same thing `LANES` is on
-     *  `/business/enterprise`. All 24 keys are distinct, which is what makes
+     *  `/products/bgv-enterprise`. All 24 keys are distinct, which is what makes
      *  one record legal.
      *
      *  BOTH HALVES RENDER AS `key=`. `key={g.r}` is the region title and
@@ -376,7 +376,7 @@ export const en = {
     },
   },
 
-  /** `/platform/technology` — how it works, for a technical evaluator. */
+  /** `/technology` — how it works, for a technical evaluator. */
   technology: {
     crumb: "Technology & APIs",
 
@@ -575,7 +575,7 @@ export const en = {
      *  call to action to the same route on the same page; three leaves would
      *  let a translator make the page ask for three different things, which is
      *  the drift this layer exists to stop rather than a freedom worth having.
-     *  The `/platform/coverage` `hours` leaf is the same judgement. */
+     *  The `/international` `hours` leaf is the same judgement. */
     requestPack: "Request the compliance pack",
 
     hero: {

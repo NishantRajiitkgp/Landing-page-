@@ -53,7 +53,6 @@ export async function IntlGrid() {
     <section className="wrap ig" aria-labelledby="ig-h">
       <div className="sec-head ig-head">
         <h2 className="h2" id="ig-h">{t.heading}</h2>
-        <p className="lede">{t.lede}</p>
       </div>
       <ul className="ig-grid">
         {CARDS.map(({ k, flag, slug, img, pos, big }) => {

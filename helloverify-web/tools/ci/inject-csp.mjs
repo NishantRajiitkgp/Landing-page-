@@ -90,6 +90,18 @@ const GA_ORIGINS = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
   ? ["https://www.googletagmanager.com"]
   : [];
 
+/** Razorpay's script origin, admitted to the meta only when live travel
+ *  commerce is on — mirroring `next.config.ts`'s `const rzp = …` exactly.
+ *  Gated by `TRAVEL_AUTH_BASE` / `TRAVEL_AUTH_MOCK`. Without this the header
+ *  can grant the origin and the intersection still refuse checkout.js. */
+const mockForced = ["1", "true", "yes"].includes(
+  (process.env.TRAVEL_AUTH_MOCK ?? "").trim().toLowerCase(),
+);
+const RAZORPAY_ORIGINS =
+  Boolean(process.env.TRAVEL_AUTH_BASE?.trim()) && !mockForced
+    ? ["https://checkout.razorpay.com"]
+    : [];
+
 const APP = ".next/server/app";
 
 /** Marks our own tag so a second run replaces rather than stacks. */
@@ -137,7 +149,7 @@ for (const file of pages(APP)) {
   // Only `script-src`. Every other directive stays in the one header
   // `next.config.ts` defines — §13's "single CSP source, no duplicated
   // copies". Two places declaring `img-src` is how they come to disagree.
-  const policy = ["script-src 'self'", ...unique, ...GA_ORIGINS].join(" ");
+  const policy = ["script-src 'self'", ...unique, ...GA_ORIGINS, ...RAZORPAY_ORIGINS].join(" ");
   const tag = `<meta ${MARK} http-equiv="Content-Security-Policy" content="${policy}">`;
 
   const at = head.index + head[0].length;

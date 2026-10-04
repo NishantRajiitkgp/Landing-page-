@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/chrome/PageShell";
 import { CHECKS, getCheck } from "@/lib/content/checks";
 import { AppLink } from "@/components/chrome/AppLink";
+import { CommerceCta } from "@/components/commerce/CommerceCta";
 import { SecHead } from "@/components/chrome/SecHead";
 /** `CHECKS_COPY`, not `CHECKS`: the catalogue above already owns that name in
  *  this file, and the two are deliberately different things — see the
@@ -67,7 +68,18 @@ export default async function CheckPage({
         <p className="sub">{c.answers}</p>
         <div className="hrow">
           <AppLink href="/contact" className="btn btn-ink">{t.hero.talkToSales}</AppLink>
-          <a href="https://app.helloverify.com" className="btn btn-line">{t.hero.buy}</a>
+          <CommerceCta
+            className="btn btn-line"
+            label={t.hero.buy}
+            loginRedirect={`checks/${c.slug}`}
+            packageDetails={{
+              packageType: "home",
+              packageId: c.slug,
+              packageName: c.name,
+              description: c.answers,
+              includedChecks: c.fields.slice(0, 4),
+            }}
+          />
         </div>
       </div>
 

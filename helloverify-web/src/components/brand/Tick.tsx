@@ -11,7 +11,7 @@
  *  individually drawn marks rather than repeats of this one.
  *
  *  THE COLOUR COMES FROM CSS, NOT FROM THE ATTRIBUTE, and that is a deliberate
- *  choice over `stroke="var(--green)"`. A `var()` in an SVG presentation
+ *  choice over `stroke="var(--primary)"`. A `var()` in an SVG presentation
  *  attribute is legal CSS and does work in current browsers — but this project
  *  does not yet render anything in a browser (that is TASKS.md Part 6), so that
  *  would be a claim nothing here can check. `currentColor` needs no such claim:
@@ -28,7 +28,7 @@
  *  colours in `sections/International.tsx`, which are facts about the world and
  *  correctly remain literals. */
 const TONE_CLASS = {
-  /** On paper — `--green`. 59 of the 65. */
+  /** On paper — `--primary-ink`. 59 of the 65. */
   green: "",
   /** On the ink-coloured bands, where the brand green does not carry. */
   light: " tick-light",

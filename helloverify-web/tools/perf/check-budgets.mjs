@@ -111,6 +111,13 @@ const CEILING = {
    *  - font 245 -> 127: 123.3 KB after the wght pin (was 241.9).
    *  - total 468 -> 443: 430.0 KB.
    *
+   *  HI / AR ARE NOT IN THIS CEILING. The four Noto faces (~49–52 KB each,
+   *  two per locale) load only when `scriptStackOf` says so, with
+   *  `preload: false`, so `/en` HTML does not reference them and this
+   *  measurement does not move. The day `hi` ships, those pages will land
+   *  near Latin + ~100 KB and need their own ceiling — do not raise THIS
+   *  number to hide that. See `src/lib/i18n/fonts.ts`.
+   *
    *  Each is the measurement plus ~3%, the headroom rule stated above. */
   script: 188,
   stylesheet: 43,

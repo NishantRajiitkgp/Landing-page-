@@ -1,20 +1,21 @@
 /** The relay map's terrain, used only by `./relayPaint.ts`: the 24 hour
  *  meridians, the night side (a real terminator from the solar declination
  *  on that date), the land dots graded green-by-day to graphite-by-night,
- *  and the sun. Ported unchanged from the follow-the-sun painter it replaced
- *  — same maths and alphas — so the map keeps its day and night.
+ *  and the sun. The night wash is heavier than the painter it replaced:
+ *  at the old alpha the night side read as pale day.
  *
  *  COLOUR COMES FROM CSS. Canvas 2D cannot take `var()`, so `readPalette()`
  *  reads the tokens and the `--v2-su-*` tints (`app/v2/presence.css`) off the
  *  stage with `getComputedStyle` once, and `rgba()` recombines them with the
  *  alphas here. No colour is typed in this file. */
+import { cssRgb, type RGB } from "@/lib/cssColour";
 import { landDots } from "@/lib/sunLand";
 import { MAP_H, MAP_W } from "@/lib/sunMap";
 
-export type RGB = [number, number, number];
+export type { RGB };
 const TOKENS = {
-  green: "--green",
-  greenLight: "--green-light",
+  green: "--primary",
+  greenLight: "--primary-light",
   ink: "--ink",
   white: "--white",
   glow: "--v2-su-glow",
@@ -27,15 +28,9 @@ const TOKENS = {
 };
 export type Palette = Record<keyof typeof TOKENS, RGB>;
 
-function hexRgb(v: string): RGB {
-  const h = v.trim().replace("#", "");
-  const n = parseInt(h.length === 3 ? [...h].map((c) => c + c).join("") : h.slice(0, 6), 16) || 0;
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
-
 export function readPalette(el: Element): { pal: Palette; mono: string } {
   const cs = getComputedStyle(el);
-  const pal = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, hexRgb(cs.getPropertyValue(v))])) as Palette;
+  const pal = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, cssRgb(cs.getPropertyValue(v))])) as Palette;
   return { pal, mono: cs.getPropertyValue("--mono").trim() || "monospace" };
 }
 
@@ -116,7 +111,8 @@ export class World {
         px[o] = nr;
         px[o + 1] = ng;
         px[o + 2] = nb;
-        px[o + 3] = Math.round(nightOf(sl * sd + cl * cd * Math.cos(lon - L0)) * 22);
+        // 22 left the night side a tint. 190 of --v2-su-night is a real night.
+        px[o + 3] = Math.round(nightOf(sl * sd + cl * cd * Math.cos(lon - L0)) * 190);
       }
     }
     this.nctx.putImageData(this.img, 0, 0);
@@ -133,10 +129,13 @@ export class World {
       p.moveTo(P[i] + 1.7, P[i + 1]);
       p.arc(P[i], P[i + 1], 1.7, 0, TAU);
     }
+    // Day stays the brand colour. Night lands on ink, not the pale dusk,
+    // so the dots stay darker than the day side once the wash is down.
+    const nightDot = pal.dusk.map((c, i) => Math.round(c * 0.28 + pal.ink[i] * 0.72)) as RGB;
     for (let b = 0; b <= B; b++) {
       const f = b / B;
-      const mix = pal.green.map((c, i) => Math.round(c + (pal.dusk[i] - c) * f)) as RGB;
-      ctx.fillStyle = rgba(mix, 0.5 - 0.3 * f);
+      const mix = pal.green.map((c, i) => Math.round(c + (nightDot[i] - c) * f)) as RGB;
+      ctx.fillStyle = rgba(mix, 0.62 - 0.14 * f);
       ctx.fill(paths[b]);
     }
 

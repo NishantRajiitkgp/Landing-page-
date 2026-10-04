@@ -102,31 +102,31 @@ export const en = {
      *  the grid spans and the images; those are routing and layout. It also
      *  keeps `key={c.href}`, so no rendered key changes. */
     paths: {
-      "/business/enterprise": {
+      "/products/bgv-enterprise": {
         tag: "Enterprise",
         from: "2,000+ clients",
         h: "Enterprise BGV",
         p: "High-volume hiring with an SLA. API, bulk upload, and a team that answers.",
       },
-      "/business/smb": {
+      "/products/bgv-smb": {
         tag: "Small & medium business",
         from: "from 30 min",
         h: "SMB packages",
         p: "Pick a package, upload documents, get answers. Public pricing, no sales call needed.",
       },
-      "/business/employee-verification": {
+      "/employee-verification": {
         tag: "HR & operations",
         from: "60 min",
         h: "Employee verification",
         p: "Existing staff, contractors and gig workforces — verified and re-verified.",
       },
-      "/business/customer-kyc": {
+      "/products/customer-kyc": {
         tag: "Trust & safety",
         from: "at signup",
         h: "Customer KYC",
         p: "Verify customers the moment they sign up, before they can do harm.",
       },
-      "/business/certifier": {
+      "/products/certifier": {
         tag: "Procurement",
         from: "2 days",
         h: "Vendor due diligence",
@@ -230,7 +230,7 @@ export const en = {
     },
   },
 
-  /** `/business/enterprise` — Template 3, the workhorse. */
+  /** `/products/bgv-enterprise` — Template 3, the workhorse. */
   enterprise: {
     crumb: "Enterprise BGV",
     closing: {
@@ -440,7 +440,7 @@ export const en = {
     },
   },
 
-  /** `/business/smb` — Template 4, the page with public pricing. */
+  /** `/products/bgv-smb` — Template 4, the page with public pricing. */
   smb: {
     crumb: "SMB packages",
     closing: {
@@ -634,7 +634,7 @@ export const en = {
     },
   },
 
-  /** `/business/employee-verification` — Template 3. */
+  /** `/employee-verification` — Template 3. */
   employeeVerification: {
     crumb: "Employee verification",
     closing: {
@@ -766,7 +766,7 @@ export const en = {
     },
   },
 
-  /** `/business/customer-kyc` — Template 3. Absorbs legacy /kyc and
+  /** `/products/customer-kyc` — Template 3. Absorbs legacy /kyc and
    *  /products/trust-safety. */
   customerKyc: {
     crumb: "Customer KYC",
@@ -899,7 +899,7 @@ export const en = {
     },
   },
 
-  /** `/business/certifier` — vendor due diligence. Descriptive name leads,
+  /** `/products/certifier` — vendor due diligence. Descriptive name leads,
    *  brand follows (IA §10.2), which is why the crumb is the category and the
    *  product name only appears inside the copy. */
   certifier: {

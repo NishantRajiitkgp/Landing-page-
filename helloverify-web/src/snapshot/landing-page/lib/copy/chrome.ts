@@ -28,7 +28,9 @@ import { en } from "./chrome.en";
  *  this, which is the whole type guarantee — see `./index`. */
 export type ChromeCopy = typeof en;
 
-export const CHROME: Dictionary<ChromeCopy> = { en };
+/** Snapshot is English-only (`/landing-page` hardcodes `defaultLocale`).
+ *  The extra keys satisfy live `Dictionary<T>` after Part 9b.7. */
+export const CHROME: Dictionary<ChromeCopy> = { en, hi: en, ar: en };
 
 /** A destination `SiteNav` may list. */
 export type NavHref = keyof ChromeCopy["nav"]["links"];

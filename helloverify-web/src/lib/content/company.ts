@@ -230,7 +230,7 @@ export type CredentialMark = {
  *    credentials where `/about` and `/platform/security-compliance` showed
  *    **seven**. The three lines added on 22 Sep (TASKS 2b) reached the two
  *    pages that rule names and stopped there.
- *  - The homepage said **"GDPR compliant"**, and so did `/business/enterprise`
+ *  - The homepage said **"GDPR compliant"**, and so did `/products/bgv-enterprise`
  *    — on the card AND in its answer block — against "GDPR — aligned" on
  *    `/platform/security-compliance`, whose standfirst says in so many words
  *    that it does not blur those two. Two surfaces blurred them.

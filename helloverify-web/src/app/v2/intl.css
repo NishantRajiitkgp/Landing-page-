@@ -23,7 +23,7 @@
 .ig-title b { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.2vw, 30px); line-height: 1.05; letter-spacing: -.02em; }
 .ig-p { font-size: 15px; line-height: 1.45; color: rgb(from var(--white) r g b / .86); }
 .ig-tat { display: inline-flex; align-self: flex-start; align-items: center; gap: 8px; white-space: nowrap; margin-top: 4px; height: 26px; padding-inline: 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .14); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); font-family: var(--mono); font-size: 11px; letter-spacing: .04em; }
-.ig-tat i { font-style: normal; text-transform: uppercase; letter-spacing: .08em; color: var(--green-light); }
+.ig-tat i { font-style: normal; text-transform: uppercase; letter-spacing: .08em; color: var(--primary-light); }
 .ig-go { position: absolute; inset-inline-end: 20px; top: 20px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--white); color: var(--ink); opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s cubic-bezier(.16, 1, .3, 1); }
 .ig-card:hover .ig-go, .ig-link:focus-visible .ig-go { opacity: 1; transform: none; }
 .ig-card:hover .pimg { transform: scale(1.05); }

@@ -19,7 +19,7 @@
 import { getLocale } from "next-intl/server";
 
 import { copy } from "@/lib/copy/request";
-import { SECTIONS, type GovSealId } from "@/lib/copy/sections";
+import { SECTIONS, type GovSealId, type SectionsCopy } from "@/lib/copy/sections";
 import { threadPath } from "@/lib/govArt";
 import { localise } from "@/lib/i18n/href";
 import "@/app/v2/govseals.css";
@@ -33,13 +33,29 @@ import { GovSealsStage } from "./GovSealsStage";
  *  emblems and Latvia's arms are the old site's files; Italy's is the
  *  Republic's emblem, cropped from the embassy lockup (whose script line names
  *  Washington, not New Delhi). A seal opens its record under the row; `href`
- *  is the authority's own page, which renders the same record. */
-export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string }[] = [
-  { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/governments/manpower-education/ministry-of-manpower" },
-  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration/embassy-of-latvia" },
-  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/governments/immigration/embassy-of-italy" },
-  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/governments/manpower-education/mohesr" },
+ *  is the authority's own page, which renders the same record.
+ *
+ *  `ctas` is each record's call-to-action cards, in the order of its copy's
+ *  `ctas`: the buttons on each card (the first is the main one), named by
+ *  `govSeals.acts`. Where a button goes is `ACT_HREF`, except `apply`, the
+ *  authority's own applicant route (`apply` below). NO APPLICANT PORTAL IS
+ *  LINKED YET (1 Oct 2026): MOM's applicants go to its case page, which
+ *  carries the COMPASS pricing; MOHESR's to the contact page; visa
+ *  applicants to the visa-screening page. Swap in the portals when known. */
+type Act = keyof SectionsCopy["govSeals"]["acts"];
+export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string; apply: string; ctas: Act[][] }[] = [
+  { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/governments/manpower-education/ministry-of-manpower", apply: "/governments/manpower-education/ministry-of-manpower", ctas: [["apply"], ["sales"]] },
+  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration/embassy-of-latvia", apply: "/individuals/immigration", ctas: [["visa"], ["sales"]] },
+  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/governments/immigration/embassy-of-italy", apply: "/individuals/immigration", ctas: [["visa"], ["partner"]] },
+  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/governments/manpower-education/mohesr", apply: "/contact", ctas: [["apply"], ["sales"]] },
 ];
+
+/** Where the shared buttons go; `apply` is per authority (`SEALS`). */
+const ACT_HREF: Record<Exclude<Act, "apply">, string> = {
+  visa: "/individuals/immigration",
+  partner: "/contact",
+  sales: "/contact",
+};
 
 /** The four marks in seal order, for `./GovWhy`'s "Governments we work
  *  with" picture: one list, so the two bands cannot show different ones. */
@@ -50,6 +66,12 @@ export async function sealItem(id: GovSealId): Promise<SealItem> {
   const t = (await copy(SECTIONS)).govSeals;
   const s = SEALS.find((x) => x.id === id)!;
   const g = t.items[id];
+  const locale = await getLocale();
+  const ctas = Object.values(g.ctas).map((c, j) => ({
+    k: c.k,
+    p: c.p,
+    acts: s.ctas[j].map((a) => ({ t: t.acts[a], href: localise(a === "apply" ? s.apply : ACT_HREF[a], locale) })),
+  }));
   return {
     name: g.name,
     ledeName: g.ledeName,
@@ -58,12 +80,9 @@ export async function sealItem(id: GovSealId): Promise<SealItem> {
     role: g.role,
     problem: g.problem,
     h: g.h,
-    p: g.p,
+    p: "p" in g ? g.p : undefined,
     facts: Object.values(g.facts),
-    deliver: Object.values(g.deliver),
-    impactK: g.impactK,
-    impact: Object.values(g.impact),
-    why: Object.values(g.why),
+    ctas,
     k: s.k,
     lift: s.lift,
     logo: s.logo,
@@ -76,7 +95,6 @@ export async function GovSeals() {
   // Clicking a seal opens its record card under the row again (restored
   // 30 Sep 2026); the authority pages stay, reachable from elsewhere.
   const items = await Promise.all(SEALS.map((s) => sealItem(s.id)));
-  const locale = await getLocale();
 
   return (
     <section className="wrap sv" aria-labelledby="sv-h">
@@ -94,10 +112,7 @@ export async function GovSeals() {
         ledeLead={t.ledeLead}
         ledeAnd={t.ledeAnd}
         stamp={t.stamp}
-        labels={{ problem: t.problemK, deliver: t.deliverK, why: t.whyK }}
-        partner={t.partner}
-        contactHref={localise("/contact", locale)}
-        caseHrefs={SEALS.map((s) => localise(s.href, locale))}
+        labels={{ problem: t.problemK, start: t.startK }}
         pauseLabel={all.hero.motion.pause}
         playLabel={all.hero.motion.play}
       />

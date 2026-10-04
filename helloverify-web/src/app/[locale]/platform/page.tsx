@@ -50,7 +50,7 @@ export default async function PlatformHub({
         <p className="sub">{t.hub.hero.sub}</p>
         <div className="hrow">
           <AppLink href="/platform/security-compliance" className="btn btn-ink">{t.hub.hero.cta}</AppLink>
-          <AppLink href="/platform/technology" className="btn btn-ghost">
+          <AppLink href="/technology" className="btn btn-ghost">
             <span>{t.hub.hero.seeTech}</span>
             <Arrow />
           </AppLink>
@@ -91,14 +91,14 @@ export default async function PlatformHub({
             Only the four words per card moved, keyed by destination —
             `chrome.footer.links`' shape. */}
         <div className="body3 paths3">
-          <AppLink href="/platform/technology" className="cell ph span3">
+          <AppLink href="/technology" className="cell ph span3">
             <Image className="pimg" src="/img/people/03-engineer-manila.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />
             <div className="scrim" />
-            <span className="tag">{t.hub.paths["/platform/technology"].tag}</span>
-            <span className="from">{t.hub.paths["/platform/technology"].from}</span>
+            <span className="tag">{t.hub.paths["/technology"].tag}</span>
+            <span className="from">{t.hub.paths["/technology"].from}</span>
             <div className="body">
-              <div className="h">{t.hub.paths["/platform/technology"].h}</div>
-              <div className="p">{t.hub.paths["/platform/technology"].p}</div>
+              <div className="h">{t.hub.paths["/technology"].h}</div>
+              <div className="p">{t.hub.paths["/technology"].p}</div>
             </div>
             {/* All three `.go` arrows on this page were inline copies of
                 `brand/Arrow.tsx` missing its `aria-hidden` — 3 of the 6 such
@@ -126,14 +126,14 @@ export default async function PlatformHub({
               <Arrow />
             </span>
           </AppLink>
-          <AppLink href="/platform/coverage" className="cell ph span3">
+          <AppLink href="/international" className="cell ph span3">
             <Image className="pimg" src="/img/19-singapore.jpg" alt="" fill sizes={SIZES_PATH_SPAN3} />
             <div className="scrim" />
-            <span className="tag">{t.hub.paths["/platform/coverage"].tag}</span>
-            <span className="from">{t.hub.paths["/platform/coverage"].from}</span>
+            <span className="tag">{t.hub.paths["/international"].tag}</span>
+            <span className="from">{t.hub.paths["/international"].from}</span>
             <div className="body">
-              <div className="h">{t.hub.paths["/platform/coverage"].h}</div>
-              <div className="p">{t.hub.paths["/platform/coverage"].p}</div>
+              <div className="h">{t.hub.paths["/international"].h}</div>
+              <div className="p">{t.hub.paths["/international"].p}</div>
             </div>
             <span className="go" aria-hidden="true">
               <Arrow />

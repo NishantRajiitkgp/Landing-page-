@@ -268,6 +268,14 @@
  *  parent. If that ever stops being enough, the answer is a provider scoped to
  *  that subtree with a measurement attached, not one at the root.
  *
+ *  ## The `forms` ruling (23 Sep 2026): resolved 4 Oct 2026
+ *
+ *  The block below is the original measurement. The finish: English
+ *  `SEGMENT_LABELS` / `INTEREST_LABELS` stay in `constraints.ts` for Zoho;
+ *  the UI lives in `forms.{en,hi,ar}` and is passed as a `t` prop. The
+ *  posted value is still the slug. Cost is the 227 B brotli the ruling
+ *  already measured. `ContactForm` still does not import this layer.
+ *
  *  ## The `forms` ruling (23 Sep 2026): NOT YET, and the numbers behind it
  *
  *  `components/forms/**` is the only area where copy would cross into a

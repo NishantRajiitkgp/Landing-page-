@@ -9,7 +9,7 @@ import { expect, test } from "@playwright/test";
  *  whether the menu opens for someone using a keyboard. That is what is here.
  */
 
-const PAGES = ["/en", "/en/business", "/en/platform/technology", "/en/contact"];
+const PAGES = ["/en", "/en/business", "/en/technology", "/en/contact"];
 
 /** Hrefs that are deliberately not routes. `#` is the design-phase
  *  placeholder — the language switcher and the three social icons — and

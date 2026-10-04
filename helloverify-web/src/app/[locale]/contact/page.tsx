@@ -5,12 +5,15 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { ContactTabs } from "@/components/forms/ContactTabs";
 import Image from "next/image";
 import { SIZES_SIDE } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
 import { SecHead } from "@/components/chrome/SecHead";
 import { CONTACT } from "@/lib/copy/contact";
+import { FORMS, formsUi } from "@/lib/copy/forms";
 import { copy } from "@/lib/copy/request";
+import { setRequestLocale } from "next-intl/server";
 
 export async function generateMetadata({
   params,
@@ -27,7 +30,9 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
   const t = await copy(CONTACT);
+  const form = await copy(FORMS);
 
   return (
     <PageShell
@@ -57,7 +62,9 @@ export default async function ContactPage({
             </div>
           </div>
 
-          <ContactForm locale={locale} />
+          <ContactTabs locale={locale} tabs={t.tabs} track={t.track}>
+            <ContactForm locale={locale} t={formsUi(form)} />
+          </ContactTabs>
         </div>
       </div>
 
@@ -71,7 +78,7 @@ export default async function ContactPage({
               <p className="p3">{t.ways.rows.individual.p}</p>
             </div>
             <span className="s3">
-              <AppLink href="/individuals/hellov" style={{ color: "inherit" }}>{t.ways.rows.individual.link}</AppLink>
+              <AppLink href="/products/hellov" style={{ color: "inherit" }}>{t.ways.rows.individual.link}</AppLink>
             </span>
           </div>
           <div className="a3">
@@ -80,7 +87,7 @@ export default async function ContactPage({
               <p className="p3">{t.ways.rows.smb.p}</p>
             </div>
             <span className="s3">
-              <AppLink href="/business/smb" style={{ color: "inherit" }}>{t.ways.rows.smb.link}</AppLink>
+              <AppLink href="/products/bgv-smb" style={{ color: "inherit" }}>{t.ways.rows.smb.link}</AppLink>
             </span>
           </div>
           <div className="a3">

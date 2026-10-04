@@ -44,15 +44,15 @@ export function HeroPrint({ uvRing }: { uvRing: string }) {
       <div className="hv-lamp" aria-hidden="true" />
       <div className="hv-uv" aria-hidden="true">
         <svg className="hv-guil hv-guil-uv" viewBox="-600 -600 1200 1200" focusable="false">
-          <g fill="none" stroke="#1B6B4A" strokeWidth="1.05" strokeOpacity="0.85">
+          <g fill="none" stroke="currentColor" strokeWidth="1.05" strokeOpacity="0.85">
             {RING_IDS.map((id) => <Copies key={id} id={id} />)}
           </g>
-          <text fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="10" letterSpacing="2" fill="#1B6B4A" fontWeight="500">
+          <text fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="10" letterSpacing="2" fill="currentColor" fontWeight="500">
             <textPath href="#hv-mt-path" textLength="3080" lengthAdjust="spacing">{uvRing}</textPath>
           </text>
         </svg>
         <svg className="hv-fibres" viewBox="0 0 1440 900" preserveAspectRatio="none" focusable="false">
-          <path d={FIBRES} fill="none" stroke="#2E9A6B" strokeWidth="1.3" strokeLinecap="round" strokeOpacity="0.95" />
+          <path d={FIBRES} fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeOpacity="0.95" />
         </svg>
       </div>
     </>

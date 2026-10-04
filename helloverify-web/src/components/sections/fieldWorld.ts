@@ -14,14 +14,16 @@
  *  the tokens and the `--v2-fc-*` tints (`app/v2/field.css`) off the stage,
  *  and `rgba()` recombines them. No colour is typed in this file. */
 
-export type RGB = [number, number, number];
+import { cssRgb, type RGB } from "@/lib/cssColour";
+
+export type { RGB };
 export type Pt = readonly [number, number];
 
 const TOKENS = {
   paper: "--paper",
   ink: "--ink",
-  green: "--green",
-  greenLight: "--green-light",
+  green: "--primary",
+  greenLight: "--primary-light",
   red: "--red",
   white: "--white",
   low: "--v2-fc-low",
@@ -37,14 +39,9 @@ const TOKENS = {
 };
 export type FieldPalette = Record<keyof typeof TOKENS, RGB>;
 
-function hexRgb(v: string): RGB {
-  const h = v.trim().replace("#", "");
-  const n = parseInt(h.length === 3 ? [...h].map((c) => c + c).join("") : h.slice(0, 6), 16) || 0;
-  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-}
 export function readFieldPalette(el: Element): { pal: FieldPalette; mono: string } {
   const cs = getComputedStyle(el);
-  const pal = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, hexRgb(cs.getPropertyValue(v))])) as FieldPalette;
+  const pal = Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, cssRgb(cs.getPropertyValue(v))])) as FieldPalette;
   return { pal, mono: cs.getPropertyValue("--mono").trim() || "monospace" };
 }
 export const rgba = (c: RGB, a: number) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;

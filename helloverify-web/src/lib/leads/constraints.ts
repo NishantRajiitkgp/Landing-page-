@@ -22,6 +22,8 @@
 export const SEGMENT_VALUES = ["business", "government", "individual"] as const;
 export type SegmentValue = (typeof SEGMENT_VALUES)[number];
 
+/** English CRM labels. The form UI reads `lib/copy/forms` instead; Zoho
+ *  still gets these strings (`lib/integrations/zoho-fields.ts`). */
 export const SEGMENT_LABELS: Record<SegmentValue, string> = {
   business: "Business",
   government: "Government",
@@ -32,7 +34,7 @@ export const SEGMENT_LABELS: Record<SegmentValue, string> = {
  *  mandatory field on a conversion page costs completions (DESIGN-RESEARCH).
  *
  *  Each slug is the last path segment of the route that sells that thing
- *  (`certifier` -> /business/certifier, `hellov` -> /individuals/hellov), so a
+ *  (`certifier` -> /products/certifier, `hellov` -> /products/hellov), so a
  *  vertical page can deep-link `/contact?interest=<its own slug>` and arrive
  *  pre-selected. One taxonomy across URLs, JSON-LD and CRM reporting rather
  *  than three. The old site's 15 slugs are deliberately NOT carried over: they

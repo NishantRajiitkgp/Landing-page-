@@ -27,11 +27,12 @@
  *  no emitted rule captures a page that world serves. That is the property
  *  the comments have been asserting in prose since item 3.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 import { vi } from "vitest";
 
-import { openGraphLocales, routing } from "../../src/lib/i18n/routing.ts";
+import { openGraphLocales, routing, scriptStackOf } from "../../src/lib/i18n/routing.ts";
 import {
   DEFAULT_LOCALE,
   LEGACY_LOCALES,
@@ -40,6 +41,7 @@ import {
   SERVED_LOCALES,
   localeContractDrift,
 } from "../../src/lib/seo/legacy-urls.ts";
+import { copyFor } from "../../src/lib/seo/copy.ts";
 import { allRoutes, localePath } from "../../src/lib/seo/routes.ts";
 
 import { check } from "./harness.ts";
@@ -87,6 +89,9 @@ function livePages(locale: string): string[] {
 }
 
 const SHIP = ["en", "hi", "ar"] as const;
+/** The world before Part 9b.7 — only English served. Kept so section 3 can
+ *  still measure the catch-all hazard after the ship. */
+const before = await emitWithServed(["en"]);
 const today = await emitWithServed(SERVED_LOCALES);
 const shipped = await emitWithServed(SHIP);
 
@@ -162,36 +167,36 @@ check(
   localeContractDrift(SHIP, "en", SHIP, "en"),
 );
 
-console.log("3. the hazard is real today — measured, not argued");
+console.log("3. the hazard when only en is served — measured, not argued");
 
 const catchAll = (rules: Rule[], locale: string) =>
   rules.find((r) => r.source === `/${locale}/:path*`);
 
 check(
-  "today /hi/:path* -> /en/:path* is emitted",
-  catchAll(today, "hi")?.destination === "/en/:path*",
-  catchAll(today, "hi"),
+  "en-only /hi/:path* -> /en/:path* is emitted",
+  catchAll(before, "hi")?.destination === "/en/:path*",
+  catchAll(before, "hi"),
 );
 check(
-  "today /ar/:path* -> /en/:path* is emitted",
-  catchAll(today, "ar")?.destination === "/en/:path*",
-  catchAll(today, "ar"),
+  "en-only /ar/:path* -> /en/:path* is emitted",
+  catchAll(before, "ar")?.destination === "/en/:path*",
+  catchAll(before, "ar"),
 );
 // If `hi` were declared in routing.ts alone, THESE pages would be the ones
 // redirecting away from themselves. Counted rather than described.
 {
   const wouldBeCaptured = livePages("hi").filter((url) =>
-    today.some((r) => captures(r.source, url)),
+    before.some((r) => captures(r.source, url)),
   );
   check(
-    `all ${livePages("hi").length} /hi pages are captured by today's rules`,
+    `all ${livePages("hi").length} /hi pages are captured by en-only rules`,
     wouldBeCaptured.length === livePages("hi").length,
     { captured: wouldBeCaptured.length, routes: livePages("hi").length },
   );
   check(
     "every one of them is captured by a rule whose destination is /en",
     livePages("hi").every((url) => {
-      const rule = today.find((r) => captures(r.source, url));
+      const rule = before.find((r) => captures(r.source, url));
       return rule !== undefined && rule.destination.startsWith("/en");
     }),
     "a served /hi page would 308 to English",
@@ -236,22 +241,22 @@ check(
 // legacy path in a NOW-SERVED locale keeps its own prefix instead of being
 // consolidated onto English.
 check(
-  "shipped: /hi/technology keeps its prefix -> /hi/platform/technology",
-  shipped.find((r) => r.source === "/hi/technology")?.destination === "/hi/platform/technology",
-  shipped.find((r) => r.source === "/hi/technology"),
+  "shipped: /hi/platform/technology keeps its prefix -> /hi/technology",
+  shipped.find((r) => r.source === "/hi/platform/technology")?.destination === "/hi/technology",
+  shipped.find((r) => r.source === "/hi/platform/technology"),
 );
 check(
-  "shipped: /ar/technology keeps its prefix -> /ar/platform/technology",
-  shipped.find((r) => r.source === "/ar/technology")?.destination === "/ar/platform/technology",
-  shipped.find((r) => r.source === "/ar/technology"),
+  "shipped: /ar/platform/technology keeps its prefix -> /ar/technology",
+  shipped.find((r) => r.source === "/ar/platform/technology")?.destination === "/ar/technology",
+  shipped.find((r) => r.source === "/ar/platform/technology"),
 );
 // Shipping does not abandon a single indexed URL: the only sources that
 // disappear are the four catch-alls per newly served locale.
 {
-  const before = new Set(today.map((r) => r.source));
+  const beforeSources = new Set(before.map((r) => r.source));
   const after = new Set(shipped.map((r) => r.source));
-  const dropped = [...before].filter((s) => !after.has(s)).sort();
-  const gained = [...after].filter((s) => !before.has(s)).sort();
+  const dropped = [...beforeSources].filter((s) => !after.has(s)).sort();
+  const gained = [...after].filter((s) => !beforeSources.has(s)).sort();
   check(
     "shipped: the only sources dropped are the 8 unserved-locale catch-alls",
     dropped.join("|") ===
@@ -290,9 +295,16 @@ check(
 console.log("6. og:locale is derived, not written down");
 
 check(
-  "openGraphLocales('en') today -> locale en, no alternates",
-  openGraphLocales("en").locale === "en" && openGraphLocales("en").alternateLocale.length === 0,
+  "openGraphLocales('en') today -> locale en, alternates hi and ar",
+  openGraphLocales("en").locale === "en" &&
+    openGraphLocales("en").alternateLocale.join(",") === "hi,ar",
   openGraphLocales("en"),
+);
+check(
+  "live SERVED_LOCALES emits the same rules as the three-locale ship",
+  today.length === shipped.length &&
+    today.every((r, i) => r.source === shipped[i]?.source && r.destination === shipped[i]?.destination),
+  { today: today.length, shipped: shipped.length },
 );
 check(
   "the default argument is routing.locales",
@@ -367,4 +379,131 @@ check(
   "no hardcoded og:locale is left in the code",
   !/\blocale:\s*"[a-z]{2}"/.test(layoutCode),
   layoutCode.match(/\blocale:\s*"[a-z]{2}"/g),
+);
+
+console.log("8. script faces — English does not pay, hi/ar can render");
+
+check("en loads no script stack", scriptStackOf("en") === null);
+check("hi loads the Devanagari stack", scriptStackOf("hi") === "deva");
+check("ar loads the Arabic stack", scriptStackOf("ar") === "arab");
+check("fa/ur share the Arabic stack (same script, later locales)", scriptStackOf("fa") === "arab" && scriptStackOf("ur") === "arab");
+check("he is RTL but not Arabic-script — no Noto Arabic", scriptStackOf("he") === null);
+
+check(
+  "the layout asks scriptStackOf(locale) rather than inlining the map",
+  layoutCode.includes("scriptStackOf(locale)"),
+);
+check(
+  "every Noto localFont call disables preload — /en must not fetch them",
+  (layoutCode.match(/preload:\s*false/g) || []).length >= 4,
+  layoutCode.match(/preload:\s*false/g),
+);
+check(
+  "the four Noto files are the ones under src/fonts/",
+  ["/noto-sans-devanagari.woff2", "/noto-serif-devanagari.woff2", "/noto-sans-arabic.woff2", "/noto-naskh-arabic.woff2"].every(
+    (f) => layoutSource.includes(f),
+  ),
+);
+
+const subsetSource = readFileSync(new URL("../perf/subset-fonts.mjs", import.meta.url), "utf8");
+/** Comments name the rejected `.next/static/media` path on purpose — same
+ *  trap as the og:locale assertion above. Strip them before judging. */
+const subsetCode = subsetSource.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+check(
+  "every FACES src lives under design-src/fonts/",
+  (subsetCode.match(/src:\s*"design-src\/fonts\//g) || []).length >= 8,
+  subsetCode.match(/src:\s*"[^"]+"/g),
+);
+check(
+  "no FACES src points at the build output",
+  !/src:\s*"[^"]*\.next\//.test(subsetCode),
+);
+check(
+  "a path under .next is a hard fail, not a fallback",
+  subsetCode.includes('face.src.includes(".next/")'),
+);
+
+const FONT_ROOT = new URL("../../src/fonts/", import.meta.url);
+const SOURCE_ROOT = new URL("../../design-src/fonts/", import.meta.url);
+for (const name of [
+  "noto-sans-devanagari.woff2",
+  "noto-serif-devanagari.woff2",
+  "noto-sans-arabic.woff2",
+  "noto-naskh-arabic.woff2",
+]) {
+  check(`source ${name} is vendored`, existsSync(new URL(name, SOURCE_ROOT)));
+  check(`shipped ${name} is in src/fonts`, existsSync(new URL(name, FONT_ROOT)));
+}
+
+console.log("9. isolated → glyphs sit in a box --flip mirrors (After 9b)");
+
+/** Isolated U+2192 in markup. Unicode does not mirror the glyph, so the
+ *  box is flipped with the same `--flip` the SVG arrow uses. Copy-embedded
+ *  go-cues are the other half — `copy.test.ts` §6g, `←` in `ar`. Ranges
+ *  (`64 → 84`, the How-we-know clock) stay. */
+const glyphCss = readFileSync(new URL("../../src/app/globals.css", import.meta.url), "utf8").replace(
+  /\/\*[\s\S]*?\*\//g,
+  "",
+);
+check(
+  "isolated → boxes use scaleX(var(--flip))",
+  /\.idx3 \.xa,\s*\.nv-ml \.k,\s*\.fwd\s*\{\s*transform:\s*scaleX\(var\(--flip\)\)/.test(glyphCss),
+);
+
+const ALLOWED_MARKUP_ARROW = [
+  /className="xa">→<\/span>/g,
+  /className="k">→<\/span>/g,
+  /className="fwd">→<\/span>/g,
+  /<\/b> → <b>/g,
+];
+
+function leftoverMarkupArrows(src: string): boolean {
+  let rest = src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+  for (const re of ALLOWED_MARKUP_ARROW) rest = rest.replace(re, "");
+  return rest.includes("→");
+}
+
+function walkTsx(dir: URL, acc: string[] = []): string[] {
+  for (const name of readdirSync(dir, { withFileTypes: true })) {
+    if (name.name === "snapshot" || name.name === "copy") continue;
+    const next = new URL(name.name + (name.isDirectory() ? "/" : ""), dir);
+    if (name.isDirectory()) walkTsx(next, acc);
+    else if (name.name.endsWith(".tsx")) acc.push(fileURLToPath(next));
+  }
+  return acc;
+}
+
+const strayMarkup = walkTsx(new URL("../../src/", import.meta.url)).filter((file) => {
+  const src = readFileSync(file, "utf8");
+  return src.includes("→") && leftoverMarkupArrows(src);
+});
+check("every painted → in markup sits in a flipped box or a range", strayMarkup.length === 0, strayMarkup);
+
+check(
+  "the isolated-arrow scan WOULD fail on a bare → in JSX",
+  leftoverMarkupArrows("<span>next →</span>"),
+);
+check(
+  "…and does not fire on the three isolated boxes or a clock range",
+  !leftoverMarkupArrows('<span className="xa">→</span><span className="k">→</span></b> → <b>'),
+);
+
+console.log("10. SEO copy is keyed by locale (After 9b)");
+
+check("English about title is unchanged", copyFor("/about").title === "About HelloVerify");
+check(
+  "Hindi about title is Hindi, not a paste of English",
+  /[\u0900-\u097F]/.test(copyFor("/about", "hi").title) &&
+    copyFor("/about", "hi").title !== copyFor("/about").title,
+  copyFor("/about", "hi").title,
+);
+check(
+  "Arabic about title is Arabic, not a paste of English",
+  /[\u0600-\u06FF]/.test(copyFor("/about", "ar").title) &&
+    copyFor("/about", "ar").title !== copyFor("/about").title,
+  copyFor("/about", "ar").title,
+);
+check(
+  "llms stays on the English table — copyFor(path) ignores the request locale",
+  copyFor("/contact").title === "Talk to sales — HelloVerify",
 );

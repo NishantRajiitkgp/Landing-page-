@@ -19,4 +19,5 @@ import { en } from "./root.en";
 /** The English object IS the schema — see `./index`. */
 export type RootCopy = typeof en;
 
-export const ROOT: Dictionary<RootCopy> = { en };
+/** Snapshot is English-only (`/landing-page` hardcodes `defaultLocale`). */
+export const ROOT: Dictionary<RootCopy> = { en, hi: en, ar: en };

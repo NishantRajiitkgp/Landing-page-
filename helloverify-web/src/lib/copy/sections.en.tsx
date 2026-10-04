@@ -56,15 +56,15 @@ export const en = {
     /** The headline in four nodes: the last word of the first line carries
      *  the hand-drawn underline, and the italic second line carries the seal
      *  on its last word (`headlineEmEnd`), which never wraps away from it.
-     *  They read "Trust Infrastructure platform for Instant AI-Powered
-     *  Background Checks." No edge whitespace — the component supplies the
+     *  They read "AI-Powered Trust Infrastructure for Global Workforces and
+     *  Businesses". No edge whitespace — the component supplies the
      *  gaps. (The whole first line was once its own `headline` leaf for the
      *  phone tree; one tree since Sep 2026.) */
-    headlineEm: "for Instant AI-Powered Background",
-    headlineEmEnd: "Checks.",
-    headlineLead: "Trust Infrastructure",
-    headlineMark: "platform",
-    lede: "Streamline background verification with AI-powered checks that ensure accuracy, speed, and fraud prevention.",
+    headlineEm: "for Global Workforces and",
+    headlineEmEnd: "Businesses",
+    headlineLead: "AI-Powered Trust",
+    headlineMark: "Infrastructure",
+    lede: "Fast, accurate background verification to help you hire confidently, reduce risk and support global mobility.",
     cta: "Talk to sales",
     checks: "See all 33 checks",
     /** Homepage v2. The corner notes of the security-print sheet
@@ -265,7 +265,11 @@ export const en = {
   howItWorks: {
     headingA: "One upload.",
     headingB: "Then we get to work.",
-    lede: "A driving licence in Bengaluru, start to finish. Thirty minutes, on loop.",
+    /** SALES PASS (1 Oct 2026), as the Enterprises panels: the band tells
+     *  why the check matters, not only how it runs. `lede` and the degree
+     *  `cap` are each route's story, with the times its log already shows;
+     *  1 in 8 is the gov records' figure. */
+    lede: "A rider applies at 9:40. By 10:10, the primary source has confirmed the licence is real, before the first delivery, not after the first accident.",
     steps: {
       upload: {
         label: "Upload",
@@ -273,7 +277,7 @@ export const en = {
       },
       read: {
         label: "Read",
-        cap: "AI captures every field, checks the document against itself, and finds the office that issued it.",
+        cap: "In about a second, AI reads every field, spots edits and copied templates, and finds the office that issued it.",
       },
       confirm: {
         label: "Confirm",
@@ -281,22 +285,23 @@ export const en = {
       },
       report: {
         label: "Report",
-        cap: "One report, with the source named beside every result.",
+        cap: "One report, with the source named beside every result. Proof you can show an auditor.",
       },
     },
     /** Homepage v2 desktop — `sections/HowWeKnow.tsx`, which replaces this
      *  band's desktop tree and `demo2`'s (canvas sheet 04). It reuses
      *  `headingA`, `headingB`, every `steps.*.label` and `steps.*.cap`, and
      *  `lede` as the licence route's caption, all verbatim; what is new is
-     *  below. `kicker` and `lede2` are `demo2`'s own words, repeated here so
-     *  this band does not depend on one the lead will retire.
+     *  below. `kicker` is `demo2`'s own word, repeated here so this band
+     *  does not depend on one the lead will retire; `lede2` was too, until
+     *  the 1 Oct sales pass gave the band its stakes.
      *
      *  The two cases are SPECIMENS — fictional holders and case numbers,
      *  said so on the page (`specimen`) and on the documents. */
     v2: {
       kicker: "HelloVerify AI",
       sheet: "Sheet 03 / 12",
-      lede2: "Every document starts here. Fields, forgery checks and the issuing office — in about a second, before a person touches it.",
+      lede2: "A fake licence or degree looks just like a real one. So we don’t trust the paper: we ask the office that issued it. Two checks, start to finish.",
       switchLabel: "Choose a route through the same machine",
       specimen: "Specimen document · illustrative",
       run: "Run · 16s loop",
@@ -311,33 +316,36 @@ export const en = {
       ev: { read: "Read by", confirmed: "Confirmed", artefact: "Artefact", reviewed: "Reviewed" },
       routes: {
         licence: {
-          chip: "Licence verified · 30\u00a0min",
+          chip: "Blue-collar · 30\u00a0min",
           role: "Delivery rider",
           city: "Bengaluru",
+          /** The shift clients this route is selling (4 Oct 2026). Alts for
+           *  their marks on the route and on the case's result. */
+          houses: { starbucks: "Starbucks", dominos: "Domino’s" },
           caseNo: "CASE HV-0417 · DRIVING LICENCE · KARNATAKA",
           from: "09:40",
           to: "10:10",
-          source: "RTO Karnataka · the source",
+          source: "The primary source",
           verdict: "Verified · 30 min · 4 sources",
           hash: "SHA-256 · 4f9c…a21e",
           tiles: {
             t0: { k: "Template & fonts", v: "match" },
             t1: { k: "Face vs. selfie", v: "98%" },
-            t2: { k: "Issuer located", v: "RTO Karnataka" },
+            t2: { k: "Issuer located", v: "Primary source" },
           },
           logs: {
             l0: { t: "09:40:02", kind: "Upload", what: "Captured on the candidate's phone · sharp, no glare, all edges", who: "Candidate" },
             l1: { t: "09:40:03", kind: "Read", what: "14 fields extracted in 1.2 s", who: "HelloVerify AI" },
             l2: { t: "09:40:03", kind: "Check", what: "Template & fonts · match", who: "HelloVerify AI" },
             l3: { t: "09:40:04", kind: "Check", what: "Face vs. selfie · 98%", who: "HelloVerify AI" },
-            l4: { t: "09:41:00", kind: "Route", what: "Request filed with the issuing office", who: "RTO Karnataka" },
-            l5: { t: "10:08:12", kind: "Confirm", what: "Record matched · licence valid", who: "RTO Karnataka" },
+            l4: { t: "09:41:00", kind: "Route", what: "Request filed with the issuing office", who: "Primary source" },
+            l5: { t: "10:08:12", kind: "Confirm", what: "Record matched · licence valid", who: "Primary source" },
             l6: { t: "10:09:40", kind: "Review", what: "Audit trail, 5 events", who: "K.S. · reviewer" },
             l7: { t: "10:10:00", kind: "Report", what: "Sarathi record · PDF · hashed · shared with HR", who: "HelloVerify" },
           },
           evTitle: "Driving licence",
           evRead: "HelloVerify AI · 14 fields · 1.2 s",
-          evConfirmed: "RTO Karnataka · 10:08",
+          evConfirmed: "Primary source · 10:08",
           evArtefact: "Sarathi record · PDF · hashed",
           evReviewed: "K.S. · audit trail, 5 events",
           /** The tags on the four fields the scan boxes. The words on the
@@ -353,7 +361,7 @@ export const en = {
           chip: "Degree verified · 3\u00a0days",
           role: "Nurse",
           city: "Abu Dhabi",
-          cap: "A nurse's degree, start to finish. Three days, on loop.",
+          cap: "1 in 8 applicants lie about their education. In 3 days, this nurse’s university confirms the degree is real, before a single patient is treated.",
           caseNo: "CASE HV-2291 · DEGREE · PRIMARY SOURCE",
           from: "Mon 09:40",
           to: "Wed 14:20",
@@ -757,7 +765,7 @@ export const en = {
    *  and lets a locale put the number anywhere in it. */
   packages: {
     headingA: "Key Verification Solutions",
-    lede: "A fixed set of checks with one turnaround. Everything runs in parallel, so a package is only as slow as its slowest check.",
+    lede: "Discover 33+ powerful verification checks — trusted by businesses to make smarter, faster and more confident decisions.",
     /** The count over a card's check list, and the label on the
      *  photograph's glass chip. Server-rendered, so the count can be a
      *  function leaf. */
@@ -923,7 +931,6 @@ export const en = {
    *  (`lib/content/countries.ts`), not copy. */
   intlGrid: {
     heading: "International Background Verification",
-    lede: "Five of the 120+ countries where we confirm records with the authority that issued them — each with its own guide to what to expect.",
     turnK: "Typical turnaround",
     cta: "Explore More",
     items: {
@@ -939,11 +946,12 @@ export const en = {
    *  wording and its figure (`12–14%`) carries footnote `1`, whose own text
    *  says the source is still to be confirmed.
    *
-   *  NEW COPY (30 Sep 2026, not founder-verbatim): `headingEm` + `heading`,
+   *  NEW COPY (30 Sep 2026, not founder-verbatim): `ledeEm` + `lede`,
    *  `reveal`, the status line and every case file but application 06's.
    *  The heading used to be "1 in 8 applicants misrepresent their academic
    *  credentials."; the table now shows eight forgeries, one trick each, so
-   *  the sentence changed with it.
+   *  the sentence changed with it. 1 Oct 2026: the "8 of 8" sentence moved
+   *  under the heading, and "We flag fraudulent documents" became it.
    *
    *  The eight certificates are SYNTHETIC — fictional institutions and people,
    *  said so in `bar` — and every one is forged (`tools/img/specimens/`).
@@ -951,11 +959,11 @@ export const en = {
   oneInEight: {
     sheet: "Sheet 02 / 12",
     flag: "Fraud",
-    /** `headingEm` + " " + `heading` is the sentence; the italic figure is its
+    /** `ledeEm` + " " + `lede` is the sub-heading; the italic figure is its
      *  own node. `fn` is the footnote mark the lede's figure carries. */
-    headingEm: "8 of 8",
-    heading: "documents here are forged, each a different way.",
-    lede: "We flag fraudulent documents before approval. Our system detects fraud in 12–14% of applications.",
+    heading: "We flag fraudulent documents before approval",
+    ledeEm: "8 of 8",
+    lede: "documents here are forged, each a different way. Our system detects fraud in 12–14% of applications.",
     fn: "1",
     footnote: "Figures as published on HelloVerify’s authority pages. Source and period to be confirmed before launch.",
     bar: "Evidence table · 8 applications · 7 countries · illustrative, synthetic documents",
@@ -1404,10 +1412,28 @@ export const en = {
     explore: "Explore More",
     sales: "Talk to Sales",
     rings: { employees: "Employees", customers: "Customers", businesses: "Businesses" },
+    /** SALES PASS (1 Oct 2026): each panel's heading, lede and figures tell
+     *  one story in numbers — what finding out late costs, what we charge
+     *  and how fast we are — instead of listing features. Every figure is one
+     *  the site or the old live site already states: 1 in 8 and 3× (the gov
+     *  records), 1–7 working days (`stats.tat`), ₹349 (the old site's
+     *  Identity check, the cheapest single check), 15 min, under a minute,
+     *  120+ and 2 days (`business.en.tsx`), 10× and up to 75% (the old
+     *  Certifier page). The ₹12 lakh hire is a worked example, said as one.
+     *  `nums` read as sentences — "₹349 is where a HelloVerify check
+     *  starts" — because the component runs each figure into its line. */
     employees: {
       k: "01 · Employees",
       tag: "Large Enterprises",
-      h: "Unified verification for large-scale white-collar and blue-collar hiring with custom workflows, speed, accuracy, and compliance.",
+      hA: "Catch a bad hire before day one,",
+      hB: "not three months’ salary later.",
+      lede: "1 in 8 applicants lie about their education. Most checks take weeks, so by the time you find out, they’re on your payroll. Ours are 3× faster than the industry average.",
+      numsK: "One bad hire, in numbers",
+      nums: {
+        late: { b: "₹3 lakh", s: "paid in 3 months to a ₹12 lakh‑a‑year hire who lied" },
+        fee: { b: "₹349", s: "is where a HelloVerify check starts" },
+        fast: { b: "1–7", s: "working days to our report, before they join" },
+      },
       white: {
         t: "White-Collar Employee Verification",
         p: "Verify professional credentials, employment history and identity to ensure trustworthy corporate hiring.",
@@ -1435,20 +1461,19 @@ export const en = {
       /** NEW MICROCOPY (24 Sep 2026), not from the old site: the button on
        *  each ID badge that turns it to the description on its back. */
       turn: "Turn over",
-      intK: "Automated Workforce Onboarding",
-      ints: {
-        hrms: "HRMS API & Integration",
-        rules: "Automated Rules Engine",
-        tracking: "Real Time Tracking",
-        security: "Enterprise Grade Security",
-      },
     },
     customers: {
       k: "02 · Customers",
       tag: "KYC Platform",
-      hA: "Onboard faster.",
-      hB: "Detect fraud earlier.",
-      lead: "Our comprehensive KYC solution brings every step of the digital onboarding process together creating a seamless experience that keeps fraudsters out and genuine customers moving forward.",
+      hA: "Slow signups lose customers.",
+      hB: "Weak ones let fraud in.",
+      lead: "We check the person behind every new account before their first transaction, not after the first complaint. One API covers ID, business checks, credit, fraud screening, e-sign and anti-money-laundering.",
+      numsK: "Signup, in numbers",
+      nums: {
+        signup: { b: "Under 1 min", s: "for a customer to sign up on their phone" },
+        identity: { b: "15 min", s: "to a verified identity" },
+        countries: { b: "120+", s: "countries through the same API" },
+      },
       /** NEW MICROCOPY (24 Sep 2026): the heading over the phone's step list,
        *  taken from the lead's own "every step of the digital onboarding". */
       stepsK: "Every step of digital onboarding",
@@ -1460,6 +1485,9 @@ export const en = {
         decision: "Get Decision",
         onboard: "Onboard the Customer",
       },
+      /** No longer drawn in the panel (1 Oct 2026: `nums` took its place and
+       *  the lead names the six in plain words). Kept because the SMB Large
+       *  panel's KYC card reads `kyc.s` as its chips. */
       grid: {
         kyc: { b: "KYC", s: "Identity Verification · Location Confirmation · Liveliness Check · Facial Recognition" },
         kyb: { b: "KYB", s: "GST Verification · MCA Verification · Udyog/Udyam Aadhaar · Company PAN" },
@@ -1473,10 +1501,10 @@ export const en = {
       k: "03 · Businesses",
       tag: "Certifier",
       /** Split 28 Sep 2026: the founder's sentence was the heading and read as
-       *  a wall of serif. The short line is the heading; the sentence, verbatim,
-       *  is the lede under it. */
+       *  a wall of serif. The short line is the heading. The founder's
+       *  sentence, its lede until the 1 Oct sales pass, is in git history. */
       h: "A wrong vendor costs more than a check.",
-      lede: "We are redefining third-party verification for B2B businesses delivering fast, reliable authentication of identities and documents that modern enterprises demand.",
+      lede: "A fake licence, unpaid GST or a director with a fraud case becomes your problem once you sign. Certifier checks the company and its people at the official registries, then keeps watching.",
       stepsK: "Verified in 4 steps, no paperwork",
       steps: {
         invite: "Send Invite",
@@ -1484,13 +1512,11 @@ export const en = {
         location: "Location Captured",
         selfie: "Upload Selfie & ID Proof",
       },
-      pts: {
-        blacklist: {
-          b: "Stop Previously Blacklisted vendors",
-          s: "Certifier raises the bar on vendor qualification identifying only those entities that are fully compliant, genuinely reliable and perfectly aligned with your company's standards.",
-        },
-        monitoring: { b: "Reduce Risk with Continuous Monitoring", s: "Never be caught off guard." },
-        brand: { b: "Protect Your Brand Integrity", s: "Bad actors don't stand a chance." },
+      numsK: "Certifier, in numbers",
+      nums: {
+        profile: { b: "2 days", s: "to a certified vendor profile" },
+        faster: { b: "10×", s: "faster vendor onboarding" },
+        cost: { b: "Up to 75%", s: "lower operating costs" },
       },
       chips: {
         trade: "Trade licence",
@@ -1563,12 +1589,24 @@ export const en = {
       clients: { cognizant: "Cognizant", infosys: "Infosys", accenture: "Accenture", reliance: "Reliance Retail", wipro: "Wipro", hcl: "HCL" },
       headingA: "Background Checks For",
       headingB: "Large Enterprises",
+      /** The old `enterprises.employees.h`, which this panel read until the
+       *  Enterprises sales pass (1 Oct 2026) replaced that heading. */
+      lede: "Unified verification for large-scale white-collar and blue-collar hiring with custom workflows, speed, accuracy, and compliance.",
       kyc: { t: "KYC Services", p: "Comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection." },
       vendor: { t: "Vendor and Supplier", p: "With Certifier, offered by HelloVerify, clients can enhance their profiling experience by accessing certified profiles." },
+      /** The blue-collar card's client proof (4 Oct 2026). The half hour is
+       *  the SMB page's blue-collar package ("a blue-collar hire in 30
+       *  minutes"). The two names are the alt text on those clients' marks. */
+      shift: {
+        n: "30",
+        u: "min",
+        l: "Onboarded in",
+        houses: { starbucks: "Starbucks", dominos: "Domino’s" },
+      },
     },
     headingA: "Background Checks For",
     headingB: "Small & Medium Businesses",
-    lede: "Pick the plan, customize your checks and get full verification details on any individual.",
+    lede: "AI-powered screening platform designed to deliver fast, accurate, and scalable verification for startups and small & medium businesses",
     mins: "60 mins",
     tot: (n: number) => `${n} checks · 60 mins`,
     /** NEW MICROCOPY (conversion pass, 24 Sep 2026), not from the old site:
@@ -1696,8 +1734,8 @@ export const en = {
    *  combined "European authorities" seal went).
    *
    *  EACH RECORD IS A PITCH, in the order a buyer reads one: the challenge
-   *  the authority faces, what HelloVerify is to it, what we deliver step by
-   *  step, the impact, and why it chose us. Every claim and figure is on the
+   *  the authority faces, what HelloVerify is to it, and a call to action
+   *  for each audience it serves. Every claim and figure is on the
    *  live site's two authority pages (helloverify.com/en/solutions/
    *  manpower-and-education-authorities and …/immigration-authorities) or
    *  the old site's per-authority content (`Application Frontend HV`). The
@@ -1706,9 +1744,6 @@ export const en = {
    *  applicants "are recommended to undertake … verification with service
    *  provider HelloVerify", listed under "Our Partners"; MOHESR "authorized
    *  verification partner", a featured client on the live education page.
-   *  `impactK` says when a figure is a page-wide one (the education page's
-   *  "12–14% of applications", the immigration page's "3×" and "99.2%")
-   *  rather than pinning it on one authority.
    *
    *  PLAIN ENGLISH (30 Sep 2026): rewritten for a reader who has never heard
    *  of HelloVerify — "hard to understand" was the verdict on the first
@@ -1718,6 +1753,13 @@ export const en = {
    *  glossed. The claims and figures are unchanged; only the wording moved.
    *  Then cut to a few words a line ("who's gonna read all these"): a
    *  heading is one claim, every body line fits a glance.
+   *
+   *  THE CLIENT'S OWN WORDING (1 Oct 2026): each record's problem, heading
+   *  and call-to-action cards are the wording the client supplied, cased to
+   *  match the page. The MOM cards are the old site's MOM page ("For
+   *  Applicants" / "For Employers & Agencies"). The impact figures went: they
+   *  were page-wide, not the authority's. So did the three "Why HelloVerify"
+   *  reasons under each record (1 Oct 2026, at the client's request).
    *
    *  `micro` is one repeat of the ring of microtext a seal turns, `stamp` one
    *  repeat of the stamp's. The component supplies the joining spaces, so no
@@ -1730,30 +1772,19 @@ export const en = {
     ledeLead: "Trusted by government authorities and embassies, including",
     ledeAnd: "and",
     stamp: "PRIMARY SOURCE VERIFICATION · HELLOVERIFY ·",
-    /** The pitch to the NEXT authority, at the foot of every record (30 Sep
-     *  2026: "these cards are the pitch for other authorities"). Every line
-     *  is the old or live site's own: applicants pay HelloVerify for their
-     *  screening and apply "first at HelloVerify and then at VFS" (the old
-     *  immigration FAQ); checks "tailored in precise accordance with the
-     *  embassy's specific requirements" and local data processing ("Why We
-     *  Stand Out"); "a named contact … pilots scoped within two weeks" (the
-     *  live governments page); "Partner with Us" (the old partners CTA). */
-    partner: {
-      k: "For your authority",
-      h: "Want this for your authority?",
-      model: {
-        m1: { t: "Applicants pay", p: "They pay for their own checks." },
-        m2: { t: "Fits your process", p: "Checked before files reach you." },
-        m3: { t: "Your rules", p: "Data stored locally." },
-        m4: { t: "Live in weeks", p: "Pilots planned within two weeks." },
-      },
-      cta: "Partner with HelloVerify",
-      caseCta: "See the full case",
-    },
-    /** The record's four section labels, shared by every authority. */
+    /** The record's section labels, shared by every authority. */
     problemK: "The problem",
-    deliverK: "What we do",
-    whyK: "Why they chose HelloVerify",
+    /** 1 Oct 2026: "What we do" became the record's call to action — one
+     *  card per audience, each with its own button(s). */
+    startK: "Get started",
+    /** The buttons on those cards. Which card carries which is routing, so
+     *  it is `GovSeals.tsx`'s `SEALS`, with the hrefs. */
+    acts: {
+      apply: "Start Verification",
+      visa: "Start your Visa Screening",
+      partner: "Join as a Partner",
+      sales: "Talk to Sales",
+    },
     items: {
       mom: {
         name: "Ministry of Manpower Singapore",
@@ -1761,8 +1792,8 @@ export const en = {
         micro: "MINISTRY OF MANPOWER · SINGAPORE · COMPASS FRAMEWORK · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 01 / 04",
         role: "Our client — Ministry of Manpower, Singapore",
-        problem: { v: "1 in 8", l: "applicants lie about their education." },
-        h: "Officially approved by Singapore’s Ministry of Manpower.",
+        problem: { v: "1 in 8", l: "applicants misrepresent their academic credentials, creating risks that undermine organizational integrity." },
+        h: "Officially empanelled by Singapore’s Ministry of Manpower.",
         p: "We check the degrees of people applying to work in Singapore.",
         facts: {
           f1: { k: "Scheme", v: "COMPASS points test" },
@@ -1770,22 +1801,9 @@ export const en = {
           f3: { k: "We check", v: "Degrees · Diplomas · Transcripts · Mark sheets" },
           f4: { k: "Per applicant", v: "Up to 7 qualifications" },
         },
-        deliver: {
-          d1: { t: "Real college?", p: "Not a fake degree seller." },
-          d2: { t: "Real degree?", p: "Confirmed with the college that issued it." },
-          d3: { t: "Fakes caught", p: "Before the work pass is approved." },
-          d4: { t: "Ready report", p: "Meets MOM’s rules, ready to submit." },
-        },
-        impactK: "Across all our education checks",
-        impact: {
-          i1: { v: "12–14%", l: "of applications flagged for fraud" },
-          i2: { v: "≤ 7", l: "working days (express)" },
-          i3: { v: "120+", l: "countries covered" },
-        },
-        why: {
-          w1: { t: "Officially approved", p: "By Singapore’s Ministry of Manpower." },
-          w2: { t: "120+ countries", p: "Direct access to thousands of universities." },
-          w3: { t: "ISO 27001 certified", p: "Your data stays secure." },
+        ctas: {
+          c1: { k: "For applicants", p: "Validate your accreditation and educational credentials through our self-service portal, with a guided verification process for a smooth, hassle‑free experience." },
+          c2: { k: "For employers & agencies", p: "Verify employee qualifications at scale, manage multiple cases, and get dedicated support with compliance‑ready documentation." },
         },
       },
       latvia: {
@@ -1794,31 +1812,17 @@ export const en = {
         micro: "EMBASSY OF THE REPUBLIC OF LATVIA · STUDENT & WORK VISAS · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 02 / 04",
         role: "Our partner — Embassy of the Republic of Latvia",
-        problem: { v: "10–15%", l: "of clever fraud cases slip past normal checks." },
-        h: "Partnered with the Embassy of Latvia to check visa applicants.",
-        p: "Student and work visa applicants are checked by us before they apply.",
+        problem: { v: "Tampered documents", l: "like counterfeit passports and visas compromise global immigration integrity and security." },
+        h: "Supporting the Embassy of Latvia with document verification for study and employment visa applications.",
         facts: {
           f1: { k: "Visas", v: "Student Visa · D‑Work Visa" },
-          f2: { k: "Applicants from", v: "India · Sri Lanka · Nepal · Bangladesh" },
+          f2: { k: "Applicants from", v: "India · Sri Lanka · Nepal" },
           f3: { k: "We check", v: "Passport · Education or job · Tax · Bank" },
           f4: { k: "Time taken", v: "Usually 14 working days" },
         },
-        deliver: {
-          d1: { t: "Checked first", p: "Before the embassy sees the file." },
-          d2: { t: "Confirmed at source", p: "ID, education, job, tax and bank records." },
-          d3: { t: "Fraud flagged", p: "Fakes, mismatches and double identities." },
-          d4: { t: "Clear report", p: "For a faster, confident decision." },
-        },
-        impactK: "Across all our visa checks",
-        impact: {
-          i1: { v: "3×", l: "faster than industry average" },
-          i2: { v: "99.2%", l: "of reports verified" },
-          i3: { v: "14", l: "working days" },
-        },
-        why: {
-          w1: { t: "Built for the embassy", p: "We check exactly what it asks for." },
-          w2: { t: "Data stays local", p: "Stored and processed in-country." },
-          w3: { t: "Certified", p: "ISO 27001, ISO 27701 and GDPR." },
+        ctas: {
+          c1: { k: "For visa applicants", p: "Complete your document verification before submitting your Latvia study or employment visa application." },
+          c2: { k: "For employers & agencies", p: "Verify employee qualifications at scale, manage multiple cases, and get dedicated support with compliance‑ready documentation." },
         },
       },
       italy: {
@@ -1827,32 +1831,18 @@ export const en = {
         micro: "EMBASSY OF ITALY · NEW DELHI · NATIONAL VISA VERIFICATION · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 03 / 04",
         role: "Our partner — Embassy of Italy, New Delhi",
-        problem: { v: "Fake documents", l: "put visa decisions at risk." },
-        h: "Recommended for Italian National Visa applicants.",
-        p: "We check documents before they reach the Embassy of Italy in New Delhi.",
+        problem: { v: "Document credibility issues", l: "Unverified educational qualifications, employment records and other supporting documents can raise concerns about an applicant’s credibility, making document verification essential to informed visa assessment." },
+        h: "Supporting the Embassy of Italy with document verification to strengthen the credibility of national visa applications from its North India jurisdiction.",
         facts: {
           /** Non-breaking hyphens (U+2011): "D-" alone at a line end reads as a typo. */
           f1: { k: "Visas", v: "D‑Work · D‑Student · D‑General · D‑Business" },
-          f2: { k: "Covers", v: "New Delhi, Haryana, Punjab and more" },
+          f2: { k: "Covers", v: "India North Jurisdiction" },
           f3: { k: "We check", v: "ID · Education or job · Bank · Company" },
           f4: { k: "Time taken", v: "Usually 14 working days" },
         },
-        deliver: {
-          d1: { t: "Checked first", p: "Before the embassy sees the file." },
-          d2: { t: "Confirmed at source", p: "ID, education, job, bank and company records." },
-          d3: { t: "Fakes caught", p: "Before a decision is made." },
-          d4: { t: "Stronger application", p: "Honest applicants get through faster." },
-        },
-        impactK: "Across all our visa checks",
-        impact: {
-          i1: { v: "3×", l: "faster than industry average" },
-          i2: { v: "99.2%", l: "of reports verified" },
-          i3: { v: "14", l: "working days" },
-        },
-        why: {
-          w1: { t: "Fully online", p: "No paperwork, start to finish." },
-          w2: { t: "Clear reports", p: "Easy to read, every step shown." },
-          w3: { t: "Fraud alerts", p: "Fakes and high-risk applicants flagged." },
+        ctas: {
+          c1: { k: "For visa applicants", p: "Complete your document verification before submitting your Italian national visa application under the Embassy of Italy’s North India jurisdiction." },
+          c2: { k: "For partners", p: "Help your clients verify documents for Italian national visa applications. Build credibility and earn commission." },
         },
       },
       mohesr: {
@@ -1861,31 +1851,17 @@ export const en = {
         micro: "MOHESR · UNITED ARAB EMIRATES · DEGREE RECOGNITION · PRIMARY SOURCE VERIFICATION ·",
         record: "Record 04 / 04",
         role: "Authorized verification partner — MOHESR, UAE",
-        problem: { v: "Degree mills", l: "sell fake degrees that look real." },
-        h: "Authorized partner of the UAE’s Ministry of Higher Education.",
-        p: "We confirm degrees earned abroad, so the UAE can recognise them.",
+        problem: { v: "Academic credential authenticity", l: "Unverified overseas qualifications can raise concerns about authenticity and institutional accreditation, complicating qualification recognition in the UAE." },
+        h: "Partnered with MOHESR to authenticate overseas academic qualifications through Primary Source Verification, supporting qualification recognition in the UAE.",
         facts: {
           f1: { k: "The rule", v: "Foreign degrees must be confirmed at source" },
           f2: { k: "You get", v: "Degree Verification Document" },
           f3: { k: "Documents", v: "Degree · Passport · Emirates ID" },
           f4: { k: "Sign in with", v: "UAE PASS" },
         },
-        deliver: {
-          d1: { t: "Real university?", p: "Not a fake degree seller." },
-          d2: { t: "Real degree?", p: "Confirmed with the university itself." },
-          d3: { t: "Verification document", p: "Issued for MOHESR." },
-          d4: { t: "Recognition", p: "Get your Certificate of Recognition." },
-        },
-        impactK: "Across all our education checks",
-        impact: {
-          i1: { v: "15", l: "calendar days" },
-          i2: { v: "12–14%", l: "of applications flagged for fraud" },
-          i3: { v: "8+", l: "years of experience" },
-        },
-        why: {
-          w1: { t: "8+ years", p: "Trusted by governments worldwide." },
-          w2: { t: "120+ countries", p: "Direct access to thousands of universities." },
-          w3: { t: "Live tracking", p: "Follow your case at every step." },
+        ctas: {
+          c1: { k: "For candidates", p: "Verify your overseas academic qualifications for your MOHESR recognition application." },
+          c2: { k: "For employers & agencies", p: "Support your candidates’ MOHESR recognition applications with academic qualification verification." },
         },
       },
     },
@@ -1940,16 +1916,32 @@ export const en = {
      *  each authority's official mark untouched beside its full name, both
      *  taken from `govSeals` (its `name`), so it has no words of its own. */
     viz: {
-      /** 01 · one verified record, relied on by every agency. */
+      /** 01 · the nation in cross-section: the institutions above ground
+       *  (`to`), HelloVerify as the layer under them, the primary sources
+       *  at the bedrock (hover titles `rows`), the record it holds (`k`). */
       trust: {
         k: "Verified record",
         rows: { r1: "Degree", r2: "Licence", r3: "Identity" },
-        to: { a1: "Labour ministry", a2: "Immigration", a3: "Health regulator" },
+        to: { a1: "Labour ministry", a2: "Immigration", a3: "Health regulator", a4: "Employer" },
+        layer: "Trust infrastructure",
+        sources: "Primary sources",
       },
-      /** 02 · the scale, as the numbers. */
-      scale: { big: "20M+", bigL: "checks at the source", countries: "in 120+ countries", sources: "Universities · Police · Registrars · Employers" },
+      /** 02 · the checkpoint: what the gate's sign rolls through (`creds`),
+       *  the world at the bedrock (`countries`; `sources` is its hover
+       *  title), the scale in the corner (`big`, `bigL`). */
+      scale: {
+        big: "20M+",
+        bigL: "checks at the source",
+        countries: "Primary sources · 120+ countries",
+        sources: "Universities · Police · Registrars · Employers",
+        creds: { c1: "Work permit", c2: "Visa", c3: "Licence", c4: "Clearance", c5: "Profession" },
+      },
       core: "AI",
       nodes: { n1: "Businesses", n2: "Suppliers", n3: "Contractors", n4: "Institutions" },
+      /** 03 · the two ecosystems the layer unifies. */
+      sides: { priv: "Private", pub: "Public" },
+      /** 04 · the two kinds of seat on the bus. No crests: the set grows. */
+      who: { a: "Authorities", e: "Enterprises" },
       since: "2018",
       today: "Today · 20M+ checks",
       ahead: "Years to come",
@@ -1958,10 +1950,9 @@ export const en = {
       stamp: "VERIFIED",
       proofs: { p1: "Clear remarks", p2: "Verification artefacts", p3: "Auditable trail" },
     },
-    /** The band's foot: the certifications the immigration page states, and
-     *  the ask. */
-    certs: "ISO/IEC 27001 · ISO/IEC 27701 · GDPR compliant",
-    cta: "Talk to our team",
+    /** The band's foot: the ask, worded as the homepage's other sales
+     *  buttons (1 Oct 2026; the certifications line beside it went). */
+    cta: "Talk to Sales",
   },
 
   /** `sections/GovDossiers.tsx` and `blocks/GovMom.tsx` — homepage v2

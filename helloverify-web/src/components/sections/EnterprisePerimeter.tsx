@@ -15,7 +15,7 @@
     the loop, the pointer and the markup.
 
     COLOUR COMES FROM THE PALETTE AT RUNTIME. Canvas 2D cannot take
-    `var(--green)`, so the four tokens it paints with are read once from
+    `var(--primary)`, so the four tokens it paints with are read once from
     computed style and mixed in JS — no hex in this file, and a re-theme of
     the tokens re-themes the rings.
 
@@ -83,8 +83,8 @@ export function EnterprisePerimeter({
       const cs = getComputedStyle(cv);
       const pal: Palette = {
         INK: parseColour(cs.getPropertyValue("--ink")),
-        GREEN: parseColour(cs.getPropertyValue("--green")),
-        MINT: parseColour(cs.getPropertyValue("--green-light")),
+        GREEN: parseColour(cs.getPropertyValue("--primary")),
+        MINT: parseColour(cs.getPropertyValue("--primary-light")),
         WHITE: parseColour(cs.getPropertyValue("--white")),
       };
 

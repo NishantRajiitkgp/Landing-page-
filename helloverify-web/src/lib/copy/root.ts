@@ -15,8 +15,10 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./root.en";
+import { hi } from "./root.hi";
+import { ar } from "./root.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type RootCopy = typeof en;
 
-export const ROOT: Dictionary<RootCopy> = { en };
+export const ROOT: Dictionary<RootCopy> = { en, hi, ar };

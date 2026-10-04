@@ -41,7 +41,7 @@
   --v2-paper-lo: #EFEBE3;
   --v2-leaf-mid: #FAF8F3;
   --v2-leaf-lo: #F1EEE6;
-  --v2-mint-pale: #F4FAF6;
+  --v2-mint-pale: var(--primary-pale);
   --v2-dash: #BDB7AB;
 }
 
@@ -54,10 +54,10 @@
 .hv-hero { position: relative; overflow: hidden; --mx: 720px; --my: 300px; --uv: 0; --lr: 240px; --mr: 210px; }
 .hv-guil { position: absolute; width: 1200px; height: 1200px; pointer-events: none; opacity: .72; transform-origin: 50% 50%; animation: hvSpin 260s linear infinite; }
 @keyframes hvSpin { to { transform: rotate(360deg); } }
-.hv-lamp { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; background: radial-gradient(circle var(--lr) at var(--mx) var(--my), rgb(from var(--green-light) r g b / .3), rgb(from var(--green-light) r g b / 0) 72%); }
+.hv-lamp { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; background: radial-gradient(circle var(--lr) at var(--mx) var(--my), rgb(from var(--primary-light) r g b / .3), rgb(from var(--primary-light) r g b / 0) 72%); }
 .hv-uv { position: absolute; inset: 0; pointer-events: none; opacity: var(--uv); transition: opacity .5s ease; -webkit-mask-image: radial-gradient(circle var(--mr) at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); mask-image: radial-gradient(circle var(--mr) at var(--mx) var(--my), var(--ink) 0, var(--ink) 30%, transparent 100%); }
-.hv-uv .hv-guil { opacity: 1; }
-.hv-fibres { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hv-uv .hv-guil { opacity: 1; color: var(--primary); }
+.hv-fibres { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--primary-light); }
 /* A touch screen has no pointer to follow: the lamp rests lit, and a tap
    glides it to the finger (`HeroStage`). */
 @media (hover: none) {
@@ -92,7 +92,7 @@
 @media (max-width: 1080px), (hover: none) {
   .hv-note-bl { display: none; }
 }
-.hv-uvdot { width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); box-shadow: 0 0 0 3px rgb(from var(--green-light) r g b / .28); }
+.hv-uvdot { width: 7px; height: 7px; border-radius: 50%; background: var(--primary-light); box-shadow: 0 0 0 3px rgb(from var(--primary-light) r g b / .28); }
 
 /* The headline: each line focuses in, the underline draws under "platform",
    and the seal stamps down beside "Checks." (replayable). The italic line is
@@ -100,7 +100,7 @@
    word (`.hv-em-end`, never broken), not off the whole wrapped box. */
 .hv-content { position: relative; padding-top: 84px; text-align: center; }
 .hv-pill { display: inline-flex; align-items: center; gap: 10px; height: 38px; padding-block: 0; padding-inline: 14px 16px; border-radius: 999px; background: var(--white); border: 1px solid var(--hair); font-size: 13px; font-weight: 500; color: var(--ink-soft); }
-.hv-h1 { margin: 34px auto 0; max-width: 1080px; font-size: 76px; line-height: .96; letter-spacing: -.03em; font-weight: 400; text-wrap: balance; animation: hvNudge .34s ease 1.93s; }
+.hv-h1 { margin: 34px auto 0; max-width: 1080px; font-size: 60px; line-height: .96; letter-spacing: -.03em; font-weight: 400; text-wrap: balance; animation: hvNudge .34s ease 1.93s; }
 @keyframes hvNudge { 30% { transform: translateY(2px); } 60% { transform: translateY(-1px); } }
 .hv-l { display: block; animation: hvFocus 1.15s cubic-bezier(.16, 1, .3, 1) both; }
 .hv-l1 { animation-delay: .12s; }
@@ -108,7 +108,7 @@
 @keyframes hvFocus { 0% { opacity: 0; filter: blur(16px); transform: translateY(16px); } 55% { opacity: 1; } to { opacity: 1; filter: blur(0); transform: none; } }
 .hv-src { position: relative; display: inline-block; }
 .hv-ul { position: absolute; inset-inline: .02em .34em; top: .74em; height: .17em; overflow: visible; pointer-events: none; }
-.hv-ul path { fill: none; stroke: var(--green); stroke-width: 4.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: hvDraw .95s cubic-bezier(.65, 0, .35, 1) 1.05s forwards; }
+.hv-ul path { fill: none; stroke: var(--primary); stroke-width: 4.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: hvDraw .95s cubic-bezier(.65, 0, .35, 1) 1.05s forwards; }
 @keyframes hvDraw { to { stroke-dashoffset: 0; } }
 .hv-em { font-style: italic; font-weight: 400; }
 .hv-em-end { position: relative; display: inline-block; white-space: nowrap; }
@@ -125,11 +125,11 @@
 .hv-lg-cell { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 18px 22px 16px; }
 .hv-lg-cell + .hv-lg-cell { border-inline-start: 1px dashed var(--v2-dash); }
 .hv-lg-k { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.hv-lg-k b { font-weight: 500; color: var(--green); }
+.hv-lg-k b { font-weight: 500; color: var(--primary-ink); }
 .hv-lg-n { position: relative; width: fit-content; margin: 0; display: flex; align-items: flex-start; font-family: var(--serif); font-size: 40px; line-height: 1; letter-spacing: -.03em; color: var(--ink); }
-.hv-lg-n i { font-style: normal; font-size: .55em; line-height: 1.3; margin-inline-start: .06em; color: var(--green); }
-.hv-lg-live .hv-lg-n { color: var(--green); }
-.hv-lg-bump { position: absolute; inset-inline-start: 100%; top: -.1em; margin-inline-start: 4px; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--green); pointer-events: none; animation: hvLgBump 1.6s cubic-bezier(.16, 1, .3, 1) forwards; }
+.hv-lg-n i { font-style: normal; font-size: .55em; line-height: 1.3; margin-inline-start: .06em; color: var(--primary-ink); }
+.hv-lg-live .hv-lg-n { color: var(--primary-ink); }
+.hv-lg-bump { position: absolute; inset-inline-start: 100%; top: -.1em; margin-inline-start: 4px; font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0; color: var(--primary-ink); pointer-events: none; animation: hvLgBump 1.6s cubic-bezier(.16, 1, .3, 1) forwards; }
 @keyframes hvLgBump { 0% { opacity: 0; transform: translateY(18px); } 20% { opacity: 1; } to { opacity: 0; transform: translateY(0); } }
 .hv-paused .hv-lg .dot.live { animation-play-state: paused; }
 
@@ -147,7 +147,7 @@
    with the phone's smaller type rather than needing a second geometry; a
    button's UA font-size is 13.33px, hence the `inherit`. */
 .hv-seal-btn { position: absolute; inset-inline-start: calc(100% + 4px); top: -.3214em; width: 1.5em; height: 1.5em; font-size: inherit; padding: 0; border: 0; background: none; border-radius: 50%; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.hv-seal-btn svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hv-seal-btn svg { display: block; width: 100%; height: 100%; overflow: visible; color: var(--primary); }
 .hv-seal-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .hv-seal { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; mix-blend-mode: multiply; }
 .hv-shock { transform-box: view-box; transform-origin: 50% 50%; opacity: 0; }
@@ -197,7 +197,7 @@
   .hv-note-tl { inset-inline-start: 30px; }
   .hv-note-tr { inset-inline-end: 30px; }
   .hv-content { padding-block: 70px 0; padding-inline: 28px; }
-  .hv-h1 { margin-top: 26px; font-size: clamp(40px, 7vw, 62px); }
+  .hv-h1 { margin-top: 26px; font-size: clamp(34px, 6vw, 50px); }
   /* Smaller, and pressed over the full stop: beside it, the 1.9× landing
      frame of the stamp overran a 390px screen (and the left edge, mirrored). */
   .hv-seal-btn { inset-inline-start: calc(100% - .35em); top: -.25em; width: 1.3em; height: 1.3em; }

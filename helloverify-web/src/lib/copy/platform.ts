@@ -9,7 +9,7 @@
  *
  *  THE KEY UNIONS gate the COMPONENT's structure, the half a dictionary cannot
  *  check on its own. Each is exported because a module declares an ordered
- *  array against it: `/platform/coverage` its regions and the countries inside
+ *  array against it: `/international` its regions and the countries inside
  *  them, and `/platform/security-compliance`'s `./content.ts` its artefact
  *  rows, its residency rows and its questions. Add a row without copy and it is
  *  TS2322 on that array, in every locale at once — the argument `./index` makes
@@ -23,13 +23,15 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./platform.en";
+import { hi } from "./platform.hi";
+import { ar } from "./platform.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type PlatformCopy = typeof en;
 
-export const PLATFORM: Dictionary<PlatformCopy> = { en };
+export const PLATFORM: Dictionary<PlatformCopy> = { en, hi, ar };
 
-/** `/platform/coverage`'s three region headings and the 24 countries the page
+/** `/international`'s three region headings and the 24 countries the page
  *  distributes between them. TWO unions rather than one nested type: the
  *  dictionary holds one flat country record, for the TS2536 reason
  *  `platform.en.tsx` records at that table. */

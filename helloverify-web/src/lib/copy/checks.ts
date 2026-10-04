@@ -14,8 +14,10 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./checks.en";
+import { hi } from "./checks.hi";
+import { ar } from "./checks.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type ChecksCopy = typeof en;
 
-export const CHECKS_COPY: Dictionary<ChecksCopy> = { en };
+export const CHECKS_COPY: Dictionary<ChecksCopy> = { en, hi, ar };

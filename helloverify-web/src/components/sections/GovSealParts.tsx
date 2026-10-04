@@ -1,8 +1,14 @@
 /** Parts of the seals band drawn the same way in two places, split out of
     `./GovSealsStage` for `max-lines`: a seal's centre inlay (which the record
-    repeats as its emblem), and the record's stamp. No state; they render
-    inside that client island. */
+    repeats as its emblem), the record's stamp, and the record itself
+    (`RecordBody`), which the homepage stage and each authority's own page
+    (`./AuthorityRecord`) both render. No state; they render inside that
+    client island and on the server alike. */
 import Image from "next/image";
+
+/** One call-to-action card on a record: who it is for, what they do, and
+ *  its buttons, the first the main one. Hrefs arrive localised. */
+export type SealCta = { k: string; p: string; acts: { t: string; href: string }[] };
 
 export type SealItem = {
   name: string;
@@ -13,15 +19,12 @@ export type SealItem = {
   /** The challenge the authority faces: a big figure (or phrase) and its line. */
   problem: { v: string; l: string };
   h: string;
-  p: string;
+  /** A line under the heading, where the heading needs one. */
+  p?: string;
   facts: { k: string; v: string }[];
-  /** What HelloVerify delivers, step by step, each with its benefit. */
-  deliver: { t: string; p: string }[];
-  /** The record's outcomes band: its label (which says when the figures are
-   *  page-wide ones), three figures, and three reasons. */
-  impactK: string;
-  impact: { v: string; l: string }[];
-  why: { t: string; p: string }[];
+  /** One card per audience the programme serves (1 Oct 2026; it replaced
+   *  "What we do", the four-step chain). */
+  ctas: SealCta[];
   /** Guilloche lobe count (distinct per seal) and the seal's rise in px. */
   k: number;
   lift: number;
@@ -40,45 +43,12 @@ export function Inlay({ item, small }: { item: SealItem; small?: boolean }) {
   );
 }
 
-export type PartnerCopy = {
-  k: string;
-  h: string;
-  model: Record<string, { t: string; p: string }>;
-  cta: string;
-  caseCta: string;
-};
-
-/** The pitch to the next authority at the foot of a record: what makes the
- *  programme easy to adopt, and the ask. Plain anchors (hrefs arrive
- *  localised), so it renders inside the client stage and on the server
- *  pages alike. `caseHref` is omitted on the case page itself. */
-export function PartnerPitch({ c, contactHref, caseHref }: { c: PartnerCopy; contactHref: string; caseHref?: string }) {
-  return (
-    <div className="sv-pp">
-      <div className="sv-pp-l">
-        <p className="sv-out-k">{c.k}</p>
-        <p className="sv-pp-h">{c.h}</p>
-        <div className="sv-pp-acts">
-          <a href={contactHref} className="sv-pp-cta">
-            {c.cta}
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </a>
-          {caseHref && <a href={caseHref} className="sv-pp-case">{c.caseCta}</a>}
-        </div>
-      </div>
-      <ul className="sv-pp-model">
-        {Object.values(c.model).map((m) => (
-          <li key={m.t}>
-            <b>{m.t}</b>
-            <span>{m.p}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+/** The arrow on a record's main buttons. */
+const ArrowIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 export function Stamp({ id, ring }: { id: string; ring: string }) {
   return (
@@ -94,5 +64,66 @@ export function Stamp({ id, ring }: { id: string; ring: string }) {
       </text>
       <path d="M63 81l11 11 24-26" fill="none" stroke="currentColor" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
+  );
+}
+
+export type RecordLabels = { problem: string; start: string };
+
+/** One authority's record, inside its `.sv-rec`: the problem, what
+ *  HelloVerify is to it and the facts (left); the emblem, the stamp and a
+ *  call-to-action card per audience (right). */
+export function RecordBody({
+  g,
+  stampId,
+  stamp,
+  labels,
+}: {
+  g: SealItem;
+  stampId: string;
+  stamp: string;
+  labels: RecordLabels;
+}) {
+  return (
+    <>
+      <div className="sv-rec-l">
+        <div className="sv-rec-k"><span>{g.record}</span><span>{g.role}</span></div>
+        <div className="sv-prob">
+          <p className="sv-out-k">{labels.problem}</p>
+          <p className="sv-prob-v">{g.problem.v}</p>
+          <p className="sv-prob-l">{g.problem.l}</p>
+        </div>
+        <p className="sv-rec-h">{g.h}</p>
+        {g.p && <p className="sv-rec-p">{g.p}</p>}
+        <dl className="sv-facts">
+          {g.facts.map((f, j) => (
+            <div key={f.k} className="sv-fact" style={{ animationDelay: `${(0.25 + j * 0.07).toFixed(2)}s` }}>
+              <dt>{f.k}</dt>
+              <dd>{f.v}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+      <div className="sv-rec-r">
+        <div className="sv-emb"><Inlay item={g} small /></div>
+        <p className="sv-out-k sv-start-k">{labels.start}</p>
+        <div className="sv-ctas">
+          {g.ctas.map((c, j) => (
+            <div key={c.k} className={j === 0 ? "sv-cta sv-cta-main sv-fact" : "sv-cta sv-fact"} style={{ animationDelay: `${(0.35 + j * 0.12).toFixed(2)}s` }}>
+              <p className="sv-cta-k">{c.k}</p>
+              <p className="sv-cta-p">{c.p}</p>
+              <div className="sv-cta-acts">
+                {c.acts.map((a, n) => (
+                  <a key={a.t} href={a.href} className={n === 0 ? "sv-cta-btn" : "sv-cta-btn sv-cta-alt"}>
+                    {a.t}
+                    {n === 0 && <ArrowIcon />}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="sv-stamp-w"><Stamp id={stampId} ring={stamp} /></div>
+      </div>
+    </>
   );
 }

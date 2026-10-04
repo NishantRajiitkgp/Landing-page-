@@ -9,14 +9,18 @@ import { hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
-import { directionOf, openGraphLocales, routing } from "@/lib/i18n/routing";
+import { directionOf, openGraphLocales, routing, scriptStackOf } from "@/lib/i18n/routing";
 import { Analytics } from "@/components/analytics/Analytics";
 import { ConsentBanner, ConsentSettings } from "@/components/chrome/ConsentBanner";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ORGANIZATION, WEBSITE } from "@/lib/seo/schema/organization";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/seo/site";
+import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
+import { copyFor } from "@/lib/seo/copy";
 import { ROOT } from "@/lib/copy/root";
+import { ACCOUNT } from "@/lib/copy/account";
+import { CHROME } from "@/lib/copy/chrome";
 import { copy } from "@/lib/copy/request";
+import { AuthPortal } from "@/components/auth/AuthPortal";
 import "../globals.css";
 
 /** SELF-HOSTED AND SUBSET, not `next/font/google` (BUILD-SPEC §9.3).
@@ -32,6 +36,10 @@ import "../globals.css";
  *  reach it — see the note in `tools/perf/check-budgets.mjs` for the full
  *  measured curve and why closing the rest needs a design decision rather than
  *  a build step.
+ *
+ *  FOUR NOTO FACES sit under the Latin trio for `hi` / `ar` only. They are
+ *  not in this className on `en`, they are not preloaded, and
+ *  `scriptStackOf` is the switch — see the block below the Latin trio.
  *
  *  `opsz` SURVIVES; `wght` IS PINNED AT 400 (24 Sep 2026). A census found the
  *  serif drawn at 400 for 15,249 characters and at 500/600 for 34, so
@@ -70,6 +78,40 @@ const geistMono = localFont({
   variable: "--font-geist-mono",
   display: "swap",
   src: [{ path: "../../fonts/geist-mono.woff2", weight: "400 500", style: "normal" }],
+});
+
+/** Script faces, Latin-only pages must not pay for them (TASKS.md Part 9b).
+ *
+ *  `preload: false` is load-bearing. `next/font` defaults to preloading every
+ *  `localFont` in this module, which would put four Noto WOFF2s on `/en` —
+ *  ~200 KB against a 127 KB English ceiling — for glyphs that page cannot
+ *  paint. The CSS variables are applied only when `scriptStackOf(locale)`
+ *  says so, and without a preload the browser fetches a face only if the
+ *  computed `font-family` names it AND the page has matching glyphs.
+ */
+const notoSansDeva = localFont({
+  variable: "--font-noto-sans-deva",
+  display: "swap",
+  preload: false,
+  src: [{ path: "../../fonts/noto-sans-devanagari.woff2", weight: "400", style: "normal" }],
+});
+const notoSerifDeva = localFont({
+  variable: "--font-noto-serif-deva",
+  display: "swap",
+  preload: false,
+  src: [{ path: "../../fonts/noto-serif-devanagari.woff2", weight: "400", style: "normal" }],
+});
+const notoSansArab = localFont({
+  variable: "--font-noto-sans-arab",
+  display: "swap",
+  preload: false,
+  src: [{ path: "../../fonts/noto-sans-arabic.woff2", weight: "400", style: "normal" }],
+});
+const notoNaskh = localFont({
+  variable: "--font-noto-naskh",
+  display: "swap",
+  preload: false,
+  src: [{ path: "../../fonts/noto-naskh-arabic.woff2", weight: "400", style: "normal" }],
 });
 
 /** WAS a static `metadata` export, and had to stop being one (BUILD-SPEC §8.1,
@@ -139,8 +181,8 @@ export async function generateMetadata({
      *  "The HelloVerify platform …" carries it mid-sentence with no suffix at
      *  all. That is a copy review, not a refactor, so it is not being done as a
      *  side effect of adding a sitemap. */
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
+    title: copyFor("/", locale).title,
+    description: copyFor("/", locale).description,
 
     /** NO `alternates` here, deliberately. Canonical and hreflang are per-page,
      *  via `lib/seo/metadata.ts`.
@@ -203,12 +245,21 @@ export default async function LocaleLayout({
   // dynamic — unless the static locale is already set. Same ordering
   // constraint every page in this tree documents.
   const t = await copy(ROOT);
+  const login = (await copy(CHROME)).login;
+  const checkout = (await copy(ACCOUNT)).checkout;
+  const script = scriptStackOf(locale);
+  const scriptVars =
+    script === "deva"
+      ? `${notoSansDeva.variable} ${notoSerifDeva.variable}`
+      : script === "arab"
+        ? `${notoSansArab.variable} ${notoNaskh.variable}`
+        : "";
 
   return (
     <html
       lang={locale}
       dir={directionOf(locale)}
-      className={`${newsreader.variable} ${instrumentSans.variable} ${geistMono.variable}`}
+      className={`${newsreader.variable} ${instrumentSans.variable} ${geistMono.variable}${scriptVars ? ` ${scriptVars}` : ""}`}
     >
       <body>
         {/* WCAG 2.4.1. First focusable element on every page, visible only
@@ -231,13 +282,13 @@ export default async function LocaleLayout({
             pages rather than trusting that argument. */}
         <JsonLd data={ORGANIZATION} />
         <JsonLd data={WEBSITE} />
-        {/* No NextIntlClientProvider: nothing on this site calls a next-intl
-            hook from a Client Component yet, and mounting the provider ships
-            the client runtime plus the message catalogue to every visitor for
-            nothing. Measured at 11.3 KB brotli on a page already over the
-            §9.1 budget. Add it back the moment a Client Component needs
-            translations — and scope it to that subtree, not the root. */}
-        {children}
+        {/* No NextIntlClientProvider: auth copy is passed as props. A next-intl
+            client provider would ship the runtime plus the message catalogue
+            to every visitor. AuthPortal is the client boundary for OTP login.
+            `/landing-page` has its own layout and does not mount this. */}
+        <AuthPortal login={login} checkout={checkout} locale={locale}>
+          {children}
+        </AuthPortal>
         {/* "Cookie preferences", below the footer, visible only once a choice
             exists. The copy promises it IN the footer; `SiteFooter.tsx` is
             being edited concurrently, so it is a strip of its own for now and

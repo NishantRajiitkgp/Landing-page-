@@ -23,11 +23,13 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./individuals.en";
+import { hi } from "./individuals.hi";
+import { ar } from "./individuals.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type IndividualsCopy = typeof en;
 
-export const INDIVIDUALS: Dictionary<IndividualsCopy> = { en };
+export const INDIVIDUALS: Dictionary<IndividualsCopy> = { en, hi, ar };
 
 /** A card the `/individuals` path rack may show. */
 export type IndividualsPathKey = keyof IndividualsCopy["hub"]["paths"];

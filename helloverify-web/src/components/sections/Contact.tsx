@@ -5,6 +5,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { SIZES_FEATURE, noteInk, tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
+import { FORMS, formsUi } from "@/lib/copy/forms";
 import { SECTIONS } from "@/lib/copy/sections";
 import "@/app/v2/contact.css";
 /** Contact form.
@@ -28,6 +29,7 @@ import "@/app/v2/contact.css";
 
 export async function Contact() {
   const t = (await copy(SECTIONS)).contact;
+  const form = await copy(FORMS);
   const locale = await getLocale();
 
   return (
@@ -101,6 +103,7 @@ export async function Contact() {
             <div className="hc" style={{ padding: '56px 64px' }}>
               <ContactForm
                 locale={locale}
+                t={formsUi(form)}
                 idPrefix="d-"
                 consent={
                   <p className="consent">
@@ -144,6 +147,7 @@ export async function Contact() {
             <div className="hc" style={{ padding: '24px 22px 28px' }}>
               <ContactForm
                 locale={locale}
+                t={formsUi(form)}
                 idPrefix="m-"
                 consent={
                   <p className="consent">

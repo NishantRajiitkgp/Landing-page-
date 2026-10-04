@@ -165,8 +165,8 @@ const TEXT_PROPS = new Set([
   "text-emphasis-color",
 ]);
 
-/** Latent non-token text colours in the artboards. **EMPTY, and it has to stay
- *  that way.**
+/** Latent non-token text colours in the artboards. Empty apart from the old
+ *  brand green (below), and nothing else may join it.
  *
  *  It held one entry for a few hours on 22 Sep 2026: `color: #7D796F` on
  *  `.inp`, once per board, 3.95:1 on `--paper` where AA needs 4.5:1. The
@@ -181,7 +181,14 @@ const TEXT_PROPS = new Set([
  *  for the same reason: a satisfied entry reads as a live exception and would
  *  excuse the colour coming back. Adding one is a decision that belongs in a
  *  diff with a measurement beside it. */
-const BOARD_CAP = {};
+const BOARD_CAP = {
+  /** 3 Oct 2026: the brand colour became the logo's red (`--primary`,
+   *  `design.css` "BRAND COLOUR"), and the boards still spell the old green as
+   *  text, 9 times. They predate the change in every respect, so running
+   *  `build-css.py` would bring back the whole green palette, not only this
+   *  colour; recolouring the nine boards is its own change. */
+  "#1B6B4A": { n: 9, why: "the pre-3 Oct 2026 brand green, as text on the nine boards; the shipped sheets use --primary-ink" },
+};
 
 // ───────────────────────────────────────────────────── colour normalisation
 /** `#abc` → `#AABBCC`, `rgba(255,255,255,.6)` → `#FFFFFF99`. Normalising the
@@ -328,16 +335,18 @@ const BASELINE = {
   //    allowed to be a number. Two of each because design.css keeps the desktop
   //    and mobile boards in disjoint media queries (see its own header).
   "decl #15140F": { n: 2, t: "ink" },
-  "decl #1B6B4A": { n: 2, t: "green" },
+  "decl #1B6B4A": { n: 0, t: "green" },
   "decl #3D3B35": { n: 2, t: "ink-soft" },
   "decl #6F6B62": { n: 2, t: "muted" },
-  "decl #8FD3B3": { n: 2, t: "green-light" },
+  "decl #8FD3B3": { n: 0, t: "green-light" },
   "decl #CFCAC0": { n: 2, t: "tick-off" },
   "decl #E3DFD6": { n: 2, t: "hair" },
   // --red was desktop-only until 29 Sep 2026, when the evidence table's
   // tamper marks became its first use at both widths (it rendered black on
   // phones, `var()` of an undefined property).
-  "decl #EC2E21": { n: 2, t: "red" },
+  // 2 -> 3 (3 Oct 2026): `--primary`, the brand colour, is the logo's red
+  // too, declared once outside both media blocks ("BRAND COLOUR").
+  "decl #EC2E21": { n: 3, t: "red" },
   "decl #F6F4EF": { n: 2, t: "paper" },
   "decl #FFFFFF": { n: 2, t: "white" },
 
@@ -351,7 +360,7 @@ const BASELINE = {
   "decl #EFEBE3": { n: 1, why: "--v2-paper-lo: the shaded foot of a door's paper" },
   "decl #FAF8F3": { n: 1, why: "--v2-leaf-mid: a door leaf's shading, mid-stop" },
   "decl #F1EEE6": { n: 1, why: "--v2-leaf-lo: a door leaf's shading at the free edge" },
-  "decl #F4FAF6": { n: 1, why: "--v2-mint-pale: the outer glow of an opened doorway" },
+  "decl #F4FAF6": { n: 0, why: "--v2-mint-pale: the outer glow of an opened doorway" },
   "decl #BDB7AB": { n: 1, why: "--v2-dash: the hero kicker's fading hairlines" },
 
   // ── homepage v2 · "Why governments" deck (`src/app/v2/why.css`): each card's
@@ -364,7 +373,7 @@ const BASELINE = {
   "decl #C2463B": { n: 1, why: "--v2-wy-rose: the fraud-alerts card's accent" },
   "decl #1F7A6D": { n: 1, why: "--v2-wy-teal: the dashboards card's accent" },
   "decl #3F5F8F": { n: 1, why: "--v2-wy-slate: the integration card's accent" },
-  "decl #E2F2E9": { n: 1, why: "--v2-wy-mint-t: the health card's illustration tint" },
+  "decl #E2F2E9": { n: 0, why: "--v2-wy-mint-t: the health card's illustration tint" },
   "decl #E1ECF8": { n: 1, why: "--v2-wy-sky-t: the immigration card's illustration tint" },
   "decl #F2E8D6": { n: 1, why: "--v2-wy-sand-t: the manpower card's illustration tint" },
   "decl #EAE3F5": { n: 1, why: "--v2-wy-lilac-t: the business & trade card's illustration tint" },
@@ -391,14 +400,14 @@ const BASELINE = {
   //    only: the stage's paper and three tints the canvas reads at runtime.
   "decl #F5F7F2": { n: 1, why: "--v2-gb-stage-mid: the globe stage's paper, mid-stop" },
   "decl #ECEFE8": { n: 1, why: "--v2-gb-stage-lo: the globe stage's paper at its edge" },
-  "decl #F2F7F3": { n: 1, why: "--v2-gb-body-mid: the orb's body, mid-stop (canvas)" },
-  "decl #D3E4D9": { n: 1, why: "--v2-gb-body-lo: the orb's shaded limb (canvas)" },
-  "decl #2EAA76": { n: 1, why: "--v2-gb-pulse: a pulse travelling a route (canvas)" },
+  "decl #F2F7F3": { n: 0, why: "--v2-gb-body-mid: the orb's body, mid-stop (canvas)" },
+  "decl #D3E4D9": { n: 0, why: "--v2-gb-body-lo: the orb's shaded limb (canvas)" },
+  "decl #2EAA76": { n: 0, why: "--v2-gb-pulse: a pulse travelling a route (canvas)" },
 
   // ── homepage v2 · consumer storefront (`src/app/v2/consumer.css`).
-  //    Surfaces only: the WhatsApp Buy Now and the WhatsApp chip's mint.
-  "decl #117F45": { n: 1, why: "--v2-cx-wa: the WhatsApp-green Buy Now (5.1:1 with its white label)" },
-  "decl #E7F7EC": { n: 1, why: "--v2-cx-wa-tint: the WhatsApp chip behind --green text" },
+  //    The chip's mint. Buy Now is `--primary-ink`, so the WhatsApp green is gone.
+  "decl #117F45": { n: 0, why: "--v2-cx-wa retired 4 Oct 2026: Buy Now is --primary-ink" },
+  "decl #E7F7EC": { n: 1, why: "--v2-cx-wa-tint: the WhatsApp chip behind --primary-ink text" },
   // ── homepage v2 · business bands (`app/v2/enterprises.css`, `smb.css`,
   //    `diligence.css`, Sep 2026). Surfaces only; every text colour in the
   //    three sheets is a token. A tint within a couple of units of an existing
@@ -416,7 +425,7 @@ const BASELINE = {
       "band depends on the other's stylesheet being on the page",
   },
   "decl #2A2823": { n: 1, why: "--v2-sm-press: the receipt printer's top face (the .btn-ink:hover lift off --ink)" },
-  "decl #145539": { n: 1, why: "--v2-sm-green-press: the spotlit package's Buy Now on hover (white label 7.9:1)" },
+  "decl #145539": { n: 0, why: "--v2-sm-green-press: the spotlit package's Buy Now on hover (white label 7.9:1)" },
   "decl #050504": { n: 1, why: "--v2-sm-slot: the printer's paper slot, darker than --ink" },
   "decl #D8D3C9": { n: 1, why: "--v2-sm-dash: the printed receipt's dashed rules, .rc .sep's colour" },
   // ── homepage v2 · governments (`src/app/v2/govseals.css`,
@@ -430,18 +439,18 @@ const BASELINE = {
   // ── homepage v2 · Trust Platform (`src/app/v2/platform.css`): the network
   //    card's surfaces, plus two hover fills the canvas reads at runtime so
   //    `sections/TrustNetwork.tsx` carries no hex. None is a text colour.
-  "decl #9FCDB5": { n: 1, why: "--v2-tq-edge: the legend's 'Verifications' line swatch" },
-  "decl #EEF7F1": { n: 1, why: "--v2-tq-glow: the network stage's centre glow" },
-  "decl #F7FBF8": { n: 1, why: "--v2-tq-mist: the network stage's mid-stop" },
-  "decl #F3F8F4": { n: 1, why: "--v2-tq-medal: the medallion's shaded rim" },
-  "decl #14573B": { n: 1, why: "--v2-tq-green-deep: a hovered customer node (canvas fill)" },
-  "decl #EAF5EE": { n: 1, why: "--v2-tq-mint: a hovered institution node (canvas fill)" },
+  "decl #9FCDB5": { n: 0, why: "--v2-tq-edge: the legend's 'Verifications' line swatch" },
+  "decl #EEF7F1": { n: 0, why: "--v2-tq-glow: the network stage's centre glow" },
+  "decl #F7FBF8": { n: 0, why: "--v2-tq-mist: the network stage's mid-stop" },
+  "decl #F3F8F4": { n: 0, why: "--v2-tq-medal: the medallion's shaded rim" },
+  "decl #14573B": { n: 0, why: "--v2-tq-green-deep: a hovered customer node (canvas fill)" },
+  "decl #EAF5EE": { n: 0, why: "--v2-tq-mint: a hovered institution node (canvas fill)" },
 
   // ── homepage v2 · footer (`src/app/v2/footer.css`, every route): the UV
   //    lamp that reveals the giant wordmark. Surfaces and a glow, never text.
   // Declared by two v2 sheets (footer.css, fraud.css) — one row, see #EDE9E0.
   "decl #16132A": { n: 2, why: "--v2-fz-night and --v2-ff-uv-lo: the dark disc of a UV lamp" },
-  "decl #6EE7B0": { n: 1, why: "--v2-fz-uv: the fluorescent glow of the revealed wordmark" },
+  "decl #6EE7B0": { n: 0, why: "--v2-fz-uv: the fluorescent glow of the revealed wordmark" },
   // ── homepage v2 · One in eight (`src/app/v2/fraud.css`): the paper behind
   //    the REFERRED stamp and the UV lamp's blacklight. The documents are
   //    photographs since 29 Sep 2026, so their paper and seals left the sheet.
@@ -465,9 +474,9 @@ const BASELINE = {
   // ── homepage v2 · How we know (`src/app/v2/how.css`): the case file's table
   //    and rails, and the custody orb. All surfaces.
   "decl #F4F1EA": { n: 1, why: "--v2-hw-table: the desk the specimen lies on" },
-  "decl #E9F7EF": { n: 1, why: "--v2-hw-orb-hi: the spinning mint orb, highlight" },
-  "decl #9AD8BA": { n: 1, why: "--v2-hw-orb-mid: the spinning mint orb" },
-  "decl #2E8A62": { n: 1, why: "--v2-hw-orb-lo: the spinning mint orb, shade" },
+  "decl #E9F7EF": { n: 0, why: "--v2-hw-orb-hi: the spinning mint orb, highlight" },
+  "decl #9AD8BA": { n: 0, why: "--v2-hw-orb-mid: the spinning mint orb" },
+  "decl #2E8A62": { n: 0, why: "--v2-hw-orb-lo: the spinning mint orb, shade" },
 
   // ── text colour. Every row is a token value; the `t` is the `var(--t)` that
   //    should be there instead. 44 opaque + 23 with an alpha = 67. This is the
@@ -475,7 +484,7 @@ const BASELINE = {
   //    re-theme, and the place `#7D796F` hid for months.
   "text #15140F": { n: 2, t: "ink" },
   "text #15140F+a": { n: 6, t: "ink" },
-  "text #1B6B4A": { n: 2, t: "green" },
+  "text #1B6B4A": { n: 0, t: "green" },
   "text #3D3B35": { n: 10, t: "ink-soft" },
   "text #CFCAC0": { n: 2, t: "tick-off" },
   "text #FFFFFF": { n: 28, t: "white" },
@@ -487,8 +496,8 @@ const BASELINE = {
   //    not a substitution, which is why they are capped rather than failed.
   "surface #15140F": { n: 6, t: "ink" },
   "surface #15140F+a": { n: 35, t: "ink" },
-  "surface #1B6B4A": { n: 36, t: "green" },
-  "surface #1B6B4A+a": { n: 58, t: "green" },
+  "surface #1B6B4A": { n: 0, t: "green" },
+  "surface #1B6B4A+a": { n: 0, t: "green" },
   "surface #CFCAC0": { n: 26, t: "tick-off" },
   "surface #F6F4EF": { n: 5, t: "paper" },
   "surface #FFFFFF": { n: 68, t: "white" },
@@ -539,7 +548,7 @@ const BASELINE = {
       "--hair. A border, so 1.4.3 does not apply; 1.4.11 would, and that needs " +
       "layout (tools/e2e/a11y.spec.ts)",
   },
-  "surface #CFE3D6": { n: 2, why: "`.b.rep`'s border - a tint of --green with no token" },
+  "surface #CFE3D6": { n: 0, why: "`.b.rep`'s border - a tint of --green with no token" },
   "surface #F2EFE8": { n: 2, why: "`.phone2 .scr`'s screen fill, a shade off --paper" },
   "surface #F9F8F4": { n: 2, why: "`.stage`'s gradient end, a shade off --white" },
   "surface #FBFAF6": { n: 3, why: "pages.css `.d2scan`/`.d2foot`/`.ct3 .status` fills, a shade off --white" },

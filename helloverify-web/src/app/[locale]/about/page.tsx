@@ -195,7 +195,7 @@ export default async function AboutPage({
               mom: (
                 <>
                   {t.credentials.momGloss}{" "}
-                  <AppLink href="/governments/manpower-education/ministry-of-manpower" style={{ fontWeight: 500 }}>{t.credentials.momStory}</AppLink>
+                  <AppLink href="/solutions/manpower-and-education-authorities/ministry-of-manpower" style={{ fontWeight: 500 }}>{t.credentials.momStory}</AppLink>
                 </>
               ),
             }}

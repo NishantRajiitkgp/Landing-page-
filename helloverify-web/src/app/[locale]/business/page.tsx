@@ -29,11 +29,11 @@ export async function generateMetadata({
  *  `lib/copy/index.ts` makes under "Where the keys come from". `PathHref`
  *  makes a sixth destination without copy a TS2322 on this array. */
 const PATHS: readonly { href: PathHref; span: string; img: string }[] = [
-  { href: "/business/enterprise", span: "span3", img: "/img/11-office-first-day.jpg" },
-  { href: "/business/smb", span: "span3", img: "/img/13-factory-floor.jpg" },
-  { href: "/business/employee-verification", span: "span2", img: "/img/people/05-warehouse-pune.jpg" },
-  { href: "/business/customer-kyc", span: "span2", img: "/img/12-phone-signup.jpg" },
-  { href: "/business/certifier", span: "span2", img: "/img/people/06-supplier-cairo.jpg" },
+  { href: "/products/bgv-enterprise", span: "span3", img: "/img/11-office-first-day.jpg" },
+  { href: "/products/bgv-smb", span: "span3", img: "/img/13-factory-floor.jpg" },
+  { href: "/employee-verification", span: "span2", img: "/img/people/05-warehouse-pune.jpg" },
+  { href: "/products/customer-kyc", span: "span2", img: "/img/12-phone-signup.jpg" },
+  { href: "/products/certifier", span: "span2", img: "/img/people/06-supplier-cairo.jpg" },
 ];
 
 export default async function BusinessHub({
@@ -57,7 +57,7 @@ export default async function BusinessHub({
         <p className="sub">{t.hub.hero.sub}</p>
         <div className="hrow">
           <AppLink href="/contact" className="btn btn-ink">{t.hub.hero.cta}</AppLink>
-          <AppLink href="/business/smb" className="btn btn-ghost">
+          <AppLink href="/products/bgv-smb" className="btn btn-ghost">
             <span>{t.hub.hero.plans}</span>
             <Arrow />
           </AppLink>
@@ -151,7 +151,7 @@ export default async function BusinessHub({
           <span className="svc">{t.hub.services.ats}</span>
           <span className="svc">{t.hub.services.whatsapp}</span>
           <span className="svc">{t.hub.services.sso}</span>
-          <AppLink href="/platform/technology" className="btn btn-ghost btn-sm">
+          <AppLink href="/technology" className="btn btn-ghost btn-sm">
             <span>{t.hub.explore}</span>
             <Arrow />
           </AppLink>

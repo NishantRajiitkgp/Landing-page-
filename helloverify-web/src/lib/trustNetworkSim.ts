@@ -14,6 +14,7 @@
     server's HTML. See the component's header for the colour, offscreen and
     reduced-motion rules this implements. */
 
+import { cssRgb } from "@/lib/cssColour";
 import { GRAPH_EDGES, GRAPH_NODES } from "@/lib/platformGraph";
 import { LAST } from "@/lib/trustNetworkSteps";
 
@@ -36,20 +37,8 @@ type Edge = { a: number; b: number; L: number; hot: number };
 type Pulse = { a: number; b: number; t0: number; dur: number; chain: boolean };
 type Rgb = [number, number, number];
 
-/** `#RRGGBB` or `rgb(r, g, b)` → channels. A computed custom property is the
- *  declared text, so both spellings can arrive. */
-function parse(v: string): Rgb {
-  const s = v.trim();
-  // The build minifies `#FFFFFF` to `#fff`, so the short form arrives too.
-  const hex = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(s);
-  if (hex) {
-    const h = hex[1].length === 3 ? hex[1].replace(/./g, "$&$&") : hex[1];
-    const n = parseInt(h, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  }
-  const m = s.match(/[\d.]+/g);
-  return m && m.length >= 3 ? [+m[0], +m[1], +m[2]] : [0, 0, 0];
-}
+/** A computed custom property → channels (`lib/cssColour`). */
+const parse = (v: string): Rgb => cssRgb(v);
 const rgba = ([r, g, b]: Rgb, a: number) => `rgba(${r},${g},${b},${a})`;
 
 export type NodeCopy = { institution: string; customer: string; one: string; many: string };
@@ -78,8 +67,8 @@ export function createTrustNetwork(
 
   const css = getComputedStyle(stage);
   const tok = (name: string) => parse(css.getPropertyValue(name));
-  const GREEN = tok("--green");
-  const GLOW = tok("--green-light");
+  const GREEN = tok("--primary");
+  const GLOW = tok("--primary-light");
   const INK = tok("--ink");
   const WHITE = tok("--white");
   const DEEP = tok("--v2-tq-green-deep");

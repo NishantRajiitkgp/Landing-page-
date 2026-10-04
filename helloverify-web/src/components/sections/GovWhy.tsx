@@ -4,32 +4,38 @@
     reasons, rebuilt as a light sheet of six engraved plates — a still
     rosette behind, a 1px-gapped grid whose hairlines catch a green light
     that follows the pointer (`./GovWhyStage`), and on every plate a drawing
-    of its reason that loops (`./GovWhyArt`) under a "Pause motion" control.
-    It closes on the certifications and the ask. (Built dark first; made
+    of its reason that loops (`./GovWhyArt`, `./GovWhyTrust`, `./GovWhyScale`)
+    under a "Pause motion" control. The six plates are one film, left to
+    right, top to bottom: 01 lays the layer under a nation; 02 is the first
+    door of that layer, asking the source anywhere in the world; 03 takes
+    companies through the same layer, not only people; 04 is who is already
+    on it — seats on the bus, not a crest each; 05 is the years settling
+    into the rock under it, and then not stopping; 06 is that answer
+    coming back up as one stamped report. It closes on
+    the ask. (Built dark first; made
     light on review, to sit in the page's paper.)
 
     Server-rendered throughout except the stage; every figure and sentence
-    is `sections.govWhy` (see its header for where each came from). */
+    is `sections.govWhy` (see its header for where each came from).
+ */
 import { Arrow } from "@/components/brand/Arrow";
 import { AppLink } from "@/components/chrome/AppLink";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type GovWhyId } from "@/lib/copy/sections";
 import "@/app/v2/govwhy.css";
-import { ArtGovs, ArtPlatform, ArtReport, ArtScale, ArtTimeline, ArtTrust } from "./GovWhyArt";
-import { SEALS } from "./GovSeals";
+import { ArtGovs } from "./GovWhyGovs";
+import { ArtReport } from "./GovWhyReport";
+import { ArtPlatform } from "./GovWhyPlatform";
+import { ArtScale } from "./GovWhyScale";
 import { GovWhyStage } from "./GovWhyStage";
-
-/** Each mark's own pixel size (`public/img/`), so it renders at its true
- *  proportions and is never stretched. */
-const MARK_SIZE: Record<string, [number, number]> = {
-  "/img/mom.jpg": [240, 240],
-  "/img/latvia-coat-of-arms.png": [197, 158],
-  "/img/italy-emblem.png": [180, 200],
-  "/img/mohesr-emblem.png": [220, 264],
-};
+import { ArtTrust } from "./GovWhyTrust";
+import { ArtYears } from "./GovWhyYears";
 
 /** Plate order: the old site's grid, read left to right, top to bottom. */
 const ORDER: readonly GovWhyId[] = ["trust", "psv", "platform", "govs", "longTerm", "evidence"];
+/** The plates rebuilt as chapters of the one cross-section story
+ *  (`./GovWhyTrust`), drawn edge to edge in their frame. */
+const FULL: ReadonlySet<GovWhyId> = new Set(["trust", "psv", "platform", "govs", "longTerm", "evidence"]);
 
 export async function GovWhy() {
   const all = await copy(SECTIONS);
@@ -37,11 +43,11 @@ export async function GovWhy() {
   const v = t.viz;
   const art: Record<GovWhyId, React.ReactNode> = {
     trust: <ArtTrust t={v.trust} />,
-    psv: <ArtScale s={v.scale} />,
-    platform: <ArtPlatform core={v.core} nodes={v.nodes} />,
-    govs: <ArtGovs govs={SEALS.map((s) => ({ name: all.govSeals.items[s.id].name, logo: s.logo, w: MARK_SIZE[s.logo][0], h: MARK_SIZE[s.logo][1] }))} />,
-    longTerm: <ArtTimeline since={v.since} today={v.today} ahead={v.ahead} />,
-    evidence: <ArtReport r={v.report} stamp={v.stamp} proofs={v.proofs} />,
+    psv: <ArtScale s={v.scale} layer={v.trust.layer} />,
+    platform: <ArtPlatform core={v.core} nodes={v.nodes} layer={v.trust.layer} sides={v.sides} />,
+    govs: <ArtGovs layer={v.trust.layer} who={v.who} />,
+    longTerm: <ArtYears since={v.since} today={v.today} ahead={v.ahead} big={v.scale.big} layer={v.trust.layer} />,
+    evidence: <ArtReport report={v.report} stamp={v.stamp} proofs={v.proofs} layer={v.trust.layer} />,
   };
 
   return (
@@ -58,7 +64,7 @@ export async function GovWhy() {
         <GovWhyStage pauseLabel={all.hero.motion.pause} playLabel={all.hero.motion.play}>
           {ORDER.map((id, i) => (
             <article key={id} className="gw-plate">
-              <div className="gw-viz">{art[id]}</div>
+              <div className={FULL.has(id) ? "gw-viz gw-viz-full" : "gw-viz"}>{art[id]}</div>
               <span className="gw-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="gw-t">{t.items[id].t}</h3>
               <p className="gw-p">{t.items[id].p}</p>
@@ -66,7 +72,6 @@ export async function GovWhy() {
           ))}
         </GovWhyStage>
         <div className="gw-foot">
-          <span className="gw-certs">{t.certs}</span>
           <AppLink href="/contact" className="gw-cta">
             <span>{t.cta}</span>
             <Arrow />

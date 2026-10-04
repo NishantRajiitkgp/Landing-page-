@@ -5,14 +5,14 @@
     `enterprises.css`'s `max-width: 1080px` block — the perimeter shrinks
     to the column, the panels size to their content and stack.
 
-    Three pieces, one band:
+    Two pieces, one band:
     - the trust perimeter: pills and canvas rings that pick one of three
       panels (`./EnterprisePerimeter`, a client island; the panels are
       rendered here and passed in). The Employees panel's two workforces
       are ID badges on lanyards (`./EnterpriseBadges`); Customers is a phone
       running the six KYC steps and Businesses a Certifier certificate that
-      fills in over its four, both on `./StepCycler`,
-    - four stats,
+      fills in over its four, both on `./StepCycler`. Each panel ends on
+      three figures (`Nums`) before its buttons,
     - the client letters (`./ClientLetters`, a client island).
 
     `MotionStage` (`./BizMotion`) wraps the band so one "Pause motion"
@@ -59,6 +59,24 @@ function Bars({ n, className = "kx-bars" }: { n: number; className?: string }) {
   );
 }
 
+/** A panel's case in three figures (the sales pass, 1 Oct 2026). Each
+    figure runs into its line — "₹349 is where a HelloVerify check starts" —
+    so the space between them is what a screen reader joins them with. */
+function Nums({ k, items }: { k: string; items: Record<string, { b: string; s: string }> }) {
+  return (
+    <div className="en-nums">
+      <span className="en-nums-k">{k}</span>
+      <ul className="en-nums-l">
+        {Object.entries(items).map(([key, n]) => (
+          <li key={key}>
+            <b>{n.b}</b> <span>{n.s}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 async function Foot({ href }: { href: string }) {
   const t = (await copy(SECTIONS)).enterprises;
   return (
@@ -84,7 +102,10 @@ export async function Enterprises() {
         <span className="k">{e.k}</span>
         <span className="en-tag">{e.tag}</span>
       </div>
-      <h3 className="en-ph">{e.h}</h3>
+      <h3 className="en-ph">
+        {e.hA} <em>{e.hB}</em>
+      </h3>
+      <p className="en-lead">{e.lede}</p>
       <EnterpriseBadges
         turn={e.turn}
         cols={[
@@ -92,17 +113,7 @@ export async function Enterprises() {
           { ...e.blue, photo: "/img/v2/en-blue.jpg", tone: "hivis" },
         ]}
       />
-      <div className="en-flow">
-        <span className="en-flow-k">{e.intK}</span>
-        <ol className="en-flow-l">
-          {Object.entries(e.ints).map(([k, v]) => (
-            <li key={k}>
-              <Tick />
-              <span>{v}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
+      <Nums k={e.numsK} items={e.nums} />
       <Foot href="/business/enterprise" />
     </div>,
     <div key="c" className="en-panel">
@@ -167,14 +178,7 @@ export async function Enterprises() {
           </span>,
         ]}
       />
-      <div className="en-grid6">
-        {Object.entries(c.grid).map(([k, g]) => (
-          <div key={k}>
-            <b>{g.b}</b>
-            <span>{g.s}</span>
-          </div>
-        ))}
-      </div>
+      <Nums k={c.numsK} items={c.nums} />
       <Foot href="/business/customer-kyc" />
     </div>,
     <div key="b" className="en-panel">
@@ -223,14 +227,7 @@ export async function Enterprises() {
           </Fragment>,
         ]}
       />
-      <div className="en-pts">
-        {Object.entries(b.pts).map(([k, p]) => (
-          <div key={k}>
-            <b>{p.b}</b>
-            <span>{p.s}</span>
-          </div>
-        ))}
-      </div>
+      <Nums k={b.numsK} items={b.nums} />
       <Foot href="/business/certifier" />
     </div>,
   ];

@@ -1,7 +1,9 @@
 import Image from "next/image";
 import { SIZES_FULL } from "@/lib/img";
 import { AppLink } from "@/components/chrome/AppLink";
+import { CommerceCta } from "@/components/commerce/CommerceCta";
 import { Arrow } from "@/components/brand/Arrow";
+import type { PackageCheckoutDetails } from "@/lib/auth/types";
 import { CHROME } from "@/lib/copy/chrome";
 import { copy } from "@/lib/copy/request";
 
@@ -31,12 +33,14 @@ export async function ClosingCta({
   ctaLabel,
   ctaHref = "/contact",
   img = "/img/23-closing.jpg",
+  commerce,
 }: {
   heading?: React.ReactNode;
   sub?: string;
   ctaLabel?: string;
   ctaHref?: string;
   img?: string;
+  commerce?: PackageCheckoutDetails;
 }) {
   const t = (await copy(CHROME)).closingCta;
 
@@ -49,8 +53,16 @@ export async function ClosingCta({
           <h2 className="h">{heading ?? t.heading}</h2>
           <p className="p">{sub ?? t.sub}</p>
           <div className="hrow">
-            <AppLink href={ctaHref} className="btn btn-paper">{ctaLabel ?? t.cta}</AppLink>
-            <AppLink href="/business/smb" className="btn btn-ghost ghost-w">
+            {commerce ? (
+              <CommerceCta
+                className="btn btn-paper"
+                label={ctaLabel ?? t.cta}
+                packageDetails={commerce}
+              />
+            ) : (
+              <AppLink href={ctaHref} className="btn btn-paper">{ctaLabel ?? t.cta}</AppLink>
+            )}
+            <AppLink href="/products/bgv-smb" className="btn btn-ghost ghost-w">
               <span>{t.plans}</span>
               <Arrow />
             </AppLink>

@@ -77,12 +77,49 @@ import { SITE_NAME, absoluteUrl } from "@/lib/seo/site";
  */
 const SECTIONS: readonly { heading: string; match: (path: string) => boolean }[] = [
   { heading: "Start here", match: (p) => p === "/" },
-  { heading: "For business", match: (p) => p === "/business" || p.startsWith("/business/") },
-  { heading: "For governments", match: (p) => p === "/governments" || p.startsWith("/governments/") },
-  { heading: "For individuals and families", match: (p) => p === "/individuals" || p.startsWith("/individuals/") },
+  /* Audience hubs plus the old-SPA product / solutions paths that now render
+   * on this host (ROUTE-LOGIN-TASKS Parts 1–10). Same grouping as routes.ts. */
+  {
+    heading: "For business",
+    match: (p) =>
+      p === "/business" ||
+      p.startsWith("/business/") ||
+      p === "/employee-verification" ||
+      p === "/products/bgv-enterprise" ||
+      p === "/products/bgv-smb" ||
+      p === "/products/customer-kyc" ||
+      p === "/products/certifier",
+  },
+  {
+    heading: "For governments",
+    match: (p) =>
+      p === "/governments" ||
+      p.startsWith("/governments/") ||
+      p === "/solutions/health-authorities" ||
+      p === "/solutions/immigration-authorities" ||
+      p.startsWith("/solutions/manpower-and-education-authorities") ||
+      p === "/solutions/trade-authorities",
+  },
+  {
+    heading: "For individuals and families",
+    match: (p) =>
+      p === "/individuals" ||
+      p.startsWith("/individuals/") ||
+      p === "/products/hellov" ||
+      p === "/products/immigration",
+  },
   /* `/ai` (the field case and the globe, 1 Oct 2026) is the platform's AI at
-   * work, and `routes.ts` lists it with the platform pages. */
-  { heading: "The platform", match: (p) => p === "/platform" || p === "/ai" || p.startsWith("/platform/") },
+   * work, and `routes.ts` lists it with the platform pages. `/technology` and
+   * `/international` are the old-SPA names for the same layer. */
+  {
+    heading: "The platform",
+    match: (p) =>
+      p === "/platform" ||
+      p === "/ai" ||
+      p.startsWith("/platform/") ||
+      p === "/technology" ||
+      p === "/international",
+  },
   { heading: "Verification checks", match: (p) => p.startsWith("/checks/") },
   { heading: "Country guides", match: (p) => p.startsWith("/countries/") },
   { heading: "Resources", match: (p) => p === "/resources" || p.startsWith("/resources/") },

@@ -32,16 +32,22 @@
  *  `copyFor` at module load, so a page that exists without copy is a failed
  *  `next build` rather than an empty `<title>` discovered in production.
  *
- *  This is also what unblocks §7: translating the site is now a matter of
- *  keying this table by locale, not of finding 32 literals scattered across the
- *  app directory.
+ *  KEYED BY LOCALE since 4 Oct 2026. English is still the reviewed table;
+ *  `hi` and `ar` are the same paths with translated titles and descriptions.
+ *  Dynamic routes keep catalogue names (check, country, post, legal) in
+ *  English — those records are not in this table — and wrap them in a
+ *  per-locale sentence. `llms.txt` stays English (one file, at the root).
  */
 import { CHECKS } from "@/lib/content/checks";
 import { COUNTRIES } from "@/lib/content/countries";
 import { LEGAL } from "@/lib/content/legal";
 import { POSTS } from "@/lib/content/posts";
+import { routing } from "@/lib/i18n/routing";
 import { allRoutes } from "@/lib/seo/routes";
 import { SITE_DESCRIPTION, SITE_TITLE } from "@/lib/seo/site";
+
+import { STATIC_AR } from "./copy.ar";
+import { STATIC_HI } from "./copy.hi";
 
 /** The reviewed copy for one page. Deliberately just these two: `<meta
  *  name="keywords">` is dropped (§8.1), and OG title/description are derived
@@ -51,9 +57,9 @@ export type PageCopy = {
   readonly description: string;
 };
 
-/** The 28 hand-written routes, in route-manifest order so the table reads like
- *  the site rather than like an alphabet. */
-const STATIC_COPY: Record<string, PageCopy> = {
+/** The 28 hand-written English routes. Unannotated so the keys are the
+ *  path literals — `copy.hi.ts` / `copy.ar.ts` are checked against them. */
+export const STATIC_EN = {
   "/": {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
@@ -83,42 +89,42 @@ const STATIC_COPY: Record<string, PageCopy> = {
     description:
       "The check library, country guides, a glossary of verification terms, and writing about how verification actually works.",
   },
-  "/business/enterprise": {
+  "/products/bgv-enterprise": {
     title: "Enterprise background verification — HelloVerify",
     description:
       "High-volume background checks with an SLA. AI reads the documents, our team confirms with the issuer, your ATS gets the answer back — from 15 minutes.",
   },
-  "/business/smb": {
+  "/products/bgv-smb": {
     title: "Background check packages for small business — HelloVerify",
     description:
       "Pick a package, see the price, upload documents, get answers — no sales call. Blue-collar and driver packages ready in 30 minutes.",
   },
-  "/business/employee-verification": {
+  "/employee-verification": {
     title: "Employee verification — HelloVerify",
     description:
       "Existing staff, contractors and gig workforces — verified at joining and re-verified when it matters. EPFO-backed employment history in 60 minutes.",
   },
-  "/business/customer-kyc": {
+  "/products/customer-kyc": {
     title: "Customer KYC & trust and safety — HelloVerify",
     description:
       "Verify customers the moment they sign up — identity in 15 minutes, screened against courts and global databases, over API or a hosted flow.",
   },
-  "/business/certifier": {
+  "/products/certifier": {
     title: "Vendor due diligence — Certifier by HelloVerify",
     description:
       "Trade licences, directors, credit and criminal records — verified at the registry before you sign a supplier. Certified vendor profiles in 2 days.",
   },
-  "/governments/health": {
+  "/solutions/health-authorities": {
     title: "Verification for health authorities — HelloVerify",
     description:
       "Medical degrees, council registrations and practice history confirmed with the issuing institution — before a clinician touches a patient.",
   },
-  "/governments/immigration": {
+  "/solutions/immigration-authorities": {
     title: "Verification for immigration authorities — HelloVerify",
     description:
       "Applicant documents screened at the source, in the country that issued them — identity, education, employment and records, before the visa decision.",
   },
-  "/governments/manpower-education": {
+  "/solutions/manpower-and-education-authorities": {
     title: "Verification for manpower & education authorities — HelloVerify",
     description:
       "Foreign-worker credentials verified for work-pass decisions — the workflow running in production with Singapore's Ministry of Manpower.",
@@ -138,22 +144,22 @@ const STATIC_COPY: Record<string, PageCopy> = {
     description:
       "Visa support document verification for Italian National Visa applicants in the New Delhi jurisdiction: identity, education, employment, bank and company records.",
   },
-  "/governments/manpower-education/ministry-of-manpower": {
+  "/solutions/manpower-and-education-authorities/ministry-of-manpower": {
     title: "Ministry of Manpower, Singapore — HelloVerify",
     description:
       "How work-pass credential verification runs with Singapore's Ministry of Manpower: foreign qualifications confirmed with the issuing institution, before arrival.",
   },
-  "/governments/trade": {
+  "/solutions/trade-authorities": {
     title: "Verification for trade & business authorities — HelloVerify",
     description:
       "Company registrations, trade licences and the people behind them — verified at the registry for licensing and enforcement decisions.",
   },
-  "/individuals/hellov": {
-    title: "Verify anyone from your phone — HelloV by HelloVerify",
+  "/products/hellov": {
+    title: "Make sure you and your family are safe — HelloV by HelloVerify",
     description:
-      "Send a photo of the document over WhatsApp and get a verified report in about 30 minutes. Drivers, maids, tenants, dates — consent-first, from ₹499.",
+      "Verification on WhatsApp by HelloVerify. Household packages from ₹499 — driver, home staff, tenant, nanny — plus single checks from ₹199.",
   },
-  "/individuals/immigration": {
+  "/products/immigration": {
     title: "Visa & immigration document screening — HelloVerify",
     description:
       "Screen your own documents before an embassy does. Degrees, employment and records checked at the source, so a visa application isn't refused over a paper problem.",
@@ -168,12 +174,12 @@ const STATIC_COPY: Record<string, PageCopy> = {
     description:
       "Follow one address check step by step: our AI flags what doesn't add up, a local expert visits in person, and the evidence becomes a full report.",
   },
-  "/platform/technology": {
+  "/technology": {
     title: "Technology & APIs — HelloVerify",
     description:
       "How HelloVerify reads a document in about a second, reaches the issuing authority, and returns a defensible result over REST and webhooks.",
   },
-  "/platform/coverage": {
+  "/international": {
     title: "Global coverage — 120+ countries — HelloVerify",
     description:
       "Where a document can be confirmed with the authority that issued it, how long it takes there, and the six offices that keep the queue moving.",
@@ -215,6 +221,14 @@ const STATIC_COPY: Record<string, PageCopy> = {
   },
 };
 
+export type StaticSeoPath = keyof typeof STATIC_EN;
+
+const STATIC: Record<string, Record<string, PageCopy>> = {
+  en: STATIC_EN,
+  hi: STATIC_HI,
+  ar: STATIC_AR,
+};
+
 /** The programmatic routes (IA §7), derived from the same records their pages
  *  render. Each branch is the exact expression the page's `generateMetadata`
  *  used to inline — moved, not rewritten.
@@ -223,27 +237,49 @@ const STATIC_COPY: Record<string, PageCopy> = {
  *  answers that case with `notFound()`, and a copy lookup is not the right
  *  place to decide a URL does not exist.
  */
-function dynamicCopy(path: string): PageCopy | null {
+function dynamicCopy(path: string, locale: string): PageCopy | null {
   let m: RegExpExecArray | null;
 
   if ((m = /^\/checks\/(.+)$/.exec(path))) {
     const c = CHECKS.find((x) => x.slug === m![1]);
-    return c
-      ? {
-          title: `${c.name} verification — HelloVerify`,
-          description: `${c.answers} Confirmed with ${c.source}, typically in ${c.time}.`,
-        }
-      : null;
+    if (!c) return null;
+    if (locale === "hi") {
+      return {
+        title: `${c.name} सत्यापन — HelloVerify`,
+        description: `${c.answers} ${c.source} से पुष्टि, आमतौर पर ${c.time} में।`,
+      };
+    }
+    if (locale === "ar") {
+      return {
+        title: `تحقق ${c.name} — HelloVerify`,
+        description: `${c.answers} يُؤكَّد لدى ${c.source}، عادة خلال ${c.time}.`,
+      };
+    }
+    return {
+      title: `${c.name} verification — HelloVerify`,
+      description: `${c.answers} Confirmed with ${c.source}, typically in ${c.time}.`,
+    };
   }
 
   if ((m = /^\/countries\/(.+)$/.exec(path))) {
     const c = COUNTRIES.find((x) => x.slug === m![1]);
-    return c
-      ? {
-          title: `Background verification in ${c.name} — HelloVerify`,
-          description: `${c.summary} Source-confirmed checks typically in ${c.turnaround}.`,
-        }
-      : null;
+    if (!c) return null;
+    if (locale === "hi") {
+      return {
+        title: `${c.name} में पृष्ठभूमि सत्यापन — HelloVerify`,
+        description: `${c.summary} स्रोत-पुष्ट जाँच आमतौर पर ${c.turnaround} में।`,
+      };
+    }
+    if (locale === "ar") {
+      return {
+        title: `التحقق من الخلفية في ${c.name} — HelloVerify`,
+        description: `${c.summary} فحوصات مؤكَّدة من المصدر عادة خلال ${c.turnaround}.`,
+      };
+    }
+    return {
+      title: `Background verification in ${c.name} — HelloVerify`,
+      description: `${c.summary} Source-confirmed checks typically in ${c.turnaround}.`,
+    };
   }
 
   if ((m = /^\/resources\/blog\/(.+)$/.exec(path))) {
@@ -259,16 +295,19 @@ function dynamicCopy(path: string): PageCopy | null {
   return null;
 }
 
-/** `copyFor("/about")` -> that page's reviewed title and description.
+/** `copyFor("/about", "hi")` -> that page's title and description in Hindi.
  *
+ *  Locale defaults to English so `llms.txt` (one English file at the root)
+ *  and any caller that has not been updated keep the reviewed table.
  *  Throws on a route with no copy. That is a build error by design — see the
  *  completeness loop below.
  */
-export function copyFor(path: string): PageCopy {
-  const copy = STATIC_COPY[path] ?? dynamicCopy(path);
+export function copyFor(path: string, locale: string = routing.defaultLocale): PageCopy {
+  const loc = locale in STATIC ? locale : routing.defaultLocale;
+  const copy = STATIC[loc]![path] ?? dynamicCopy(path, loc);
   if (!copy) {
     throw new Error(
-      `copyFor: no copy for ${JSON.stringify(path)}. Every route in ` +
+      `copyFor: no copy for ${JSON.stringify(path)} (${loc}). Every route in ` +
         `lib/seo/routes.ts must have a title and description — a page without ` +
         `them ships an empty <title> and an empty llms.txt line.`,
     );
@@ -276,14 +315,10 @@ export function copyFor(path: string): PageCopy {
   return copy;
 }
 
-/** §7's "translation completeness is a build gate", applied to the copy table.
- *
- *  Runs once at module load, which is during `next build` because every page's
- *  `generateMetadata` imports this transitively. A route added to the manifest
- *  without copy therefore fails the build at the point it is added, rather than
- *  emitting a blank title on one page that nobody opens for a month.
- *
- *  Cheap enough not to guard: 56 lookups over two `Record` hits and four regex
- *  branches, once per build.
+/** §7's "translation completeness is a build gate", applied to every served
+ *  locale. A route missing from `hi` or `ar` fails `next build` the same way
+ *  a missing English row always has.
  */
-for (const route of allRoutes()) copyFor(route.path);
+for (const locale of routing.locales) {
+  for (const route of allRoutes()) copyFor(route.path, locale);
+}

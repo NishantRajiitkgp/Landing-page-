@@ -18,7 +18,8 @@ import { en } from "./blocks.en";
 /** The English object IS the schema — see `./index`. */
 export type BlocksCopy = typeof en;
 
-export const BLOCKS: Dictionary<BlocksCopy> = { en };
+/** Snapshot is English-only (`/landing-page` hardcodes `defaultLocale`). */
+export const BLOCKS: Dictionary<BlocksCopy> = { en, hi: en, ar: en };
 
 /** A message in the HelloV thread. */
 export type PhoneMsgId = keyof BlocksCopy["helloVPhone"]["msgs"];

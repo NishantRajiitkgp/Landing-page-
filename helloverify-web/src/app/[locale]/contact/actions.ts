@@ -21,9 +21,20 @@ import { screenSubmission, type AbuseVerdict } from "@/lib/leads/abuse";
 import { FIELDS, type LeadField } from "@/lib/leads/constraints";
 import { deliverLead } from "@/lib/leads/delivery";
 import { leadsConfig } from "@/lib/leads/env";
-import { leadMessages } from "@/lib/leads/messages";
+import { pick } from "@/lib/copy";
+import { FORMS } from "@/lib/copy/forms";
+import { routing } from "@/lib/i18n/routing";
 import { parseSubmission } from "@/lib/leads/schema";
 import type { LeadFormState } from "@/lib/leads/state";
+
+function statusCopy(form: FormData) {
+  const raw = form.get("locale");
+  const locale =
+    typeof raw === "string" && (routing.locales as readonly string[]).includes(raw)
+      ? raw
+      : routing.defaultLocale;
+  return pick(FORMS, locale).status;
+}
 
 /** The user's own input, read back verbatim so a failed submission does not
  *  cost them their typing. Only the known fields — never the whole FormData,
@@ -37,17 +48,21 @@ function echo(form: FormData): Partial<Record<LeadField, string>> {
   return values;
 }
 
-function rejectionMessage(verdict: Extract<AbuseVerdict, { allowed: false }>, fallbackEmail: string) {
+function rejectionMessage(
+  verdict: Extract<AbuseVerdict, { allowed: false }>,
+  fallbackEmail: string,
+  say: ReturnType<typeof statusCopy>,
+) {
   switch (verdict.kind) {
     case "rate-limited":
-      return leadMessages.rateLimited(verdict.retryAfterSeconds ?? 60, fallbackEmail);
+      return say.rateLimited(verdict.retryAfterSeconds ?? 60, fallbackEmail);
     case "email-disposable":
-      return leadMessages.disposableEmail;
+      return say.disposable;
     case "email-undeliverable":
-      return leadMessages.undeliverableEmail;
+      return say.undeliverable;
     case "honeypot":
     case "too-fast":
-      return leadMessages.suspicious(fallbackEmail);
+      return say.suspicious(fallbackEmail);
   }
 }
 
@@ -60,6 +75,7 @@ export async function submitLead(
   const token = Date.now();
   const { fallbackEmail } = leadsConfig();
   const values = echo(form);
+  const say = statusCopy(form);
 
   // 1. The schema is the contract. Validation runs BEFORE the rate limiter on
   //    purpose: a person who makes five typos should not be locked out, and a
@@ -68,7 +84,7 @@ export async function submitLead(
   if (!parsed.ok) {
     return {
       status: "invalid",
-      message: leadMessages.invalid,
+      message: say.invalid,
       fieldErrors: parsed.fieldErrors,
       values,
       token,
@@ -85,7 +101,7 @@ export async function submitLead(
   if (!verdict.allowed) {
     return {
       status: "rejected",
-      message: rejectionMessage(verdict, fallbackEmail),
+      message: rejectionMessage(verdict, fallbackEmail, say),
       retryAfterSeconds: verdict.retryAfterSeconds,
       values,
       token,
@@ -100,8 +116,8 @@ export async function submitLead(
   });
 
   if (!outcome.ok) {
-    return { status: "degraded", message: leadMessages.degraded(fallbackEmail), values, token };
+    return { status: "degraded", message: say.degraded(fallbackEmail), values, token };
   }
 
-  return { status: "success", message: leadMessages.success, token };
+  return { status: "success", message: say.ok, token };
 }

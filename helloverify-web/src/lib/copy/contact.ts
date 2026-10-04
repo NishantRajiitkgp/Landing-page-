@@ -13,8 +13,10 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./contact.en";
+import { hi } from "./contact.hi";
+import { ar } from "./contact.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type ContactCopy = typeof en;
 
-export const CONTACT: Dictionary<ContactCopy> = { en };
+export const CONTACT: Dictionary<ContactCopy> = { en, hi, ar };

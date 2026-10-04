@@ -66,16 +66,16 @@ function destinationLocaleFor(locale: string): string {
  *      them to the default locale costs nothing that a dead URL can lose.
  *   3. `.../index.html` is generated PER RULE, not stripped generically. AUDIT
  *      A2 means all 84 sitemap URLs are indexed in their `/index.html` form
- *      too, and `/en/smb/index.html` -> `/en/smb` -> `/en/business/smb` would
+ *      too, and `/en/smb/index.html` -> `/en/smb` -> `/en/products/bgv-smb` would
  *      be a chain on exactly the URLs Google already holds.
  */
 export function legacyRedirects(): RedirectRule[] {
   const rules: RedirectRule[] = [];
 
-  /** The SPA leaves the site entirely. First, because these are the most
-   *  specific sources on the list — `/en/orders/:path*` must be matched before
-   *  the `/hi/:path*` style catch-alls further down, and `/consumer/…` before
-   *  anything generic. */
+  /** Remaining app-host paths. First, because these are the most specific
+   *  sources on the list — `/consumer/…` must be matched before anything
+   *  generic. A leftover wildcard `/orders/:path*` would steal `/orders`
+   *  and the candidate invite pages, which now live on this host. */
   for (const locale of LEGACY_LOCALES) {
     for (const { from, to } of APP_ROUTES) {
       rules.push({
@@ -92,7 +92,7 @@ export function legacyRedirects(): RedirectRule[] {
   /** Every legacy path, in every indexed locale.
    *
    *  The destination locale is NOT the source locale: `/hi/technology` lands on
-   *  `/en/platform/technology`, because `/hi/platform/technology` does not
+   *  `/en/technology`, because `/hi/technology` does not
    *  exist. Consolidating in one hop is the point — routing it to a Hindi URL
    *  that 404s would be worse than not redirecting at all. */
   for (const locale of LEGACY_LOCALES) {
@@ -128,7 +128,7 @@ export function legacyRedirects(): RedirectRule[] {
    *
    *  Ordering is load-bearing in both directions: this must come AFTER the
    *  specific rules above, so `/hi/technology` reaches
-   *  `/en/platform/technology` rather than a dead `/en/technology`, and BEFORE
+   *  `/en/technology` rather than a dead `/en/technology`, and BEFORE
    *  the generic `/index.html` strip below, which would otherwise turn
    *  `/hi/about/index.html` into a three-hop path to a 404. */
   for (const locale of unservedLocales()) {

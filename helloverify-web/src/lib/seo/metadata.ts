@@ -30,7 +30,7 @@
  *       sitemap holds by construction, not by review.
  *    2. `tools/seo/check-sitemap.mjs` reads the emitted HTML and asserts each
  *       page's canonical equals its OWN URL. That is the half this file cannot
- *       see: `/business/smb` passing `"/business/enterprise"` is a valid
+ *       see: `/products/bgv-smb` passing `"/products/bgv-enterprise"` is a valid
  *       manifest path, so only the build output can catch it.
  */
 import type { Metadata } from "next";
@@ -54,7 +54,7 @@ import { copyFor } from "@/lib/seo/copy";
  * with: there is no second string to disagree with.
  */
 export function pageMetadata(locale: string, path: string): Metadata {
-  const copy = copyFor(path);
+  const copy = copyFor(path, locale);
 
   return {
     title: copy.title,

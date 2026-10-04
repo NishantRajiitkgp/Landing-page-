@@ -21,7 +21,7 @@
  *  page whose children are the services; giving it a `Service` node of its own
  *  puts it in competition with its own children for the same entity, which is
  *  the opposite of what an entity graph is for.
- *  `/governments/manpower-education/ministry-of-manpower` is excluded too — it
+ *  `/solutions/manpower-and-education-authorities/ministry-of-manpower` is excluded too — it
  *  is a customer story, not a service offering.
  *
  *  ON `areaServed`, which §11a.3 asks for by name ("lets an engine answer
@@ -48,6 +48,7 @@
 import type { OfferCatalog, Service, WithContext } from "schema-dts";
 
 import { canonicalOf } from "@/lib/seo/canonical";
+import { copyFor } from "@/lib/seo/copy";
 import { ORG_ID } from "@/lib/seo/schema/organization";
 
 /** One package on a product page. Deliberately has no `price`.
@@ -104,7 +105,7 @@ export function serviceNode(locale: string, facts: ServiceFacts): WithContext<Se
     "@type": "Service",
     "@id": `${url}#service`,
     name: facts.name,
-    description: facts.description,
+    description: copyFor(facts.path, locale).description,
     serviceType: facts.serviceType,
     url,
     /** By reference, never by restatement. Repeating the organisation's name

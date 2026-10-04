@@ -38,7 +38,7 @@ export function NumbersDial({ a, b }: { a: string; b: string }) {
         </mask>
       </defs>
       <path d={TICKS} stroke="#DCD6CA" strokeWidth="2" strokeLinecap="round" />
-      <path d={TICKS} stroke="#1B6B4A" strokeWidth="2.4" strokeLinecap="round" mask="url(#nm-dial-m)" />
+      <path d={TICKS} stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" mask="url(#nm-dial-m)" />
       <circle cx="110" cy="110" r="66" fill="none" stroke="#E6E1D6" strokeWidth="1" />
       <text x="110" y="106" textAnchor="middle" fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="9.5" letterSpacing="1.6" fill="#6F6B62">{a}</text>
       <text x="110" y="121" textAnchor="middle" fontFamily="geistMono, SF Mono, Menlo, monospace" fontSize="9.5" letterSpacing="1.6" fill="#6F6B62">{b}</text>

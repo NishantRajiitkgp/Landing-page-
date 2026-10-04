@@ -58,7 +58,7 @@ export default async function CountryPage({
         <p className="sub">{c.summary}</p>
         <div className="hrow">
           <AppLink href="/contact" className="btn btn-ink">{t.hero.ask(c.name)}</AppLink>
-          <AppLink href="/platform/coverage" className="btn btn-ghost">
+          <AppLink href="/international" className="btn btn-ghost">
             <span>{t.hero.allCountries}</span>
             <Arrow />
           </AppLink>

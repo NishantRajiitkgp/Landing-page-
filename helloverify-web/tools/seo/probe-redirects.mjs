@@ -113,7 +113,7 @@ console.log("\nLegacy URLs (locale-prefixed)");
 for (const locale of LEGACY_LOCALES) {
   // An indexed locale we serve keeps its prefix; one we do not serve
   // consolidates onto the default. /hi/technology must land on
-  // /en/platform/technology, NOT on a dead /hi/platform/technology.
+  // /en/technology, NOT on a dead /hi/technology.
   const dest = SERVED_LOCALES.includes(locale) ? locale : DEFAULT_LOCALE;
   for (const { from, to } of LEGACY_ROUTES) {
     const source = from === "/" ? `/${locale}` : `/${locale}${from}`;
@@ -211,7 +211,6 @@ console.log("\nSPA paths (cross-host)");
   // The token-bearing and money-bearing ones, checked on the full absolute URL
   // because getting the host or the path wrong silently breaks a live flow.
   for (const [path, expected] of [
-    ["/en/orders/candidate", `${APP_HOST}/en/orders/candidate`],
     ["/consumer/passwordrecovery/abc123", `${APP_HOST}/consumer/passwordrecovery/abc123`],
     ["/consumer/PayUPayment/PaymentSuccess1", `${APP_HOST}/consumer/PayUPayment/PaymentSuccess1`],
   ]) {
@@ -222,6 +221,26 @@ console.log("\nSPA paths (cross-host)");
       `got ${res.status} -> ${res.headers.get("location")}`,
     );
   }
+}
+
+console.log("\nAccount pages (this host, not app)");
+{
+  for (const path of [
+    "/en/cart",
+    "/en/orders",
+    "/en/orders/candidate",
+    "/en/orders/smb-candidates",
+    "/en/profile-settings",
+  ]) {
+    const res = await fetch(origin() + path, { redirect: "manual" });
+    check(
+      `200 ${path} stays on this host`,
+      res.status === 200 && !res.headers.get("location"),
+      `got ${res.status} -> ${res.headers.get("location")}`,
+    );
+  }
+  await assertOneHop("/en/cartlist", "/en/cart");
+
   warn(
     "cross-host 308s assume app.helloverify.com is live",
     `${APP_ROUTES.length + APP_ROUTES_UNPREFIXED.length} rules point at ${APP_HOST}. A 308 is cached forever, so if ` +

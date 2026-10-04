@@ -61,17 +61,17 @@ const DEPRECATED = ["QAPage", "SearchAction"];
  *  Manpower case study no), so it is written down where a diff shows it
  *  changing rather than inferred from whatever the build happened to emit. */
 const SERVICE_PAGES = new Set([
-  "/en/business/enterprise",
-  "/en/business/smb",
-  "/en/business/employee-verification",
-  "/en/business/customer-kyc",
-  "/en/business/certifier",
-  "/en/individuals/hellov",
-  "/en/governments/health",
-  "/en/governments/immigration",
-  "/en/governments/manpower-education",
-  "/en/governments/trade",
-  "/en/individuals/immigration",
+  "/en/products/bgv-enterprise",
+  "/en/products/bgv-smb",
+  "/en/employee-verification",
+  "/en/products/customer-kyc",
+  "/en/products/certifier",
+  "/en/products/hellov",
+  "/en/solutions/health-authorities",
+  "/en/solutions/immigration-authorities",
+  "/en/solutions/manpower-and-education-authorities",
+  "/en/solutions/trade-authorities",
+  "/en/products/immigration",
   "/en/individuals/home-family",
 ]);
 
@@ -86,20 +86,20 @@ const SERVICE_PAGES = new Set([
  *  a NEW strip is a failed build until somebody states which it is. */
 const HOWTO_PAGES = new Set([
   "/en/business",
-  "/en/business/enterprise",
-  "/en/business/smb",
-  "/en/business/employee-verification",
-  "/en/business/certifier",
+  "/en/products/bgv-enterprise",
+  "/en/products/bgv-smb",
+  "/en/employee-verification",
+  "/en/products/certifier",
   "/en/individuals",
-  "/en/individuals/hellov",
-  "/en/platform/technology",
+  "/en/products/hellov",
+  "/en/technology",
   // the six built on VerticalPage, from its `stepsHead`
-  "/en/governments/health",
-  "/en/governments/immigration",
-  "/en/governments/manpower-education",
-  "/en/governments/trade",
+  "/en/solutions/health-authorities",
+  "/en/solutions/immigration-authorities",
+  "/en/solutions/manpower-and-education-authorities",
+  "/en/solutions/trade-authorities",
   "/en/individuals/home-family",
-  "/en/individuals/immigration",
+  "/en/products/immigration",
 ]);
 
 /** The four strips that are NOT instructions, with the reason on each. A
@@ -107,11 +107,11 @@ const HOWTO_PAGES = new Set([
  *  carry a how-shaped or question-shaped heading, which is what makes them
  *  tempting. Each page's `<Steps>` call carries the same note. */
 const HOWTO_NOT_A_SEQUENCE = new Map([
-  ["/en/business/customer-kyc", "three mutually exclusive routes (\"02 · Or redirect\"), not steps"],
-  ["/en/platform/coverage", "a definition of coverage and its properties, not a process"],
+  ["/en/products/customer-kyc", "three mutually exclusive routes (\"02 · Or redirect\"), not steps"],
+  ["/en/international", "a definition of coverage and its properties, not a process"],
   ["/en/platform/security-compliance", "four controls that apply concurrently, not in order"],
   [
-    "/en/governments/manpower-education/ministry-of-manpower",
+    "/en/solutions/manpower-and-education-authorities/ministry-of-manpower",
     "four deliverables — \"four things in the contract\" — not steps",
   ],
 ]);
@@ -156,6 +156,8 @@ const sitemapPaths = new Set(
 );
 
 const pageFiles = await htmlPages(root);
+/** Gated account shells — prerendered, noindex, not in the sitemap. */
+const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings)$/;
 
 // ------------------------------------------------------------------ parsing
 const LD = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
@@ -185,7 +187,7 @@ function visibleCrumbs(html) {
  *  </div><p class="p">…</p></div>` — and required to sit immediately after the
  *  strip's own opening tag, then immediately after the previous card. Two
  *  cheaper shapes were rejected by measurement rather than by taste:
- *  `class="t"` and `class="p"` are NOT unique to this strip (`/business/smb`
+ *  `class="t"` and `class="p"` are NOT unique to this strip (`/products/bgv-smb`
  *  alone renders eight `<span class="t">30 min</span>` pills), so harvesting
  *  the classes separately the way `visibleFaqs` can would mix a pill's
  *  turnaround into a step's name; and matching the strip container's closing
@@ -240,6 +242,7 @@ const danglingRefs = [];
 const strayGraph = [];
 
 for (const [path, file] of pageFiles) {
+  if (ACCOUNT_PAGE.test(path)) continue;
   const html = await readFile(new URL(file, root), "utf8");
   const raw = [...html.matchAll(LD)].map((m) => m[1]);
 

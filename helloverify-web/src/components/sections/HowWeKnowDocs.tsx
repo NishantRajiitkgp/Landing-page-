@@ -32,10 +32,10 @@ export function Seal({ id, ring: text }: { id: string; ring: string }) {
       <defs>
         <path id={id} d="M60 60 m-44 0 a44 44 0 1 1 88 0 a44 44 0 1 1 -88 0" />
       </defs>
-      <g fill="none" stroke="#1B6B4A">
+      <g fill="none" stroke="currentColor">
         <circle cx="60" cy="60" r="55" strokeWidth="2.6" />
         <circle cx="60" cy="60" r="49" strokeWidth="0.9" />
-        <text fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="7.4" letterSpacing="1.4">
+        <text fill="currentColor" stroke="none" fontFamily={MONO} fontSize="7.4" letterSpacing="1.4">
           <textPath href={`#${id}`} textLength="272" lengthAdjust="spacing">{`${text} `}</textPath>
         </text>
         <path d="M44 60 l10 10 l22 -23" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />

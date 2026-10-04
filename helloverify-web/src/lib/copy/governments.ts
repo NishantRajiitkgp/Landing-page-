@@ -7,7 +7,7 @@
  *
  *  THE KEY UNIONS below gate the COMPONENT's structure, the half a dictionary
  *  cannot check on its own. Each of the four vertical pages declares an ordered
- *  `LANES` and `ROWS` against them, exactly as `/business/enterprise` does, so a
+ *  `LANES` and `ROWS` against them, exactly as `/products/bgv-enterprise` does, so a
  *  lane, a pill or a row added without copy is TS2322 on that array in every
  *  locale at once — the argument `./index` makes under "Where the keys come
  *  from".
@@ -24,11 +24,13 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./governments.en";
+import { hi } from "./governments.hi";
+import { ar } from "./governments.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type GovernmentsCopy = typeof en;
 
-export const GOVERNMENTS: Dictionary<GovernmentsCopy> = { en };
+export const GOVERNMENTS: Dictionary<GovernmentsCopy> = { en, hi, ar };
 
 /** A destination the `/governments` hub may card. Keyed by href for the same
  *  reason `chrome.footer.links` is: the href is the string the component needs

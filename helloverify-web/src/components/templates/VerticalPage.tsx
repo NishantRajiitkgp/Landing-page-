@@ -8,6 +8,8 @@ import { FaqSection } from "@/components/chrome/FaqSection";
 import type { ClosingCta } from "@/components/chrome/ClosingCta";
 import { CertCards } from "@/components/chrome/CertCard";
 import { AppLink } from "@/components/chrome/AppLink";
+import { CommerceCta } from "@/components/commerce/CommerceCta";
+import type { PackageCheckoutDetails } from "@/lib/auth/types";
 import type { Crumb } from "@/lib/seo/schema/breadcrumbs";
 import type { Faq } from "@/lib/seo/schema/faq";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
@@ -37,7 +39,11 @@ export type VerticalContent = {
   h1: React.ReactNode;
   sub: string;
   primary?: { label: string; href: string };
+  primaryCommerce?: PackageCheckoutDetails;
   secondary?: { label: string; href: string };
+  /** Optional control under the hero lede (immigration audience tabs). The
+   *  sections below are untouched — this is a slot, not a restyle. */
+  heroAfter?: React.ReactNode;
   strip: React.ReactNode[];
   verifyHead: React.ReactNode;
   verifyLede: string;
@@ -89,8 +95,17 @@ export async function VerticalPage(c: VerticalContent) {
         <div className="k">{c.eyebrow}</div>
         <h1 className="h1">{c.h1}</h1>
         <p className="sub">{c.sub}</p>
+        {c.heroAfter}
         <div className="hrow">
-          <AppLink href={c.primary?.href ?? "/contact"} className="btn btn-ink">{c.primary?.label ?? t.talkToSales}</AppLink>
+          {c.primaryCommerce ? (
+            <CommerceCta
+              className="btn btn-ink"
+              label={c.primary?.label ?? t.talkToSales}
+              packageDetails={c.primaryCommerce}
+            />
+          ) : (
+            <AppLink href={c.primary?.href ?? "/contact"} className="btn btn-ink">{c.primary?.label ?? t.talkToSales}</AppLink>
+          )}
           {c.secondary && (
             <AppLink href={c.secondary.href} className="btn btn-ghost">
               <span>{c.secondary.label}</span>

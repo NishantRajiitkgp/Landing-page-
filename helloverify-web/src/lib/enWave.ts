@@ -11,6 +11,7 @@
  *  island imports eagerly; this file, the drawing, is fetched by dynamic
  *  import as the section approaches. */
 
+import { cssRgb } from "./cssColour";
 import { C, RS, SIZE, type Sim } from "./enRings";
 
 export { C, PILL_TOP, SIZE, newSim, ringAt, type Sim } from "./enRings";
@@ -22,20 +23,8 @@ const SAMP = 300;
 
 export type RGB = [number, number, number];
 
-/** A token's computed value → RGB. Browsers return a custom property as
- *  authored, so this reads the `#RRGGBB` the palette is written in and
- *  `rgb()` in case a theme ever writes it that way. */
-export function parseColour(v: string): RGB {
-  const s = v.trim();
-  const h = s.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
-  if (h) {
-    const x = h[1].length === 3 ? [...h[1]].map((c) => c + c).join("") : h[1];
-    const n = parseInt(x, 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  }
-  const f = s.match(/rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i);
-  return f ? [Number(f[1]), Number(f[2]), Number(f[3])] : [0, 0, 0];
-}
+/** A token's computed value → RGB (`lib/cssColour`). */
+export const parseColour = (v: string): RGB => cssRgb(v);
 
 const mix = (a: RGB, b: RGB, t: number): RGB => [
   Math.round(a[0] + (b[0] - a[0]) * t),

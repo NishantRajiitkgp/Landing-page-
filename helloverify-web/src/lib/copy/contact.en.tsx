@@ -48,6 +48,40 @@ export const en = {
       "get a real answer, including when the honest answer is that something takes days.",
   },
 
+  tabs: {
+    aria: "Contact options",
+    enquiry: "Enquiry",
+    track: "Track your Application",
+  },
+
+  track: {
+    title: "Select Tracking Method",
+    or: "Or",
+    phoneEmail: "Phone Number / Email ID",
+    passport: "Passport Number",
+    reference: "Reference Number",
+    phoneHeading: "Enter Your Phone Number or Email",
+    passportHeading: "Enter Your Details",
+    passportNote: "An OTP will be sent to your registered email or phone number.",
+    referenceHeading: "Enter Your Reference",
+    countryCode: "Country Code",
+    countryPlaceholder: "+91",
+    phone: "Phone Number",
+    phonePlaceholder: "Phone Number",
+    email: "Email ID",
+    emailPlaceholder: "Enter your email Id",
+    passportNumber: "Passport Number",
+    passportPlaceholder: "Passport number",
+    referenceNumber: "Reference Number",
+    referencePlaceholder: "Enter your reference number",
+    referenceExample: "Enter your reference number (e.g., HV2024001234)",
+    sendOtp: "Send OTP",
+    result:
+      "This page cannot look up a live case. If you ordered here, open My Orders. Authority applicants use their programme portal. Or send an enquiry and we will look it up.",
+    orders: "My Orders",
+    enquiryInstead: "Send an enquiry",
+  },
+
   /** The image panel beside the form. See the header note on the duplication. */
   side: {
     h: (

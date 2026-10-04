@@ -49,7 +49,8 @@ const PAPER = "#F6F4EF";
 const INK = "#15140F";
 const MUTED = "#6F6B62";
 const HAIR = "#E3DFD6";
-const GREEN = "#1B6B4A";
+/** `--primary` in `design.css`, the logo's red; keep the two equal. */
+const PRIMARY = "#EC2E21";
 
 export default async function Image() {
   return new ImageResponse(
@@ -69,9 +70,7 @@ export default async function Image() {
           <div style={{ fontSize: 34, fontWeight: 600, color: INK, letterSpacing: "-0.02em" }}>
             {SITE_NAME}
           </div>
-          {/* The accent is --green, never --red: red exists only inside the
-              logo mark, which this card does not draw. */}
-          <div style={{ width: 8, height: 8, borderRadius: 8, backgroundColor: GREEN }} />
+          <div style={{ width: 8, height: 8, borderRadius: 8, backgroundColor: PRIMARY }} />
           <div style={{ fontSize: 22, color: MUTED }}>Primary-source verification</div>
         </div>
 

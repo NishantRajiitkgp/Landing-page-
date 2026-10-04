@@ -33,30 +33,30 @@ const COLS: readonly { k: FooterColKey; links: readonly FooterHref[] }[] = [
   {
     k: "governments",
     links: [
-      "/governments/health",
-      "/governments/immigration",
-      "/governments/manpower-education",
-      "/governments/trade",
-      "/governments/manpower-education/ministry-of-manpower",
+      "/solutions/health-authorities",
+      "/solutions/immigration-authorities",
+      "/solutions/manpower-and-education-authorities",
+      "/solutions/trade-authorities",
+      "/solutions/manpower-and-education-authorities/ministry-of-manpower",
     ],
   },
   {
     k: "business",
     links: [
-      "/business/enterprise",
-      "/business/smb",
-      "/business/employee-verification",
-      "/business/customer-kyc",
-      "/business/certifier",
+      "/products/bgv-enterprise",
+      "/products/bgv-smb",
+      "/employee-verification",
+      "/products/customer-kyc",
+      "/products/certifier",
     ],
   },
   {
     k: "individuals",
-    links: ["/individuals/hellov", "/individuals/immigration", "/individuals/home-family"],
+    links: ["/products/hellov", "/products/immigration", "/individuals/home-family"],
   },
   {
     k: "platform",
-    links: ["/platform/technology", "/platform/security-compliance", "/platform/coverage"],
+    links: ["/technology", "/platform/security-compliance", "/international"],
   },
   {
     k: "resources",
@@ -188,12 +188,7 @@ export async function SiteFooter() {
             <div className="co">
               <AppLink href="/about">{t.about}</AppLink>
               <AppLink href="/contact">{t.contact}</AppLink>
-              {/* `color` is new on this call site and only this one: the dead
-                  anchor inherited `#3D3B35` from `.foot2 .co a`
-                  (`pages.css:74`), and a `<span>` does not match that
-                  selector. `--ink-soft` is that exact value
-                  (`design.css:30`), so the pixel is unchanged. */}
-              <LocaleSwitch style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 500, color: "var(--ink-soft)" }} />
+              <LocaleSwitch />
             </div>
           </div>
           {COLS.map((c) => (
@@ -246,8 +241,8 @@ export async function SiteFooter() {
             <pattern id="fz-eng-r" width="0.62" height="0.62" patternUnits="userSpaceOnUse">
               <path d="M0 0.31 q0.155 -0.2 0.31 0 t0.31 0" fill="none" stroke="#EC2E21" strokeWidth="0.22" />
             </pattern>
-            <pattern id="fz-uv" width="1.4" height="1.4" patternUnits="userSpaceOnUse">
-              <circle cx="0.7" cy="0.7" r="0.34" fill="#6EE7B0" />
+            <pattern id="fz-uv" className="fz-uv-dots" width="1.4" height="1.4" patternUnits="userSpaceOnUse">
+              <circle cx="0.7" cy="0.7" r="0.34" fill="currentColor" />
             </pattern>
           </defs>
         </svg>

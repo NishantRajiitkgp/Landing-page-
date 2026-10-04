@@ -4,20 +4,10 @@
  *  locale, including English, so there is never an unprefixed duplicate of a
  *  prefixed page. AUDIT A2 exists because nobody wrote that rule down.
  *
- *  ON THE LOCALE LIST — `hi` and `ar` are NOT here yet, deliberately.
- *
- *  §7 makes a missing translation key a type error rather than a runtime
- *  fallback, and that rule is doing exactly what it should: declaring a locale
- *  whose copy does not exist would publish a full route tree of English pages
- *  under /hi and /ar. That is not a partial translation, it is duplicate
- *  content at three times the scale, and it would be actively worse for search
- *  than those URLs not existing.
- *
- *  The old site has real translated copy (33,609 Devanagari and 15,806 Arabic
- *  characters, AUDIT §F) and it is recoverable from the old repo — but it is
- *  written against the OLD information architecture, so it maps onto these
- *  pages only in part. Adding a locale here is one array entry, which is the
- *  §3.4 requirement; it is gated on copy, not on code.
+ *  ON THE LOCALE LIST — `hi` and `ar` shipped in Part 9b.7, after every
+ *  namespace had an annotated dictionary. Declaring them earlier would have
+ *  published English under /hi and /ar (duplicate content). `SERVED_LOCALES`
+ *  in `lib/seo/legacy-urls.ts` moved in the same change.
  *
  *  ONE ARRAY ENTRY IS NOW ENFORCED, NOT ASSERTED. The list below is mirrored
  *  by `SERVED_LOCALES` in `lib/seo/legacy-urls.ts`, which cannot import this
@@ -32,7 +22,7 @@
 import { defineRouting } from "next-intl/routing";
 
 export const routing = defineRouting({
-  locales: ["en"],
+  locales: ["en", "hi", "ar"],
   defaultLocale: "en",
   localePrefix: "always",
   localeDetection: true,
@@ -47,6 +37,8 @@ const RTL_LOCALES = new Set<string>(["ar", "he", "fa", "ur"]);
 export function directionOf(locale: string): "ltr" | "rtl" {
   return RTL_LOCALES.has(locale) ? "rtl" : "ltr";
 }
+
+export { scriptStackOf, type ScriptStack } from "./fonts";
 
 /** `og:locale` and `og:locale:alternate`, derived rather than written down
  *  (BUILD-SPEC §8.1).

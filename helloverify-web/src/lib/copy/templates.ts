@@ -14,8 +14,10 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./templates.en";
+import { hi } from "./templates.hi";
+import { ar } from "./templates.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type TemplatesCopy = typeof en;
 
-export const TEMPLATES: Dictionary<TemplatesCopy> = { en };
+export const TEMPLATES: Dictionary<TemplatesCopy> = { en, hi, ar };

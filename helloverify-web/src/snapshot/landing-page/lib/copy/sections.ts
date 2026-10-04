@@ -21,7 +21,8 @@ import { en } from "./sections.en";
 /** The English object IS the schema — see `./index`. */
 export type SectionsCopy = typeof en;
 
-export const SECTIONS: Dictionary<SectionsCopy> = { en };
+/** Snapshot is English-only (`/landing-page` hardcodes `defaultLocale`). */
+export const SECTIONS: Dictionary<SectionsCopy> = { en, hi: en, ar: en };
 
 /** `Why.tsx` — the ordinal a reason prints, which is also its React key. */
 export type WhyReasonId = keyof SectionsCopy["why"]["reasons"];

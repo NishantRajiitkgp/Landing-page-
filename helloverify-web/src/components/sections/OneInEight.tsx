@@ -29,11 +29,9 @@ export async function OneInEight() {
         <span className="ff-flag">{t.flag}</span>
       </div>
       <div className="sec-head" style={{ marginTop: "22px" }}>
-        <h2 className="h2">
-          <em className="ff-one">{t.headingEm}</em> {t.heading}
-        </h2>
+        <h2 className="h2">{t.heading}</h2>
         <p className="lede" style={{ marginBottom: "8px" }}>
-          {t.lede}
+          <em className="ff-one">{t.ledeEm}</em> {t.lede}
           <sup className="ff-sup">{t.fn}</sup>
         </p>
       </div>

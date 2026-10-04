@@ -27,10 +27,10 @@ export async function generateMetadata({
  *  here. `k` rather than the href because two of the four point at the same
  *  route, which is the note `lib/copy/individuals.en.tsx` records. */
 const PATHS: readonly { k: IndividualsPathKey; href: string; span: string; img: string }[] = [
-  { k: "hellov", href: "/individuals/hellov", span: "span3", img: "/img/12-phone-signup.jpg" },
-  { k: "immigration", href: "/individuals/immigration", span: "span3", img: "/img/14-visa-counter.jpg" },
+  { k: "hellov", href: "/products/hellov", span: "span3", img: "/img/12-phone-signup.jpg" },
+  { k: "immigration", href: "/products/immigration", span: "span3", img: "/img/14-visa-counter.jpg" },
   { k: "homeFamily", href: "/individuals/home-family", span: "span3", img: "/img/15-home-doorway.jpg" },
-  { k: "tenants", href: "/individuals/hellov", span: "span3", img: "/img/people/07-tenant-singapore.jpg" },
+  { k: "tenants", href: "/products/hellov", span: "span3", img: "/img/people/07-tenant-singapore.jpg" },
 ];
 
 export default async function IndividualsHub({
@@ -53,7 +53,7 @@ export default async function IndividualsHub({
         heading: c.closing.heading,
         sub: c.closing.sub,
         ctaLabel: c.closing.ctaLabel,
-        ctaHref: "https://app.helloverify.com",
+        ctaHref: "/products/hellov",
         img: "/img/15-home-doorway.jpg",
       }}
     >
@@ -62,8 +62,8 @@ export default async function IndividualsHub({
         <h1 className="h1">{c.hero.h1}</h1>
         <p className="sub">{c.hero.sub}</p>
         <div className="hrow">
-          <a href="https://app.helloverify.com" className="btn btn-ink">{c.hero.cta}</a>
-          <AppLink href="/individuals/hellov" className="btn btn-ghost">
+          <AppLink href="/products/hellov" className="btn btn-ink">{c.hero.cta}</AppLink>
+          <AppLink href="/products/hellov" className="btn btn-ghost">
             <span>{c.hero.plans}</span>
             <Arrow />
           </AppLink>
@@ -153,13 +153,13 @@ export default async function IndividualsHub({
               blocks and left 21 alone because they were not the same shape.
               Measured across the 40 cards the nine surfaces rendered on 22 Sep
               2026: 37 are credential cards and three are this shape — these two
-              and the GDPR card on `/business/customer-kyc`.
+              and the GDPR card on `/products/customer-kyc`.
 
               The second gloss DOES name a credential ("ISO 27001 certified
               storage"), and it is left as prose because it agrees with the
               reviewed list. It is worth knowing it is there: it is a status
               word this consumer page states in copy that no table governs, the
-              same exposure as the answer blocks on `/business/enterprise` and
+              same exposure as the answer blocks on `/products/bgv-enterprise` and
               `/governments`. */}
           <div className="cert">
             <Image src="/img/gdpr.jpg" alt={c.certs.consent.alt} width={CERT_BOX} height={CERT_BOX} />

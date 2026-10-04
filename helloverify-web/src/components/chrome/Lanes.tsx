@@ -4,11 +4,11 @@
  *
  *  MEASURED 22 SEP 2026, BY DIFFING THE COPIES RATHER THAN READING THEM. Four
  *  render sites. The two that already drive the band from records —
- *  `templates/VerticalPage.tsx` and `app/[locale]/business/enterprise/page.tsx`
+ *  `templates/VerticalPage.tsx` and `app/[locale]/products/bgv-enterprise/page.tsx`
  *  — are byte-identical for all fourteen lines inside the container; a scripted
  *  line diff of the two blocks returns exactly two differences, the
  *  container's `style` and the name of the array being mapped. The other two,
- *  `/business/certifier` and `/business/customer-kyc`, write the same shape
+ *  `/products/certifier` and `/products/customer-kyc`, write the same shape
  *  longhand: 22 and 23 lines of `<span className="pl3">` for 9 and 10 pills.
  *  This is that shape, lifted out the way `chrome/Steps.tsx` was lifted out of
  *  the same template for the twelve pages not built on it.

@@ -18,6 +18,8 @@
        the board started on mount, so a visitor arriving later landed on
        whichever seal the clock had reached — and stops for good on any
        choice, on keyboard focus, or when the pointer enters the record.
+       A choice also scrolls the record into view: the card sits below
+       the seals, and a click should land on it.
     3. **Pausing motion** (WCAG 2.2.2). The rosette and the microtext rings
        turn indefinitely, so this band carries the hero's own pause control,
        with the hero's words (`hero.motion`), rather than a second phrasing.
@@ -36,7 +38,7 @@ import {
 } from "react";
 
 import { Rosette, SealRim } from "./GovArt";
-import { Inlay, PartnerPitch, Stamp, type PartnerCopy, type SealItem } from "./GovSealParts";
+import { Inlay, RecordBody, type RecordLabels, type SealItem } from "./GovSealParts";
 
 /** The lede names the authorities in seal order: "A, B, C and D." `tail` is
  *  the punctuation inside the no-wrap span, so a comma never starts a line. */
@@ -52,9 +54,6 @@ export function GovSealsStage({
   ledeAnd,
   stamp,
   labels,
-  partner,
-  contactHref,
-  caseHrefs,
   pauseLabel,
   playLabel,
 }: {
@@ -63,12 +62,8 @@ export function GovSealsStage({
   ledeLead: string;
   ledeAnd: string;
   stamp: string;
-  /** The record's section labels: the challenge, the steps, the reasons. */
-  labels: { problem: string; deliver: string; why: string };
-  /** The pitch to the next authority, and its localised links. */
-  partner: PartnerCopy;
-  contactHref: string;
-  caseHrefs: string[];
+  /** The record's section labels: the challenge and the call to action. */
+  labels: RecordLabels;
   pauseLabel: string;
   playLabel: string;
 }) {
@@ -78,6 +73,7 @@ export function GovSealsStage({
   const [paused, setPaused] = useState(false);
   const row = useRef<HTMLDivElement>(null);
   const box = useRef<HTMLDivElement>(null);
+  const recs = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = row.current;
@@ -109,6 +105,10 @@ export function GovSealsStage({
   const pick = useCallback((i: number) => {
     setOn(i);
     setAuto(false);
+    const el = recs.current;
+    if (!el) return;
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
   }, []);
   const hold = useCallback(() => setAuto(false), []);
 
@@ -214,68 +214,10 @@ export function GovSealsStage({
         </button>
       </div>
 
-      <div className="sv-recs" onPointerEnter={hold}>
+      <div className="sv-recs" ref={recs} onPointerEnter={hold}>
         {items.map((g, i) => (
           <div key={g.name} className="sv-rec" hidden={on !== i}>
-            <div className="sv-rec-l">
-              <div className="sv-rec-k"><span>{g.record}</span><span>{g.role}</span></div>
-              <div className="sv-prob">
-                <p className="sv-out-k">{labels.problem}</p>
-                <p className="sv-prob-v">{g.problem.v}</p>
-                <p className="sv-prob-l">{g.problem.l}</p>
-              </div>
-              <p className="sv-rec-h">{g.h}</p>
-              <p className="sv-rec-p">{g.p}</p>
-              <dl className="sv-facts">
-                {g.facts.map((f, j) => (
-                  <div key={f.k} className="sv-fact" style={{ animationDelay: `${(0.25 + j * 0.07).toFixed(2)}s` }}>
-                    <dt>{f.k}</dt>
-                    <dd>{f.v}</dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
-            <div className="sv-rec-r">
-              <div className="sv-emb"><Inlay item={g} small /></div>
-              <p className="sv-out-k sv-deliver-k">{labels.deliver}</p>
-              <ol className="sv-chain">
-                {g.deliver.map((c, j) => (
-                  <li key={c.t} style={{ "--d": `${(0.35 + j * 0.32).toFixed(2)}s` } as React.CSSProperties}>
-                    <i aria-hidden="true" />
-                    <span className="sv-step">
-                      <b>{c.t}</b>
-                      <span>{c.p}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-              <div className="sv-stamp-w"><Stamp id={`svst${i}`} ring={stamp} /></div>
-            </div>
-            <div className="sv-rec-b">
-              <div className="sv-out">
-                <p className="sv-out-k">{g.impactK}</p>
-                <ul className="sv-imp">
-                  {g.impact.map((m, j) => (
-                    <li key={m.l} className="sv-fact" style={{ animationDelay: `${(0.6 + j * 0.08).toFixed(2)}s` }}>
-                      <b>{m.v}</b>
-                      <span>{m.l}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="sv-out">
-                <p className="sv-out-k">{labels.why}</p>
-                <ul className="sv-why">
-                  {g.why.map((w, j) => (
-                    <li key={w.t} className="sv-fact" style={{ animationDelay: `${(0.8 + j * 0.08).toFixed(2)}s` }}>
-                      <b>{w.t}</b>
-                      <span>{w.p}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <PartnerPitch c={partner} contactHref={contactHref} caseHref={caseHrefs[i]} />
+            <RecordBody g={g} stampId={`svst${i}`} stamp={stamp} labels={labels} />
           </div>
         ))}
       </div>

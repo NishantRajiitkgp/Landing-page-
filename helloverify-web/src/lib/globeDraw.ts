@@ -12,10 +12,10 @@
     at runtime (`app/v2/globe.css`), so the canvas re-themes with the page and
     this file carries no literal for `hv/no-color-literal` to find. */
 
+import { cssRgb, type RGB } from "./cssColour";
 import { H, W } from "./globeFrame";
 
 export type Vec = [number, number, number];
-type RGB = [number, number, number];
 
 /** The stage's drawing box, in CSS px (`./globeFrame`, which the eager
  *  island shares). */
@@ -72,24 +72,13 @@ export type Palette = {
   pulse: RGB;
 };
 
-/** `#RRGGBB` or `rgb(r g b)` / `rgb(r, g, b)`, as computed styles return. */
-function parse(value: string): RGB {
-  const s = value.trim();
-  if (s.startsWith("#")) {
-    const h = s.length === 4 ? s.slice(1).split("").map((c) => c + c).join("") : s.slice(1, 7);
-    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
-  }
-  const n = s.match(/[\d.]+/g) ?? ["0", "0", "0"];
-  return [+n[0], +n[1], +n[2]];
-}
-
 export function readPalette(el: Element): Palette {
   const cs = getComputedStyle(el);
-  const get = (name: string) => parse(cs.getPropertyValue(name));
+  const get = (name: string) => cssRgb(cs.getPropertyValue(name));
   return {
     ink: get("--ink"),
-    green: get("--green"),
-    greenLight: get("--green-light"),
+    green: get("--primary"),
+    greenLight: get("--primary-light"),
     white: get("--white"),
     bodyMid: get("--v2-gb-body-mid"),
     bodyLo: get("--v2-gb-body-lo"),

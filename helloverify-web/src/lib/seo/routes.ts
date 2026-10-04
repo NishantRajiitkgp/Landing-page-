@@ -53,31 +53,31 @@ export const STATIC_ROUTES: readonly RouteEntry[] = [
   r("/resources", "weekly", 0.7),
 
   // Business verticals
-  r("/business/enterprise", "monthly", 0.9),
-  r("/business/smb", "monthly", 0.9),
-  r("/business/employee-verification", "monthly", 0.9),
-  r("/business/customer-kyc", "monthly", 0.8),
-  r("/business/certifier", "monthly", 0.8),
+  r("/products/bgv-enterprise", "monthly", 0.9),
+  r("/products/bgv-smb", "monthly", 0.9),
+  r("/employee-verification", "monthly", 0.9),
+  r("/products/customer-kyc", "monthly", 0.8),
+  r("/products/certifier", "monthly", 0.8),
 
   // Government verticals
-  r("/governments/health", "monthly", 0.8),
-  r("/governments/immigration", "monthly", 0.8),
-  r("/governments/manpower-education", "monthly", 0.8),
-  r("/governments/manpower-education/ministry-of-manpower", "monthly", 0.8),
+  r("/solutions/health-authorities", "monthly", 0.8),
+  r("/solutions/immigration-authorities", "monthly", 0.8),
+  r("/solutions/manpower-and-education-authorities", "monthly", 0.8),
+  r("/solutions/manpower-and-education-authorities/ministry-of-manpower", "monthly", 0.8),
   r("/governments/manpower-education/mohesr", "monthly", 0.7),
   r("/governments/immigration/embassy-of-latvia", "monthly", 0.7),
   r("/governments/immigration/embassy-of-italy", "monthly", 0.7),
-  r("/governments/trade", "monthly", 0.8),
+  r("/solutions/trade-authorities", "monthly", 0.8),
 
   // Individual verticals
-  r("/individuals/hellov", "monthly", 0.8),
-  r("/individuals/immigration", "monthly", 0.9),
+  r("/products/hellov", "monthly", 0.8),
+  r("/products/immigration", "monthly", 0.9),
   r("/individuals/home-family", "monthly", 0.7),
 
   // Platform
   r("/ai", "monthly", 0.8),
-  r("/platform/technology", "monthly", 0.8),
-  r("/platform/coverage", "monthly", 0.9),
+  r("/technology", "monthly", 0.8),
+  r("/international", "monthly", 0.9),
   r("/platform/security-compliance", "monthly", 0.8),
 
   // Resources

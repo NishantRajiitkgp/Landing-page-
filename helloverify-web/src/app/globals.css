@@ -71,6 +71,27 @@
   --origin-x: right;
 }
 
+/* Script fallbacks (BUILD-SPEC §9.3, TASKS.md Part 9b).
+ *
+ *  `--serif` / `--sans` are declared in `design.css` as Newsreader /
+ *  Instrument Sans only. Those faces have no Devanagari or Arabic glyphs.
+ *  The Noto variables are defined only when `layout.tsx` adds them — `hi`
+ *  and `ar` — so an `en` page never names a file it will not fetch.
+ *
+ *  Latin stays in front: "HelloVerify", numerals and punctuation keep the
+ *  designed type; the script face paints the rest. `html[lang]` is more
+ *  specific than `:root`, so this wins over the generated sheets without
+ *  editing them (and `build-css.py` would drop a hand edit there). */
+html[lang="hi"] {
+  --serif: var(--font-newsreader), var(--font-noto-serif-deva), "Times New Roman", Georgia, serif;
+  --sans: var(--font-instrument), var(--font-noto-sans-deva), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+html[lang="ar"] {
+  --serif: var(--font-newsreader), var(--font-noto-naskh), "Times New Roman", Georgia, serif;
+  --sans: var(--font-instrument), var(--font-noto-sans-arab), "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 /* The forward arrow, mirrored (BUILD-SPEC §7, §17 condition 15).
 
    `components/brand/Arrow.tsx` draws a RIGHT-pointing arrow, `M3 8h10M9 4l4
@@ -115,6 +136,30 @@
    square box at 16px and at 14px alike. The mirror lands on itself. */
 svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) {
   transform: scaleX(var(--flip));
+}
+
+/* Isolated U+2192. Unicode does not mirror this glyph, so the box is
+   mirrored the same way as the SVG above — `--flip`, not a second
+   `[dir="rtl"]` spelling, and not a `←` written into English markup.
+
+   SCOPED TO BOXES THAT CONTAIN ONLY THE GLYPH. `.k` elsewhere is a kicker;
+   `.hw2-clock` and the One-in-Eight UV tags are `from → to` ranges, which
+   are data, not a "go" cue; the technology page's `→ id, status` blurbs
+   are API specimen. `.fwd` is the leftover isolated case: the How-we-know
+   route label, where the arrow shares a node with the source name and
+   flipping the whole span would mirror the letters too.
+
+   `.idx3 .xa` is a grid item and `.nv-ml .k` a flex item, so both are
+   already blockified and `transform` applies without a `display` change
+   (and without fighting the phone rule that hides `.xa`). `.fwd` is inline
+   text, so it needs `inline-block` or the transform is ignored. */
+.idx3 .xa,
+.nv-ml .k,
+.fwd {
+  transform: scaleX(var(--flip));
+}
+.fwd {
+  display: inline-block;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -205,8 +250,8 @@ svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) {
    `.tick` itself only sets size in design.css; the stroke was previously a hex
    literal repeated on all 65 copies of the mark.
    ───────────────────────────────────────────────────────────────────────── */
-.tick { color: var(--green); }
-.tick-light { color: var(--green-light); }
+.tick { color: var(--primary-ink); }
+.tick-light { color: var(--primary-light); }
 .tick-inverse { color: var(--white); }
 .tick-off { color: var(--tick-off); }
 

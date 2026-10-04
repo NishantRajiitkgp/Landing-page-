@@ -28,7 +28,7 @@
  *  credential glosses, the six artefact rows, the four residency rows and the
  *  five `{ q, a }` pairs are prose on ONE route, gated by nothing, each a
  *  paragraph a translator translates. That is exactly the ruling
- *  `app/[locale]/business/enterprise/content.ts` recorded for its own `FAQS`,
+ *  `app/[locale]/products/bgv-enterprise/content.ts` recorded for its own `FAQS`,
  *  and it is the PRECEDENT THAT APPLIES HERE — not the one `lib/content/checks.ts`
  *  and `lib/content/company.ts` set. Those two are the catalogues SEVERAL routes
  *  read and the register of the site's CLAIMS, held to agreement by

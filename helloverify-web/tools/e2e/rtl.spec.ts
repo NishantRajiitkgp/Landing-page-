@@ -134,14 +134,19 @@ async function measure(page: Page, path: string): Promise<Geometry> {
       outside[key] = (outside[key] ?? 0) + 1;
     }
 
-    /** Selected by the drawing, not by a class, because that is how
-     *  `globals.css` mirrors it - keying on `d` adds no attribute and so moves
-     *  no LTR byte. Reading the same selector here means the test fails if the
-     *  stylesheet's selector stops matching, which a class-based probe would
-     *  not. */
+    /** SVG arrows are selected by the drawing, not by a class, because that
+     *  is how `globals.css` mirrors them — keying on `d` adds no attribute.
+     *  Isolated `→` glyphs cannot be selected by their character, so those
+     *  three classes are the stylesheet's own list (After 9b). Reading the
+     *  same selectors here means the test fails if either rule stops matching. */
     const arrows: Record<string, number> = {};
-    const FORWARD = 'svg:has(> path[d="M3 8h10M9 4l4 4-4 4"])';
-    for (const svg of Array.from(document.querySelectorAll<SVGElement>(FORWARD))) {
+    const FORWARD = [
+      'svg:has(> path[d="M3 8h10M9 4l4 4-4 4"])',
+      ".idx3 .xa",
+      ".nv-ml .k",
+      ".fwd",
+    ].join(", ");
+    for (const el of Array.from(document.querySelectorAll<Element>(FORWARD))) {
       // Painted only. Chromium does not resolve `transform` inside a
       // `display: none` subtree, so the homepage's hidden breakpoint tree
       // reports `none` on a correctly mirrored arrow. Measured: /en carries 11
@@ -150,8 +155,8 @@ async function measure(page: Page, path: string): Promise<Geometry> {
       // the only two-tree page in the build (Part 6: `class="dsk"` appears on
       // 1 of them), so without this the assertion fails on correct code, on
       // every run, at both breakpoints.
-      if (svg.getClientRects().length === 0) continue;
-      const matrix = getComputedStyle(svg).transform;
+      if (el.getClientRects().length === 0) continue;
+      const matrix = getComputedStyle(el).transform;
       arrows[matrix] = (arrows[matrix] ?? 0) + 1;
     }
 
@@ -181,7 +186,7 @@ test.describe("rtl", () => {
    *  Each test here does two `goto`s (the LTR control and the mirrored run),
    *  two `settle()`s -- which scroll the whole document so every reveal paints
    *  -- and a full-page screenshot, which Playwright takes by scrolling and
-   *  stitching. Measured 23 Sep: `/en/individuals/hellov` (115,828 bytes, the
+   *  stitching. Measured 23 Sep: `/en/products/hellov` (115,828 bytes, the
    *  longest page after the homepage) failed at mobile with
    *  `page.screenshot: Test timeout of 60000ms exceeded` while the other 293
    *  tests passed. The suite was 166 tests when 60s was chosen and is 294 now,

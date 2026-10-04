@@ -4,7 +4,7 @@
  *
  *  MEASURED 22 SEP 2026, BY SCRIPT. Four files render a `.tbl3`, and only two
  *  of them render THIS table: `templates/VerticalPage.tsx` and
- *  `app/[locale]/business/enterprise/page.tsx`, whose fifteen lines differ in
+ *  `app/[locale]/products/bgv-enterprise/page.tsx`, whose fifteen lines differ in
  *  exactly two places — the name of the array being mapped, and whether the
  *  footnote is a literal or a guarded prop.
  *
@@ -27,7 +27,7 @@
  *  emit the same HTML through one branch and adopting it there is a deletion.
  *
  *  `note` IS A `ReactNode` rather than a string because the one in use ends in
- *  an `<AppLink>` into `/platform/coverage`, and `Row.src` is a string because
+ *  an `<AppLink>` into `/international`, and `Row.src` is a string because
  *  none of the sources are marked up — the same split `chrome/SecHead.tsx`
  *  measured between its `h` and its `k`.
  */

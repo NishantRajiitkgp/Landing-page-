@@ -16,7 +16,7 @@ import { Smb } from "@/components/sections/Smb";
 import { Diligence } from "@/components/sections/Diligence";
 import { Consumer } from "@/components/sections/Consumer";
 import { CustomerStory } from "@/components/sections/CustomerStory";
-import { TrustPlatform } from "@/components/sections/TrustPlatform";
+// import { TrustPlatform } from "@/components/sections/TrustPlatform"; — hidden, see below.
 import { Contact } from "@/components/sections/Contact";
 import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { setRequestLocale } from "next-intl/server";
@@ -94,7 +94,9 @@ export default async function Home({
         {/* The globe ("Hire from anywhere. Verified at the source, in 120+
             countries.") moved to `/ai`, after the field case, on 1 Oct
             2026. */}
-        <TrustPlatform />
+        {/* "Most verification systems are static. Ours compound." hidden
+            from the homepage (1 Oct 2026), not deleted: restore
+            <TrustPlatform /> here. */}
         {/* The Compliance band ("The unexciting part, done properly.") came
             off the homepage on 30 Sep 2026. The component and its copy
             remain. */}

@@ -35,6 +35,10 @@ import { PACKS } from "./smbData";
  *  tablet a card is at most 340px of a sideways row (`smb.css`). */
 const SIZES_SP_CARD = "(max-width: 1080px) 80vw, 27vw";
 
+/** "How it works" and the facts row under it are hidden for now, not
+ *  removed: set to `true` to bring both back. */
+const SHOW_HOW = false;
+
 /** "₹2,399" over 5 checks -> "480", rounded and grouped the Indian way
  *  (no `Intl`, so server and browser print the same); the copy adds the ₹. */
 function perCheck(price: string, n: number): string {
@@ -121,9 +125,9 @@ export async function SmbPanel() {
         })}
       </ul>
 
-      <SmbHow />
+      {SHOW_HOW && <SmbHow />}
 
-      <div className="sg-proof sp-proof">
+      {SHOW_HOW && <div className="sg-proof sp-proof">
         <ul className="sp-facts">
           <li>{biz.strip.checks}</li>
           <li>{biz.strip.subscription}</li>
@@ -138,7 +142,7 @@ export async function SmbPanel() {
             <Arrow />
           </AppLink>
         </div>
-      </div>
+      </div>}
     </>
   );
 }

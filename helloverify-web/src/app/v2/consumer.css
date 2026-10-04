@@ -6,13 +6,11 @@
    One tree at every width: the base holds what both sizes share, then the
    desktop board's layout, then the phone's.
 
-   Two WhatsApp greens, declared once, both surfaces. The board's Buy Now was
-   WhatsApp's own green, which measures 4.3:1 against its white label — under
-   the 4.5:1 a 15px label needs — so the button is the same hue taken down
-   to 5.1:1. The chip's pale mint sits behind `--green` text (5.8:1). The
-   segmented switch's track is hero.css's `--v2-paper-lo`. */
+   Buy Now is `--primary-ink`: the logo red mixed toward black so the white
+   label clears 4.5:1 (the logo red itself is about 4.2:1). The chip's pale
+   mint sits behind that same red. The segmented switch's track is
+   hero.css's `--v2-paper-lo`. */
 :root {
-  --v2-cx-wa: #117F45;
   --v2-cx-wa-tint: #E7F7EC;
 }
 
@@ -49,7 +47,7 @@
 .cx-cap p { margin: 12px 0 0; font-size: 15px; line-height: 1.45; text-wrap: pretty; }
 .cx-card { z-index: 2; box-sizing: border-box; display: flex; flex-direction: column; padding: 18px; border-radius: 20px; background: rgb(from var(--white) r g b / .9); -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2); box-shadow: 0 30px 60px -30px rgb(from var(--ink) r g b / .55); opacity: 0; visibility: hidden; transform: translateX(calc(var(--flip) * 24px)); transition: opacity .35s, transform .6s cubic-bezier(.16, 1, .3, 1), visibility 0s .35s; }
 .cx-ck { display: flex; justify-content: space-between; align-items: center; }
-.cx-wa { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding-inline: 10px; border-radius: 999px; background: var(--v2-cx-wa-tint); color: var(--green); font-size: 12px; font-weight: 600; }
+.cx-wa { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding-inline: 10px; border-radius: 999px; background: var(--v2-cx-wa-tint); color: var(--primary-ink); font-size: 12px; font-weight: 600; }
 .cx-wa svg { width: 14px; height: 14px; }
 .cx-eta { font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
 .cx-seg { position: relative; margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; padding: 4px; border-radius: 999px; background: var(--v2-paper-lo); }
@@ -65,7 +63,7 @@
 /* `inherit`, not `visible`: a visible child of a hidden card would still
    be hit-tested and read out on every closed panel. */
 .cx-v0 .cx-t0, .cx-v1 .cx-t1 { opacity: 1; visibility: inherit; transform: none; transition-delay: 0s; }
-.cx-pop { position: absolute; inset-inline-end: 0; top: 0; height: 22px; display: inline-flex; align-items: center; padding-inline: 8px; border-radius: 999px; background: var(--green); color: var(--white); font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; }
+.cx-pop { position: absolute; inset-inline-end: 0; top: 0; height: 22px; display: inline-flex; align-items: center; padding-inline: 8px; border-radius: 999px; background: var(--primary-ink); color: var(--white); font-family: var(--mono); font-size: 9.5px; letter-spacing: .08em; }
 .cx-tn { font-size: 13px; font-weight: 500; color: var(--muted); }
 .cx-price { margin-top: 6px; display: flex; align-items: baseline; gap: 6px; color: var(--ink); }
 .cx-price b { font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1; letter-spacing: -.03em; }
@@ -77,11 +75,11 @@
 .cx-tbc span { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
 .cx-checks { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 9px; }
 .cx-checks li { display: flex; align-items: center; gap: 10px; font-size: 14.5px; color: var(--ink); }
-.cx-checks svg { flex: none; width: 18px; height: 18px; padding: 3px; box-sizing: border-box; border-radius: 50%; background: var(--green); color: var(--white); }
-.cx-buy { margin-top: 8px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; background: var(--v2-cx-wa); color: var(--white); font-size: 15px; font-weight: 600; text-decoration: none; transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s; }
+.cx-checks svg { flex: none; width: 18px; height: 18px; padding: 3px; box-sizing: border-box; border-radius: 50%; background: var(--primary-ink); color: var(--white); }
+.cx-buy { margin-top: 8px; height: 48px; display: flex; align-items: center; justify-content: center; gap: 9px; border-radius: 999px; background: var(--primary-ink); color: var(--white); font-size: 15px; font-weight: 600; text-decoration: none; transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s; }
 .cx-buy svg { width: 18px; height: 18px; }
 .cx-buy svg * { fill: var(--white); }
-.cx-buy:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -14px rgb(from var(--v2-cx-wa) r g b / .8); }
+.cx-buy:hover { transform: translateY(-2px); box-shadow: 0 14px 26px -14px rgb(from var(--primary-ink) r g b / .8); }
 .cx-buy:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 .cx-on { box-shadow: 0 40px 70px -40px rgb(from var(--ink) r g b / .6); }
@@ -98,7 +96,7 @@
 .fm-qr { width: 120px; height: 120px; padding: 8px; box-sizing: border-box; border-radius: 12px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair); }
 .fm-qr svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; }
 .fm-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 13px; line-height: 1.4; color: var(--ink-soft); }
-.fm-steps b { display: block; font-family: var(--mono); font-weight: 400; font-size: 10px; letter-spacing: .1em; color: var(--green); }
+.fm-steps b { display: block; font-family: var(--mono); font-weight: 400; font-size: 10px; letter-spacing: .1em; color: var(--primary-ink); }
 .cx-phonecol { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 .fm-phone { display: flex; justify-content: center; }
 .fm-phone .phone2 { animation: cxIn .55s cubic-bezier(.16, 1, .3, 1) both; }

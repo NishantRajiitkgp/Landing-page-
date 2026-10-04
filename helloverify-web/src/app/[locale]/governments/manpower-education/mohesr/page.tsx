@@ -16,5 +16,5 @@ export default async function Mohesr({ params }: { params: Promise<{ locale: str
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await copy(GOVERNMENTS);
-  return <AuthorityPage id="mohesr" parent={{ label: t.manpowerEducation.crumb, href: "/governments/manpower-education" }} />;
+  return <AuthorityPage id="mohesr" parent={{ label: t.manpowerEducation.crumb, href: "/solutions/manpower-and-education-authorities" }} />;
 }

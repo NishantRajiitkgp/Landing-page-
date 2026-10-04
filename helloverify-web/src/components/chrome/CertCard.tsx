@@ -50,7 +50,7 @@ import {
  *  into the case study, and their link text differs ("the story →" on `/about`,
  *  "read the story →" on `/governments`).
  *
- *  NOT USED FOR THREE CARDS ON `/business/customer-kyc` AND `/individuals`, and
+ *  NOT USED FOR THREE CARDS ON `/products/customer-kyc` AND `/individuals`, and
  *  that is the SecHead judgement applied: three of the 40 are `.cert` markup
  *  around a STANCE rather than a credential — "Consent first, always", "They
  *  consent, then we check", "Documents deleted on schedule" — reusing `gdpr.jpg` and

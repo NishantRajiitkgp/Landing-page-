@@ -17,11 +17,13 @@
 import type { Dictionary } from "@/lib/copy";
 
 import { en } from "./sections.en";
+import { hi } from "./sections.hi";
+import { ar } from "./sections.ar";
 
 /** The English object IS the schema — see `./index`. */
 export type SectionsCopy = typeof en;
 
-export const SECTIONS: Dictionary<SectionsCopy> = { en };
+export const SECTIONS: Dictionary<SectionsCopy> = { en, hi, ar };
 
 /** `Why.tsx` — the ordinal a reason prints, which is also its React key. */
 export type WhyReasonId = keyof SectionsCopy["why"]["reasons"];

@@ -86,6 +86,25 @@ const tokens = Object.fromEntries(
   [...css.matchAll(/--([a-z-]+):\s*(#[0-9A-Fa-f]{3,8})/g)].map((m) => [m[1], m[2].toUpperCase()]),
 );
 
+/** The brand shades are mixed from `--primary`, not typed (`design.css`,
+ *  "BRAND COLOUR"). `color-mix(in srgb, A, B p%)` is a straight
+ *  interpolation of the encoded channels, so it resolves here exactly as the
+ *  browser does; a shade this cannot read would be a text token with no
+ *  measurement, so any other mix fails the gate. */
+const MIX_ENDS = { black: "#000000", white: "#FFFFFF" };
+for (const m of css.matchAll(/--([a-z-]+):\s*color-mix\(([^;]*)\);/g)) {
+  const f = /^in srgb,\s*var\(--([a-z-]+)\),\s*(black|white)\s+([\d.]+)%\s*$/.exec(m[2].trim());
+  if (!f || !tokens[f[1]]) {
+    console.log(`  x --${m[1]}: cannot resolve color-mix(${m[2]})`);
+    process.exit(1);
+  }
+  const a = parseInt(tokens[f[1]].slice(1, 7), 16);
+  const b = parseInt(MIX_ENDS[f[2]].slice(1), 16);
+  const p = Number(f[3]) / 100;
+  const ch = (s) => Math.round(((a >> s) & 255) * (1 - p) + ((b >> s) & 255) * p);
+  tokens[m[1]] = "#" + [16, 8, 0].map((s) => ch(s).toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+
 /** §12 names this one explicitly. It is gone; the assertion stops it returning
  *  through a copy-paste from the old repo, which still uses it. */
 const banned = Object.entries(tokens).filter(([, v]) => v === "#007AFF");

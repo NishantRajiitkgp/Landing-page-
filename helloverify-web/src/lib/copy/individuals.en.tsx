@@ -8,25 +8,20 @@
  *  dictionary holds almost no arrays — is in `./index`'s header and is not
  *  repeated here.
  *
- *  MEASURED: **105 matched nodes, 309 leaves — 2.94x**, asserted in
- *  `tools/test/copy.test.ts` §15. 105 is this agent's re-run of the
- *  comment-stripped `>text<` matcher, calibrated against the one figure in
- *  `./index`'s header that no migration has moved (`components/forms/** 10`,
- *  reproduced exactly); the brief that commissioned this slice counted 71.
- *  Both runs are recorded rather than reconciled — §7 and §9 of that test file
- *  already take that posture for chrome's 24-versus-26 and business's
- *  206-versus-181.
+ *  MEASURED: **105 matched nodes, 367 leaves**, asserted in
+ *  `tools/test/copy.test.ts` §15. 105 is the pre-migration `>text<` matcher
+ *  (unchanged — only the leaf side is asserted). HelloV grew from 77 to 135
+ *  leaves when Part 1 of the content restore replaced the invented Basic /
+ *  Advanced plans with the live old catalogue (8 packages, 6 singles, 4
+ *  advanced). The other three files did not move.
  *
- *  THE PER-FILE SPREAD IS THE FINDING, and it is `./index`'s own rule read
- *  twice over:
- *
- *      individuals/page.tsx       22 nodes ->  52 leaves   2.4x
- *      individuals/hellov         59       ->  77          1.3x
- *      individuals/home-family    11       ->  86          7.8x
- *      individuals/immigration    13       ->  93          7.2x
+ *      individuals/page.tsx       22 nodes ->  52 leaves
+ *      individuals/hellov         59       -> 135
+ *      individuals/home-family    11       ->  86
+ *      individuals/immigration    13       ->  93
  *
  *  (plus `crumb`, the one leaf all four share, which is why the four rows
- *  sum to 308 and the namespace holds 309.)
+ *  sum to 366 and the namespace holds 367.)
  *
  *  The two ends have one cause each. `hellov` is 300 lines of hand-written
  *  markup and the matcher reads most of it, so its ratio is near one; the two
@@ -52,17 +47,13 @@
  *    JSON-LD node read from two copy sources, and `serviceType` is a
  *    schema.org classification — structure in the sense an href is.
  *
- *    RECORDED RATHER THAN RESOLVED, because `hellov` makes it sharper than
- *    `business` did: its `offers[].name`/`description` are "Basic" / "The
- *    essentials, in half an hour" and "Advanced" / "For the people inside your
- *    home", which are word for word `hellov.plans.basic.tt`/`.sub` and
- *    `.advanced.tt`/`.sub` below. Four strings, two copies, no type between
- *    them. They cannot be shared: `SERVICE` is a module-level `const`
- *    evaluated outside the component, so it cannot `await copy()`. The same
- *    posture `./contact.en.tsx` takes for the side card that duplicates
- *    `chrome.closingCta` — folding them is a content decision, and the
- *    alternative (moving `SERVICE` inside the render) is a markup-adjacent
- *    change this slice has no mandate for.
+ *    RECORDED RATHER THAN RESOLVED: `hellov`'s `offers[].name`/`description`
+ *    repeat two live catalogue titles and their check lists
+ *    (`plans.packages.driver.tt` and `plans.packages.homeStaff.tt`). They
+ *    cannot be shared: `SERVICE` is a module-level `const` evaluated outside
+ *    the component, so it cannot `await copy()`. The same posture
+ *    `./contact.en.tsx` takes for the side card that duplicates
+ *    `chrome.closingCta`.
  *
  *  - **`VerticalPage`'s own eleven leaves.** Already gone; see
  *    `./templates.en.tsx`. Its props and rendering contract are untouched by
@@ -139,7 +130,7 @@ export const en = {
      *  without a label is TS2322 at the page's own array.
      *
      *  TWO OF THESE POINT AT THE SAME ROUTE (`hellov` and `tenants` both link
-     *  to `/individuals/hellov`), which is why the key is an id and not the
+     *  to `/products/hellov`), which is why the key is an id and not the
      *  href: keying by destination would have collapsed two cards into one.
      *  `h` is also the React key the page renders with — see the header. */
     paths: {
@@ -235,127 +226,246 @@ export const en = {
     },
   },
 
-  /** `/individuals/hellov` — the consumer product page (Template 4). */
+  /** `/products/hellov` — the consumer product page (Template 4).
+   *  Catalogue, prices and hero line are the live old CMS
+   *  (`hellov.base.json`), not the invented Basic / Advanced pair. */
   hellov: {
     crumb: "HelloV",
     closing: {
       heading: (
         <>
-          Thirty minutes now, or <em>years of wondering.</em>
+          Verify anyone instantly <em>on WhatsApp.</em>
         </>
       ),
-      sub: "Message HelloV on WhatsApp. That's the whole setup.",
-      ctaLabel: "Start on WhatsApp",
+      sub: "Verification made easy on WhatsApp by HelloVerify.",
+      ctaLabel: "Start verification",
     },
     hero: {
       k: "Individuals · HelloV",
       /** Three children — a text node, a `<br />`, and an `<em>` — written on
        *  the same lines the `<h1>` used, so the newline-plus-indent after the
        *  `<br />` folds away exactly as it did before. The shape
-       *  `./templates.en.tsx#compliance.head` documents. */
+       *  `./templates.en.tsx#compliance.head` documents. Old CMS title:
+       *  "Make Sure You and Your Family Are Safe!". */
       h1: (
         <>
-          Verify anyone.<br />
-          <em>From your phone, in 30 minutes.</em>
+          Make sure you and your family<br />
+          <em>are safe.</em>
         </>
       ),
       sub:
-        "Send a photo of the document over WhatsApp. We check it with the authority that issued " +
-        "it — the transport office, the court, the registry — and send the report back to the " +
-        "same chat.",
-      cta: "Start on WhatsApp",
-      plans: "See the two plans",
+        "Verification made easy on WhatsApp by HelloVerify. From nannies and house staff to " +
+        "drivers and tenants — our verification is 100% digital, fast and accurate.",
+      cta: "Start verification",
+      plans: "See packages & prices",
     },
     strip: {
       thirtyMin: <><b>30 min</b> typical turnaround</>,
-      noApp: <><b>No</b> app, no account</>,
-      price: <><b>₹499</b> to start</>,
+      noApp: <><b>WhatsApp</b> — no app to install</>,
+      price: <><b>₹499</b> packages from</>,
       consent: <><span className="dot" /> they consent first, always</>,
     },
     chat: {
       k: "In one conversation",
       h: "Can I run a background check over WhatsApp?",
       lede:
-        "Yes. HelloV runs entirely inside WhatsApp — no download, no dashboard, no password. " +
-        "Families use it before hiring a driver, a maid or nanny, before handing a tenant the " +
-        "keys, and before believing someone they met online. Each check takes about 30 minutes.",
+        "Yes. HelloV runs entirely inside WhatsApp — scan the QR with the WhatsApp camera, " +
+        "select who you want to verify, and the person being verified consents on their own " +
+        "phone. Families use it for drivers, home staff, nannies and tenants. Single checks " +
+        "start at ₹199; household packages start at ₹499.",
     },
     /** The four `.when3` cards, written out longhand in the page, so each is
-     *  three text-node swaps and the card keeps its three children. */
+     *  three text-node swaps and the card keeps its three children. Subjects
+     *  and included checks are the old HelloV packages. */
     when: {
       driver: {
         wt: "A driver",
-        wp: "For the school run, the night shift, the family car. Licence, record, address.",
-        wm: "30 min",
+        wp: "Driving License Check and Address Check — the Driver Verification package.",
+        wm: "₹499",
       },
       maid: {
-        wt: "A maid or nanny",
-        wp: "The person alone in your home with your children. Identity, criminal record, address.",
-        wm: "30 min",
+        wt: "Home staff or nanny",
+        wp: "Criminal Check and Identity Check, before they are alone in your home.",
+        wm: "₹549–₹599",
       },
       tenant: {
         wt: "A tenant",
-        wp: "Before the keys and the deposit change hands. Identity, criminal, credit.",
-        wm: "30 min",
+        wp: "Identity Check and Address Check, before the keys and the deposit change hands.",
+        wm: "₹549",
       },
       online: {
         wt: "Someone you met online",
-        wp: "Before dinner, before an investment, before you believe the profile.",
-        wm: "30 min",
+        wp: "Identity Check and Criminal Check — Verify Anyone or Know Your Contact.",
+        wm: "₹1099",
       },
     },
     plans: {
-      k: "Plans",
+      k: "Packages",
       h: "How is a HelloV background check priced?",
       lede:
-        "HelloV is priced per person rather than by subscription, with two plans. Basic covers " +
-        "driving licence, criminal record and current address. Advanced adds identity with photo " +
-        "match and a global database screen. Both return a report in 30 minutes.",
-      /** The `.rc` card's invariant chrome, hoisted because both cards say it
-       *  — one decision for a translator rather than two identical rows. The
-       *  shape `sections.packages` already uses for `package`/`buy`. */
+        "HelloV is priced per person rather than by subscription. Household packages start at " +
+        "₹499. Single checks start at ₹199. Advanced packages add more checks from ₹1399. " +
+        "Every check needs the person's consent.",
+      /** The `.rc` card's invariant chrome, hoisted because every receipt
+       *  says it — one decision for a translator. The shape
+       *  `sections.packages` already uses for `package`/`buy`. */
       card: {
-        hd: "Plan",
+        hd: "Package",
         perPerson: "Per person",
+        perCheck: "Per check",
         inclGst: "incl. GST",
-        thirtyMinutes: "30 minutes",
+        readyIn: "Ready in",
         buy: "Buy now",
       },
-      /** ONE FLAT TABLE for every `.ln` on either card, not a `lines` nested
-       *  per plan — three of the five appear on both, so nesting would put a
-       *  translator in front of eight rows where there are five decisions.
-       *  The shape and the argument are `sections.packages.lines`'.
-       *
-       *  `identityPhotoMatch` is plain `&`: the JSX read
-       *  `Identity &amp; photo match` inside a `<span>` with no other child,
-       *  so it is one text node and therefore a string leaf — see the note on
-       *  `hub.hero.k`. */
-      lines: {
-        licence: "Driving licence",
-        criminal: "Criminal record",
-        address: "Current address",
-        identityPhotoMatch: "Identity & photo match",
-        globalDatabase: "Global database screen",
+      /** ONE FLAT TABLE for every check pill on any receipt. The page holds
+       *  which SKU includes which key; the translator sees each check once.
+       *  Names are the old CMS `checkPills` / `checks[].label` strings. */
+      checks: {
+        drivingLicense: "Driving License Check",
+        address: "Address Check",
+        criminal: "Criminal Check",
+        identity: "Identity Check",
+        voterId: "Voter Id Check",
+        aadhaar: "Aadhaar Check",
+        credit: "Credit Check",
       },
-      basic: {
-        hd: "HelloV · Basic",
-        tt: "Basic",
-        sub: "The essentials, in half an hour",
-        price: "₹499",
-        ready: "3 checks · ready in",
-        who: "Drivers, tenants, dates",
-      },
-      advanced: {
-        hd: "HelloV · Advanced",
-        tt: "Advanced",
-        sub: "For the people inside your home",
-        price: "₹799",
-        ready: "5 checks · ready in",
-        who: "Nannies, carers, live-in staff",
+      packages: {
+        driver: {
+          tt: "Driver Verification",
+          sub:
+            "Quickly verify a driver's licence and identity to confirm authenticity and " +
+            "eligibility, helping you make safer, more confident decisions with a fast, " +
+            "secure, and easy-to-use digital check.",
+          price: "₹499",
+        },
+        homeStaff: {
+          tt: "Home Staff",
+          sub:
+            "Verify domestic help and security staff before hiring. Build a safer environment " +
+            "for your family with trusted, digital checks you can act on quickly.",
+          price: "₹599",
+        },
+        tenant: {
+          tt: "Tenant Verification",
+          sub:
+            "Before you take a decision, know who you're letting in. Verify your tenant, " +
+            "tutor, caretaker, or anyone else with identity and location clarity you can rely on.",
+          price: "₹549",
+        },
+        nanny: {
+          tt: "Nanny Verification",
+          sub:
+            "Ensure your child is in safe hands. Verify nannies and caregivers so your kids " +
+            "are protected by checks that match how much trust you're placing in someone.",
+          price: "₹549",
+        },
+        verifyAnyone: {
+          tt: "Verify Anyone",
+          sub:
+            "Before you take a decision, verify anyone you need to trust. Confirm identity " +
+            "and criminal background with fast, secure digital checks you can rely on.",
+          price: "₹1099",
+        },
+        cyberIdentity: {
+          tt: "Cyber Identity Verification",
+          sub:
+            "Stay protected from online fraud and impersonation. Verify cyber identity with " +
+            "fast, secure checks that help you trust digital interactions with confidence.",
+          price: "₹1099",
+        },
+        knowIdentity: {
+          tt: "Know The Identity",
+          sub:
+            "Protect yourself from online identity fraud. Validate documents and databases " +
+            "with fast, accurate checks that confirm who someone really is.",
+          price: "₹1099",
+        },
+        knowContact: {
+          tt: "Know Your Contact",
+          sub:
+            "Before you trust a new contact, know who you are dealing with. Verify picture, " +
+            "ID, and background with fast, reliable checks you can act on quickly.",
+          price: "₹1099",
+        },
       },
       note:
-        "Prices shown are placeholders pending commercial sign-off · the person being verified " +
-        "consents before any check runs",
+        "Prices are the live HelloV catalogue · the person being verified consents before any " +
+        "check runs",
+    },
+    singles: {
+      k: "Single checks",
+      h: "What if I only need one check?",
+      lede:
+        "Try our single checks for individual needs. Get a verified report against your chosen " +
+        "background check — from ₹199.",
+      cards: {
+        age: {
+          tt: "Age Verification",
+          sub: "Establishes candidate's age by verifying government-issued documents containing date of birth.",
+          price: "₹199",
+          ready: "30 minutes",
+        },
+        employment: {
+          tt: "Digital Employment Check",
+          sub: "Verifies applicant's previous employer name, dates of joining and relieving instantly",
+          price: "₹299",
+          ready: "60 minutes",
+        },
+        licence: {
+          tt: "Driving License Check",
+          sub: "Verifies driver name, license number and validity of license instantly",
+          price: "₹299",
+          ready: "30 minutes",
+        },
+        pan: {
+          tt: "Pan Card Check",
+          sub: "Authenticate PAN card information to confirm identity and prevent fraud",
+          price: "₹299",
+          ready: "30 minutes",
+        },
+        criminal: {
+          tt: "Criminal Record Check",
+          sub: "Checks court records for any cases against the candidate",
+          price: "₹899",
+          ready: "30 minutes",
+        },
+        address: {
+          tt: "Digital Address Check",
+          sub: "Verifies address digitally through documents & live geo location",
+          price: "₹299",
+          ready: "30 minutes",
+        },
+      },
+    },
+    advanced: {
+      k: "Advanced packages",
+      h: "What is in an advanced HelloV package?",
+      lede:
+        "Advanced packages add more checks for the same household roles. Home staff and nanny " +
+        "are ₹1399; driver and tenant are ₹1799.",
+      badge: "Most popular",
+      packages: {
+        homeStaff: {
+          tt: "Home Staff Verification",
+          sub: "Voter Id Check, Criminal Check and Address Check.",
+          price: "₹1399",
+        },
+        nanny: {
+          tt: "Nanny Verification",
+          sub: "Identity Check, Criminal Check and Address Check.",
+          price: "₹1399",
+        },
+        driver: {
+          tt: "Driver Verification",
+          sub: "Driving License Check, Criminal Check, Voter Id Check and Address Check.",
+          price: "₹1799",
+        },
+        tenant: {
+          tt: "Tenant Verification",
+          sub: "Credit Check, Criminal Check and Aadhaar Check.",
+          price: "₹1799",
+        },
+      },
     },
     rule: {
       k: "The rule",
@@ -411,92 +521,94 @@ export const en = {
     },
   },
 
-  /** `/individuals/home-family` — a `VerticalPage` client. Every leaf below is
-   *  a PROP, which is why the matcher scored this file 11 against 60 leaves;
-   *  see this file's header. */
+  /** `/individuals/home-family` — a `VerticalPage` client. Facts are the
+   *  live HelloV catalogue from Part 1, not a second household price list. */
   homeFamily: {
     crumb: "Home & family",
     eyebrow: "Individuals · Home & family",
-    h1: <>The people <em>in your home.</em></>,
-    sub: "A nanny, a driver, a cook, a carer for your parents. They hold your keys and your children's hands — and usually arrive on a recommendation and a photocopy.",
-    primary: "Check someone now",
-    secondary: "See what gets checked",
+    h1: (
+      <>
+        Make sure you and your family<br />
+        <em>are safe.</em>
+      </>
+    ),
+    sub:
+      "Verification made easy on WhatsApp by HelloVerify. From nannies and house staff to " +
+      "drivers and tenants — our verification is 100% digital, fast and accurate.",
+    primary: "See HelloV packages",
+    secondary: "See single checks",
     strip: {
       thirtyMin: <><b>30 min</b> typical turnaround</>,
-      price: <><b>₹499</b> to start</>,
+      price: <><b>₹499</b> packages from</>,
       whatsapp: <><b>WhatsApp</b> — no app to install</>,
       consent: <><span className="dot" /> they consent first, always</>,
     },
-    verifyHead: "What does a background check on a nanny or driver cover?",
+    verifyHead: "What HelloV packages cover a nanny or driver?",
     verifyLede:
-      "A HelloVerify household check covers three things: identity with a photo match, the " +
-      "criminal and global-database record, and whether the address given is real. Identity " +
-      "takes 15 minutes, driving licence and criminal record 30 minutes each; a previous " +
-      "household employer takes two days.",
+      "HelloV household packages start at ₹499: Driver Verification is Driving License Check " +
+      "and Address Check; Home Staff is ₹599 for Criminal Check and Identity Check; Nanny and " +
+      "Tenant are ₹549. Single checks start at ₹199.",
     /** `VerticalPage` keys a lane on `gt`, so these three are React keys. */
     lanes: {
-      identity: { gt: "01 — Identity", gh: "Who they are" },
-      record: { gt: "02 — Record", gh: "What's on file" },
-      address: { gt: "03 — Where they live", gh: "Is it real" },
+      identity: { gt: "01 — Identity", gh: "Identity Check" },
+      record: { gt: "02 — Record", gh: "Criminal Check" },
+      address: { gt: "03 — Where they live", gh: "Address Check" },
     },
-    /** ONE FLAT TABLE for the eight pills across the three lanes, for the
-     *  reason `sections.packages.lines` gives: nesting them under the lane
-     *  makes `t.lanes[l.k].pills[p]` the correlated-union problem TypeScript
-     *  cannot solve across a `.map()`. `fast` is not here — it picks a CSS
-     *  modifier and stays beside the `className` it drives. `n` is the pill's
-     *  React key. */
+    /** ONE FLAT TABLE for the eight pills across the three lanes. Names and
+     *  times are the live HelloV singles / package checks — no invented
+     *  15-minute or two-day figures. `n` is the pill's React key. */
     pills: {
-      identity: { n: "Identity", t: "15 min" },
-      photoMatch: { n: "Photo match", t: "seconds" },
-      age: { n: "Age", t: "15 min" },
-      licence: { n: "Driving licence", t: "30 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-      previousEmployment: { n: "Previous employment", t: "2 days" },
+      identity: { n: "Identity Check", t: "₹1099" },
+      photoMatch: { n: "Pan Card Check", t: "30 min" },
+      age: { n: "Age Verification", t: "30 min" },
+      licence: { n: "Driving License Check", t: "30 min" },
+      criminal: { n: "Criminal Record Check", t: "30 min" },
+      globalDatabase: { n: "Credit Check", t: "in package" },
+      currentAddress: { n: "Digital Address Check", t: "30 min" },
+      previousEmployment: { n: "Digital Employment Check", t: "60 min" },
     },
-    stepsHead: "How do I check a nanny or driver before they start?",
+    stepsHead: "How do I check a nanny or driver on HelloV?",
     stepsLede:
-      "A HelloVerify home-and-family check runs in a WhatsApp conversation: you photograph the " +
-      "person's document, they consent on their own phone after seeing exactly what is being " +
-      "checked, and the report returns to the same chat in about 30 minutes.",
+      "A HelloV home-and-family check runs on WhatsApp: scan the QR with the WhatsApp camera, " +
+      "select who you want to verify, and the person consents on their own phone before any " +
+      "check runs.",
     steps: {
       you: {
         n: "01 · You",
-        t: "Send a photo",
-        p: "Message HelloV and photograph their document. Takes about a minute.",
+        t: "Scan the QR",
+        p: "Scan the HelloV QR code using the WhatsApp camera.",
       },
       them: {
-        n: "02 · Them",
-        t: "They agree",
-        p: "They get a message showing exactly what's being checked, and consent on their own phone.",
+        n: "02 · You",
+        t: "Select who",
+        p: "Select who you want to verify — driver, home staff, nanny or tenant.",
       },
       report: {
-        n: "03 · The report",
-        t: "You know",
-        p: "Plain language, sources named, back in the same chat — usually in about 30 minutes.",
+        n: "03 · Them",
+        t: "They consent",
+        p: "The person being verified consents on their own phone. Then the check runs.",
       },
     },
-    tableHead: "How long does a nanny or driver background check take?",
+    tableHead: "How much do HelloV household checks cost?",
     tableLede:
-      "Most HelloVerify household checks finish inside 30 minutes, measured from upload to " +
-      "report: identity and a global database screen in 15 minutes, driving licence, criminal " +
-      "record and current address in 30. Only a previous household employer is slow, at two days.",
+      "HelloV single checks are priced and timed in the live catalogue: Age Verification ₹199 " +
+      "in 30 minutes, Digital Employment Check ₹299 in 60 minutes, Driving License, PAN and " +
+      "Digital Address ₹299 in 30 minutes, Criminal Record Check ₹899 in 30 minutes.",
     /** `VerticalPage` keys a row on `nm`. */
     rows: {
-      identity: { nm: "Identity", sub: "name, DOB, photo match", tm: "15 min", src: "issuing registry" },
-      globalDatabase: { nm: "Global database screen", sub: "watchlists, adverse media", tm: "15 min", src: "global databases" },
-      licence: { nm: "Driving licence", sub: "class, validity, endorsements", tm: "30 min", src: "state transport authority" },
-      criminal: { nm: "Criminal record", sub: "court & police databases", tm: "30 min", src: "court records" },
-      address: { nm: "Current address", sub: "residence confirmation", tm: "30 min", src: "address records" },
-      previousEmployment: { nm: "Previous employment", sub: "household or agency reference", tm: "2 days", src: "the previous employer" },
+      identity: { nm: "Age Verification", sub: "₹199 · government ID with date of birth", tm: "30 min", src: "issuing registry" },
+      globalDatabase: { nm: "Pan Card Check", sub: "₹299 · authenticate PAN details", tm: "30 min", src: "income-tax records" },
+      licence: { nm: "Driving License Check", sub: "₹299 · name, number, validity", tm: "30 min", src: "state transport authority" },
+      criminal: { nm: "Criminal Record Check", sub: "₹899 · court records", tm: "30 min", src: "court records" },
+      address: { nm: "Digital Address Check", sub: "₹299 · documents and live geo location", tm: "30 min", src: "address records" },
+      previousEmployment: { nm: "Digital Employment Check", sub: "₹299 · employer name, joining and relieving", tm: "60 min", src: "previous employer" },
     },
-    tableNote: "Times shown are from upload to report · all checks require the person's consent",
+    tableNote: "Prices and times are the live HelloV catalogue · the person being verified consents before any check runs",
     complianceHead: "Is verification fair to the person being checked?",
     complianceLede:
       "The person being checked is usually looking for work: they see exactly what is being " +
-      "verified, consent to it, and their documents are held under retention limits rather than " +
-      "forever. A verified record is also portable proof for the next family.",
+      "verified, consent to it on their own phone, and no HelloV check runs without that. " +
+      "Documents are held under retention limits rather than forever.",
     faqHead: <>From families.</>,
     faqs: {
       awkward: {
@@ -505,7 +617,7 @@ export const en = {
       },
       noDocuments: {
         q: "What if they have no formal documents?",
-        a: "Most people have at least one government ID, which anchors identity and criminal checks. If nothing can be verified, the report says so plainly — that's information too, and it's better than assuming.",
+        a: "Most people have at least one government ID, which anchors Identity Check and Criminal Check. If nothing can be verified, the report says so plainly — that's information too, and it's better than assuming.",
       },
       clean: {
         q: "Does a clean report mean they're safe?",
@@ -513,17 +625,21 @@ export const en = {
       },
       agency: {
         q: "Can I check an agency's staff?",
-        a: "Yes, with the individual's consent. Agencies often say staff are 'verified' without saying by whom or against what — this tells you which authority confirmed it and when.",
+        a: "Yes, with the individual's consent, on the same HelloV packages. Agencies often say staff are 'verified' without saying by whom or against what — the report names the check.",
       },
     },
     closing: {
-      heading: <>Peace of mind, <em>in half an hour.</em></>,
-      sub: "One photo, their consent, and a report you can rely on.",
-      ctaLabel: "Check someone now",
+      heading: (
+        <>
+          Verify anyone instantly <em>on WhatsApp.</em>
+        </>
+      ),
+      sub: "Verification made easy on WhatsApp by HelloVerify.",
+      ctaLabel: "Start verification",
     },
   },
 
-  /** `/individuals/immigration` — the second `VerticalPage` client. */
+  /** `/products/immigration` — the second `VerticalPage` client. */
   immigration: {
     crumb: "Visa & immigration",
     eyebrow: "Individuals · Visa & immigration screening",

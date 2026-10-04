@@ -4,9 +4,8 @@
     for business and trade. All roughened by the one `#gv-ink` filter the
     band declares once. Decorative (`aria-hidden`); the words are copy.
 
-    The `#1B6B4A` on the elements is `--green` written as an SVG presentation
-    attribute — artwork, the exemption `hv/no-color-literal` makes for SVG,
-    and the same way `sections/Hero.tsx` draws its seal. */
+    The ink is `currentColor`; `.gv-stamp` sets it to `--primary`, as
+    `sections/Hero.tsx`'s seal is set by `.hv-seal-btn svg`. */
 import { octagon } from "@/lib/govArt";
 
 const MONO = "geistMono, SF Mono, Menlo, monospace";
@@ -21,15 +20,15 @@ export function StampRound({ big, small }: StampWords) {
       <defs>
         <path id="gv-arc-r" d="M100 100 m-70 0 a70 70 0 1 1 140 0 a70 70 0 1 1 -140 0" />
       </defs>
-      <g filter="url(#gv-ink)" fill="none" stroke="#1B6B4A">
+      <g filter="url(#gv-ink)" fill="none" stroke="currentColor">
         <circle cx="100" cy="100" r="92" strokeWidth="3.4" />
         <circle cx="100" cy="100" r="84" strokeWidth="1.2" />
         <circle cx="100" cy="100" r="56" strokeWidth="1.2" />
-        <text fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="11" fontWeight="500" letterSpacing="1.3">
+        <text fill="currentColor" stroke="none" fontFamily={MONO} fontSize="11" fontWeight="500" letterSpacing="1.3">
           <textPath href="#gv-arc-r" textLength="434" lengthAdjust="spacing">{`${small} `}</textPath>
         </text>
         <path d="M76 94 l15 15 l33 -34" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" />
-        <text x="100" y="134" textAnchor="middle" fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="10" letterSpacing="1.6">{big}</text>
+        <text x="100" y="134" textAnchor="middle" fill="currentColor" stroke="none" fontFamily={MONO} fontSize="10" letterSpacing="1.6">{big}</text>
       </g>
     </svg>
   );
@@ -38,12 +37,12 @@ export function StampRound({ big, small }: StampWords) {
 export function StampRect({ big, small }: StampWords) {
   return (
     <svg className="gv-stamp gv-stamp-wide" viewBox="0 0 240 120" aria-hidden="true" focusable="false">
-      <g filter="url(#gv-ink)" fill="none" stroke="#1B6B4A">
+      <g filter="url(#gv-ink)" fill="none" stroke="currentColor">
         <rect x="4" y="4" width="232" height="112" rx="10" strokeWidth="3.4" />
         <rect x="12" y="12" width="216" height="96" rx="5" strokeWidth="1.2" />
         <path d="M30 60 l10 10 l20 -22" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-        <text x="72" y="66" fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="18.5" fontWeight="500" letterSpacing="1.2">{big}</text>
-        <text x="72" y="86" fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="8.6" letterSpacing="1.2">{small}</text>
+        <text x="72" y="66" fill="currentColor" stroke="none" fontFamily={MONO} fontSize="18.5" fontWeight="500" letterSpacing="1.2">{big}</text>
+        <text x="72" y="86" fill="currentColor" stroke="none" fontFamily={MONO} fontSize="8.6" letterSpacing="1.2">{small}</text>
         <path d="M24 34 H216" strokeWidth="1" strokeDasharray="3 4" />
       </g>
     </svg>
@@ -53,12 +52,12 @@ export function StampRect({ big, small }: StampWords) {
 export function StampOct({ big, small }: StampWords) {
   return (
     <svg className="gv-stamp" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
-      <g filter="url(#gv-ink)" fill="none" stroke="#1B6B4A">
+      <g filter="url(#gv-ink)" fill="none" stroke="currentColor">
         <polygon points={OCT_OUTER} strokeWidth="3.4" />
         <polygon points={OCT_INNER} strokeWidth="1.2" />
         <path d="M78 74 l14 14 l30 -31" strokeWidth="7.5" strokeLinecap="round" strokeLinejoin="round" />
-        <text x="100" y="122" textAnchor="middle" fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="14.5" fontWeight="500" letterSpacing="0.8">{big}</text>
-        <text x="100" y="141" textAnchor="middle" fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="8.4" letterSpacing="1.2">{small}</text>
+        <text x="100" y="122" textAnchor="middle" fill="currentColor" stroke="none" fontFamily={MONO} fontSize="14.5" fontWeight="500" letterSpacing="0.8">{big}</text>
+        <text x="100" y="141" textAnchor="middle" fill="currentColor" stroke="none" fontFamily={MONO} fontSize="8.4" letterSpacing="1.2">{small}</text>
       </g>
     </svg>
   );
@@ -70,13 +69,13 @@ export function StampOval({ big, small }: StampWords) {
       <defs>
         <path id="gv-arc-o" d="M30 70 a90 52 0 1 1 180 0" />
       </defs>
-      <g filter="url(#gv-ink)" fill="none" stroke="#1B6B4A">
+      <g filter="url(#gv-ink)" fill="none" stroke="currentColor">
         <ellipse cx="120" cy="70" rx="114" ry="64" strokeWidth="3.4" />
         <ellipse cx="120" cy="70" rx="104" ry="55" strokeWidth="1.2" />
-        <text fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="9.5" letterSpacing="1.6">
+        <text fill="currentColor" stroke="none" fontFamily={MONO} fontSize="9.5" letterSpacing="1.6">
           <textPath href="#gv-arc-o" startOffset="50%" textAnchor="middle">{small}</textPath>
         </text>
-        <text x="120" y="86" textAnchor="middle" fill="#1B6B4A" stroke="none" fontFamily={MONO} fontSize="21" fontWeight="500" letterSpacing="2">{big}</text>
+        <text x="120" y="86" textAnchor="middle" fill="currentColor" stroke="none" fontFamily={MONO} fontSize="21" fontWeight="500" letterSpacing="2">{big}</text>
         <path d="M104 104 l8 8 l16 -17" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
       </g>
     </svg>

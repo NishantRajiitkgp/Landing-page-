@@ -16,5 +16,5 @@ export default async function EmbassyOfLatvia({ params }: { params: Promise<{ lo
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await copy(GOVERNMENTS);
-  return <AuthorityPage id="latvia" parent={{ label: t.immigration.crumb, href: "/governments/immigration" }} />;
+  return <AuthorityPage id="latvia" parent={{ label: t.immigration.crumb, href: "/solutions/immigration-authorities" }} />;
 }

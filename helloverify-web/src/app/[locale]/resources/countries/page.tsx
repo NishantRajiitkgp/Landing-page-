@@ -92,7 +92,7 @@ export default async function CountriesIndex({
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
         <div className="pricenote">
           {d.note}{" "}
-          <AppLink href="/platform/coverage" style={{ color: "inherit", textDecoration: "underline" }}>{d.globalCoverage}</AppLink>
+          <AppLink href="/international" style={{ color: "inherit", textDecoration: "underline" }}>{d.globalCoverage}</AppLink>
         </div>
       </div>
     </PageShell>
