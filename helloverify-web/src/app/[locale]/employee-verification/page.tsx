@@ -1,24 +1,53 @@
-/** /employee-verification — vertical page (Template 3). */
+/** /employee-verification — the old SPA's Employee Verification page in its
+ *  order: hero, "Employee Verification Solutions", White-Collar Verification,
+ *  Why White-Collar Verification Matters, the HR & staffing results,
+ *  Blue-Collar Verification, Why Blue-Collar worker Verification Matters,
+ *  Automated Workforce Onboarding, Primary Source Verification. Copy is
+ *  `employees.base.json` word for word (`business.employeeVerification`). */
 import type { Metadata } from "next";
+import Image from "next/image";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { copyFor } from "@/lib/seo/copy";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
-import { FaqSection } from "@/components/chrome/FaqSection";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
-import { SecHead } from "@/components/chrome/SecHead";
-import { Arrow } from "@/components/brand/Arrow";
-import { Steps } from "@/components/chrome/Steps";
-import { BUSINESS } from "@/lib/copy/business";
+import { EmployeeChecks } from "@/components/employee/EmployeeChecks";
+import { AutomateTabs } from "@/components/employee/AutomateTabs";
+import { EmployeeIcon, type EmployeeIconId } from "@/components/employee/EmployeeIcons";
+import { BUSINESS, type BusinessCopy } from "@/lib/copy/business";
 import { copy } from "@/lib/copy/request";
 
-/** This page's route, stated ONCE. `pageMetadata` and the Service node below
- *  both read it, so §8.2's graph does not add a second chance to name the
- *  wrong route on top of the one §8.1 already guards. */
 const PATH = "/employee-verification";
+const TALK = "/contact?tab=enquiry&role=business&contact=business-support";
 
+type E = BusinessCopy["employeeVerification"];
+
+const WHITE_WHY: readonly [keyof E["whiteWhy"]["cards"], EmployeeIconId][] = [["integrity", "integrity"], ["hiring", "hiring"], ["compliance", "compliance"]];
+const BLUE_WHY: readonly [keyof E["blueWhy"]["cards"], EmployeeIconId][] = [["trust", "trustMinutes"], ["smart", "verifySmart"], ["compliance", "complianceShield"]];
+/** Old CMS stat values; identical in every locale. */
+const STATS: readonly [keyof E["results"]["stats"], string][] = [["workflow", "91%"], ["accuracy", "88%"], ["experience", "81%"]];
+/** Old screenshots, `public/img/employee/`, with their pixel sizes. */
+const AUTOMATE: readonly [keyof E["automate"]["tabs"], string, number, number][] = [
+  ["smooth", "Smooth-Experience_HRMS-API-Integration.png", 2088, 974],
+  ["hrms", "api_flow.png", 2088, 961],
+  ["rules", "Rule-Engine.png", 2088, 962],
+  ["tracking", "Real-Time-Tracking.png", 2088, 910],
+  ["support", "Excellent-Support.png", 2088, 779],
+  ["security", "Enterprise-Grade-Security.jpg", 751, 422],
+];
+/** Old glyphs, `public/img/employee/psv/`, white on a dark disc. */
+const PSV: readonly [keyof E["psv"]["items"], string, number, number][] = [
+  ["education", "education-verification", 26, 27],
+  ["institute", "institute-accreditation", 30, 29],
+  ["employment", "employment-verification", 29, 29],
+  ["dualEmployment", "dual-employment-verification", 25, 19],
+  ["criminal", "criminal-record-verification", 25, 27],
+  ["identity", "identity-verification", 25, 16],
+  ["address", "address-verification", 26, 28],
+  ["bank", "bank-account-verification", 27, 28],
+];
 
 export async function generateMetadata({
   params,
@@ -29,11 +58,6 @@ export async function generateMetadata({
   return pageMetadata(locale, PATH);
 }
 
-/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
- *  `description` is this page's own reviewed description, read from the copy
- *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
- *  title, the meta description, the Service node and llms.txt cannot drift
- *  apart. */
 const SERVICE: ServiceFacts = {
   path: PATH,
   name: "Employee verification",
@@ -47,120 +71,131 @@ export default async function EmployeeVerificationPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  // Enables static rendering: without it every next-intl call in this
-  // subtree (AppLink resolves the locale) falls back to reading request
-  // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
-  const t = await copy(BUSINESS);
-  const c = t.employeeVerification;
+  const e = (await copy(BUSINESS)).employeeVerification;
 
   return (
-    <PageShell
-      crumbs={[{ label: t.crumb, href: "/business" }, { label: c.crumb }]}
-      closing={{ heading: c.closing.heading, sub: c.closing.sub }}
-    >
+    <PageShell crumbs={[{ label: e.crumb }]} closing={false}>
       <div className="wrap hero3">
-        <div className="k">{c.hero.k}</div>
-        <h1 className="h1">{c.hero.h1}</h1>
-        <p className="sub">{c.hero.sub}</p>
+        <h1 className="h1">{e.hero.h1}</h1>
         <div className="hrow">
-          <AppLink href="/contact" className="btn btn-ink">{c.hero.cta}</AppLink>
-          <a href="#when" className="btn btn-ghost">
-            <span>{c.hero.when}</span>
-            <Arrow />
-          </a>
+          <AppLink href={TALK} className="btn btn-ink">
+            {e.hero.cta}
+          </AppLink>
         </div>
       </div>
 
-      <div className="wrap">
-        <div className="strip3">
-          <span className="it">{c.strip.digital}</span>
-          <span className="it">{c.strip.epfo}</span>
-          <span className="it">{c.strip.zero}</span>
-          <span className="it">{c.strip.consent}</span>
-        </div>
+      <div className="wrap emp3-banner">
+        <h2 className="h2">{e.banner}</h2>
       </div>
 
-      {/* what we check */}
+      <Split id="employees-white-collar" c={e.white} img={["white-caller-verification.png", 1454, 1024]} service="white-collar-verification" />
+      <Why h={e.whiteWhy.h} cards={WHITE_WHY.map(([k, icon]) => ({ k, icon, ...e.whiteWhy.cards[k] }))} />
+
       <div className="wrap sec3">
-        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). The heading is the question, the
-            lede is the whole answer in ~40 words, and it names re-verification
-            rather than saying "this" — a block that says "this process" is
-            unciteable once an engine lifts it off the page (§11a.2 rule 3).
-
-            Every number here is already on this page: the chip list below
-            carries the per-check times, and the strip above carries the 60-min
-            digital employment figure. Deliberately NOT naming entitlement to
-            work's turnaround, which is one side of the three-way disagreement
-            TASKS.md carries between the catalogue, this page and the homepage.
-            A citeable sentence is the worst place to pick a side by accident. */}
-        <SecHead k={c.whatWeCheck.k} h={c.whatWeCheck.h}>
-          {c.whatWeCheck.lede}
-        </SecHead>
-        <div className="body3 cloud3" style={{ marginTop: 40 }}>
-          {/* Each chip keeps its three children — the `.d` dot, the name, the
-              `.t` time — so these are two text-node swaps apiece. */}
-          <span className="pl3 fast"><span className="d" />{c.chips.digitalEmployment.n}<span className="t">{c.chips.digitalEmployment.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{c.chips.moonlighting.n}<span className="t">{c.chips.moonlighting.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{c.chips.entitlementToWork.n}<span className="t">{c.chips.entitlementToWork.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{c.chips.criminalRefresh.n}<span className="t">{c.chips.criminalRefresh.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{c.chips.currentAddress.n}<span className="t">{c.chips.currentAddress.t}</span></span>
-          <span className="pl3"><span className="d" />{c.chips.employmentManual.n}<span className="t">{c.chips.employmentManual.t}</span></span>
-          <span className="pl3"><span className="d" />{c.chips.education.n}<span className="t">{c.chips.education.t}</span></span>
-        </div>
-      </div>
-
-      {/* when to re-verify */}
-      <div className="wrap sec3" id="when">
-        <SecHead k={c.whenItMatters.k} h={c.whenItMatters.h}>
-          {c.whenItMatters.lede}
-        </SecHead>
-        <div className="body3 when3">
-          <div className="w">
-            <div className="wt">{c.when.joining.wt}</div>
-            <p className="wp">{c.when.joining.wp}</p>
-            <span className="wm">{c.when.joining.wm}</span>
-          </div>
-          <div className="w">
-            <div className="wt">{c.when.roleChange.wt}</div>
-            <p className="wp">{c.when.roleChange.wp}</p>
-            <span className="wm">{c.when.roleChange.wm}</span>
-          </div>
-          <div className="w">
-            <div className="wt">{c.when.annual.wt}</div>
-            <p className="wp">{c.when.annual.wp}</p>
-            <span className="wm">{c.when.annual.wm}</span>
-          </div>
-          <div className="w">
-            <div className="wt">{c.when.incident.wt}</div>
-            <p className="wp">{c.when.incident.wp}</p>
-            <span className="wm">{c.when.incident.wm}</span>
+        <div className="emp3-results">
+          <h2>{e.results.h}</h2>
+          <div className="smb3-stats">
+            {STATS.map(([k, v]) => (
+              <div key={k}>
+                <p className="v">{v}</p>
+                <p className="l">{e.results.stats[k]}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* how it works */}
+      <Split id="employees-blue-collar" c={e.blue} img={["blue-caller-verification.png", 1536, 1024]} service="blue-collar-verification" />
+      <Why h={e.blueWhy.h} cards={BLUE_WHY.map(([k, icon]) => ({ k, icon, ...e.blueWhy.cards[k] }))} />
+
       <div className="wrap sec3">
-        <SecHead k={c.howItWorks.k} h={c.howItWorks.h}>
-          {c.howItWorks.lede}
-        </SecHead>
-        {/* HowTo (§17 condition 18): `name` is this band's own `SecHead` `h`,
-            so the node and the heading are the same string — now ONE leaf read
-            twice rather than two identical literals a translation could part. */}
-        <Steps
-          name={c.howItWorks.h}
-          items={[c.steps.enroll, c.steps.verify, c.steps.alert]}
+        <div className="sec-head smb3-head">
+          <h2 className="h2">{e.automate.h}</h2>
+          <p className="lede">{e.automate.p}</p>
+        </div>
+        <AutomateTabs
+          items={AUTOMATE.map(([k, file, w, h]) => ({
+            k,
+            t: e.automate.tabs[k].t,
+            p: e.automate.tabs[k].p,
+            img: <Image src={`/img/employee/${file}`} alt={e.automate.tabs[k].alt} width={w} height={h} sizes="(max-width: 1080px) 92vw, 820px" />,
+          }))}
         />
       </div>
 
-      {/* FAQ — markup and FAQPage node both from the same records (see
-          FaqSection). The order is structure and stays here. */}
-      <FaqSection
-        head={c.faqHead}
-        faqs={[c.faqs.legal, c.faqs.digital, c.faqs.moonlighting, c.faqs.contacted]}
-      />
+      <div className="wrap sec3">
+        <div className="sec-head smb3-head">
+          <h2 className="h2">{e.psv.h}</h2>
+        </div>
+        <ul className="body3 emp3-psv">
+          {PSV.map(([k, file, w, h]) => (
+            <li key={k}>
+              <span className="ic">
+                <Image src={`/img/employee/psv/${file}.svg`} alt="" width={w} height={h} unoptimized />
+              </span>
+              <p>{e.psv.items[k]}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
+  );
+}
+
+/** The old split panel: title, intro and the checks card beside the photo,
+ *  "Talk to Sales" centred below. */
+function Split({
+  id,
+  c,
+  img: [file, w, h],
+  service,
+}: {
+  id: string;
+  c: E["white"] | E["blue"];
+  img: readonly [string, number, number];
+  service: string;
+}) {
+  return (
+    <div className="wrap sec3" id={id}>
+      <div className="emp3-split">
+        <div className="emp3-copy">
+          <h2 className="h2">{c.h}</h2>
+          <p className="lede">{c.p}</p>
+          <EmployeeChecks id={id} items={Object.entries(c.checks).map(([k, x]) => ({ k, n: x.n, p: x.p }))} />
+        </div>
+        <figure className="emp3-fig">
+          <Image src={`/img/employee/${file}`} alt={c.alt} width={w} height={h} sizes="(max-width: 1080px) 92vw, 520px" />
+        </figure>
+      </div>
+      <div className="emp3-cta">
+        <AppLink href={`${TALK}&service=${service}`} className="btn btn-ink">
+          {c.cta}
+        </AppLink>
+      </div>
+    </div>
+  );
+}
+
+function Why({ h, cards }: { h: string; cards: readonly { k: string; icon: EmployeeIconId; t: string; p: string }[] }) {
+  return (
+    <div className="wrap sec3">
+      <div className="sec-head smb3-head">
+        <h2 className="h2">{h}</h2>
+      </div>
+      <ul className="body3 smb3-cards">
+        {cards.map((x) => (
+          <li key={x.k}>
+            <span className="ic">
+              <EmployeeIcon id={x.icon} />
+            </span>
+            <h3>{x.t}</h3>
+            <p>{x.p}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

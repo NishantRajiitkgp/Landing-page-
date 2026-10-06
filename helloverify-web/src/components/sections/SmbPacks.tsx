@@ -28,6 +28,7 @@ import { BUSINESS } from "@/lib/copy/business";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
 import { tint } from "@/lib/img";
+import { SMB_CLIENTS, smbLogo } from "@/lib/smbClients";
 import { SmbHow } from "./SmbHow";
 import { PACKS } from "./smbData";
 
@@ -124,6 +125,20 @@ export async function SmbPanel() {
           );
         })}
       </ul>
+
+      {/* The SMB clients, in the Large panel's client-strip format. */}
+      <div className="sg-trust sg-trust-many">
+        <p className="sg-trust-h">
+          {t.trust.hA} <em>{t.trust.hB}</em>
+        </p>
+        <ul className="sg-logos">
+          {SMB_CLIENTS.map((c) => (
+            <li key={c.id} className={c.fit && `sg-logo-${c.fit}`}>
+              <Image src={smbLogo(c.id)} alt={t.clients[c.id]} width={150} height={40} />
+            </li>
+          ))}
+        </ul>
+      </div>
 
       {SHOW_HOW && <SmbHow />}
 

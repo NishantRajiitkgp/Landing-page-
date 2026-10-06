@@ -64,6 +64,8 @@
 
 .nav2 .nv-i { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; padding: 11px 12px; border-radius: 12px; color: var(--ink); transition: background .18s; }
 .nav2 .nv-i:hover, .nav2 .nv-i:focus-visible { color: var(--ink); background: var(--paper); }
+.nav2 .nv-static { cursor: default; }
+.nav2 .nv-static:hover { background: none; }
 .nav2 .nv-ic { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); transition: background .18s, box-shadow .18s; }
 .nav2 .nv-i:hover .nv-ic, .nav2 .nv-i:focus-visible .nv-ic { background: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
 /* The icon is a graphic, so its colour is `stroke`, not `color` (which the
@@ -163,13 +165,16 @@
 .vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 /* 1200–1439px: Sign Up is in the bar now, so the old 1081/1280 numbers
-   overflow and `.page { overflow: clip }` chops Talk to sales. Hide the
-   locale trigger and tighten the items until 1440, where the full row fits
-   (measured: 43px cut at 1366, 115px at 1280). */
+   overflow and `.page { overflow: clip }` chops Talk to sales. The items
+   tighten until 1440, where the full row fits; below 1280 the locale trigger
+   also shrinks to its globe, the endonym kept as its accessible name
+   (measured: 52px spare at 1200 with the globe, 53px at 1280 with "English"). */
+@media (min-width: 1200px) and (max-width: 1279px) {
+  .nav2 .acts .lang-now > span { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
 @media (min-width: 1200px) and (max-width: 1439px) {
   .nav2 .nbar { gap: 16px; }
   .nav2 .nv-l, .nav2 .nv-btn { padding-inline: 9px; font-size: 14.5px; }
-  .nav2 .acts .lang { display: none; }
   /* At full size the Products and Support cards pass the CTA's edge here
      (measured at 1200 and 1280); narrower, the titles wrap instead. */
   .nav2 .nv-mid .nv-card { width: 660px; }

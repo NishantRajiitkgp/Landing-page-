@@ -29,7 +29,8 @@ type T = ChromeCopy["nav"];
 type ItemId = keyof T["items"];
 type ColId = keyof T["menus"]["solutions"]["cols"];
 type IconId = "heart" | "bank" | "doc" | "building" | "case" | "store" | "user" | "id" | "star" | "passport" | "globe" | "badge" | "chat" | "shield" | "mail";
-type Item = { id: ItemId; href: string; icon: IconId };
+/** `href` is absent where the old menu's entry was not a link. */
+type Item = { id: ItemId; href?: string; icon: IconId };
 
 /** 24-unit line icons, stroked from CSS (`.nv-ic svg`). */
 const ICONS: Record<IconId, React.ReactNode> = {
@@ -50,23 +51,23 @@ const ICONS: Record<IconId, React.ReactNode> = {
   mail: <path d="M4.5 6.5h15v11h-15zM4.5 7l7.5 6 7.5-6" />,
 };
 
-/** Solutions: three audiences, each column heading linking to its hub. */
-const SOLUTIONS: { col: ColId; hub: string; items: Item[] }[] = [
-  { col: "gov", hub: "/governments", items: [
+/** Solutions: three audiences under plain column headings. */
+const SOLUTIONS: { col: ColId; items: Item[] }[] = [
+  { col: "gov", items: [
     { id: "govHealth", href: "/solutions/health-authorities", icon: "heart" },
     { id: "govImmigration", href: "/solutions/immigration-authorities", icon: "bank" },
     { id: "govEducation", href: "/solutions/manpower-and-education-authorities", icon: "doc" },
     { id: "govTrade", href: "/solutions/trade-authorities", icon: "building" },
   ] },
-  { col: "biz", hub: "/business", items: [
+  { col: "biz", items: [
     { id: "forBusiness", href: "/products/bgv-enterprise", icon: "case" },
     { id: "forSmb", href: "/products/bgv-smb", icon: "store" },
     { id: "employee", href: "/employee-verification", icon: "user" },
     { id: "kyc", href: "/products/customer-kyc", icon: "id" },
   ] },
-  { col: "consumer", hub: "/individuals", items: [
-    { id: "individuals", href: "/individuals/home-family", icon: "star" },
-    { id: "visa", href: "/products/immigration?tab=applicant", icon: "passport" },
+  { col: "consumer", items: [
+    { id: "individuals", href: "/#consumer-services", icon: "star" },
+    { id: "visa", href: "/products/immigration", icon: "passport" },
     { id: "global", href: "/international", icon: "globe" },
   ] },
 ];
@@ -77,23 +78,24 @@ const PRODUCTS: Item[] = [
   { id: "bgvEnterprise", href: "/products/bgv-enterprise", icon: "case" },
   { id: "bgvSmb", href: "/products/bgv-smb", icon: "store" },
   { id: "certifier", href: "/products/certifier", icon: "badge" },
-  { id: "immigrationDocs", href: "/products/immigration?tab=applicant", icon: "bank" },
+  { id: "immigrationDocs", href: "/products/immigration", icon: "bank" },
   { id: "hellov", href: "/products/hellov", icon: "chat" },
   { id: "trust", href: "/products/customer-kyc", icon: "shield" },
 ];
 
 const PREMIUM: Item[] = [
-  { id: "premHealth", href: "/solutions/health-authorities", icon: "heart" },
+  { id: "premHealth", icon: "heart" },
   { id: "premImmigration", href: "/products/immigration?tab=applicant", icon: "passport" },
-  { id: "premConsumer", href: "/individuals/home-family", icon: "id" },
+  { id: "premConsumer", href: "/products/hellov", icon: "id" },
 ];
 
-const SUPPORT: Item[] = [{ id: "enquiry", href: "/contact", icon: "mail" }];
+const ENQUIRY = "/contact?tab=enquiry";
+const SUPPORT: Item[] = [{ id: "enquiry", href: ENQUIRY, icon: "mail" }];
 
 function Entry({ item, t }: { item: Item; t: T }) {
   const c = t.items[item.id];
-  return (
-    <AppLink href={item.href} className="nv-i">
+  const body = (
+    <>
       <span className="nv-ic" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none">{ICONS[item.icon]}</svg>
       </span>
@@ -101,19 +103,15 @@ function Entry({ item, t }: { item: Item; t: T }) {
         <span className="nv-t">{c.t}</span>
         <span className="nv-d">{c.d}</span>
       </span>
-    </AppLink>
+    </>
   );
+  if (!item.href) return <div className="nv-i nv-static">{body}</div>;
+  return <AppLink href={item.href} className="nv-i">{body}</AppLink>;
 }
 
-function Arrow() {
-  return (
-    <svg className="nv-arr" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-      <path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-export async function SiteNav() {
+/** `showSignUp={false}` drops the logged-out Sign Up button from the bar and
+ *  the burger; a signed-in visitor still gets the account menu. */
+export async function SiteNav({ showSignUp = true }: { showSignUp?: boolean } = {}) {
   const chrome = await copy(CHROME);
   const t = chrome.nav;
   const m = t.menus;
@@ -123,6 +121,7 @@ export async function SiteNav() {
     signUp: t.signUp,
     account: t.account,
     userMenu: t.userMenu,
+    showSignUp,
   };
 
   return (
@@ -134,9 +133,9 @@ export async function SiteNav() {
         <nav className="links" aria-label={t.primary}>
           <NavDropdown label={m.solutions.label} size="wide">
             <div className="nv-cols">
-              {SOLUTIONS.map(({ col, hub, items }) => (
+              {SOLUTIONS.map(({ col, items }) => (
                 <div key={col} className="nv-col">
-                  <AppLink href={hub} className="nv-h nv-hl">{m.solutions.cols[col]}<Arrow /></AppLink>
+                  <p className="nv-h">{m.solutions.cols[col]}</p>
                   {items.map((it) => <Entry key={it.id} item={it} t={t} />)}
                 </div>
               ))}
@@ -146,10 +145,9 @@ export async function SiteNav() {
             <div className="nv-grid2">
               {PRODUCTS.map((it) => <Entry key={it.id} item={it} t={t} />)}
             </div>
-            <AppLink href="/resources/checks" className="nv-foot">{m.products.all}<Arrow /></AppLink>
           </NavDropdown>
           <NavDropdown label={m.premium.label} size="narrow">
-            <p className="nv-h">{m.premium.label}</p>
+            <p className="nv-h">{m.premium.title}</p>
             <p className="nv-lede">{m.premium.lede}</p>
             {PREMIUM.map((it) => <Entry key={it.id} item={it} t={t} />)}
           </NavDropdown>
@@ -164,7 +162,7 @@ export async function SiteNav() {
           {/* `LocaleSwitch` turns into a real switcher on one array entry — see its header. */}
           <LocaleSwitch />
           <NavAuth {...auth} placement="bar" />
-          <AppLink href="/contact" className="btn btn-ink btn-sm">{t.cta}</AppLink>
+          <AppLink href={ENQUIRY} className="btn btn-ink btn-sm">{t.cta}</AppLink>
           {/* Real text, not `aria-label`: a <label> has no role that permits
               a name from `aria-label` (axe `aria-prohibited-attr`, serious). */}
           <label htmlFor="nav-menu-toggle" className="burger">
@@ -180,9 +178,9 @@ export async function SiteNav() {
       <nav className="menu" aria-label={t.primaryMobile}>
         <details>
           <summary>{m.solutions.label}<Caret /></summary>
-          {SOLUTIONS.map(({ col, hub, items }) => (
+          {SOLUTIONS.map(({ col, items }) => (
             <div key={col} className="nv-col">
-              <AppLink href={hub} className="nv-h nv-hl">{m.solutions.cols[col]}<Arrow /></AppLink>
+              <p className="nv-h">{m.solutions.cols[col]}</p>
               {items.map((it) => <Entry key={it.id} item={it} t={t} />)}
             </div>
           ))}
@@ -191,12 +189,12 @@ export async function SiteNav() {
           <summary>{m.products.label}<Caret /></summary>
           <div className="nv-col">
             {PRODUCTS.map((it) => <Entry key={it.id} item={it} t={t} />)}
-            <AppLink href="/resources/checks" className="nv-foot">{m.products.all}<Arrow /></AppLink>
           </div>
         </details>
         <details>
           <summary>{m.premium.label}<Caret /></summary>
           <div className="nv-col">
+            <p className="nv-h">{m.premium.title}</p>
             <p className="nv-lede">{m.premium.lede}</p>
             {PREMIUM.map((it) => <Entry key={it.id} item={it} t={t} />)}
           </div>
@@ -205,6 +203,7 @@ export async function SiteNav() {
         <details>
           <summary>{m.support.label}<Caret /></summary>
           <div className="nv-col">
+            <p className="nv-h">{m.support.col}</p>
             {SUPPORT.map((it) => <Entry key={it.id} item={it} t={t} />)}
           </div>
         </details>

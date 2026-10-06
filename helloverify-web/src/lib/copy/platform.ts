@@ -9,8 +9,8 @@
  *
  *  THE KEY UNIONS gate the COMPONENT's structure, the half a dictionary cannot
  *  check on its own. Each is exported because a module declares an ordered
- *  array against it: `/international` its regions and the countries inside
- *  them, and `/platform/security-compliance`'s `./content.ts` its artefact
+ *  array against it: `/international` its countries, their package cards and
+ *  the checks each one lists, and `/platform/security-compliance`'s `./content.ts` its artefact
  *  rows, its residency rows and its questions. Add a row without copy and it is
  *  TS2322 on that array, in every locale at once — the argument `./index` makes
  *  under "Where the keys come from".
@@ -31,12 +31,11 @@ export type PlatformCopy = typeof en;
 
 export const PLATFORM: Dictionary<PlatformCopy> = { en, hi, ar };
 
-/** `/international`'s three region headings and the 24 countries the page
- *  distributes between them. TWO unions rather than one nested type: the
- *  dictionary holds one flat country record, for the TS2536 reason
- *  `platform.en.tsx` records at that table. */
-export type RegionKey = keyof PlatformCopy["coverage"]["regions"];
-export type CountryKey = keyof PlatformCopy["coverage"]["countries"];
+/** `/international`'s four countries (name plus the two flag alts), three
+ *  package cards, and the flat check-row record the CMS tables pick from. */
+export type CoverageCountry = keyof PlatformCopy["coverage"]["countries"];
+export type CoverageCard = keyof PlatformCopy["coverage"]["packages"]["cards"];
+export type CoverageCheck = keyof PlatformCopy["coverage"]["checks"]["rows"];
 
 /** `/platform/security-compliance`'s three record lists, whose ORDER — and, for
  *  the artefacts, the `.req` CSS flag — stayed in that page's `./content.ts`. */

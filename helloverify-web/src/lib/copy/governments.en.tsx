@@ -73,7 +73,6 @@
  *
  *  NO `as const`, per the recipe.
  */
-import type { ReactNode } from "react";
 
 export const en = {
   /** The subtree's own name: the hub's breadcrumb rung AND the parent rung on
@@ -256,495 +255,459 @@ export const en = {
     },
   },
 
-  /** `/solutions/health-authorities` — Template 3 via `components/templates/VerticalPage`.
-   *
-   *  THE FOUR VERTICAL PAGES ALL HAVE THIS SHAPE, and the split between what is
-   *  here and what stays in the page is the one `business/enterprise/page.tsx`
-   *  made: the dictionary holds a record per lane, per pill, per row, per step
-   *  and per question, keyed; the page holds WHICH of them, in WHAT ORDER, and
-   *  the `fast` flag, which is a CSS class and not a word. A lane or a pill
-   *  added without copy is TS2322 on that page's array, in every locale at
-   *  once. `rows`' `nm` is also the rendered `key=` and `lanes`' `gt` and
-   *  `pills`' `n` are too (see `VerticalPage`), so the third corollary applies
-   *  to 3 + 12 + 6 strings on each page; `tools/test/copy.test.ts` §13 pins
-   *  them against the pre-migration literals. */
+  /** `/solutions/health-authorities` — the old `healthAuthorities.base.json`,
+   *  word for word, in its section order. The hidden "Our Client" card is not
+   *  carried. */
   health: {
-    crumb: "Health authorities",
-    eyebrow: "Governments · Health authorities",
-    h1: (<>No one practises <em>on an unchecked degree.</em></>),
-    sub: "Medical degrees, council registrations, licences and practice history — confirmed with the university and the council that issued them, in the country they were issued in.",
-    secondary: "See turnaround times",
-    strip: {
-      countries: (<><b>120+</b> countries of qualifications</>),
-      degree: (<><b>3 days</b> degree at the registrar</>),
-      checks: (<><b>20M+</b> checks at the primary source</>),
-      certs: (<><span className="dot" /> ISO 27001 · GDPR</>),
+    crumb: "Health Authorities",
+    h1: (<>Primary Source Verification for Healthcare <em>Workforce</em></>),
+    sub: "Ensure credential accuracy and regulatory compliance by verifying doctors, nurses, and allied professionals directly from issuing authorities.",
+    overview: {
+      h: "Overview",
+      p: "In the GCC's fast-growing, highly regulated healthcare landscape, credentials are non-negotiable. HelloVerify is a globally recognised verification partner trusted by health authority in Saudi Arabia.",
+      imgAlt: "Healthcare professional verifying credentials",
+      bullets: ["Primary Source Verification (PSV) - each record is verified from the source of issue.", "Each issuing authority’s accreditation is verified from government regulatory organisation/ministry.", "Audit-ready reports that enable fast, defensible licensing decisions for government authorities."],
     },
-    verifyHead: "What does a health authority verify before licensing a clinician?",
-    verifyLede: "A health authority verifies three things about a clinician: identity, qualification and standing. Identity, criminal and watchlist checks return in 15 to 30 minutes; council registration takes two days at the medical council and a medical degree three days at the university registrar.",
-    lanes: {
-      identity: { gt: "01 — Identity", gh: "Who they are" },
-      qualification: { gt: "02 — Qualification", gh: "What they trained in" },
-      standing: { gt: "03 — Standing", gh: "Whether they may practise" },
-    },
-    pills: {
-      identity: { n: "Identity", t: "15 min" },
-      passport: { n: "Passport", t: "15 min" },
-      age: { n: "Age", t: "15 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-      medicalDegree: { n: "Medical degree", t: "3 days" },
-      postGraduate: { n: "Post-graduate specialty", t: "3 days" },
-      councilRegistration: { n: "Council registration", t: "2 days" },
-      internship: { n: "Internship completion", t: "3 days" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      employmentHistory: { n: "Employment history", t: "2 days" },
-      disciplinary: { n: "Disciplinary record", t: "3 days" },
-    },
-    stepsHead: "How does a health authority verify applicant documents?",
-    stepsLede: "A health authority verifies clinician documents in four steps: the applicant photographs them on a phone and consents, HelloVerify AI locates the issuing institution in about a second, the university registrar and medical council confirm directly, and one dated file per applicant follows.",
-    steps: {
-      submit: { n: "01 · The applicant", t: "Submit", p: "Documents photographed on a phone, consent captured, quality checked before upload." },
-      read: { n: "02 · HelloVerify AI", t: "Read", p: "Every field extracted and the issuing institution identified — in about a second." },
-      confirm: { n: "03 · The institution", t: "Confirm", p: "The university registrar and the medical council confirm directly. Not a database that resembles them." },
-      decide: { n: "04 · The authority", t: "Decide", p: "One file per applicant, each result carrying its source and date, ready for the licensing decision." },
-    },
-    tableHead: "How long does clinician verification take?",
-    tableLede: "Clinician verification takes 15 minutes for identity and a global database screen, 30 minutes for a criminal record, two days for council registration, and three days for a medical degree at the university registrar or a disciplinary record on the council's register.",
-    rows: {
-      identity: { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", src: "issuing registry" },
-      criminal: { nm: "Criminal record", sub: "court & police databases", tm: "30 min", src: "court records" },
-      globalDatabase: { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", src: "global databases" },
-      councilRegistration: { nm: "Council registration", sub: "licence number, status, expiry", tm: "2 days", src: "the medical council" },
-      medicalDegree: { nm: "Medical degree", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
-      disciplinary: { nm: "Disciplinary record", sub: "sanctions, suspensions, conditions", tm: "3 days", src: "the council's register" },
-    },
-    /** A FUNCTION leaf taking the anchor — the shape `./index` describes for a
-     *  sentence wrapping something the component owns. A plain string would
-     *  have had to END IN A SPACE to keep the byte, which
-     *  `tools/test/copy.test.ts` §3 rejects. */
-    note: (link: ReactNode) => (
-      <>Times shown are from submission to result · qualifications verified in the country of issue — see {link}</>
-    ),
-    complianceHead: "How is clinician data protected during verification?",
-    complianceLede: "Health records are the most sensitive data a person has, so clinician verification runs under independently audited ISO 27001 certification and GDPR-aligned handling: consent captured per applicant, bounded retention, and every access logged. HelloVerify is a PBSA member.",
-    faqHead: (<>From licensing<br />boards.</>),
-    faqs: {
-      abroad: {
-        q: "Can you verify qualifications earned abroad?",
-        a: "Yes — that's the common case. A nurse trained in Manila and applying in Abu Dhabi has her degree confirmed with the Philippine institution that issued it, by our team in that country. 120+ countries are reachable through the same pipeline.",
-      },
-      offline: {
-        q: "What if the issuing institution is slow or offline?",
-        a: "The file shows the request as pending with a date and the route being used — courier, in-person, or official channel — rather than silently stalling. Authorities see exactly where each applicant stands.",
-      },
-      forgery: {
-        q: "Do you detect forged medical degrees?",
-        a: "Document forensics run first — template, fonts, security features — but a clean forgery still fails the source check, because the registrar simply has no record of the graduate. That's the point of verifying at the source.",
-      },
-      volume: {
-        q: "Can this run at national volume?",
-        a: "Yes. The pipeline is parallel, so a licensing round of ten thousand applicants runs at the same per-file speed as one. Six offices across twelve time zones keep the queue moving overnight.",
+    categories: {
+      h: "Practitioner Categories",
+      sub: "The PSV program encompasses all practitioner categories defined by regulators",
+      items: {
+        doctor: "Doctor",
+        practitioners: "Practitioners",
+        nonPhysician: "Non-physician",
+        pharmacists: "Pharmacists",
+        nurses: "Nurses and Midwives",
       },
     },
-    closing: {
-      heading: (<>Every licence you issue, <em>backed by proof.</em></>),
-      sub: "Tell us the licensing round and the volume. We'll scope a pilot.",
+    psv: {
+      h: "Primary Source Verification",
+      cards: {
+        education: { t: "Education Verification", p: "Direct verification with universities, colleges, or boards to confirm degree, field of study and complete status." },
+        accreditation: { t: "Institute Accreditation Check", p: "Ensures the issuing institution is recognized and in good standing both domestically and internationally." },
+        license: { t: "Health License", p: "Verification with licensing authorities, medical councils, or equivalents to confirm license details." },
+        standing: { t: "Certificate Of Good Standing", p: "Verification of the practitioner's standing, including any sanctions, suspensions, or disciplinary actions." },
+        registration: { t: "Business Registration Certificate", p: "Validate company authenticity through registration, licensing and regulatory compliance checks." },
+        employment: { t: "Employment Verification", p: "Confirmation from previous or current employers regarding designation, department, employment type and dates." },
+      },
+    },
+    easy: {
+      h: "How HelloVerify Makes It Easy For Authorities",
+      cards: {
+        trust: {
+          t: "Building Trust within Healthcare",
+          p: "Empowering healthcare authorities across the world in their mission to onboard verified and competent healthcare professionals with flexible reporting mechanisms.",
+          b: ["Empowers authorities to onboard healthcare professionals", "Flexible reporting for competency assurance"],
+        },
+        regulators: {
+          t: "Delivering Trust for Health Regulators",
+          p: "Evidence backed primary source verification through official confirmations from authorized institutions. Ensures accurate and reliable results for informed decision making.",
+          b: ["Primary source verification via official institutional confirmations", "Accurate results for informed decision-making"],
+        },
+        tech: {
+          t: "Powered by Tech, Built on Trust",
+          p: "Providing a technology enabled an end-to-end screening ecosystem for Healthcare Professionals with fast & accurate verifications through our proprietary portal.",
+          b: ["End-to-end screening ecosystem for health professionals", "Fast, accurate verifications via our proprietary portal"],
+        },
+        applicant: {
+          t: "Seamless Applicant Experience",
+          p: "Assistance through our Candidate Support features across the journey to handhold you in your verification journey. Our support ensures a smooth & hassle-free experience at every step.",
+          b: ["Dedicated support provided throughout verification journey", "Smooth, hassle-free experience at every step"],
+        },
+      },
+    },
+    promise: {
+      h: "Accuracy Is Not Our Feature. It's Our Promise.",
+      intro: ["While technology is our backbone, results are our benchmark.", "We deliver a distinct competitive edge through"],
+      cards: {
+        psv: {
+          t: "Primary Source Verification",
+          p: "PSV verifies qualifications at source, ensuring accurate, tamper-proof validation that strengthens fraud detection, protects reputation, and ensures compliance.",
+          b: ["Verified at source", "Tamper-proof validation", "Fraud detection & compliance"],
+        },
+        speed: {
+          t: "Unmatched Speed & Accuracy",
+          p: "High-speed turnaround times backed by industry-leading SLAs and evidence backed reporting.",
+          b: ["Industry-leading SLAs", "High-speed turnaround", "Evidence-backed reporting"],
+        },
+        fraud: {
+          t: "Proactive Fraud Intelligence",
+          p: "We flag fake documents before they're approved — our system detected fraud in 12–14% of applications.",
+          b: ["Flags fake documents pre-approval", "Fraud detected in 12–14% of applications", "Enhances trust and reduces risk"],
+        },
+        intelligence: {
+          t: "Actionable Business Intelligence",
+          p: "Customizable, analytics-driven dashboards provide real-time tracking and management insights.",
+          b: ["Customizable dashboards", "Real-time tracking", "Analytics-driven insights"],
+        },
+        compliance: {
+          t: "Trusted Compliance",
+          p: "HelloVerify is certified under ISO/IEC 27001 & ISO/IEC 27701 and is fully GDPR compliant. Our integrated, standards-driven framework ensures strong data protection, privacy & security you can trust.",
+          b: ["ISO/IEC 27001 & 27701 certified", "Fully GDPR compliant", "Strong data privacy & security"],
+        },
+        sovereignty: {
+          t: "Data Sovereignty - Local Assurance",
+          p: "We ensure data is stored and processed locally in accordance with applicable data localisation laws and regulatory mandates.",
+          b: ["Data stored & processed locally", "Compliant with localisation laws", "Meets regulatory mandates"],
+        },
+      },
     },
   },
 
-  /** `/solutions/immigration-authorities`. */
+  /** `/solutions/immigration-authorities` — the old
+   *  `immigrationMigrationService.base.json` authorities tab, word for word,
+   *  in its order. `tabs` are the old hero's two tab labels, shared with
+   *  `/products/immigration`; `crumb` is also the parent rung on the Latvia
+   *  and Italy pages. The hidden "Transforming" band is not carried. */
   immigration: {
-    crumb: "Immigration authorities",
-    eyebrow: "Governments · Immigration authorities",
-    h1: (<>Check the document <em>where it was issued.</em></>),
-    sub: "A visa decision rests on papers from somewhere else. We verify them in the country that issued them — with the registry, the university, the employer — before the stamp.",
-    secondary: "See turnaround times",
-    strip: {
-      countries: (<><b>120+</b> countries, checked in-country</>),
-      /** A JSX leaf keeps `&amp;` EXACTLY as written — the opposite of the
-       *  string rule above, because here the entity is decoded by the same JSX
-       *  pass that decoded it in the page. Copying the original markup
-       *  verbatim is the correct move. */
-      screen: (<><b>15 min</b> identity &amp; watchlist screen</>),
-      offices: (<><b>6</b> offices across twelve hours</>),
-      certs: (<><span className="dot" /> ISO 27001 · GDPR</>),
+    crumb: "Immigration Authorities",
+    tabs: { authorities: "Solutions For Authorities", applicant: "Solutions For Applicants" },
+    h1: (<>Immigration Solutions <em>Authorities</em></>),
+    sub: "AI-Powered Verification for Faster, Safer Immigration Decisions. Enable secure, compliant applicant screening with advanced fraud detection and real-time verification.",
+    overview: {
+      h: "Overview",
+      imgAlt: "Immigration authority overview",
+      bullets: [
+        "AI powered background verification and applicant screening for immigration and government authorities.",
+        "End to end digital verification from application to final decision.",
+        "Real time verification of identity, education, employment, financial, criminal, and supporting records.",
+        "AI driven fraud detection for forged documents and high risk applicants.",
+        "Fast, standardized verification with minimal manual intervention.",
+        "Audit-ready reports with complete traceability and compliance support.",
+        "Centralized dashboards with real-time insights and operational visibility.",
+        "Secure, scalable platform for high-volume application processing",
+      ],
     },
-    verifyHead: "What does an immigration authority verify about a visa applicant?",
-    verifyLede: "An immigration authority verifies three things about a visa applicant: identity, the grounds they qualify on, and what the record says. Identity, watchlist and credit screens return in 15 minutes; education, employment and trade licences are confirmed abroad in two or three days.",
-    lanes: {
-      identity: { gt: "01 — Identity", gh: "Who is applying" },
-      grounds: { gt: "02 — Grounds", gh: "Why they qualify" },
-      admissibility: { gt: "03 — Admissibility", gh: "What the record says" },
-    },
-    pills: {
-      identity: { n: "Identity", t: "15 min" },
-      passport: { n: "Passport", t: "15 min" },
-      age: { n: "Age", t: "15 min" },
-      face: { n: "Face vs. selfie", t: "seconds" },
-      education: { n: "Education", t: "3 days" },
-      employment: { n: "Employment", t: "2 days" },
-      digitalEmployment: { n: "Digital employment", t: "60 min" },
-      entitlementToWork: { n: "Entitlement to work", t: "60 min" },
-      tradeLicence: { n: "Trade licence", t: "2 days" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      credit: { n: "Credit", t: "15 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-    },
-    stepsHead: "How are a visa applicant's documents verified in the country that issued them?",
-    stepsLede: "A visa applicant submits documents through a one-time link on any phone, with consent. HelloVerify AI runs forgery checks and returns identity and watchlist screens in minutes, then a HelloVerify team in the issuing country confirms each record with the registrar or employer holding it.",
-    steps: {
-      submit: { n: "01 · The applicant", t: "Submit", p: "A one-time link, consent, and photographs of the documents — no appointment, no courier." },
-      screen: { n: "02 · HelloVerify AI", t: "Screen", p: "Fields extracted, forgery checks run, identity and watchlist screens returned in minutes." },
-      confirm: { n: "03 · In-country", t: "Confirm", p: "Our team in the issuing country confirms with the registrar, employer or authority that holds the record." },
-      decide: { n: "04 · The authority", t: "Decide", p: "A single file per applicant — each result with its source, date and evidence attached." },
-    },
-    tableHead: "How long does visa applicant verification take?",
-    tableLede: "Visa applicant verification returns identity, passport and global database screens in 15 minutes and a criminal record in 30. Digital employment, confirmed from provident-fund records, takes 60 minutes; employment two days at the employer's HR; education three days at the university registrar.",
-    rows: {
-      identity: { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", src: "issuing registry" },
-      globalDatabase: { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", src: "global databases" },
-      criminal: { nm: "Criminal record", sub: "court & police databases", tm: "30 min", src: "court records" },
-      digitalEmployment: { nm: "Digital employment", sub: "contribution-backed work history", tm: "60 min", src: "provident fund records" },
-      employment: { nm: "Employment", sub: "role, tenure, exit remarks", tm: "2 days", src: "the employer's HR" },
-      education: { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
-    },
-    note: (link: ReactNode) => (
-      <>Times shown are from submission to result · documents verified in the country of issue — see {link}</>
-    ),
-    complianceHead: "How is cross-border applicant data handled lawfully?",
-    complianceLede: "Cross-border verification means cross-border data, so HelloVerify captures consent per applicant, documents every transfer, and bounds retention in the data processing agreement. Handling is GDPR-aligned and security management is ISO 27001 certified, independently audited. HelloVerify is also a PBSA member.",
-    faqHead: (<>From immigration<br />departments.</>),
-    faqs: {
-      noPresence: {
-        q: "How do you verify a document from a country we have no presence in?",
-        a: "Six offices and a partner network reach 120+ countries. The check is executed in the issuing country by people who know that registry's process — an Egyptian trade licence is confirmed in Cairo, not inferred from a scan.",
-      },
-      remote: {
-        q: "Can applicants submit without travelling to a centre?",
-        a: "Yes. A one-time link works on any phone — consent, capture and quality checks happen in the applicant's hand, wherever they are.",
-      },
-      file: {
-        q: "What does the authority actually receive?",
-        a: "One file per applicant: every check, its result, the source that confirmed it, the date, and the supporting evidence. It is built to be defended in an appeal, not just read.",
-      },
-      integration: {
-        q: "Does this integrate with our case management system?",
-        a: "Yes — REST API and webhooks push results into an existing case file, or officers can work from the HelloVerify console. Bulk submission handles seasonal application waves.",
+    standOut: {
+      h: "Why We Stand Out",
+      sub: "Technology powers us, but results define us. We provide a clear competitive edge through.",
+      cards: {
+        digital: { t: "Digital & Paperless Process", p: "Digitize the complete verification lifecycle from application submission and document collection to verification, reporting, and final decision making through a secure, paperless workflow." },
+        reports: { t: "Insightful and Informative Reports", p: "Our proprietary technology, AI capabilities, and deep verification expertise deliver clear, comprehensive, and audit ready reports that enable faster, more confident decision making." },
+        customized: { t: "Customized Solutions", p: "We meticulously tailor our services in precise accordance with the embassy's specific requirements from the Applicant." },
+        fraudAlerts: { t: "Clear Fraud Alerts", p: "Our continuously evolving fraud intelligence, combined with advanced document analysis and verification expertise, helps detect forged documents, discrepancies, duplicate identities, and high-risk applicants with greater accuracy." },
+        compliance: { t: "Trusted Compliance", p: "HelloVerify is certified under ISO/IEC 27001 and ISO/IEC 27701 and is fully GDPR compliant, ensuring robust information security, privacy protection, regulatory compliance, and complete audit traceability." },
+        sovereignty: { t: "Data Sovereignty - Local Assurance", p: "Support secure local data storage and processing while complying with data localization laws, regulatory mandates, and government security requirements." },
       },
     },
-    closing: {
-      heading: (<>Decide on evidence, <em>not on paperwork.</em></>),
-      sub: "Tell us the visa categories and the volume. We'll scope a pilot.",
+    partners: {
+      h: "Our Partners",
+      cta: "Partner with Us",
+      logos: {
+        latvia: "Embassy of Latvia",
+        italy: "Embassy of Italy",
+        britain: "British High Commission",
+        switzerland: "Embassy of Switzerland",
+        zambia: "Zambia Qualifications Authority",
+      },
+    },
+    advantage: {
+      h: "The HelloVerify Advantage",
+      cards: {
+        fast: { t: "Fast", tag: "3× faster than industry average", p: "HelloVerify uses artificial intelligence & machine learning capabilities to provide fastest background screening service." },
+        accurate: { t: "Accurate", tag: "99.2% verified report rate", p: "Our instant background check process helps you to eliminate fraudulent document for better decision making." },
+        compliant: { t: "Compliant", tag: "ISO 27001 + GDPR certified", p: "HelloVerify follows high level of compliance and ensures bank level security." },
+      },
+    },
+    ai: {
+      h: "AI-Powered Immigration Verification Solution, transforming the way you screen and verify applicants.",
+      sub: "The future of verification is here. Powered by AI and real-time data, HelloVerify delivers the speed, scale, and accuracy that legacy systems can't match.",
+      cols: {
+        challenges: {
+          t: "Understanding Your Challenges",
+          items: [
+            { t: "Tampered Documents", p: "Counterfeit passports and visas compromise global immigration integrity and security." },
+            { t: "Document Credibility Issues", p: "Educational and professional credentials verify qualifications, credibility, and suitability." },
+            { t: "Compliance & Regulatory Risk", p: "Ensuring hiring meets legal and industry regulations." },
+            { t: "Identity Manipulation", p: "Fraudulent company submissions compromise the credibility of organizational information." },
+          ],
+        },
+        future: {
+          t: "HelloVerify the Future of Verification",
+          items: [
+            { t: "Modern vs Legacy Systems", p: "Automates verification, reduces human error and delivers actionable insights in real time." },
+            { t: "Advanced Fraud Detection", p: "Proactively identifies bad actors, flags tampered documents and detects suspicious activity early." },
+            { t: "Audit-Ready Reporting", p: "Generates secure, audit-ready reports, ensuring compliance, transparency and accountability." },
+            { t: "Real-time Dashboards", p: "Real-time dashboards provide comprehensive visibility for efficient operational oversight." },
+          ],
+        },
+        advantages: {
+          t: "Key Advantages Over Conventional Methods",
+          items: [
+            { t: "Detects Complex & Fraudulent case", p: "10–15% of complex fraudulent cases often missed by traditional checks." },
+            { t: "Identifies inconsistencies", p: "Identifies hidden inconsistencies invisible to the naked eye." },
+            { t: "Digital verification", p: "End-to-end digital applicant verification and screening." },
+            { t: "AI-driven fraud detection", p: "Fraud detection tailored for visas, work permits, residency and labour mobility programs." },
+          ],
+        },
+      },
     },
   },
 
-  /** `/solutions/manpower-and-education-authorities`. */
+  /** `/solutions/manpower-and-education-authorities` — the old
+   *  `educationAuthorities.base.json`, word for word, in its section order.
+   *  `crumb` is also the parent rung on the MOM and MOHESR pages. The second client card
+   *  is MOHESR, as on the live site (the repo's `main` still hid it as "Client AE"). */
   manpowerEducation: {
-    crumb: "Manpower & education",
-    eyebrow: "Governments · Manpower & education",
-    h1: (<>Work passes, issued <em>on verified facts.</em></>),
-    sub: "Foreign workers arrive with credentials from everywhere. We confirm each one with the institution that issued it — the workflow already running with Singapore's Ministry of Manpower.",
-    secondary: "Read the Ministry of Manpower story",
-    strip: {
-      mom: (<><b>Ministry of Manpower</b> · Singapore</>),
-      countries: (<><b>120+</b> countries of credentials</>),
-      degree: (<><b>3 days</b> degree at the registrar</>),
-      certs: (<><span className="dot" /> ISO 27001 · GDPR · PBSA</>),
-    },
-    verifyHead: "What does a manpower ministry verify before issuing a work pass?",
-    verifyLede: "Before issuing a work pass, a ministry verifies identity, credentials and records. Identity and a global database screen take 15 minutes, a criminal record 30; employment is confirmed with the employer in two days, education or trade certification with the issuing institution in three.",
-    lanes: {
-      identity: { gt: "01 — Identity", gh: "Who arrived" },
-      credentials: { gt: "02 — Credentials", gh: "What they can do" },
-      records: { gt: "03 — Records", gh: "What's on file" },
-    },
-    pills: {
-      identity: { n: "Identity", t: "15 min" },
-      passport: { n: "Passport", t: "15 min" },
-      age: { n: "Age", t: "15 min" },
-      entitlementToWork: { n: "Entitlement to work", t: "60 min" },
-      education: { n: "Education", t: "3 days" },
-      tradeCertification: { n: "Trade certification", t: "3 days" },
-      employment: { n: "Employment", t: "2 days" },
-      digitalEmployment: { n: "Digital employment", t: "60 min" },
-      moonlighting: { n: "Moonlighting", t: "60 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-    },
-    stepsHead: "How does work-pass verification run at ministry scale?",
-    stepsLede: "Work-pass verification captures documents in the worker's origin country before travel, with consent. HelloVerify AI locates the issuing institution, the registrar, board or employer confirms in-country, and results land in the ministry's work-pass workflow with exceptions flagged for an officer.",
-    steps: {
-      submit: { n: "01 · The worker", t: "Submit", p: "Documents captured on a phone in the origin country, with consent, before travel." },
-      read: { n: "02 · HelloVerify AI", t: "Read", p: "Fields extracted, forgery checks run, the issuing institution located automatically." },
-      confirm: { n: "03 · The institution", t: "Confirm", p: "The registrar, board or employer confirms directly — in the country that holds the record." },
-      decide: { n: "04 · The ministry", t: "Decide", p: "Results land in the work-pass workflow, with exceptions flagged for an officer to judge." },
-    },
-    tableHead: "How long does work-pass credential verification take?",
-    tableLede: "Work-pass credential verification returns identity in 15 minutes, a criminal record in 30, and digital employment from provident-fund records in 60. Employment is confirmed with the employer's HR in two days; education and trade certification with the issuing institution in three.",
-    rows: {
-      identity: { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", src: "issuing registry" },
-      criminal: { nm: "Criminal record", sub: "court & police databases", tm: "30 min", src: "court records" },
-      entitlementToWork: { nm: "Entitlement to work", sub: "permit status and conditions", tm: "60 min", src: "labour records" },
-      digitalEmployment: { nm: "Digital employment", sub: "contribution-backed work history", tm: "60 min", src: "provident fund records" },
-      employment: { nm: "Employment", sub: "role, tenure, exit remarks", tm: "2 days", src: "the employer's HR" },
-      education: { nm: "Education & trade certification", sub: "qualification, year, institution", tm: "3 days", src: "the issuing institution" },
-    },
-    note: (link: ReactNode) => (
-      <>Times shown are from submission to result · credentials verified in the country of issue — see {link}</>
-    ),
-    complianceHead: "How is foreign worker data protected in a ministry workflow?",
-    complianceLede: "Worker data crosses borders before the worker does, so HelloVerify captures consent in the origin country, documents each transfer, and bounds retention. Security management is ISO 27001 certified and independently audited, handling is GDPR-aligned, and HelloVerify is a PBSA member.",
-    faqHead: (<>From manpower<br />ministries.</>),
-    faqs: {
+    crumb: "Education Authorities",
+    h1: (<>AI-Powered Education Equivalency &amp; <br /><em>Qualification Checks</em></>),
+    sub: "1 in 8 applicants misrepresent their academic credentials, creating risks that undermine organizational integrity. Our AI-driven onboarding and automated workflows support faster, more informed hiring decisions.",
+    client: {
+      h: "Our Client",
+      sub: (<>HelloVerify verifies educational qualifications for work-visa applicants including degree equivalency assessments for <strong>120+</strong> countries.</>),
       mom: {
-        q: "What exactly runs with Singapore's Ministry of Manpower?",
-        a: "Credential verification supporting work-pass decisions: foreign qualifications and employment history confirmed with the issuing institutions abroad, returned into the ministry's workflow. The case study page covers the shape of it.",
+        name: "Ministry of Manpower\n(Singapore)",
+        logoAlt: "Ministry of Manpower (Singapore)",
+        cta: "Start Your Primary Source Verification",
       },
-      beforeTravel: {
-        q: "Can workers be verified before they travel?",
-        a: "That's the design. Capture happens in the origin country on the worker's own phone, so a failed credential surfaces before a flight is booked rather than at a counter after arrival.",
-      },
-      diplomaMills: {
-        q: "How do you handle diploma mills and fake institutions?",
-        a: "An institution that cannot be located in the national register of recognised bodies is flagged as unrecognised rather than silently passed. The file distinguishes 'not verified' from 'verified as false' — they are different decisions.",
-      },
-      volume: {
-        q: "What volume can this absorb?",
-        a: "Checks run in parallel, so a seasonal intake of tens of thousands moves at the same per-file speed as a single application. Six offices twelve hours apart mean a file submitted at night in Manila is worked on before morning in Singapore.",
+      mohesr: {
+        name: "Ministry of Higher Education and Scientific Research\n(MOHESR)",
+        logoAlt: "Ministry of Higher Education and Scientific Research (MOHESR)",
+        cta: "Start Your Primary Source Verification",
       },
     },
-    closing: {
-      heading: (<>Issue the pass. <em>Keep the proof.</em></>),
-      sub: "Tell us the pass categories and intake volume. We'll scope a pilot.",
+    overview: {
+      h: "Overview",
+      p: "Trusted qualifications are the foundation of global education and workforce mobility. As students and professionals move across borders, authorities must verify whether international credentials are authentic, issued by recognised institutions, and aligned with local qualification frameworks. HelloVerify combines primary source verification, institutional intelligence, automated fraud detection, and standardized reporting into a unified workflow, enabling authorities to:",
+      imgAlt: "Education equivalency overview",
+      bullets: [
+        { t: "Enable global talent mobility", p: "by making international qualifications easier to understand, validate, and assess against local requirements." },
+        { t: "Protect the integrity of education and workforce systems", p: "by verifying institutions, programmes, degrees, and certifications while identifying forged documents and discrepancies." },
+        { t: "Make consistent, evidence-based decisions at scale", p: "with structured reports and clear audit trails that support recognition, employment, licensing, and workforce planning." },
+        { t: "Promote fairness and transparency", p: "by ensuring applicants are assessed using reliable information while authorities retain control over final recognition and eligibility decisions" },
+      ],
+      closing: "The result is a more trusted connection between education, employment, and economic development allowing countries to attract qualified talent while protecting national standards.",
+    },
+    services: {
+      h: "Our Verification Services",
+      sub: "HelloVerify ensures educational institutions are genuine and accredited through a robust validation framework.",
+      cards: {
+        qualification: {
+          t: "Qualification Verification",
+          imgAlt: "Qualification verification",
+          p: ["Verify degrees or diplomas awarded, graduation dates, transcripts and marksheets.", "Additional fees charged by universities, professional organizations, or third parties may apply."],
+          cta: "Talk to Sales",
+        },
+        accreditation: {
+          t: "Institution Accreditation",
+          imgAlt: "Institution accreditation",
+          p: ["We verify that the institution is accredited by an authorised and recognized accreditation body before conducting the education verification.", "Our accreditation check confirms that the institution is a legitimate and approved provider of degree programs, not a diploma or degree mill."],
+          cta: "Talk to Sales",
+        },
+      },
+    },
+    promise: {
+      h: "Accuracy Is Not Our Feature. It's Our Promise.",
+      sub: ["While technology is our backbone, results are our benchmark. We deliver a competitive edge through:"],
+      cards: {
+        psv: { t: "Primary Source Verification", p: "PSV verifies qualifications directly at the source, ensuring accurate, tamper-proof validation that strengthens fraud detection, protects reputation, and supports compliance." },
+        speed: { t: "Unmatched Speed & Accuracy", p: "Fast turnaround times backed by industry-leading SLAs and evidence-backed reporting." },
+        fraud: { t: "Proactive Fraud Intelligence", p: "We flag fraudulent documents before approval. Our system detects fraud in 12–14% of applications." },
+        intelligence: { t: "Actionable Business Intelligence", p: "Customizable, analytics-driven dashboards provide real-time tracking and management insights." },
+        compliance: { t: "Guaranteed Compliance", p: "HelloVerify is ISO 9001 and 27701 certified and GDPR compliant." },
+        sovereignty: { t: "Data Sovereignty - Local Assurance", p: "We ensure data is stored and processed locally in compliance with applicable data localization laws and regulatory requirements." },
+      },
     },
   },
 
-  /** `/solutions/trade-authorities`. */
+  /** `/solutions/trade-authorities` — the old `businessTradeAuthorities.base.json`,
+   *  word for word: the hero, then its three audience rows. */
   trade: {
-    crumb: "Trade & business",
-    eyebrow: "Governments · Trade & business authorities",
-    h1: (<>Licence the business. <em>Know the people.</em></>),
-    sub: "A company is a filing and a group of humans. Before a trade licence is granted or renewed, we confirm both — at the registry that holds the record, not the applicant's letterhead.",
-    secondary: "See turnaround times",
-    strip: {
-      profile: (<><b>2 days</b> to a certified entity profile</>),
-      countries: (<><b>120+</b> countries of company records</>),
-      checks: (<><b>20M+</b> checks at the primary source</>),
-      certs: (<><span className="dot" /> ISO 27001 · GDPR</>),
-    },
-    verifyHead: "What does a licensing authority verify about a business?",
-    verifyLede: "A licensing authority verifies the entity, the people behind it and the risk on record. Credit, identity and watchlist screens return in 15 minutes, a criminal record in 30; trade licence, company registration, defaulting directors and financial assessment each take two days.",
-    lanes: {
-      entity: { gt: "01 — The entity", gh: "What is filed" },
-      people: { gt: "02 — The people", gh: "Who stands behind it" },
-      risk: { gt: "03 — Risk", gh: "What the record says" },
-    },
-    pills: {
-      tradeLicence: { n: "Trade licence", t: "2 days" },
-      companyRegistration: { n: "Company registration", t: "2 days" },
-      directorsGst: { n: "Directors & GST", t: "3 days" },
-      credit: { n: "Credit", t: "15 min" },
-      identity: { n: "Identity", t: "15 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      defaultingDirectors: { n: "Defaulting directors", t: "2 days" },
-      promoterCriminal: { n: "Promoter criminal history", t: "2 days" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      financialAssessment: { n: "Financial assessment", t: "2 days" },
-      gstScreening: { n: "GST screening", t: "2 days" },
-    },
-    stepsHead: "How does a licensing authority verify a company and its directors?",
-    stepsLede: "Company documents and director identities arrive through a link or the authority's portal. HelloVerify AI parses the filings and resolves registration numbers, then licence registers, company registries, courts and credit bureaus each confirm the facts they hold. The authority receives a certified entity profile.",
-    steps: {
-      file: { n: "01 · The applicant", t: "File", p: "Company documents and director identities submitted through a link or your own portal." },
-      read: { n: "02 · HelloVerify AI", t: "Read", p: "Filings parsed, registration numbers resolved, the holding registry identified automatically." },
-      confirm: { n: "03 · The registries", t: "Confirm", p: "Licence registers, company registries, courts and credit bureaus — each fact checked where it is filed." },
-      decide: { n: "04 · The authority", t: "Decide", p: "A certified entity profile with sources, dates, and renewal reminders before anything goes stale." },
-    },
-    tableHead: "How long does business and trade licence verification take?",
-    tableLede: "Business verification returns credit and global database screens in 15 minutes and a director or promoter criminal record in 30 minutes. Two days confirm a trade licence at the licence register and a financial assessment from tax and filing records.",
+    crumb: "Business & Trade Authorities",
+    h1: (<>Business &amp; Trade <em>Authorities</em></>),
+    sub: "Empowering Business & Trade Authorities with comprehensive verification solutions that support visa compliance through accurate validation of identity, education, employment, and criminal records—helping reduce fraud and operational risk.",
+    cta: "Talk to Sales",
     rows: {
-      credit: { nm: "Credit screen", sub: "ratings, defaults, exposure", tm: "15 min", src: "credit bureaus" },
-      globalDatabase: { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", src: "global databases" },
-      criminal: { nm: "Criminal record", sub: "directors and promoters", tm: "30 min", src: "court records" },
-      tradeLicence: { nm: "Trade licence", sub: "number, status, validity", tm: "2 days", src: "the licence register" },
-      financialAssessment: { nm: "Financial assessment", sub: "filings, GST behaviour, solvency", tm: "2 days", src: "tax & filing records" },
-      directorsGst: { nm: "Directors & GST", sub: "beneficial owners, disqualifications", tm: "3 days", src: "the company registry" },
-    },
-    note: (link: ReactNode) => (
-      <>Times shown are from filing to result · company records verified in the country of registration — see {link}</>
-    ),
-    complianceHead: "Does a verification profile hold up on appeal?",
-    complianceLede: "A licensing refusal can be appealed, so every fact in a HelloVerify entity profile carries its source, its date and the artefact behind it. Security management is ISO 27001 certified and independently audited, handling is GDPR-aligned, and HelloVerify is a PBSA member.",
-    faqHead: (<>From licensing<br />authorities.</>),
-    faqs: {
-      parents: {
-        q: "Can you verify foreign parent companies?",
-        a: "Yes — a local subsidiary's foreign parent is checked in its own country of registration, through the same pipeline that covers 120+ countries. Cross-border ownership chains are shown as a chain, not a footnote.",
+      government: {
+        h: "For Government and Diplomatic Missions",
+        imgAlt: "Government and diplomatic missions",
+        points: {
+          security: { t: "Strengthen National and Cross-Border Security", p: "Authenticate the credentials of foreign workers, applicants, or business entities engaging with institutions." },
+          mobility: { t: "Promote Transparent Mobility", p: "Support the safe, compliant migration of talent into the country especially amid growing employment inflows." },
+        },
       },
-      renewals: {
-        q: "How do you handle renewals?",
-        a: "Every certified profile carries expiry dates for each underlying fact. Renewals re-run automatically before a licence, rating or director record goes stale, so enforcement isn't working from last year's picture.",
+      companies: {
+        h: "For Companies and Enterprises",
+        imgAlt: "Companies and enterprises",
+        points: {
+          integrity: { t: "Enhance Workforce Integrity", p: "Identify and eliminate the risk of fraudulent academic, professional, or identity claims among applicants." },
+          hiring: { t: "Accelerate Hiring with Confidence", p: "Our AI-driven onboarding and automated workflows enable faster, more accurate talent acquisition." },
+          compliance: { t: "Ensure Full Regulatory Compliance", p: "All verifications are aligned international due diligence standards." },
+        },
       },
-      conflicts: {
-        q: "What happens when registries disagree?",
-        a: "The profile shows both records and flags the conflict for an officer rather than picking a winner. Reconciling contradictory filings is a judgement the authority makes, not a vendor.",
+      agents: {
+        h: "For Hiring Agents and Recruitment Intermediaries",
+        imgAlt: "Hiring agents and recruitment intermediaries",
+        points: {
+          streamlined: { t: "Streamlined Verification Processes", p: "A single platform to verify credentials across multiple jurisdictions with real-time analytics and global screening coverage. Conduct real-time verifications across 80+ countries, with built-in regional compliance logic." },
+          credibility: { t: "Credibility & Trust", p: "Bolster agency reputation by placing candidates who meet verified skill, education and legal thresholds." },
+          integration: { t: "Scalable Integration", p: "API-ready infrastructure to seamlessly integrate into existing hiring or visa processing systems." },
+        },
       },
-      book: {
-        q: "Can this run across our whole licence book?",
-        a: "Yes. Batch runs process an entire register in parallel — thousands of entities in days — which is how authorities move from application-time checks to continuous oversight.",
-      },
-    },
-    closing: {
-      heading: (<>Grant the licence. <em>Keep the file.</em></>),
-      sub: "Tell us the licence categories and register size. We'll scope a pilot.",
     },
   },
-
-  /** `/solutions/manpower-and-education-authorities/ministry-of-manpower` — the case study,
-   *  the single strongest proof artefact for the government buyer (IA §4.1).
-   *  Real facts only; nothing here is a figure awaiting sign-off. */
+  /** `/solutions/manpower-and-education-authorities/ministry-of-manpower` —
+   *  the old `ministryOfManpower.base.json` overview, word for word (5 Oct
+   *  2026). `closing` is NOT this page's: `sections/AuthorityPage.tsx`
+   *  (Latvia, Italy, MOHESR) renders it, so it stays as it was; this page
+   *  closes on `support`. */
   mom: {
     crumb: "Ministry of Manpower",
-
     closing: {
       heading: (<>Your ministry, <em>next.</em></>),
       sub: "Tell us the pass categories and intake volume. We'll scope a pilot.",
     },
 
+    logo: "Ministry of Manpower (Singapore)",
     hero: {
-      k: "Case study · Singapore",
-      h1: (
-        <>
-          A ministry's standard, <em>at a ministry's scale.</em>
-        </>
-      ),
-      sub:
-        "Singapore's Ministry of Manpower decides who may work in the country. That decision " +
-        "rests on credentials issued thousands of kilometres away — which is exactly the " +
-        "problem primary-source verification exists to solve.",
+      h1: (<>Verify Your Qualifications. <em>Get Your Work Pass.</em></>),
+      sub: "HelloVerify is officially empanelled by Singapore’s Ministry of Manpower (MOM) to provide Primary Source Verification (PSV) for educational qualifications under the COMPASS framework.",
     },
-
-    strip: {
-      passes: (<><b>Work passes</b> credential verification</>),
-      countries: (<><b>120+</b> countries of qualifications</>),
-      before: (<><b>Before</b> arrival, not after</>),
-      live: (<><span className="dot" /> in production</>),
+    prices: {
+      education: { label: "Education Check", value: "SGD 99", foot: "+9% GST = SGD 108" },
+      accreditation: { label: "Accreditation", value: "SGD 30", foot: "+9% GST = SGD 33" },
+      express: { label: "Express Delivery ≤ 7 working days", value: "SGD 54", foot: "+9% GST = SGD 59" },
     },
-
-    /** The company's own position, rendered in a `<p className="q">`. It was a
-     *  `<blockquote>` attributed to an invented "Verification programme lead"
-     *  until that attribution was withdrawn; the words stayed. Copy either
-     *  way — one route, gated by nothing. */
-    quote: "The credential either exists at the institution that issued it, or it doesn't. Everything else is opinion.",
-
-    /** The three `.s` stats. `v` is RICH TEXT in all three — `120<em>+</em>`,
-     *  `3 <em>days</em>`, `Before <em>arrival</em>` — so one leaf each rather
-     *  than a number and a word, for the adjacent-text-children reason the
-     *  strips give. `l` is the caption under it. These three are sourced and
-     *  stay, which is why this page is not gated the way `CustomerStory` is. */
-    stats: {
-      countries: {
-        v: (<>120<em>+</em></>),
-        l: "countries where a qualification can be confirmed with its issuing institution",
-      },
-      days: {
-        v: (<>3 <em>days</em></>),
-        l: "typical time to a registrar-confirmed degree, anywhere in that network",
-      },
-      before: {
-        v: (<>Before <em>arrival</em></>),
-        l: "when a failed credential surfaces — not at a counter after a flight",
+    why: {
+      h: "Why Choose HelloVerify?",
+      lede: "Officially empanelled by Ministry of Manpower. Built for speed, compliance and trust.",
+      recognised: { t: "Educational Qualification Verification", p: "Officially recognized by Singapore’s Ministry of Manpower for qualification verification under the COMPASS framework across eligible work pass categories." },
+      network: { t: "Global Verification Network", p: "Operating across 120+ countries with direct access to thousands of universities and accredited institutions." },
+      security: { t: "ISO 27001 Information Security", p: "Your personal data, academic records, and passport information are protected by enterprise-grade security and privacy controls." },
+    },
+    services: {
+      h: "Our Services",
+      lede: "Everything you need for Ministry of Manpower compliant qualification verification.",
+      education: { t: "Education Verification", p: "Primary Source Verification conducted directly with issuing institutions worldwide." },
+      accreditation: { t: "Accreditation Check", p: "Confirms that the institution is recognized by relevant government and accreditation authorities." },
+      express: { t: "Express Processing", p: "≤ 7 working days turnaround. Priority queue with dedicated case handler for urgent applications." },
+      passes: {
+        t: "All Work Pass Types Supported",
+        tags: ["Employment Pass (EP)", "S Pass", "ONE Pass", "PEP", "TEP"],
       },
     },
-
-    /** Both `sec-head` blocks on this page were headings with NO lede — one of
-     *  the 21 shapes `chrome/SecHead.tsx` deliberately does not own — so the
-     *  page writes the markup itself and a `.lede` was added in Part 8 to give
-     *  the answer somewhere to live (§11a.2). Three leaves each, the same
-     *  k/h/lede the `SecHead` bands elsewhere have. */
-    problem: {
-      k: "The problem",
-      h: "Why does a work-pass decision need primary-source verification?",
-      lede:
-        "A work-pass decision rests on credentials issued thousands of kilometres away. " +
-        "Accepting one in error puts an unqualified person into a regulated job; rejecting " +
-        "one in error keeps a qualified person out and invites an appeal the ministry must " +
-        "defend with evidence.",
+    how: {
+      h: "How it works",
+      lede: "Simple 4-step process to get COMPASS-ready.",
+      start: "Start Verification",
+      sales: "Talk to Sales",
+      register: { t: "Register & Upload", p: "Create account and upload passport for identity verification." },
+      qualifications: { t: "Add Qualifications", p: "Enter education details and upload degree, transcripts, marksheets." },
+      loa: { t: "Sign LOA & Pay", p: "Digitally sign Letter of Authorization and complete payment." },
+      report: { t: "Receive Your Verification Report", p: "Get MOM-compliant verification report for work pass submission." },
     },
-
-    /** The prose block. Four `<p>`s, three `<h3>`s and one `.aside`. The aside
-     *  is the only rich-text leaf — three `<br />`s carrying a bulleted list
-     *  the markup makes out of line breaks — and it is moved as JSX so the
-     *  breaks travel with the words. */
-    prose: {
-      claims:
-        "A work-pass application arrives with a degree from one country, an employment record " +
-        "from another, and an identity document from a third. Each is a claim. Traditionally " +
-        "each is checked against a database that aggregates such claims — which verifies that " +
-        "somebody once typed it in, not that it is true.",
-      gap:
-        "For a ministry, that gap matters twice. A credential accepted in error puts an " +
-        "unqualified person into a regulated job. A credential rejected in error keeps a " +
-        "qualified person out of the country, and invites an appeal the authority must defend " +
-        "with evidence it may not have.",
-      changedH: "What changed",
-      changed:
-        "Every qualification is confirmed with the institution that issued it, by people in the " +
-        "country where that institution sits. A Philippine nursing degree is confirmed with the " +
-        "Philippine school's registrar. An Indian diploma is confirmed with the Indian board. " +
-        "The answer that comes back isn't a probability — it's a registrar saying yes or no, " +
-        "with a date attached.",
-      outcomes: (
-        <>
-          The file distinguishes three outcomes that are usually collapsed into one:
-          <br />· verified — the institution confirmed the record
-          <br />· not verified — the institution has no such record
-          <br />· unverifiable — the institution could not be reached, and by which route
-        </>
-      ),
-      thirdState:
-        "That third state is the one authorities care about most, because it is the one that " +
-        "gets silently reported as a pass by systems built to return a binary.",
-      runsH: "How it runs",
-      capture:
-        "Capture happens in the origin country, on the worker's own phone, before travel — with " +
-        "consent recorded at the point of capture. AI reads the document and locates the issuing " +
-        "institution in about a second. The confirmation request goes out through the local team, " +
-        "and results return into the ministry's work-pass workflow, where officers see the " +
-        "exceptions rather than the thousands of clean files.",
-      offices:
-        "Six offices spread across twelve hours of time zones mean a submission made at night in " +
-        "Manila is being worked before the morning shift starts in Singapore — which is how the " +
-        "turnaround stays measured in days rather than weeks at national volume.",
-      holdsH: "Why it holds up",
-      holds:
-        "Every result in the file carries its source, the date it was confirmed and the artefact " +
-        "behind it. When a refusal is appealed, the authority is not defending a score from a " +
-        "vendor's model — it is presenting a registrar's answer. That is a materially different " +
-        "conversation.",
+    docs: {
+      h: "Required Documents",
+      list: ["Valid passport (for identity verification)", "Degree certificate / diploma", "Marksheets / grade sheets", "Official transcripts", "Authorized English translation (for non-English documents)", "Letter of Authorization (generated during application)"],
+      translationNote: "For non-English documents, you must submit the original document and an English translation. The translation can be done by a translation service provider.",
+      accreditation: {
+        h: "When is Accreditation Needed?",
+        inList: { lead: "Institution in MOM's list?", rest: "Only education check needed." },
+        notInList: { lead: "Not in the list?", rest: "Both education + accreditation checks required." },
+      },
+      nonEnglish: { h: "Non-English Documents", p: "Non-English documents must be accompanied by an authorized English translation." },
     },
-
-    gets: {
-      k: "What a ministry gets",
-      h: "What does a ministry get from primary-source credential verification?",
-      lede:
-        "A ministry gets four things in the contract: each credential confirmed with its " +
-        "issuing institution, named and dated; unverifiable reported as unverifiable with " +
-        "the route tried; parallel processing and twelve hours of office coverage holding " +
-        "turnaround at intake volume; and an auditable trail per applicant.",
+    compass: {
+      k: "Compass Framework",
+      h: "Two-Stage EP Eligibility",
+      intro: "From 1 September 2023, MOM requires all Employment Pass (EP) candidates (from any country) to pass a 2-stage eligibility framework. This applies to new EP applications from 1 September 2023 and renewals from 1 September 2024.",
+      one: { t: "Stage 1", p: "Meet the qualifying salary for your sector." },
+      two: { t: "Stage 2", p: "Pass COMPASS with ≥ 40 points across salary, qualifications, diversity and support." },
+      scoring: {
+        h: "Qualification Scoring (C2)",
+        p: "From September 2023, all new EP applications must pass COMPASS with at least 40 points. Under criterion C2, all post-secondary qualifications must be verified by an empaneled vendor.",
+        top: { v: "20 pts", l: "Top-tier institution degree" },
+        recognised: { v: "10 pts", l: "Any recognized institution degree" },
+        none: { v: "0 pts", l: "No degree / unverified" },
+      },
+      links: {
+        h: "Useful MOM Links",
+        documents: "EP Documents Required",
+        selfAssessment: "Self-Assessment Tool",
+      },
     },
-
-    steps: {
-      proof: { n: "01", t: "Source proof", p: "Each credential confirmed with its issuing institution, named and dated in the file." },
-      gaps: { n: "02", t: "Honest gaps", p: "Unverifiable is reported as unverifiable, with the route tried — never quietly passed." },
-      scale: { n: "03", t: "Scale", p: "Parallel processing and twelve hours of office coverage hold turnaround at intake volume." },
-      appeal: { n: "04", t: "Appeal-ready", p: "An auditable trail per applicant, built to be defended rather than merely read." },
+    faqHead: "Frequently Asked Questions",
+    faqs: {
+      compass: {
+        q: "What is COMPASS and how does it affect my EP application?",
+        a: "COMPASS (Complementarity Assessment Framework) is a points-based framework by Singapore's Ministry of Manpower for evaluating Employment Pass applications. From 1 September 2023, all new EP applications must pass COMPASS with at least 40 points across four foundational criteria. This applies to new applications from September 2023, and renewals from September 2024. Qualification verification under criterion C2 is mandatory.",
+      },
+      twoStage: {
+        q: "What is the two-stage EP eligibility framework?",
+        a: "MOM requires EP candidates to pass two stages: Stage 1 — meet the qualifying salary for their sector. Stage 2 — pass the COMPASS framework with at least 40 points across criteria covering salary, qualifications, diversity, and local employment support. Post-secondary qualifications declared must be supported with verification proof.",
+      },
+      psv: {
+        q: "Why do I need primary source verification?",
+        a: "MOM requires that all educational qualifications (post-secondary diploma and above) declared in work pass applications be verified through an independent background screening company. Primary source verification involves directly contacting the issuing institution to confirm the authenticity of your qualification. Educational certificates certified by notary public and school letters are NOT accepted as verification proof.",
+      },
+      accreditation: {
+        q: "When is an accreditation check required?",
+        a: "If your awarding institution is found in MOM's dropdown list, only an authenticity check (education verification) is needed. If the institution is NOT in MOM's dropdown list, you must carry an authenticity check and an accreditation check to confirm the institution is recognized by the country's local government authorities.",
+      },
+      passTypes: {
+        q: "Which work pass types require verification?",
+        a: "Verification is required for Employment Pass (EP), S Pass, Training Employment Pass (TEP), ONE Pass, and Personalized Employment Pass (PEP) applications where educational qualifications are declared to MOM.",
+      },
+      duration: {
+        q: "How long does the verification process take?",
+        a: "Standard verification takes 10–15 working days depending on the institution's response time. Express service is available at SGD 54 + 9% GST (SGD 58.86), reducing turnaround to ≤ 7 working days.",
+      },
+      cost: {
+        q: "How much does verification cost?",
+        a: "Education verification costs SGD 99 + 9% GST (SGD 108) per qualification. Accreditation check is SGD 30 + 9% GST (SGD 33) per check (optional, only if institution is not in MOM's list). Express service is SGD 54 + 9% GST (SGD 58.86) per application. Some universities may charge an additional verification fee which will be converted to SGD.",
+      },
+      howMany: {
+        q: "How many qualifications can I verify in one application?",
+        a: "You can verify up to 7 educational qualifications in a single application. Each qualification is charged separately at SGD 99 + GST. Accreditation checks are optional and charged at SGD 30 + GST per check.",
+      },
+      documents: {
+        q: "What documents do I need to submit?",
+        a: "You'll need: (1) Valid passport for identity verification; (2) Degree certificate or diploma; (3) Marksheets or grade sheets; (4) Official transcripts. For non-English documents, the original document and an authorized English translation. All documents must be uploaded digitally. You'll also need the address, contact, and person details of your awarding institution.",
+      },
+      nameDiffers: {
+        q: "What if my name on the passport differs from my degree?",
+        a: "If your name on the passport differs from that on your educational documents, please upload an explanation letter and supporting documents (e.g., deed poll, marriage certificate, or name change certificate or affidavit) during the application process.",
+      },
+      universityFees: {
+        q: "Do some universities charge additional verification fees?",
+        a: "Yes, some universities charge their own verification fee. If applicable, we will inform you of the amount during the application. This fee will be converted to SGD and added to your total before payment. Externally charged change processing or transaction surcharges may apply for this fee for non-SGD settlement.",
+      },
+      payment: {
+        q: "What payment methods do you accept?",
+        a: "We accept all major credit cards (Visa, Mastercard, American Express). Payment is collected at the end of the application process after you review and digitally sign the Letter of Authorization (LOA). All prices are subject to 9% GST.",
+      },
+      invoice: {
+        q: "Will I receive a tax invoice?",
+        a: "Yes, upon payment you will receive a detailed tax invoice showing the breakdown of: education verification charges (SGD 99 + GST per qualification), accreditation charges (SGD 30 + GST if opted), university verification fees (if any), express service charges (SGD 54 + GST if opted), and total GST amount.",
+      },
+      loa: {
+        q: "What is the Letter of Authorization (LOA)?",
+        a: "The LOA is a legal document authorizing HelloVerify to contact your educational institution to verify your qualifications. It is similar to a Letter of Consent used by other employment agencies. You will digitally sign this document before proceeding with payment.",
+      },
+      employer: {
+        q: "Can my employer submit the verification on my behalf?",
+        a: "Both candidates and employers or agencies can submit verification requests. Candidates can use our self-service portal, while employers can contact our sales team for bulk verification requests and dedicated account support.",
+      },
+      report: {
+        q: "What's included in the verification report?",
+        a: "Your verification report includes a summary, identity details, authenticity status, each qualification, accreditation status for each institution (if applicable), direct confirmation from issuing institutions, and a forgery-protected, MOM-compliant report ready for work pass submission.",
+      },
+      after: {
+        q: "What happens after verification is complete?",
+        a: "Once verification is complete, you will receive a final verification report that can be submitted as part of your work pass application to MOM. The report confirms the authenticity (and accreditation, if opted) of your educational qualifications.",
+      },
+      unverifiable: {
+        q: "What if my qualification cannot be verified?",
+        a: "If an institution is unresponsive or unable to verify, we will provide a detailed report explaining the verification attempt and outcome. In some cases, alternative verification methods may be explored. We make unlimited attempts to contact the institution.",
+      },
+      empanelled: {
+        q: "Is HelloVerify an MOM-empaneled vendor?",
+        a: "Yes, HelloVerify is an empaneled background screening company recognized by Singapore's Ministry of Manpower for work pass qualification verification. MOM selects vendors based on customer support capabilities, geographical coverage, cost efficiency, and quality of verification processes.",
+      },
     },
-
-    verification: "Manpower & education verification",
-    artefacts: "Procurement & compliance artefacts",
+    support: {
+      heading: (<>Support &amp; <em>Appeal</em></>),
+      sub: "Our team is here to assist you with document preparation or questions about eligibility.",
+      cta: "Contact Now",
+    },
   },
 };

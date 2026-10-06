@@ -45,7 +45,7 @@ import { GovSealsStage } from "./GovSealsStage";
 type Act = keyof SectionsCopy["govSeals"]["acts"];
 export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string; apply: string; ctas: Act[][] }[] = [
   { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/governments/manpower-education/ministry-of-manpower", apply: "/governments/manpower-education/ministry-of-manpower", ctas: [["apply"], ["sales"]] },
-  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration/embassy-of-latvia", apply: "/individuals/immigration", ctas: [["visa"], ["sales"]] },
+  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration/embassy-of-latvia", apply: "/individuals/immigration", ctas: [["visa"], ["partner"]] },
   { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/governments/immigration/embassy-of-italy", apply: "/individuals/immigration", ctas: [["visa"], ["partner"]] },
   { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/governments/manpower-education/mohesr", apply: "/contact", ctas: [["apply"], ["sales"]] },
 ];

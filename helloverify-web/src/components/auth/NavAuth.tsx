@@ -18,12 +18,14 @@ export function NavAuth({
   account,
   userMenu,
   placement,
+  showSignUp = true,
 }: {
   locale: string;
   signUp: string;
   account: string;
   userMenu: UserMenu;
   placement: "bar" | "menu";
+  showSignUp?: boolean;
 }) {
   const { isLoggedIn, user, openLogin, logout } = useAuth();
   const name = user?.name?.trim() || account;
@@ -35,6 +37,7 @@ export function NavAuth({
   ] as const;
 
   if (!isLoggedIn) {
+    if (!showSignUp) return null;
     if (placement === "bar") {
       return (
         <button type="button" className="btn btn-line btn-sm nv-signup" onClick={() => openLogin()}>

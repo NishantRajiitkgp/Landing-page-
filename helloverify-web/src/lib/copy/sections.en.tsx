@@ -924,6 +924,24 @@ export const en = {
     },
   },
 
+  /** `sections/PremiumServices.tsx` — under Individual Checks (5 Oct 2026).
+   *  The three services are the nav's Premium menu (`chrome.nav`), word for
+   *  word, and the lede is that menu's lede. `kicker` is the label over the
+   *  cards; `who` is each card's audience, on its frosted plate. The links
+   *  live in the component. */
+  premiumServices: {
+    kicker: "One-to-one support",
+    heading: "Premium Services",
+    headingEm: "Expert help, start to finish.",
+    lede: "Dedicated one-to-one support for seamless verification and application submission.",
+    more: "Learn more",
+    items: {
+      health: { t: "Doctors, dentists & health practitioners", p: "Accurate submissions for healthcare professionals applying to authorities", who: "Healthcare professionals" },
+      immigration: { t: "Immigration documents pre-screening", p: "Personal support for an accurate, hassle-free visa pre-screening", who: "Visa applicants" },
+      consumer: { t: "Consumer service", p: "An advanced package with extra checks for greater peace of mind", who: "Families & individuals" },
+    },
+  },
+
   /** `sections/IntlGrid.tsx` — "International Background Verification"
    *  (30 Sep 2026), the old home page's `internationalGrid` block, which the
    *  v2 homepage had dropped. The country names and the five lines are the
@@ -1607,6 +1625,23 @@ export const en = {
     headingA: "Background Checks For",
     headingB: "Small & Medium Businesses",
     lede: "AI-powered screening platform designed to deliver fast, accurate, and scalable verification for startups and small & medium businesses",
+    /** The SMB client strip under the packages (5 Oct 2026), in the Large
+     *  panel's format. The figure is `/products/bgv-smb`'s "1200+ SMBs
+     *  trust HelloVerify". Each name is its logo's alt; the order is
+     *  `lib/smbClients.ts`. */
+    trust: { hA: "Trusted by 1,200+ small & medium businesses for", hB: "Background Verification" },
+    clients: {
+      akcelerator: "Akmazo Akcelerator",
+      aidenai: "Aiden AI",
+      lucid: "Lucid Technology Services",
+      midfin: "Midfin Wealth",
+      lnp: "LNP Infotech",
+      itekpeople: "iTek People Technology",
+      appxcelerate: "AppXcelerate Solutions",
+      ditstek: "DITSTEK Innovations",
+      caone: "CA-One India",
+      ibirds: "iBirds Software Services",
+    },
     mins: "60 mins",
     tot: (n: number) => `${n} checks · 60 mins`,
     /** NEW MICROCOPY (conversion pass, 24 Sep 2026), not from the old site:
@@ -1822,7 +1857,7 @@ export const en = {
         },
         ctas: {
           c1: { k: "For visa applicants", p: "Complete your document verification before submitting your Latvia study or employment visa application." },
-          c2: { k: "For employers & agencies", p: "Verify employee qualifications at scale, manage multiple cases, and get dedicated support with compliance‑ready documentation." },
+          c2: { k: "For partners", p: "Help your clients verify documents for Latvia study and employment visa applications. Build credibility and earn commission." },
         },
       },
       italy: {

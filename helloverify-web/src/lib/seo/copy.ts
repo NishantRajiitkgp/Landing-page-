@@ -90,44 +90,44 @@ export const STATIC_EN = {
       "The check library, country guides, a glossary of verification terms, and writing about how verification actually works.",
   },
   "/products/bgv-enterprise": {
-    title: "Enterprise background verification — HelloVerify",
+    title: "AI-Powered Background Screening Trusted by India’s Leading Enterprises Stop Bad Hires Before They Happen — HelloVerify",
     description:
-      "High-volume background checks with an SLA. AI reads the documents, our team confirms with the issuer, your ATS gets the answer back — from 15 minutes.",
+      "Our combination of AI-powered automation and dedicated in-house verification experts helps detect fraud while delivering a seamless experience for genuine applicants.",
   },
   "/products/bgv-smb": {
-    title: "Background check packages for small business — HelloVerify",
+    title: "Background Checks For Small & Medium Businesses — HelloVerify",
     description:
-      "Pick a package, see the price, upload documents, get answers — no sales call. Blue-collar and driver packages ready in 30 minutes.",
+      "Our AI-powered screening platform provides startups and small & medium businesses with a fast, reliable, and scalable background verification solution.",
   },
   "/employee-verification": {
-    title: "Employee verification — HelloVerify",
+    title: "All-in-One Background Verification for Every Workforce Segment — HelloVerify",
     description:
-      "Existing staff, contractors and gig workforces — verified at joining and re-verified when it matters. EPFO-backed employment history in 60 minutes.",
+      "As a global provider of background screening solutions, we help organizations of all sizes hire the right people for the right opportunities. Join us to Modernize the way you hire & scale heights.",
   },
   "/products/customer-kyc": {
-    title: "Customer KYC & trust and safety — HelloVerify",
+    title: "KYC Platform — HelloVerify",
     description:
-      "Verify customers the moment they sign up — identity in 15 minutes, screened against courts and global databases, over API or a hosted flow.",
+      "Onboard faster. Detect fraud earlier. Our comprehensive KYC solution brings every step of the digital onboarding process together creating a seamless experience that keeps fraudsters out and genuine customers moving forward.",
   },
   "/products/certifier": {
-    title: "Vendor due diligence — Certifier by HelloVerify",
+    title: "Certifier — HelloVerify",
     description:
-      "Trade licences, directors, credit and criminal records — verified at the registry before you sign a supplier. Certified vendor profiles in 2 days.",
+      "We are redefining third-party verification for B2B businesses delivering fast, reliable authentication of identities and documents that modern enterprises demand.",
   },
   "/solutions/health-authorities": {
-    title: "Verification for health authorities — HelloVerify",
+    title: "Primary Source Verification for Healthcare Workforce — HelloVerify",
     description:
-      "Medical degrees, council registrations and practice history confirmed with the issuing institution — before a clinician touches a patient.",
+      "Ensure credential accuracy and regulatory compliance by verifying doctors, nurses, and allied professionals directly from issuing authorities.",
   },
   "/solutions/immigration-authorities": {
-    title: "Verification for immigration authorities — HelloVerify",
+    title: "Immigration Solutions Authorities — HelloVerify",
     description:
-      "Applicant documents screened at the source, in the country that issued them — identity, education, employment and records, before the visa decision.",
+      "AI-Powered Verification for Faster, Safer Immigration Decisions. Enable secure, compliant applicant screening with advanced fraud detection and real-time verification.",
   },
   "/solutions/manpower-and-education-authorities": {
-    title: "Verification for manpower & education authorities — HelloVerify",
+    title: "AI-Powered Education Equivalency & Qualification Checks — HelloVerify",
     description:
-      "Foreign-worker credentials verified for work-pass decisions — the workflow running in production with Singapore's Ministry of Manpower.",
+      "1 in 8 applicants misrepresent their academic credentials, creating risks that undermine organizational integrity. Our AI-driven onboarding and automated workflows support faster, more informed hiring decisions.",
   },
   "/governments/manpower-education/mohesr": {
     title: "UAE Ministry of Higher Education & Scientific Research — HelloVerify",
@@ -145,29 +145,29 @@ export const STATIC_EN = {
       "Visa support document verification for Italian National Visa applicants in the New Delhi jurisdiction: identity, education, employment, bank and company records.",
   },
   "/solutions/manpower-and-education-authorities/ministry-of-manpower": {
-    title: "Ministry of Manpower, Singapore — HelloVerify",
+    title: "Verify Your Qualifications. Get Your Work Pass. — HelloVerify",
     description:
-      "How work-pass credential verification runs with Singapore's Ministry of Manpower: foreign qualifications confirmed with the issuing institution, before arrival.",
+      "HelloVerify is officially empanelled by Singapore’s Ministry of Manpower (MOM) to provide Primary Source Verification (PSV) for educational qualifications under the COMPASS framework.",
   },
   "/solutions/trade-authorities": {
-    title: "Verification for trade & business authorities — HelloVerify",
+    title: "Business & Trade Authorities — HelloVerify",
     description:
-      "Company registrations, trade licences and the people behind them — verified at the registry for licensing and enforcement decisions.",
+      "Empowering Business & Trade Authorities with comprehensive verification solutions that support visa compliance through accurate validation of identity, education, employment, and criminal records—helping reduce fraud and operational risk.",
   },
   "/products/hellov": {
-    title: "Make sure you and your family are safe — HelloV by HelloVerify",
+    title: "Make Sure You and Your Family Are Safe! — HelloVerify",
     description:
-      "Verification on WhatsApp by HelloVerify. Household packages from ₹499 — driver, home staff, tenant, nanny — plus single checks from ₹199.",
+      "Verification made easy on WhatsApp by HelloVerify.",
   },
   "/products/immigration": {
-    title: "Visa & immigration document screening — HelloVerify",
+    title: "Pre Screening Of Applicant — HelloVerify",
     description:
-      "Screen your own documents before an embassy does. Degrees, employment and records checked at the source, so a visa application isn't refused over a paper problem.",
+      "We Help Make Your Entire Visa Application Process Smooth, Secure, and Free from Delays",
   },
   "/individuals/home-family": {
-    title: "Home & family background checks — HelloVerify",
+    title: "Make sure you and your family are safe — HelloV by HelloVerify",
     description:
-      "Nannies, drivers, cooks, carers and tutors — identity, criminal record and address confirmed at the source in about 30 minutes, with their consent.",
+      "HelloV household packages on WhatsApp: driver ₹499, home staff ₹599, nanny and tenant ₹549. Single checks from ₹199, with consent first.",
   },
   "/ai": {
     title: "HelloVerify AI — see how our AI checks work",
@@ -175,14 +175,14 @@ export const STATIC_EN = {
       "Follow one address check step by step: our AI flags what doesn't add up, a local expert visits in person, and the evidence becomes a full report.",
   },
   "/technology": {
-    title: "Technology & APIs — HelloVerify",
+    title: "The Trust Technology Platform — HelloVerify",
     description:
-      "How HelloVerify reads a document in about a second, reaches the issuing authority, and returns a defensible result over REST and webhooks.",
+      "HelloVerify's Trust Technology Platform performs Primary Source Verification directly from authorised sources, orchestrating complex workflows across countries, institutions, and regulatory ecosystems. Powered by AI and trained on millions of verifications.",
   },
   "/international": {
-    title: "Global coverage — 120+ countries — HelloVerify",
+    title: "International Background Verification — HelloVerify",
     description:
-      "Where a document can be confirmed with the authority that issued it, how long it takes there, and the six offices that keep the queue moving.",
+      "HelloVerify provides accurate and timely international background verification across 120+ countries and territories worldwide.",
   },
   "/platform/security-compliance": {
     title: "Security & compliance — HelloVerify",
@@ -212,12 +212,12 @@ export const STATIC_EN = {
   "/about": {
     title: "About HelloVerify",
     description:
-      "We verify claims at their source — 20M+ checks since 2018, for enterprises, governments and families across 120+ countries.",
+      "Trust is becoming the world's next critical digital infrastructure. HelloVerify is building the platform through which trust will move.",
   },
   "/contact": {
-    title: "Talk to sales — HelloVerify",
+    title: "Lets Build the Business Together — HelloVerify",
     description:
-      "Tell us what you need verified, for whom, and at what volume. Enterprise, government and individual enquiries, answered by a person.",
+      "See how HelloVerify can help your business. Schedule a demo with our background screening expert",
   },
 };
 

@@ -311,6 +311,11 @@ export const LEGACY_ROUTES: readonly LegacyRoute[] = [
     to: "/governments/manpower-education/mohesr",
     why: "Part 10 — old AE alias; MOHESR is live",
   },
+  {
+    from: "/solutions/manpower-and-education-authorities/mohesr",
+    to: "/governments/manpower-education/mohesr",
+    why: "17.8 — the live Education page's MOHESR card links here",
+  },
 ];
 
 /** Legacy URLs that are indexed today and have NO correct destination yet.

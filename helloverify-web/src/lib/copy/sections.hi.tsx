@@ -717,6 +717,19 @@ export const hi: SectionsCopy = {
     },
   },
 
+  premiumServices: {
+    kicker: "एक-से-एक सहायता",
+    heading: "प्रीमियम सेवाएँ",
+    headingEm: "शुरू से अंत तक विशेषज्ञ मदद।",
+    lede: "सहज सत्यापन और आवेदन जमा करने के लिए एक-से-एक समर्पित सहायता।",
+    more: "और जानें",
+    items: {
+      health: { t: "डॉक्टर, दंत चिकित्सक और स्वास्थ्य पेशेवर", p: "प्राधिकरणों में आवेदन करने वाले स्वास्थ्य पेशेवरों के सटीक सबमिशन", who: "स्वास्थ्य पेशेवर" },
+      immigration: { t: "आप्रवासन दस्तावेज़ पूर्व-स्क्रीनिंग", p: "सटीक, सहज वीज़ा पूर्व-स्क्रीनिंग के लिए व्यक्तिगत सहायता", who: "वीज़ा आवेदक" },
+      consumer: { t: "उपभोक्ता सेवा", p: "अधिक मानसिक शांति के लिए अतिरिक्त जाँच वाला उन्नत पैकेज", who: "परिवार और व्यक्ति" },
+    },
+  },
+
   intlGrid: {
     heading: "अंतर्राष्ट्रीय पृष्ठभूमि सत्यापन",
     turnK: "सामान्य अवधि",
@@ -1233,6 +1246,19 @@ export const hi: SectionsCopy = {
     headingA: "पृष्ठभूमि जाँच",
     headingB: "लघु और मध्यम व्यवसायों के लिए",
     lede: "स्टार्टअप तथा लघु और मध्यम व्यवसायों के लिए तेज़, सटीक और स्केलेबल सत्यापन देने वाला AI-संचालित स्क्रीनिंग प्लेटफ़ॉर्म",
+    trust: { hA: "1,200+ लघु और मध्यम व्यवसायों का भरोसा —", hB: "पृष्ठभूमि सत्यापन के लिए" },
+    clients: {
+      akcelerator: "Akmazo Akcelerator",
+      aidenai: "Aiden AI",
+      lucid: "Lucid Technology Services",
+      midfin: "Midfin Wealth",
+      lnp: "LNP Infotech",
+      itekpeople: "iTek People Technology",
+      appxcelerate: "AppXcelerate Solutions",
+      ditstek: "DITSTEK Innovations",
+      caone: "CA-One India",
+      ibirds: "iBirds Software Services",
+    },
     mins: "60 मिनट",
     tot: (n: number) => `${n} जाँच · 60 मिनट`,
     best: "सर्वोत्तम मूल्य",

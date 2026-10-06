@@ -1,18 +1,22 @@
+/** Manpower & Education Authorities — the old `educationAuthorities.base.json`
+ *  on the new design, in its order: our client, overview, our verification
+ *  services, and the accuracy promise. */
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { copyFor } from "@/lib/seo/copy";
-import type { ServiceFacts } from "@/lib/seo/schema/service";
-import { VerticalPage } from "@/components/templates/VerticalPage";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { PageShell } from "@/components/chrome/PageShell";
 import { AppLink } from "@/components/chrome/AppLink";
+import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
-import { GOVERNMENTS, type Lanes, type Rows } from "@/lib/copy/governments";
+import { GOVERNMENTS } from "@/lib/copy/governments";
 import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
  *  wrong route on top of the one §8.1 already guards. */
 const PATH = "/solutions/manpower-and-education-authorities";
-
 
 export async function generateMetadata({
   params,
@@ -35,48 +39,17 @@ const SERVICE: ServiceFacts = {
   serviceType: "Credential verification",
 };
 
-/** Which lanes, which pills, in which order, and which render `.fast` —
- *  structure, and it stays; the names and the times are the dictionary's,
- *  keyed by `LaneKey<"manpowerEducation">` and `PillKey<"manpowerEducation">`.
- *  See `/solutions/health-authorities` for the full argument. */
-const LANES: Lanes<"manpowerEducation"> = [
-  {
-    k: "identity",
-    pills: [
-      { p: "identity", fast: true },
-      { p: "passport", fast: true },
-      { p: "age", fast: true },
-      { p: "entitlementToWork", fast: true },
-    ],
-  },
-  {
-    k: "credentials",
-    pills: [
-      { p: "education" },
-      { p: "tradeCertification" },
-      { p: "employment" },
-      { p: "digitalEmployment", fast: true },
-      { p: "moonlighting", fast: true },
-    ],
-  },
-  {
-    k: "records",
-    pills: [
-      { p: "criminal", fast: true },
-      { p: "globalDatabase", fast: true },
-      { p: "currentAddress", fast: true },
-    ],
-  },
-];
+/** Our Client, in the old CMS card order: logo, intrinsic size, destination. */
+const CLIENTS = [
+  ["mom", "/img/education/mom-logo.png", 152, 152, "/solutions/manpower-and-education-authorities/ministry-of-manpower"],
+  ["mohesr", "/img/education/mohesr-logo.jpg", 800, 673, "/governments/manpower-education/mohesr"],
+] as const;
+const SALES = "/contact?tab=enquiry&role=applicant&service=education-authority";
 
-const ROWS: Rows<"manpowerEducation"> = [
-  { k: "identity", fast: true },
-  { k: "criminal", fast: true },
-  { k: "entitlementToWork", fast: true },
-  { k: "digitalEmployment", fast: true },
-  { k: "employment" },
-  { k: "education" },
-];
+const SERVICE_IMAGES = {
+  qualification: { src: "/img/education/qualification-verification.jpg", w: 1200, h: 643 },
+  accreditation: { src: "/img/education/institution-accreditation.jpg", w: 1200, h: 675 },
+} as const;
 
 export default async function Page({
   params,
@@ -88,60 +61,111 @@ export default async function Page({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
-  const t = await copy(GOVERNMENTS);
-  const d = t.manpowerEducation;
+  const d = (await copy(GOVERNMENTS)).manpowerEducation;
 
   return (
-    <VerticalPage
-      service={SERVICE}
-      crumbs={[{ label: t.crumb, href: "/governments" }, { label: d.crumb }]}
-      eyebrow={d.eyebrow}
-      h1={d.h1}
-      sub={d.sub}
-      secondary={{ label: d.secondary, href: "/solutions/manpower-and-education-authorities/ministry-of-manpower" }}
-      strip={[d.strip.mom, d.strip.countries, d.strip.degree, d.strip.certs]}
-      /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
-         Each `*Head` is the question a manpower ministry types and each
-         `*Lede` a self-contained answer of 35-45 words naming work passes and
-         the ministry, rather than "Identity and records resolve within the
-         hour" — which is true and unciteable, because nothing in it says what
-         is being verified (§11a.2 rule 3). The template owns the `k` eyebrows
-         and they are untouched.
+    <PageShell crumbs={[{ label: d.crumb }]} closing={false}>
+      <JsonLd data={serviceNode(locale, SERVICE)} />
+      <div className="wrap hero3">
+        <h1 className="h1">{d.h1}</h1>
+        <p className="sub">{d.sub}</p>
+      </div>
 
-         Times and sources are the `lanes` pills and the `rows` table on this
-         page. **Entitlement to work's 60 minutes is deliberately not quoted**
-         in any of the four answers, although it is a pill and a table row
-         here: TASKS.md records that turnaround as disputed three ways between
-         `lib/content/checks.ts`, the homepage and the enterprise page, and a
-         citeable sentence is the worst place to pick a side by accident.
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.client.h}</h2>
+          <p className="lede">{d.client.sub}</p>
+        </div>
+        <ul className="body3 cli3-grid">
+          {CLIENTS.map(([k, src, w, h, href]) => {
+            const c = d.client[k];
+            return (
+              <li key={k} className="cli3">
+                <span className={`lg lg-${k}`}>
+                  <Image src={src} alt={c.logoAlt} width={w} height={h} sizes="180px" />
+                </span>
+                <h3>{c.name}</h3>
+                <AppLink href={href} className="btn btn-ink">
+                  {c.cta}
+                  <svg viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M3 8h10M9 4l4 4-4 4" />
+                  </svg>
+                </AppLink>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
 
-         Singapore's Ministry of Manpower is named only where the page already
-         names it (the strip, the `secondary` link and the FAQ) — a wrong claim
-         about a government client is worse than a bland heading. */
-      verifyHead={d.verifyHead}
-      verifyLede={d.verifyLede}
-      lanes={LANES.map((l) => ({
-        ...d.lanes[l.k],
-        pills: l.pills.map((p) => ({ ...d.pills[p.p], fast: p.fast })),
-      }))}
-      stepsHead={d.stepsHead}
-      stepsLede={d.stepsLede}
-      steps={[d.steps.submit, d.steps.read, d.steps.confirm, d.steps.decide]}
-      tableHead={d.tableHead}
-      tableLede={d.tableLede}
-      rows={ROWS.map((r) => ({ ...d.rows[r.k], fast: r.fast }))}
-      tableNote={d.note(
-        <AppLink href="/international" style={{ color: "inherit", textDecoration: "underline" }}>{t.coverageLink}</AppLink>,
-      )}
-      complianceHead={d.complianceHead}
-      complianceLede={d.complianceLede}
-      faqHead={d.faqHead}
-      faqs={[d.faqs.mom, d.faqs.beforeTravel, d.faqs.diplomaMills, d.faqs.volume]}
-      closing={{
-        heading: d.closing.heading,
-        sub: d.closing.sub,
-        img: "/img/10-ministry-hall.jpg",
-      }}
-    />
+      <div className="wrap sec3">
+        <div className="aud3">
+          <div>
+            <h2 className="h2">{d.overview.h}</h2>
+            <p className="lede">{d.overview.p}</p>
+            <ul className="pts3 plain">
+              {d.overview.bullets.map((b) => (
+                <li key={b.t}>
+                  <b>{b.t}</b> {b.p}
+                </li>
+              ))}
+            </ul>
+            <p className="lede">{d.overview.closing}</p>
+          </div>
+          <div className="fig">
+            <Image
+              src="/img/education/overview.png"
+              alt={d.overview.imgAlt}
+              width={1264}
+              height={848}
+              sizes="(max-width: 1080px) 100vw, 560px"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.services.h}</h2>
+          <p className="lede">{d.services.sub}</p>
+        </div>
+        <div className="body3 svc3">
+          {(Object.keys(SERVICE_IMAGES) as (keyof typeof SERVICE_IMAGES)[]).map((k) => {
+            const c = d.services.cards[k];
+            const img = SERVICE_IMAGES[k];
+            return (
+              <div key={k} className="c">
+                <Image src={img.src} alt={c.imgAlt} width={img.w} height={img.h} sizes="(max-width: 1080px) 100vw, 600px" />
+                <div className="tx">
+                  <h3>{c.t}</h3>
+                  {c.p.map((p) => (
+                    <p key={p}>{p}</p>
+                  ))}
+                  <AppLink href={SALES} className="btn btn-ink">{c.cta}</AppLink>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.promise.h}</h2>
+          <div>
+            {d.promise.sub.map((p) => (
+              <p key={p} className="lede">{p}</p>
+            ))}
+          </div>
+        </div>
+        <div className="body3 vals3">
+          {Object.entries(d.promise.cards).map(([k, c]) => (
+            <div key={k} className="v">
+              <h3>{c.t}</h3>
+              <p>{c.p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PageShell>
   );
 }

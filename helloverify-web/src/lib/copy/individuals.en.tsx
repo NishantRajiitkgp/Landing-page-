@@ -75,7 +75,6 @@
  *
  *  NO `as const`, per the recipe.
  */
-import type { ReactNode } from "react";
 
 export const en = {
   /** The subtree's own breadcrumb rung: the hub's, and the parent rung on all
@@ -226,297 +225,147 @@ export const en = {
     },
   },
 
-  /** `/products/hellov` — the consumer product page (Template 4).
-   *  Catalogue, prices and hero line are the live old CMS
-   *  (`hellov.base.json`), not the invented Basic / Advanced pair. */
+  /** `/products/hellov` — the old `hellov.base.json`, word for word, in its
+   *  order: hero, intro, the Packages / Single Checks tabs (the AI Travel tab
+   *  was switched off, `showAi: false`), the Advanced Package cards.
+   *  `checksInclude` is the old `common.checksInclude` label; `stepLabel`,
+   *  `banner` and `mins` were hard-coded English in the old components and
+   *  stay English in every locale, as the old page showed them. `pager` is
+   *  the old pager's aria labels. */
   hellov: {
     crumb: "HelloV",
-    closing: {
-      heading: (
-        <>
-          Verify anyone instantly <em>on WhatsApp.</em>
-        </>
-      ),
-      sub: "Verification made easy on WhatsApp by HelloVerify.",
-      ctaLabel: "Start verification",
-    },
     hero: {
-      k: "Individuals · HelloV",
-      /** Three children — a text node, a `<br />`, and an `<em>` — written on
-       *  the same lines the `<h1>` used, so the newline-plus-indent after the
-       *  `<br />` folds away exactly as it did before. The shape
-       *  `./templates.en.tsx#compliance.head` documents. Old CMS title:
-       *  "Make Sure You and Your Family Are Safe!". */
-      h1: (
-        <>
-          Make sure you and your family<br />
-          <em>are safe.</em>
-        </>
-      ),
-      sub:
-        "Verification made easy on WhatsApp by HelloVerify. From nannies and house staff to " +
-        "drivers and tenants — our verification is 100% digital, fast and accurate.",
-      cta: "Start verification",
-      plans: "See packages & prices",
+      h1: (<>Make Sure You and Your Family Are <em>Safe!</em></>),
+      sub: "Verification made easy on WhatsApp by HelloVerify.",
+      cta: "Talk to Sales",
     },
-    strip: {
-      thirtyMin: <><b>30 min</b> typical turnaround</>,
-      noApp: <><b>WhatsApp</b> — no app to install</>,
-      price: <><b>₹499</b> packages from</>,
-      consent: <><span className="dot" /> they consent first, always</>,
-    },
-    chat: {
-      k: "In one conversation",
-      h: "Can I run a background check over WhatsApp?",
-      lede:
-        "Yes. HelloV runs entirely inside WhatsApp — scan the QR with the WhatsApp camera, " +
-        "select who you want to verify, and the person being verified consents on their own " +
-        "phone. Families use it for drivers, home staff, nannies and tenants. Single checks " +
-        "start at ₹199; household packages start at ₹499.",
-    },
-    /** The four `.when3` cards, written out longhand in the page, so each is
-     *  three text-node swaps and the card keeps its three children. Subjects
-     *  and included checks are the old HelloV packages. */
-    when: {
-      driver: {
-        wt: "A driver",
-        wp: "Driving License Check and Address Check — the Driver Verification package.",
-        wm: "₹499",
+    intro: "From nannies and house staff to drivers and tenants - our verification is 100% digital, fast and accurate. Because everyone in your home deserves to be thoroughly verified.",
+    tabs: { packages: "Packages", single: "Single Checks" },
+    packages: {
+      h: "Packages",
+      sub: "Process is so easy, you can do it yourself",
+      stepLabel: "STEP",
+      steps: {
+        scan: { t: "Scan QR Code", p: "using Whatsapp Camera" },
+        select: { t: "Select", p: "who you want to verify" },
+        person: { t: "The Person being verified", p: "using Whatsapp Camera" },
       },
-      maid: {
-        wt: "Home staff or nanny",
-        wp: "Criminal Check and Identity Check, before they are alone in your home.",
-        wm: "₹549–₹599",
-      },
-      tenant: {
-        wt: "A tenant",
-        wp: "Identity Check and Address Check, before the keys and the deposit change hands.",
-        wm: "₹549",
-      },
-      online: {
-        wt: "Someone you met online",
-        wp: "Identity Check and Criminal Check — Verify Anyone or Know Your Contact.",
-        wm: "₹1099",
-      },
-    },
-    plans: {
-      k: "Packages",
-      h: "How is a HelloV background check priced?",
-      lede:
-        "HelloV is priced per person rather than by subscription. Household packages start at " +
-        "₹499. Single checks start at ₹199. Advanced packages add more checks from ₹1399. " +
-        "Every check needs the person's consent.",
-      /** The `.rc` card's invariant chrome, hoisted because every receipt
-       *  says it — one decision for a translator. The shape
-       *  `sections.packages` already uses for `package`/`buy`. */
-      card: {
-        hd: "Package",
-        perPerson: "Per person",
-        perCheck: "Per check",
-        inclGst: "incl. GST",
-        readyIn: "Ready in",
-        buy: "Buy now",
-      },
-      /** ONE FLAT TABLE for every check pill on any receipt. The page holds
-       *  which SKU includes which key; the translator sees each check once.
-       *  Names are the old CMS `checkPills` / `checks[].label` strings. */
-      checks: {
-        drivingLicense: "Driving License Check",
-        address: "Address Check",
-        criminal: "Criminal Check",
-        identity: "Identity Check",
-        voterId: "Voter Id Check",
-        aadhaar: "Aadhaar Check",
-        credit: "Credit Check",
-      },
-      packages: {
+      checksInclude: "Checks Include",
+      buy: "Buy Now",
+      items: {
         driver: {
-          tt: "Driver Verification",
-          sub:
-            "Quickly verify a driver's licence and identity to confirm authenticity and " +
-            "eligibility, helping you make safer, more confident decisions with a fast, " +
-            "secure, and easy-to-use digital check.",
-          price: "₹499",
+          t: "Driver Verification",
+          p: "Quickly verify a driver's licence and identity to confirm authenticity and eligibility, helping you make safer, more confident decisions with a fast, secure, and easy-to-use digital check.",
+          pills: ["Driving License Check", "Address Check"],
         },
         homeStaff: {
-          tt: "Home Staff",
-          sub:
-            "Verify domestic help and security staff before hiring. Build a safer environment " +
-            "for your family with trusted, digital checks you can act on quickly.",
-          price: "₹599",
+          t: "Home Staff",
+          p: "Verify domestic help and security staff before hiring. Build a safer environment for your family with trusted, digital checks you can act on quickly.",
+          pills: ["Criminal Check", "Identity Check"],
         },
         tenant: {
-          tt: "Tenant Verification",
-          sub:
-            "Before you take a decision, know who you're letting in. Verify your tenant, " +
-            "tutor, caretaker, or anyone else with identity and location clarity you can rely on.",
-          price: "₹549",
+          t: "Tenant Verification",
+          p: "Before you take a decision, know who you're letting in. Verify your tenant, tutor, caretaker, or anyone else with identity and location clarity you can rely on.",
+          pills: ["Identity Check", "Address Check"],
         },
         nanny: {
-          tt: "Nanny Verification",
-          sub:
-            "Ensure your child is in safe hands. Verify nannies and caregivers so your kids " +
-            "are protected by checks that match how much trust you're placing in someone.",
-          price: "₹549",
+          t: "Nanny Verification",
+          p: "Ensure your child is in safe hands. Verify nannies and caregivers so your kids are protected by checks that match how much trust you're placing in someone.",
+          pills: ["Criminal Check", "Identity Check"],
         },
         verifyAnyone: {
-          tt: "Verify Anyone",
-          sub:
-            "Before you take a decision, verify anyone you need to trust. Confirm identity " +
-            "and criminal background with fast, secure digital checks you can rely on.",
-          price: "₹1099",
+          t: "Verify Anyone",
+          p: "Before you take a decision, verify anyone you need to trust. Confirm identity and criminal background with fast, secure digital checks you can rely on.",
+          pills: ["Identity Check", "Criminal Check"],
         },
         cyberIdentity: {
-          tt: "Cyber Identity Verification",
-          sub:
-            "Stay protected from online fraud and impersonation. Verify cyber identity with " +
-            "fast, secure checks that help you trust digital interactions with confidence.",
-          price: "₹1099",
+          t: "Cyber Identity Verification",
+          p: "Stay protected from online fraud and impersonation. Verify cyber identity with fast, secure checks that help you trust digital interactions with confidence.",
+          pills: ["Identity Check", "Criminal Check"],
         },
         knowIdentity: {
-          tt: "Know The Identity",
-          sub:
-            "Protect yourself from online identity fraud. Validate documents and databases " +
-            "with fast, accurate checks that confirm who someone really is.",
-          price: "₹1099",
+          t: "Know The Identity",
+          p: "Protect yourself from online identity fraud. Validate documents and databases with fast, accurate checks that confirm who someone really is.",
+          pills: ["Identity Check"],
         },
         knowContact: {
-          tt: "Know Your Contact",
-          sub:
-            "Before you trust a new contact, know who you are dealing with. Verify picture, " +
-            "ID, and background with fast, reliable checks you can act on quickly.",
-          price: "₹1099",
+          t: "Know Your Contact",
+          p: "Before you trust a new contact, know who you are dealing with. Verify picture, ID, and background with fast, reliable checks you can act on quickly.",
+          pills: ["Identity Check", "Criminal Check"],
         },
       },
-      note:
-        "Prices are the live HelloV catalogue · the person being verified consents before any " +
-        "check runs",
+      promo: {
+        brand: "HelloV",
+        tagline: "Verify Anyone Instantly on WhatsApp",
+        qrAlt: "Scan to open HelloV on WhatsApp",
+        caption: "Verification made easy on WhatsApp by HelloVerify.",
+        cta: "Start Verification",
+      },
     },
     singles: {
-      k: "Single checks",
-      h: "What if I only need one check?",
-      lede:
-        "Try our single checks for individual needs. Get a verified report against your chosen " +
-        "background check — from ₹199.",
+      intro: "Try Our Single Checks for your Individual needs. Get a verified report against your chosen background check",
+      banner: "Verification in just",
+      mins: "mins",
+      buy: "Buy Now",
       cards: {
         age: {
-          tt: "Age Verification",
-          sub: "Establishes candidate's age by verifying government-issued documents containing date of birth.",
-          price: "₹199",
-          ready: "30 minutes",
+          t: "Age Verification",
+          p: "Establishes candidate's age by verifying government-issued documents containing date of birth.",
+          imgAlt: "Age verification: confirming eligibility and preventing misuse with a digital check",
         },
         employment: {
-          tt: "Digital Employment Check",
-          sub: "Verifies applicant's previous employer name, dates of joining and relieving instantly",
-          price: "₹299",
-          ready: "60 minutes",
+          t: "Digital Employment Check",
+          p: "Verifies applicant's previous employer name, dates of joining and relieving instantly",
+          imgAlt: "Digital employment check: verifying applicant date of joining and relieving",
         },
         licence: {
-          tt: "Driving License Check",
-          sub: "Verifies driver name, license number and validity of license instantly",
-          price: "₹299",
-          ready: "30 minutes",
+          t: "Driving License Check",
+          p: "Verifies driver name, license number and validity of license instantly",
+          imgAlt: "Driving licence check: detecting invalid licences before onboarding drivers",
         },
         pan: {
-          tt: "Pan Card Check",
-          sub: "Authenticate PAN card information to confirm identity and prevent fraud",
-          price: "₹299",
-          ready: "30 minutes",
+          t: "Pan Card Check",
+          p: "Authenticate PAN card information to confirm identity and prevent fraud",
+          imgAlt: "PAN card check: authenticating PAN details to confirm identity and prevent fraud",
         },
         criminal: {
-          tt: "Criminal Record Check",
-          sub: "Checks court records for any cases against the candidate",
-          price: "₹899",
-          ready: "30 minutes",
+          t: "Criminal Record Check",
+          p: "Checks court records for any cases against the candidate",
+          imgAlt: "Criminal record check: reviewing court records for cases against a candidate",
         },
         address: {
-          tt: "Digital Address Check",
-          sub: "Verifies address digitally through documents & live geo location",
-          price: "₹299",
-          ready: "30 minutes",
+          t: "Digital Address Check",
+          p: "Verifies address digitally through documents & live geo location",
+          imgAlt: "Digital location check: verifying addresses for accurate and trustworthy location details",
         },
       },
+      pager: { prev: "Previous single checks", next: "Next single checks" },
     },
     advanced: {
-      k: "Advanced packages",
-      h: "What is in an advanced HelloV package?",
-      lede:
-        "Advanced packages add more checks for the same household roles. Home staff and nanny " +
-        "are ₹1399; driver and tenant are ₹1799.",
-      badge: "Most popular",
-      packages: {
+      h: "Advanced Package",
+      buy: "Buy Now",
+      badge: "MOST POPULAR",
+      cards: {
         homeStaff: {
-          tt: "Home Staff Verification",
-          sub: "Voter Id Check, Criminal Check and Address Check.",
-          price: "₹1399",
+          t: "Home Staff Verification",
+          price: "INR ₹1399",
+          checks: ["Voter Id Check", "Criminal Check", "Address Check"],
         },
         nanny: {
-          tt: "Nanny Verification",
-          sub: "Identity Check, Criminal Check and Address Check.",
-          price: "₹1399",
+          t: "Nanny Verification",
+          price: "INR ₹1399",
+          checks: ["Identity Check", "Criminal Check", "Address Check"],
         },
         driver: {
-          tt: "Driver Verification",
-          sub: "Driving License Check, Criminal Check, Voter Id Check and Address Check.",
-          price: "₹1799",
+          t: "Driver Verification",
+          price: "INR ₹1799",
+          checks: ["Driving License Check", "Criminal Check", "Voter Id Check", "Address Check"],
         },
         tenant: {
-          tt: "Tenant Verification",
-          sub: "Credit Check, Criminal Check and Aadhaar Check.",
-          price: "₹1799",
+          t: "Tenant Verification",
+          price: "INR ₹1799",
+          checks: ["Credit Check", "Criminal Check", "Aadhaar Check"],
         },
-      },
-    },
-    rule: {
-      k: "The rule",
-      /** Read twice — `<h2>` and `HowTo` name. See `hub.howItWorks.h`. */
-      h: "Is it legal to check someone yourself?",
-      lede:
-        "Yes — with consent, which is the law rather than a HelloV policy. The person receives a " +
-        "message showing exactly what will be checked and consents on their own phone; without " +
-        "that no check runs and you aren't charged. Documents are deleted on schedule.",
-    },
-    steps: {
-      agree: {
-        n: "01",
-        t: "They agree",
-        p: "The person receives a message, sees exactly what will be checked, and consents on their own phone.",
-      },
-      check: {
-        n: "02",
-        t: "We check",
-        p: "Only the checks they agreed to, only at the authority that issued the document.",
-      },
-      deleted: {
-        n: "03",
-        t: "Then it's deleted",
-        p: "Documents are kept for a bounded period, encrypted, then removed on schedule.",
-      },
-    },
-    faqHead: <>Before you start.</>,
-    /** `<FaqSection>` renders these AND emits the matching `FAQPage` node from
-     *  the same records, which is what Google requires (BUILD-SPEC §8.2). The
-     *  ORDER is structure and stays in the page. */
-    faqs: {
-      knows: {
-        q: "Does the person know I'm checking them?",
-        a: "Yes — always. They get a message explaining what is being verified and must consent on their own phone before anything runs. A check without consent isn't something we can do, or would.",
-      },
-      refuse: {
-        q: "What if they refuse?",
-        a: "Then no check runs and you aren't charged. How you read a refusal is your judgement — plenty of people simply want to know what's being collected before they agree.",
-      },
-      search: {
-        q: "How is this different from searching their name online?",
-        a: "A search finds what someone published. We ask the authority that issued the document whether the record is real — the transport office for a licence, the courts for a criminal record. The report names that source beside every result.",
-      },
-      receive: {
-        q: "What do I actually receive?",
-        a: "A short report in plain language: what was checked, what came back, and who confirmed it. No risk scores, no opinions about the person — facts with sources.",
-      },
-      thirty: {
-        q: "Is 30 minutes realistic?",
-        a: "For licence, criminal and address checks, usually yes — those registries answer digitally. If something needs a slower route, the chat tells you before you pay.",
       },
     },
   },
@@ -563,7 +412,7 @@ export const en = {
       age: { n: "Age Verification", t: "30 min" },
       licence: { n: "Driving License Check", t: "30 min" },
       criminal: { n: "Criminal Record Check", t: "30 min" },
-      globalDatabase: { n: "Credit Check", t: "in package" },
+      globalDatabase: { n: "Credit Check", t: "₹1799" },
       currentAddress: { n: "Digital Address Check", t: "30 min" },
       previousEmployment: { n: "Digital Employment Check", t: "60 min" },
     },
@@ -639,119 +488,156 @@ export const en = {
     },
   },
 
-  /** `/products/immigration` — the second `VerticalPage` client. */
+  /** `/products/immigration` - the old `immigrationMigrationService.base.json`
+   *  applicant tab, word for word, in its order. The guide's extras - the FAQ
+   *  categories past "process", the per-embassy How to Apply accordions, the
+   *  Latvia Premium Service packages, the second-level labels - are the old
+   *  SPA's `immigrationApplicantGuideExtras.ts`, which that page merged into the
+   *  CMS guide; its UI lines are the old `i18n/<locale>.json`. The Latvia link
+   *  labels were the English ones in every locale. The CMS embassy names are the
+   *  fallback list the old page showed until the visa back office answered;
+   *  cities and visa types only ever came from that back office. Document
+   *  checklists differ in length per locale, so they are `lib/immigration/checklists`. */
   immigration: {
-    crumb: "Visa & immigration",
-    eyebrow: "Individuals · Visa & immigration screening",
-    h1: <>Find the problem <em>before the embassy does.</em></>,
-    sub: "A visa refusal over an unverifiable degree costs the fee, the wait and sometimes the job offer. Screen your own documents first, at the same sources an authority would use.",
-    primary: "Screen my documents",
-    secondary: "See what gets checked",
-    strip: {
-      countries: <><b>120+</b> countries of documents</>,
-      sources: <><b>Same</b> sources an authority uses</>,
-      degree: <><b>3 days</b> for a registrar-confirmed degree</>,
-      yours: <><span className="dot" /> your documents, your report</>,
-    },
-    verifyHead: "Which documents should I check before a visa application?",
-    verifyLede:
-      "HelloVerify's visa screening covers the documents an embassy questions: passport and " +
-      "identity, your criminal and global-database record, and above all the degree and " +
-      "employment claims you are relying on. Identity and passport confirm in 15 minutes; a " +
-      "registrar-confirmed degree takes three days.",
-    lanes: {
-      documents: { gt: "01 — Identity", gh: "Your documents" },
-      claims: { gt: "02 — Your claims", gh: "What you're relying on" },
-      record: { gt: "03 — Your record", gh: "What they'll find" },
-    },
-    pills: {
-      identity: { n: "Identity", t: "15 min" },
-      passport: { n: "Passport", t: "15 min" },
-      age: { n: "Age", t: "15 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-      education: { n: "Education", t: "3 days" },
-      employment: { n: "Employment", t: "2 days" },
-      digitalEmployment: { n: "Digital employment", t: "60 min" },
-      entitlementToWork: { n: "Entitlement to work", t: "60 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      credit: { n: "Credit", t: "15 min" },
-    },
-    stepsHead: "How do I check my own documents before applying for a visa?",
-    stepsLede:
-      "Upload your own documents to HelloVerify by photographing them on your phone — no " +
-      "appointment, no agent, no courier. Each is confirmed with the institution that issued it, " +
-      "in the country it came from, and the report says which claims will fail before you file.",
+    crumb: "Immigration Authorities",
+    h1: (<>Pre Screening Of <em>Applicant</em></>),
+    sub: "We Help Make Your Entire Visa Application Process Smooth, Secure, and Free from Delays",
     steps: {
-      upload: {
-        n: "01 · You",
-        t: "Upload",
-        p: "Photograph your documents on your phone. No appointment, no agent, no courier.",
-      },
-      check: {
-        n: "02 · HelloVerify",
-        t: "Check",
-        p: "Each document confirmed with the institution that issued it, in the country it came from.",
-      },
-      fix: {
-        n: "03 · Your report",
-        t: "Fix",
-        p: "You see which claims confirm cleanly and which won't — with the reason, before you file.",
+      h: "Get Started in 3 Simple Steps",
+      items: {
+        upload: { t: "Easy upload", p: "Applicants can digitally upload & update the information required for background verification in just a few minutes. We will take care of the rest." },
+        reminders: { t: "Smart Reminders", p: "Timely reminders via email and message will be shared with the applicants to remind them to update and submit any pending documents." },
+        dashboard: { t: "Real time dashboard", p: "Applicant can check the status of their visa screening process on the dashboard in real time anywhere, anytime." },
       },
     },
-    tableHead: "How long does visa document screening take?",
-    tableLede:
-      "HelloVerify measures visa screening from upload to result: identity, passport and a " +
-      "global database screen in 15 minutes, a criminal record in 30, and digital employment in " +
-      "60 minutes from provident-fund records. Education is the slow one at three days, " +
-      "employment at two.",
-    rows: {
-      identity: { nm: "Identity & passport", sub: "name, DOB, number, validity", tm: "15 min", src: "issuing registry" },
-      globalDatabase: { nm: "Global database screen", sub: "sanctions, watchlists, adverse media", tm: "15 min", src: "global databases" },
-      criminal: { nm: "Criminal record", sub: "court & police databases", tm: "30 min", src: "court records" },
-      digitalEmployment: { nm: "Digital employment", sub: "contribution-backed work history", tm: "60 min", src: "provident fund records" },
-      employment: { nm: "Employment", sub: "role, tenure, exit remarks", tm: "2 days", src: "the employer's HR" },
-      education: { nm: "Education", sub: "degree, year, institution", tm: "3 days", src: "the university registrar" },
-    },
-    /** The one FUNCTION leaf in this namespace, and the shape `./index`
-     *  describes for a sentence that wraps something the COMPONENT owns: the
-     *  `<AppLink>` carries an href and an inline style, both routing and
-     *  presentation. Written on ONE line on purpose — the text child ends in
-     *  a space before the node, and a line break there would fold into a
-     *  separate `{" "}` child, putting two adjacent text children where one
-     *  sits today and a `<!-- -->` between them. */
-    tableNote: (coverage: ReactNode) => (
-      <>Times shown are from upload to result · documents verified in the country of issue — see {coverage}</>
-    ),
-    globalCoverage: "global coverage",
-    complianceHead: "Who sees my screening report?",
-    complianceLede:
-      "Only you. A HelloVerify screening report is not shared with an embassy, an employer or an " +
-      "agent unless you send it yourself. The documents you upload are held under retention " +
-      "limits, and the same evidence often satisfies a new employer's background check later.",
-    faqHead: <>From applicants.</>,
-    faqs: {
-      accept: {
-        q: "Will an embassy accept your report?",
-        a: "Treat it as preparation, not a substitute. Authorities run their own verification — the point of screening first is to discover a problem while you can still correct it, rather than after a refusal.",
-      },
-      closed: {
-        q: "My university has closed. Now what?",
-        a: "Closed institutions usually transfer records to a successor body or a state authority, and we check there. If no record survives anywhere, the report says unverifiable rather than failed — a distinction that matters when you explain it to a consulate.",
-      },
-      abroad: {
-        q: "Can you check documents from a country I've left?",
-        a: "Yes — that's the normal case. The check runs in the country that issued the document, through our own offices and partner network across 120+ countries.",
-      },
-      employer: {
-        q: "Does this help with the employer's checks too?",
-        a: "Often, yes. The same evidence that satisfies a consulate usually satisfies a new employer's background check, and you already know what it will say.",
+    partners: {
+      h: "Our Partners",
+      cta: "Start your Visa Screening",
+      logos: {
+        latvia: "Embassy of Latvia",
+        italy: "Embassy of Italy",
+        britain: "British High Commission",
+        switzerland: "Embassy of Switzerland",
+        zambia: "Zambia Qualifications Authority",
       },
     },
-    closing: {
-      heading: <>Fix the paperwork <em>while you still can.</em></>,
-      sub: "Screen your documents before the application fee is spent.",
-      ctaLabel: "Screen my documents",
+    guide: {
+      h: "Information Guide",
+      sub: "For your Visa Application.",
+      tabs: { how: "How to Apply", docs: "Documents Required", faq: "FAQs" },
+      fields: { applyingTo: "Applying To *", applyingFrom: "Applying From", visaType: "Visa Type", category: "Application Category" },
+      placeholders: { embassy: "Select Embassy", country: "Select Country", visaType: "Select Type", visaChild: "Select a Visa Type Child" },
+      cta: "Start Visa Screen",
+      how: { t: "User Guide", p: "Please select from below drop-down menu to get Step-by-Step user guide." },
+      docs: { t: "Check below mentioned required document to process VISA Screening.", p: "Please select from below drop-down menu to know the documents required." },
+      destinations: {
+        latvia: { name: "Embassy of Latvia" },
+        italy: { name: "Embassy of Italy" },
+        canada: { name: "High Commission Of Canada" },
+        britain: { name: "British High Commission" },
+        switzerland: { name: "Embassy of Switzerland" },
+        zambia: { name: "Zambia Qualifications Authority" },
+      },
+      loading: "Loading…",
+      errors: { embassies: "Failed to load embassies", countries: "Failed to load countries", visas: "Failed to load visa types" },
+      docsHeading: "Document Required:",
+      linksIntro: "Please refer to the following links for more details:",
+      accordions: {
+        italy: {
+          who: { t: "Who can apply for Italy visa screening?", p: "Applicants from India North Jurisdiction willing to prove their reliability applying for an Italian National Visa (Work, Study, Family Reunion, etc.) are recommended to undertake visa support document verification with service provider HelloVerify to increase credibility and ease Visa processing. Residents of New Delhi, Haryana, Himachal Pradesh, Jammu & Kashmir, Punjab, Rajasthan, Uttar Pradesh, Uttarakhand and Chandigarh fall within the jurisdiction of Embassy of Italy in New Delhi." },
+        },
+        latvia: {
+          who: { t: "Who can apply for Latvia visa screening?", p: "The Embassy has partnered with HelloVerify India Private Limited for background screening of applicants from India and Sri Lanka who are applying for Higher Studies or Work purposes (India, Sri Lanka, Nepal, Bangladesh)." },
+          dependents: { t: "Does applicant need to submit application to HelloVerify for dependents (children, spouse, parents)?", p: "Please reach out directly to the Embassy for clarification on Dependent Application. HelloVerify only processes the application applied under “Student Visa” and/or “D-Work Visa”." },
+        },
+      },
+      latviaLinks: { indian: "Indian Nationals", srilankan: "Sri Lankan Nationals", nepalese: "Nepalese Nationals", bangladeshi: "Bangladeshi Nationals" },
+      premium: {
+        h: "Premium Service",
+        cta: "Select Your Services",
+        disclaimer: "Disclaimer - The verification process is conducted strictly based on the documents submitted. Insufficiency Premium services are limited to assistance with application filing and do not influence the outcome of the visa decision.",
+        clearance: {
+          t: "Insufficiency Clearance",
+          sub: "(Post application Filling Help)",
+          price: "21 €",
+          features: ["Helping with Each insufficiency raised", "Priority Support (Call & WhatsApp Support) on Insufficiency", "Document check assistance", "Hassel free Case update (Call & WhatsApp Support)"],
+        },
+        premium: {
+          t: "Premium",
+          sub: "(Application Filling)",
+          price: "42 €",
+          disclaimer: "Disclaimer - The verification process is conducted strictly based on the documents submitted. Premium services are limited to assistance with application filing and do not influence the outcome of the visa decision.",
+          features: ["Step-by-step guidance", "Form filling assistance", "Form Document Checklist", "1 Premium Support – 1 Application", "30 Min Premium Support/session", "Video Call", "Max 2 sessions"],
+        },
+      },
+      faqNav: {
+        process: "Process",
+        documents: "Documents",
+        download: "Download Receipt",
+        status: "Status of Application",
+        payment: "Payment",
+        terms: "Terms & Conditions",
+      },
+      faqs: {
+        process: [
+          { q: "Kindly educate me about the process done by HelloVerify?", a: "HelloVerify is an empanelled partner with various embassies for visa screening purposes. The candidate needs to submit and upload all information as per the process. Visa background verification will commence after submission of documents and payment by the candidate. We provide the final status of the visa application to the embassy only." },
+          { q: "How do I submit my information and documents to HelloVerify?", a: "You may submit your information and documents through the online portal https://visa.HelloVerify.com and click on “How to apply” to know the steps further." },
+          { q: "Why do I need to submit my documents to HelloVerify?", a: "The embassy has partnered with HelloVerify to screen the authenticity of all documents presented by the candidate for the visa screening process. Please refer to the link: https://www.mfa.gov.lv/en/newdelhi/consular-section/applying-for-a-long-stay-visa/students" },
+          { q: "Is it mandatory to do the visa screening at HelloVerify before applying for visa services at VFS?", a: "Yes, it is mandatory to apply first at HelloVerify and then at VFS. HelloVerify has empanelled with embassies to conduct the document screening before applying for a visa." },
+          { q: "Candidate has already submitted the documents at HelloVerify, does he/she still need to re-submit the same at VFS?", a: "Yes, it is mandatory to apply first at HelloVerify and then at VFS. HelloVerify has empanelled with embassies to conduct the document screening before applying for a visa." },
+          { q: "I have already taken attestation Human Resource Development(HRD)and Sub Divisional Magistrate(SDM) apostle on my educational documents and on police clearance certificate still I have to follow the above process? is it compulsory?", a: "Yes, HelloVerify screening process is still mandatory for applying for a visa application." },
+          { q: "Should I attest my documents from the embassy in my country or from any other authority?", a: "You do not require document attestation for background screening from the embassy. Ensure that document scans are clear, legible and complete, to assure timely processing of your application. Please note that the documents submitted to HelloVerify should be the same as submitted to VFS." },
+          { q: "I am Unable to schedule an appointment after making the payment?", a: "Once the payment has been successfully made, the “Thank You” page contains a link which directs you to the VFS Global website to schedule an appointment. Alternatively, an email will be shared to your registered email ID, with a link to schedule an appointment with VFS." },
+          { q: "How to clear your insufficiency?", a: "Once you have logged in with your credentials (registered email ID & password), please follow the steps below to clear the insufficiency:", b: ["Click on Clear Insufficiency.", "Click on Browse to upload the required documents / information.", "Click on Submit to clear the insufficiency."] },
+          { q: "I am facing appointment related issues with VFS Global services?", a: "For VFS appointment scheduling problems, please use the reschedule or contact links on the Thank You confirmation page after payment, check the email sent to your registered address, or contact VFS Global support through their official channels. HelloVerify completes document screening separately from VFS scheduling." },
+        ],
+        documents: [
+          { q: "What information and documents are required to be submitted?", a: "The documents which you need to submit depend on your application category and location. Please follow the Embassy guidance and the portal instructions for your case." },
+          { q: "What document to be submitted if the candidate has blocked funds in Fund Transfer Scheme with University?", a: "You can submit the FTS agreement in place of ITR and upload it on the portal." },
+          { q: "What needs to be submitted for ITR document if in-case your Legal Guardian's/Sponsor's is a Farmer or a Government employee?", a: "If the sponsor is a Government employee: provide ID proof and an income letter from the department. If the sponsor is a farmer: provide proof of occupation (Ration Card/ID)." },
+          { q: "What if I’m a Minor, what documents should I submit?", a: "Provide one ID proof (PAN / Driving License / Voter ID). If you do not have any, apply for PAN and share the PAN application acknowledgement number." },
+          { q: "I’m self-sponsored, I do not have the ITR.", a: "ITR is generally mandatory. It may be exempted for certain cases (Government employee, farmer, non-resident sponsor, or FTS agreement)." },
+        ],
+        download: [
+          { q: "What is HelloVerify Receipt?", a: "After successful submission of the application on the HelloVerify Visa portal, a transaction receipt will be generated and shared to the registered email ID. The receipt can also be downloaded from the portal." },
+          { q: "Why is HelloVerify Receipt important?", a: "It contains payment confirmation and the transaction number as proof of payment made to HelloVerify for the visa application." },
+          { q: "How do I download my payment receipt?", a: "Visit https://visa.HelloVerify.com → Visa Screening → login with your email & password → Download your payment receipt." },
+        ],
+        status: [
+          { q: "How can I check the status of my application?", a: "Visit https://visa.HelloVerify.com → Candidate Login → enter your credentials → status is visible on the dashboard." },
+          { q: "What is the turnaround time for the applications submitted to HelloVerify?", a: "HelloVerify typically takes 14 business days; this may extend as results are gathered from multiple resources. Excludes weekends and public holidays." },
+        ],
+        payment: [
+          { q: "My payment got deducted, but no confirmation received from your end?", a: "You will receive a receipt on your email ID once payment completes. You can also download the receipt from https://visa.helloverify.com." },
+          { q: "I would like to know what are the charges for background checks and for the whole process?", a: "Charges differ depending on the visa check services opted at a particular geographical location." },
+          { q: "Why should I pay to HelloVerify or is it mandatory to pay to HelloVerify?", a: "If the background screening process is mandated by the authorities, payment is mandatory to process the application." },
+          { q: "If you face any difficulties while filling the application form online?", a: "Check your internet connectivity and retry. You can email visascreening@helloverify.com with a screenshot of the error message." },
+        ],
+        terms: [
+          { q: "What are the Terms & Conditions intended for?", a: "This agreement sets the rules and guidelines users must agree to and grants permission to HelloVerify to conduct the visa screening process." },
+          { q: "The documents were uploaded at HelloVerify online portal however VFS is unaware of the update on HelloVerify services", a: "HelloVerify is empanelled as per Embassy guidance; please refer to: https://www.mfa.gov.lv/en/newdelhi/consular-section/applying-for-a-long-stay-visa/students" },
+          { q: "How can I be sure that my documents and data is secured with HelloVerify?", a: "HelloVerify follows privacy and security standards and aims to comply with applicable data privacy laws (including IT Act 2000 and GDPR where applicable)." },
+        ],
+      },
+    },
+    easy: {
+      h: "How HelloVerify makes it easy for Applicants?",
+      cards: {
+        trust: { t: "Visa Screening You Can Trust", p: "Centralised verification. Automated tasks. Actionable insights. Faster, smarter, data-driven decisions — for every authority, mission, and organisation that demands the best." },
+        onboarding: { t: "Digital Onboarding", p: "HelloVerify offers a Digital Onboarding platform, enabling seamless one-click document intake, eliminating the need for manual work." },
+        queues: { t: "No more waiting in long queues!", p: "Easily upload your documents digitally at your convenience. No more physical visits required to submit the documents." },
+        reminders: { t: "Get Smart Reminders", p: "Timely reminders via email and message will be shared with the applicants to remind them to update and submit any pending documents." },
+        dashboards: { t: "Real Time Dashboards", p: "Applicants can check the status of their visa screening process on the dashboard in real time anywhere, anytime." },
+        secure: { t: "Secure and Compliant", p: "Stay informed at every stage of your verification journey with Secure, Compliant and Real-Time Updates." },
+      },
+    },
+    testimonials: {
+      h: "What Customer Say About Us",
+      cards: {
+        rohit: { name: "Rohit Sharma", quote: "Hiring staff usded to be risky, but HelloVerify made it simple and reliable. We now onboard with complete confidence.,," },
+        anjali: { name: "Anjali Mehta", quote: "Fast, accurate, and seamless verification. HelloVerify helped us scale hiring without delays.,," },
+        neha: { name: "Neha Verma", quote: "Finding trustworthy help is crucial With HelloVerify, I feel safe and assured every time I hire.,," },
+      },
     },
   },
 };

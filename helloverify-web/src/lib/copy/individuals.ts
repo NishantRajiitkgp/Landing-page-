@@ -14,7 +14,7 @@
  *  rather than the destination. Keying by href would have collapsed them.
  *
  *  NO UNION FOR THE VERTICAL PAGES' TABLES. `homeFamily.pills`,
- *  `immigration.pills`, the `lanes`, `rows`, `steps` and `faqs` records are
+ *  `immigration.destinations`, the `lanes`, `rows`, `steps` and `faqs` records are
  *  all read by a page that writes its `lanes={[…]}` / `rows={[…]}` array out
  *  longhand, so the ORDER is structure and every lookup is a literal property
  *  access that `tsc` already checks. A union would gate a component-side array

@@ -1,6 +1,7 @@
 import { SiteNav } from "@/components/chrome/SiteNav";
 import { Hero } from "@/components/sections/Hero";
 import { PeopleStrip } from "@/components/sections/PeopleStrip";
+import { PremiumServices } from "@/components/sections/PremiumServices";
 import { OneInEight } from "@/components/sections/OneInEight";
 import { HowWeKnow } from "@/components/sections/HowWeKnow";
 import { Presence } from "@/components/sections/Presence";
@@ -51,7 +52,7 @@ export default async function Home({
 
   return (
     <div className="page hv-home">
-      <SiteNav />
+      <SiteNav showSignUp={false} />
       {/* The homepage does not use PageShell, so it carries its own <main>.
           Without it this is the one page of 56 with no main landmark, and the
           site-wide skip link has nothing to skip to (WCAG 2.4.1, 1.3.1). */}
@@ -63,14 +64,15 @@ export default async function Home({
         {/* 1–10: the order set on 30 Sep 2026. */}
         <Hero />
         <GovWhy />
-        <GovSeals />
         <GovDossiers />
+        <GovSeals />
         <Smb />
         <Consumer />
         <Packages />
         {/* Individual Checks, then the old home page's country grid,
             restored (30 Sep 2026). */}
         <PeopleStrip />
+        <PremiumServices />
         <IntlGrid />
         <Diligence />
         <Presence />

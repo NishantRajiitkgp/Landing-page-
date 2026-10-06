@@ -8,10 +8,9 @@
  *  THE KEY UNIONS below gate the COMPONENT's structure, which is the half a
  *  dictionary cannot check on its own. Each one is exported because a page
  *  declares an ordered array against it: `/business` its five cards, and
- *  `/products/bgv-enterprise` its lanes, its pills and its table rows. Add a
- *  destination, a pill or a row without a label and it is TS2322 at that
- *  array, in every locale at once — the point argued in `./index`'s "Where
- *  the keys come from".
+ *  `/products/bgv-enterprise` its lanes and its pills. Add a destination or a
+ *  pill without a label and it is TS2322 at that array, in every locale at
+ *  once — the point argued in `./index`'s "Where the keys come from".
  *
  *  `BusinessCopy["enterprise"]` rather than a re-export of the whole subtree:
  *  the unions are what the pages need and the objects are reached through
@@ -33,18 +32,7 @@ export const BUSINESS: Dictionary<BusinessCopy> = { en, hi, ar };
  *  needs anyway, and it is also the rendered `key=`. */
 export type PathHref = keyof BusinessCopy["hub"]["paths"];
 
-/** `/products/bgv-enterprise`'s three `.lanes3` groups, the 17 pills they draw
- *  from, and the six `.tbl3` rows. Three unions rather than one because the
- *  three tables are keyed independently — a pill appears in exactly one lane
- *  today, and nothing should make that a rule. */
-export type LaneKey = keyof BusinessCopy["enterprise"]["lanes"];
-export type PillKey = keyof BusinessCopy["enterprise"]["pills"];
-export type RowKey = keyof BusinessCopy["enterprise"]["rows"];
-
-/** A `/products/bgv-smb` rack card, and a check one of them may list. The
- *  package's CONTENTS are the page's — they set the price and the rendered
- *  check count — while the names are the dictionary's, keyed separately
- *  because three of the eleven rendered lines are the same check in two
- *  packages. */
-export type SmbPackKey = keyof BusinessCopy["smb"]["packs"];
-export type SmbCheckKey = keyof BusinessCopy["smb"]["checks"];
+/** A `/products/bgv-smb` package card, and a row of its Select Your Checks
+ *  table. The amounts and API check codes are the page's; names are copy. */
+export type SmbPackKey = keyof BusinessCopy["smb"]["packages"]["items"];
+export type SmbRowKey = keyof BusinessCopy["smb"]["table"]["rows"];

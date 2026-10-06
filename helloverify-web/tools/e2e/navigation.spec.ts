@@ -68,7 +68,7 @@ test.describe("navigation", () => {
     await page.evaluate(() => history.replaceState({}, "", "/en"));
 
     await page.locator("nav[aria-label='Primary'] > a", { hasText: "Technology" }).click();
-    await expect(page).toHaveURL(/\/en\/platform\/technology$/);
+    await expect(page).toHaveURL(/\/en\/technology$/);
     await expect(page.locator("h1")).toBeVisible();
 
     // THIS ASSERTS THE ABSENCE OF CLIENT-SIDE ROUTING, deliberately, and the
@@ -99,7 +99,7 @@ test.describe("navigation", () => {
     test.skip(testInfo.project.name !== "desktop", "the .links nav is the desktop tree");
 
     await page.goto("/en");
-    await page.locator("nav[aria-label='Primary'] > a", { hasText: "About us" }).click();
+    await page.locator("nav[aria-label='Primary'] > a", { hasText: "About Us" }).click();
     await expect(page).toHaveURL(/\/en\/about$/);
 
     await page.goBack();
@@ -140,7 +140,7 @@ test.describe("navigation", () => {
     // A closed panel is `visibility: hidden`, so its links are out of the tab
     // order: Tab from the trigger lands on the next trigger, not inside.
     await page.keyboard.press("Tab");
-    await expect(page.locator("nav[aria-label='Primary'] button", { hasText: "Premium services" })).toBeFocused();
+    await expect(page.locator("nav[aria-label='Primary'] button", { hasText: "Premium Services" })).toBeFocused();
   });
 
   test("a desktop dropdown's links go where they say", async ({ page }, testInfo) => {
@@ -148,8 +148,8 @@ test.describe("navigation", () => {
 
     await page.goto("/en");
     await page.locator("nav[aria-label='Primary'] button", { hasText: "Solutions" }).hover();
-    await page.locator("nav[aria-label='Primary'] a", { hasText: "Know your customer (KYC)" }).click();
-    await expect(page).toHaveURL(/\/en\/business\/customer-kyc$/);
+    await page.locator("nav[aria-label='Primary'] a", { hasText: "Know Your Customer (KYC)" }).click();
+    await expect(page).toHaveURL(/\/en\/products\/customer-kyc$/);
     await expect(page.locator("h1")).toBeVisible();
   });
 
@@ -196,8 +196,8 @@ test.describe("navigation", () => {
     // so the visitor's path is open the group, then pick the link.
     const menu = page.locator("nav[aria-label='Primary, mobile']");
     await menu.locator("summary", { hasText: "Solutions" }).click();
-    await menu.locator("a", { hasText: "Health authorities" }).click();
-    await expect(page).toHaveURL(/\/en\/governments\/health$/);
+    await menu.locator("a", { hasText: "Health Authorities" }).click();
+    await expect(page).toHaveURL(/\/en\/solutions\/health-authorities$/);
     await expect(page.locator("h1")).toBeVisible();
   });
 

@@ -14,8 +14,10 @@ export function isInternalHref(href: string): boolean {
 
 /** "/about" + "en" -> "/en/about". The root is special-cased so "/" becomes
  *  "/en" rather than "/en/", which would then 308 to "/en" (BUILD-SPEC §6.1
- *  forbids the trailing slash and the pointless hop). */
+ *  forbids the trailing slash and the pointless hop) — and so does the root
+ *  with a fragment or query: "/#consumer-services" -> "/en#consumer-services". */
 export function localise(href: string, locale: string): string {
   if (!isInternalHref(href)) return href;
-  return href === "/" ? `/${locale}` : `/${locale}${href}`;
+  if (href === "/" || href.startsWith("/#") || href.startsWith("/?")) return `/${locale}${href.slice(1)}`;
+  return `/${locale}${href}`;
 }

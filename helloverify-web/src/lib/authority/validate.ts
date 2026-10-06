@@ -1,4 +1,5 @@
-/** Field rules from the old `saudiAuthValidation` (email / 10-digit phone / 6-digit OTP). */
+/** Field rules from the old `saudiAuthValidation` (email / 10-digit phone / 6-digit OTP).
+ *  MOM's live dialog accepts 7–15 digits; MOHESR and the site login stay at 10. */
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE = /^\d{10}$/;
@@ -8,8 +9,12 @@ export function normalizeEmail(value: string): string {
   return value.trim();
 }
 
-export function normalizePhoneDigits(value: string): string {
-  return value.replace(/\D/g, "").slice(0, 10);
+export function normalizePhoneDigits(value: string, max = 10): string {
+  return value.replace(/\D/g, "").slice(0, max);
+}
+
+export function isValidPhoneSpan(value: string, min: number, max: number): boolean {
+  return new RegExp(`^\\d{${min},${max}}$`).test(value);
 }
 
 export function normalizeOtp(value: string): string {

@@ -46,7 +46,6 @@ import { ar as sectionsAr } from "../../src/lib/copy/sections.ar.tsx";
 import { BLOCKS } from "../../src/lib/copy/blocks.ts";
 import { hi as blocksHi } from "../../src/lib/copy/blocks.hi.tsx";
 import { ar as blocksAr } from "../../src/lib/copy/blocks.ar.tsx";
-import { FAQ_ORDER } from "../../src/app/[locale]/products/bgv-enterprise/content.ts";
 import { ABOUT } from "../../src/lib/copy/about.ts";
 import { hi as aboutHi } from "../../src/lib/copy/about.hi.tsx";
 import { ar as aboutAr } from "../../src/lib/copy/about.ar.tsx";
@@ -133,7 +132,12 @@ const NAMESPACES: readonly { name: string; dict: Dictionary<unknown> }[] = [
  *  `$$typeof` guard. Without it a `<>a <em>b</em> c</>` leaf would be walked
  *  into and compared as `props.children[1].type`, so two locales whose rich
  *  text puts the `<em>` in different places would be reported as drift when
- *  moving it is exactly what a translator is for. */
+ *  moving it is exactly what a translator is for.
+ *
+ *  Array items share one path, `list[]`, so a list still counts one leaf per
+ *  item but its LENGTH is not part of the shape: the old CMS's locales do not
+ *  always carry the same number of bullets, and each page shows its own
+ *  locale's list word for word. `shape` is what the locales are compared on. */
 function leafPaths(value: unknown, prefix = ""): string[] {
   if (
     value === null ||
@@ -142,9 +146,17 @@ function leafPaths(value: unknown, prefix = ""): string[] {
   ) {
     return [prefix];
   }
+  if (Array.isArray(value)) {
+    return value.flatMap((v) => leafPaths(v, `${prefix}[]`)).sort();
+  }
   return Object.entries(value as Record<string, unknown>)
     .flatMap(([k, v]) => leafPaths(v, prefix ? `${prefix}.${k}` : k))
     .sort();
+}
+
+/** A dictionary's leaf paths with list items collapsed — see `leafPaths`. */
+function shape(value: unknown): string {
+  return [...new Set(leafPaths(value))].join("\n");
 }
 
 /** Every string leaf, with its path, for the content assertions. */
@@ -229,10 +241,10 @@ console.log("2. loop two — every locale has the same leaf paths as the default
  *  stated rather than hidden, and section 6 constructs the drifted state so
  *  the assertion is shown to be capable of failing before `hi` exists. */
 for (const ns of NAMESPACES) {
-  const reference = leafPaths(safePick(ns.dict, DEFAULT)).join("\n");
+  const reference = shape(safePick(ns.dict, DEFAULT));
   for (const locale of routing.locales) {
     if (locale === DEFAULT) continue;
-    const got = leafPaths(safePick(ns.dict, locale)).join("\n");
+    const got = shape(safePick(ns.dict, locale));
     check(
       `${ns.name}: ${locale} has the same leaf paths as ${DEFAULT}`,
       got === reference,
@@ -417,7 +429,7 @@ const short = { ...EN, nav: { ...EN.nav, cta: undefined } } as unknown;
 delete (short as { nav: { cta?: unknown } }).nav.cta;
 check(
   "loop 2 WOULD fail on a locale missing a leaf",
-  leafPaths(short).join("\n") !== leafPaths(EN).join("\n"),
+  shape(short) !== shape(EN),
   leafPaths(EN).filter((p) => !leafPaths(short).includes(p)),
 );
 
@@ -425,7 +437,7 @@ check(
 const long = { ...EN, nav: { ...EN.nav, ctaa: "Talk to sales" } };
 check(
   "loop 2 WOULD fail on a locale with a leaf the default lacks",
-  leafPaths(long).join("\n") !== leafPaths(EN).join("\n"),
+  shape(long) !== shape(EN),
   leafPaths(long).filter((p) => !leafPaths(EN).includes(p)),
 );
 
@@ -434,8 +446,19 @@ check(
 const moved = { ...EN, closingCta: { ...EN.closingCta, heading: "beginning verified" } };
 check(
   "loop 2 does NOT fire when only a rich-text leaf's markup differs",
-  leafPaths(moved).join("\n") === leafPaths(EN).join("\n"),
+  shape(moved) === shape(EN),
   leafPaths(moved).filter((p) => !leafPaths(EN).includes(p)),
+);
+
+/** …nor on a list of a different length, while a list item with a different
+ *  key still does. */
+check(
+  "loop 2 does NOT fire when only a list's length differs",
+  shape({ b: ["x", "y", "z"] }) === shape({ b: ["x"] }),
+);
+check(
+  "loop 2 WOULD fail on a list item with a key the default lacks",
+  shape({ b: [{ t: "x" }] }) !== shape({ b: [{ t: "x", p: "y" }] }),
 );
 
 /** Section 3's predicate, against the exact mistake it is for. */
@@ -540,7 +563,7 @@ for (const row of PENDING) {
   );
   check(
     `${row.ns}.${row.locale} has the same leaf paths as en`,
-    leafPaths(row.dict).join("\n") === leafPaths(PENDING_EN[row.ns]).join("\n"),
+    shape(row.dict) === shape(PENDING_EN[row.ns]),
   );
   const leaves = stringLeaves(row.dict);
   const entities = leaves.filter(([, v]) => ENTITY.test(v));
@@ -602,7 +625,7 @@ for (const row of [
   );
   check(
     `sections.${row.locale} has the same leaf paths as en`,
-    leafPaths(row.dict).join("\n") === leafPaths(pick(SECTIONS, DEFAULT)).join("\n"),
+    shape(row.dict) === shape(pick(SECTIONS, DEFAULT)),
   );
   const leaves = stringLeaves(row.dict);
   const entities = leaves.filter(([, v]) => ENTITY.test(v));
@@ -655,7 +678,7 @@ for (const row of [
   );
   check(
     `business.${row.locale} has the same leaf paths as en`,
-    leafPaths(row.dict).join("\n") === leafPaths(pick(BUSINESS, DEFAULT)).join("\n"),
+    shape(row.dict) === shape(pick(BUSINESS, DEFAULT)),
   );
   const leaves = stringLeaves(row.dict);
   const entities = leaves.filter(([, v]) => ENTITY.test(v));
@@ -680,21 +703,44 @@ check(
     businessAr.crumb === chromeAr.nav.links["/business"],
   { hi: businessHi.crumb, ar: businessAr.crumb },
 );
+/** 6 Oct 2026: the last function leaf, `enterprise.note`, went with the
+ *  enterprise rebuild — the old page had no such sentence. */
 check(
-  "both business locales keep the three function leaves",
-  [
-    businessHi.enterprise.note,
-    businessHi.smb.card.readyIn,
-    businessHi.smb.pricenote,
-    businessAr.enterprise.note,
-    businessAr.smb.card.readyIn,
-    businessAr.smb.pricenote,
-  ].every((f) => typeof f === "function"),
+  "neither business locale keeps the invented enterprise note",
+  !("note" in businessHi.enterprise) && !("note" in businessAr.enterprise),
 );
+/** 6 Oct 2026: the `&amp;` faqHead this used to pin was KYC's, and the KYC
+ *  rebuild from `customerKyc.base.json` dropped its invented FAQ. What has
+ *  to hold now is the old shape: six steps, six solution cards, no FAQ. */
 check(
-  "both business locales keep &amp; in the JSX faqHead (the inverted rule)",
-  localeModule("business", "hi")!.source.includes("&amp;") &&
-    localeModule("business", "ar")!.source.includes("&amp;"),
+  "both business locales carry the old KYC shape: six steps, six cards, no FAQ",
+  [businessHi, businessAr].every(
+    (b) =>
+      !("faqs" in b.customerKyc) &&
+      Object.keys(b.customerKyc.how.steps).length === 6 &&
+      Object.keys(b.customerKyc.solutions.cards).length === 6,
+  ),
+);
+
+/** `/products/certifier`, rebuilt from `certifier.base.json`, likewise:
+ *  two check tabs of four, four onboarding steps, three monitoring lines,
+ *  six screenings, three agreement features, four slider alts, four
+ *  industries, four why-consider cards, eight API cards, no FAQ. */
+check(
+  "both business locales carry the old Certifier shape and no FAQ",
+  [businessHi, businessAr].every(
+    (b) =>
+      !("faqs" in b.certifier) &&
+      Object.values(b.certifier.checks.tabs).every((t) => Object.keys(t.cards).length === 4) &&
+      b.certifier.how.onboarding.steps.length === 4 &&
+      b.certifier.how.monitoring.items.length === 3 &&
+      b.certifier.how.statutory.items.length === 6 &&
+      b.certifier.how.agreement.items.length === 3 &&
+      b.certifier.how.slides.length === 4 &&
+      Object.keys(b.certifier.industries.cards).length === 4 &&
+      Object.keys(b.certifier.why.cards).length === 4 &&
+      Object.keys(b.certifier.api.cards).length === 8,
+  ),
 );
 
 console.log("6e. governments + individuals + platform hi/ar exist before those locales are served (Part 9b.5)");
@@ -727,7 +773,7 @@ for (const row of PENDING_9B5) {
   );
   check(
     `${row.ns}.${row.locale} has the same leaf paths as en`,
-    leafPaths(row.dict).join("\n") === leafPaths(row.en).join("\n"),
+    shape(row.dict) === shape(row.en),
   );
   const leaves = stringLeaves(row.dict);
   const entities = leaves.filter(([, v]) => ENTITY.test(v));
@@ -760,29 +806,6 @@ check(
   },
 );
 check(
-  "both governments locales keep the four function leaves",
-  [
-    governmentsHi.health.note,
-    governmentsHi.immigration.note,
-    governmentsHi.manpowerEducation.note,
-    governmentsHi.trade.note,
-    governmentsAr.health.note,
-    governmentsAr.immigration.note,
-    governmentsAr.manpowerEducation.note,
-    governmentsAr.trade.note,
-  ].every((f) => typeof f === "function"),
-);
-check(
-  "both governments locales keep &amp; in the JSX immigration strip (the inverted rule)",
-  localeModule("governments", "hi")!.source.includes("&amp;") &&
-    localeModule("governments", "ar")!.source.includes("&amp;"),
-);
-check(
-  "both individuals locales keep the tableNote function leaf",
-  typeof individualsHi.immigration.tableNote === "function" &&
-    typeof individualsAr.immigration.tableNote === "function",
-);
-check(
   "both individuals locales keep a bare & on hub.hero.k",
   individualsHi.hub.hero.k.includes("&") &&
     !individualsHi.hub.hero.k.includes("&amp;") &&
@@ -794,9 +817,12 @@ check(
   },
 );
 check(
-  "both platform locales keep the coverage.note function leaf",
-  typeof platformHi.coverage.note === "function" &&
-    typeof platformAr.coverage.note === "function",
+  "both platform locales keep coverage's 16 check rows in the English order",
+  Object.keys(platformHi.coverage.checks.rows).join() ===
+    Object.keys(PLATFORM.en.coverage.checks.rows).join() &&
+    Object.keys(platformAr.coverage.checks.rows).join() ===
+      Object.keys(PLATFORM.en.coverage.checks.rows).join() &&
+    Object.keys(PLATFORM.en.coverage.checks.rows).length === 16,
 );
 check(
   "both platform locales keep a bare & on hub.hero.cta",
@@ -847,7 +873,7 @@ for (const row of PENDING_9B6) {
   );
   check(
     `${row.ns}.${row.locale} has the same leaf paths as en`,
-    leafPaths(row.dict).join("\n") === leafPaths(row.en).join("\n"),
+    shape(row.dict) === shape(row.en),
   );
   const leaves = stringLeaves(row.dict);
   const entities = leaves.filter(([, v]) => ENTITY.test(v));
@@ -932,9 +958,8 @@ console.log("6g. Arabic go-cues do not keep an unmirrored → (After 9b)");
 /** U+2192 in Arabic copy. Unicode does not mirror it, so a "go" cue that
  *  still uses it points backwards. Isolated markup arrows (`.xa`, `.nv-ml
  *  .k`, `.fwd`) are flipped in CSS with `--flip`; these leaves cannot be,
- *  because the glyph sits inside a text node. Two populations keep `→`:
- *  the One-in-Eight UV tags (`64 → 84`) are from-to ranges, and the
- *  technology page's `→ id, status` blurbs are API specimen. Everything
+ *  because the glyph sits inside a text node. One population keeps `→`:
+ *  the One-in-Eight UV tags (`64 → 84`) are from-to ranges. Everything
  *  else is a nav cue and is `←` in `ar`. */
 function arrowLeaves(value: unknown, prefix = ""): string[] {
   if (typeof value === "string") return value.includes("→") ? [prefix] : [];
@@ -954,18 +979,23 @@ function arrowLeaves(value: unknown, prefix = ""): string[] {
   );
 }
 
+/** The specimen ranges, and two old immigration-guide FAQ answers that use
+ *  → between portal steps ("visa.HelloVerify.com → Visa Screening → …"),
+ *  kept as the old Arabic copy wrote them. */
 function allowedArArrow(path: string): boolean {
-  if (path.includes(".uv.tags.") && path.endsWith(".d")) return true;
-  if (path.includes(".api.") && path.endsWith(".ret")) return true;
-  return false;
+  return (
+    (path.includes(".uv.tags.") && path.endsWith(".d")) ||
+    path === "individuals.immigration.guide.faqs.download[2].a" ||
+    path === "individuals.immigration.guide.faqs.status[0].a"
+  );
 }
 
 const arArrows = NAMESPACES.flatMap((ns) => arrowLeaves(pick(ns.dict, "ar"), ns.name));
 const strayArArrows = arArrows.filter((p) => !allowedArArrow(p));
 check("Arabic go-cues do not keep U+2192", strayArArrows.length === 0, strayArArrows);
 check(
-  "the allowlist is not vacuous — specimen ranges and API rets still use →",
-  arArrows.filter(allowedArArrow).length === 11,
+  "the allowlist is not vacuous — the specimen ranges and the two FAQ answers still use →",
+  arArrows.filter(allowedArArrow).length === 8,
   arArrows.filter(allowedArArrow),
 );
 
@@ -1043,8 +1073,8 @@ check(
  *  module, and NO ERROR AT ALL on a stray key in an unannotated one — which
  *  is the hole section 5 exists to close, reproduced on `contact`. */
 const SLICE: readonly { name: string; dict: Dictionary<unknown>; matched: number; leaves: number }[] = [
-  { name: "about", dict: ABOUT, matched: 47, leaves: 57 },
-  { name: "contact", dict: CONTACT, matched: 34, leaves: 66 },
+  { name: "about", dict: ABOUT, matched: 47, leaves: 47 },
+  { name: "contact", dict: CONTACT, matched: 34, leaves: 46 },
   { name: "checks", dict: CHECKS_COPY, matched: 16, leaves: 25 },
   { name: "countries", dict: COUNTRIES_COPY, matched: 19, leaves: 25 },
   { name: "legal", dict: LEGAL_COPY, matched: 4, leaves: 14 },
@@ -1059,16 +1089,19 @@ for (const ns of SLICE) {
   );
 }
 
-/** 188 for 124 is 1.52x (was 161 / 1.30x before the contact tabs). Against
+/** 158 for 124 is 1.27x (155 / 1.25x before about's certification logos took
+ *  their old alts and lost the hero eyebrow the old page never had, 6 Oct 2026; 168 / 1.35x before about took the old CMS copy and
+ *  188 / 1.52x before contact did, both 5 Oct 2026; 161 / 1.30x before the
+ *  contact tabs). Against
  *  chrome's 3.2x, and the spread inside the six is the interesting part:
- *  `legal` is 3.5x and `about` is 1.21x. The header's rule predicts it —
+ *  `legal` is 3.5x and `about` is 0.94x. The header's rule predicts it —
  *  `legal`'s page is almost entirely `d.sections.map(…)` over a catalogue, so
  *  what little copy it has is in attributes and next to interpolations where
  *  the matcher cannot see it, while `/about` is 200 lines of hand-written
  *  prose that the matcher reads almost completely. */
 check(
-  "the six route namespaces total 188 leaves for 124 matched nodes",
-  SLICE.reduce((a, b) => a + b.leaves, 0) === 188 &&
+  "the six route namespaces total 158 leaves for 124 matched nodes",
+  SLICE.reduce((a, b) => a + b.leaves, 0) === 158 &&
     SLICE.reduce((a, b) => a + b.matched, 0) === 124,
   { leaves: SLICE.reduce((a, b) => a + b.leaves, 0), matched: SLICE.reduce((a, b) => a + b.matched, 0) },
 );
@@ -1182,11 +1215,26 @@ console.log("9. the numbers for `business` and `templates`");
  *  It IS a range, and the spread is the finding. A comment-stripped `>text<`
  *  run over the pre-migration sources scored 206 nodes across the six
  *  `app/[locale]/business/**` files and 10 in `components/templates/**`; the
- *  dictionaries hold 475 and 11:
+ *  dictionaries hold 560 and 11:
  *
  *      chrome     26 nodes -> 77 leaves   3.0x   (24 by the run in §7)
- *      business  206 nodes -> 475 leaves  2.3x
+ *      business  206 nodes -> 560 leaves
+ *
+ *  475 -> 526 (5 Oct 2026): SMB content restore. Eight invented checks and
+ *  eight timed chips became five package lines and 35 priced custom checks.
+ *  526 -> 505 the same day: enterprise restore. The invented turnaround table
+ *  and timed pills came out; partner names, three audiences and the named
+ *  checks went in. Rich leaves stayed 44.
+ *  505 -> 566 the same day: employee verification. Invented re-verification
+ *  times came out; white-collar and blue-collar checks, why-it-matters,
+ *  onboarding and primary-source names went in.
+ *  566 -> 560 the same day: KYC and Certifier in the old CMS wording. Timed
+ *  chips became name-only, the KYC ISO gloss fell back to the default, and
+ *  Certifier's three steps became the old page's four tabs.
  *      templates  10 nodes -> 11 leaves   1.1x
+ *  11 -> 9 (5 Oct 2026): the compliance band's default heading and lede
+ *  came out; trade, the last page that fell back to them, has no compliance
+ *  copy in the old CMS, so the band shows its eyebrow and cards only.
  *
  *  `lib/copy/index.ts` predicts exactly that shape: the undercount tracks how
  *  much of a file is ALREADY a table, and `VerticalPage` has none — every
@@ -1204,31 +1252,57 @@ console.log("9. the numbers for `business` and `templates`");
 const BIZ = pick(BUSINESS, DEFAULT);
 const TPL = pick(TEMPLATES, DEFAULT);
 
+/** 516 -> 527 strings (5 Oct 2026): `/products/bgv-smb`'s client strip —
+ *  its heading and ten client names (`smb.trust`, `smb.clients`).
+ *  527 -> 600 (6 Oct 2026): `/products/bgv-smb` rebuilt from `bgvSmb.base.json`
+ *  — the 35-row checks table with its info lines, the summary panel, Trusted
+ *  by and Solutions We Offer in; the invented rack, chips, FAQ and closing
+ *  out. Rich and function leaves 44 -> 39: its closing heading, one strip
+ *  item, its faqHead and both function leaves went.
+ *  600 -> 590 strings (6 Oct 2026): `/products/bgv-enterprise` rebuilt from
+ *  `enterprise.base.json` — trust strip, partners and the three screening
+ *  tabs in; the invented lanes, pills, qualities, FAQ, note and closing out.
+ *  Rich and function leaves 39 -> 33: its closing heading, four strip items,
+ *  its faqHead and the `note` function went; the two-line screening heading
+ *  came in.
+ *  590 -> 569 strings (6 Oct 2026): `/employee-verification` rebuilt from
+ *  `employees.base.json` — the banner, image alts, onboarding tabs and the
+ *  HR results in; the invented eyebrows, ledes, industry chips, four FAQs
+ *  and closing out. Rich leaves 33 -> 27: its closing heading, four strip
+ *  items and its faqHead went.
+ *  569 -> 568 strings (6 Oct 2026): `/products/customer-kyc` rebuilt from
+ *  `customerKyc.base.json` — six steps and six solution cards in; the lanes,
+ *  chips, flow steps, privacy stance, four FAQs and closing out. Rich leaves
+ *  27 -> 21: its closing heading, four strip items and its faqHead went.
+ *  568 -> 597 strings (6 Oct 2026): `/products/certifier` rebuilt from
+ *  `certifier.base.json` — the two check tabs, the four how-it-works tabs
+ *  and slider alts, industries, why-consider and API cards in; the lanes,
+ *  chips, two package receipts, steps strip, FAQs and closing out. Rich
+ *  leaves 21 -> 18: its closing heading, four strip items and its faqHead
+ *  went; the three Vendor Monitoring lines (old CMS `bold` parts) came. */
 check(
-  "business/en holds 431 string leaves and 44 rich-text or function leaves",
-  stringLeaves(BIZ).length === 431 && leafPaths(BIZ).length === 475,
+  "business/en holds 597 string leaves and 18 rich-text leaves",
+  stringLeaves(BIZ).length === 597 && leafPaths(BIZ).length === 615,
   { strings: stringLeaves(BIZ).length, all: leafPaths(BIZ).length },
 );
 
-/** The 44, itemised, so changing one of them has to change this line. Six
- *  `<h1>`s and five `ClosingCta` headings carry an `<em>`; the 25 trust-strip
- *  items are `<b>figure</b> tail`, which is TWO children and therefore one
- *  rich-text leaf rather than two string leaves — splitting them would put
- *  two adjacent text children where one sits today, and React's SSR writes
- *  `<!-- -->` between those (measured with `renderToString` before the move);
- *  five `FaqSection` heads carry a `<br />`; and three are FUNCTION leaves
- *  taking a node the page owns — the two link sentences that would otherwise
- *  need a leaf ending in a space, and the `{n} checks · ready in` label whose
- *  count is `p.lines.length`. */
+/** The 18, itemised, so changing one of them has to change this line. Six
+ *  `<h1>`s and the enterprise screening heading carry an `<em>`; the 8
+ *  trust-strip items are `<b>figure</b> tail`, which is TWO children and
+ *  therefore one rich-text leaf rather than two string leaves — splitting
+ *  them would put two adjacent text children where one sits today, and
+ *  React's SSR writes `<!-- -->` between those (measured with
+ *  `renderToString` before the move); and the three certifier Vendor
+ *  Monitoring lines carry the old `<b>` runs. No function leaf is left. */
 check(
-  "…and the 44 are 6 h1 + 5 closing + 25 strip + 5 faqHead + 3 functions",
-  6 + 5 + 25 + 5 + 3 === leafPaths(BIZ).length - stringLeaves(BIZ).length,
+  "…and the 18 are 6 h1 + 1 screening heading + 3 monitoring lines + 8 strip",
+  6 + 1 + 3 + 8 === leafPaths(BIZ).length - stringLeaves(BIZ).length,
   leafPaths(BIZ).length - stringLeaves(BIZ).length,
 );
 
 check(
-  "templates/en holds 10 string leaves plus the one rich-text leaf",
-  stringLeaves(TPL).length === 10 && leafPaths(TPL).length === 11,
+  "templates/en holds 9 string leaves and no rich-text leaf",
+  stringLeaves(TPL).length === 9 && leafPaths(TPL).length === 9,
   { strings: stringLeaves(TPL).length, all: leafPaths(TPL).length },
 );
 
@@ -1250,36 +1324,15 @@ check(
   [TPL.table.check, TPL.table.turnaround, TPL.table.confirmedWith],
 );
 
-/** THE ONE COUPLING THIS SLICE ADDED, and section 4's argument applies
- *  unchanged: two modules agreeing with no type between them.
- *  `app/[locale]/products/bgv-enterprise/content.ts` now holds the ORDER of the
- *  five questions and `business.enterprise.faqs` holds the words. A key
- *  renamed on one side IS a tsc error — `FAQ_ORDER` is typed
- *  `keyof …["faqs"]`. What tsc cannot say is that the order is COMPLETE:
- *  dropping an entry typechecks perfectly and silently stops rendering a
- *  question, and `<FaqSection>` builds the `FAQPage` node from the same
- *  array, so the page and the structured data would go quiet together. */
+/** 6 Oct 2026: `/products/bgv-enterprise` was rebuilt from
+ *  `enterprise.base.json`, which has no FAQ, so its five invented questions
+ *  (and `content.ts`'s `FAQ_ORDER`, and the FAQPage node) went. The old
+ *  screening tabs are in their CMS order instead. */
 check(
-  "every enterprise FAQ is in the render order, and none is asked twice",
-  FAQ_ORDER.length === Object.keys(BIZ.enterprise.faqs).length &&
-    new Set(FAQ_ORDER).size === FAQ_ORDER.length,
-  { order: FAQ_ORDER, dictionary: Object.keys(BIZ.enterprise.faqs) },
-);
-
-/** …and the guard shown capable of failing, the shape section 6 uses: the
- *  predicate run against a tuple with one question dropped, and against one
- *  that asks the same question twice. */
-const shortOrder = FAQ_ORDER.slice(0, -1);
-const dupOrder = [...FAQ_ORDER.slice(0, -1), FAQ_ORDER[0]];
-check(
-  "…and it WOULD fail on an order that drops a question",
-  shortOrder.length !== Object.keys(BIZ.enterprise.faqs).length,
-  { order: shortOrder.length, dictionary: Object.keys(BIZ.enterprise.faqs).length },
-);
-check(
-  "…and on one that asks the same question twice",
-  new Set(dupOrder).size !== dupOrder.length,
-  dupOrder,
+  "the enterprise copy has no FAQ, and the three screening tabs are in the old order",
+  !("faqs" in BIZ.enterprise) &&
+    Object.keys(BIZ.enterprise.screening.tabs).join() === "employees,businesses,customers",
+  Object.keys(BIZ.enterprise),
 );
 
 console.log("10. the numbers for `sections` and `blocks`, and the keys they had to keep");
@@ -1363,6 +1416,10 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  checks (name, line, turnaround, price) and its heading, lede and
    *  price-row labels, in place of eight people. */
   peopleStrip: [2, 38],
+  /** New 5 Oct 2026: the nav's three premium services, under Individual
+   *  Checks. Kicker, two heading lines, the link label, and three cards.
+   *  10 -> 14 (5 Oct 2026, the redesign): the lede and each card's `who`. */
+  premiumServices: [0, 14],
   contact: [11, 12],
   customerStory: [15, 18],
   /** 52 -> 45 (29 Sep 2026): the hour-coverage strip under the map went,
@@ -1439,7 +1496,9 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  had been `enterprises.employees.h`. */
   /* 70 -> 75 (4 Oct 2026): the blue-collar punch clock — 30, min,
    *  onboarded, and the two shift clients. */
-  smb: [0, 75],
+  /* 75 -> 87 (5 Oct 2026): the SMB panel's client strip — its two-part
+   *  heading and ten client names. */
+  smb: [0, 87],
   diligence: [0, 27],
   trustPlatform: [0, 52],
   /** New 30 Sep 2026: the field case — heading block and rail label (7),
@@ -1495,10 +1554,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
  *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
- *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients. */
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients; 1702 -> 1712: `premiumServices`; 1712 -> 1724: the SMB client strip; 1724 -> 1728: the premium redesign's lede and audiences. */
 check(
-  "sections holds 1702 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1702 &&
+  "sections holds 1728 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1728 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -1531,10 +1590,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691; `premiumServices` to 1701; the SMB client strip to 1713; the premium redesign to 1717. */
 check(
-  "sections: 1691 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1691 &&
+  "sections: 1717 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1717 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
@@ -1806,17 +1865,17 @@ console.log("13. the numbers for `platform` and `governments`, and the keys they
  *  finding restated with fresh numbers: the PROPORTION is the claim.
  *
  *      platform/page.tsx                 28 nodes ->  26 leaves   0.93x
- *      platform/coverage                 33       ->  99          3.0x
- *      platform/technology               52       ->  65          1.25x
+ *      platform/coverage                 33       -> 106          3.2x   (old CMS copy, 5 Oct 2026)
+ *      platform/technology               52       ->  53          1.02x  (old CMS copy, 5 Oct 2026)
  *      platform/security-compliance      43       ->  99          2.3x
  *      governments/page.tsx              46       ->  65          1.41x
- *      governments/health                15       ->  95          6.3x
- *      governments/immigration           15       ->  97          6.5x
- *      governments/manpower-education    15       ->  95          6.3x
- *      governments/trade                 15       ->  93          6.2x
- *      .../ministry-of-manpower          44       ->  48          1.09x
+ *      governments/health                15       ->  79          5.3x   (old CMS copy and order, 6 Oct 2026)
+ *      governments/immigration           15       ->  75          5.0x   (old CMS copy and order, 6 Oct 2026)
+ *      governments/manpower-education    15       ->  49          3.3x   (old CMS copy and order + the live MOHESR card, 6 Oct 2026)
+ *      governments/trade                 15       ->  26          1.7x   (old CMS copy and order, 6 Oct 2026)
+ *      .../ministry-of-manpower          44       -> 124          2.8x   (old CMS copy, 5 Oct 2026)
  *
- *  Over both subtrees: 785 leaves for 306 matched nodes, 2.57x — inside the
+ *  Over both subtrees: 818 leaves for 306 matched nodes, 2.67x — inside the
  *  2.88x §10 measured for `sections`/`blocks` and well above `templates`' 1.1x,
  *  with the whole spread coming from the four vertical pages.
  *
@@ -1847,18 +1906,18 @@ const EN_GOVERNMENTS = pick(GOVERNMENTS, DEFAULT);
 
 const PLATFORM_FILES: Record<string, readonly [number, number]> = {
   hub: [28, 26],
-  coverage: [33, 99],
-  technology: [52, 65],
+  coverage: [33, 124],
+  technology: [52, 57],
   security: [43, 99],
 };
 
 const GOVERNMENT_FILES: Record<string, readonly [number, number]> = {
   hub: [46, 65],
-  health: [15, 95],
-  immigration: [15, 97],
-  manpowerEducation: [15, 95],
-  trade: [15, 93],
-  mom: [44, 48],
+  health: [15, 79],
+  immigration: [15, 75],
+  manpowerEducation: [15, 49],
+  trade: [15, 26],
+  mom: [44, 124],
 };
 
 for (const [k, v] of Object.entries(PLATFORM_FILES)) {
@@ -1884,16 +1943,16 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 290 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 290 &&
+  "platform holds 307 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 307 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
 );
 
 check(
-  "governments holds 495 leaves for 150 matched nodes — six pages plus crumb and coverageLink",
-  leafPaths(EN_GOVERNMENTS).length === 495 &&
+  "governments holds 420 leaves for 150 matched nodes — six pages plus crumb and coverageLink",
+  leafPaths(EN_GOVERNMENTS).length === 420 &&
     Object.values(GOVERNMENT_FILES).reduce((a, b) => a + b[0], 0) === 150 &&
     Object.values(GOVERNMENT_FILES).reduce((a, b) => a + b[1], 0) + 2 ===
       leafPaths(EN_GOVERNMENTS).length,
@@ -1907,91 +1966,59 @@ check(
  *  `governments` as 10 `<em>` headings when six pages carry two each. The
  *  arithmetic is in the assertion so that neither can drift again.
  *
- *  `platform`: 8 `<em>` headings (four `h1`s and four `ClosingCta`s), 16
- *  trust-strip items (`<b>figure</b> tail`, which is TWO children and therefore
- *  one leaf — splitting them would put two adjacent text children where one
- *  sits today), 3 `FaqSection` heads — the hub has none —
- *  `security.certs.h`'s `<br />`, the two accessibility paragraphs carrying a
- *  mid-sentence `<strong>`, and ONE function leaf, `coverage.note`, which takes
- *  the anchor the page owns because a string leaf would have had to end in a
- *  space. */
+ *  `platform`: 8 `<em>` headings (four `h1`s, two `ClosingCta`s — coverage
+ *  and technology close on the chrome default — coverage's packages heading
+ *  and technology's compound heading), 8 trust-strip items (`<b>figure</b>
+ *  tail`, which is TWO children and therefore one leaf — splitting them would
+ *  put two adjacent text children where one sits today), 1 `FaqSection` head —
+ *  security's —, `security.certs.h`'s `<br />`, and the two accessibility
+ *  paragraphs carrying a mid-sentence `<strong>`. Coverage and technology lost
+ *  their strips, FAQs and closing copy to the old CMS copy on 5 Oct 2026. */
 check(
-  "platform: 259 string leaves and 31 rich-text or function leaves",
-  stringLeaves(EN_PLATFORM).length === 259 &&
-    leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 31 &&
-    8 + 16 + 3 + 1 + 2 + 1 === 31 &&
-    typeof EN_PLATFORM.coverage.note === "function",
+  "platform: 287 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 287 &&
+    leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
+    8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },
 );
 
-/** `governments`: 12 `<em>` headings (six `h1`s and six `ClosingCta`
- *  headings — every page in the subtree has both), 24 trust-strip items, 4
- *  `FaqSection` heads (the hub and the case study have no FAQ band), the three
- *  `mom.stats` values (`120<em>+</em>` and friends), `mom.prose.outcomes`'
- *  three `<br />`s, and FOUR function leaves — one table note per vertical
- *  page. */
+/** `governments`: 9 `<em>` headings (six `h1`s, the hub's closing heading,
+ *  `mom.closing.heading` — `sections/AuthorityPage.tsx`'s — and
+ *  `mom.support.heading`, the MOM page's own closing), the hub's 4
+ *  trust-strip items, and the education page's client line, whose "120+" is
+ *  the old CMS emphasis. Health, immigration, education and trade were
+ *  rebuilt on the old section order on 6 Oct 2026 and close on their last old
+ *  section, so they carry no closing copy, strips or function leaves. */
 check(
-  "governments: 447 string leaves and 48 rich-text or function leaves",
-  stringLeaves(EN_GOVERNMENTS).length === 447 &&
-    leafPaths(EN_GOVERNMENTS).length - stringLeaves(EN_GOVERNMENTS).length === 48 &&
-    12 + 24 + 4 + 3 + 1 + 4 === 48 &&
-    [
-      EN_GOVERNMENTS.health.note,
-      EN_GOVERNMENTS.immigration.note,
-      EN_GOVERNMENTS.manpowerEducation.note,
-      EN_GOVERNMENTS.trade.note,
-    ].every((f) => typeof f === "function"),
+  "governments: 406 string leaves and 14 rich-text leaves",
+  stringLeaves(EN_GOVERNMENTS).length === 406 &&
+    leafPaths(EN_GOVERNMENTS).length - stringLeaves(EN_GOVERNMENTS).length === 14 &&
+    9 + 4 + 1 === 14,
   { strings: stringLeaves(EN_GOVERNMENTS).length, all: leafPaths(EN_GOVERNMENTS).length },
 );
 
-/** The four function leaves, against the text they replaced. Each renders as a
- *  FRAGMENT whose last child is the anchor, so the sentence keeps its trailing
- *  space as JSX rather than as an edge-whitespace string leaf — which §3
- *  rejects — and the page still passes the same two children to `.note`. Only
- *  the preamble is asserted: the anchor is the page's. */
-for (const [page, fn] of [
-  ["health", EN_GOVERNMENTS.health.note],
-  ["immigration", EN_GOVERNMENTS.immigration.note],
-  ["manpowerEducation", EN_GOVERNMENTS.manpowerEducation.note],
-  ["trade", EN_GOVERNMENTS.trade.note],
-] as const) {
-  const rendered = fn("LINK");
-  check(
-    `governments.${page}.note() is a fragment, not a string that ends in a space`,
-    typeof rendered === "object" && rendered !== null && !("trim" in (rendered as object)),
-    typeof rendered,
-  );
-}
-
 /** THE THIRD COROLLARY, pinned for this slice. `lib/copy/index.ts` says a
  *  `key=` expression must keep resolving to the string it resolved to before,
- *  and these two subtrees moved 79 of them into dictionaries:
+ *  and these two subtrees hold 61 of them in dictionaries:
  *
- *    - `/international` keys its three region blocks on the region heading
- *      and its 24 country rows on the country name;
+ *    - `/international` keys each package card's check lines on the tag text
+ *      (the old CMS `tags`, 5 Oct 2026; its tabs, cards and table rows key on
+ *      ids);
  *    - `/platform/security-compliance` keys four residency rows on `nm` and six
  *      artefact rows on `t`;
- *    - all four vertical pages reach `VerticalPage`, which keys lanes on `gt`,
- *      pills on `n` and table rows on `nm` — 12 + 48 + 24 across the four.
- *      (Its `strip` keys on the ARRAY INDEX and is therefore untouched.)
  *
  *  The literals below are the PRE-MIGRATION strings, typed out from the
  *  pre-change build's `.next/server/app/en/**.html`, which is the point:
  *  reading them back out of the dictionary would assert nothing. */
+const COVERAGE_TAG_KEYS =
+  "Criminal Check|Passport Check|Entitlement to Work/" +
+  "Criminal Check|Driving License Check|Current Address Check/" +
+  "Criminal Check|Identity Check|Credit Check";
 check(
-  "coverage's three region blocks still key on the headings they keyed on",
-  Object.values(EN_PLATFORM.coverage.regions).join("|") ===
-    "South & Southeast Asia|Middle East & Africa|Europe & the Americas",
-  Object.values(EN_PLATFORM.coverage.regions),
-);
-
-check(
-  "…and its 24 country rows still key on the 24 names they keyed on",
-  Object.values(EN_PLATFORM.coverage.countries).map((x) => x.c).join("|") ===
-    "India|Philippines|Singapore|Indonesia|Vietnam|Sri Lanka|Nepal|Bangladesh|" +
-      "United Arab Emirates|Saudi Arabia|Egypt|Qatar|Kuwait|Kenya|Nigeria|South Africa|" +
-      "United Kingdom|Germany|France|Netherlands|Poland|United States|Canada|Brazil",
-  Object.values(EN_PLATFORM.coverage.countries).map((x) => x.c),
+  "coverage's package cards key their check lines on the old CMS tags",
+  Object.values(EN_PLATFORM.coverage.packages.cards).map((x) => x.tags.join("|")).join("/") ===
+    COVERAGE_TAG_KEYS,
+  Object.values(EN_PLATFORM.coverage.packages.cards).map((x) => x.tags),
 );
 
 check(
@@ -2009,68 +2036,61 @@ check(
   Object.values(EN_PLATFORM.security.artefacts).map((a) => a.t),
 );
 
-/** The four vertical pages' lane, pill and row keys. One assertion per page per
- *  kind rather than one joined monster, so a failure names the page and the
- *  table rather than a 600-character diff. */
-const VERTICAL_KEYS: Record<string, { lanes: string; pills: string; rows: string }> = {
-  health: {
-    lanes: "01 — Identity|02 — Qualification|03 — Standing",
-    pills:
-      "Identity|Passport|Age|Current address|Medical degree|Post-graduate specialty|" +
-      "Council registration|Internship completion|Global database|Criminal|" +
-      "Employment history|Disciplinary record",
-    rows:
-      "Identity & passport|Criminal record|Global database screen|Council registration|" +
-      "Medical degree|Disciplinary record",
-  },
-  immigration: {
-    lanes: "01 — Identity|02 — Grounds|03 — Admissibility",
-    pills:
-      "Identity|Passport|Age|Face vs. selfie|Education|Employment|Digital employment|" +
-      "Entitlement to work|Trade licence|Global database|Criminal|Credit|Current address",
-    rows:
-      "Identity & passport|Global database screen|Criminal record|Digital employment|" +
-      "Employment|Education",
-  },
-  manpowerEducation: {
-    lanes: "01 — Identity|02 — Credentials|03 — Records",
-    pills:
-      "Identity|Passport|Age|Entitlement to work|Education|Trade certification|Employment|" +
-      "Digital employment|Moonlighting|Criminal|Global database|Current address",
-    rows:
-      "Identity & passport|Criminal record|Entitlement to work|Digital employment|" +
-      "Employment|Education & trade certification",
-  },
-  trade: {
-    lanes: "01 — The entity|02 — The people|03 — Risk",
-    pills:
-      "Trade licence|Company registration|Directors & GST|Credit|Identity|Criminal|" +
-      "Defaulting directors|Promoter criminal history|Global database|" +
-      "Financial assessment|GST screening",
-    rows:
-      "Credit screen|Global database screen|Criminal record|Trade licence|" +
-      "Financial assessment|Directors & GST",
-  },
-};
+// Health carries the old practitioner categories and primary-source cards,
+// in the CMS order.
+check(
+  "governments.health: practitioner categories and PSV cards are the old ones, in order",
+  Object.values(EN_GOVERNMENTS.health.categories.items).join("|") ===
+    "Doctor|Practitioners|Non-physician|Pharmacists|Nurses and Midwives" &&
+    Object.values(EN_GOVERNMENTS.health.psv.cards).map((c) => c.t).join("|") ===
+      "Education Verification|Institute Accreditation Check|Health License|" +
+        "Certificate Of Good Standing|Business Registration Certificate|Employment Verification",
+  [Object.values(EN_GOVERNMENTS.health.categories.items), Object.values(EN_GOVERNMENTS.health.psv.cards).map((c) => c.t)],
+);
 
-for (const [page, want] of Object.entries(VERTICAL_KEYS)) {
-  const d = EN_GOVERNMENTS[page as keyof typeof VERTICAL_KEYS];
-  check(
-    `governments.${page}: its lanes still key on the three \`gt\` strings they keyed on`,
-    Object.values(d.lanes).map((l) => l.gt).join("|") === want.lanes,
-    Object.values(d.lanes).map((l) => l.gt),
-  );
-  check(
-    `governments.${page}: its pills still key on the names they keyed on`,
-    Object.values(d.pills).map((p) => p.n).join("|") === want.pills,
-    Object.values(d.pills).map((p) => p.n),
-  );
-  check(
-    `governments.${page}: its table rows still key on the \`nm\` strings they keyed on`,
-    Object.values(d.rows).map((r) => r.nm).join("|") === want.rows,
-    Object.values(d.rows).map((r) => r.nm),
-  );
-}
+// Trade is the old page's three audience rows, in the CMS order.
+check(
+  "governments.trade: its rows are the old three audiences, in order",
+  Object.values(EN_GOVERNMENTS.trade.rows).map((r) => r.h).join("|") ===
+    "For Government and Diplomatic Missions|For Companies and Enterprises|For Hiring Agents and Recruitment Intermediaries",
+  Object.values(EN_GOVERNMENTS.trade.rows).map((r) => r.h),
+);
+
+// Immigration authorities carries the old "AI-Powered Immigration
+// Verification Solution" bullets, three columns of four, in order.
+check(
+  "governments.immigration: the AI-solution bullets are the old twelve, in order",
+  Object.values(EN_GOVERNMENTS.immigration.ai.cols).flatMap((c) => c.items).map((r) => r.t).join("|") ===
+    "Tampered Documents|Document Credibility Issues|Compliance & Regulatory Risk|Identity Manipulation|" +
+      "Modern vs Legacy Systems|Advanced Fraud Detection|Audit-Ready Reporting|Real-time Dashboards|" +
+      "Detects Complex & Fraudulent case|Identifies inconsistencies|Digital verification|AI-driven fraud detection",
+  Object.values(EN_GOVERNMENTS.immigration.ai.cols).flatMap((c) => c.items).map((r) => r.t),
+);
+
+// Manpower & education carries the old "Our Verification Services" cards, in
+// order.
+check(
+  "governments.manpowerEducation: its service cards are the old two, in order",
+  Object.values(EN_GOVERNMENTS.manpowerEducation.services.cards).map((c) => c.t).join("|") ===
+    "Qualification Verification|Institution Accreditation",
+  Object.values(EN_GOVERNMENTS.manpowerEducation.services.cards).map((c) => c.t),
+);
+
+// The MOM page's HowTo is the old "How it works", in its order, and its FAQ
+// band is the old 19 questions (5 Oct 2026).
+const MOM_HOW = EN_GOVERNMENTS.mom.how;
+check(
+  "governments.mom: the HowTo steps are the old four, in order",
+  [MOM_HOW.register, MOM_HOW.qualifications, MOM_HOW.loa, MOM_HOW.report].map((s) => s.t).join("|") ===
+    "Register & Upload|Add Qualifications|Sign LOA & Pay|Receive Your Verification Report",
+);
+check(
+  "governments.mom: 19 FAQs, opening on COMPASS and closing on empanelment",
+  Object.values(EN_GOVERNMENTS.mom.faqs).length === 19 &&
+    EN_GOVERNMENTS.mom.faqs.compass.q === "What is COMPASS and how does it affect my EP application?" &&
+    EN_GOVERNMENTS.mom.faqs.empanelled.q === "Is HelloVerify an MOM-empaneled vendor?",
+  Object.values(EN_GOVERNMENTS.mom.faqs).map((f) => f.q),
+);
 
 /** THE FOUR COUPLINGS THIS SLICE ADDED, and §4's argument applies unchanged to
  *  each: two modules agreeing with no type between them.
@@ -2153,25 +2173,18 @@ check(
   leafPaths({ closing: EN_GOVERNMENTS.mom.closing }).length,
 );
 
-/** THE KEY GUARD, broken, on the exact mistake it exists for: a renamed row
+/** THE KEY GUARD, broken, on the exact mistake it exists for: a renamed tag
  *  typechecks, renders the same words in the same place, and silently changes a
  *  React key in the flight payload. */
-const renamedRow = {
-  ...EN_GOVERNMENTS.health.rows,
-  criminal: { ...EN_GOVERNMENTS.health.rows.criminal, nm: "Criminal records" },
+const coverageCards = EN_PLATFORM.coverage.packages.cards;
+const renamedTag = {
+  ...coverageCards,
+  tenant: { ...coverageCards.tenant, tags: ["Criminal Check", "Identity Check", "Credit check"] },
 };
 check(
-  "the key guard WOULD fail on a renamed vertical-table row",
-  Object.values(renamedRow).map((r) => r.nm).join("|") !== VERTICAL_KEYS.health.rows,
-  renamedRow.criminal.nm,
-);
-
-const renamedRegion = { ...EN_PLATFORM.coverage.regions, europeAmericas: "Europe and the Americas" };
-check(
-  "…and on a renamed coverage region heading",
-  Object.values(renamedRegion).join("|") !==
-    "South & Southeast Asia|Middle East & Africa|Europe & the Americas",
-  renamedRegion.europeAmericas,
+  "the key guard WOULD fail on a renamed coverage package tag",
+  Object.values(renamedTag).map((x) => x.tags.join("|")).join("/") !== COVERAGE_TAG_KEYS,
+  renamedTag.tenant.tags,
 );
 
 /** §3's `&amp;` guard, pointed at the trap THIS slice had to avoid, which is a
@@ -2193,7 +2206,7 @@ check(
   [
     EN_PLATFORM.security.certs.k,
     EN_PLATFORM.security.residencyBand.k,
-    EN_PLATFORM.technology.hero.k,
+    EN_PLATFORM.technology.pillars.h,
     EN_GOVERNMENTS.hub.hero.k,
   ].every((v) => v.includes("&") && !ENTITY.test(v)),
   [EN_PLATFORM.security.certs.k, EN_PLATFORM.security.residencyBand.k],
@@ -2240,18 +2253,20 @@ console.log("15. the numbers for `individuals` and `resources`, and the keys the
  *  slice counted 71 and 44 against this run's 105 and 90 — the same
  *  disagreement §7 and §9 record, stated rather than reconciled.
  *
- *      individuals  105 nodes -> 367 leaves
+ *      individuals  105 nodes -> 402 leaves
  *      resources     90       ->  98
  *
  *  AND THE SPREAD IS INSIDE `individuals`, not between the two:
  *
  *      individuals/page.tsx       22 nodes ->  52 leaves
- *      individuals/hellov         59       -> 135
+ *      individuals/hellov         59       -> 102
  *      individuals/home-family    11       ->  86
- *      individuals/immigration    13       ->  93
+ *      individuals/immigration    13       -> 161
  *
  *  HelloV's leaf count moved in the content-restore Part 1 (old CMS
- *  catalogue). The node counts are still the pre-migration matcher.
+ *  catalogue), immigration's in Part 9 (old CMS visa copy) and again on
+ *  6 Oct 2026 (the old applicant tab in its order, with the guide's FAQs, then
+ *  the guide's extras in and the CMS city / visa lists - never shown - out). The node counts are still the pre-migration matcher.
  *
  *  `home-family` and `immigration` are `VerticalPage` clients: their copy is
  *  almost entirely PROPS — `lanes`, `pills`, `rows`, `steps`, `faqs`, four
@@ -2273,9 +2288,9 @@ const EN_RES = pick(RESOURCES, DEFAULT);
 const IND_FILES: Record<string, readonly [number, number]> = {
   crumb: [0, 1],
   hub: [22, 52],
-  hellov: [59, 135],
+  hellov: [59, 102],
   homeFamily: [11, 86],
-  immigration: [13, 93],
+  immigration: [13, 161],
 };
 
 const RES_FILES: Record<string, readonly [number, number]> = {
@@ -2308,8 +2323,8 @@ for (const [k, v] of Object.entries(EN_RES)) {
 }
 
 check(
-  "individuals holds 367 leaves for 105 nodes and resources 98 for 90",
-  leafPaths(EN_IND).length === 367 &&
+  "individuals holds 402 leaves for 105 nodes and resources 98 for 90",
+  leafPaths(EN_IND).length === 402 &&
     leafPaths(EN_RES).length === 98 &&
     Object.values(IND_FILES).reduce((a, b) => a + b[0], 0) === 105 &&
     Object.values(RES_FILES).reduce((a, b) => a + b[0], 0) === 90,
@@ -2318,12 +2333,16 @@ check(
 
 /** The non-string leaves, itemised so moving one has to move this line.
  *
- *  `individuals`: 28. Four `<h1>`s and four `closing.heading`s carry an
- *  `<em>`; three `faqHead`s are `<>…</>`; sixteen `.strip3` figures are
+ *  `individuals`: 15. Four `<h1>`s and two `closing.heading`s carry an
+ *  `<em>`; one `faqHead` is `<>…</>`; eight `.strip3` figures are
  *  `<b>figure</b> tail` or a `<span className="dot" />` plus a phrase, which
  *  is TWO children and therefore one rich-text leaf rather than two string
  *  leaves — splitting them would put two adjacent text children where one
- *  sits today; and one is the FUNCTION leaf `immigration.tableNote`.
+ *  sits today. Immigration's strip, rich FAQ head and `tableNote` function
+ *  leaf went with the old CMS copy on 5 Oct 2026, and its closing heading on
+ *  6 Oct 2026, when the page took the old applicant tab's order. HelloV's
+ *  four strip figures, FAQ head and closing heading went the same day, with
+ *  the old `hellov.base.json`.
  *
  *  `resources`: 37. Twelve glossary `d` fragments, six `closing.heading`s,
  *  six `hero.h1`s, eight `.strip3` figures (two of them functions), and five
@@ -2332,9 +2351,9 @@ check(
  *  than a node because it replaced a template literal in an attribute-shaped
  *  position. */
 check(
-  "individuals: 339 string leaves and 28 rich-text or function leaves",
-  stringLeaves(EN_IND).length === 339 &&
-    leafPaths(EN_IND).length - stringLeaves(EN_IND).length === 28,
+  "individuals: 387 string leaves and 15 rich-text or function leaves",
+  stringLeaves(EN_IND).length === 387 &&
+    leafPaths(EN_IND).length - stringLeaves(EN_IND).length === 15,
   { strings: stringLeaves(EN_IND).length, all: leafPaths(EN_IND).length },
 );
 
@@ -2372,56 +2391,89 @@ check(
   joinKeys(EN_IND.homeFamily.lanes, "gt"),
 );
 
+// Re-keyed on 5 Oct 2026 to the old information guide's destinations.
 check(
-  "immigration's three lanes still key on 01 — Identity/02 — Your claims/03 — Your record",
-  joinKeys(EN_IND.immigration.lanes, "gt") === "01 — Identity|02 — Your claims|03 — Your record",
-  joinKeys(EN_IND.immigration.lanes, "gt"),
+  "immigration's six lanes head on the old information guide's embassies",
+  joinKeys(EN_IND.immigration.guide.destinations, "name") ===
+    "Embassy of Latvia|Embassy of Italy|High Commission Of Canada|British High Commission|" +
+      "Embassy of Switzerland|Zambia Qualifications Authority",
+  joinKeys(EN_IND.immigration.guide.destinations, "name"),
 );
 
 check(
-  "home-family's eight pills still key on the names they keyed on",
+  "home-family's eight pills still key on the HelloV check names",
   joinKeys(EN_IND.homeFamily.pills, "n") ===
-    "Identity|Photo match|Age|Driving licence|Criminal|Global database|Current address|Previous employment",
+    "Identity Check|Pan Card Check|Age Verification|Driving License Check|Criminal Record Check|Credit Check|Digital Address Check|Digital Employment Check",
   joinKeys(EN_IND.homeFamily.pills, "n"),
 );
 
+/** The old guide only ever showed the CMS embassy names (until the visa back
+ *  office answered); its cities and visa types came from the back office, so
+ *  the CMS `fromCountries` / `visaTypes` are not carried. What it did carry
+ *  from `immigrationApplicantGuideExtras.ts`: the six FAQ categories, the
+ *  Italy and Latvia accordions and the two Latvia Premium Service packages. */
 check(
-  "immigration's eleven pills still key on the names they keyed on",
-  joinKeys(EN_IND.immigration.pills, "n") ===
-    "Identity|Passport|Age|Current address|Education|Employment|Digital employment|" +
-      "Entitlement to work|Criminal|Global database|Credit",
-  joinKeys(EN_IND.immigration.pills, "n"),
+  "immigration's guide carries the old extras, and no CMS city or visa lists",
+  Object.values(EN_IND.immigration.guide.destinations).every((d) => Object.keys(d).join() === "name") &&
+    Object.values(EN_IND.immigration.guide.faqs).map((f) => f.length).join() === "10,5,3,2,4,3" &&
+    Object.keys(EN_IND.immigration.guide.accordions.latvia).join() === "who,dependents" &&
+    EN_IND.immigration.guide.premium.clearance.features.length === 4 &&
+    EN_IND.immigration.guide.premium.premium.features.length === 7,
+  Object.values(EN_IND.immigration.guide.faqs).map((f) => f.length),
 );
 
 check(
-  "home-family's six table rows still key on the names they keyed on",
+  "home-family's six table rows still key on the HelloV single-check names",
   joinKeys(EN_IND.homeFamily.rows, "nm") ===
-    "Identity|Global database screen|Driving licence|Criminal record|Current address|Previous employment",
+    "Age Verification|Pan Card Check|Driving License Check|Criminal Record Check|Digital Address Check|Digital Employment Check",
   joinKeys(EN_IND.homeFamily.rows, "nm"),
 );
 
 check(
-  "immigration's six table rows still key on the names they keyed on",
-  joinKeys(EN_IND.immigration.rows, "nm") ===
-    "Identity & passport|Global database screen|Criminal record|Digital employment|Employment|Education",
-  joinKeys(EN_IND.immigration.rows, "nm"),
+  "immigration's how-we-make-it-easy cards are the old six, in order",
+  joinKeys(EN_IND.immigration.easy.cards, "t") ===
+    "Visa Screening You Can Trust|Digital Onboarding|No more waiting in long queues!|Get Smart Reminders|" +
+      "Real Time Dashboards|Secure and Compliant",
+  joinKeys(EN_IND.immigration.easy.cards, "t"),
 );
 
 check(
-  "the four Steps decks still key on the step names they keyed on",
+  "the three Steps decks still key on the step names they keyed on",
   [
     joinKeys(EN_IND.hub.steps, "t"),
-    joinKeys(EN_IND.hellov.steps, "t"),
     joinKeys(EN_IND.homeFamily.steps, "t"),
-    joinKeys(EN_IND.immigration.steps, "t"),
+    joinKeys(EN_IND.immigration.steps.items, "t"),
   ].join(" / ") ===
-    "Send a photo|We check the source|The report / They agree|We check|Then it's deleted / " +
-      "Send a photo|They agree|You know / Upload|Check|Fix",
+    "Send a photo|We check the source|The report / Scan the QR|Select who|They consent / " +
+      "Easy upload|Smart Reminders|Real time dashboard",
   [
     joinKeys(EN_IND.hub.steps, "t"),
-    joinKeys(EN_IND.hellov.steps, "t"),
     joinKeys(EN_IND.homeFamily.steps, "t"),
-    joinKeys(EN_IND.immigration.steps, "t"),
+    joinKeys(EN_IND.immigration.steps.items, "t"),
+  ],
+);
+
+// HelloV took the old hellov.base.json on 6 Oct 2026: its STEP pills, the
+// eight packages, the six single checks and the four Advanced cards, in order.
+check(
+  "HelloV's step pills, packages, single checks and Advanced cards are the old ones, in order",
+  [
+    joinKeys(EN_IND.hellov.packages.steps, "t"),
+    joinKeys(EN_IND.hellov.packages.items, "t"),
+    joinKeys(EN_IND.hellov.singles.cards, "t"),
+    joinKeys(EN_IND.hellov.advanced.cards, "t"),
+  ].join(" / ") ===
+    "Scan QR Code|Select|The Person being verified / " +
+      "Driver Verification|Home Staff|Tenant Verification|Nanny Verification|Verify Anyone|" +
+      "Cyber Identity Verification|Know The Identity|Know Your Contact / " +
+      "Age Verification|Digital Employment Check|Driving License Check|Pan Card Check|" +
+      "Criminal Record Check|Digital Address Check / " +
+      "Home Staff Verification|Nanny Verification|Driver Verification|Tenant Verification",
+  [
+    joinKeys(EN_IND.hellov.packages.steps, "t"),
+    joinKeys(EN_IND.hellov.packages.items, "t"),
+    joinKeys(EN_IND.hellov.singles.cards, "t"),
+    joinKeys(EN_IND.hellov.advanced.cards, "t"),
   ],
 );
 
@@ -2460,16 +2512,15 @@ console.log("15b. one leaf read twice, and the HowTo `name` that depends on it")
  *  verbatim in JSON-LD. A leaf rewritten as JSX would silently emit no node
  *  at all, and `check-schema.mjs` lists the pages that must have one. */
 check(
-  "both VerticalPage clients' stepsHead is a plain string, so the HowTo node still emits",
-  typeof EN_IND.homeFamily.stepsHead === "string" &&
-    typeof EN_IND.immigration.stepsHead === "string",
-  { homeFamily: typeof EN_IND.homeFamily.stepsHead, immigration: typeof EN_IND.immigration.stepsHead },
+  "home-family's stepsHead is a plain string, so its HowTo node still emits",
+  typeof EN_IND.homeFamily.stepsHead === "string",
+  typeof EN_IND.homeFamily.stepsHead,
 );
 
 check(
-  "…and so is every heading a `Steps name=` reads on the two hand-written pages",
-  typeof EN_IND.hub.howItWorks.h === "string" && typeof EN_IND.hellov.rule.h === "string",
-  [EN_IND.hub.howItWorks.h, EN_IND.hellov.rule.h],
+  "…and so is the heading the hub's `Steps name=` reads",
+  typeof EN_IND.hub.howItWorks.h === "string",
+  EN_IND.hub.howItWorks.h,
 );
 
 console.log("15c. the function leaves, against the children they have to reproduce");
@@ -2479,7 +2530,7 @@ console.log("15c. the function leaves, against the children they have to reprodu
  *  one into two — React's SSR writes `<!-- -->` between adjacent text
  *  children, and the built page shows them
  *  (`.next/server/app/en/resources.html` reads `12<!-- --> checks documented
- *  →`). Nine leaves in `resources` and one in `individuals` stand in for a
+ *  →`). Nine leaves in `resources` stand in for a
  *  parent's inline children, so what has to hold is the CHILD ARRAY: its
  *  length, and the exact connective text including the leading space that
  *  §3's edge-whitespace guard would have rejected as a string leaf.
@@ -2526,15 +2577,6 @@ check(
   EN_RES.countries.officeIn("Noida") === "office in Noida" &&
     typeof EN_RES.countries.officeIn("Noida") === "string",
   EN_RES.countries.officeIn("Noida"),
-);
-
-check(
-  "individuals.immigration.tableNote keeps its text child's TRAILING space before the link",
-  childArray(EN_IND.immigration.tableNote("LINK")).length === 2 &&
-    childArray(EN_IND.immigration.tableNote("LINK"))[0] ===
-      "Times shown are from upload to result · documents verified in the country of issue — see " &&
-    childArray(EN_IND.immigration.tableNote("LINK"))[1] === "LINK",
-  childArray(EN_IND.immigration.tableNote("LINK")),
 );
 
 console.log("15d. the catalogue boundary where equality cannot hold it");
@@ -2627,11 +2669,11 @@ check(
 
 check(
   "…while leafPaths, which sorts, would NOT — which is why the join is the assertion",
-  leafPaths(reordered).join("\n") ===
-    leafPaths({
+  shape(reordered) ===
+    shape({
       primarySource: EN_RES.glossary.terms.primarySource,
       databaseScreening: EN_RES.glossary.terms.databaseScreening,
-    }).join("\n"),
+    }),
   leafPaths(reordered),
 );
 
@@ -2652,22 +2694,6 @@ check(
   "…and on one that split its text child in two",
   JSON.stringify(childArray({ props: { children: [12, " checks", " documented →"] } })) !==
     JSON.stringify([12, " checks documented →"]),
-);
-
-/** The trailing space `immigration.tableNote` depends on, deleted. The page
- *  would then need a `{" "}` of its own, which is a THIRD child and a
- *  separator that is not there today. */
-check(
-  "the tableNote guard WOULD fail if the space before the link were dropped",
-  childArray({
-    props: {
-      children: [
-        "Times shown are from upload to result · documents verified in the country of issue — see",
-        "LINK",
-      ],
-    },
-  })[0] !==
-    "Times shown are from upload to result · documents verified in the country of issue — see ",
 );
 
 /** The HowTo coupling, broken: a `stepsHead` rewritten as rich text still
@@ -2699,7 +2725,7 @@ check(
 
 const driftedArrow = {
   ...aboutAr,
-  credentials: { ...aboutAr.credentials, momStory: "القصة →" },
+  hero: { ...aboutAr.hero, k: `${aboutAr.hero.k} →` },
 };
 check(
   "the Arabic go-cue guard WOULD fail on a leftover →",

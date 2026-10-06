@@ -5,10 +5,9 @@
  *  goes TS2741 when one is declared without a dictionary, and a `.ts` registry
  *  stays importable from modules that must not be compiled as JSX.
  *
- *  No key unions here, unlike `./chrome.ts`. Nothing on `/about` is a table
- *  the component iterates — the three path cards and the six office rows are
- *  written out longhand — so there is no component-side array for a union to
- *  gate. Adding one is the moment to add the union.
+ *  No key unions here, unlike `./chrome.ts`. The page iterates `numbers.stats`,
+ *  `values.items` and `clients.items` with `Object.entries`, so a key added in
+ *  English renders without a component-side array for a union to gate.
  */
 import type { Dictionary } from "@/lib/copy";
 

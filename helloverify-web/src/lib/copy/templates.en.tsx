@@ -67,25 +67,6 @@ export const en = {
     confirmedWith: "Confirmed with",
   },
 
-  /** The compliance band's two PROP DEFAULTS. A page may override either, and
-   *  `/platform/security-compliance` does; these are the words for the band
-   *  when nobody says otherwise. */
-  compliance: {
-    /** The one rich-text leaf here, and the reason the file is `.tsx`.
-     *  Written exactly as the `??` default was: a text node, a `<br />`, and
-     *  a second text node — the same three children React saw before, with
-     *  the newline-plus-indent between the `<br />` and "done properly."
-     *  folding away as it did in the original. */
-    head: (
-      <>
-        The unexciting part,<br />done properly.
-      </>
-    ),
-    lede:
-      "Every check involves someone's most personal documents. Consent comes first, " +
-      "retention has limits, and all of it is auditable.",
-  },
-
   /** The band-closing link to `/platform/security-compliance`. The href is
    *  routing and stays in the component; only the words are here. */
   securityInFull: "Security & compliance, in full — DPA, residency, conformance",

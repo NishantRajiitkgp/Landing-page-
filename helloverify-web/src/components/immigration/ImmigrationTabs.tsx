@@ -1,7 +1,7 @@
-/** Old Authorities / Applicant pair. The two bodies already live on this
- *  host as separate VerticalPages; the tabs are links, not a restyle. */
+/** Old Authorities / Applicant pair, with the old hero's tab labels. The two
+ *  bodies live on this host as separate pages; the tabs are links. */
 import { AppLink } from "@/components/chrome/AppLink";
-import { CHROME } from "@/lib/copy/chrome";
+import { GOVERNMENTS } from "@/lib/copy/governments";
 import { copy } from "@/lib/copy/request";
 import {
   IMMIGRATION_APPLICANT_HREF,
@@ -10,9 +10,7 @@ import {
 } from "@/lib/immigration/tab";
 
 export async function ImmigrationTabs({ selected }: { selected: ImmigrationTab }) {
-  const t = await copy(CHROME);
-  const authorities = t.footer.links["/solutions/immigration-authorities"];
-  const applicant = t.footer.links["/products/immigration"];
+  const { authorities, applicant } = (await copy(GOVERNMENTS)).immigration.tabs;
 
   return (
     <div className="imm-tabs" role="tablist" aria-label={`${authorities} / ${applicant}`}>

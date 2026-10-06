@@ -56,8 +56,8 @@ check(
 
 console.log("3. immigration goes to the visa portal, not the app cart");
 check("immigration source does not name the app", !immigration.includes(APP_HOST));
-check("immigration primary uses VISA_HOST", immigration.includes("href: VISA_HOST"));
-check("immigration closing uses VISA_HOST", immigration.includes("ctaHref: VISA_HOST"));
+check("immigration partners CTA uses VISA_HOST", immigration.includes("href={VISA_HOST}"));
+check("immigration guide CTA uses VISA_HOST", immigration.includes("ctaHref={VISA_HOST}"));
 
 console.log("4. no other live marketing page still hrefs the app");
 {

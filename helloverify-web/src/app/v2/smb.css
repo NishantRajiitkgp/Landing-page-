@@ -319,6 +319,25 @@
   .sg-logos img { max-width: 96px; max-height: 26px; }
   .sg-logos img[src*="wipro"] { max-height: 34px; }
 }
+/* The SMB panel's strip (`SmbPacks.tsx`): ten marks are too many for one
+   row, so they sit in an even grid — five across on desktop, then fewer.
+   The `fit` classes (`lib/smbClients.ts`) even out how big each mark reads,
+   as Wipro's height does above. */
+.sg-trust-many .sg-logos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; }
+.sg-trust-many .sg-logos li { height: 52px; }
+.sg-trust-many .sg-logos img { max-width: min(128px, 100%); max-height: 30px; }
+.sg-trust-many .sg-logo-tall img { max-height: 46px; }
+.sg-trust-many .sg-logo-square img { max-height: 52px; }
+.sg-trust-many .sg-logo-wide img { max-width: 100%; }
+@media (min-width: 640px) {
+  .sg-trust-many .sg-logos { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px 24px; }
+}
+@media (min-width: 1081px) {
+  .sg-trust-many { padding-block: 22px; }
+  .sg-trust-many .sg-logos img { max-height: 32px; }
+  .sg-trust-many .sg-logo-tall img { max-height: 48px; }
+  .sg-trust-many .sg-logo-square img { max-height: 52px; }
+}
 
 /* ── Desktop placements ─────────────────────────────────────────────────── */
 @media (min-width: 1081px) {

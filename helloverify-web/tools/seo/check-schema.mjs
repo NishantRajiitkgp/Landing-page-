@@ -80,40 +80,34 @@ const SERVICE_PAGES = new Set([
  *  shows it changing rather than inferred from what the build emitted.
  *
  *  A page renders a strip when `chrome/Steps.tsx` is called, and it emits the
- *  node only when that call was given a `name`. Eighteen pages render one —
- *  twelve call `Steps` directly, six through `templates/VerticalPage.tsx` —
- *  and every one of the eighteen must be in exactly one of these two sets, so
+ *  node only when that call was given a `name`. Six pages render one,
+ *  directly or through `templates/VerticalPage.tsx`, and every one of the
+ *  six must be in exactly one of these two sets, so
  *  a NEW strip is a failed build until somebody states which it is. */
 const HOWTO_PAGES = new Set([
   "/en/business",
-  "/en/products/bgv-enterprise",
   "/en/products/bgv-smb",
-  "/en/employee-verification",
-  "/en/products/certifier",
+  // `/en/products/customer-kyc` left on 6 Oct 2026: the old page's six step
+  // cards are not one instruction each (step 1 lists three check groups), so
+  // they render as the old cards, not a `Steps` strip
   "/en/individuals",
-  "/en/products/hellov",
-  "/en/technology",
-  // the six built on VerticalPage, from its `stepsHead`
-  "/en/solutions/health-authorities",
-  "/en/solutions/immigration-authorities",
-  "/en/solutions/manpower-and-education-authorities",
-  "/en/solutions/trade-authorities",
+  // the old "How it works" (Register & Upload → … → Receive Your Verification
+  // Report); the page's "Our Services" strip has no `name` and emits nothing
+  "/en/solutions/manpower-and-education-authorities/ministry-of-manpower",
+  // VerticalPage pages that emit a HowTo from their `stepsHead`
   "/en/individuals/home-family",
-  "/en/products/immigration",
+  // `/en/products/immigration` left on 6 Oct 2026: the old page's three
+  // "steps" are unnumbered icon cards (upload, reminders, dashboard), not
+  // instructions, so they render as those cards
 ]);
 
-/** The four strips that are NOT instructions, with the reason on each. A
- *  numbered strip is not automatically a sequence, and three of these four
- *  carry a how-shaped or question-shaped heading, which is what makes them
- *  tempting. Each page's `<Steps>` call carries the same note. */
+/** The strip that is NOT instructions, with the reason on it. A numbered
+ *  strip is not automatically a sequence. The page's `<Steps>` call carries
+ *  the same note. (`/products/bgv-enterprise`, `/employee-verification` and
+ *  `/products/certifier` left this list on 6 Oct 2026: their old pages show
+ *  those claims as icon cards and tabs, not a steps strip.) */
 const HOWTO_NOT_A_SEQUENCE = new Map([
-  ["/en/products/customer-kyc", "three mutually exclusive routes (\"02 · Or redirect\"), not steps"],
-  ["/en/international", "a definition of coverage and its properties, not a process"],
   ["/en/platform/security-compliance", "four controls that apply concurrently, not in order"],
-  [
-    "/en/solutions/manpower-and-education-authorities/ministry-of-manpower",
-    "four deliverables — \"four things in the contract\" — not steps",
-  ],
 ]);
 
 const failures = [];

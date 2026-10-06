@@ -505,5 +505,5 @@ check(
 );
 check(
   "llms stays on the English table — copyFor(path) ignores the request locale",
-  copyFor("/contact").title === "Talk to sales — HelloVerify",
+  copyFor("/contact").title === "Lets Build the Business Together — HelloVerify",
 );

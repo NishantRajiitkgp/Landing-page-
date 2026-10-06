@@ -7,7 +7,6 @@
  *  marks, figures, prices and `{link}` / `{n}` slots stay Latin.
  */
 
-import type { ReactNode } from "react";
 import type { BusinessCopy } from "./business";
 
 export const ar: BusinessCopy = {
@@ -138,730 +137,649 @@ export const ar: BusinessCopy = {
     },
   },
 
+  /** `/products/bgv-enterprise` — the old `enterprise.base.json`, word for
+   *  word, in its order: hero, trust strip (title, subtitle, six partner
+   *  logos), the Employees / Businesses / Customers screening tabs. The old
+   *  `titleBold` was empty in every locale and is not carried. */
   enterprise: {
-    crumb: "التحقق من الخلفية للمؤسسات",
-    closing: {
-      heading: (
-        <>
-          أربعمئة سائق في الأسبوع؟ <em>قبل الغداء.</em>
-        </>
-      ),
-      sub: "أخبرونا بحجمكم وأدواركم. سيكون لديكم تجريب تشغيلي هذا الأسبوع.",
-    },
+    crumb: "المؤسسات",
     hero: {
-      k: "الأعمال · التحقق المؤسسي من الخلفية",
-      h1: (
-        <>
-          تحقق يواكب <em>وتيرة التوظيف.</em>
-        </>
-      ),
-      sub:
-        "فحوصات خلفية عالية الحجم باتفاقية مستوى خدمة. يقرأ الذكاء الاصطناعي كل وثيقة، ويؤكّد " +
-        "فريقنا لدى الجهة المُصدِرة، ويعود الجواب إلى نظام ATS لديكم — من 15 دقيقة.",
-      cta: "اتصل بالمبيعات",
-      turnaround: "اطّلعوا على مدد الإنجاز",
+      h1: (<>فحص مدعوم بالذكاء الاصطناعي تثق به أكبر المؤسسات في الهند. <br /><em>أوقف التوظيف الخاطئ قبل أن يبدأ.</em></>),
+      cta: "تحدث إلى المبيعات",
     },
-    strip: {
-      clients: (<><b>2,000+</b> عميل مؤسسي</>),
-      checks: (<><b>20M+</b> فحصاً، كل واحد منها لدى المصدر</>),
-      riders: (<><b>1,600+</b> سائق موثَّق شهرياً، لعميل واحد</>),
-      certs: (<><span className="dot" /> ISO 27001 · PBSA</>),
+    trust: {
+      before: "موثوق به من أفضل",
+      after: "شركات IT/ITES في الهند لـ",
+      second: "التحقق من الخلفية",
+      sub: "يجمع مزيجنا من الذكاء الاصطناعي وخبراء التحقق الداخليين على ردع الاحتيال مع تجربة سلسة للمستخدمين الحقيقيين.",
     },
-    verify: {
-      k: "ما نتحقّق منه",
-      h: "ماذا يشمل فحص الخلفية المؤسسي؟",
-      lede:
-        "كتالوج HelloVerify المؤسسي يشغّل 33 فحصاً حول ثلاثة أسئلة: من هو المرشّح، وماذا أنجز، " +
-        "وما المسجَّل في الملف. الهوية خلال 15 دقيقة، والسجل الجنائي خلال 30، والعمل الرقمي خلال 60؛ " +
-        "والتعليم يستغرق ثلاثة أيام لدى المسجِّل.",
+    partners: {
+      cognizant: "Cognizant",
+      infosys: "Infosys",
+      accenture: "Accenture",
+      reliance: "Reliance Retail",
+      wipro: "Wipro",
+      hcl: "HCL",
     },
-    lanes: {
-      identity: { gt: "01 — الهوية", gh: "من هم" },
-      work: { gt: "02 — العمل والتعليم", gh: "ماذا أنجزوا" },
-      records: { gt: "03 — السجلات والمخاطر", gh: "ما في الملف" },
+    screening: {
+      h: (<>فحوصات خلفية لكل جزء من مؤسستك <br /><em>اختر من تريد فحصه</em></>),
+      tabs: { employees: "الموظفون", businesses: "الشركات", customers: "العملاء" },
     },
-    pills: {
-      identity: { n: "الهوية", t: "15 دقيقة" },
-      pan: { n: "PAN", t: "15 دقيقة" },
-      passport: { n: "جواز السفر", t: "15 دقيقة" },
-      age: { n: "العمر", t: "15 دقيقة" },
-      drivingLicence: { n: "رخصة القيادة", t: "30 دقيقة" },
-      registrationCertificate: { n: "شهادة التسجيل", t: "30 دقيقة" },
-      digitalEmployment: { n: "العمل الرقمي", t: "60 دقيقة" },
-      moonlighting: { n: "العمل الموازي", t: "60 دقيقة" },
-      entitlementToWork: { n: "أحقية العمل", t: "60 دقيقة" },
-      employment: { n: "العمل", t: "يومان" },
-      education: { n: "التعليم", t: "3 أيام" },
-      credit: { n: "الائتمان", t: "15 دقيقة" },
-      globalDatabase: { n: "قاعدة البيانات العالمية", t: "15 دقيقة" },
-      criminal: { n: "الجنائي", t: "30 دقيقة" },
-      currentAddress: { n: "العنوان الحالي", t: "30 دقيقة" },
-      tradeLicence: { n: "الرخصة التجارية", t: "يومان" },
-      directorsGst: { n: "المديرون وGST", t: "3 أيام" },
-    },
-    allChecks: "كل الفحوصات الـ 33",
-    howItWorks: {
-      k: "كيف يعمل",
-      h: "كيف يعمل التحقق المؤسسي من الخلفية؟",
-      lede:
-        "يبدأ التحقق المؤسسي برفع واحد: يصوّر المرشّح الوثائق عبر WhatsApp أو رابط، بلا تطبيق " +
-        "وبلا حساب. يقرأ ذكاء HelloVerify الاصطناعي كل حقل، ويُرسل الطلب إلى الجهة المُصدِرة، ويصل " +
-        "التقرير إلى نظام ATS لديكم مع تسمية كل مصدر.",
-    },
-    steps: {
-      upload: {
-        n: "01 · هاتف المرشّح",
-        t: "الرفع",
-        p: "صوِّر الوثيقة. تُفحص الحواف والوهج والتركيز قبل أن يُغلق الغالق.",
+    employees: {
+      h: "فحوصات خلفية للجميع",
+      p: "HelloVerify هي الطبقة الرقمية الوحيدة التي تؤتمت عملية الفحص الخلفي لتقليل الاحتيال وضمان أسرع انضمام.",
+      values: {
+        fast: { t: "سريع", tag: "أسرع 3 مرات من متوسط الصناعة", p: "يستخدم HelloVerify الذكاء الاصطناعي وتعلم الآلة لتقديم أسرع خدمة فحص خلفي." },
+        accurate: { t: "دقيق", tag: "معدل تقارير مُتحقق منها 99.2%", p: "عملية الفحص الفورية تساعدك على استبعاد المستندات الاحتيالية وتوظيف المرشح المناسب." },
+        compliant: { t: "متوافق", tag: "معتمد ISO 27001 + GDPR", p: "يلتزم HelloVerify بمستوى عالٍ من الامتثال ويضمن أمانًا بمستوى البنوك." },
       },
-      read: {
-        n: "02 · ذكاء HelloVerify الاصطناعي",
-        t: "القراءة",
-        p: "يُستخرج كل حقل، وتُراجع الوثيقة على نفسها، ويُحدَّد مكتب الإصدار — في نحو ثانية.",
+      explore: "استكشف المزيد",
+      checksH: "الفحوصات التي نقدمها",
+      stats: {
+        checks: { a: "30+", b: "فحص" },
+        countries: { a: "120+", b: "دولة" },
+        tat: { a: "1 إلى 7", b: "أيام عمل TAT" },
+        api: { a: "REST API +", b: "رفع جماعي" },
       },
-      confirm: {
-        n: "03 · المصدر",
-        t: "التأكيد",
-        p: "يُرسل الطلب إلى الجهة المُصدِرة. وللشهادة يعني ذلك المسجِّل — لا موقعاً يشبهه.",
-      },
-      report: {
-        n: "04 · نظام ATS لديكم",
-        t: "التقرير",
-        p: "تقرير واحد، باسم المصدر إلى جانب كل نتيجة، ومسار قابل للتدقيق خلفه.",
+      groups: {
+        enterprise: {
+          h: "فحوصات المؤسسات",
+          a: ["فحص الهوية", "فحص التعليم", "فحص المؤسسة التعليمية", "فحص التوظيف", "فحص كشف الحساب البنكي", "شهادة تسجيل الأعمال", "الملف ثلاثي الأبعاد والتعرف على الوجه"],
+          b: ["فحص الترخيص المهني", "فحص السجل الجنائي", "فحص العنوان", "فحص قاعدة البيانات العالمية", "فحص الشركة", "جميع لوحات المخدرات"],
+        },
+        tampering: {
+          h: "تلاعب بالمستندات",
+          a: ["التحقق من الرخصة", "الشهادة", "المستندات", "كشف الحساب البنكي"],
+        },
       },
     },
-    turnaroundBand: {
-      k: "مدة الإنجاز والتغطية",
-      h: "كم يستغرق فحص الخلفية المؤسسي؟",
-      lede:
-        "تُقاس مدة الإنجاز المؤسسي من الرفع حتى التقرير: الهوية وPAN خلال 15 " +
-        "دقيقة، ورخصة القيادة والسجل الجنائي خلال 30، والعمل الرقمي خلال 60، " +
-        "والعمل خلال يومين، والتعليم خلال ثلاثة — عبر 120+ دولة، ومذكورة في " +
-        "العقد الذي توقّعه HelloVerify.",
+    businesses: {
+      h: "التحقق من الأعمال والعناية الواجبة\nللشراكة مع الموردين المناسبين",
+      p: "مع Certifier من HelloVerify يمكن للعملاء تحسين تجربة التقييم عبر ملفات موثقة تشمل السيلفي وتأكيد الموقع وصور الموقع والفحص والتصاريح والاتفاقيات والتواقيع الرقمية.",
+      features: {
+        dueDiligence: "عناية واجبة\nشاملة للموردين",
+        kyc: "KYC للموردين و\nالتحقق من المستندات",
+        criminal: "فحص السجلات\nالقانونية والجنائية والمحاكم",
+        financial: "المخاطر المالية و\nتقييم الائتمان",
+        compliance: "فحص الامتثال\nوالتنظيمي",
+        reference: "التحقق من المراجع\nوالأداء السابق",
+      },
+      explore: "استكشف المزيد",
     },
-    rows: {
-      identityPan: {
-        nm: "الهوية وPAN",
-        sub: "الاسم، وتاريخ الميلاد، والرقم، والصلاحية",
-        tm: "15 دقيقة",
-        src: "السجل المُصدِر",
-      },
-      drivingLicence: {
-        nm: "رخصة القيادة",
-        sub: "الفئة، والصلاحية، والتأييدات",
-        tm: "30 دقيقة",
-        src: "هيئة النقل في الولاية",
-      },
-      criminal: {
-        nm: "السجل الجنائي",
-        sub: "قواعد بيانات المحاكم والشرطة",
-        tm: "30 دقيقة",
-        src: "سجلات المحاكم",
-      },
-      digitalEmployment: {
-        nm: "العمل الرقمي",
-        sub: "سجل عمل مدعوم من EPFO",
-        tm: "60 دقيقة",
-        src: "سجلات صندوق الادخار",
-      },
-      employment: {
-        nm: "العمل",
-        sub: "الدور، ومدة الخدمة، وملاحظات المغادرة",
-        tm: "يومان",
-        src: "موارد بشرية لدى صاحب العمل",
-      },
-      education: {
-        nm: "التعليم",
-        sub: "الدرجة، والسنة، والمؤسسة",
-        tm: "3 أيام",
-        src: "مسجِّل الجامعة",
-      },
-    },
-    note: (link: ReactNode) => (
-      <>
-        الأوقات المعروضة من الرفع حتى التقرير · 120+ دولة عبر المسار نفسه — اطّلعوا على {link}
-      </>
-    ),
-    noteLink: "التغطية العالمية",
-    compliance: {
-      k: "الامتثال والأمن",
-      h: "كيف تتعامل HelloVerify مع حماية البيانات والامتثال؟",
-      lede:
-        "HelloVerify حاصلة على شهادة ISO 27001 ومدقَّقة بشكل مستقل، ومتوافقة مع GDPR — " +
-        "الموافقة وحدود الاحتفاظ والحق في النسيان في كل مسار عمل — وعضو في PBSA، الهيئة " +
-        "العالمية لمعايير صناعة الفحص. كل فحص يبدأ بالموافقة ويترك مساراً قابلاً للتدقيق.",
-    },
-    securityInFull: "الأمن والامتثال بالكامل — DPA، والإقامة، والمطابقة",
-    faqHead: (<>يُسأل قبل<br />كل تجريب.</>),
-    faqs: {
-      volume: {
-        q: "ما مدى «السرعة» عند الحجم الحقيقي؟",
-        a:
-          "الأوقات في هذه الصفحة تصمد عند الحجم لأن المسار متوازٍ — ألف رخصة قيادة تستغرق تقريباً ما تستغرقه واحدة. فحوصات فئة الهوية تعود خلال 15–60 دقيقة؛ وما يحتاج مسجِّلاً أو محكمة يُسعَّر بالأيام، واتفاقية مستوى الخدمة التي نوقّعها تعكس مزيج فحوصاتكم الفعلي.",
-      },
-      source: {
-        q: "ماذا يعني «مؤكَّد لدى المصدر» فعلاً؟",
-        a:
-          "لا قواعد بيانات وسيطة ككلمة أخيرة. تُؤكَّد الشهادة لدى مسجِّل الجامعة، والرخصة لدى جهة الإصدار، والعمل لدى صاحب العمل أو سجلات صندوق الادخار. يسمّي التقرير المصدر إلى جانب كل نتيجة.",
-      },
-      submit: {
-        q: "كيف يقدّم المرشّحون الوثائق؟",
-        a:
-          "عبر WhatsApp أو رابط لمرة واحدة — بلا تطبيق للتثبيت، وبلا حساب يُنشأ. تُلتقط الموافقة أولاً، ويراجع مسار الالتقاط التركيز والحواف والوهج قبل الرفع.",
-      },
-      ats: {
-        q: "هل يمكن ربط هذا بنظام ATS لدينا؟",
-        a:
-          "نعم — REST API وwebhooks، وCSV جماعي لحملات التوظيف الجماعية، وموصّلات لمنصات ATS الشائعة. تُنشر النتائج تلقائياً؛ ولا يغادر مسؤولو التوظيف طابورهم.",
-      },
-      failure: {
-        q: "ماذا يحدث عندما يفشل فحص؟",
-        a:
-          "يُظهر التقرير بالضبط ما لم يتطابق وأين فُحص، مع إرفاق الأدلة. يحصل المرشّحون على مسار للاعتراض، وإعادة التحقق بعد تصحيح مجانية.",
+    customers: {
+      brand: "الثقة والسلامة",
+      sub: "بنية ثقة لنمو أعمال سريع ودقيق ومتوافق",
+      pillar: "شريك موثوق للبقاء أمام الاحتيال المالي لجميع أصحاب المصلحة",
+      body: ["منصة الثقة والسلامة حل KYC شامل يبسّط عمليات الانضمام الرقمي وكشف الاحتيال.", "عزّز أعمالك بحلول متوافقة تنظيميًا تبني الثقة في كل مرحلة من الانضمام والتحقق الرقمي—من فحص الأشخاص المعرضين سياسيًا (PEP) والعناية الواجبة إلى تحليل السمعة والامتثال وقوائم المراقبة الجنائية."],
+      explore: "استكشف المزيد",
+      advH: "بعض المزايا الرئيسية التي لاحظها عملاؤنا",
+      adv: {
+        cost: { v: "90%", sub: "خفض تكلفة الانضمام." },
+        time: "قلّل وقت الانضمام من ساعات إلى دقائق.",
+        fraud: "زيادة تصل إلى 90% في كشف الاحتيال بفضل الملف ثلاثي الأبعاد ومطابقة الوجه وفحوصات AML.",
+        paperless: "عمليات رقمية آلية بلا ورق للامتثال للمتطلبات القانونية بسهولة.",
       },
     },
   },
-
+  /** `/products/bgv-smb` — the old `bgvSmb.base.json`, word for word, in its
+   *  order: hero, How it Works?, the packages with the Select Your Checks
+   *  table and its summary, Trusted by, Solutions We Offer. `exploreLess` and
+   *  `stars` were hard-coded English in the old components and stay English.
+   *  `trust` / `clients` are the SMB client logos added on request (5 Oct
+   *  2026); the old page had no logo strip. `strip`, `hero.talkFirst` and
+   *  `closing.ctaLabel` are read by the homepage only (`sections/SmbPacks.tsx`). */
   smb: {
-    crumb: "باقات الشركات الصغيرة والمتوسطة",
-    closing: {
-      heading: (
-        <>
-          أول توظيف لديكم يستحق <em>اليقين نفسه.</em>
-        </>
-      ),
-      sub: "بلا عقد، وبلا حد أدنى. ادفعوا لكل مرشّح، والجواب خلال دقائق.",
-      ctaLabel: "اشتروا باقة",
-    },
+    crumb: "BGV للشركات الصغيرة والمتوسطة",
     hero: {
-      k: "الأعمال · الشركات الصغيرة والمتوسطة",
-      h1: (
-        <>
-          اختاروا باقة.<br />
-          <em>اطّلعوا على السعر.</em>
-        </>
-      ),
-      sub:
-        "بلا مكالمة مبيعات، وبلا عرض سعر بالبريد. اختاروا الفحوصات، وادفعوا لكل مرشّح، وأرسلوا رابط " +
-        "WhatsApp واحداً — ويعود التقرير في الصباح نفسه.",
-      buy: "اشتروا باقة",
-      talkFirst: "أو تحدّثوا إلينا أولاً",
+      h1: (<>عمليات تحقق خلفية <br /><em>للشركات الصغيرة والمتوسطة</em></>),
+      sub: "توفر تقنيتنا المملوكة والمدعومة بالذكاء الاصطناعي وتعلم الآلة حلاً شاملاً للفحص للشركات الناشئة والشركات الصغيرة والمتوسطة.",
+      cta: "تحدث إلى المبيعات",
+      talkFirst: "تحدثوا إلى المبيعات",
     },
     strip: {
-      package: (<><b>30 دقيقة</b> باقة العمالة الميدانية</>),
-      checks: (<><b>20M+</b> فحصاً منذ 2018</>),
-      subscription: (<><b>لا</b> اشتراك، الدفع لكل مرشّح</>),
-      invoice: (<><span className="dot" /> فاتورة GST على كل طلب</>),
+      checks: (<><b>1200+</b> شركة صغيرة تثق بـ HelloVerify</>),
+      subscription: (<><b>60 دقيقة</b> للأساسي والقياسي والمتميز</>),
+      invoice: (<><span className="dot" /> متوسط الإنجاز 9 أيام</>),
+    },
+    closing: {
+      ctaLabel: "اطّلعوا على الباقات",
+    },
+    trust: { h: "موثوق به لدى أكثر من 1,200 شركة صغيرة ومتوسطة في التحقق من الخلفية" },
+    clients: {
+      akcelerator: "Akmazo Akcelerator",
+      aidenai: "Aiden AI",
+      lucid: "Lucid Technology Services",
+      midfin: "Midfin Wealth",
+      lnp: "LNP Infotech",
+      itekpeople: "iTek People Technology",
+      appxcelerate: "AppXcelerate Solutions",
+      ditstek: "DITSTEK Innovations",
+      caone: "CA-One India",
+      ibirds: "iBirds Software Services",
+    },
+    how: {
+      h: "كيف يعمل؟",
+      steps: {
+        select: { n: "01", t: "اختر عمليات التحقق", p: "خصّص طلبك حسب احتياجك من مجموعة واسعة من عمليات التحقق" },
+        fill: { n: "02", t: "املأ المعلومات", p: "قدّم موافقة الفرد والمعلومات اللازمة للتحقق" },
+        fast: { n: "03", t: "بسرعة تصل إلى 24 ساعة", p: "احصل على تقارير واضحة تساعدك في اتخاذ القرار" },
+      },
     },
     packages: {
-      k: "الباقات والأسعار",
-      h: "ما باقات فحص الخلفية التي يمكن لشركة صغيرة شراءها؟",
-      lede:
-        "تغطي باقات HelloVerify للشركات الصغيرة والمتوسطة ثلاثة أشكال توظيف، مسعَّرة لكل مرشّح: " +
-        "توظيف عمالة ميدانية خلال 30 دقيقة، وتوظيف مكتبي — التعليم والعمل " +
-        "والعمل الموازي والعنوان الحالي — خلال ثلاثة أيام، وباقة سائق خلال 30 " +
-        "دقيقة. بلا اشتراك، وفاتورة GST على كل طلب.",
+      h: "اختر أو خصّص باقة التحقق",
+      checksInclude: "تشمل عمليات التحقق",
+      buy: "اشترِ الآن",
+      items: {
+        basic: {
+          t: "الباقة الأساسية",
+          price: "₹1799",
+          ready: "60 دقيقة",
+          p: "يتحقق من الهوية الصادرة عن الحكومة، ويفحص السجلات الجنائية، ويطابق قوائم المراقبة العالمية للكشف عن المخاطر الخفية.",
+          checks: ["فحص الهوية", "الفحص الجنائي", "فحص قاعدة البيانات العالمية"],
+        },
+        standard: {
+          t: "الباقة القياسية",
+          price: "₹2199",
+          ready: "60 دقيقة",
+          p: "جميع فحوصات الباقة الأساسية بالإضافة إلى التحقق من العنوان، لصورة خلفية أكثر اكتمالاً.",
+          checks: ["فحص الهوية", "الفحص الجنائي", "فحص قاعدة البيانات العالمية", "فحص العنوان الحالي"],
+        },
+        premium: {
+          t: "الباقة المميزة",
+          price: "₹2399",
+          ready: "60 دقيقة",
+          p: "جميع فحوصات الباقة القياسية بالإضافة إلى كشف العمل الإضافي غير المعلن (Moonlighting).",
+          checks: ["فحص الهوية", "فحص العنوان الحالي", "الفحص الجنائي", "فحص قاعدة البيانات العالمية", "فحص العمل الإضافي"],
+        },
+      },
+      customize: "خصّص باقاتك",
     },
-    packs: {
-      blue: {
-        hd0: "باقة",
-        hd1: "عمالة ميدانية · شركات صغيرة ومتوسطة",
-        tt: "توظيف عمالة ميدانية",
-        sub: "سائقون، وراكبون، ومستودعات، وأمن",
-        price: "₹349",
-        ready: "30 دقيقة",
-        who: "رفع واحد من المرشّح",
+    table: {
+      h: "اختر عمليات التحقق",
+      cols: { check: "التحقق", pricing: "السعر", action: "الإجراء" },
+      rows: {
+        identity: {
+          n: "Identity Check",
+          price: "₹349",
+          info: "This check involves validation of Passport or PAN card or Driving License or Voter ID or Aadhaar Card used by candidate. For Aadhaar, only number validation will only be done. We match the name, DOB, father's name of the candidate, ID Number to document provided (Govt. restrictions incase of Aadhaar) • Screening of passport through MRZ (Machine Readable Zone) format passports. For International candidates' passport screening will only be conducted.",
+        },
+        employment: {
+          n: "Employment Check",
+          price: "₹499",
+          info: "It includes verifying the candidate's claims about his/her tenure, etc. and establishment with respective employer. Hello Verify will reach out to the HR using automated email / telephone. Mode: Email/Database Additional Options for Verifications We also have verification methods via. PF/Form 16/Supervisor /UAN. These all are chargeable at an additional charge per check per method.",
+        },
+        education: {
+          n: "Education Check-Highest Education (Extra University Chargesapplicable)",
+          price: "₹999",
+          info: "This check involves verifying the authenticity of candidate's educational & professional qualifications from the respective universities/colleges / trusted database. The names are run through Hello Verify's proprietary database of both known (trusted) and unknown (suspect) universities/institutes and organizations. Herein, TAT may vary subject to university/college (TAT) process. Mode: Database/Email Scope: 12th, Bachelors, Masters, Professional",
+        },
+        address: {
+          n: "Address Check",
+          price: "₹499",
+          info: "The address is matched using a candidates documents which are either verified or eyeballed for details using original color photocopies. We accept all address proof related documents such as Aadhaar OKYC, Driving License, Voter ID, Electricity Bills, Credit Card Statement, Bank Passbook, Govt Issued Cards and other documents containing the candidates address details. We also provide latitude / longitude in the address where the candidate is actively staying. In case the candidate does not have a valid address proof we do ask for a self declaration of address or a visit can be done to the stated location (only if required). It is recommended that only current / active stay address be checked as the candidate would be residing there. Mode: Digital",
+        },
+        professionalReference: {
+          n: "Professional Reference Check",
+          price: "₹499",
+          info: "An automated voice command IVR verification or email link will be conducted to obtain reference confirmation about the candidate's personal integrity, educational and professional backgrounds from professional references provided by the candidate. For fresher's, verification is taken from personal references provided by the candidate. We will attempt to reach the candidate 3 times as per defined scope . Mode: Automated IVR/ Telephonic/Email Scope: Personal / Professional",
+        },
+        indianDatabase: {
+          n: "Indian Database Check",
+          price: "₹699",
+          info: "This Check includes enhanced due diligence using most comprehensive database. Some are listed below: * Central Bureau of Investigation (CBI) Most Wanted List * India Courts * Central Vigilance Commission (CVC) Corrupt Officers Database * Securities and Exchange Board of India * Most Wanted Criminals *Other Indian Databases Mode: Database",
+        },
+        globalDatabase: {
+          n: "Global Database Check",
+          price: "₹999",
+          info: "This Check includes enhanced due diligence using most comprehensive database. Some are listed below: * Serious and Organized Crimes - Interpol Most Wanted. - Most Wanted Lists * Regulatory Authorities * Compliance Authorities - Office of Foreign Assets Control - Proprietary Databases * Web and Media Searches - Internet Searches - Media Searches * Bankruptcy Checks - Board of Industries and Financial Reconstruction (BIFR) Companies Mode: Database",
+        },
+        criminalEcourt: {
+          n: "Criminal Check via E-Court",
+          price: "₹799",
+          info: "Search for negative records/charges against the applicant through online e-Court records of the jurisdiction, covering Magistrate Court, Session Court, District Court and High Court. Checks for any negative history or adverse records for the last 7 years. (Subject to availability of information in public or online domain). Mode: Database Scope: Criminal/Civil or Both",
+        },
+        criminalPolice: {
+          n: "Criminal Check via Police and law Firm",
+          price: "₹899",
+          info: "Search for criminal records against the applicant at the police station of the stated jurisdiction, along with a court record search conducted through Certified Legal Consultants/Advocates. Checks for any negative history or adverse records for the last 7 years. TAT may vary subject to the police station and court process. (Subject to availability of information in public or online domain). Mode: Police Station/Database Scope: Criminal/Civil or Both",
+        },
+        criminalLawFirm: {
+          n: "Criminal check via law firm",
+          price: "₹999",
+          info: "Search for negative records/charges against the applicant in the civil court, High Court, Magistrate Court & Session Court of the jurisdiction. Checks for any negative history or any adverse records (Civil proceeding: Original Suit /Miscellaneous Suit / Execution/ Arbitration cases for last 7 Years. Screenings are conducted via Certified Legal Consultants/ Advocates. They use their own access via legal databases to perform these checks. (Subject to availability of information in public or online domain). Mode: Database Scope: Criminal/Civil or Both",
+        },
+        rightToWork: {
+          n: "Right/Eligibility to work",
+          price: "₹359",
+          info: "This check verifies whether the candidate is legally eligible to work in India, matching identity, nationality/visa status and work-authorisation documents against the details declared by the candidate. Mode: Database/Document",
+        },
+        uan: {
+          n: "UAN Check",
+          price: "₹400",
+          info: "This check validates the candidate's Universal Account Number (UAN) against EPFO records, matching name, employment history and contributing establishments with the details declared by the candidate. Mode: Database",
+        },
+        bankAccount: {
+          n: "Bank Account check (Penny Drop)",
+          price: "₹199",
+          info: "This check validates the candidate's bank account through a penny-drop (name-match) verification, confirming that the account number, IFSC and account-holder name match the details provided by the candidate. Mode: Database",
+        },
+        credit: {
+          n: "Credit Check",
+          price: "₹899",
+          info: "This check retrieves the candidate's credit report from authorised bureaus to identify outstanding loans, defaults, write-offs or other adverse credit history recorded against the candidate. Mode: Database",
+        },
+        creditSuit: {
+          n: "Credit suit defaulter Check",
+          price: "₹699",
+          info: "This check screens the candidate against defaulter and credit-suit databases to identify any civil suit, recovery proceeding or wilful-defaulter listing recorded against the candidate. Mode: Database",
+        },
+        resume: {
+          n: "Resume Check Validation",
+          price: "₹299",
+          info: "Information contained in resume is used to hire a candidate. Once an offer is placed, and a background screening request is placed a candidate has to submit a Screening form along with documentation. Thus a check on validating of details on the resume submitted at time of interview and application form submitted at the time of Screening must be check for inconsistencies and highlighted back to the candidate. Mode: Online",
+        },
+        finra: {
+          n: "FINRA Fingerprint(Pan India)",
+          price: "₹10000",
+          info: "To verify fingerprint, the template created from the captured fingerprint is compared with templates stored in a database. This comparison can be done using algorithms that measure the similarity between templates.",
+        },
+        ofac: {
+          n: "OFAC Check",
+          price: "₹999",
+          info: "The Office of Foreign Assets Control, or OFAC, of the U.S. Department of the Treasury administers and enforces economic and trade sanctions based on US foreign policy and national security goals against targeted foreign countries, terrorists, international narcotics traffickers, and those engaged in activities related to the proliferation of weapons of mass destruction. The most recent, master list of Specially Designated Nationals and Blocked Persons that is made available by OFAC will be searched. Mode: Database",
+        },
+        form16: {
+          n: "Form-16 Check",
+          price: "₹500",
+          info: "This check verifies the Form-16 issued to the candidate, matching employer name, PAN, assessment year and reported income against the employment details declared by the candidate. Mode: Document/Database",
+        },
+        professionalLicense: {
+          n: "Professional license Check (Extra cost on actuals)",
+          price: "₹799",
+          info: "This check involves verifying the authenticity and current status of the professional licence, registration or membership claimed by the candidate with the issuing council, board or regulatory body. The licence number, holder name, category and validity/expiry are matched against the document provided by the candidate. Charges levied by the issuing authority are extra on actuals. Mode: Database/Email",
+        },
+        socialMedia: {
+          n: "Social Media Check",
+          price: "₹749",
+          info: "This check reviews publicly available social-media profiles associated with the candidate to identify any adverse, discriminatory or reputational content relevant to employment screening. Mode: Online",
+        },
+        directorship: {
+          n: "Directorship Check",
+          price: "₹649",
+          info: "This refers to a search based on matching credential of a candidate with MCA (Company) database whether candidate is a Director or not in the company where he/she has worked. If he/she is a Director, then the company name is checked against on the MCA black listed company. Mode: Database",
+        },
+        financialRegulatory: {
+          n: "Financial Regulatory Search",
+          price: "₹500",
+          info: "This check screens the candidate against financial-regulatory databases, including FFIEC records, to identify any enforcement action, prohibition or adverse finding recorded by banking and financial regulators. Mode: Database",
+        },
+        bankStatement: {
+          n: "Bank Statement - Online or PDF",
+          price: "₹100",
+          info: "This check validates the authenticity of the candidate's bank statement (online fetch or uploaded PDF), confirming account details and flagging signs of tampering or inconsistency with the declared information. Mode: Online/Document",
+        },
+        gsa: {
+          n: "General Service Administration",
+          price: "₹499",
+          info: "This check screens the candidate against the U.S. General Services Administration (GSA) excluded-parties lists to identify any debarment, suspension or ineligibility for federal programmes. Mode: Database",
+        },
+        oig: {
+          n: "Office of Inspector General",
+          price: "₹499",
+          info: "This check screens the candidate against the U.S. Office of Inspector General (OIG) exclusions database to identify any exclusion from federal healthcare programmes or related adverse listing. Mode: Database",
+        },
+        adverseMedia: {
+          n: "Adverse Media Search",
+          price: "₹1299",
+          info: "This Check includes enhanced due diligence using most comprehensive database. Some are listed below: * Serious and Organized Crimes - Interpol Most Wanted. - Most Wanted Lists * Regulatory Authorities * Compliance Authorities - Office of Foreign Assets Control - Proprietary Databases * Web and Media Searches - Internet Searches - Media Searches * Bankruptcy Checks - Board of Industries and Financial Reconstruction (BIFR) Companies Mode: Database",
+        },
+        gap: {
+          n: "Gap Check",
+          price: "₹649",
+          info: "This check involves identification of GAP between employment, education and address details. Mode: Online",
+        },
+        drug: {
+          n: "Drug Test",
+          price: "₹1350",
+          info: "Upon receipt of request/Documents for Drug Test from client/customer, HelloVerify, with prior consent of candidate, will fix an appointment with candidate for collection of sample for Drug Test. After collection, sample for Drug test will be sent to the laboratory or Drug Test will be conducted via instant drug kits onsite. Prior notice of 48 hours must be given to arrange for visits/sample collection. Availability of visit is subject to confirmation from the lab, once Hello Verify has been informed. A date of visit | candidate name | email | phone number | Drug Test Type | must be provided in order to perform the check. Component under below-mentioned Drug Test- Panel are subject to change. Client/customer may choose specific component as per their requirements.",
+        },
+        alcohol: {
+          n: "Alcohol Test",
+          price: "₹2300",
+          info: "Upon receipt of request from the client, HelloVerify, with prior consent of the candidate, will arrange collection of a sample for alcohol testing. Prior notice of 48 hours must be given to arrange visits/sample collection. Availability is subject to confirmation from the lab. A date of visit, candidate name, email, phone number and test type must be provided. Mode: Lab/Onsite",
+        },
+        company: {
+          n: "Company Check",
+          price: "₹599",
+          info: "It authenticates the existence of a company, its reputation and regulatory compliances of the Company wherein the candidate has previously worked. Note: Visit may not be possible due to COVID-19 and entry Restriction. Mode: Database only/visit (Subject to COVID-19)",
+        },
+        faceMatch: {
+          n: "Face match",
+          price: "₹0",
+          info: "This check captures a live selfie and matches it against the photograph on the candidate's identity document, including a liveness check to confirm the person is physically present. Mode: Online",
+        },
+        fda: {
+          n: "Food and Drug Administration Database Verification",
+          price: "₹1350",
+          info: "This check screens the candidate against Food and Drug Administration (FDA) databases, including the debarment list and the disqualified/restricted investigators list, to identify any regulatory action, prohibition or adverse finding recorded against the candidate. Mode: Database",
+        },
+        nsr: {
+          n: "National Skill of Registry",
+          price: "₹799",
+          info: "This check validates the candidate's profile against the National Skills Registry (NSR), confirming the ITPIN/NSR record and matching the personal, education and employment details registered against it with the details declared by the candidate. Mode: Database",
+        },
+        gapValidation: {
+          n: "Gap Check validation",
+          price: "₹900",
+          info: "This is an advanced gap check that identifies unexplained gaps between employment, education and address timelines and validates supporting documents or declarations provided for those periods. Mode: Online/Document",
+        },
       },
-      white: {
-        hd0: "باقة",
-        hd1: "وظائف مكتبية · شركات صغيرة ومتوسطة",
-        tt: "توظيف مكتبي",
-        sub: "شركات، وتقنية، ومالية، ورعاية صحية",
-        price: "₹999",
-        ready: "3 أيام",
-        who: "مؤكَّد لدى المسجِّل",
+      more: "استكشف المزيد",
+      exploreLess: "Explore Less",
+    },
+    summary: {
+      h: "خصّص باقتك",
+      p: "تحقق من موثوقية الأشخاص الذين توظفهم لحماية منزلك/طفلك/سيارتك من مخاطر الجرائم.",
+      checksInclude: "تشمل عمليات التحقق",
+      empty: "اختر عمليات التحقق من الجدول لبناء باقتك.",
+      buy: "اشترِ الآن",
+    },
+    trusted: {
+      h: "موثوق به من قبل الشركات والأفراد",
+      stats: {
+        smbs: { v: "1200+", l: "شركات صغيرة ومتوسطة تثق بـ HelloVerify" },
+        tat: { v: "9 Day TAT", l: "متوسط مدة الإنجاز (TAT)" },
+        start: { v: "₹649", l: "السعر الابتدائي لكل فحص" },
       },
-      driver: {
-        hd0: "باقة",
-        hd1: "مستهلك · شركات صغيرة ومتوسطة",
-        tt: "سائق",
-        sub: "للعائلات والأساطيل الصغيرة",
-        price: "₹499",
-        ready: "30 دقيقة",
-        who: "أيضاً على HelloV، بلا عنوان",
+      stars: "4 out of 5 stars",
+      people: {
+        rohit: {
+          name: "Rohit Sharma",
+          role: "مالك مطعم",
+          quote: "“كان توظيف الموظفين محفوفًا بالمخاطر، لكن HelloVerify جعله بسيطًا وموثوقًا. الآن ننضمّ بثقة كاملة.„",
+          alt: "Rohit Sharma",
+        },
+        anjali: {
+          name: "Anjali Mehta",
+          role: "مؤسسة شركة ناشئة",
+          quote: "“تحقق سريع ودقيق وسلس. ساعدنا HelloVerify على توسيع التوظيف دون تأخير.„",
+          alt: "Anjali Mehta",
+        },
+        neha: {
+          name: "Neha Verma",
+          role: "صاحبة عمل منزلية",
+          quote: "“العثور على مساعدة موثوقة أمر بالغ الأهمية. مع HelloVerify أشعر بالأمان والاطمئنان كل مرة أوظف فيها.„",
+          alt: "Neha Verma",
+        },
       },
     },
-    checks: {
-      pan: "بطاقة PAN",
-      registrationCertificate: "شهادة التسجيل",
-      drivingLicence: "رخصة القيادة",
-      criminalRecord: "السجل الجنائي",
-      education: "التعليم",
-      employment: "العمل",
-      moonlighting: "العمل الموازي",
-      currentAddress: "العنوان الحالي",
-    },
-    card: {
-      perCandidate: "لكل مرشّح",
-      inclGst: "شامل GST",
-      readyIn: (n: ReactNode) => (<>{n} فحوصات · جاهز خلال</>),
-      buyNow: "اشترِ الآن",
-    },
-    pricenote: (link: ReactNode) => (
-      <>
-        الأسعار المعروضة مؤقتة بانتظار الاعتماد التجاري · كل طلب يحصل على فاتورة GST ·
-        أسعار الحجم من 50 مرشّحاً/شهراً — {link}
-      </>
-    ),
-    pricenoteLink: "اتصل بالمبيعات",
-    alacarte: {
-      k: "À la carte",
-      h: "هل يمكنني شراء فحص خلفية واحد؟",
-      lede:
-        "يمكن شراء أي من فحوصات HelloVerify الـ 33 بمفرده داخل التطبيق، من المصادر " +
-        "نفسها وفي التقرير نفسه كالباقة. تعود الهوية وPAN خلال 15 دقيقة، " +
-        "والجنائي والعنوان الحالي خلال 30، والتعليم خلال ثلاثة أيام.",
-    },
-    chips: {
-      identity: { n: "الهوية", t: "15 دقيقة" },
-      pan: { n: "PAN", t: "15 دقيقة" },
-      drivingLicence: { n: "رخصة القيادة", t: "30 دقيقة" },
-      criminal: { n: "الجنائي", t: "30 دقيقة" },
-      currentAddress: { n: "العنوان الحالي", t: "30 دقيقة" },
-      digitalEmployment: { n: "العمل الرقمي", t: "60 دقيقة" },
-      employment: { n: "العمل", t: "يومان" },
-      education: { n: "التعليم", t: "3 أيام" },
-    },
-    allChecks: "كل الفحوصات الـ 33",
-    howItWorks: {
-      k: "كيف يعمل",
-      h: "كيف يعمل فحص الخلفية للشركات الصغيرة؟",
-    },
-    steps: {
-      pick: {
-        n: "01 · دقيقتان",
-        t: "اختر وادفع",
-        p: "اختَر باقة، وادفع لكل مرشّح. بلا اشتراك، وبلا حد أدنى للطلب.",
+    solutions: {
+      h: "الحلول التي نقدمها",
+      sub: "نلبي احتياجات الشركات الصغيرة والمتوسطة من خلال عروضنا التالية",
+      tabs: { employee: "التحقق من الموظفين", vendor: "فحص الموردين" },
+      employee: {
+        trust: { t: "ثقة في كل توظيف", p: "من أول نقرة حتى التوظيف النهائي—توفر عمليات الانضمام المدعومة بالذكاء الاصطناعي وسير العمل المؤتمت لدينا السرعة والدقة في كل خطوة." },
+        decision: { t: "كل قرار مدعوم بالثقة", p: "المربيات وطاقم المنزل والسائقون والمستأجرون الذين تثق بهم في منزلك يستحقون تحققًا شاملاً. رقمي 100% وسريع ودقيق—حتى لا تقلق بشأن الأشخاص الأقرب لعائلتك." },
+        instant: { t: "فحوصات فورية، توظيف بثقة", p: "كل توظيف يحمل مخاطر. فحوصات الخلفية الفورية من HelloVerify تلغي التخمين—وتكشف العلامات التحذيرية قبل أن يصلوا إلى بابك." },
       },
-      link: {
-        n: "02 · المرشّح",
-        t: "رابط واحد",
-        p: "يحصلون على رابط WhatsApp، ويصوّرون وثائقهم، ويوافقون من هاتفهم.",
-      },
-      report: {
-        n: "03 · صندوق واردكم",
-        t: "التقرير",
-        p: "ملف PDF واحد، باسم المصدر إلى جانب كل نتيجة. باقات العمالة الميدانية تصل خلال نحو 30 دقيقة.",
-      },
-    },
-    faqHead: (<>قبل أن تشتروا.</>),
-    faqs: {
-      consent: {
-        q: "هل أحتاج موافقة المرشّح؟",
-        a:
-          "نعم، والمسار يتولاها: يوافق المرشّح من هاتفه قبل التقاط أي وثيقة. بلا موافقة، بلا فحص — وهذا متطلب قانوني، لا إعداد.",
-      },
-      subscription: {
-        q: "هل هناك اشتراك؟",
-        a:
-          "لا. تدفعون لكل مرشّح، ولكل باقة. إذا تحقّقتم من خمسين شخصاً شهرياً أو أكثر، يبدأ تسعير الحجم — اتصلوا بالمبيعات لبطاقة الأسعار.",
-      },
-      unverifiable: {
-        q: "ماذا لو تعذّر التحقق من وثيقة؟",
-        a:
-          "يقول التقرير بالضبط ما تعذّر تأكيده ولماذا — الجهة المُصدِرة غير متصلة، أو السجل غير موجود، أو عدم تطابق — وما يلزم لحله. لن تُحاسبوا مرتين على إعادة تشغيل بعد تصحيح.",
-      },
-      invoice: {
-        q: "هل ترسلون فاتورة أصولية؟",
-        a:
-          "كل طلب يأتي بفاتورة GST، تلقائياً، إلى البريد الإلكتروني على الحساب.",
+      vendor: {
+        h: "التحقق من الأعمال والعناية الواجبة للشراكة مع الموردين المناسبين",
+        p: "مع Certifier من HelloVerify يمكن للعملاء تحسين تجربة التقييم عبر ملفات موثقة تشمل السيلفي وتأكيد الموقع وصور الموقع والفحص والتصاريح والاتفاقيات والتواقيع الرقمية.",
+        features: {
+          dueDiligence: "عناية واجبة\nشاملة للموردين",
+          kyc: "KYC للموردين و\nالتحقق من المستندات",
+          criminal: "فحص السجلات\nالقانونية والجنائية والمحاكم",
+          financial: "المخاطر المالية و\nتقييم الائتمان",
+          compliance: "فحص الامتثال\nوالتنظيمي",
+          reference: "التحقق من المراجع\nوالأداء السابق",
+        },
+        offer: {
+          h: "ما الذي نقدمه",
+          cards: {
+            fast: { t: "انضمام الموردين أسرع بـ 10 مرات", p: "تساعد المنصة على اتخاذ قرارات مبنية على البيانات حول أداء الموردين، لتمكين الشركات من تحديد أفضل الموردين وتحسين عملية الاختيار." },
+            regulatory: { t: "الحفاظ على الامتثال التنظيمي", p: "يساعد Certifier على تحديد الكيانات الموثوقة والمؤهلة المتوافقة مع متطلبات الشركة والامتثال، مما يقلل احتمال التعامل مع موردين عاليي المخاطر أو غير متوافقين." },
+            monitoring: { t: "تقليل المخاطر عبر المراقبة المستمرة", p: "تحديثات فورية لتقدم أنشطة الموردين (صور/فيديو/ملاحظات صوتية) والالتزام بالتعاقدات—لإدارة مشاريع أفضل وحل استباقي للمشكلات." },
+            reputation: { t: "حماية سمعة عملك", p: "تتطور قدرات الذكاء الاصطناعي وتعلم الآلة في Certifier باستمرار مع تدخل بشري، لضمان تحقق أصيل من الموردين وإبعاد الجهات السيئة." },
+          },
+        },
       },
     },
   },
 
+  /** `/employee-verification` — the old `employees.base.json`, word for word,
+   *  in its order. The two sections the CMS marks `hidden` (blue-collar
+   *  workforce stats, the White & Blue-Collar benefits) never rendered and are
+   *  not carried; nor are the white / blue `exploreMore` labels, which the old
+   *  split panel did not render. Stat values live in the page. */
   employeeVerification: {
     crumb: "التحقق من الموظفين",
-    closing: {
-      heading: (
-        <>
-          من تثقون بهم أصلاً، <em>على السجل.</em>
-        </>
-      ),
-      sub: "أطلِقوا إعادة التحقق دون تعطيل وردية واحدة.",
-    },
     hero: {
-      k: "الأعمال · التحقق من الموظفين",
-      h1: (
-        <>
-          اعرفوا قوى عملكم. <em>ولا تزالون.</em>
-        </>
-      ),
-      sub:
-        "التحقق ليس للتوظيف الجديد فقط. المقاولون وأساطيل العمل الحر والموظفون المنتقلون إلى " +
-        "أدوار حسّاسة — يُعاد توثيقهم في الخلفية، من سجلات صندوق الادخار إلى المحاكم.",
-      cta: "اتصل بالمبيعات",
-      when: "متى تعيدون التحقق",
+      h1: (<>تحقق خلفية شامل <br /><em>لكل فئة من القوى العاملة.</em></>),
+      cta: "تحدث مع المبيعات",
     },
-    strip: {
-      digital: (<><b>60 دقيقة</b> فحص العمل الرقمي</>),
-      epfo: (<><b>EPFO</b> سجل عمل مدعوم</>),
-      zero: (<><b>صفر</b> نماذج للموظف</>),
-      consent: (<><span className="dot" /> تُلتقط الموافقة في كل تشغيل</>),
-    },
-    whatWeCheck: {
-      k: "ما نفحصه",
-      h: "ماذا تفحص إعادة التحقق من الموظفين؟",
-      lede:
-        "تغطي إعادة التحقق من الموظفين العمل الرقمي، والعمل الموازي، وأحقية " +
-        "العمل، وتحديثاً جنائياً، والعنوان الحالي. تجيب سجلات صندوق الادخار والمحاكم " +
-        "رقمياً — العمل الرقمي خلال 60 دقيقة. وحيث يلزم الاتصال بصاحب عمل سابق، " +
-        "تتصل HelloVerify، ويسمّي التقرير من ردّ.",
-    },
-    chips: {
-      digitalEmployment: { n: "العمل الرقمي", t: "60 دقيقة" },
-      moonlighting: { n: "العمل الموازي", t: "60 دقيقة" },
-      entitlementToWork: { n: "أحقية العمل", t: "60 دقيقة" },
-      criminalRefresh: { n: "تحديث جنائي", t: "30 دقيقة" },
-      currentAddress: { n: "العنوان الحالي", t: "30 دقيقة" },
-      employmentManual: { n: "العمل (يدوي)", t: "يومان" },
-      education: { n: "التعليم", t: "3 أيام" },
-    },
-    whenItMatters: {
-      k: "متى يهمّ",
-      h: "متى ينبغي إعادة التحقق من موظف؟",
-      lede:
-        "أعيدوا التحقق في أربع لحظات: الانضمام، وتغيير دور إلى المالية أو الأمن أو " +
-        "عملاً مجاوراً لرعاية الأطفال، وتحديثاً سنوياً عبر القوى العاملة، وبعد " +
-        "حادثة. الفحص لقطة ليوم تشغيله، وهذه النقاط الأربع حيث تتغيّر الصورة — " +
-        "وما يسأل عنه المدقّقون.",
-    },
-    when: {
-      joining: {
-        wt: "الانضمام",
-        wp: "الأساس: الهوية وسجل العمل والسجلات مؤكَّدة قبل منح الوصول.",
-        wm: "اليوم نفسه",
+    banner: "حلول التحقق من الموظفين",
+    white: {
+      h: "تحقق الوظائف المكتبية (White Collar)",
+      p: "يُعد تحقق الوظائف المكتبية عملية شاملة للتحقق من مؤهلات وخلفية وهوية المهنيين في الأدوار التي تتطلب خبرة وثقة. يوفر HelloVerify حلاً مبسطًا يساعد الشركات على تقليل مخاطر التوظيف، وضمان الامتثال، وبناء قوة عاملة يمكن الاعتماد عليها.",
+      checks: {
+        education: { n: "التحقق من التعليم", p: "التحقق من المؤهلات التعليمية والمهنية لمقدم الطلب بما في ذلك أصالة الجهة المُصدِرة." },
+        identity: { n: "التحقق من الهوية", p: "التحقق من هوية مقدم الطلب عبر مطابقة المستندات الحكومية الصادرة مع الاسم وتاريخ الميلاد واسم الأب ورقم الهوية." },
+        employment: { n: "التحقق من العمل", p: "التحقق من سجل عمل مقدم الطلب بما في ذلك اسم الشركة ومدة العمل والمسمى الوظيفي." },
+        criminalRecords: { n: "التحقق من السجل الجنائي", p: "التحقق من سجلات المحاكم عبر الاختصاصات، بما في ذلك المحكمة العليا ومحاكم الاستئناف ومحاكم المقاطعات والهيئات، لتحديد أي تهم جنائية ضد مقدم الطلب." },
+        reference: { n: "التحقق من المراجع", p: "يتحقق من السلوك المهني والأداء والكفاءات الأخرى لمقدم الطلب عبر مراجع من أصحاب العمل السابقين." },
+        drugTest: { n: "التحقق من اختبار المخدرات", p: "إجراء اختبار مخدرات يشمل جميع اللوحات من Panel-1 إلى Panel-10." },
+        globalDatabase: { n: "التحقق عبر قواعد بيانات عالمية", p: "التحقق من قوائم العقوبات الدولية وقوائم المراقبة والسجلات التنظيمية عبر قواعد بيانات عالمية لرصد المعلومات السلبية وتخفيف المخاطر." },
+        address: { n: "التحقق من العنوان", p: "التحقق الرقمي من عنوان مقدم الطلب عبر مطابقة مستندات إثبات العنوان المؤهلة مع الموقع الجغرافي المباشر. لا يلزم زيارة ميدانية." },
+        company: { n: "التحقق من الشركة", p: "يتحقق من شرعية جهة العمل السابقة لمقدم الطلب عبر التحقق من تسجيل المؤسسة وحالتها التشغيلية وتفاصيل الأعمال الرئيسية." },
+        credit: { n: "التحقق الائتماني", p: "يتحقق من الملف الائتماني لمقدم الطلب عبر مكتب ائتماني من خلال تقييم درجة الائتمان والتاريخ الائتماني ومعايير المخاطر المرتبطة." },
+        criminalLawFirm: { n: "التحقق الجنائي عبر مكتب محاماة", p: "يحدد السجلات الجنائية عبر التحقق من سجلات المحاكم من خلال شركاء مكاتب محاماة موثوقين." },
+        directorship: { n: "التحقق من عضوية مجالس الإدارة", p: "يحدد ما إذا كان مقدم الطلب يشغل حالياً أو شغل سابقاً مناصب عضوية مجلس إدارة في شركات مسجلة." },
+        form16: { n: "التحقق من نموذج Form 16", p: "يتحقق من راتب مقدم الطلب والخصومات الضريبية وتفاصيل العمل عبر التحقق من نموذج Form 16 الصادر من جهة العمل." },
+        resume: { n: "التحقق من السيرة الذاتية", p: "يتحقق من المعلومات الواردة في سيرة مقدم الطلب بما في ذلك التعليم والعمل والمهارات والاعتمادات الأخرى." },
       },
-      roleChange: {
-        wt: "تغيير الدور",
-        wp: "الانتقال إلى المالية أو الأمن أو عمل مجاور لرعاية الأطفال يطلق الفحوصات التي يطلبها الدور.",
-        wm: "60 دقيقة",
-      },
-      annual: {
-        wt: "تحديث سنوي",
-        wp: "تحديث جنائي والعمل الموازي عبر القوى العاملة، مجمَّعاً بحيث لا تفعل الموارد البشرية شيئاً يدوياً.",
-        wm: "يعمل ليلاً",
-      },
-      incident: {
-        wt: "حادثة",
-        wp: "إعادة تشغيل مستهدفة بمسار قابل للتدقيق، جاهزة للشؤون القانونية في اليوم نفسه.",
-        wm: "30 دقيقة",
+      cta: "تحدث مع المبيعات",
+      alt: "مهنيون يمثلون التحقق من الوظائف المكتبية والامتثال",
+    },
+    whiteWhy: {
+      h: "لماذا يُعد تحقق الوظائف المكتبية مهمًا؟",
+      cards: {
+        integrity: { t: "تعزيز نزاهة القوى العاملة", p: "اكتشف وخفف مخاطر الادعاءات المزيفة في التعليم أو الخبرة أو الهوية. يضمن ذلك قرارات توظيف أدق ويقلل المخاطر ويبني قوة عاملة موثوقة ومتوافقة." },
+        hiring: { t: "تسريع التوظيف بثقة", p: "تعمل إجراءات الإدخال المدعومة بالذكاء الاصطناعي وسير العمل المؤتمت على تبسيط التوظيف من البداية للنهاية، وتقليل الجهد اليدوي والأخطاء وتحسين زمن الإنجاز." },
+        compliance: { t: "ضمان الامتثال التنظيمي الكامل", p: "يتوافق إطارنا المتكامل مع المعايير العالمية لحماية خصوصية البيانات وأمنها، ويضمن التعامل الآمن مع المعلومات عبر بروتوكولات قوية وصلاحيات وصول مضبوطة." },
       },
     },
-    howItWorks: {
-      k: "كيف يعمل",
-      h: "كيف تعمل إعادة التحقق دون تعطيل الموظفين؟",
-      lede:
-        "يوافق الموظفون مرة واحدة من هاتفهم. بعد ذلك، تعمل إعادة التحقق من " +
-        "رفع قائمة أو مزامنة HRMS، وتفحص السجلات النظامية وسجلات المحاكم رقمياً، و" +
-        "تبلّغ عن التغييرات فقط — سجل محكمة جديد، أو صاحب عمل ثانٍ — لا " +
-        "كل نتيجة نظيفة. لا أحد يملأ نموذجاً مجدداً.",
-    },
-    steps: {
-      enroll: {
-        n: "01 · CSV واحد أو استدعاء API",
-        t: "التسجيل",
-        p: "ارفعوا القائمة أو زامنوا من HRMS لديكم. يحصل كل موظف على رابط موافقة.",
-      },
-      verify: {
-        n: "02 · وفق الجدول",
-        t: "التحقق",
-        p: "تعمل الفحوصات رقمياً مقابل سجلات صندوق الادخار والمحاكم والسجلات. ويتولى البشر الاستثناءات.",
-      },
-      alert: {
-        n: "03 · التغييرات فقط",
-        t: "التنبيه",
-        p: "تسمعون عن الفروقات — سجل محكمة جديد، أو صاحب عمل ثانٍ — لا خمسمئة نتيجة نظيفة.",
+    results: {
+      h: "حقق قسم الموارد البشرية وشركات التوظيف نتائج أفضل مع HelloVerify",
+      stats: {
+        workflow: "شهدوا تبسيط سير عمل الفحص",
+        accuracy: "شهدوا تحسنًا في دقة الفحوصات",
+        experience: "شهدوا تحسنًا في تجربة المرشح",
       },
     },
-    faqHead: (<>أسئلة عادلة.</>),
-    faqs: {
-      legal: {
-        q: "هل إعادة التحقق من الموظفين الحاليين قانونية أصلاً؟",
-        a:
-          "نعم، بالموافقة — والمسار يلتقطها لكل تشغيل، لا كتواقيع شاملة من قبل خمس سنوات. النطاق محدود بما يبرّره الدور، ويمكن للموظفين رؤية ما فُحص.",
+    blue: {
+      h: "تحقق الوظائف الميدانية (Blue Collar)",
+      p: "التصنيع واللوجستيات والإنشاءات والأغذية والمشروبات كشرائح صغيرة لمساعدة المشترين على رؤية أنفسهم بوضوح.",
+      checks: {
+        pan: { n: "التحقق من بطاقة PAN", p: "يتحقق التحقق من بطاقة PAN من الرقم الدائم للحساب عبر قواعد البيانات الرسمية لتأكيد الهوية واكتشاف الاختلافات ودعم الامتثال." },
+        registration: { n: "التحقق من شهادة التسجيل", p: "يتحقق من أصالة بيانات تسجيل المركبة، بما في ذلك الملكية وحالة التسجيل." },
+        drivingLicense: { n: "التحقق من رخصة القيادة", p: "يتحقق من أصالة رخصة قيادة المرشح، بما في ذلك رقم الرخصة والصلاحية وجهة الإصدار عبر قواعد البيانات الرسمية." },
+        criminalRecords: { n: "التحقق من السجل الجنائي", p: "يبحث فحص سجلات المحاكم في سجلات e-court الرسمية عبر اختصاصات متعددة لتحديد القضايا الجنائية ضد المرشح. وتُشارك تفاصيل القضايا الداعمة مع العميل إن توفرت." },
+        pennyDrop: { n: "التحقق عبر Penny Drop", p: "يؤكد التحقق عبر Penny Drop صلاحية الحساب البنكي عبر تحويل مبلغ رمزي ومطابقة اسم صاحب الحساب مع التفاصيل المقدمة." },
+        liveness: { n: "التحقق من الحيوية (Liveness)", p: "يتحقق فحص الحيوية من أن الفرد حاضر فعليًا أثناء التحقق من الهوية، مما يمنع الاحتيال عبر الصور أو الفيديوهات أو الأقنعة." },
       },
-      digital: {
-        q: "ما فحص «العمل الرقمي»؟",
-        a:
-          "سجل عمل يُعاد بناؤه من سجلات اشتراكات صندوق الادخار — أسماء أصحاب العمل والتداخلات والفجوات — مؤكَّد لدى المصدر خلال نحو ساعة، دون الاتصال بصاحب العمل الحالي.",
+      cta: "تحدث مع المبيعات",
+      alt: "عمال ميدانيون يرتدون معدات سلامة يمثلون التحقق التشغيلي",
+    },
+    blueWhy: {
+      h: "لماذا يُعد تحقق عمال الوظائف الميدانية مهمًا؟",
+      cards: {
+        trust: { t: "ثقة خلال دقائق لا أيام", p: "تحول منصتنا التحقق إلى سرعة—تقارير دقيقة وفي الوقت المناسب تحول البيانات إلى ثقة حقيقية، لتكون كل قرارات التوظيف مدعومة بالأدلة." },
+        smart: { t: "تحقق بذكاء وثق بسرعة", p: "يُزيل الإدخال المدعوم بالذكاء الاصطناعي وسير العمل المؤتمت التأخير ويقلل الأخطاء ويوفر التوظيف الصحيح بسرعة ودقة." },
+        compliance: { t: "الحفاظ على الامتثال", p: "تتطلب العديد من الصناعات فحوصات خلفية دقيقة للامتثال للأنظمة، مما يحمي المؤسسة وأصحاب المصلحة." },
       },
-      moonlighting: {
-        q: "هل يكشف العمل الموازي؟",
-        a:
-          "تظهر اشتراكات PF المتزامنة من صاحب عمل ثانٍ في الفحص نفسه خلال 60 دقيقة. يُظهر التقرير فترة التداخل، لا اتهاماً — وما تفعلونه به سياسة.",
+    },
+    automate: {
+      h: "أتمتة إدخال الموظفين والعمال",
+      p: "بصفتنا مزودًا عالميًا لحلول فحص الخلفيات، نساعد المؤسسات بمختلف أحجامها على توظيف الأشخاص المناسبين للفرص المناسبة. انضم إلينا لتحديث طريقة التوظيف والتوسع.",
+      tabs: {
+        smooth: { t: "تجربة سلسة", p: "وظّف أسرع عبر منصات تحول البيانات إلى ثقة عبر تقارير دقيقة وبسرعة. ثقة دون تنازل مدعومة بالأدلة.", alt: "لوحة تحكم HelloVerify وتجربة إدخال سلسة" },
+        hrms: { t: "واجهات HRMS والتكامل", p: "ادمج API القوي من HelloVerify ضمن أنظمتك لأتمتة فحوصات الخلفية والتحقق والامتثال، مع تزامن بيانات فوري لرفع الكفاءة والدقة.", alt: "تكامل مع سير عمل HRMS وتبادل بيانات عبر API" },
+        rules: { t: "محرك القواعد", p: "استفد من محرك القواعد لأتمتة وتحسين اتخاذ القرار. خصص سير التحقق وحدد المعايير وطبق الامتثال لضمان نتائج دقيقة ومتسقة.", alt: "إعدادات محرك القواعد" },
+        tracking: { t: "تتبع فوري", p: "ابقَ على اطلاع عبر تحديثات فورية لحالة عمليات التحقق مع إشعارات مباشرة لضمان عدم تفويت أي تحديث مهم.", alt: "تتبع فوري لحالة الطلبات" },
+        support: { t: "دعم ممتاز", p: "يوفر HelloVerify دعمًا عالي الجودة لمساعدتك في أي أسئلة أو تحديات عبر حلول سريعة وفعالة لتجربة سلسة.", alt: "دعم العملاء والمساعدة" },
+        security: { t: "أمن بمستوى المؤسسات", p: "يضمن HelloVerify أعلى مستوى من حماية البيانات عبر تشفير قوي وامتثال للمعايير ومراقبة استباقية لحماية المعلومات الحساسة.", alt: "ضوابط أمن بمستوى المؤسسات" },
       },
-      contacted: {
-        q: "هل سيُتواصل مع الموظفين؟",
-        a:
-          "للموافقة فقط، من هاتفهم. الفحوصات الرقمية لا تمسّ صاحب عملهم أو زملاءهم؛ أما فحوصات العمل اليدوية فتفعل، وتُعلَّم بوضوح قبل طلبها.",
+    },
+    psv: {
+      h: "التحقق من المصدر الأساسي",
+      items: {
+        education: "التحقق من التعليم",
+        institute: "التحقق من اعتماد المؤسسة",
+        employment: "التحقق من العمل",
+        dualEmployment: "التحقق من العمل المزدوج",
+        criminal: "التحقق من السجل الجنائي",
+        identity: "التحقق من الهوية",
+        address: "التحقق من العنوان",
+        bank: "التحقق من الحساب البنكي",
       },
     },
   },
 
+  /** `/products/customer-kyc` — the old `customerKyc.base.json`, word for
+   *  word, in its order: hero (title, subtitle, Talk to Sales), the six-step
+   *  How it Works grid with Talk to Sales, Solutions We Offer (six cards).
+   *  Step numbers and icons live in the page. */
   customerKyc: {
-    crumb: "اعرف عميلك (KYC)",
-    closing: {
-      heading: (
-        <>
-          ثقة عند التسجيل، <em>لا بعد الخسارة.</em>
-        </>
-      ),
-      sub: "استدعاء API واحد بين غريب وعميل.",
-    },
+    crumb: "الثقة والسلامة — KYC",
     hero: {
-      k: "الأعمال · الثقة والسلامة",
-      h1: (
-        <>
-          عملاء موثَّقون <em>عند التسجيل.</em>
-        </>
-      ),
-      sub:
-        "الأسواق والإيجارات والإقراض ومنصات الرعاية — تحقَّقوا من الشخص خلف الحساب " +
-        "قبل أول معاملة، لا بعد أول شكوى.",
-      cta: "اتصل بالمبيعات",
-      api: "اطّلعوا على API",
+      h1: (<>منصة <em>KYC</em></>),
+      sub: "قم بضم العملاء أسرع. اكتشف الاحتيال مبكرًا. يجمع حل KYC الشامل لدينا كل خطوة من خطوات الانضمام الرقمي في تجربة سلسة تُبقي المحتالين خارجًا وتُبقي العملاء الحقيقيين في مسارهم للأمام.",
+      cta: "تواصل مع المبيعات",
     },
-    strip: {
-      identity: (<><b>15 دقيقة</b> فحص الهوية</>),
-      inFlow: (<><b>ضمن المسار</b> — API أو صفحة مستضافة</>),
-      countries: (<><b>120+</b> دولة، المسار نفسه</>),
-      consent: (<><span className="dot" /> الموافقة أولاً، ونظيف وفق GDPR</>),
-    },
-    whatWeVerify: {
-      k: "ما نتحقّق منه",
-      h: "ماذا يتحقّق KYC للعملاء عند التسجيل؟",
-      lede:
-        "يؤكّد KYC للعملاء لدى HelloVerify الشخص أولاً — الهوية وPAN والعمر خلال 15 " +
-        "دقيقة، ومطابقة صورة ذاتية بالوجه خلال ثوانٍ — ثم يفحص السجل: قاعدة البيانات " +
-        "العالمية والائتمان خلال 15 دقيقة، والجنائي خلال 30، والرخصة التجارية خلال يومين. العمق " +
-        "يُحدَّد حسب شريحة التسجيل.",
-    },
-    lanes: {
-      identity: { lgt: "01 — الهوية", lgh: "هل هم من يدّعون؟" },
-      risk: { lgt: "02 — المخاطر", lgh: "هل ينبغي أن يكونوا هنا؟" },
-    },
-    chips: {
-      identity: { n: "الهوية", t: "15 دقيقة" },
-      pan: { n: "PAN", t: "15 دقيقة" },
-      face: { n: "الوجه مقابل الصورة الذاتية", t: "ثوانٍ" },
-      age: { n: "العمر", t: "15 دقيقة" },
-      currentAddress: { n: "العنوان الحالي", t: "30 دقيقة" },
-      globalDatabase: { n: "قاعدة البيانات العالمية", t: "15 دقيقة" },
-      criminal: { n: "الجنائي", t: "30 دقيقة" },
-      credit: { n: "الائتمان", t: "15 دقيقة" },
-      tradeLicence: { n: "الرخصة التجارية", t: "يومان" },
-    },
-    inFlow: {
-      k: "في مساركم",
-      h: "كيف يندرج تحقق KYC في مسار التسجيل لدينا؟",
-      lede:
-        "يصل KYC للعملاء إلى HelloVerify بثلاث طرق: استدعاء API من واجهة UI لديكم، أو " +
-        "صفحة التقاط مستضافة لدى HelloVerify، أو رابط WhatsApp للبائعين والشركاء الذين " +
-        "يسجّلون بالهاتف. يعيد كل منها webhook واحداً — موثَّق، أو فاشل، أو يحتاج إنساناً — " +
-        "مع إرفاق الأدلة.",
-    },
-    steps: {
-      api: {
-        n: "01 · التضمين",
-        t: "API",
-        p: "واجهة UI لديكم، ومسارنا. أرسلوا صورة الوثيقة، واحصلوا على حقول منظَّمة وحكم.",
+    how: {
+      h: "نوفّر حماية قوية ضد احتيال الهوية عبر الإنترنت—قوية وسلسة ودائمة التشغيل.",
+      steps: {
+        upload: { t: "يرفع المستخدم صورة لهويته", body: ["\"التحقق من الكيان\" (MCA, GST, Company Check)", "\"الفحوصات المالية\" (Bank Statement, Credit, Global DB)", "\"المدير والملكية\" (Identity, Directorship)"], alt: "Step 1" },
+        selfie: { t: "يلتقط المستخدم صورة سيلفي", body: ["وجّه الكاميرا إلى أي هوية حكومية—يتعرف ذكاؤنا الاصطناعي على نوع المستند تلقائيًا دون اختيار يدوي."], alt: "Step 2" },
+        face: { t: "التعرّف على الوجه", body: ["يبسّط HelloVerify التجربة عبر إرشاد فوري واكتشاف ذكي للمستندات، مع التعرف تلقائيًا على أنواعها وإلغاء إدخال البيانات اليدوي—ما يسرّع المعالجة ويقلل الأخطاء بشكل كبير."], alt: "Step 3" },
+        liveness: { t: "فحص الحيوية", body: ["يعزز HelloVerify تجربة المستخدم بإرشاد فوري وتعرّف ذكي على المستندات، مع تحديد أنواعها تلقائيًا وإلغاء الإدخال اليدوي—لمعالجة أسرع ودقة أعلى وأخطاء أقل."], alt: "Step 4" },
+        decision: { t: "الحصول على القرار", body: ["يجعل HelloVerify العملية أكثر سلاسة عبر إرشاد فوري وتعرّف ذكي، مع إزالة الحاجة للإدخال اليدوي—لنتائج أسرع ودقة أعلى وأخطاء أقل."], alt: "Step 5" },
+        onboard: { t: "ضمّ العميل", body: ["يبسّط HelloVerify العملية بإرشاد فوري واكتشاف تلقائي للمستندات، ما يلغي الإدخال اليدوي ويُسرّع سير العمل ويقلل الأخطاء ويحسن الدقة."], alt: "Step 6" },
       },
-      hosted: {
-        n: "02 · أو إعادة التوجيه",
-        t: "مسار مستضاف",
-        p: "صفحة التقاط مستضافة لدى HelloVerify بألوانكم — الموافقة والالتقاط وفحوصات الجودة متولاة.",
-      },
-      whatsapp: {
-        n: "03 · أو غير متزامن",
-        t: "WhatsApp",
-        p: "للبائعين والشركاء الذين يسجّلون بالهاتف — مسار الرابط نفسه الذي يستخدمه المرشّحون.",
-      },
+      cta: "تواصل مع المبيعات",
     },
-    compliance: {
-      k: "الامتثال والخصوصية",
-      h: "كيف تتعامل HelloVerify مع بيانات KYC للعملاء؟",
-      lede:
-        "يبدأ فحص KYC لدى HelloVerify بموافقة العميل، قبل أي التقاط، مع " +
-        "بيان النطاق والاحتفاظ بلغة واضحة. تُشفَّر الوثائق أثناء النقل و" +
-        "في حالة السكون، وتُحذف وفق جدول الاحتفاظ في DPA، ولا تُخزَّن في أي مكان إن جلبتم " +
-        "تخزينكم.",
-    },
-    stance: {
-      alt: "GDPR",
-      h: "الموافقة أولاً، دائماً",
-      p: "يوافق العميل قبل الالتقاط؛ ويُبيَّن النطاق والاحتفاظ بلغة واضحة.",
-    },
-    isoGloss: "وثائق مشفَّرة أثناء النقل وفي حالة السكون؛ حذف وفق الجدول، قابل للتحقق عند الطلب.",
-    securityInFull: "الأمن والامتثال بالكامل",
-    faqHead: (<>من فرق الثقة &amp;<br />والسلامة.</>),
-    faqs: {
-      friction: {
-        q: "كم احتكاكاً يضيف هذا إلى التسجيل؟",
-        a:
-          "يستغرق مسار الالتقاط أقل من دقيقة على الهاتف، وتعود أحكام الهوية خلال دقائق. معظم المنصات تقيّد الميزات لا التسجيل — يوجد الحساب فوراً، وينتظر الإجراء الخطر الحكم.",
-      },
-      tiering: {
-        q: "هل يمكننا تدريج الفحوصات حسب المخاطر؟",
-        a:
-          "نعم — لكل استدعاء API. قد يحصل المشتري على الهوية فقط؛ ويضيف البائع الجنائي وقاعدة البيانات العالمية؛ ويضيف الشريك عالي القيمة الرخصة التجارية والمديرين. تكامل واحد، أي مزيج.",
-      },
-      storage: {
-        q: "ماذا نخزّن، وماذا تخزّنون؟",
-        a:
-          "تتلقون الحكم والحقول التي طلبتموها. تبقى الوثائق في مخزن HelloVerify المشفَّر وفق جدول الاحتفاظ في DPA — أو بلا احتفاظ إن جلبتم تخزينكم.",
-      },
-      international: {
-        q: "هل يعمل هذا خارج الهند؟",
-        a:
-          "نعم — 120+ دولة عبر API نفسه، والفحص يعمل في البلد الذي أصدر الوثيقة. اطّلعوا على التغطية العالمية للصورة دولة بدولة.",
+    solutions: {
+      h: "الحلول التي نقدمها",
+      sub: "حل KYC شامل للمساعدة في تبسيط عمليات الانضمام الرقمي واكتشاف الاحتيال.",
+      cards: {
+        kyc: { t: "KYC", items: ["التحقق من الهوية", "تأكيد الموقع", "فحص الحيوية", "التعرّف على الوجه"] },
+        kyb: { t: "KYB", items: ["التحقق من GST", "التحقق من MCA", "Udyog/Udyam Aadhaar", "PAN للشركة"] },
+        underwriting: { t: "الاكتتاب", items: ["GST-Lite وAdvanced", "تحليل كشف الحساب البنكي", "فحص ITR", "سحب بيانات MCA"] },
+        fraud: { t: "الاحتيال والمخاطر", items: ["فحص السجل القضائي", "ربط PAN وAadhaar", "تحليل مخاطر البريد الإلكتروني", "مطابقة الوجه 1:N"] },
+        execute: { t: "التنفيذ", items: ["التحقق من الحساب البنكي", "التوقيع الإلكتروني", "بصمة الجهاز", "E-stamp"] },
+        aml: { t: "AML", items: ["ضمان الامتثال وتقليل المخاطر", "تنفيذ الفحص في الوقت الحقيقي", "مراقبة المعاملات باستمرار", "إجراء تقييمات شاملة للمخاطر"] },
       },
     },
   },
 
+  /** `/products/certifier` — the old `certifier.base.json`, word for word, in
+   *  its order: hero, We Verify What Matters Most (two tabs of four checks),
+   *  How Certifier Works For Businesses? (image slider beside four tabs),
+   *  Industries We Serve, Why Businesses Should Consider Certifier?, the
+   *  API-Driven Counterparty Platform (two slides of four). Bold runs in the
+   *  Vendor Monitoring lines are the old CMS `bold` parts. */
   certifier: {
-    crumb: "العناية الواجبة بالمورّدين",
-    closing: {
-      heading: (
-        <>
-          وقّعوا المورّد، <em>لا المخاطر.</em>
-        </>
-      ),
-      sub: "أرسلوا إلينا قائمة المورّدين قبل إغلاق الربع.",
-    },
+    crumb: "Certifier",
     hero: {
-      k: "الأعمال · العناية الواجبة بالمورّدين — Certifier",
-      h1: (
-        <>
-          اعرفوا ممن <em>تشترون.</em>
-        </>
-      ),
-      sub:
-        "قبل أول أمر شراء: هل الرخصة التجارية حقيقية، ومن المديرون، " +
-        "وماذا تقول المحاكم ومكاتب الائتمان؟ يجيب Certifier من السجل، لا " +
-        "من كتيّب المورّد.",
-      cta: "اتصل بالمبيعات",
-      packages: "اطّلعوا على الباقتين",
+      h1: (<><em>Certifier</em></>),
+      sub: "نعيد تعريف التحقق من الطرف الثالث للشركات B2B عبر تقديم مصادقة سريعة وموثوقة للهويات والمستندات التي تتطلبها المؤسسات الحديثة.",
+      cta: "تحدث إلى المبيعات",
     },
-    strip: {
-      profile: (<><b>يومان</b> حتى ملف معتمَد</>),
-      registry: (<><b>السجل</b> مؤكَّد، لا إعلان ذاتي</>),
-      countries: (<><b>120+</b> دولة مورّدين</>),
-      renewals: (<><span className="dot" /> تذكيرات تجديد مدمجة</>),
-    },
-    whatWeCheck: {
-      k: "ما نفحصه",
-      h: "ماذا تفحص العناية الواجبة بالمورّدين؟",
-      lede:
-        "يفحص Certifier المورّد ككيان قانوني وكأشخاص خلفه: الرخصة " +
-        "التجارية خلال يومين، والمديرون وGST، وفحص الائتمان وقاعدة البيانات العالمية خلال 15 " +
-        "دقيقة، إضافة إلى الهوية والسجل الجنائي للمروّجين وتقييم مالي. " +
-        "الرخص تنتهي، لذا يواصل الفحص.",
-    },
-    lanes: {
-      entity: { lgt: "01 — الكيان", lgh: "على الورق" },
-      people: { lgt: "02 — الأشخاص", lgh: "خلفه" },
-    },
-    chips: {
-      tradeLicence: { n: "الرخصة التجارية", t: "يومان" },
-      directorsGst: { n: "المديرون وGST", t: "3 أيام" },
-      credit: { n: "الائتمان", t: "15 دقيقة" },
-      globalDatabase: { n: "قاعدة البيانات العالمية", t: "15 دقيقة" },
-      identity: { n: "الهوية", t: "15 دقيقة" },
-      criminal: { n: "الجنائي", t: "30 دقيقة" },
-      promoter: { n: "السجل الجنائي للمروّج", t: "يومان" },
-      financial: { n: "التقييم المالي", t: "يومان" },
-    },
-    packagesBand: {
-      k: "الباقات",
-      h: "ماذا تتضمن باقة العناية الواجبة بالمورّدين؟",
-      lede:
-        "يقدّم Certifier باقتين للمورّدين بأربعة فحوصات: مخاطر الرخصة التجارية، قبل توقيع " +
-        "مورّد، ومخاطر مالية للمورّد، قبل أول طلب كبير. كلتاهما " +
-        "مؤكَّدتان من السجل لا بإعلان ذاتي، وتنتهيان بملف مورّد معتمَد " +
-        "خلال يومين.",
-    },
-    card: {
-      label: "باقة",
-      vendors: "المورّدون · Certifier",
-      readyIn: "4 فحوصات · جاهز خلال",
-      ready: "يومان",
-      who: "ملف مورّد معتمَد",
-      cta: "اتصل بالمبيعات",
-    },
-    packs: {
-      licence: {
-        tt: "مخاطر الرخصة التجارية",
-        sub: "قبل توقيع مورّد",
-        lines: {
-          tradeLicence: "الرخصة التجارية",
-          defaultingDirectors: "المديرون المتعثّرون",
-          criminalRecords: "السجلات الجنائية",
-          creditCompany: "الائتمان والشركة",
+    checks: {
+      h: "We Verify What Matters Most",
+      sub: "Our advance verification checks help you to onboard trustworthy vendors and minimise the risk across your supply chain.",
+      tabs: {
+        business: {
+          label: "Business License & Promoter Verification",
+          cards: {
+            tradeLicense: { t: "Trade License Check", p: "This check involves verifying a candidate's educational and professional qualifications, along with confirming the authenticity of the university, college, or academic institution from which the qualifications were obtained." },
+            defaultingDirectors: { t: "Defaulting Directors Check", p: "Defaulting Directors Check identifies whether a candidate has been listed as a defaulting director in any company due to non compliance, financial defaults or regulatory violations." },
+            criminalRecords: { t: "Criminal Records Check", p: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate." },
+            creditCompany: { t: "Credit & Company Check", p: "A Credit & Company Check in background verification evaluates a candidate's credit profile and verifies the legitimacy and status of associated companies through official and financial records." },
+          },
         },
-      },
-      financial: {
-        tt: "المخاطر المالية للمورّد",
-        sub: "قبل أول طلب كبير",
-        lines: {
-          financialAssessment: "التقييم المالي",
-          gstScreening: "فحص GST",
-          creditChecks: "فحوصات الائتمان",
-          promoterCriminal: "السجل الجنائي للمروّج",
+        vendor: {
+          label: "Vendor, Credit & Financial Verification",
+          cards: {
+            financialAssessment: { t: "Financial\nAssessment Check", p: "Financial Assessment in business due diligence involves evaluating a company's financial health by reviewing its financial statements, credit profile, and key financial indicators to assess stability and risk." },
+            gstScreening: { t: "GST\nScreening Check", p: "GST Screening in business due diligence involves verifying a company's GST registration, status, and compliance through official records." },
+            creditCheck: { t: "Credit\nCheck", p: "The credit check involves verifying the candidate's credit score and risk parameters through a Credit Bureau. A credit score is generated based on the individual's credit history." },
+            promoterCriminal: { t: "Promoter Criminal\nHistory Check", p: "A Promoter Criminal History Check in business due diligence involves verifying whether company promoters have any criminal records through court and legal databases." },
+          },
         },
       },
     },
-    howItWorks: {
-      k: "كيف يعمل",
-      h: "كيف تعمل العناية الواجبة بالمورّدين؟",
+    how: {
+      h: "كيف يعمل Certifier للشركات؟",
+      intro: ["ابدأ مجانًا—Certifier منصة HelloVerify لفحص الموردين.", "أدرج الموردين أسرع 10 مرات مع مراقبة الامتثال في الوقت الحقيقي."],
+      slides: ["سير عمل التحقق من الموردين", "فريق يتعاون في فحص الموردين", "مراجعة تفاصيل التحقق", "تخطيط الأعمال والامتثال"],
+      tabs: { onboarding: "الانضمام الافتراضي", monitoring: "مراقبة الموردين", statutory: "الفحوصات النظامية", agreement: "اتفاقية افتراضية وتوقيع إلكتروني" },
+      onboarding: {
+        h: "الانضمام الافتراضي — موثّق في 4 خطوات بدون أوراق",
+        sub: "خصّص وارفع جميع بيانات الموردين افتراضيًا.",
+        steps: ["إرسال دعوة", "إدخال المعلومات الشخصية", "التقاط الموقع", "رفع سيلفي وإثبات الهوية"],
+      },
+      monitoring: {
+        h: "مراقبة الموردين — تنبيهات تلقائية عند تغيّر المخاطر",
+        items: [
+          (<><b>{"ارفع افتراضيًا"}</b>{" – ارفع أي صورة للموقع الذي ترغب برؤيته أو الاحتفاظ به كسجل."}</>),
+          (<>{"استلم ملاحظات صوتية للحصول على "}<b>{"تغذية راجعة فورية."}</b></>),
+          (<>{"استلم فيديوهات للمواقع/المشاريع القائمة لتبقى "}<b>{"على اطلاع "}</b>{"على التقدم الحالي."}</>),
+        ],
+      },
+      statutory: {
+        h: "الفحوصات النظامية — امتثل تلقائيًا",
+        intro: ["ارفع جميع المستندات المطلوبة وتحقق فورًا.", "نستخدم قدرات الذكاء الاصطناعي وتعلم الآلة لتقديم أسرع خدمة فحص."],
+        items: ["Global WatchList", "Company Screening", "Identity Screening", "GST Screening", "Financial Screening", "Credit Suit Default Screening"],
+      },
+      agreement: {
+        h: "اتفاقية افتراضية وتوقيع إلكتروني — كن رقميًا بأمان وموثوقية",
+        intro: "كن رقميًا معنا وحرك أعمالك بأمان وموثوقية.",
+        items: ["إنشاء اتفاقية جديدة", "إضافة توقيع رقمي", "توقيع الاتفاقية ومشاركتها"],
+      },
     },
-    steps: {
-      list: {
-        n: "01 · المشتريات",
-        t: "القائمة",
-        p: "أسماء المورّدين وأرقام GST — ملف CSV أو استدعاء API من نظام المشتريات لديكم.",
-      },
-      digging: {
-        n: "02 · السجلات",
-        t: "التنقيب",
-        p: "سجلات الرخص، وسجلات الوزارات، والمحاكم، ومكاتب الائتمان — كل حقيقة مؤكَّدة حيث أُودعت.",
-      },
-      profile: {
-        n: "03 · بعد يومين",
-        t: "الملف",
-        p: "ملف معتمَد لكل مورّد: ما فُحص، وأين، وما وُجد — ومتى ينتهي.",
+    industries: {
+      h: "القطاعات التي نخدمها",
+      p: "منصة واحدة تدعم التحقق والمصادقة والامتثال عبر القطاعات. مصممة لتتكيف مع المتطلبات المخصصة لكل قطاع نخدمه.",
+      cards: {
+        realEstate: { t: "شركات العقارات والإنشاءات والتصنيع", alt: "محترف يرتدي خوذة وبجواره نماذج معمارية" },
+        ecommerce: { t: "منصات التجارة الإلكترونية واكتشاف الموردين", alt: "شخص يستخدم الهاتف والكمبيوتر للتسوق واكتشاف الموردين" },
+        it: { t: "شركات تقنية المعلومات والرعاية الصحية", alt: "مختصون صحيون يراجعون مستندات" },
+        retail: { t: "سلاسل السلع الاستهلاكية السريعة (FMCG) والتجزئة", alt: "موظف تجزئة مع عربة تسوق داخل متجر" },
       },
     },
-    faqHead: (<>من المشتريات.</>),
-    faqs: {
-      cooperate: {
-        q: "هل يجب أن يتعاون المورّد؟",
-        a:
-          "في الغالب لا — تجيب السجلات والمحاكم والمكاتب دون تدخل المورّد. وحيث يجب أن تأتي وثيقة من المورّد، يحصلون على مسار الرفع برابط واحد نفسه الذي يستخدمه المرشّحون.",
+    why: {
+      h: "لماذا يجب على الشركات اختيار Certifier؟",
+      p: "تحقق موثوق وآمن وفعّال — مصمم للشركات الحديثة. يساعدك على الحفاظ على الامتثال مع توفير الوقت والجهد التشغيلي.",
+      cards: {
+        fast: { t: "تسريع انضمام الموردين بمقدار 10 أضعاف", p: "من تقييم المورد إلى الاختيار النهائي، تحول منصتنا بيانات الأداء إلى قرارات مهمة — لتحديد أفضل الموردين وبناء عملية اختيار قائمة على الحقائق." },
+        blacklist: { t: "إيقاف الموردين المدرجين سابقًا في القوائم السوداء", p: "يرفع Certifier معيار تأهيل الموردين عبر تحديد الكيانات المتوافقة والموثوقة والمتوافقة تمامًا مع معايير شركتك." },
+        monitoring: { t: "تقليل المخاطر عبر المراقبة المستمرة", p: "لا تفاجأ بعد الآن. تحديثات الموردين الفورية بالصور والفيديوهات والملاحظات الصوتية تمنحك رؤية كاملة قبل أن تتحول أي مشكلة إلى أزمة." },
+        brand: { t: "حماية نزاهة علامتك التجارية", p: "تتطور قدرات الذكاء الاصطناعي وتعلم الآلة في Certifier مع كل تحقق — بدمج الذكاء الآلي والحكم البشري لضمان مرور الموردين الأصليين فقط." },
       },
-      certified: {
-        q: "ماذا يعني «معتمَد» هنا؟",
-        a:
-          "كل حقيقة في الملف تحمل مصدرها وتاريخ الفحص. الاعتماد ليس رأينا في المورّد — بل إثبات أن كل ادّعاء وُثِّق لدى السجل الذي يحمله.",
-      },
-      wholeBase: {
-        q: "هل يمكن تشغيل هذا على قاعدة مورّدينا كلها؟",
-        a:
-          "نعم — تعمل الدفعات بالتوازي، فألف مورّد يستغرق أياماً لا أرباعاً. تُعاد التجديدات تلقائياً قبل أن تتقادم رخصة أو تقييم.",
-      },
-      international: {
-        q: "والمورّدون الدوليون أيضاً؟",
-        a:
-          "120+ دولة، تُفحص في البلد: تُؤكَّد الرخصة التجارية لمورّد منسوجات مصري في القاهرة، لا تُترجم من مسح.",
+    },
+    api: {
+      h: "منصة طرف مقابل قائمة على واجهات API",
+      p: "دع طرفًا ثالثًا ينفذ جميع فحوصات الامتثال نيابةً عنك. يمكن للشركات حماية سمعتها وتقليل العواقب القانونية المحتملة والحفاظ على الامتثال للمعايير القانونية والأخلاقية.",
+      cards: {
+        mca: { t: "وزارة الشؤون المؤسسية", p: "تجربة موظف أفضل بتحقق أسرع وعالي الكفاءة—يقلل وقت الانضمام ويخفض التكاليف التشغيلية حتى 75%." },
+        gst: { t: "ضريبة السلع والخدمات (GST)", p: "يؤكد تحقق GST صلاحية GSTIN ويوفر تفاصيل مثل الاسم القانوني ونوع الكيان وحالة التسجيل—لمساعدة في كشف سجلات GST الاحتيالية." },
+        owner: { t: "التحقق من المالك والمدير", p: "يؤكد هوية مالكي الشركة أو مديريها عبر مستندات رسمية مثل PAN أو Aadhaar أو بطاقة الناخب أو رخصة القيادة بمطابقتها مع قواعد بيانات الجهة المصدرة." },
+        company: { t: "فحص الشركة", p: "يشمل زيارة موقع الشركة والمراجعة عبر Rolodex (قائمة الشركات الوهمية) وMoCA وNASSCOM والبحث العكسي عن النطاق، ثم مكالمات وهمية وتسوق سري وتحقق ميداني." },
+        bank: { t: "التحقق من كشف الحساب البنكي", p: "يتحقق هذا الفحص من أصالة ملكية حساب بنكي محدد." },
+        global: { t: "قاعدة البيانات العالمية", p: "يفحص هذا الأفراد والكيانات مقابل قواعد بيانات عالمية لتحديد المخاطر المحتملة وقوائم المراقبة أو السجلات السلبية." },
+        directorship: { t: "فحص المنصب الإداري", p: "يتحقق هذا الفحص من تفاصيل المرشح عبر بوابة قاعدة بيانات MCA باستخدام معرفات مثل الاسم وتاريخ الميلاد أو لقب الأب لمطابقة السجلات مع قاعدة بيانات وزارة الشؤون المؤسسية الرسمية." },
+        credit: { t: "فحص ائتمان الشركة", p: "يُستخرج التقرير من مكتب ائتمان ويشمل درجة Credit/CIBIL ومؤشرات المخاطر، مع التحقق من اسم مقدم الطلب وPAN وتفاصيل القروض النشطة والمغلقة." },
       },
     },
   },

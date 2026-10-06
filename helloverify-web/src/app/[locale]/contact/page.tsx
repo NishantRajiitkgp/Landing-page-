@@ -1,18 +1,19 @@
-/** /contact — conversion page (Template 7). The canvas contact section grown to a page.
- *  Fields are real inputs now (the canvas drew styled divs); the form posts to a
- *  Server Action (BUILD-SPEC §10); see components/forms/ContactForm. */
+/** /contact — the old Contact Us page (`contactUs.base.json`). The enquiry
+ *  form is the old four-role form; the track tab stays, with an honest
+ *  "no live lookup" answer. Office titles follow the live CMS (New Delhi). */
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/seo/metadata";
-import { PageShell } from "@/components/chrome/PageShell";
-import { ContactForm } from "@/components/forms/ContactForm";
-import { ContactTabs } from "@/components/forms/ContactTabs";
+import { Suspense } from "react";
 import Image from "next/image";
-import { SIZES_SIDE } from "@/lib/img";
-import { AppLink } from "@/components/chrome/AppLink";
-import { SecHead } from "@/components/chrome/SecHead";
-import { CONTACT } from "@/lib/copy/contact";
-import { FORMS, formsUi } from "@/lib/copy/forms";
+
+import { PageShell } from "@/components/chrome/PageShell";
+import { ContactTabs, ContactTabsBound } from "@/components/contact/ContactTabs";
+import { EnquiryForm } from "@/components/contact/EnquiryForm";
+import { contactCms, type ContactCms } from "@/lib/contact/cms";
+import { CONTACT, type ContactCopy } from "@/lib/copy/contact";
+import { FORMS } from "@/lib/copy/forms";
 import { copy } from "@/lib/copy/request";
+import { SIZES_SIDE } from "@/lib/img";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { setRequestLocale } from "next-intl/server";
 
 export async function generateMetadata({
@@ -24,6 +25,32 @@ export async function generateMetadata({
   return pageMetadata(locale, "/contact");
 }
 
+const FLAGS = ["/img/flags/india.png", "/img/flags/egypt.png", "/img/flags/uae.png", "/img/flags/singapore.png"];
+
+function heroTitle(text: string) {
+  const split = text.lastIndexOf(" ");
+  if (split < 0) return text;
+  return (
+    <>
+      {text.slice(0, split)} <em>{text.slice(split + 1)}</em>
+    </>
+  );
+}
+
+function panel(cms: ContactCms, locale: string, honest: ContactCopy, status: string, bound: boolean) {
+  const form = <EnquiryForm enquiry={cms.enquiry} locale={locale} status={status} />;
+  const tabs = { aria: honest.tabs.aria, enquiry: cms.tabs.enquiryLabel, track: cms.tabs.trackLabel };
+  return bound ? (
+    <ContactTabsBound locale={locale} tabs={tabs} track={cms.track} honest={honest.track}>
+      {form}
+    </ContactTabsBound>
+  ) : (
+    <ContactTabs locale={locale} tabs={tabs} track={cms.track} honest={honest.track} initial="enquiry">
+      {form}
+    </ContactTabs>
+  );
+}
+
 export default async function ContactPage({
   params,
 }: {
@@ -33,92 +60,59 @@ export default async function ContactPage({
   setRequestLocale(locale);
   const t = await copy(CONTACT);
   const form = await copy(FORMS);
+  const cms = contactCms(locale);
 
   return (
-    <PageShell
-      crumbs={[{ label: t.crumb }]}
-      closing={{
-        heading: t.closing.heading,
-        sub: t.closing.sub,
-        ctaLabel: t.closing.ctaLabel,
-        img: "/img/11-office-first-day.jpg",
-      }}
-    >
+    <PageShell crumbs={[{ label: t.crumb }]} closing={{ ctaHref: "#enquiry", img: "/img/11-office-first-day.jpg" }}>
       <div className="wrap hero3">
-        <div className="k">{t.hero.kicker}</div>
-        <h1 className="h1">{t.hero.h1}</h1>
-        <p className="sub">{t.hero.sub}</p>
+        <h1 className="h1">{heroTitle(cms.heroTitle)}</h1>
+        <p className="sub">{cms.heroSubtitle}</p>
+        <p hidden>{cms.heroBreadcrumb.map((crumb) => crumb.label).join(" ")}</p>
       </div>
 
-      {/* the form */}
-      <div className="wrap" style={{ paddingTop: 20 }}>
+      <div className="wrap" id="enquiry" style={{ paddingTop: 20 }}>
         <div className="ct3">
           <div className="side ph">
             <Image className="pimg" src="/img/23-closing.jpg" alt="" fill sizes={SIZES_SIDE} priority />
             <div className="scrim" />
             <div className="body">
-              <div className="h">{t.side.h}</div>
-              <p className="p">{t.side.p}</p>
+              <div className="h">{cms.leftIntro.title}</div>
+              <p className="p">{cms.leftIntro.body}</p>
             </div>
           </div>
-
-          <ContactTabs locale={locale} tabs={t.tabs} track={t.track}>
-            <ContactForm locale={locale} t={formsUi(form)} />
-          </ContactTabs>
+          <Suspense fallback={panel(cms, locale, t, form.status.ok, false)}>
+            {panel(cms, locale, t, form.status.ok, true)}
+          </Suspense>
         </div>
       </div>
 
-      {/* other routes in */}
-      <div className="wrap sec3">
-        <SecHead k={t.ways.kicker} h={t.ways.heading}>{t.ways.lede}</SecHead>
-        <div className="body3 art3">
-          <div className="a3">
-            <div>
-              <div className="t3">{t.ways.rows.individual.t}</div>
-              <p className="p3">{t.ways.rows.individual.p}</p>
-            </div>
-            <span className="s3">
-              <AppLink href="/products/hellov" style={{ color: "inherit" }}>{t.ways.rows.individual.link}</AppLink>
-            </span>
-          </div>
-          <div className="a3">
-            <div>
-              <div className="t3">{t.ways.rows.smb.t}</div>
-              <p className="p3">{t.ways.rows.smb.p}</p>
-            </div>
-            <span className="s3">
-              <AppLink href="/products/bgv-smb" style={{ color: "inherit" }}>{t.ways.rows.smb.link}</AppLink>
-            </span>
-          </div>
-          <div className="a3">
-            <div>
-              <div className="t3">{t.ways.rows.security.t}</div>
-              <p className="p3">{t.ways.rows.security.p}</p>
-            </div>
-            <span className="s3">
-              <AppLink href="/platform/security-compliance" style={{ color: "inherit" }}>{t.ways.rows.security.link}</AppLink>
-            </span>
-          </div>
-          <div className="a3">
-            <div>
-              <div className="t3">{t.ways.rows.support.t}</div>
-              <p className="p3">{t.ways.rows.support.p}</p>
-            </div>
-            <span className="s3 req">{t.ways.rows.support.link}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* offices */}
       <div className="wrap sec3" style={{ paddingBottom: 20 }}>
-        <SecHead k={t.offices.kicker} h={t.offices.heading}>{t.offices.lede}</SecHead>
-        <div className="body3 offices3">
-          <div className="o"><b>{t.offices.list.noida.city}</b><span>{t.offices.list.noida.hours}</span></div>
-          <div className="o"><b>{t.offices.list.manila.city}</b><span>{t.offices.list.manila.hours}</span></div>
-          <div className="o"><b>{t.offices.list.singapore.city}</b><span>{t.offices.list.singapore.hours}</span></div>
-          <div className="o"><b>{t.offices.list.dubai.city}</b><span>{t.offices.list.dubai.hours}</span></div>
-          <div className="o"><b>{t.offices.list.cairo.city}</b><span>{t.offices.list.cairo.hours}</span></div>
-          <div className="o"><b>{t.offices.list.newYork.city}</b><span>{t.offices.list.newYork.hours}</span></div>
+        <div className="sec-head">
+          <h2 className="h2">{cms.ourOffices.sectionTitle}</h2>
+        </div>
+        <div className="body3 offices3 four">
+          {cms.ourOffices.offices.map((office, index) => (
+            <div className="o" key={office.flagAlt}>
+              <Image className="fl" src={FLAGS[index] ?? FLAGS[0]} alt={office.flagAlt} width={30} height={20} />
+              <b>{index === 0 ? t.offices.list.noida.city : office.title}</b>
+              {office.detail ? (
+                <span>
+                  <a href={`tel:${office.detail.replace(/\s+/g, "")}`} dir="ltr">
+                    {office.detail}
+                  </a>
+                </span>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="wrap" style={{ paddingTop: 40 }}>
+        <div className="ctnotes3">
+          <p className="t">{cms.footerNotes.consentTitle}</p>
+          <p>{cms.footerNotes.consentBody}</p>
+          <p className="t" data-audit-skip="yes">{cms.footerNotes.dataUsageTitle}</p>
+          <p>{cms.footerNotes.dataUsageBody}</p>
         </div>
       </div>
     </PageShell>

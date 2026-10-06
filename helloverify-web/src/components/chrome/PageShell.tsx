@@ -31,7 +31,9 @@ export async function PageShell({
 }: {
   crumbs: readonly Crumb[];
   children: React.ReactNode;
-  closing?: React.ComponentProps<typeof ClosingCta>;
+  /** `false` drops the closing band, for pages whose old version ended on
+   *  its last section. */
+  closing?: React.ComponentProps<typeof ClosingCta> | false;
 }) {
   const locale = await getLocale();
   const breadcrumbs = breadcrumbList(crumbs, locale);
@@ -42,7 +44,7 @@ export async function PageShell({
       <Breadcrumb items={crumbs} />
       {breadcrumbs && <JsonLd data={breadcrumbs} />}
       <main id="main-content">{children}</main>
-      <ClosingCta {...closing} />
+      {closing !== false && <ClosingCta {...closing} />}
       <SiteFooter />
     </div>
   );

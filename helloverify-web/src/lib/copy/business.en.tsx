@@ -8,7 +8,8 @@
  *  with this content in front of you.
  *
  *  MEASURED: 206 JSX text nodes by a comment-stripped `>text<` matcher across
- *  the six pre-migration files; this file holds 475 leaves. A 2.3x undercount,
+ *  the six pre-migration files; this file holds 560 leaves (505 after the
+ *  enterprise restore, 475 before the SMB catalogue). A 2.3x undercount,
  *  against 3.0x on `chrome` and 1.1x on `templates` — the spread is the point
  *  `./index` makes, since the multiplier tracks how much of a file is ALREADY
  *  a table. (The brief that commissioned this slice counted 181 with a
@@ -44,7 +45,6 @@
  *  NO `as const`, per the recipe: it would pin every leaf to its literal type
  *  and force a second locale to repeat the English bytes to typecheck.
  */
-import type { ReactNode } from "react";
 
 export const en = {
   /** The subtree's own name: the hub's breadcrumb rung AND the parent rung on
@@ -230,817 +230,649 @@ export const en = {
     },
   },
 
-  /** `/products/bgv-enterprise` — Template 3, the workhorse. */
+  /** `/products/bgv-enterprise` — the old `enterprise.base.json`, word for
+   *  word, in its order: hero, trust strip (title, subtitle, six partner
+   *  logos), the Employees / Businesses / Customers screening tabs. The old
+   *  `titleBold` was empty in every locale and is not carried. */
   enterprise: {
-    crumb: "Enterprise BGV",
-    closing: {
-      heading: (
-        <>
-          Four hundred riders a week? <em>Before lunch.</em>
-        </>
-      ),
-      sub: "Tell us your volume and your roles. You'll have a pilot running this week.",
-    },
+    crumb: "Enterprise",
     hero: {
-      k: "Business · Enterprise BGV",
-      h1: (
-        <>
-          Verification that keeps up <em>with hiring.</em>
-        </>
-      ),
-      sub:
-        "High-volume background checks with an SLA. AI reads every document, our team " +
-        "confirms with the issuer, and your ATS gets the answer back — from 15 minutes.",
-      cta: "Talk to sales",
-      turnaround: "See turnaround times",
+      h1: (<>AI-Powered Background Screening Trusted by India’s Leading Enterprises <br /><em>Stop Bad Hires Before They Happen</em></>),
+      cta: "Talk to Sales",
     },
-    strip: {
-      clients: (<><b>2,000+</b> enterprise clients</>),
-      checks: (<><b>20M+</b> checks, every one at the source</>),
-      riders: (<><b>1,600+</b> riders verified a month, one client</>),
-      certs: (<><span className="dot" /> ISO 27001 · PBSA</>),
+    trust: {
+      before: "Trusted by India’s top",
+      after: "IT/ITES companies for",
+      second: "Background Verification",
+      sub: "Our combination of AI-powered automation and dedicated in-house verification experts helps detect fraud while delivering a seamless experience for genuine applicants.",
     },
-    verify: {
-      k: "What we verify",
-      h: "What does an enterprise background check include?",
-      lede:
-        "HelloVerify's enterprise catalogue runs 33 checks against three questions: who the " +
-        "candidate is, what they have done, and what is on file. Identity answers in 15 " +
-        "minutes, criminal records in 30, digital employment in 60; education takes three " +
-        "days at the registrar.",
+    partners: {
+      cognizant: "Cognizant",
+      infosys: "Infosys",
+      accenture: "Accenture",
+      reliance: "Reliance Retail",
+      wipro: "Wipro",
+      hcl: "HCL",
     },
-    /** The three `.lanes3` groups. `lanes` and `pills` are separate tables
-     *  keyed differently on purpose, the same split `chrome.footer` makes
-     *  between `cols` and `links`: a lane has an id, a pill has a name that
-     *  several lanes and several pages would otherwise repeat. */
-    lanes: {
-      identity: { gt: "01 — Identity", gh: "Who they are" },
-      work: { gt: "02 — Work & education", gh: "What they've done" },
-      records: { gt: "03 — Records & risk", gh: "What's on file" },
+    screening: {
+      h: (<>Background Checks For Every Part of Your Organization <br /><em>Select who you're screening</em></>),
+      tabs: { employees: "Employees", businesses: "Businesses", customers: "Customers" },
     },
-    /** The 17 pills. `fast` stays in the page: it is a CSS class, not a word.
-     *  `n` is still `Lanes`' `key=`, and still the same English string. */
-    pills: {
-      identity: { n: "Identity", t: "15 min" },
-      pan: { n: "PAN", t: "15 min" },
-      passport: { n: "Passport", t: "15 min" },
-      age: { n: "Age", t: "15 min" },
-      drivingLicence: { n: "Driving licence", t: "30 min" },
-      registrationCertificate: { n: "Registration certificate", t: "30 min" },
-      digitalEmployment: { n: "Digital employment", t: "60 min" },
-      moonlighting: { n: "Moonlighting", t: "60 min" },
-      entitlementToWork: { n: "Entitlement to work", t: "60 min" },
-      employment: { n: "Employment", t: "2 days" },
-      education: { n: "Education", t: "3 days" },
-      credit: { n: "Credit", t: "15 min" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-      tradeLicence: { n: "Trade licence", t: "2 days" },
-      directorsGst: { n: "Directors & GST", t: "3 days" },
-    },
-    allChecks: "All 33 checks",
-    howItWorks: {
-      k: "How it works",
-      h: "How does enterprise background verification work?",
-      lede:
-        "Enterprise verification starts with one upload: the candidate photographs documents " +
-        "over WhatsApp or a link, with no app and no account. HelloVerify's AI reads every " +
-        "field, the request goes to the issuer, and the report reaches your ATS with each " +
-        "source named.",
-    },
-    steps: {
-      upload: {
-        n: "01 · Candidate's phone",
-        t: "Upload",
-        p: "Photograph the document. Edges, glare and focus are checked before the shutter fires.",
+    employees: {
+      h: "Background Checks for everyone",
+      p: "HelloVerify automates the background screening process to reduce fraud, accelerate onboarding, and improve hiring confidence.",
+      values: {
+        fast: { t: "Fast", tag: "3× faster than industry average", p: "Helloverify uses artificial intelligence & machine learning capabilities to provide fastest background screening service." },
+        accurate: { t: "Accurate", tag: "99.2% verified report rate", p: "Our background verification process helps identify fraudulent documents and supports better hiring decisions." },
+        compliant: { t: "Compliant", tag: "ISO 27001 + GDPR certified", p: "HelloVerify follows stringent compliance standards and enterprise-grade security practices." },
       },
-      read: {
-        n: "02 · HelloVerify AI",
-        t: "Read",
-        p: "Every field extracted, the document checked against itself, the issuing office located — in about a second.",
+      explore: "Explore More",
+      checksH: "Checks We Offer",
+      stats: {
+        checks: { a: "30+", b: "Checks" },
+        countries: { a: "120+", b: "Countries" },
+        tat: { a: "1 to 7", b: "Working Days TAT" },
+        api: { a: "REST API + bulk", b: "upload" },
       },
-      confirm: {
-        n: "03 · The source",
-        t: "Confirm",
-        p: "The request goes to the issuer. For a degree, that means the registrar — not a website that looks like one.",
-      },
-      report: {
-        n: "04 · Your ATS",
-        t: "Report",
-        p: "One report, the source named beside every result, with an auditable trail behind it.",
+      groups: {
+        enterprise: {
+          h: "Enterprise Checks",
+          a: ["ID Check", "Education Check", "Education Institution Check", "Employment Check", "Bank Statement Check", "Business Registration Certificate", "3D Profiling & Facial Recognition"],
+          b: ["Professional License Check", "Criminal Check", "Address Check", "Global Database Check", "Company Check", "All Drug Panels"],
+        },
+        tampering: {
+          h: "Document Tampering",
+          a: ["License Verification", "Certificate", "Documents", "Bank Statement"],
+        },
       },
     },
-    turnaroundBand: {
-      k: "Turnaround & coverage",
-      h: "How long does an enterprise background check take?",
-      lede:
-        "Enterprise turnaround is measured from upload to report: identity and PAN in 15 " +
-        "minutes, driving licence and criminal records in 30, digital employment in 60, " +
-        "employment in two days, education in three — across 120+ countries, and stated in " +
-        "the contract HelloVerify signs.",
+    businesses: {
+      h: "Business verification and due diligence\nto partner with the right vendors",
+      p: "With Certifier, offered by HelloVerify, clients can enhance their profiling experience by accessing certified profiles that encompass various aspects such as selfies, location confirmation, premises visuals, screening, clearances, agreements, and digital signatures.",
+      features: {
+        dueDiligence: "Comprehensive Vendor\nDue Diligence",
+        kyc: "Vendor KYC &\nDocument Verification",
+        criminal: "Criminal & Court\nRecord Check",
+        financial: "Financial Risk &\nCredit Assessment",
+        compliance: "Compliance &\nRegulatory Check",
+        reference: "Personal & Professional\nReference Verification",
+      },
+      explore: "Explore More",
     },
-    /** The six `.tbl3` rows. `nm` is `CheckTable`'s `key=` and still resolves
-     *  to the same string. `fast` stays in the page with the order. */
-    rows: {
-      identityPan: {
-        nm: "Identity & PAN",
-        sub: "name, DOB, number, validity",
-        tm: "15 min",
-        src: "issuing registry",
-      },
-      drivingLicence: {
-        nm: "Driving licence",
-        sub: "class, validity, endorsements",
-        tm: "30 min",
-        src: "state transport authority",
-      },
-      criminal: {
-        nm: "Criminal record",
-        sub: "court & police databases",
-        tm: "30 min",
-        src: "court records",
-      },
-      digitalEmployment: {
-        nm: "Digital employment",
-        sub: "EPFO-backed work history",
-        tm: "60 min",
-        src: "provident fund records",
-      },
-      employment: {
-        nm: "Employment",
-        sub: "role, tenure, exit remarks",
-        tm: "2 days",
-        src: "the employer's HR",
-      },
-      education: {
-        nm: "Education",
-        sub: "degree, year, institution",
-        tm: "3 days",
-        src: "the university registrar",
-      },
-    },
-    /** A FUNCTION LEAF — the shape `./index` describes for a sentence that
-     *  wraps a node the component owns. The anchor's href and its inline style
-     *  are routing and layout and stay in the page; a locale may put the link
-     *  anywhere in the sentence. Function rather than a plain string because
-     *  the string would have to end in a space to keep the byte, and an
-     *  edge-whitespace leaf is exactly what `copy.test.ts` §3 rejects. */
-    note: (link: ReactNode) => (
-      <>
-        Times shown are from upload to report · 120+ countries via the same pipeline — see {link}
-      </>
-    ),
-    noteLink: "global coverage",
-    compliance: {
-      k: "Compliance & security",
-      h: "How does HelloVerify handle data protection and compliance?",
-      lede:
-        "HelloVerify is ISO 27001 certified and independently audited, GDPR-aligned — " +
-        "consent, retention limits and the right to be forgotten in every workflow — and a " +
-        "member of the PBSA, the screening industry's global standards body. Every check " +
-        "begins with consent and leaves an auditable trail.",
-    },
-    securityInFull: "Security & compliance, in full — DPA, residency, conformance",
-    faqHead: (<>Asked before<br />every pilot.</>),
-    /** The FAQ copy that was `business/enterprise/content.ts`. That module's
-     *  own header called itself "copy for one route" and contrasted itself
-     *  with `lib/content/`, "the catalogues several routes read" — which is
-     *  the same line this layer draws, so the strings belong here and the
-     *  module's remaining job is the ORDER. `lib/seo/schema/faq.ts`'s "exactly
-     *  one home" rule is about copies, not about files: still one array, still
-     *  one render site, and `FaqSection` still emits the `FAQPage` node from
-     *  the same records it renders. */
-    faqs: {
-      volume: {
-        q: "How fast is \"fast\" at real volume?",
-        a:
-          "The times on this page hold at volume because the pipeline is parallel — a thousand driving licences take about as long as one. Identity-class checks come back in 15–60 minutes; anything that needs a registrar or a court is quoted in days, and the SLA we sign reflects your actual mix of checks.",
-      },
-      source: {
-        q: "What does \"confirmed at the source\" actually mean?",
-        a:
-          "No proxy databases as the final word. A degree is confirmed with the university registrar, a licence with the issuing authority, employment with the employer or provident-fund records. The report names the source beside every result.",
-      },
-      submit: {
-        q: "How do candidates submit documents?",
-        a:
-          "Over WhatsApp or a one-time link — no app to install, no account to create. Consent is captured first, and the capture flow checks focus, edges and glare before upload.",
-      },
-      ats: {
-        q: "Can this plug into our ATS?",
-        a:
-          "Yes — REST API and webhooks, bulk CSV for batch drives, and connectors for common ATS platforms. Results post back automatically; your recruiters never leave their queue.",
-      },
-      failure: {
-        q: "What happens when a check fails?",
-        a:
-          "The report shows exactly what didn't match and where it was checked, with the evidence attached. Candidates get a dispute path, and re-verification after a correction is free.",
+    customers: {
+      brand: "Trust & Safety",
+      sub: "Trust Infrastructure for your Fast, Accurate & Compliant Business Growth",
+      pillar: "Trusted Partner to Stay Ahead of Financial Frauds for all Stakeholders",
+      body: ["Trust & Safety Platform is a comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection.", "Strengthen your business with regulatory-compliant solutions designed to build trust across every stage of your digital onboarding and verification journey. From Politically Exposed Person (PEP) screening and due diligence to reputation analysis, regulatory compliance, and criminal watchlist checks — ensure every onboarding is secure and trustworthy."],
+      explore: "Explore More",
+      advH: "Some of the key advantages our customers have seen are",
+      adv: {
+        cost: { v: "90%", sub: "Cost Reduction in Onboarding." },
+        time: "Reduce time for onboarding from hours to minutes.",
+        fraud: "Upto 90% increase in fraud detection with the help of our proprietary 3D Profiling, Face Match and AML checks.",
+        paperless: "Paperless and automated processes to help comply with legal requirements and regulations in a hassle-free manner.",
       },
     },
   },
-
-  /** `/products/bgv-smb` — Template 4, the page with public pricing. */
+  /** `/products/bgv-smb` — the old `bgvSmb.base.json`, word for word, in its
+   *  order: hero, How it Works?, the packages with the Select Your Checks
+   *  table and its summary, Trusted by, Solutions We Offer. `exploreLess` and
+   *  `stars` were hard-coded English in the old components and stay English.
+   *  `trust` / `clients` are the SMB client logos added on request (5 Oct
+   *  2026); the old page had no logo strip. `strip`, `hero.talkFirst` and
+   *  `closing.ctaLabel` are read by the homepage only (`sections/SmbPacks.tsx`). */
   smb: {
-    crumb: "SMB packages",
-    closing: {
-      heading: (
-        <>
-          Your first hire deserves the <em>same certainty.</em>
-        </>
-      ),
-      sub: "No contract, no minimums. Pay per candidate, answer in minutes.",
-      ctaLabel: "Buy a package",
-    },
+    crumb: "SMB",
     hero: {
-      /** `Business · Small &amp; medium` in the JSX this replaced. An ATTRIBUTE
-       *  and a text node are both entity-decoded by JSX, so the string leaf
-       *  spells the ampersand plainly either way. */
-      k: "Business · Small & medium",
-      /** Three children — text, `<br />`, `<em>` — and the newline-plus-indent
-       *  between the `<br />` and the `<em>` folds away exactly as it did in
-       *  the `<h1>`. */
-      h1: (
-        <>
-          Pick a package.<br />
-          <em>See the price.</em>
-        </>
-      ),
-      sub:
-        "No sales call, no quote by email. Choose the checks, pay per candidate, and send one " +
-        "WhatsApp link — the report comes back the same morning.",
-      buy: "Buy a package",
-      talkFirst: "Or talk to us first",
+      h1: (<>Background Checks For <br /><em>Small &amp; Medium Businesses</em></>),
+      sub: "Our AI-powered screening platform provides startups and small & medium businesses with a fast, reliable, and scalable background verification solution.",
+      cta: "Talk to Sales",
+      talkFirst: "Talk to Sales",
     },
     strip: {
-      package: (<><b>30 min</b> blue-collar package</>),
-      checks: (<><b>20M+</b> checks since 2018</>),
-      subscription: (<><b>No</b> subscription, pay per candidate</>),
-      invoice: (<><span className="dot" /> GST invoice on every order</>),
+      checks: (<><b>1200+</b> SMBs trust HelloVerify</>),
+      subscription: (<><b>60 min</b> for Basic, Standard and Premium</>),
+      invoice: (<><span className="dot" /> 9 day average TAT</>),
+    },
+    closing: {
+      ctaLabel: "See packages",
+    },
+    trust: { h: "Trusted by 1,200+ small & medium businesses for background verification" },
+    clients: {
+      akcelerator: "Akmazo Akcelerator",
+      aidenai: "Aiden AI",
+      lucid: "Lucid Technology Services",
+      midfin: "Midfin Wealth",
+      lnp: "LNP Infotech",
+      itekpeople: "iTek People Technology",
+      appxcelerate: "AppXcelerate Solutions",
+      ditstek: "DITSTEK Innovations",
+      caone: "CA-One India",
+      ibirds: "iBirds Software Services",
+    },
+    how: {
+      h: "How it Works?",
+      steps: {
+        select: { n: "01", t: "Select Checks", p: "Customize your order as per your requirement from our wide range of Checks" },
+        fill: { n: "02", t: "Fill Information", p: "Provide Consent of Individual & relevant information for verification" },
+        fast: { n: "03", t: "As fast as 24 hours", p: "Get intuitive reports for decision making" },
+      },
     },
     packages: {
-      k: "Packages & pricing",
-      h: "What background check packages can a small business buy?",
-      lede:
-        "HelloVerify's SMB packages cover three hiring shapes, priced per candidate: a " +
-        "blue-collar hire in 30 minutes, a white-collar hire — education, employment, " +
-        "moonlighting and current address — in three days, and a driver package in 30 " +
-        "minutes. No subscription, and a GST invoice on every order.",
+      h: "Select Or Customize Verification Package",
+      checksInclude: "Checks Included",
+      buy: "Buy Now",
+      items: {
+        basic: {
+          t: "Basic Package",
+          price: "₹1799",
+          ready: "60 mins",
+          p: "Verifies government-issued ID, screens criminal records, and cross-checks global watchlists for hidden risks.",
+          checks: ["Identity Check", "Criminal Check", "Global Database Check"],
+        },
+        standard: {
+          t: "Standard Package",
+          price: "₹2199",
+          ready: "60 mins",
+          p: "All Basic checks plus address verification, giving you a more complete background picture.",
+          checks: ["Identity Check", "Criminal Check", "Global Database Check", "Current Address Check"],
+        },
+        premium: {
+          t: "Premium Package",
+          price: "₹2399",
+          ready: "60 mins",
+          p: "All Standard checks plus a moonlighting detection to uncover any undisclosed secondary employment.",
+          checks: ["Identity Check", "Current Address Check", "Criminal Check", "Global Database Check", "Moonlighting Check"],
+        },
+      },
+      customize: "Customize Your Package",
     },
-    /** The three rack cards. `lines` does NOT live here: the checks inside a
-     *  package are keys in the page, and their names are the `checks` table
-     *  below. Two reasons, both from `./index` — an array leaf derives to
-     *  `string[]`, so a locale could ship a five-check blue-collar package and
-     *  `tsc` would agree, and the rendered `{p.lines.length} checks · ready in`
-     *  would then print a different number than the price was set for. */
-    packs: {
-      blue: {
-        hd0: "Package",
-        hd1: "Blue-collar · SMB",
-        tt: "Blue-collar hire",
-        sub: "Drivers, riders, warehouse, security",
-        price: "₹349",
-        ready: "30 minutes",
-        who: "One upload from the candidate",
+    table: {
+      h: "Select Your Checks",
+      cols: { check: "Check Include", pricing: "Pricing", action: "Action" },
+      rows: {
+        identity: {
+          n: "Identity Check",
+          price: "₹349",
+          info: "This check involves validation of Passport or PAN card or Driving License or Voter ID or Aadhaar Card used by candidate. For Aadhaar, only number validation will only be done. We match the name, DOB, father's name of the candidate, ID Number to document provided (Govt. restrictions incase of Aadhaar) • Screening of passport through MRZ (Machine Readable Zone) format passports. For International candidates' passport screening will only be conducted.",
+        },
+        employment: {
+          n: "Employment Check",
+          price: "₹499",
+          info: "It includes verifying the candidate's claims about his/her tenure, etc. and establishment with respective employer. Hello Verify will reach out to the HR using automated email / telephone. Mode: Email/Database Additional Options for Verifications We also have verification methods via. PF/Form 16/Supervisor /UAN. These all are chargeable at an additional charge per check per method.",
+        },
+        education: {
+          n: "Education Check-Highest Education (Extra University Chargesapplicable)",
+          price: "₹999",
+          info: "This check involves verifying the authenticity of candidate's educational & professional qualifications from the respective universities/colleges / trusted database. The names are run through Hello Verify's proprietary database of both known (trusted) and unknown (suspect) universities/institutes and organizations. Herein, TAT may vary subject to university/college (TAT) process. Mode: Database/Email Scope: 12th, Bachelors, Masters, Professional",
+        },
+        address: {
+          n: "Address Check",
+          price: "₹499",
+          info: "The address is matched using a candidates documents which are either verified or eyeballed for details using original color photocopies. We accept all address proof related documents such as Aadhaar OKYC, Driving License, Voter ID, Electricity Bills, Credit Card Statement, Bank Passbook, Govt Issued Cards and other documents containing the candidates address details. We also provide latitude / longitude in the address where the candidate is actively staying. In case the candidate does not have a valid address proof we do ask for a self declaration of address or a visit can be done to the stated location (only if required). It is recommended that only current / active stay address be checked as the candidate would be residing there. Mode: Digital",
+        },
+        professionalReference: {
+          n: "Professional Reference Check",
+          price: "₹499",
+          info: "An automated voice command IVR verification or email link will be conducted to obtain reference confirmation about the candidate's personal integrity, educational and professional backgrounds from professional references provided by the candidate. For fresher's, verification is taken from personal references provided by the candidate. We will attempt to reach the candidate 3 times as per defined scope . Mode: Automated IVR/ Telephonic/Email Scope: Personal / Professional",
+        },
+        indianDatabase: {
+          n: "Indian Database Check",
+          price: "₹699",
+          info: "This Check includes enhanced due diligence using most comprehensive database. Some are listed below: * Central Bureau of Investigation (CBI) Most Wanted List * India Courts * Central Vigilance Commission (CVC) Corrupt Officers Database * Securities and Exchange Board of India * Most Wanted Criminals *Other Indian Databases Mode: Database",
+        },
+        globalDatabase: {
+          n: "Global Database Check",
+          price: "₹999",
+          info: "This Check includes enhanced due diligence using most comprehensive database. Some are listed below: * Serious and Organized Crimes - Interpol Most Wanted. - Most Wanted Lists * Regulatory Authorities * Compliance Authorities - Office of Foreign Assets Control - Proprietary Databases * Web and Media Searches - Internet Searches - Media Searches * Bankruptcy Checks - Board of Industries and Financial Reconstruction (BIFR) Companies Mode: Database",
+        },
+        criminalEcourt: {
+          n: "Criminal Check via E-Court",
+          price: "₹799",
+          info: "Search for negative records/charges against the applicant through online e-Court records of the jurisdiction, covering Magistrate Court, Session Court, District Court and High Court. Checks for any negative history or adverse records for the last 7 years. (Subject to availability of information in public or online domain). Mode: Database Scope: Criminal/Civil or Both",
+        },
+        criminalPolice: {
+          n: "Criminal Check via Police and law Firm",
+          price: "₹899",
+          info: "Search for criminal records against the applicant at the police station of the stated jurisdiction, along with a court record search conducted through Certified Legal Consultants/Advocates. Checks for any negative history or adverse records for the last 7 years. TAT may vary subject to the police station and court process. (Subject to availability of information in public or online domain). Mode: Police Station/Database Scope: Criminal/Civil or Both",
+        },
+        criminalLawFirm: {
+          n: "Criminal check via law firm",
+          price: "₹999",
+          info: "Search for negative records/charges against the applicant in the civil court, High Court, Magistrate Court & Session Court of the jurisdiction. Checks for any negative history or any adverse records (Civil proceeding: Original Suit /Miscellaneous Suit / Execution/ Arbitration cases for last 7 Years. Screenings are conducted via Certified Legal Consultants/ Advocates. They use their own access via legal databases to perform these checks. (Subject to availability of information in public or online domain). Mode: Database Scope: Criminal/Civil or Both",
+        },
+        rightToWork: {
+          n: "Right/Eligibility to work",
+          price: "₹359",
+          info: "This check verifies whether the candidate is legally eligible to work in India, matching identity, nationality/visa status and work-authorisation documents against the details declared by the candidate. Mode: Database/Document",
+        },
+        uan: {
+          n: "UAN Check",
+          price: "₹400",
+          info: "This check validates the candidate's Universal Account Number (UAN) against EPFO records, matching name, employment history and contributing establishments with the details declared by the candidate. Mode: Database",
+        },
+        bankAccount: {
+          n: "Bank Account check (Penny Drop)",
+          price: "₹199",
+          info: "This check validates the candidate's bank account through a penny-drop (name-match) verification, confirming that the account number, IFSC and account-holder name match the details provided by the candidate. Mode: Database",
+        },
+        credit: {
+          n: "Credit Check",
+          price: "₹899",
+          info: "This check retrieves the candidate's credit report from authorised bureaus to identify outstanding loans, defaults, write-offs or other adverse credit history recorded against the candidate. Mode: Database",
+        },
+        creditSuit: {
+          n: "Credit suit defaulter Check",
+          price: "₹699",
+          info: "This check screens the candidate against defaulter and credit-suit databases to identify any civil suit, recovery proceeding or wilful-defaulter listing recorded against the candidate. Mode: Database",
+        },
+        resume: {
+          n: "Resume Check Validation",
+          price: "₹299",
+          info: "Information contained in resume is used to hire a candidate. Once an offer is placed, and a background screening request is placed a candidate has to submit a Screening form along with documentation. Thus a check on validating of details on the resume submitted at time of interview and application form submitted at the time of Screening must be check for inconsistencies and highlighted back to the candidate. Mode: Online",
+        },
+        finra: {
+          n: "FINRA Fingerprint(Pan India)",
+          price: "₹10000",
+          info: "To verify fingerprint, the template created from the captured fingerprint is compared with templates stored in a database. This comparison can be done using algorithms that measure the similarity between templates.",
+        },
+        ofac: {
+          n: "OFAC Check",
+          price: "₹999",
+          info: "The Office of Foreign Assets Control, or OFAC, of the U.S. Department of the Treasury administers and enforces economic and trade sanctions based on US foreign policy and national security goals against targeted foreign countries, terrorists, international narcotics traffickers, and those engaged in activities related to the proliferation of weapons of mass destruction. The most recent, master list of Specially Designated Nationals and Blocked Persons that is made available by OFAC will be searched. Mode: Database",
+        },
+        form16: {
+          n: "Form-16 Check",
+          price: "₹500",
+          info: "This check verifies the Form-16 issued to the candidate, matching employer name, PAN, assessment year and reported income against the employment details declared by the candidate. Mode: Document/Database",
+        },
+        professionalLicense: {
+          n: "Professional license Check (Extra cost on actuals)",
+          price: "₹799",
+          info: "This check involves verifying the authenticity and current status of the professional licence, registration or membership claimed by the candidate with the issuing council, board or regulatory body. The licence number, holder name, category and validity/expiry are matched against the document provided by the candidate. Charges levied by the issuing authority are extra on actuals. Mode: Database/Email",
+        },
+        socialMedia: {
+          n: "Social Media Check",
+          price: "₹749",
+          info: "This check reviews publicly available social-media profiles associated with the candidate to identify any adverse, discriminatory or reputational content relevant to employment screening. Mode: Online",
+        },
+        directorship: {
+          n: "Directorship Check",
+          price: "₹649",
+          info: "This refers to a search based on matching credential of a candidate with MCA (Company) database whether candidate is a Director or not in the company where he/she has worked. If he/she is a Director, then the company name is checked against on the MCA black listed company. Mode: Database",
+        },
+        financialRegulatory: {
+          n: "Financial Regulatory Search",
+          price: "₹500",
+          info: "This check screens the candidate against financial-regulatory databases, including FFIEC records, to identify any enforcement action, prohibition or adverse finding recorded by banking and financial regulators. Mode: Database",
+        },
+        bankStatement: {
+          n: "Bank Statement - Online or PDF",
+          price: "₹100",
+          info: "This check validates the authenticity of the candidate's bank statement (online fetch or uploaded PDF), confirming account details and flagging signs of tampering or inconsistency with the declared information. Mode: Online/Document",
+        },
+        gsa: {
+          n: "General Service Administration",
+          price: "₹499",
+          info: "This check screens the candidate against the U.S. General Services Administration (GSA) excluded-parties lists to identify any debarment, suspension or ineligibility for federal programmes. Mode: Database",
+        },
+        oig: {
+          n: "Office of Inspector General",
+          price: "₹499",
+          info: "This check screens the candidate against the U.S. Office of Inspector General (OIG) exclusions database to identify any exclusion from federal healthcare programmes or related adverse listing. Mode: Database",
+        },
+        adverseMedia: {
+          n: "Adverse Media Search",
+          price: "₹1299",
+          info: "This Check includes enhanced due diligence using most comprehensive database. Some are listed below: * Serious and Organized Crimes - Interpol Most Wanted. - Most Wanted Lists * Regulatory Authorities * Compliance Authorities - Office of Foreign Assets Control - Proprietary Databases * Web and Media Searches - Internet Searches - Media Searches * Bankruptcy Checks - Board of Industries and Financial Reconstruction (BIFR) Companies Mode: Database",
+        },
+        gap: {
+          n: "Gap Check",
+          price: "₹649",
+          info: "This check involves identification of GAP between employment, education and address details. Mode: Online",
+        },
+        drug: {
+          n: "Drug Test",
+          price: "₹1350",
+          info: "Upon receipt of request/Documents for Drug Test from client/customer, HelloVerify, with prior consent of candidate, will fix an appointment with candidate for collection of sample for Drug Test. After collection, sample for Drug test will be sent to the laboratory or Drug Test will be conducted via instant drug kits onsite. Prior notice of 48 hours must be given to arrange for visits/sample collection. Availability of visit is subject to confirmation from the lab, once Hello Verify has been informed. A date of visit | candidate name | email | phone number | Drug Test Type | must be provided in order to perform the check. Component under below-mentioned Drug Test- Panel are subject to change. Client/customer may choose specific component as per their requirements.",
+        },
+        alcohol: {
+          n: "Alcohol Test",
+          price: "₹2300",
+          info: "Upon receipt of request from the client, HelloVerify, with prior consent of the candidate, will arrange collection of a sample for alcohol testing. Prior notice of 48 hours must be given to arrange visits/sample collection. Availability is subject to confirmation from the lab. A date of visit, candidate name, email, phone number and test type must be provided. Mode: Lab/Onsite",
+        },
+        company: {
+          n: "Company Check",
+          price: "₹599",
+          info: "It authenticates the existence of a company, its reputation and regulatory compliances of the Company wherein the candidate has previously worked. Note: Visit may not be possible due to COVID-19 and entry Restriction. Mode: Database only/visit (Subject to COVID-19)",
+        },
+        faceMatch: {
+          n: "Face match",
+          price: "₹0",
+          info: "This check captures a live selfie and matches it against the photograph on the candidate's identity document, including a liveness check to confirm the person is physically present. Mode: Online",
+        },
+        fda: {
+          n: "Food and Drug Administration Database Verification",
+          price: "₹1350",
+          info: "This check screens the candidate against Food and Drug Administration (FDA) databases, including the debarment list and the disqualified/restricted investigators list, to identify any regulatory action, prohibition or adverse finding recorded against the candidate. Mode: Database",
+        },
+        nsr: {
+          n: "National Skill of Registry",
+          price: "₹799",
+          info: "This check validates the candidate's profile against the National Skills Registry (NSR), confirming the ITPIN/NSR record and matching the personal, education and employment details registered against it with the details declared by the candidate. Mode: Database",
+        },
+        gapValidation: {
+          n: "Gap Check validation",
+          price: "₹900",
+          info: "This is an advanced gap check that identifies unexplained gaps between employment, education and address timelines and validates supporting documents or declarations provided for those periods. Mode: Online/Document",
+        },
       },
-      white: {
-        hd0: "Package",
-        hd1: "White-collar · SMB",
-        tt: "White-collar hire",
-        sub: "Corporate, tech, finance, healthcare",
-        price: "₹999",
-        ready: "3 days",
-        who: "Registrar-confirmed",
+      more: "Explore More",
+      exploreLess: "Explore Less",
+    },
+    summary: {
+      h: "Customize Your Package",
+      p: "Check for the genuineness of the people you employ to safeguard your house/child/car from the risk of any crime.",
+      checksInclude: "Checks Include",
+      empty: "Select checks from the table to build your package.",
+      buy: "Buy Now",
+    },
+    trusted: {
+      h: "Trusted by Businesses & Individuals",
+      stats: {
+        smbs: { v: "1200+", l: "SMBs trust HelloVerify" },
+        tat: { v: "9 Day TAT", l: "Average TAT" },
+        start: { v: "₹649", l: "Starting per check" },
       },
-      driver: {
-        hd0: "Package",
-        hd1: "Consumer · SMB",
-        tt: "Driver",
-        sub: "For families and small fleets",
-        price: "₹499",
-        ready: "30 minutes",
-        who: "Also on HelloV, without address",
+      stars: "4 out of 5 stars",
+      people: {
+        rohit: {
+          name: "Rohit Sharma",
+          role: "Restaurant Owner",
+          quote: "“Hiring staff usded to be risky, but HelloVerify made it simple and reliable. We now onboard with complete confidence„",
+          alt: "Rohit Sharma",
+        },
+        anjali: {
+          name: "Anjali Mehta",
+          role: "Startup Founder",
+          quote: "“Fast, accurate and seamless verification. HelloVerify helped us scale hiring without delays„",
+          alt: "Anjali Mehta",
+        },
+        neha: {
+          name: "Neha Verma",
+          role: "Domestic Employer",
+          quote: "“Finding trustworthy help is crucial With HelloVerify, I feel safe and assured every time I hire„",
+          alt: "Neha Verma",
+        },
       },
     },
-    /** The check names a package line can carry. Eight leaves for eleven
-     *  rendered lines, because three names appear in two packages — and the
-     *  `key={l}` on each line resolves through this table to the same string
-     *  it did before, which is the third corollary of the byte-identity
-     *  rule. */
-    checks: {
-      pan: "PAN card",
-      registrationCertificate: "Registration certificate",
-      drivingLicence: "Driving licence",
-      criminalRecord: "Criminal record",
-      education: "Education",
-      employment: "Employment",
-      moonlighting: "Moonlighting",
-      currentAddress: "Current address",
-    },
-    /** The card frame — one leaf each, rendered three times. Shared rather
-     *  than per-card because these are three instances of ONE card shape; a
-     *  locale that translated "Per candidate" differently on the driver card
-     *  would have a bug, not a choice. `chrome`'s duplicated `logoHome` is
-     *  the opposite case and says so: two different controls, two components.
-     *
-     *  `readyIn` is a function leaf because the count is the page's — it is
-     *  `p.lines.length`, and the markup is `{4}{" checks · ready in"}`, two
-     *  adjacent text children with React's `<!-- -->` between them. The
-     *  function keeps both children and lets a locale put the number
-     *  elsewhere in the phrase. */
-    card: {
-      perCandidate: "Per candidate",
-      inclGst: "incl. GST",
-      readyIn: (n: ReactNode) => (<>{n} checks · ready in</>),
-      buyNow: "Buy now",
-    },
-    /** Same function-leaf shape as `enterprise.note`, and for the same
-     *  reason: the sentence ends in a space before the anchor. */
-    pricenote: (link: ReactNode) => (
-      <>
-        Prices shown are placeholders pending commercial sign-off · every order gets a GST invoice ·
-        volume rates from 50 candidates/month — {link}
-      </>
-    ),
-    pricenoteLink: "talk to sales",
-    alacarte: {
-      k: "À la carte",
-      h: "Can I buy a single background check?",
-      lede:
-        "Any of HelloVerify's 33 checks can be bought on its own inside the app, at the same " +
-        "sources and in the same report as a package. Identity and PAN return in 15 minutes, " +
-        "criminal and current address in 30, and education in three days.",
-    },
-    /** The eight `.pl3` chips. Written out longhand in the page (no array),
-     *  so these swap one text node each and the chip keeps its three
-     *  children. */
-    chips: {
-      identity: { n: "Identity", t: "15 min" },
-      pan: { n: "PAN", t: "15 min" },
-      drivingLicence: { n: "Driving licence", t: "30 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-      digitalEmployment: { n: "Digital employment", t: "60 min" },
-      employment: { n: "Employment", t: "2 days" },
-      education: { n: "Education", t: "3 days" },
-    },
-    allChecks: "All 33 checks",
-    /** A bare `sec-head`, not a `SecHead` — this band has never carried a
-     *  lede, which the page's comment argues at length. Two leaves, and `h`
-     *  is read twice: by the `<h2>` and by `Steps`' `name`. */
-    howItWorks: {
-      k: "How it works",
-      h: "How does a small-business background check work?",
-    },
-    steps: {
-      pick: {
-        n: "01 · Two minutes",
-        t: "Pick & pay",
-        p: "Choose a package, pay per candidate. No subscription, no minimum order.",
+    solutions: {
+      h: "Solutions We Offer",
+      sub: "Catering to the needs of the small and medium businesses for our following offerings",
+      tabs: { employee: "Employee Verification", vendor: "Vendor Screening" },
+      employee: {
+        trust: { t: "Trust Build into Every Hire", p: "From first click to final hire—our AI-driven onboarding and automated workflows deliver speed and accuracy at every step." },
+        decision: { t: "Every Decision. Backed by Trust.", p: "The nannies, house staff, drivers, and tenants you trust with your home deserve thorough verification. 100% digital, fast and accurate — so you never have to wonder about the people closest to your family." },
+        instant: { t: "Instant Checks. Confident Hires", p: "Every hire carries risk. HelloVerify's instant background checks eliminate the guesswork—uncovering red flags before they ever walk through your door." },
       },
-      link: {
-        n: "02 · The candidate",
-        t: "One link",
-        p: "They get a WhatsApp link, photograph their documents, and consent on their own phone.",
-      },
-      report: {
-        n: "03 · Your inbox",
-        t: "The report",
-        p: "One PDF, the source named beside every result. Blue-collar packages land in about 30 minutes.",
-      },
-    },
-    faqHead: (<>Before you buy.</>),
-    faqs: {
-      consent: {
-        q: "Do I need the candidate's permission?",
-        a:
-          "Yes, and the flow handles it: the candidate consents on their own phone before any document is captured. No consent, no check — that's a legal requirement, not a setting.",
-      },
-      subscription: {
-        q: "Is there a subscription?",
-        a:
-          "No. You pay per candidate, per package. If you verify fifty people a month or more, volume pricing kicks in — talk to sales for a rate card.",
-      },
-      unverifiable: {
-        q: "What if a document can't be verified?",
-        a:
-          "The report says exactly what could not be confirmed and why — issuer offline, record not found, mismatch — and what it would take to resolve it. You're never charged twice for a re-run after a correction.",
-      },
-      invoice: {
-        q: "Do you send a proper invoice?",
-        a:
-          "Every order comes with a GST invoice, automatically, to the email on the account.",
+      vendor: {
+        h: "Business verification and due diligence to partner with the right vendors",
+        p: "With Certifier, offered by HelloVerify, clients can enhance their profiling experience by accessing certified profiles that encompass various aspects such as selfies, location confirmation, premises visuals, screening, clearances, agreements, and digital signatures.",
+        features: {
+          dueDiligence: "Comprehensive Vendor\nDue Diligence",
+          kyc: "Vendor KYC & Document\nVerification",
+          criminal: "Criminal & Court\nRecord Check",
+          financial: "Financial Risk & Credit\nAssessment",
+          compliance: "Compliance &\nRegulatory Check",
+          reference: "Personal & Professional\nReference Verification",
+        },
+        offer: {
+          h: "What We Offer",
+          cards: {
+            fast: { t: "Onboard Vendors 10x Faster", p: "The platform can facilitate data-driven decision-making on vendor performance, enabling real estate companies to identify top-performing vendors and optimise their vendor selection processes." },
+            regulatory: { t: "Maintain regulatory adherence", p: "Certifier helps identify reliable and qualified entities that align with the company & compliance requirements, thereby reducing the likelihood of engaging with non-compliant or high-risk vendors." },
+            monitoring: { t: "Reduce Risk with Continuous Monitoring", p: "Real-time updates on vendor activities progress (via photos, videos, voice notes), and adherence to contractual obligations, allowing for better project management and proactive issue resolution." },
+            reputation: { t: "Protect your business reputation", p: "Certifier's advanced AI-ML capabilities continually evolve along with human intervention, ensuring authentic Vendor verification while keeping bad actors away" },
+          },
+        },
       },
     },
   },
 
-  /** `/employee-verification` — Template 3. */
+  /** `/employee-verification` — the old `employees.base.json`, word for word,
+   *  in its order. The two sections the CMS marks `hidden` (blue-collar
+   *  workforce stats, the White & Blue-Collar benefits) never rendered and are
+   *  not carried; nor are the white / blue `exploreMore` labels, which the old
+   *  split panel did not render. Stat values live in the page. */
   employeeVerification: {
-    crumb: "Employee verification",
-    closing: {
-      heading: (
-        <>
-          The people you already trust, <em>on the record.</em>
-        </>
-      ),
-      sub: "Roll out re-verification without disrupting a single shift.",
-    },
+    crumb: "Employee Verification",
     hero: {
-      k: "Business · Employee verification",
-      h1: (
-        <>
-          Know your workforce. <em>Still.</em>
-        </>
-      ),
-      sub:
-        "Verification isn't only for new hires. Contractors, gig fleets and staff moving into " +
-        "sensitive roles — re-verified in the background, from provident-fund records to courts.",
-      cta: "Talk to sales",
-      when: "When to re-verify",
+      h1: (<>All-in-One Background Verification <br /><em>for Every Workforce Segment</em></>),
+      cta: "Talk to Sales",
     },
-    strip: {
-      digital: (<><b>60 min</b> digital employment check</>),
-      epfo: (<><b>EPFO</b>-backed work history</>),
-      zero: (<><b>Zero</b> forms for the employee</>),
-      consent: (<><span className="dot" /> consent captured every run</>),
-    },
-    whatWeCheck: {
-      k: "What we check",
-      h: "What does employee re-verification check?",
-      lede:
-        "Employee re-verification covers digital employment, moonlighting, entitlement to " +
-        "work, a criminal refresh and current address. Provident-fund and court records " +
-        "answer digitally — digital employment in 60 minutes. Where a former employer has " +
-        "to be called, HelloVerify calls, and the report names who picked up.",
-    },
-    chips: {
-      digitalEmployment: { n: "Digital employment", t: "60 min" },
-      moonlighting: { n: "Moonlighting", t: "60 min" },
-      entitlementToWork: { n: "Entitlement to work", t: "60 min" },
-      criminalRefresh: { n: "Criminal refresh", t: "30 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-      employmentManual: { n: "Employment (manual)", t: "2 days" },
-      education: { n: "Education", t: "3 days" },
-    },
-    whenItMatters: {
-      k: "When it matters",
-      h: "When should you re-verify an employee?",
-      lede:
-        "Re-verify at four moments: joining, a role change into finance, security or " +
-        "childcare-adjacent work, an annual refresh across the workforce, and after an " +
-        "incident. A check is a snapshot of the day it ran, and these are the four points " +
-        "where the picture changes — and the ones auditors ask about.",
-    },
-    /** The four `.when3` cards. Written out longhand in the page, so these are
-     *  three text-node swaps each and the card keeps its three children. */
-    when: {
-      joining: {
-        wt: "Joining",
-        wp: "The baseline: identity, work history and records confirmed before access is granted.",
-        wm: "same day",
+    banner: "Employee Verification Solutions",
+    white: {
+      h: "White-Collar Verification",
+      p: "White collar verification is a comprehensive process designed to validate the credentials, background and identity of professionals in roles that demand specialized knowledge, expertise and trust. HelloVerify delivers a streamlined solution that helps businesses mitigate hiring risks, ensure compliance and build a workforce they can truly rely on.",
+      checks: {
+        education: { n: "Education Check", p: "Verify an applicant's educational and professional qualifications including the authenticity of the issuing institution." },
+        identity: { n: "Identity Check", p: "Verify applicant's identity by validating government-issued documents matching name, DOB, father's name & ID number." },
+        employment: { n: "Employment Check", p: "Verify applicants employment history including company name, tenure & designation." },
+        criminalRecords: { n: "Criminal Record Check", p: "Verify court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the applicant." },
+        reference: { n: "Reference Check", p: "Verifies an applicant's professional conduct, performance, and other competencies through references from previous employers." },
+        drugTest: { n: "Drug Test Check", p: "Perform drug test ranging across all panels, from Panel-1 to Panel-10." },
+        globalDatabase: { n: "Global Database Check", p: "Verify international sanctions lists, watchlists, and regulatory records through global database to flag adverse information and mitigate risk." },
+        address: { n: "Address Check", p: "Verify an applicant's address digitally by validating eligible address proof documents and matching them with the applicant's live geolocation. No physical site visit required." },
+        company: { n: "Company Check", p: "Verifies the legitimacy of an applicant's previous employer by validating the organization's registration, operational status, and key business details." },
+        credit: { n: "Credit Check", p: "Verifies an applicant's credit profile through a Credit Bureau by assessing their credit score, credit history, and associated risk parameters." },
+        criminalLawFirm: { n: "Criminal Check through Law Firm", p: "Identifies criminal records by verifying court records through trusted law firm partners." },
+        directorship: { n: "Directorship Check", p: "Identifies whether an applicant currently holds or has previously held directorship positions in registered companies." },
+        form16: { n: "Form 16 Check", p: "Verifies an applicant's salary, tax deductions, and employment details by validating the employer-issued Form 16." },
+        resume: { n: "Resume Validation", p: "Validates the information provided in an applicant's resume, including education, employment, skills, and other credentials." },
       },
-      roleChange: {
-        wt: "Role change",
-        wp: "Moving into finance, security or childcare-adjacent work triggers the checks that role demands.",
-        wm: "60 min",
-      },
-      annual: {
-        wt: "Annual refresh",
-        wp: "Criminal and moonlighting refresh across the workforce, batched so HR does nothing manually.",
-        wm: "runs overnight",
-      },
-      incident: {
-        wt: "Incident",
-        wp: "A targeted re-run with an auditable trail, ready for legal the same day.",
-        wm: "30 min",
+      cta: "Talk to Sales",
+      alt: "Professionals representing white collar verification and compliance",
+    },
+    whiteWhy: {
+      h: "Why White-Collar Verification Matters",
+      cards: {
+        integrity: { t: "Enhance Workforce Integrity", p: "Identify and eliminate the risk of fraudulent academic, professional or identity claims among applicants. This ensures accurate hiring decisions, reduces risk and builds a reliable and compliant workforce." },
+        hiring: { t: "Accelerate Hiring with Confidence", p: "Our AI-driven onboarding and automated workflows streamline the hiring process from start to finish. This reduce manual effort, minimize errors and ensure faster turnaround times." },
+        compliance: { t: "Ensure Full Regulatory Compliance", p: "Our integrated framework aligns with global standards to protect data privacy and security. It ensures that all information is handled securely through robust protocols and controlled access." },
       },
     },
-    howItWorks: {
-      k: "How it works",
-      h: "How does re-verification work without disrupting staff?",
-      lede:
-        "Employees consent once on their own phone. After that, re-verification runs from a " +
-        "roster upload or an HRMS sync, checks statutory and court records digitally, and " +
-        "reports only the changes — a new court record, a second employer — rather than " +
-        "every clean result. Nobody fills in a form again.",
-    },
-    steps: {
-      enroll: {
-        n: "01 · One CSV or API call",
-        t: "Enroll",
-        p: "Upload the roster or sync from your HRMS. Each employee gets a consent link.",
-      },
-      verify: {
-        n: "02 · On schedule",
-        t: "Verify",
-        p: "Checks run digitally against provident-fund, court and registry records. Humans handle the exceptions.",
-      },
-      alert: {
-        n: "03 · Only the changes",
-        t: "Alert",
-        p: "You hear about the deltas — a new court record, a second employer — not five hundred clean results.",
+    results: {
+      h: "HR's & Staffing organizations see improved results with HelloVerify",
+      stats: {
+        workflow: "Have experienced a simplified screening workflow",
+        accuracy: "Have seen improved accuracy on background checks",
+        experience: "Have seen an improved candidate experience",
       },
     },
-    faqHead: (<>Fair questions.</>),
-    faqs: {
-      legal: {
-        q: "Is re-verifying existing employees even legal?",
-        a:
-          "Yes, with consent — which the flow captures per run, not as a blanket signature from five years ago. Scope is limited to what the role justifies, and employees can see what was checked.",
+    blue: {
+      h: "Blue-Collar Verification",
+      p: "Manufacturing, Logistics, Construction, Food & Beverage as small chips to help buyers see themselves explicitly.",
+      checks: {
+        pan: { n: "Pan Card Check", p: "PAN Card Verification validates an applicant's Permanent Account Number (PAN) through official databases to confirm identity, detect discrepancies, and support compliance." },
+        registration: { n: "Registration Certificate Check", p: "Verifies the authenticity of a vehicle's registration details, including ownership and registration status." },
+        drivingLicense: { n: "Driving License Verification", p: "Validates the authenticity of a candidate's driving license, including license number, validity, and issuing authority through official databases." },
+        criminalRecords: { n: "Criminal Records Check", p: "Court Record Check searches official e-court records across multiple jurisdictions to identify criminal cases against the candidate. Supporting case details, if available, are shared with the client." },
+        pennyDrop: { n: "Penny Drop Check", p: "Penny Drop Verification confirms the validity of a bank account by transferring a nominal amount and matching the account holder's name with the provided details." },
+        liveness: { n: "Liveness Check", p: "Liveness Check verifies that the individual is physically present during identity verification, preventing fraud from photos, videos, or masks." },
       },
-      digital: {
-        q: "What is a \"digital employment\" check?",
-        a:
-          "Work history reconstructed from provident-fund contribution records — employer names, overlaps and gaps — confirmed at the source in about an hour, without calling anyone's current employer.",
+      cta: "Talk to Sales",
+      alt: "Blue collar workers in safety gear representing field and operational verification",
+    },
+    blueWhy: {
+      h: "Why Blue-Collar worker Verification Matters",
+      cards: {
+        trust: { t: "Trust in Minutes, not Days", p: "Our platform turns verification into velocity, delivering accurate, timely reports that transform raw data into genuine trust, so every hiring decision your business makes is backed by proof and built on confidence." },
+        smart: { t: "Verify smart, Trust faster", p: "Our AI-driven onboarding and automated workflows eliminate delays, reduce errors, and deliver the right hire faster and more accurately than ever before." },
+        compliance: { t: "Maintaining Compliance", p: "Many industries are subject to regulatory requirements that necessitate thorough background checks and verification, protecting both the organization and its stakeholders." },
       },
-      moonlighting: {
-        q: "Can it detect moonlighting?",
-        a:
-          "Concurrent PF contributions from a second employer show up in the same 60-minute check. The report shows the overlap period, not an accusation — what you do with it is policy.",
+    },
+    automate: {
+      h: "Automated Workforce Onboarding",
+      p: "As a global provider of background screening solutions, we help organizations of all sizes hire the right people for the right opportunities. Join us to Modernize the way you hire & scale heights.",
+      tabs: {
+        smooth: { t: "Smooth Experience", p: "Hire faster through our platforms that turn data into trust through accurate reports with speed. Trust without compromise, backed by proof.", alt: "HelloVerify dashboard showing applicant details and a smooth onboarding experience" },
+        hrms: { t: "HRMS API & Integration", p: "Effortlessly integrate HelloVerify's powerful HRMS API into your existing systems to automate background checks, employee verification, and compliance tasks. Enhance efficiency and accuracy in managing your HR operations with seamless, real-time data synchronization.", alt: "HelloVerify integrated with HRMS workflows and API-driven data exchange" },
+        rules: { t: "Automated Rules Engine", p: "Leverage HelloVerify's Rule Engine to automate and optimize decision-making processes. Customize verification workflows, set criteria, and enforce compliance standards, ensuring consistent and accurate results tailored to your organization's specific needs.", alt: "Rule engine configuration for verification packages by role and policy" },
+        tracking: { t: "Real Time Tracking", p: "Stay informed with HelloVerify's real-time tracking feature, providing instant updates on the status of your verifications. Monitor progress and receive notifications, ensuring you’re always in the loop and never miss a critical update.", alt: "Real-time tracking of verification requests and completion status" },
+        support: { t: "Excellent Support", p: "HelloVerify offers top-notch customer support to assist you with any questions or challenges. Our dedicated team is always ready to provide quick and effective solutions, ensuring a smooth and hassle-free experience.", alt: "Customer support and specialist assistance for verification programs" },
+        security: { t: "Enterprise Grade Security", p: "HelloVerify ensures the highest level of data protection with enterprise-grade security measures. Safeguard sensitive information with robust encryption, compliance with industry standards, and proactive monitoring, giving you peace of mind.", alt: "Enterprise-grade security controls for sensitive verification data" },
       },
-      contacted: {
-        q: "Will employees be contacted?",
-        a:
-          "Only for consent, on their own phone. Digital checks never touch their employer or colleagues; manual employment checks do, and are marked clearly before you order one.",
+    },
+    psv: {
+      h: "Primary Source Verification",
+      items: {
+        education: "Education Verification",
+        institute: "Institute Accreditation Check",
+        employment: "Employment Verification",
+        dualEmployment: "Dual Employment Verification",
+        criminal: "Criminal Record Verification",
+        identity: "Identity Verification",
+        address: "Address Verification",
+        bank: "Bank Account Verification",
       },
     },
   },
 
-  /** `/products/customer-kyc` — Template 3. Absorbs legacy /kyc and
-   *  /products/trust-safety. */
+  /** `/products/customer-kyc` — the old `customerKyc.base.json`, word for
+   *  word, in its order: hero (title, subtitle, Talk to Sales), the six-step
+   *  How it Works grid with Talk to Sales, Solutions We Offer (six cards).
+   *  Step numbers and icons live in the page. */
   customerKyc: {
-    crumb: "Customer KYC",
-    closing: {
-      heading: (
-        <>
-          Trust at signup, <em>not after the loss.</em>
-        </>
-      ),
-      sub: "One API call between a stranger and a customer.",
-    },
+    crumb: "KYC",
     hero: {
-      k: "Business · Trust & safety",
-      h1: (
-        <>
-          Customers, verified <em>at signup.</em>
-        </>
-      ),
-      sub:
-        "Marketplaces, rentals, lending, care platforms — verify the person behind the account " +
-        "before the first transaction, not after the first complaint.",
-      cta: "Talk to sales",
-      api: "See the API",
+      h1: (<>KYC <em>Platform</em></>),
+      sub: "Onboard faster. Detect fraud earlier. Our comprehensive KYC solution brings every step of the digital onboarding process together creating a seamless experience that keeps fraudsters out and genuine customers moving forward.",
+      cta: "Talk to Sales",
     },
-    strip: {
-      identity: (<><b>15 min</b> identity check</>),
-      inFlow: (<><b>In-flow</b> — API or hosted page</>),
-      countries: (<><b>120+</b> countries, same pipeline</>),
-      consent: (<><span className="dot" /> consent-first, GDPR-clean</>),
-    },
-    whatWeVerify: {
-      k: "What we verify",
-      h: "What does customer KYC verify at signup?",
-      lede:
-        "HelloVerify's customer KYC confirms the person first — identity, PAN and age in 15 " +
-        "minutes, a selfie-to-face match in seconds — then screens the record: global " +
-        "database and credit in 15 minutes, criminal in 30, trade licence in two days. Depth " +
-        "is set per signup tier.",
-    },
-    lanes: {
-      identity: { lgt: "01 — Identity", lgh: "Are they who they claim?" },
-      risk: { lgt: "02 — Risk", lgh: "Should they be here?" },
-    },
-    chips: {
-      identity: { n: "Identity", t: "15 min" },
-      pan: { n: "PAN", t: "15 min" },
-      face: { n: "Face vs. selfie", t: "seconds" },
-      age: { n: "Age", t: "15 min" },
-      currentAddress: { n: "Current address", t: "30 min" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      credit: { n: "Credit", t: "15 min" },
-      tradeLicence: { n: "Trade licence", t: "2 days" },
-    },
-    inFlow: {
-      k: "In your flow",
-      h: "How does KYC verification fit into our signup flow?",
-      lede:
-        "Customer KYC reaches HelloVerify three ways: an API call from your own UI, a " +
-        "HelloVerify-hosted capture page, or a WhatsApp link for sellers and partners who " +
-        "sign up by phone. Each returns one webhook — verified, failed, or needs a human — " +
-        "with the evidence attached.",
-    },
-    steps: {
-      api: {
-        n: "01 · Embed",
-        t: "API",
-        p: "Your UI, our pipeline. Send the document image, get structured fields and a verdict back.",
+    how: {
+      h: "We deliver robust protection against online identity fraud powerful, seamless and always on.",
+      steps: {
+        upload: { t: "The user uploads a photo of their ID", body: ["\"Entity Verification\" (MCA, GST, Company Check)", "\"Financial Checks\" (Bank Statement, Credit, Global DB)", "\"Director & Ownership\" (Identity, Directorship)"], alt: "Step 1" },
+        selfie: { t: "User takes a Selfie", body: ["Point your camera at any government ID — our AI detects document type automatically, no manual selection needed."], alt: "Step 2" },
+        face: { t: "Facial Recognition", body: ["HelloVerify simplifies the experience with real-time guidance and smart document detection, automatically recognizing document types and removing the need for manual data entry—resulting in faster processing and significantly fewer errors."], alt: "Step 3" },
+        liveness: { t: "Liveliness Check", body: ["HelloVerify enhances the user experience with real-time guidance and intelligent document recognition, automatically identifying document types and eliminating manual data entry—delivering faster processing with greater accuracy and minimal errors."], alt: "Step 4" },
+        decision: { t: "Get Decision", body: ["HelloVerify makes the process smoother with real-time guidance and smart document recognition, instantly identifying document types and removing the need for manual input—resulting in quicker processing, higher accuracy and fewer errors."], alt: "Step 5" },
+        onboard: { t: "Onboard the Customer", body: ["HelloVerify streamlines the process with real-time user guidance and automatic document detection, removing the need for manual data entry—accelerating workflows while reducing errors and improving overall accuracy."], alt: "Step 6" },
       },
-      hosted: {
-        n: "02 · Or redirect",
-        t: "Hosted flow",
-        p: "A HelloVerify-hosted capture page in your colours — consent, capture and quality checks handled.",
-      },
-      whatsapp: {
-        n: "03 · Or async",
-        t: "WhatsApp",
-        p: "For sellers and partners who sign up by phone — the same link flow candidates use.",
-      },
+      cta: "Talk to Sales",
     },
-    compliance: {
-      k: "Compliance & privacy",
-      h: "How does HelloVerify handle customer KYC data?",
-      lede:
-        "A HelloVerify KYC check begins with the customer's consent, before any capture, with " +
-        "scope and retention stated in plain language. Documents are encrypted in transit and " +
-        "at rest, deleted on the DPA's retention schedule, and stored nowhere if you bring " +
-        "your own storage.",
-    },
-    /** NOT a credential card — the page's comment argues this at length. It is
-     *  `.cert` markup around a STANCE, it names no credential and carries no
-     *  status word, so `CREDENTIAL_MARKS` owns nothing here and all three
-     *  strings are ordinary page copy. `alt` is a plain `string` leaf, which
-     *  is why leaf types are derived rather than declared `ReactNode`. */
-    stance: {
-      alt: "GDPR",
-      h: "Consent first, always",
-      p: "The customer consents before capture; scope and retention are stated in plain language.",
-    },
-    /** The per-page gloss on the ISO card. The heading and the status word
-     *  still come from `CREDENTIAL_MARKS`; only this sentence is the page's. */
-    isoGloss: "Documents encrypted in transit and at rest; deletion on schedule, verifiable on request.",
-    securityInFull: "Security & compliance, in full",
-    /** `&amp;` KEPT, and this is the one place the ampersand rule inverts.
-     *  In a JSX leaf the entity is decoded by JSX exactly as it was in the
-     *  page, so copying the markup verbatim is what preserves the byte; it is
-     *  only a STRING leaf that must spell the bare `&`. */
-    faqHead: (<>From trust &amp;<br />safety teams.</>),
-    faqs: {
-      friction: {
-        q: "How much friction does this add to signup?",
-        a:
-          "The capture flow takes under a minute on a phone, and identity verdicts return in minutes. Most platforms gate features, not signup — the account exists immediately, the risky action waits for the verdict.",
-      },
-      tiering: {
-        q: "Can we tier the checks by risk?",
-        a:
-          "Yes — per API call. A buyer might get identity only; a seller adds criminal and global database; a high-value partner adds trade licence and directors. One integration, any mix.",
-      },
-      storage: {
-        q: "What do we store, and what do you store?",
-        a:
-          "You receive the verdict and the fields you asked for. Documents stay in HelloVerify's encrypted store on the retention schedule in the DPA — or zero-retention if you bring your own storage.",
-      },
-      international: {
-        q: "Does this work outside India?",
-        a:
-          "Yes — 120+ countries through the same API, with the check running in the country that issued the document. See global coverage for the country-by-country picture.",
+    solutions: {
+      h: "Solutions We Offer",
+      sub: "Comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection.",
+      cards: {
+        kyc: { t: "KYC (Know your customer)", items: ["Identity Verification", "Location Confirmation", "Liveliness Check", "Facial Recognition"] },
+        kyb: { t: "KYB (Know Your Business)", items: ["GST Verification", "MCA Verification", "Udyog/Udyam Aadhaar", "Company PAN"] },
+        underwriting: { t: "Underwriting", items: ["GST-Lite & Advanced", "Bank Statement Analysis", "ITR Check", "MCA Data Pull"] },
+        fraud: { t: "Fraud & Risk", items: ["Court Record Check", "PAN Aadhaar Link", "Email Risk Analysis", "1:N Face-Match"] },
+        execute: { t: "Execute", items: ["Bank Account Validation", "E-sign", "Device Fingerprinting", "E-stamp"] },
+        aml: { t: "AML", items: ["HelloVerify helps mitigate risk", "Perform real-time screening", "Monitor transactions continuously", "Conduct comprehensive risk assessments"] },
       },
     },
   },
 
-  /** `/products/certifier` — vendor due diligence. Descriptive name leads,
-   *  brand follows (IA §10.2), which is why the crumb is the category and the
-   *  product name only appears inside the copy. */
+  /** `/products/certifier` — the old `certifier.base.json`, word for word, in
+   *  its order: hero, We Verify What Matters Most (two tabs of four checks),
+   *  How Certifier Works For Businesses? (image slider beside four tabs),
+   *  Industries We Serve, Why Businesses Should Consider Certifier?, the
+   *  API-Driven Counterparty Platform (two slides of four). Bold runs in the
+   *  Vendor Monitoring lines are the old CMS `bold` parts. */
   certifier: {
-    crumb: "Vendor due diligence",
-    closing: {
-      heading: (
-        <>
-          Sign the supplier, <em>not the risk.</em>
-        </>
-      ),
-      sub: "Send us the vendor list before the quarter closes.",
-    },
+    crumb: "Certifier",
     hero: {
-      k: "Business · Vendor due diligence — Certifier",
-      h1: (
-        <>
-          Know who <em>you buy from.</em>
-        </>
-      ),
-      sub:
-        "Before the first purchase order: is the trade licence real, who are the directors, " +
-        "what do the courts and credit bureaus say? Certifier answers from the registry, not " +
-        "the vendor's brochure.",
-      cta: "Talk to sales",
-      packages: "See the two packages",
+      h1: (<><em>Certifier</em></>),
+      sub: "We are redefining third-party verification for B2B businesses delivering fast, reliable authentication of identities and documents that modern enterprises demand.",
+      cta: "Talk to Sales",
     },
-    strip: {
-      profile: (<><b>2 days</b> to a certified profile</>),
-      registry: (<><b>Registry</b>-confirmed, not self-declared</>),
-      countries: (<><b>120+</b> countries of suppliers</>),
-      renewals: (<><span className="dot" /> renewal reminders built in</>),
-    },
-    whatWeCheck: {
-      k: "What we check",
-      h: "What does vendor due diligence check?",
-      lede:
-        "Certifier checks a vendor as a legal entity and as the people behind it: trade " +
-        "licence in two days, directors and GST, credit and global-database screening in 15 " +
-        "minutes, plus identity, promoter criminal history and a financial assessment. " +
-        "Licences expire, so it keeps checking.",
-    },
-    lanes: {
-      entity: { lgt: "01 — The entity", lgh: "On paper" },
-      people: { lgt: "02 — The people", lgh: "Behind it" },
-    },
-    chips: {
-      tradeLicence: { n: "Trade licence", t: "2 days" },
-      directorsGst: { n: "Directors & GST", t: "3 days" },
-      credit: { n: "Credit", t: "15 min" },
-      globalDatabase: { n: "Global database", t: "15 min" },
-      identity: { n: "Identity", t: "15 min" },
-      criminal: { n: "Criminal", t: "30 min" },
-      promoter: { n: "Promoter criminal history", t: "2 days" },
-      financial: { n: "Financial assessment", t: "2 days" },
-    },
-    packagesBand: {
-      k: "Packages",
-      h: "What is in a vendor due diligence package?",
-      lede:
-        "Certifier ships two four-check vendor packages: trade licence risk, before you sign " +
-        "a supplier, and vendor financial risk, before the first big order. Both are " +
-        "registry-confirmed rather than self-declared, and both end in a certified vendor " +
-        "profile in two days.",
-    },
-    /** The frame both `.rc` cards render, one leaf each. Shared for the same
-     *  reason as `smb.card`: two instances of one card shape, where divergent
-     *  translations would be a bug. Unlike `smb`, the count and the turnaround
-     *  are literals in the markup here rather than derived from a list, so
-     *  `readyIn` is a plain string and not a function. */
-    card: {
-      label: "Package",
-      vendors: "Vendors · Certifier",
-      readyIn: "4 checks · ready in",
-      ready: "2 days",
-      who: "Certified vendor profile",
-      cta: "Talk to sales",
-    },
-    packs: {
-      licence: {
-        tt: "Trade licence risk",
-        sub: "Before you sign a supplier",
-        lines: {
-          tradeLicence: "Trade licence",
-          defaultingDirectors: "Defaulting directors",
-          criminalRecords: "Criminal records",
-          creditCompany: "Credit & company",
+    checks: {
+      h: "We Verify What Matters Most",
+      sub: "Our advance verification checks help you to onboard trustworthy vendors and minimise the risk across your supply chain.",
+      tabs: {
+        business: {
+          label: "Business License & Promoter Verification",
+          cards: {
+            tradeLicense: { t: "Trade License Check", p: "This check involves verifying a candidate's educational and professional qualifications, along with confirming the authenticity of the university, college, or academic institution from which the qualifications were obtained." },
+            defaultingDirectors: { t: "Defaulting Directors Check", p: "Defaulting Directors Check identifies whether a candidate has been listed as a defaulting director in any company due to non compliance, financial defaults or regulatory violations." },
+            criminalRecords: { t: "Criminal Records Check", p: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate." },
+            creditCompany: { t: "Credit & Company Check", p: "A Credit & Company Check in background verification evaluates a candidate's credit profile and verifies the legitimacy and status of associated companies through official and financial records." },
+          },
         },
-      },
-      financial: {
-        tt: "Vendor financial risk",
-        sub: "Before the first big order",
-        lines: {
-          financialAssessment: "Financial assessment",
-          gstScreening: "GST screening",
-          creditChecks: "Credit checks",
-          promoterCriminal: "Promoter criminal history",
+        vendor: {
+          label: "Vendor, Credit & Financial Verification",
+          cards: {
+            financialAssessment: { t: "Financial\nAssessment Check", p: "Financial Assessment in business due diligence involves evaluating a company's financial health by reviewing its financial statements, credit profile, and key financial indicators to assess stability and risk." },
+            gstScreening: { t: "GST\nScreening Check", p: "GST Screening in business due diligence involves verifying a company's GST registration, status, and compliance through official records." },
+            creditCheck: { t: "Credit\nCheck", p: "The credit check involves verifying the candidate's credit score and risk parameters through a Credit Bureau. A credit score is generated based on the individual's credit history." },
+            promoterCriminal: { t: "Promoter Criminal\nHistory Check", p: "A Promoter Criminal History Check in business due diligence involves verifying whether company promoters have any criminal records through court and legal databases." },
+          },
         },
       },
     },
-    howItWorks: {
-      k: "How it works",
-      h: "How does vendor due diligence work?",
+    how: {
+      h: "How Certifier Works For Businesses?",
+      intro: ["Start Free, Trial Certifier is HelloVerify's vendor screening platform.", "Onboard vendors 10X faster while monitoring compliance in real time."],
+      slides: ["Vendor verification workflow", "Team collaborating on vendor screening", "Professional reviewing verification details", "Business planning and compliance"],
+      tabs: { onboarding: "Virtual onboarding", monitoring: "Vendor Monitoring", statutory: "Statutory Screenings", agreement: "Virtual Agreement & E-Sign" },
+      onboarding: {
+        h: "Verified in 4 steps, no paperwork",
+        sub: "Customize and Upload all your vendor details virtually.",
+        steps: ["Send Invite", "Enter Personal Information", "Location Captured", "Upload Selfie & ID Proof"],
+      },
+      monitoring: {
+        h: "Vendor Monitoring — automatic alerts for risk changes",
+        items: [
+          (<><b>{"Upload virtually"}</b>{" – Upload virtually any picture of the site you wish to see or keep as a record."}</>),
+          (<>{"Receive voice notes to "}<b>{"get instant feedback."}</b></>),
+          (<>{"Receive videos of the existing sites/projects to "}<b>{"stay informed "}</b>{"on the current progress."}</>),
+        ],
+      },
+      statutory: {
+        h: "Statutory Screenings — stay compliant automatically",
+        intro: ["Upload all the required documents and verify instantly.", "We use artificial intelligence & machine learning capabilities to provide fastest screening service."],
+        items: ["Global WatchList", "Company Screening", "Identity Screening", "GST Screening", "Financial Screening", "Credit Suit Default Screening"],
+      },
+      agreement: {
+        h: "Go digital securely and reliably",
+        intro: "Go digital with us and move your business securely & reliably.",
+        items: ["Create New Agreement", "Add Digital Signature", "Sign and Share Agreement"],
+      },
     },
-    steps: {
-      list: {
-        n: "01 · Procurement",
-        t: "The list",
-        p: "Vendor names and GST numbers — a CSV or an API call from your procurement system.",
-      },
-      digging: {
-        n: "02 · The registries",
-        t: "The digging",
-        p: "Licence registers, ministry records, courts, credit bureaus — each fact confirmed where it's filed.",
-      },
-      profile: {
-        n: "03 · Two days later",
-        t: "The profile",
-        p: "A certified profile per vendor: what was checked, where, what was found — and when it expires.",
+    industries: {
+      h: "Industries We Serve",
+      p: "One platform powering verification, validation and compliance across industries. Designed to adapt to the customized requirements of every industry we serve.",
+      cards: {
+        realEstate: { t: "Real Estate, Construction & Manufacturing companies", alt: "Professional in a hard hat with architectural building models" },
+        ecommerce: { t: "E-commerce & Vendor Discovery Platforms", alt: "Person using smartphone and laptop for online shopping and vendor discovery" },
+        it: { t: "IT & Healthcare Companies", alt: "Healthcare professionals reviewing documents together" },
+        retail: { t: "FMCG & Retail Chains", alt: "Retail associate with shopping cart in a store aisle" },
       },
     },
-    faqHead: (<>From procurement.</>),
-    faqs: {
-      cooperate: {
-        q: "Does the vendor have to cooperate?",
-        a:
-          "Mostly no — registries, courts and bureaus answer without the vendor's involvement. Where a document must come from the vendor, they get the same one-link upload flow candidates use.",
+    why: {
+      h: "Why Businesses Should Consider Certifier?",
+      p: "Reliable, secure and efficient verification—built for modern businesses. Designed to help you stay compliant while saving time and operational effort.",
+      cards: {
+        fast: { t: "Fast-Track Vendor Onboarding by 10x", p: "From vendor evaluation to final selection, our platform transforms raw performance data into decisions that matter helping companies consistently identify their strongest vendors and build a selection process built on facts, not assumptions." },
+        blacklist: { t: "Stop Previously Blacklisted vendors", p: "Certifier raises the bar on vendor qualification identifying only those entities that are fully compliant, genuinely reliable and perfectly aligned with your company's standards. Because the cost of a wrong vendor is one your business should never have to pay." },
+        monitoring: { t: "Reduce Risk with Continuous Monitoring", p: "Never be caught off guard. Real time vendor updates photos, videos, voice notes give you complete visibility into every activity, every obligation and every potential issue before it becomes a problem." },
+        brand: { t: "Protect Your Brand Integrity", p: "Bad actors don't stand a chance. Certifier's AI and ML capabilities grow smarter with every verification combining machine intelligence with human judgment to ensure only authentic vendors make it through." },
       },
-      certified: {
-        q: "What does \"certified\" mean here?",
-        a:
-          "Every fact in the profile carries its source and check date. Certification isn't our opinion of the vendor — it's proof that each claim was verified at the registry that holds it.",
-      },
-      wholeBase: {
-        q: "Can this run on our whole vendor base?",
-        a:
-          "Yes — batches run in parallel, so a thousand vendors take days, not quarters. Renewals re-run automatically before a licence or rating goes stale.",
-      },
-      international: {
-        q: "International suppliers too?",
-        a:
-          "120+ countries, checked in-country: an Egyptian textile supplier's trade licence is confirmed in Cairo, not translated from a scan.",
+    },
+    api: {
+      h: "API-Driven Counterparty Platform",
+      p: "Let a third party perform all compliance checks on your behalf. Businesses can safeguard their reputation, mitigate potential legal repercussions and maintain compliance with both legal and ethical guidelines.",
+      cards: {
+        mca: { t: "Ministry of Corporate Affairs", p: "Deliver a better employee experience with faster, high-efficiency verifications—reducing onboarding time and lowering operational costs by up to 75%." },
+        gst: { t: "Goods and Services Tax (GST)", p: "GST verification confirms the validity of a GSTIN and provides key business details such as legal name, entity type and registration status—helping identify and prevent fraudulent GST record" },
+        owner: { t: "Owner & Director Verification", p: "This verification confirms the identity of company owners or directors using official documents such as PAN, Aadhaar, Voter ID, or Driving License by validating document copies against issuing authority databases." },
+        company: { t: "Company Check", p: "This verification includes a site visit to the company and cross-referencing through our Rolodex (Fake Company List), MoCA, NASSCOM and reverse domain lookups, followed by decoy calls, mystery shopping and on-site verification to confirm authenticity." },
+        bank: { t: "Bank Statement Verification", p: "This check verifies the authenticity and ownership of a specified bank account." },
+        global: { t: "Global Database", p: "This check screens individuals and entities against global databases to identify potential risks, watchlists, or adverse records." },
+        directorship: { t: "Directorship Check", p: "This check verifies candidate details through the MCA database portal using identifiers such as Name, Date of Birth, or Father's Surname to validate records against the official Ministry of Corporate Affairs database." },
+        credit: { t: "Company Credit Check", p: "The credit report is obtained from a credit bureau and includes the Credit/CIBIL score and key risk parameters, along with verification of the applicant's name and PAN, and details of total active and closed loans." },
       },
     },
   },

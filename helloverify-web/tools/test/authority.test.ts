@@ -16,7 +16,7 @@ import {
   isAuthorityId,
   UAE_PASS,
 } from "../../src/lib/authority/portals.ts";
-import { isValidEmail, isValidOtp, isValidPhone } from "../../src/lib/authority/validate.ts";
+import { isValidEmail, isValidOtp, isValidPhone, isValidPhoneSpan } from "../../src/lib/authority/validate.ts";
 import { pick } from "../../src/lib/copy/index.ts";
 import { AUTHORITY } from "../../src/lib/copy/authority.ts";
 import { LEGACY_ROUTES } from "../../src/lib/seo/legacy-urls.ts";
@@ -28,6 +28,11 @@ check("email", isValidEmail("ada@helloverify.com"));
 check("bare word is not email", !isValidEmail("ada"));
 check("10-digit phone", isValidPhone("9876543210"));
 check("short phone fails", !isValidPhone("98765"));
+check("mom 7 digits", isValidPhoneSpan("1234567", 7, 15));
+check("mom 15 digits", isValidPhoneSpan("123456789012345", 7, 15));
+check("mom 6 digits fail", !isValidPhoneSpan("123456", 7, 15));
+check("mohesr placeholder stays 10-digit", pick(AUTHORITY, "en").dialog.phonePlaceholder === "Enter 10-digit phone number");
+check("mom placeholder is the live string", pick(AUTHORITY, "en").dialog.momPhonePlaceholder === "Enter Phone Number");
 check("6-digit otp", isValidOtp("123456"));
 check("short otp fails", !isValidOtp("12345"));
 

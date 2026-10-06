@@ -22,7 +22,7 @@
  *
  *      platform/page.tsx                 28 nodes ->  26 leaves   0.93x
  *      platform/coverage                 33       ->  99          3.0x
- *      platform/technology               52       ->  65          1.25x
+ *      platform/technology               52       ->  53          1.02x   (old CMS copy, 5 Oct 2026)
  *      platform/security-compliance      43       ->  99          2.3x
  *                                        (+1: the shared `crumb` leaf)
  *
@@ -41,16 +41,6 @@
  *    lives in `lib/seo/copy.ts`, which `check:sitemap` compares. §8.1's table
  *    owns what the `<head>` says; this one owns the `<body>`.
  *
- *  - **The two `<pre>` samples on `/technology`.** A JSON request
- *    body and a webhook payload are CODE, not copy: `"driving_licence"`,
- *    `"callback_url"` and `"2026-09-16T10:08Z"` are the API's own spelling and
- *    are identical in every locale, exactly as an href is. They stay as the
- *    template literals they were. The same line puts the method and the path
- *    (`POST`, `/v1/verifications`) and the webhook's event name
- *    (`verification.completed`) in the page and the `<small>` description and
- *    the `→ …` return blurb beside them in here — one is API surface, the
- *    other is a sentence a translator translates.
- *
  *  - **The credential names and status words** on
  *    `/platform/security-compliance`. `CREDENTIAL_MARKS` in
  *    `lib/content/company.ts` owns those (BUILD-SPEC §11a.3) and
@@ -60,7 +50,6 @@
  *
  *  NO `as const`, per the recipe.
  */
-import type { ReactNode } from "react";
 
 export const en = {
   /** The subtree's own name: the hub's single breadcrumb rung AND the parent
@@ -156,386 +145,302 @@ export const en = {
     },
   },
 
-  /** `/international` — where a document can be confirmed at its source. */
+  /** `/international` — the old SPA's `international.base.json`, word for word.
+   *  The four countries' package cards share a title and tag list per card
+   *  type; the line under the title is per country (hi and ar name it).
+   *  Prices and which checks each country lists are the page's. */
   coverage: {
-    crumb: "Global coverage",
-
-    closing: {
-      heading: (
-        <>
-          Tell us the country. <em>We'll tell you the truth.</em>
-        </>
-      ),
-      sub: "Including when the honest answer is that a registry still works on paper.",
-    },
+    crumb: "International Checks",
 
     hero: {
-      k: "Platform · Global coverage",
-      h1: (
-        <>
-          Verified in <em>120+ countries.</em>
-        </>
-      ),
-      sub:
-        "A document is only properly verified in the country that issued it. Our own offices and " +
-        "partner network reach the registries, universities, courts and employers that hold the " +
-        "records — locally, in language, to local process.",
-      cta: "Ask about a country",
-      times: "See country times",
-    },
-
-    strip: {
-      countries: (<><b>120+</b> countries reachable</>),
-      offices: (<><b>6</b> offices, twelve hours apart</>),
-      hours: (<><b>21 of 24</b> hours with someone at a desk</>),
-      live: (<><span className="dot live" /> someone is working now</>),
-    },
-
-    offices: {
-      k: "Six offices",
-      h: "Where are HelloVerify's offices?",
-      lede:
-        "HelloVerify works from six offices — Manila, Singapore, Noida, Dubai, Cairo and New " +
-        "York — each open 09–18 local, which puts someone at a desk for 21 of 24 hours. A " +
-        "request filed at night in one place is picked up in the morning elsewhere.",
-    },
-
-    /** The six `.o3` cards. Each is `<b>city</b><span>hours</span>` — two
-     *  elements with one text child each, so two leaves and not one rich-text
-     *  leaf; nothing here is an element-plus-text PAIR inside one node.
-     *
-     *  ONE `hours` LEAF READ SIX TIMES, not six identical leaves, and the band
-     *  above is the reason: its lede says the offices are "each open 09–18
-     *  local", so the six rendering the same string is a property of the copy
-     *  rather than a coincidence, and six leaves would let a locale break the
-     *  sentence that describes them. The same move
-     *  `business/enterprise/page.tsx` makes for the `Steps` `name` it shares
-     *  with its own `SecHead` `h`. */
-    officeRows: {
-      manila: "Manila",
-      singapore: "Singapore",
-      noida: "Noida",
-      dubai: "Dubai",
-      cairo: "Cairo",
-      newYork: "New York",
-      hours: "09–18 local",
-    },
-
-    countryTimes: {
-      k: "Country times",
-      h: "How long does verification take in each country?",
-      lede:
-        "HelloVerify's indicative times for source-confirmed checks vary by country: India 15 " +
-        "minutes to 3 days, the United States, Germany and Saudi Arabia 1–3 days, Nigeria 3–6 " +
-        "days. Digital registries answer in minutes; where a registrar works on paper, the " +
-        "estimate says days.",
-    },
-
-    /** THE REGION TABLE, and the 51 leaves that make this page 3.0x.
-     *
-     *  Keyed rather than an array, per `./index`: an array leaf derives to
-     *  `T[]`, so a second locale could ship six countries where English ships
-     *  eight and `tsc` would agree. The page keeps the ORDER — which regions,
-     *  which countries, in which order — as `readonly { r: RegionKey; list:
-     *  readonly CountryKey[] }[]`, so a country listed without a name is
-     *  TS2322 there, in every locale at once.
-     *
-     *  FLAT, not nested inside the region. The obvious shape puts each
-     *  region's eight countries under it, and it does not survive contact with
-     *  the page: `t.coverage.regions[g.r].countries[k]` indexes a UNION of
-     *  three objects by a union of their key sets, which is TS2536 unless the
-     *  page casts it away — and a cast in the one place the type gate is
-     *  supposed to bite is worse than no gate. Which region a country belongs
-     *  to is the page's ordered list either way, the same thing `LANES` is on
-     *  `/products/bgv-enterprise`. All 24 keys are distinct, which is what makes
-     *  one record legal.
-     *
-     *  BOTH HALVES RENDER AS `key=`. `key={g.r}` is the region title and
-     *  `key={x.c}` the country name, so these 27 leaves are the third
-     *  corollary's case: a rename here is a changed React key and a changed
-     *  flight payload. `tools/test/copy.test.ts` §13 pins the three region
-     *  titles and all 24 names against the pre-migration strings.
-     *
-     *  IT DELIBERATELY DOES NOT READ `lib/content/countries.ts`, which holds
-     *  six of these 24 names. That module is the catalogue behind
-     *  `/countries/[country]` — 28 programmatic routes whose titles
-     *  `lib/seo/copy.ts` derives from it — and this is a page-local table of
-     *  indicative times on one route, gated by nothing. `business.enterprise`
-     *  already set that precedent in the harder direction: its pill names
-     *  overlap `lib/content/checks.ts`, and §8's boundary guard deliberately
-     *  does not run over `business`. Importing the catalogue here would cover
-     *  a quarter of the table and leave 18 names hand-written beside them,
-     *  which is worse than either. */
-    regions: {
-      southSoutheastAsia: "South & Southeast Asia",
-      middleEastAfrica: "Middle East & Africa",
-      europeAmericas: "Europe & the Americas",
+      h1: (<>International Background <em>Verification</em></>),
+      sub: "HelloVerify provides accurate and timely international background verification across 120+ countries and territories worldwide.",
     },
 
     countries: {
-      india: { c: "India", t: "15 min – 3 days" },
-      philippines: { c: "Philippines", t: "Tomorrow, 9:00 AM" },
-      singapore: { c: "Singapore", t: "Fri, 10:30 AM" },
-      indonesia: { c: "Indonesia", t: "2 – 4 days" },
-      vietnam: { c: "Vietnam", t: "2 – 4 days" },
-      sriLanka: { c: "Sri Lanka", t: "2 – 5 days" },
-      nepal: { c: "Nepal", t: "2 – 5 days" },
-      bangladesh: { c: "Bangladesh", t: "3 – 5 days" },
-      uae: { c: "United Arab Emirates", t: "Today, 4:00 PM" },
-      saudiArabia: { c: "Saudi Arabia", t: "1 – 3 days" },
-      egypt: { c: "Egypt", t: "Today, 4:00 PM" },
-      qatar: { c: "Qatar", t: "1 – 3 days" },
-      kuwait: { c: "Kuwait", t: "2 – 4 days" },
-      kenya: { c: "Kenya", t: "3 – 5 days" },
-      nigeria: { c: "Nigeria", t: "3 – 6 days" },
-      southAfrica: { c: "South Africa", t: "2 – 4 days" },
-      uk: { c: "United Kingdom", t: "Today, 4:00 PM" },
-      germany: { c: "Germany", t: "1 – 3 days" },
-      france: { c: "France", t: "1 – 3 days" },
-      netherlands: { c: "Netherlands", t: "1 – 3 days" },
-      poland: { c: "Poland", t: "2 – 4 days" },
-      us: { c: "United States", t: "1 – 3 days" },
-      canada: { c: "Canada", t: "1 – 3 days" },
-      brazil: { c: "Brazil", t: "3 – 5 days" },
+      uk: { name: "United Kingdom", flagAlt: "United Kingdom flag", checksFlagAlt: "United Kingdom flag" },
+      uae: { name: "United Arab Emirates", flagAlt: "United Arab Emirates flag", checksFlagAlt: "United Arab Emirates flag" },
+      philippines: { name: "Philippines", flagAlt: "Philippines flag", checksFlagAlt: "Philippines flag" },
+      egypt: { name: "Egypt", flagAlt: "Egypt flag", checksFlagAlt: "Egypt flag" },
     },
 
-    /** A FUNCTION leaf taking the anchor, the shape `./index` describes for a
-     *  sentence wrapping something the component owns — here an href and an
-     *  inline style. A plain string would have had to END IN A SPACE to keep
-     *  the byte, and an edge-whitespace leaf is what
-     *  `tools/test/copy.test.ts` §3 rejects. `business.enterprise.note` is the
-     *  same construction. */
-    note: (link: ReactNode) => (
-      <>
-        Indicative times for source-confirmed checks · a further 90+ countries are covered through
-        the partner network — {link}
-      </>
-    ),
-    noteLink: "ask about a specific country",
-
-    means: {
-      k: "What coverage means",
-      h: "What does global coverage actually mean?",
-      lede:
-        "Coverage at HelloVerify means someone can reach the office that holds the record — a " +
-        "court, a university, a transport authority — in the country that issued the document, " +
-        "not a database licence. If nobody can, the report says unverifiable and names the " +
-        "route tried.",
-    },
-
-    /** The three `Steps` cards. `n` is the ornament number, `t` the card
-     *  heading, `p` its line — all three are rendered words, so all three are
-     *  here; the ORDER is the page's. NO `name` is passed, so no HowTo node
-     *  reads any of this (§17 condition 18); the page comment says why. */
-    steps: {
-      inCountry: {
-        n: "01",
-        t: "In-country",
-        p: "The check runs where the document was issued, by people who know that registry's process and language.",
-      },
-      atSource: {
-        n: "02",
-        t: "At the source",
-        p: "The university, the court, the transport authority — not an aggregator that once copied their data.",
-      },
-      honest: {
-        n: "03",
-        t: "Honestly reported",
-        p: "If a registry can't be reached, the report says unverifiable and names the route tried. Never a silent pass.",
+    packages: {
+      h: (<>Verify <em>Domestic Staff, Drivers, and Tenants</em> with Fast, Reliable Background Checks.</>),
+      includes: "Checks Include",
+      buy: "Buy Now",
+      cards: {
+        homeStaff: {
+          t: "Home Staff Verification",
+          tags: ["Criminal Check", "Passport Check", "Entitlement to Work"],
+          p: {
+            uk: "Quick, hassle-free background checks so you can ensure your family is in safe",
+            uae: "Quick, hassle-free background checks so you can ensure your family is in safe",
+            philippines: "Quick, hassle-free background checks so you can ensure your family is in safe",
+            egypt: "Quick, hassle-free background checks so you can ensure your family is in safe",
+          },
+        },
+        driver: {
+          t: "Driver Verification",
+          tags: ["Criminal Check", "Driving License Check", "Current Address Check"],
+          p: {
+            uk: "Verify your driver’s identity, licensing status, and background before entrusting them with your vehicle.",
+            uae: "Verify your driver’s identity, licensing status, and background before entrusting them with your vehicle.",
+            philippines: "Verify your driver’s identity, licensing status, and background before entrusting them with your vehicle.",
+            egypt: "Verify your driver’s identity, licensing status, and background before entrusting them with your vehicle.",
+          },
+        },
+        tenant: {
+          t: "Tenant Verification",
+          tags: ["Criminal Check", "Identity Check", "Credit Check"],
+          p: {
+            uk: "Verify prospective tenants quickly and confidently before finalizing a tenancy agreement.",
+            uae: "Verify prospective tenants quickly and confidently before finalizing a tenancy agreement.",
+            philippines: "Verify prospective tenants quickly and confidently before finalizing a tenancy agreement.",
+            egypt: "Verify prospective tenants quickly and confidently before finalizing a tenancy agreement.",
+          },
+        },
       },
     },
 
-    /** Kept as a FRAGMENT, exactly as written, although it holds one text
-     *  child and no markup. `FaqSection`'s `head` is a `ReactNode` because
-     *  three of this subtree's four carry a `<br />`; a string leaf here would
-     *  swap a fragment for a raw string in the same slot for no gain.
-     *  `business`'s five are all fragments for the same reason. */
-    faqHead: (<>About reach.</>),
-
-    faqs: {
-      count120: {
-        q: "What does \"120+ countries\" actually count?",
-        a:
-          "Countries where we can confirm at least one check type with the authority that issued the document, through our own offices or a named partner. It does not count countries where all we could do is search a commercial database.",
+    checks: {
+      h: "International Checks",
+      lede: "Whether you're hiring domestic staff, renting out property, or screening a potential business partner, our international verification services have you covered.",
+      cols: {
+        name: "Check Name",
+        price: "Price (US $)",
+        tat: "Turn Around Time",
+        action: "Action",
       },
-      everywhere: {
-        q: "Is every check available everywhere?",
-        a:
-          "No, and any vendor claiming otherwise is describing a database. Criminal record access in particular varies by jurisdiction — some require the individual to request their own certificate. The catalogue shows what is possible per country before you order.",
-      },
-      crisis: {
-        q: "How do you handle countries in crisis?",
-        a:
-          "Where institutions are closed or records are destroyed, we say so. The report distinguishes unverifiable from failed, which protects applicants who did nothing wrong but happen to come from somewhere with broken record-keeping.",
-      },
-      addCountry: {
-        q: "Can you add a country for us?",
-        a:
-          "Often, yes — for a committed volume we will establish a route into a new jurisdiction, typically a matter of weeks. Tell us the country and the check types you need.",
+      add: "Add",
+      more: "Explore More",
+      less: "View Less",
+      empty: "No checks are available for the selected country.",
+      none: "No countries match your search.",
+      search: "Search country…",
+      pick: "Select country",
+      multi: "Add Multiple",
+      sort: "Sort by {{column}}",
+      up: "sorted ascending",
+      down: "sorted descending",
+      select: "Select {{name}}",
+      rows: {
+        education: {
+          nm: "Education Check",
+          sub: "This check involves verifying a candidate's educational and professional qualifications, along with confirming the authenticity of the university, college, or academic institution from which the qualifications were obtained.",
+          price: "$50/check",
+          tat: "10-15 Days",
+        },
+        resume: {
+          nm: "Resume Validation Check",
+          sub: "Resume Validation Check involves verifying the accuracy of information provided in a candidate's resume, including education, employment, skills, and other credentials.",
+          price: "$35/check",
+          tat: "10-15 days",
+        },
+        passport: {
+          nm: "Passport Check",
+          sub: "This check validates the candidate's passport details, including identity information, document authenticity, and validity for international verification purposes.",
+          price: "$25/check",
+          tat: "10-15 days",
+        },
+        criminal: {
+          nm: "Criminal Check",
+          sub: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate. We search e-court records to provide accurate results, supporting case details if any are shared with the client.",
+          price: "$35/check",
+          tat: "10-15 days",
+        },
+        reference: {
+          nm: "Reference Checks",
+          sub: "A reference check is a background verification process where previous employers or professional contacts are consulted to confirm a candidate's employment history, job performance and professional conduct. This helps organizations make informed hiring decisions.",
+          price: "$55/check",
+          tat: "10-15 days",
+        },
+        globalDb: {
+          nm: "Global Database check",
+          sub: "Global database verification involves searching international databases, including sanctions lists, watchlists, and regulatory records, to identify any adverse information related to a candidate or business entity. This check helps organizations ensure compliance and mitigate potential risks.",
+          price: "$10/check",
+          tat: "10-15 days",
+        },
+        etw: {
+          nm: "Eligibility To Work Check",
+          sub: "This check confirms the candidate's legal right to work in the selected country, including visa status, work permits, and compliance with local employment regulations.",
+          price: "$40/check",
+          tat: "10-15 days",
+        },
+        criminalUae: {
+          nm: "Criminal Records",
+          sub: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate. We search e-court records to provide accurate results, supporting case details if any are shared with the client.",
+          price: "$45/check",
+          tat: "10-15 Days",
+        },
+        passportUae: {
+          nm: "Passport Check",
+          sub: "This check validates the candidate's passport details, including identity information, document authenticity, and validity for international verification purposes.",
+          price: "$30/check",
+          tat: "10-15 days",
+        },
+        etwUae: {
+          nm: "Entitlement to Work",
+          sub: "This check confirms the candidate's legal right to work in the selected country, including visa status, work permits, and compliance with local employment regulations.",
+          price: "$40/check",
+          tat: "10-15 days",
+        },
+        criminalPh: {
+          nm: "Criminal Records",
+          sub: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate. We search e-court records to provide accurate results, supporting case details if any are shared with the client.",
+          price: "$40/check",
+          tat: "10-15 Days",
+        },
+        licensePh: {
+          nm: "Driving License Check",
+          sub: "This check verifies the validity and authenticity of the candidate's driving licence, including issue details, class of vehicle permitted, and entitlement status.",
+          price: "$35/check",
+          tat: "10-15 days",
+        },
+        globalPh: {
+          nm: "Global Database Check",
+          sub: "Global database verification involves searching international databases, including sanctions lists, watchlists, and regulatory records, to identify any adverse information related to a candidate or business entity. This check helps organizations ensure compliance and mitigate potential risks.",
+          price: "$25/check",
+          tat: "10-15 days",
+        },
+        criminalEg: {
+          nm: "Criminal Records",
+          sub: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate. We search e-court records to provide accurate results, supporting case details if any are shared with the client.",
+          price: "$40/check",
+          tat: "10-15 Days",
+        },
+        identityEg: {
+          nm: "Identity Check",
+          sub: "This check involves validation of the candidate's passport, national ID, and other government-issued identity documents. We verify the identity by matching the name, date of birth, and ID number with the document provided.",
+          price: "$30/check",
+          tat: "10-15 days",
+        },
+        creditEg: {
+          nm: "Credit Check",
+          sub: "The credit check involves verifying the candidate's credit score and risk parameters through a Credit Bureau. A credit report is generated based on the individual's credit history. If the candidate's details are not available in the database, additional information may be required as per the Credit Bureau's guidelines.",
+          price: "$45/check",
+          tat: "10-15 days",
+        },
       },
     },
   },
 
-  /** `/technology` — how it works, for a technical evaluator. */
+  /** `/technology` — the old SPA's `technology.base.json`, word for word. */
   technology: {
-    crumb: "Technology & APIs",
-
-    closing: {
-      heading: (
-        <>
-          Read the docs, <em>then send one request.</em>
-        </>
-      ),
-      sub: "Sandbox keys the same day you ask.",
-    },
+    crumb: "Technology",
 
     hero: {
-      k: "Platform · Technology & APIs",
-      h1: (
-        <>
-          AI reads it. <em>People confirm it.</em>
-        </>
-      ),
-      sub:
-        "The model extracts fields and spots forgeries in about a second. The part that makes the " +
-        "answer worth having is what comes next — reaching the office that issued the document.",
-      cta: "Request sandbox access",
-      endpoints: "See the endpoints",
+      h1: (<>The Trust Technology <em>Platform</em></>),
+      sub: "HelloVerify's Trust Technology Platform performs Primary Source Verification directly from authorised sources, orchestrating complex workflows across countries, institutions, and regulatory ecosystems. Powered by AI and trained on millions of verifications.",
+      cta: "Contact Sales",
     },
 
-    strip: {
-      read: (<><b>1.2 s</b> document read</>),
-      types: (<><b>33</b> check types, one API</>),
-      webhooks: (<><b>Webhooks</b> — no polling</>),
-      uptime: (<><span className="dot" /> 99.9% uptime target</>),
-    },
-
-    /** `h` IS THE HowTo NODE'S NAME (§17 condition 18). The page passed the
-     *  same sentence twice — once as `SecHead h=`, once as `Steps name=` — and
-     *  now reads ONE leaf twice, so a translation cannot break the equality
-     *  `check-schema.mjs` compares per page. `business.enterprise.howItWorks`
-     *  made the same move for the same reason. */
-    pipeline: {
-      k: "The pipeline",
-      h: "How does the verification pipeline work?",
-      lede:
-        "You post one document and a list of checks. HelloVerify then runs four stages: an " +
-        "on-device capture quality gate, field extraction and forgery checks in about 1.2 " +
-        "seconds, routing to the office that issued the document, and a signed result delivered " +
-        "by webhook.",
-    },
-
-    steps: {
-      capture: {
-        n: "01 · Capture",
-        t: "Quality gate",
-        p: "Edges, glare, focus and resolution checked on-device before upload — bad captures never enter the queue.",
-      },
-      extract: {
-        n: "02 · Extract",
-        t: "Read & verify",
-        p: "Fields extracted, template and fonts matched against the issuer's known series, security features and face compared.",
-      },
-      route: {
-        n: "03 · Route",
-        t: "Find the issuer",
-        p: "The issuing office is resolved from the document itself, then the request is routed to the team or API that can reach it.",
-      },
-      ret: {
-        n: "04 · Return",
-        t: "Signed result",
-        p: "A structured result with the source, timestamp and evidence — delivered by webhook, not discovered by polling.",
+    pillars: {
+      h: "Global Workforce & Business Trust Infrastructure platform",
+      sub: "The future growth engine. The next Journey",
+      cards: {
+        onboarding: {
+          t: "Seamless Applicant Onboarding",
+          p: "Our AI automatically captures, structures, and validates information directly from uploaded documents, creating clean, verification ready data without manual intervention.",
+        },
+        research: {
+          t: "AI-Powered Research Intelligence",
+          p: "Our AI research engine connects with the right authorised contacts, leverages a proprietary database of fraudulent institutions, and continuously learns from every verification to strengthen fraud detection.",
+        },
+        orchestration: {
+          t: "ML-Driven Workflow Orchestration",
+          p: "Our ML based automation engine intelligently orchestrates every verification routing cases, automating decision making, and managing complex cross-border workflows across global institutions and regulatory environments.",
+        },
       },
     },
 
-    shape: {
-      k: "Shape of it",
-      h: "What does a verification request look like?",
-      lede:
-        "A verification is one POST to /v1/verifications carrying the candidate, the check types " +
-        "and a callback URL. Completion arrives as a verification.completed webhook naming the " +
-        "result, the source and the timestamp. The shapes shown are illustrative; the published " +
-        "reference ships with sandbox credentials.",
-    },
-
-    /** The two `.ch` labels only. The `<b>` beside each — `POST
-     *  /v1/verifications` and `verification.completed` — is API surface and
-     *  stays in the page, with the two `<pre>` bodies. These two words are
-     *  also what `aria-labelledby` names the scrollable regions with, so they
-     *  are copy in the fullest sense: a screen reader reads them. */
-    code: {
-      request: "Request",
-      webhook: "Webhook",
-    },
-
-    endpoints: {
-      k: "Endpoints",
-      h: "Which endpoints does the HelloVerify API expose?",
-      lede:
-        "Five endpoints cover every HelloVerify product: start a verification, read one back, " +
-        "submit a batch for a hiring drive, list the available check types, and fetch the signed " +
-        "evidence behind a result. All 33 check types are parameters, not separate integrations.",
-    },
-
-    /** The five `.e` rows. `d` is the `<small>` description and `ret` the
-     *  `→ …` blurb; the method and the path are the page's, for the reason in
-     *  this file's header. Keyed by what the endpoint DOES rather than by its
-     *  path, because two rows share a path prefix and one of them is a POST to
-     *  the same collection the GET reads. */
-    api: {
-      start: { d: "Start a verification for one candidate", ret: "→ id, status" },
-      read: { d: "Current state and per-check results", ret: "→ full record" },
-      batch: { d: "Bulk submission for hiring drives", ret: "→ batch id" },
-      checks: { d: "Available check types, times and coverage", ret: "→ catalogue" },
-      evidence: { d: "Signed artefact behind a result", ret: "→ signed URL" },
-    },
-
-    integrate: {
-      k: "Ways to integrate",
-      h: "How can we integrate HelloVerify?",
-      lede:
-        "HelloVerify integrates eight ways: REST API, webhooks, bulk CSV upload, a hosted " +
-        "capture page, the WhatsApp candidate flow, ATS connectors, SSO/SAML, and a console for " +
-        "non-technical teams. That spans a link pasted into an email to results posted straight " +
-        "back into your ATS.",
-    },
-
-    /** The eight `.svc` chips. Written out longhand in the page today, so no
-     *  `key=` is involved; the page keeps the order. */
-    svc: {
-      rest: "REST API",
-      webhooks: "Webhooks",
-      csv: "Bulk CSV upload",
-      capture: "Hosted capture page",
-      whatsapp: "WhatsApp candidate flow",
-      ats: "ATS connectors",
-      sso: "SSO / SAML",
-      console: "Console for non-technical teams",
-    },
-
-    faqHead: (<>From engineers.</>),
-
-    faqs: {
-      sync: {
-        q: "Is the result synchronous?",
-        a:
-          "The document read is — fields and forgery signals return in about a second. Source confirmation is asynchronous by nature, because a registrar answers on their own schedule, so completion arrives by webhook with the source named.",
+    compound: {
+      h: (<>A platform that gets stronger with <em>every verification.</em></>),
+      sub: "Most verification systems are static. Ours compound",
+      cards: {
+        intelligence: {
+          t: "Every verification enriches our intelligence",
+          p: "Each completed check adds to our understanding of institutions, documents and fraud patterns",
+        },
+        network: {
+          t: "Every Connected institution expands our network",
+          p: "Each new issuing authority becomes a permanent, trusted node in our verification infrastructure",
+        },
+        ecosystem: {
+          t: "Every new customer strengthens the ecosystem",
+          p: "More customers means more verifications, more data, more connections and better outcome for everyone.",
+        },
       },
-      unsure: {
-        q: "What happens if your model is unsure?",
-        a:
-          "Low-confidence extractions go to a human reviewer rather than being returned as confident guesses. The record shows that a person intervened, which matters when a result is later challenged.",
+      trust: "Trust",
+      orbit: {
+        verifications: "Verifications",
+        intelligence: "Intelligence",
+        institutions: "Institutions",
+        customers: "Customers",
+        ecosystem: "Ecosystem",
       },
-      storage: {
-        q: "Do you store our candidates' documents?",
-        a:
-          "On the retention schedule in your DPA, encrypted at rest — or zero-retention if you hold the files yourself and send us only what a check needs. Both are configured per account, not per request.",
+    },
+
+    platform: {
+      h: "From verification provider to global trust platform.",
+      sub: "HelloVerify is evolving into a global trust platform the infrastructure layer for trusted economic activity across borders.",
+      cards: {
+        workforceMobility: {
+          t: "Workforce Mobility",
+          p: "Professionals carrying verified credentials across borders.",
+        },
+        businessVerification: {
+          t: "Business verification",
+          p: "Corporate due diligence and counterparty trust.",
+        },
+        procurementVendor: {
+          t: "Procurement & vendor trust",
+          p: "Verified supply chains and vendor onboarding.",
+        },
+        complianceRegulatory: {
+          t: "Compliance & regulatory",
+          p: "Meeting the standards of regulators worldwide.",
+        },
+        financialOnboarding: {
+          t: "Financial onboarding",
+          p: "KYC and trust for financial institutions.",
+        },
+        digitalIdentity: {
+          t: "Digital identity",
+          p: "Verified credentials as the foundation of digital trust.",
+        },
+        crossBorder: {
+          t: "Cross-border economic activity",
+          p: "The trust rails for a borderless economy.",
+        },
+        verifiedCredentials: {
+          t: "Verified credentials",
+          p: "Portable, tamper evident proof of skills and qualifications.",
+        },
       },
-      limits: {
-        q: "Rate limits and volume spikes?",
-        a:
-          "Batch submission is built for hiring drives and seasonal intakes; the pipeline parallelises across checks, so a thousand candidates take roughly as long as one plus queue time. Limits are set per contract rather than per plan tier.",
+    },
+
+    future: {
+      h: "Building the Future of Digital Trust.",
+      cards: {
+        persistentTrust: {
+          t: "Persistent Trust Layer",
+          p: "Securely store verified identities, businesses, and credentials as living digital assets that remain continuously monitored and updated throughout their lifecycle",
+        },
+        trustedAccess: {
+          t: "Trusted Access",
+          p: "Governments and enterprises access continuously validated credentials instead of repeating the same verification process.",
+        },
+        digitalTrustInfra: {
+          t: "Digital Trust Infrastructure",
+          p: "This transforms HelloVerify from a verification provider into the trusted infrastructure that powers digital trust across organizations.",
+        },
       },
+    },
+
+    certs: {
+      h: "Enterprise-Grade Security & Compliance",
+      lede: "Your data security is our top priority with multiple layers of protection and global compliance standards.",
+      logos: { nsr: "NSR — Credible Data, Credible People", pbsa: "PBSA — Professional Background Screening Association", iso9001: "ISO 9001", gdpr: "GDPR — General Data Protection Regulation" },
     },
   },
 

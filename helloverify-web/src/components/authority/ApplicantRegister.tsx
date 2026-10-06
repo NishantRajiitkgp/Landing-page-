@@ -9,6 +9,7 @@ import {
   isValidEmail,
   isValidOtp,
   isValidPhone,
+  isValidPhoneSpan,
   normalizeEmail,
   normalizeOtp,
   normalizePhoneDigits,
@@ -46,6 +47,11 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
 
   const selected = packages.find((p) => p.client_package_id === pkgId) ?? null;
   const fullName = `${name.trim()} ${last.trim()}`.trim();
+  const phoneMax = authority === "mom" ? 15 : 10;
+  const phonePlaceholder = authority === "mom" ? t.momPhonePlaceholder : t.phonePlaceholder;
+  const phoneError = authority === "mom" ? t.momInvalidPhone : t.invalidPhone;
+  const phoneDigits = (value: string) => normalizePhoneDigits(value, phoneMax);
+  const phoneValid = (value: string) => (authority === "mom" ? isValidPhoneSpan(value, 7, 15) : isValidPhone(value));
 
   async function loadPackages() {
     setPkgLoading(true);
@@ -125,9 +131,9 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
       setError(t.nameRequired);
       return;
     }
-    const number = normalizePhoneDigits(phone);
-    if (!isValidPhone(number)) {
-      setError(t.invalidPhone);
+    const number = phoneDigits(phone);
+    if (!phoneValid(number)) {
+      setError(phoneError);
       return;
     }
     setLoading(true);
@@ -159,7 +165,7 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
     setLoading(true);
     setError(null);
     try {
-      const res = await authorityClient.verifyOtp(authority, { mobile: normalizePhoneDigits(phone), otp });
+      const res = await authorityClient.verifyOtp(authority, { mobile: phoneDigits(phone), otp });
       if (res.is_success || res.status) setPhoneOk(true);
       else setError(res.message ?? t.invalidPhoneOtp);
     } catch {
@@ -178,7 +184,7 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
       setError(packages.length ? t.completeRequired : t.loadPackagesFailed);
       return;
     }
-    if (!isValidEmail(email) || !isValidPhone(phone)) {
+    if (!isValidEmail(email) || !phoneValid(phone)) {
       setError(t.completeRequired);
       return;
     }
@@ -195,7 +201,7 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
           name: name.trim(),
           last: last.trim(),
           email: normalizeEmail(email),
-          number: normalizePhoneDigits(phone),
+          number: phoneDigits(phone),
           dialCode: dial,
           client_package_id: String(selected.client_package_id),
           program: String(selected.program),
@@ -330,7 +336,7 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
               </option>
             ))}
           </select>
-          <input id="ap-reg-phone" className="inp lg-input" type="tel" inputMode="numeric" maxLength={10} value={phone} placeholder={t.phonePlaceholder} onChange={(e) => setPhone(normalizePhoneDigits(e.target.value))} />
+          <input id="ap-reg-phone" className="inp lg-input" type="tel" inputMode="numeric" maxLength={phoneMax} value={phone} placeholder={phonePlaceholder} onChange={(e) => setPhone(phoneDigits(e.target.value))} />
           <button type="button" className="btn btn-ink btn-sm" disabled={loading} onClick={() => void sendSms()}>
             {t.sendOtp}
           </button>

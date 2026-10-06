@@ -15,18 +15,21 @@ import type { Faq } from "@/lib/seo/schema/faq";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getLocale } from "next-intl/server";
+import Image from "next/image";
 import { Arrow } from "@/components/brand/Arrow";
 import { Steps, type Step } from "@/components/chrome/Steps";
 import { TEMPLATES } from "@/lib/copy/templates";
 import { copy } from "@/lib/copy/request";
 
-export type Pill = { n: string; t: string; fast?: boolean };
-export type Lane = { gt: string; gh: string; pills: Pill[] };
+export type Pill = { n: string; t?: string; fast?: boolean };
+/** `id` keys the lane when `gt` repeats across lanes. */
+export type Lane = { id?: string; gt: string; gh: string; pills: Pill[] };
 // The step card moved to `chrome/Steps.tsx` when 41 hand-written copies of
 // it turned up across 12 pages that are not built on this template. Re-
 // exported here so the six vertical pages keep importing one module.
 export type { Step };
-export type Row = { nm: string; sub: string; tm: string; fast?: boolean; src: string };
+export type Row = { nm: string; sub: string; tm?: string; fast?: boolean; src?: string };
+type Band = "verify" | "steps" | "table" | "compliance";
 
 export type VerticalContent = {
   crumbs: readonly Crumb[];
@@ -44,20 +47,32 @@ export type VerticalContent = {
   /** Optional control under the hero lede (immigration audience tabs). The
    *  sections below are untouched — this is a slot, not a restyle. */
   heroAfter?: React.ReactNode;
+  /** Partner marks above the trust strip, the `.logos3` row the enterprise
+   *  page uses. */
+  partners?: { h: string; logos: readonly { src: string; alt: string }[] };
   strip: React.ReactNode[];
-  verifyHead: React.ReactNode;
-  verifyLede: string;
+  /** Omitted: no "what we verify" band at all (trade's source has none). */
+  verifyHead?: React.ReactNode;
+  verifyLede?: string;
   lanes: Lane[];
   laneCols?: number;
   stepsHead: React.ReactNode;
   stepsLede?: string;
   steps: Step[];
+  /** `false` when the cards are concurrent claims rather than a sequence, so
+   *  no HowTo is emitted. Must agree with `HOWTO_NOT_A_SEQUENCE`. */
+  stepsAreSequence?: boolean;
   tableHead: React.ReactNode;
-  tableLede: string;
+  tableLede?: string;
   rows: Row[];
   tableNote?: React.ReactNode;
+  /** Omitted: the band shows its eyebrow and certificate cards only. */
   complianceHead?: React.ReactNode;
   complianceLede?: string;
+  /** Bands whose template eyebrow does not describe this page's content
+   *  ("Turnaround & coverage" over a table with no times); they render
+   *  without one. */
+  plainBands?: readonly Band[];
   faqHead: React.ReactNode;
   faqs: readonly Faq[];
   closing: React.ComponentProps<typeof ClosingCta>;
@@ -87,6 +102,14 @@ export async function VerticalPage(c: VerticalContent) {
   // `getLocale()`: next-intl caches that call per request, so `copy()`
   // re-uses the resolution the line above already paid for.
   const t = await copy(TEMPLATES);
+  // A page whose source publishes no turnaround or source drops that column.
+  const hasTm = c.rows.some((r) => r.tm);
+  const hasSrc = c.rows.some((r) => r.src);
+  const tableCols =
+    hasTm && hasSrc
+      ? undefined
+      : { gridTemplateColumns: ["minmax(0, 1fr)", hasTm && "130px", hasSrc && "220px"].filter(Boolean).join(" ") };
+  const kicker = (b: Band) => (c.plainBands?.includes(b) ? null : <div className="k">{t.bands[b]}</div>);
 
   return (
     <PageShell crumbs={c.crumbs} closing={c.closing}>
@@ -115,51 +138,69 @@ export async function VerticalPage(c: VerticalContent) {
         </div>
       </div>
 
-      {/* trust strip */}
+      {/* partner marks + trust strip */}
       <div className="wrap">
-        <div className="strip3">
-          {c.strip.map((s, i) => (
-            <span className="it" key={i}>{s}</span>
-          ))}
-        </div>
+        {c.partners && (
+          <>
+            <p className="logos3-h">{c.partners.h}</p>
+            <ul className="logos3">
+              {c.partners.logos.map((l) => (
+                <li key={l.src}>
+                  <Image src={l.src} alt={l.alt} width={150} height={40} />
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+        {c.strip.length > 0 && (
+          <div className="strip3">
+            {c.strip.map((s, i) => (
+              <span className="it" key={i}>{s}</span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* what we verify */}
-      <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">{t.bands.verify}</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>{c.verifyHead}</h2>
-          </div>
-          <p className="lede" style={{ marginBottom: 8 }}>{c.verifyLede}</p>
-        </div>
-        <div
-          className="body3 lanes3"
-          style={c.laneCols ? { gridTemplateColumns: `repeat(${c.laneCols}, minmax(0, 1fr))` } : undefined}
-        >
-          {c.lanes.map((l) => (
-            <div key={l.gt}>
-              <div className="lgt">{l.gt}</div>
-              <div className="lgh">{l.gh}</div>
-              <div className="cloud3">
-                {l.pills.map((p) => (
-                  <span key={p.n} className={`pl3${p.fast ? " fast" : ""}`}>
-                    <span className="d" />
-                    {p.n}
-                    <span className="t">{p.t}</span>
-                  </span>
-                ))}
-              </div>
+      {c.verifyHead && (
+        <div className="wrap sec3">
+          <div className="sec-head">
+            <div>
+              {kicker("verify")}
+              <h2 className="h2" style={{ marginTop: 12 }}>{c.verifyHead}</h2>
             </div>
-          ))}
+            {c.verifyLede && <p className="lede" style={{ marginBottom: 8 }}>{c.verifyLede}</p>}
+          </div>
+          {c.lanes.length > 0 && (
+            <div
+              className="body3 lanes3"
+              style={c.laneCols ? { gridTemplateColumns: `repeat(${c.laneCols}, minmax(0, 1fr))` } : undefined}
+            >
+              {c.lanes.map((l) => (
+                <div key={l.id ?? l.gt}>
+                  <div className="lgt">{l.gt}</div>
+                  <div className="lgh">{l.gh}</div>
+                  <div className="cloud3">
+                    {l.pills.map((p) => (
+                      <span key={p.n} className={`pl3${p.fast ? " fast" : ""}`}>
+                        <span className="d" />
+                        {p.n}
+                        {p.t && <span className="t">{p.t}</span>}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
       {/* how it works */}
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">{t.bands.steps}</div>
+            {kicker("steps")}
             <h2 className="h2" style={{ marginTop: 12 }}>{c.stepsHead}</h2>
           </div>
           {c.stepsLede && <p className="lede" style={{ marginBottom: 8 }}>{c.stepsLede}</p>}
@@ -176,29 +217,34 @@ export async function VerticalPage(c: VerticalContent) {
             emit; one written as JSX would silently emit none, which is why
             `check-schema.mjs` lists the six pages that must have the node
             rather than counting whatever the build produced. */}
-        <Steps items={c.steps} name={typeof c.stepsHead === "string" ? c.stepsHead : undefined} />
+        <Steps
+          items={c.steps}
+          name={c.stepsAreSequence !== false && typeof c.stepsHead === "string" ? c.stepsHead : undefined}
+        />
       </div>
 
       {/* turnaround & coverage */}
       <div className="wrap sec3" id="turnaround">
         <div className="sec-head">
           <div>
-            <div className="k">{t.bands.table}</div>
+            {kicker("table")}
             <h2 className="h2" style={{ marginTop: 12 }}>{c.tableHead}</h2>
           </div>
-          <p className="lede" style={{ marginBottom: 8 }}>{c.tableLede}</p>
+          {c.tableLede && <p className="lede" style={{ marginBottom: 8 }}>{c.tableLede}</p>}
         </div>
         <div className="body3 tbl3">
-          <div className="hd">
-            <span>{t.table.check}</span>
-            <span>{t.table.turnaround}</span>
-            <span>{t.table.confirmedWith}</span>
-          </div>
+          {(hasTm || hasSrc) && (
+            <div className="hd" style={tableCols}>
+              <span>{t.table.check}</span>
+              {hasTm && <span>{t.table.turnaround}</span>}
+              {hasSrc && <span>{t.table.confirmedWith}</span>}
+            </div>
+          )}
           {c.rows.map((r) => (
-            <div className="r" key={r.nm}>
+            <div className="r" key={r.nm} style={tableCols}>
               <span className="nm">{r.nm}<small>{r.sub}</small></span>
-              <span className={`tm${r.fast ? " fast" : ""}`}>{r.tm}</span>
-              <span className="src">{r.src}</span>
+              {hasTm && <span className={`tm${r.fast ? " fast" : ""}`}>{r.tm}</span>}
+              {hasSrc && <span className="src">{r.src}</span>}
             </div>
           ))}
           {c.tableNote && <div className="note">{c.tableNote}</div>}
@@ -209,14 +255,10 @@ export async function VerticalPage(c: VerticalContent) {
       <div className="wrap sec3">
         <div className="sec-head">
           <div>
-            <div className="k">{t.bands.compliance}</div>
-            <h2 className="h2" style={{ marginTop: 12 }}>
-              {c.complianceHead ?? t.compliance.head}
-            </h2>
+            {kicker("compliance")}
+            {c.complianceHead && <h2 className="h2" style={{ marginTop: 12 }}>{c.complianceHead}</h2>}
           </div>
-          <p className="lede" style={{ marginBottom: 8 }}>
-            {c.complianceLede ?? t.compliance.lede}
-          </p>
+          {c.complianceLede && <p className="lede" style={{ marginBottom: 8 }}>{c.complianceLede}</p>}
         </div>
         <div className="body3 certs3">
           <CertCards ids={CERT_IDS} />

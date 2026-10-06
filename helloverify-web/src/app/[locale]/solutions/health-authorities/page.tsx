@@ -1,18 +1,21 @@
+/** Health Authorities — the old `healthAuthorities.base.json` on the new
+ *  design, in its order: overview, practitioner categories, primary source
+ *  verification, how HelloVerify makes it easy, and the accuracy promise. */
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { copyFor } from "@/lib/seo/copy";
-import type { ServiceFacts } from "@/lib/seo/schema/service";
-import { VerticalPage } from "@/components/templates/VerticalPage";
-import { AppLink } from "@/components/chrome/AppLink";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { PageShell } from "@/components/chrome/PageShell";
+import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
-import { GOVERNMENTS, type Lanes, type Rows } from "@/lib/copy/governments";
+import { GOVERNMENTS } from "@/lib/copy/governments";
 import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
  *  wrong route on top of the one §8.1 already guards. */
 const PATH = "/solutions/health-authorities";
-
 
 export async function generateMetadata({
   params,
@@ -35,53 +38,22 @@ const SERVICE: ServiceFacts = {
   serviceType: "Credential verification",
 };
 
-/** Which lanes, which pills, in which order, and which render `.fast` —
- *  structure, and it stays. The names and the times are
- *  `lib/copy/governments`'s, keyed by `LaneKey<"health">` and
- *  `PillKey<"health">`, so a lane or a pill added without copy is TS2322 on
- *  this array in every locale at once. `fast` is a CSS class, not a word. The
- *  shape is `LANES` on `/products/bgv-enterprise`, for the reason
- *  `lib/copy/index.ts` argues under "Where the keys come from". */
-const LANES: Lanes<"health"> = [
-  {
-    k: "identity",
-    pills: [
-      { p: "identity", fast: true },
-      { p: "passport", fast: true },
-      { p: "age", fast: true },
-      { p: "currentAddress", fast: true },
-    ],
-  },
-  {
-    k: "qualification",
-    pills: [
-      { p: "medicalDegree" },
-      { p: "postGraduate" },
-      { p: "councilRegistration" },
-      { p: "internship" },
-    ],
-  },
-  {
-    k: "standing",
-    pills: [
-      { p: "globalDatabase", fast: true },
-      { p: "criminal", fast: true },
-      { p: "employmentHistory" },
-      { p: "disciplinary" },
-    ],
-  },
-];
+const CATEGORY_IMAGES = {
+  doctor: { src: "/img/health/doctor.png", w: 740, h: 518 },
+  practitioners: { src: "/img/health/practitioners.jpg", w: 1200, h: 800 },
+  nonPhysician: { src: "/img/health/non-physician.png", w: 740, h: 485 },
+  pharmacists: { src: "/img/health/pharmacists.jpg", w: 1200, h: 800 },
+  nurses: { src: "/img/health/nurses-and-midwives.jpg", w: 1200, h: 798 },
+} as const;
 
-/** Same split as `LANES`: the six rows' order and their `.fast` flag here,
- *  their four strings in the dictionary under the same keys. */
-const ROWS: Rows<"health"> = [
-  { k: "identity", fast: true },
-  { k: "criminal", fast: true },
-  { k: "globalDatabase", fast: true },
-  { k: "councilRegistration" },
-  { k: "medicalDegree" },
-  { k: "disciplinary" },
-];
+const PSV_ICONS = {
+  education: "/img/health/education-verification.svg",
+  accreditation: "/img/health/institute-accreditation-check.svg",
+  license: "/img/health/health-license.svg",
+  standing: "/img/health/certificate-of-good-standing.svg",
+  registration: "/img/health/business-registration-certificate.svg",
+  employment: "/img/health/employment-verification.svg",
+} as const;
 
 export default async function Page({
   params,
@@ -90,65 +62,119 @@ export default async function Page({
 }) {
   const { locale } = await params;
   // Enables static rendering: without it every next-intl call in this
-  // subtree (AppLink resolves the locale) falls back to reading request
-  // headers, which makes the route dynamic. BUILD-SPEC §5.
+  // subtree falls back to reading request headers, which makes the route
+  // dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
-  const t = await copy(GOVERNMENTS);
-  const d = t.health;
+  const d = (await copy(GOVERNMENTS)).health;
 
   return (
-    <VerticalPage
-      service={SERVICE}
-      crumbs={[{ label: t.crumb, href: "/governments" }, { label: d.crumb }]}
-      eyebrow={d.eyebrow}
-      h1={d.h1}
-      sub={d.sub}
-      secondary={{ label: d.secondary, href: "#turnaround" }}
-      strip={[d.strip.countries, d.strip.degree, d.strip.checks, d.strip.certs]}
-      /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
-         Each `*Head` is now the question a licensing official types and each
-         `*Lede` is a self-contained answer of 35-45 words that names health
-         authorities and clinicians rather than saying "green means" or "this
-         check" — a lede that points outside itself is unciteable once an
-         engine lifts it off the page (§11a.2 rule 3). The template owns the
-         `k` eyebrows ("What we verify", "How it works", "Turnaround &
-         coverage", "Compliance & security") and they are untouched — they are
-         `templates.bands` in the copy layer, not this page's.
+    <PageShell crumbs={[{ label: d.crumb }]} closing={false}>
+      <JsonLd data={serviceNode(locale, SERVICE)} />
+      <div className="wrap hero3">
+        <h1 className="h1">{d.h1}</h1>
+        <p className="sub">{d.sub}</p>
+      </div>
 
-         Every figure below is already on this page: the times come from the
-         `lanes` pills and the `rows` table beneath each block, and the sources
-         ("the medical council", "the university registrar") are the `src`
-         column verbatim. Nothing new is asserted about a clinician or an
-         institution. */
-      verifyHead={d.verifyHead}
-      verifyLede={d.verifyLede}
-      lanes={LANES.map((l) => ({
-        ...d.lanes[l.k],
-        pills: l.pills.map((p) => ({ ...d.pills[p.p], fast: p.fast })),
-      }))}
-      stepsHead={d.stepsHead}
-      stepsLede={d.stepsLede}
-      steps={[d.steps.submit, d.steps.read, d.steps.confirm, d.steps.decide]}
-      tableHead={d.tableHead}
-      tableLede={d.tableLede}
-      rows={ROWS.map((r) => ({ ...d.rows[r.k], fast: r.fast }))}
-      /* `note` is a FUNCTION leaf taking the anchor — the shape
-         `lib/copy/index.ts` describes for a sentence wrapping something the
-         component owns. A plain string would have had to end in a space to
-         keep the byte, and an edge-whitespace leaf is what
-         `tools/test/copy.test.ts` §3 rejects. */
-      tableNote={d.note(
-        <AppLink href="/international" style={{ color: "inherit", textDecoration: "underline" }}>{t.coverageLink}</AppLink>,
-      )}
-      complianceHead={d.complianceHead}
-      complianceLede={d.complianceLede}
-      faqHead={d.faqHead}
-      faqs={[d.faqs.abroad, d.faqs.offline, d.faqs.forgery, d.faqs.volume]}
-      closing={{
-        heading: d.closing.heading,
-        sub: d.closing.sub,
-        img: "/img/people/02-nurse-abudhabi.jpg",
-      }}
-    />
+      <div className="wrap sec3">
+        <div className="aud3">
+          <div>
+            <h2 className="h2">{d.overview.h}</h2>
+            <p className="lede">{d.overview.p}</p>
+            <ul className="pts3 plain">
+              {d.overview.bullets.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="fig">
+            <Image
+              src="/img/health/overview-img.png"
+              alt={d.overview.imgAlt}
+              width={579}
+              height={335}
+              sizes="(max-width: 1080px) 100vw, 560px"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.categories.h}</h2>
+          <p className="lede">{d.categories.sub}</p>
+        </div>
+        <ul className="body3 cat3">
+          {(Object.keys(CATEGORY_IMAGES) as (keyof typeof CATEGORY_IMAGES)[]).map((k) => {
+            const img = CATEGORY_IMAGES[k];
+            return (
+              <li key={k}>
+                <Image src={img.src} alt="" width={img.w} height={img.h} sizes="(max-width: 1080px) 50vw, 240px" />
+                <h3>{d.categories.items[k]}</h3>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.psv.h}</h2>
+        </div>
+        <div className="body3 vals3">
+          {(Object.keys(PSV_ICONS) as (keyof typeof PSV_ICONS)[]).map((k) => (
+            <div key={k} className="v">
+              <span className="ic3" aria-hidden="true">
+                <Image src={PSV_ICONS[k]} alt="" width={22} height={22} unoptimized />
+              </span>
+              <h3>{d.psv.cards[k].t}</h3>
+              <p>{d.psv.cards[k].p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.easy.h}</h2>
+        </div>
+        <div className="body3 vals3 four">
+          {Object.entries(d.easy.cards).map(([k, c]) => (
+            <div key={k} className="v">
+              <h3>{c.t}</h3>
+              <p>{c.p}</p>
+              <ul className="chk3">
+                {c.b.map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.promise.h}</h2>
+          <div>
+            {d.promise.intro.map((p) => (
+              <p key={p} className="lede">{p}</p>
+            ))}
+          </div>
+        </div>
+        <div className="body3 vals3">
+          {Object.entries(d.promise.cards).map(([k, c]) => (
+            <div key={k} className="v">
+              <h3>{c.t}</h3>
+              <p>{c.p}</p>
+              <ul className="chk3">
+                {c.b.map((b) => (
+                  <li key={b}>{b}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PageShell>
   );
 }

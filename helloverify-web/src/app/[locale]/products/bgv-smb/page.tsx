@@ -1,27 +1,83 @@
-/** /products/bgv-smb — product page with PUBLIC pricing (Template 4, IA §4.3).
- *  Prices are placeholders pending commercial sign-off (IA §10.4) and say so on the page. */
+/** /products/bgv-smb — the old SPA's SMB page in its order: hero, How it
+ *  Works?, Select Or Customize Verification Package (the three packages, then
+ *  the Select Your Checks table and its summary), Trusted by Businesses &
+ *  Individuals, Solutions We Offer. Copy is `bgvSmb.base.json` word for word
+ *  (`business.smb`). The client-logo strip under the hero was added on
+ *  request (5 Oct 2026); the old page had none. */
 import type { Metadata } from "next";
+import Image from "next/image";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { copyFor } from "@/lib/seo/copy";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
-import { FaqSection } from "@/components/chrome/FaqSection";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
-import { Tick } from "@/components/brand/Tick";
-import { SecHead } from "@/components/chrome/SecHead";
-import { Arrow } from "@/components/brand/Arrow";
 import { Steps } from "@/components/chrome/Steps";
 import { CommerceCta } from "@/components/commerce/CommerceCta";
-import { BUSINESS, type SmbCheckKey, type SmbPackKey } from "@/lib/copy/business";
+import { SmbCustomize, type SmbRow } from "@/components/smb/SmbCustomize";
+import { SmbSolutions } from "@/components/smb/SmbSolutions";
+import { SmbIcon } from "@/components/smb/SmbIcons";
+import { BUSINESS, type SmbPackKey } from "@/lib/copy/business";
 import { copy } from "@/lib/copy/request";
+import { SMB_CLIENTS, smbLogo } from "@/lib/smbClients";
 
-/** This page's route, stated ONCE. `pageMetadata` and the Service node below
- *  both read it, so §8.2's graph does not add a second chance to name the
- *  wrong route on top of the one §8.1 already guards. */
 const PATH = "/products/bgv-smb";
+const SALES = "/contact?tab=enquiry&role=business&contact=business-support";
 
+/** Structure, not copy: the old CMS package ids and amounts; Standard is the
+ *  featured card. */
+const PACKS: readonly { k: SmbPackKey; unitAmount: number; featured?: true }[] = [
+  { k: "basic", unitAmount: 1799 },
+  { k: "standard", unitAmount: 2199, featured: true },
+  { k: "premium", unitAmount: 2399 },
+];
+
+/** Structure, not copy: the old CMS `customizableRows` in order — the API
+ *  check code each row posts, its amount, and the one ticked on load. */
+const ROWS: readonly SmbRow[] = [
+  { key: "identity", code: "1CIC", amount: 349 },
+  { key: "employment", code: "ALLEMP", amount: 499 },
+  { key: "education", code: "ALLEDU", amount: 999, checked: true },
+  { key: "address", code: "ALLADD", amount: 499 },
+  { key: "professionalReference", code: "PREF", amount: 499 },
+  { key: "indianDatabase", code: "IDC", amount: 699 },
+  { key: "globalDatabase", code: "GDC", amount: 999 },
+  { key: "criminalEcourt", code: "ALLADDCCVEC", amount: 799 },
+  { key: "criminalPolice", code: "ALLADDCCVPAF", amount: 899 },
+  { key: "criminalLawFirm", code: "ALLCCVLF", amount: 999 },
+  { key: "rightToWork", code: "RTW", amount: 359 },
+  { key: "uan", code: "UAN", amount: 400 },
+  { key: "bankAccount", code: "BV", amount: 199 },
+  { key: "credit", code: "CC", amount: 899 },
+  { key: "creditSuit", code: "Credit suit defaulter check", amount: 699 },
+  { key: "resume", code: "ResumeCV", amount: 299 },
+  { key: "finra", code: "1FINGER-PRINT-COLLECTION", amount: 10000 },
+  { key: "ofac", code: "OFAC", amount: 999 },
+  { key: "form16", code: "FORM16", amount: 500 },
+  { key: "professionalLicense", code: "PLC", amount: 799 },
+  { key: "socialMedia", code: "1SMC", amount: 749 },
+  { key: "directorship", code: "DIR", amount: 649 },
+  { key: "financialRegulatory", code: "FFIEC", amount: 500 },
+  { key: "bankStatement", code: "BSV", amount: 100 },
+  { key: "gsa", code: "GSA", amount: 499 },
+  { key: "oig", code: "OIG", amount: 499 },
+  { key: "adverseMedia", code: "AMC", amount: 1299 },
+  { key: "gap", code: "GCB", amount: 649 },
+  { key: "drug", code: "DRUG5P", amount: 1350 },
+  { key: "alcohol", code: "1Alcohol-Test", amount: 2300 },
+  { key: "company", code: "COMC", amount: 599 },
+  { key: "faceMatch", code: "SELFIE", amount: 0 },
+  { key: "fda", code: "FADA", amount: 1350 },
+  { key: "nsr", code: "NSRC", amount: 799 },
+  { key: "gapValidation", code: "GCACCVEC", amount: 900 },
+];
+
+const PEOPLE = [
+  { k: "rohit", src: "/img/smb/rohit.png", w: 409, h: 280 },
+  { k: "anjali", src: "/img/smb/anjali.jpg", w: 240, h: 210 },
+  { k: "neha", src: "/img/smb/neha.jpg", w: 275, h: 183 },
+] as const;
 
 export async function generateMetadata({
   params,
@@ -32,29 +88,10 @@ export async function generateMetadata({
   return pageMetadata(locale, PATH);
 }
 
-
-/** WHICH CHECKS ARE IN EACH PACKAGE, in order. That is not copy: it is what
- *  the price was set for, and the card renders `{p.lines.length} checks` from
- *  it. The seven strings a card shows moved to `lib/copy/business` keyed by
- *  package, and the check NAMES to a table of their own — eight leaves for
- *  eleven rendered lines, because three checks appear in two packages. The
- *  split is `chrome/SiteFooter.tsx`'s `COLS`/`links`, and `SmbPackKey` /
- *  `SmbCheckKey` make a fourth package or a ninth check without copy a
- *  TS2322 here, in every locale at once. */
-const PACKS: readonly { k: SmbPackKey; lines: readonly SmbCheckKey[] }[] = [
-  { k: "blue", lines: ["pan", "registrationCertificate", "drivingLicence", "criminalRecord"] },
-  { k: "white", lines: ["education", "employment", "moonlighting", "currentAddress"] },
-  { k: "driver", lines: ["drivingLicence", "criminalRecord", "currentAddress"] },
-];
-
-/** BUILD-SPEC §8.2 (`Service`, per solution) and §11a.3 (`areaServed`).
- *  `description` is this page's own reviewed description, read from the copy
- *  table (`lib/seo/copy.ts`, §8.1) rather than paraphrased here, so the page
- *  title, the meta description, the Service node and llms.txt cannot drift
- *  apart. */
+/** BUILD-SPEC §8.2. `offers` are the three package cards as rendered. */
 const SERVICE: ServiceFacts = {
   path: PATH,
-  name: "Background check packages for small business",
+  name: "Background checks for small and medium businesses",
   description: copyFor(PATH).description,
   serviceType: "Background verification",
 };
@@ -65,188 +102,129 @@ export default async function SmbPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  // Enables static rendering: without it every next-intl call in this
-  // subtree (AppLink resolves the locale) falls back to reading request
-  // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
-  const t = await copy(BUSINESS);
-  /** The three cards resolved once and read twice — by the rack below and by
-   *  the `Service` node's `offers`, which was `PACKS.map(...)` before the copy
-   *  move and still mirrors exactly what the page renders (§8.2). */
-  const packs = PACKS.map((p) => ({ ...p, ...t.smb.packs[p.k] }));
+  const c = (await copy(BUSINESS)).smb;
   const service: ServiceFacts = {
     ...SERVICE,
-    offers: packs.map((p) => ({ name: p.tt, description: p.sub })),
+    offers: PACKS.map((p) => ({ name: c.packages.items[p.k].t, description: c.packages.items[p.k].p })),
   };
+  const st = c.how.steps;
 
   return (
-    <PageShell
-      crumbs={[{ label: t.crumb, href: "/business" }, { label: t.smb.crumb }]}
-      closing={{
-        heading: t.smb.closing.heading,
-        sub: t.smb.closing.sub,
-        ctaLabel: t.smb.closing.ctaLabel,
-        ctaHref: "#packages",
-      }}
-    >
-      {/* hero */}
+    <PageShell crumbs={[{ label: c.crumb }]} closing={false}>
       <div className="wrap hero3">
-        <div className="k">{t.smb.hero.k}</div>
-        <h1 className="h1">{t.smb.hero.h1}</h1>
-        <p className="sub">{t.smb.hero.sub}</p>
+        <h1 className="h1">{c.hero.h1}</h1>
+        <p className="sub">{c.hero.sub}</p>
         <div className="hrow">
-          <a href="#packages" className="btn btn-ink">{t.smb.hero.buy}</a>
-          <AppLink href="/contact" className="btn btn-ghost">
-            <span>{t.smb.hero.talkFirst}</span>
-            <Arrow />
+          <AppLink href={SALES} className="btn btn-ink">
+            {c.hero.cta}
           </AppLink>
         </div>
       </div>
 
-      {/* trust strip */}
       <div className="wrap">
-        <div className="strip3">
-          <span className="it">{t.smb.strip.package}</span>
-          <span className="it">{t.smb.strip.checks}</span>
-          <span className="it">{t.smb.strip.subscription}</span>
-          <span className="it">{t.smb.strip.invoice}</span>
-        </div>
+        <p className="logos3-h">{c.trust.h}</p>
+        <ul className="logos3 logos3-many">
+          {SMB_CLIENTS.map((x) => (
+            <li key={x.id} className={x.fit && `logos3-${x.fit}`}>
+              <Image src={smbLogo(x.id)} alt={c.clients[x.id]} width={150} height={40} />
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* pricing rack */}
-      <div className="wrap sec3" id="packages">
-        {/* ANSWER BLOCK (BUILD-SPEC §11a.2). 44 words, every figure taken from
-            the PACKS records rendered below — three packages, their turnarounds,
-            per-candidate pricing — plus the trust strip's "No subscription" and
-            "GST invoice on every order".
+      <div className="wrap sec3" id="bgv-smb-how-it-works">
+        <div className="sec-head smb3-head">
+          <h2 className="h2">{c.how.h}</h2>
+        </div>
+        <Steps name={c.how.h} items={[st.select, st.fill, st.fast]} />
+      </div>
 
-            TWO THINGS DELIBERATELY LEFT OUT, and the reason is that an answer
-            block is read AWAY from the page:
-
-            - The rupee figures. They are placeholders pending commercial
-              sign-off, and the `.pricenote` below says so — but a block built
-              to survive extraction leaves that disclaimer behind, so a
-              citeable "₹349" would become a firm price the moment an engine
-              lifts it. The heading therefore asks what you can buy, not what
-              it costs.
-            - The blue-collar package's check list. It contains "Registration
-              certificate", whose turnaround TASKS.md measures as 30 min on the
-              homepage and 60 min on /products/bgv-enterprise, and which is not in
-              the catalogue at all. Naming it inside this package's 30 minutes
-              would settle that in a sentence built to be quoted, so the answer
-              gives the package's turnaround and not its contents. The
-              white-collar list has no such conflict and is named in full. */}
-        <SecHead k={t.smb.packages.k} h={t.smb.packages.h}>
-          {t.smb.packages.lede}
-        </SecHead>
-        <div className="body3 rack3">
-          {packs.map((p) => (
-            <div className="rc" key={p.tt}>
-              <div className="hd"><span>{p.hd0}</span><span>{p.hd1}</span></div>
-              <div className="tt">{p.tt}</div>
-              <div className="sub">{p.sub}</div>
-              <div className="sep" />
-              {/* `key` still resolves to the label, as it did when the label
-                  WAS the array element — third corollary of the byte-identity
-                  rule in `lib/copy/index.ts`. */}
-              {p.lines.map((l) => (
-                <div className="ln" key={t.smb.checks[l]}><Tick /><span>{t.smb.checks[l]}</span></div>
-              ))}
-              <div className="sep" />
-              <div className="price">
-                <span className="lb">{t.smb.card.perCandidate}</span>
-                <span className="v">{p.price}<small>{t.smb.card.inclGst}</small></span>
-              </div>
-              <div className="ready">
-                {/* A FUNCTION leaf: the count is the page's, and the markup is
-                    two adjacent text children with React's `<!-- -->` between
-                    them. Measured with `renderToString` — `{n}{" checks · ready
-                    in"}` inline and the same pair inside a Fragment emit the
-                    same bytes, separator included; joining them does not. */}
-                <span className="lb">{t.smb.card.readyIn(p.lines.length)}</span>
-                <span className="v">{p.ready}</span>
-              </div>
-              <div className="bc" />
-              <div className="buy">
-                <span className="who">{p.who}</span>
+      <div className="wrap sec3" id="bgv-smb-verification-packages">
+        <div className="sec-head smb3-head">
+          <h2 className="h2">{c.packages.h}</h2>
+        </div>
+        <ul className="body3 smb3-packs">
+          {PACKS.map((p) => {
+            const it = c.packages.items[p.k];
+            return (
+              <li key={p.k} className={p.featured ? "on" : undefined}>
+                <div className="hd">
+                  <h3>{it.t}</h3>
+                  <span className="tat">
+                    <SmbIcon id="clock" />
+                    {it.ready}
+                  </span>
+                </div>
+                <p className="pr">{it.price}</p>
+                <p className="ds">{it.p}</p>
+                <p className="lb">{c.packages.checksInclude}</p>
+                <ul className="pills">
+                  {it.checks.map((x) => (
+                    <li key={x}>{x}</li>
+                  ))}
+                </ul>
                 <CommerceCta
-                  className="btn btn-ink btn-sm"
-                  label={t.smb.card.buyNow}
+                  className={p.featured ? "btn btn-ink" : "btn btn-line"}
+                  label={c.packages.buy}
                   loginRedirect="products/bgv-smb"
                   packageDetails={{
                     packageType: "smb",
                     packageId: p.k,
-                    packageName: p.tt,
-                    description: p.sub,
-                    priceDisplay: p.price,
-                    includedChecks: p.lines.map((l) => t.smb.checks[l]),
+                    packageName: it.t,
+                    description: it.p,
+                    priceDisplay: it.price,
+                    unitAmount: p.unitAmount,
+                    includedChecks: [...it.checks],
                   }}
                 />
-              </div>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="smb3-czl">
+          <a href="#bgv-smb-select-checks" className="btn btn-line">
+            {c.packages.customize}
+          </a>
+        </div>
+        <SmbCustomize table={c.table} summary={c.summary} rows={ROWS} />
+      </div>
+
+      <div className="wrap sec3" id="bgv-smb-trusted-by">
+        <div className="sec-head smb3-head">
+          <h2 className="h2">{c.trusted.h}</h2>
+        </div>
+        <div className="body3 smb3-stats">
+          {(["smbs", "tat", "start"] as const).map((k) => (
+            <div key={k}>
+              <p className="v">{c.trusted.stats[k].v}</p>
+              <p className="l">{c.trusted.stats[k].l}</p>
             </div>
           ))}
         </div>
-        <div className="pricenote">
-          {t.smb.pricenote(
-            <AppLink href="/contact" style={{ color: "inherit", textDecoration: "underline" }}>{t.smb.pricenoteLink}</AppLink>,
-          )}
-        </div>
+        <ul className="smb3-quotes">
+          {PEOPLE.map((x) => {
+            const t = c.trusted.people[x.k];
+            return (
+              <li key={x.k}>
+                <Image src={x.src} alt={t.alt} width={x.w} height={x.h} className="ph" />
+                <p className="nm">{t.name}</p>
+                <p className="rl">{t.role}</p>
+                <blockquote>{t.quote}</blockquote>
+                <span className="stars" role="img" aria-label={c.trusted.stars}>
+                  {[0, 1, 2, 3].map((i) => (
+                    <svg key={i} viewBox="0 0 15 14" aria-hidden="true">
+                      <path d="M6.69533 0.487005L4.86449 4.10687L0.768236 4.68922C0.0336581 4.79311 -0.260734 5.67621 0.271975 6.182L3.23552 8.99806L2.53459 12.9761C2.40842 13.6951 3.18505 14.2337 3.83552 13.8975L7.5 12.0192L11.1645 13.8975C11.8149 14.231 12.5916 13.6951 12.4654 12.9761L11.7645 8.99806L14.728 6.182C15.2607 5.67621 14.9663 4.79311 14.2318 4.68922L10.1355 4.10687L8.30467 0.487005C7.97664 -0.158228 7.02617 -0.16643 6.69533 0.487005Z" />
+                    </svg>
+                  ))}
+                </span>
+              </li>
+            );
+          })}
+        </ul>
       </div>
 
-      {/* build your own */}
-      <div className="wrap sec3">
-        {/* ANSWER BLOCK (§11a.2). 44 words. The times are the `.pl3` chips
-            below and the count is the button's own "All 33 checks"; nothing
-            here is new copy. */}
-        <SecHead k={t.smb.alacarte.k} h={t.smb.alacarte.h}>
-          {t.smb.alacarte.lede}
-        </SecHead>
-        <div className="body3 cloud3" style={{ marginTop: 36 }}>
-          {/* Each chip keeps its three children — the `.d` dot, the name, the
-              `.t` time — so these are two text-node swaps apiece and no child
-              is merged or split. */}
-          <span className="pl3 fast"><span className="d" />{t.smb.chips.identity.n}<span className="t">{t.smb.chips.identity.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{t.smb.chips.pan.n}<span className="t">{t.smb.chips.pan.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{t.smb.chips.drivingLicence.n}<span className="t">{t.smb.chips.drivingLicence.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{t.smb.chips.criminal.n}<span className="t">{t.smb.chips.criminal.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{t.smb.chips.currentAddress.n}<span className="t">{t.smb.chips.currentAddress.t}</span></span>
-          <span className="pl3 fast"><span className="d" />{t.smb.chips.digitalEmployment.n}<span className="t">{t.smb.chips.digitalEmployment.t}</span></span>
-          <span className="pl3"><span className="d" />{t.smb.chips.employment.n}<span className="t">{t.smb.chips.employment.t}</span></span>
-          <span className="pl3"><span className="d" />{t.smb.chips.education.n}<span className="t">{t.smb.chips.education.t}</span></span>
-          <AppLink href="/resources/checks" className="btn btn-line btn-sm">{t.smb.allChecks}</AppLink>
-        </div>
-      </div>
-
-      {/* how it works */}
-      <div className="wrap sec3">
-        <div className="sec-head">
-          <div>
-            <div className="k">{t.smb.howItWorks.k}</div>
-            {/* Question-shaped H2 with NO lede added (§11a.2). This band has
-                never carried one — it is a bare `sec-head`, not a `SecHead` —
-                and the three `Steps` cards below already read as the answer.
-                Same call made on /checks/[check] for its two lede-less bands:
-                converting the heading is copy, adding a paragraph where the
-                design has none is a layout change. */}
-            <h2 className="h2" style={{ marginTop: 12 }}>{t.smb.howItWorks.h}</h2>
-          </div>
-        </div>
-        {/* HowTo (§17 condition 18): `name` is this band's own `<h2>`, so the
-            node and the heading are the same string — now ONE leaf read twice
-            rather than two identical literals a translation could part. */}
-        <Steps
-          name={t.smb.howItWorks.h}
-          items={[t.smb.steps.pick, t.smb.steps.link, t.smb.steps.report]}
-        />
-      </div>
-
-      {/* FAQ — markup and FAQPage node both from the same records (see
-          FaqSection). The order is written here because a sequence is
-          structure; the four questions are `business.smb.faqs`. */}
-      <FaqSection
-        head={t.smb.faqHead}
-        faqs={[t.smb.faqs.consent, t.smb.faqs.subscription, t.smb.faqs.unverifiable, t.smb.faqs.invoice]}
-      />
+      <SmbSolutions c={c.solutions} />
 
       <JsonLd data={serviceNode(locale, service)} />
     </PageShell>

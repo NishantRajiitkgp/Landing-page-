@@ -1,0 +1,63 @@
+/* Homepage · Premium services (`sections/PremiumServices.tsx`), under
+   Individual Checks. Prefix `pm-`. Tokens only, and the band borrows its
+   neighbours' parts rather than inventing any: the red italic heading line
+   and the centred mono label are Individual Checks' (`strip.css`), the
+   frosted plate and white button its price row, the scrim and the hover
+   arrow-lift the country grid's (`intl.css`), the phone's scroll-snap row
+   the packages' (`packages.css`). Text on the photograph sits on a scrim
+   that reaches 90% ink at the foot. */
+
+.pm { padding-top: clamp(64px, 9vw, 112px); padding-bottom: clamp(48px, 7vw, 96px); }
+.pm-head { margin-bottom: clamp(28px, 4vw, 44px); }
+/* A block of its own so `balance` evens out its two lines, not "finish." alone. */
+.pm-it { display: block; font-style: italic; color: var(--primary-ink); text-wrap: balance; }
+.pm-k { margin: 0 0 22px; display: flex; justify-content: center; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--primary-ink); }
+.pm-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 3px rgb(from var(--primary) r g b / .18); }
+
+.pm-grid { list-style: none; margin: 0; padding: 0; display: grid; }
+.pm-card { position: relative; border-radius: 26px; overflow: hidden; box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 34px 64px -44px rgb(from var(--ink) r g b / .55); transition: transform .55s cubic-bezier(.16, 1, .3, 1), box-shadow .55s; }
+.pm-card:hover { transform: translateY(-6px); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 80px -46px rgb(from var(--ink) r g b / .6); }
+.pm-link { position: absolute; inset: 0; display: block; color: var(--white); text-decoration: none; }
+/* Restated: `design.css`'s `a:hover` would otherwise turn the words red. */
+.pm-link:hover { color: var(--white); }
+.pm-link:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 26px; }
+.pm-ph { position: absolute; inset: 0; display: block; }
+.pm-ph .pimg { object-fit: cover; transform: scale(1.02); transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
+.pm-card:hover .pm-ph .pimg { transform: scale(1.08); }
+.pm-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(from var(--ink) r g b / .22) 0, rgb(from var(--ink) r g b / 0) 22%, rgb(from var(--ink) r g b / 0) 38%, rgb(from var(--ink) r g b / .62) 64%, rgb(from var(--ink) r g b / .9) 100%); }
+
+.pm-chip { position: absolute; inset-inline-start: 16px; top: 16px; height: 34px; display: inline-flex; align-items: center; gap: 8px; padding-inline: 8px 14px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: var(--ink); }
+.pm-chip svg { width: 20px; height: 20px; padding: 3px; box-sizing: content-box; border-radius: 50%; background: var(--primary-pale); stroke: var(--primary-ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+.pm-body { position: absolute; inset-inline: 20px; bottom: 20px; display: flex; flex-direction: column; }
+.pm-t { font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 1vw + 18px, 31px); line-height: 1.06; letter-spacing: -.022em; text-wrap: balance; text-shadow: 0 2px 20px rgb(from var(--ink) r g b / .35); }
+.pm-p { margin-top: 10px; font-size: 14.5px; line-height: 1.45; color: rgb(from var(--white) r g b / .86); text-wrap: pretty; }
+.pm-plate { margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 8px; padding-inline: 14px 8px; border-radius: 999px; background: rgb(from var(--white) r g b / .14); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .22); }
+.pm-who { min-width: 0; font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: rgb(from var(--white) r g b / .86); }
+.pm-btn { flex: none; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding-inline: 16px; border-radius: 999px; background: var(--white); color: var(--ink); font-family: var(--sans); font-size: 14px; font-weight: 500; transition: background .25s, gap .3s; }
+.pm-card:hover .pm-btn, .pm-link:focus-visible .pm-btn { background: var(--primary-light); gap: 12px; }
+
+@media (min-width: 1081px) {
+  .pm-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .pm-card { height: 540px; }
+  .pm .lede { margin-bottom: 8px; }
+}
+
+/* Phone and tablet: one scroll-snap row, bled to the screen edge and snapped
+   to the 20px gutter, the next card peeking in as the cue to swipe. The
+   padding keeps the cards' shadow and lift inside the scroller. */
+@media (max-width: 1080px) {
+  .pm-head { margin-bottom: 24px; }
+  .pm .lede { margin-top: 14px; }
+  .pm-grid { margin-inline: -20px; padding: 8px 20px 40px; grid-auto-flow: column; grid-auto-columns: min(80vw, 320px); gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .pm-card { height: 460px; scroll-snap-align: start; }
+  .pm-body { inset-inline: 16px; bottom: 16px; }
+  .pm-t { font-size: 25px; }
+  .pm-p { font-size: 14px; }
+  .pm-plate { padding-inline: 12px 6px; }
+  .pm-btn { height: 30px; padding-inline: 12px; font-size: 13px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pm-card, .pm-ph .pimg, .pm-btn { transition: none; }
+}

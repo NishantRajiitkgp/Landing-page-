@@ -1,19 +1,24 @@
+/** Immigration Authorities — the old `immigrationMigrationService.base.json`
+ *  authorities tab on the new design, in its order: overview, why we stand
+ *  out, our partners, the HelloVerify advantage, and the AI-powered
+ *  verification solution. */
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { copyFor } from "@/lib/seo/copy";
-import type { ServiceFacts } from "@/lib/seo/schema/service";
-import { VerticalPage } from "@/components/templates/VerticalPage";
-import { AppLink } from "@/components/chrome/AppLink";
+import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { PageShell } from "@/components/chrome/PageShell";
+import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { ImmigrationTabs } from "@/components/immigration/ImmigrationTabs";
-import { GOVERNMENTS, type Lanes, type Rows } from "@/lib/copy/governments";
+import { ImmigrationPartners } from "@/components/immigration/ImmigrationPartners";
+import { GOVERNMENTS } from "@/lib/copy/governments";
 import { copy } from "@/lib/copy/request";
 
 /** This page's route, stated ONCE. `pageMetadata` and the Service node below
  *  both read it, so §8.2's graph does not add a second chance to name the
  *  wrong route on top of the one §8.1 already guards. */
 const PATH = "/solutions/immigration-authorities";
-
 
 export async function generateMetadata({
   params,
@@ -36,49 +41,7 @@ const SERVICE: ServiceFacts = {
   serviceType: "Document verification",
 };
 
-/** Which lanes, which pills, in which order, and which render `.fast` —
- *  structure, and it stays; the names and the times are the dictionary's,
- *  keyed by `LaneKey<"immigration">` and `PillKey<"immigration">`. See
- *  `/solutions/health-authorities`'s copy of this note for the full argument. */
-const LANES: Lanes<"immigration"> = [
-  {
-    k: "identity",
-    pills: [
-      { p: "identity", fast: true },
-      { p: "passport", fast: true },
-      { p: "age", fast: true },
-      { p: "face", fast: true },
-    ],
-  },
-  {
-    k: "grounds",
-    pills: [
-      { p: "education" },
-      { p: "employment" },
-      { p: "digitalEmployment", fast: true },
-      { p: "entitlementToWork", fast: true },
-      { p: "tradeLicence" },
-    ],
-  },
-  {
-    k: "admissibility",
-    pills: [
-      { p: "globalDatabase", fast: true },
-      { p: "criminal", fast: true },
-      { p: "credit", fast: true },
-      { p: "currentAddress", fast: true },
-    ],
-  },
-];
-
-const ROWS: Rows<"immigration"> = [
-  { k: "identity", fast: true },
-  { k: "globalDatabase", fast: true },
-  { k: "criminal", fast: true },
-  { k: "digitalEmployment", fast: true },
-  { k: "employment" },
-  { k: "education" },
-];
+const PARTNER_HREF = "/contact?tab=enquiry&role=authority";
 
 export default async function Page({
   params,
@@ -90,57 +53,93 @@ export default async function Page({
   // subtree (AppLink resolves the locale) falls back to reading request
   // headers, which makes the route dynamic. BUILD-SPEC §5.
   setRequestLocale(locale);
-  const t = await copy(GOVERNMENTS);
-  const d = t.immigration;
+  const d = (await copy(GOVERNMENTS)).immigration;
 
   return (
-    <VerticalPage
-      service={SERVICE}
-      crumbs={[{ label: t.crumb, href: "/governments" }, { label: d.crumb }]}
-      eyebrow={d.eyebrow}
-      h1={d.h1}
-      sub={d.sub}
-      heroAfter={<ImmigrationTabs selected="authorities" />}
-      secondary={{ label: d.secondary, href: "#turnaround" }}
-      strip={[d.strip.countries, d.strip.screen, d.strip.offices, d.strip.certs]}
-      /* ANSWER BLOCKS (BUILD-SPEC §11a.2), all four sections of this template.
-         Each `*Head` is now the question an immigration official types and
-         each `*Lede` a self-contained answer of 35-45 words naming visa
-         applicants and the authority, rather than opening on "Screening" with
-         no subject — a lede that depends on the heading above it stops being
-         an answer the moment an engine lifts it away (§11a.2 rule 3). The
-         template owns the `k` eyebrows and they are untouched.
+    <PageShell crumbs={[{ label: d.crumb }]} closing={false}>
+      <JsonLd data={serviceNode(locale, SERVICE)} />
+      <div className="wrap hero3">
+        <h1 className="h1">{d.h1}</h1>
+        <p className="sub">{d.sub}</p>
+        <ImmigrationTabs selected="authorities" />
+      </div>
 
-         Times and sources come from the `lanes` pills and the `rows` table on
-         this page. One is deliberately absent: **entitlement to work**, whose
-         turnaround TASKS.md records as disputed three ways between
-         `lib/content/checks.ts`, the homepage and the enterprise page. It is a
-         pill in lane 02 here, but a citeable sentence is the worst place to
-         pick a side of that disagreement by accident. */
-      verifyHead={d.verifyHead}
-      verifyLede={d.verifyLede}
-      lanes={LANES.map((l) => ({
-        ...d.lanes[l.k],
-        pills: l.pills.map((p) => ({ ...d.pills[p.p], fast: p.fast })),
-      }))}
-      stepsHead={d.stepsHead}
-      stepsLede={d.stepsLede}
-      steps={[d.steps.submit, d.steps.screen, d.steps.confirm, d.steps.decide]}
-      tableHead={d.tableHead}
-      tableLede={d.tableLede}
-      rows={ROWS.map((r) => ({ ...d.rows[r.k], fast: r.fast }))}
-      tableNote={d.note(
-        <AppLink href="/international" style={{ color: "inherit", textDecoration: "underline" }}>{t.coverageLink}</AppLink>,
-      )}
-      complianceHead={d.complianceHead}
-      complianceLede={d.complianceLede}
-      faqHead={d.faqHead}
-      faqs={[d.faqs.noPresence, d.faqs.remote, d.faqs.file, d.faqs.integration]}
-      closing={{
-        heading: d.closing.heading,
-        sub: d.closing.sub,
-        img: "/img/14-visa-counter.jpg",
-      }}
-    />
+      <div className="wrap sec3">
+        <div className="aud3">
+          <div>
+            <h2 className="h2">{d.overview.h}</h2>
+            <ul className="pts3 plain">
+              {d.overview.bullets.map((b) => (
+                <li key={b}>{b}</li>
+              ))}
+            </ul>
+          </div>
+          <div className="fig">
+            <Image
+              src="/img/immigration/authority-overview.png"
+              alt={d.overview.imgAlt}
+              width={1264}
+              height={848}
+              sizes="(max-width: 1080px) 100vw, 560px"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.standOut.h}</h2>
+          <p className="lede">{d.standOut.sub}</p>
+        </div>
+        <div className="body3 vals3">
+          {Object.entries(d.standOut.cards).map(([k, c]) => (
+            <div key={k} className="v">
+              <h3>{c.t}</h3>
+              <p>{c.p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <ImmigrationPartners h={d.partners.h} logos={d.partners.logos} cta={d.partners.cta} href={PARTNER_HREF} />
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.advantage.h}</h2>
+        </div>
+        <div className="body3 vals3">
+          {Object.entries(d.advantage.cards).map(([k, c]) => (
+            <div key={k} className="v">
+              <h3>{c.t}</h3>
+              <div className="tag">{c.tag}</div>
+              <p>{c.p}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="wrap sec3">
+        <div className="sec-head">
+          <h2 className="h2">{d.ai.h}</h2>
+          <p className="lede">{d.ai.sub}</p>
+        </div>
+        <div className="body3 vals3 aicol3">
+          {Object.entries(d.ai.cols).map(([k, c], i) => (
+            <div key={k} className="v">
+              <div className="n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</div>
+              <h3>{c.t}</h3>
+              <ul>
+                {c.items.map((it) => (
+                  <li key={it.t}>
+                    <b>{it.t}</b>
+                    <span>{it.p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </PageShell>
   );
 }
