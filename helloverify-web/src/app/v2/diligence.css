@@ -20,7 +20,7 @@
 }
 
 .dd { padding-top: clamp(72px, 11.2vw, 120px); padding-bottom: clamp(72px, 13vw, 140px); }
-.dd-mast { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 22px; }
+.dd-mast { display: flex; justify-content: flex-end; align-items: center; }
 .dd-mast-r { display: flex; align-items: center; gap: 22px; }
 .dd-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 /* The pause control (WCAG 2.2.2), the hero's mono caption. 24px tall. */

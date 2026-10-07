@@ -256,10 +256,12 @@ export default async function LocaleLayout({
         : "";
 
   return (
+    // The consent boot script writes `data-hv-consent` here before hydration.
     <html
       lang={locale}
       dir={directionOf(locale)}
       className={`${newsreader.variable} ${instrumentSans.variable} ${geistMono.variable}${scriptVars ? ` ${scriptVars}` : ""}`}
+      suppressHydrationWarning
     >
       <body>
         {/* WCAG 2.4.1. First focusable element on every page, visible only

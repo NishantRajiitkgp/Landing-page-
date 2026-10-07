@@ -428,6 +428,8 @@ export const en = {
       from: "from",
       groups: { home: "In your home", online: "Online" },
       qr: "QR code: verify on WhatsApp",
+      /** The ask's button: opens the same chat the QR encodes, for anyone already on their phone. */
+      cta: "Continue on WhatsApp",
       steps: {
         s1: { k: "STEP 01", t: "Scan QR Code using Whatsapp Camera" },
         s2: { k: "STEP 02", t: "Select who you want to verify" },
@@ -765,7 +767,10 @@ export const en = {
    *  and lets a locale put the number anywhere in it. */
   packages: {
     headingA: "Key Verification Solutions",
-    lede: "Discover 33+ powerful verification checks — trusted by businesses to make smarter, faster and more confident decisions.",
+    /** The italic line under the heading (6 Oct 2026 redesign). */
+    headingEm: "Two workforces. One standard of proof.",
+    kicker: "Employee verification",
+    lede: "Frontline crews cleared in 30 minutes. Corporate hires confirmed before their first day. We don’t trust the paper: we ask the office that issued it.",
     /** The count over a card's check list, and the label on the
      *  photograph's glass chip. Server-rendered, so the count can be a
      *  function leaf. */
@@ -773,6 +778,101 @@ export const en = {
     readyIn: "Ready in",
     buy: "Buy now",
     explore: "Explore",
+    /** The two jump links under the heading, and their group's name. */
+    jump: "Choose a workforce",
+    talk: "Talk to Sales",
+    /** The stamp on each photograph: a ring of text around a tick. */
+    sealRing: "VERIFIED AT THE SOURCE · HELLOVERIFY ·",
+    checksK: "What we verify",
+    sectorsK: "Built for",
+    /** Every figure is one the site already states: 30 minutes is the
+     *  blue-collar package, the licence case is `howItWorks.v2.routes.licence`
+     *  (09:40 to 10:10), "1 in 8", "3×" and "1–7 working days" are
+     *  `enterprises.employees`, and 12–14% is `oneInEight.lede`. The
+     *  check names and lines are `/employee-verification`'s, shortened. */
+    collars: {
+      blue: {
+        idx: "01",
+        k: "Blue collar · Frontline & gig",
+        em: "Shift-ready in 30 minutes.",
+        hook: "A rider with a fake licence becomes your liability the moment they log in. One upload from the candidate, and PAN, licence, vehicle RC and court records come back verified before the shift starts.",
+        sectors: {
+          delivery: "Delivery & logistics",
+          qsr: "Food & QSR",
+          retail: "Retail",
+          manufacturing: "Manufacturing",
+          security: "Security",
+          construction: "Construction",
+        },
+        metrics: {
+          tat: { v: "30 min", l: "upload to verified" },
+          upload: { v: "1", l: "upload from the candidate" },
+          checks: { v: "4", l: "checks, run in parallel" },
+        },
+        checks: {
+          pan: "PAN Card Check",
+          rc: "Registration Certificate Check",
+          licence: "Driving Licence Check",
+          criminal: "Criminal Check",
+        },
+        case: {
+          label: "Example · driving licence",
+          steps: {
+            upload: { t: "09:40", d: "Candidate uploads ID on their phone" },
+            match: { t: "09:52", d: "PAN, licence and RC matched at source" },
+            done: { t: "10:10", d: "Verified. Ready for the shift." },
+          },
+        },
+        clientsH: "Trusted on the frontline by",
+        cta: "Explore blue-collar checks",
+      },
+      white: {
+        idx: "02",
+        k: "White collar · Corporate & professional",
+        em: "Verified before day one.",
+        hook: "1 in 8 applicants lie about their education. We confirm the degree with the university and past jobs with the employer, so you find out before the offer letter, not three months’ salary later.",
+        sectors: {
+          it: "IT & ITES",
+          bfsi: "Banking & finance",
+          healthcare: "Healthcare",
+          consulting: "Consulting",
+          tech: "Tech & startups",
+          corporate: "Corporate offices",
+        },
+        metrics: {
+          tat: { v: "1–7", l: "working days, before they join" },
+          fraud: { v: "12–14%", l: "of applications flagged for fraud" },
+          faster: { v: "3×", l: "faster than the industry average" },
+        },
+        checks: {
+          education: "Education Check",
+          employment: "Employment Check",
+          moonlighting: "Moonlighting Check",
+          address: "Current Address Check",
+        },
+        case: {
+          label: "Example · education",
+          steps: {
+            offer: { t: "Day 0", d: "Offer accepted, consent signed" },
+            source: { t: "Day 3", d: "University and past employer confirm" },
+            done: { t: "Day 5", d: "Report ready, before the first day" },
+          },
+        },
+        clientsH: "Trusted by corporate HR teams",
+        cta: "Explore white-collar checks",
+      },
+    },
+    /** Alt text for the blue-collar marks, in `lib/blueCollarClients.ts`
+     *  order. Domino's, Starbucks and Reliance Retail are on the page for
+     *  testing and still need approval before launch. */
+    clients: {
+      haldiram: "Haldiram",
+      cafeDelhiHeights: "Café Delhi Heights",
+      hungerbox: "Hungerbox",
+      dominos: "Domino's",
+      starbucks: "Starbucks",
+      relianceRetail: "Reliance Retail",
+    },
     /** ONE FLAT TABLE for every line on every card, not a `lines` nested per
      *  pack — the shape `consumer.checkLines` already uses. Two reasons, and
      *  the first is a hard one. Nested, `PACKS` in the component is an array
@@ -1612,15 +1712,6 @@ export const en = {
       lede: "Unified verification for large-scale white-collar and blue-collar hiring with custom workflows, speed, accuracy, and compliance.",
       kyc: { t: "KYC Services", p: "Comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection." },
       vendor: { t: "Vendor and Supplier", p: "With Certifier, offered by HelloVerify, clients can enhance their profiling experience by accessing certified profiles." },
-      /** The blue-collar card's client proof (4 Oct 2026). The half hour is
-       *  the SMB page's blue-collar package ("a blue-collar hire in 30
-       *  minutes"). The two names are the alt text on those clients' marks. */
-      shift: {
-        n: "30",
-        u: "min",
-        l: "Onboarded in",
-        houses: { starbucks: "Starbucks", dominos: "Domino’s" },
-      },
     },
     headingA: "Background Checks For",
     headingB: "Small & Medium Businesses",

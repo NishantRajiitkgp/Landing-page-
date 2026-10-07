@@ -1075,7 +1075,8 @@ check(
 const SLICE: readonly { name: string; dict: Dictionary<unknown>; matched: number; leaves: number }[] = [
   { name: "about", dict: ABOUT, matched: 47, leaves: 47 },
   { name: "contact", dict: CONTACT, matched: 34, leaves: 46 },
-  { name: "checks", dict: CHECKS_COPY, matched: 16, leaves: 25 },
+  /* 25 -> 24 (6 Oct 2026): `hero.buy` went with the unpriced buy button. */
+  { name: "checks", dict: CHECKS_COPY, matched: 16, leaves: 24 },
   { name: "countries", dict: COUNTRIES_COPY, matched: 19, leaves: 25 },
   { name: "legal", dict: LEGAL_COPY, matched: 4, leaves: 14 },
   { name: "root", dict: ROOT, matched: 4, leaves: 1 },
@@ -1099,9 +1100,10 @@ for (const ns of SLICE) {
  *  what little copy it has is in attributes and next to interpolations where
  *  the matcher cannot see it, while `/about` is 200 lines of hand-written
  *  prose that the matcher reads almost completely. */
+/* 158 -> 157 (6 Oct 2026): `checks.hero.buy`. */
 check(
-  "the six route namespaces total 158 leaves for 124 matched nodes",
-  SLICE.reduce((a, b) => a + b.leaves, 0) === 158 &&
+  "the six route namespaces total 157 leaves for 124 matched nodes",
+  SLICE.reduce((a, b) => a + b.leaves, 0) === 157 &&
     SLICE.reduce((a, b) => a + b.matched, 0) === 124,
   { leaves: SLICE.reduce((a, b) => a + b.leaves, 0), matched: SLICE.reduce((a, b) => a + b.matched, 0) },
 );
@@ -1279,10 +1281,12 @@ const TPL = pick(TEMPLATES, DEFAULT);
  *  and slider alts, industries, why-consider and API cards in; the lanes,
  *  chips, two package receipts, steps strip, FAQs and closing out. Rich
  *  leaves 21 -> 18: its closing heading, four strip items and its faqHead
- *  went; the three Vendor Monitoring lines (old CMS `bold` parts) came. */
+ *  went; the three Vendor Monitoring lines (old CMS `bold` parts) came.
+ *  597 -> 598 strings (6 Oct 2026): `smb.summary.cartName`, the custom
+ *  package's name in checkout, the cart and My Orders. */
 check(
-  "business/en holds 597 string leaves and 18 rich-text leaves",
-  stringLeaves(BIZ).length === 597 && leafPaths(BIZ).length === 615,
+  "business/en holds 598 string leaves and 18 rich-text leaves",
+  stringLeaves(BIZ).length === 598 && leafPaths(BIZ).length === 616,
   { strings: stringLeaves(BIZ).length, all: leafPaths(BIZ).length },
 );
 
@@ -1401,13 +1405,18 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  issuer, signature line) went; each route keeps its four box tags. */
   /* 141 -> 143 (4 Oct 2026): the licence route names its two shift clients. */
   howItWorks: [5, 143],
-  consumer: [10, 136],
+  /* 136 -> 137 (6 Oct 2026): the WhatsApp ask's button, `shop.cta`. */
+  consumer: [10, 137],
   checks: [7, 59],
   /* 117 -> 127 (30 Sep 2026): sales pass: impact figures and actions. */
   /* 127 -> 126 (30 Sep 2026): the KSA code went: Saudi Arabia shows its flag. */
   international: [6, 126],
   /* 56 -> 55 (30 Sep 2026): one-line heading, "Key Verification Solutions". */
-  packages: [7, 55],
+  /* 55 -> 62 (6 Oct 2026): the blue-collar client rail — "Trusted by" and six names. */
+  /* 62 -> 152 (6 Oct 2026): the two-workforce redesign — heading, jump
+   *  links, stamp, and per collar its promise, sectors, figures, checks,
+   *  example case and client heading (+91); "Trusted by" went (-1). */
+  packages: [7, 126],
   /** New 30 Sep 2026: the old site's country grid — heading, lede, the
    *  turnaround label, the CTA and five countries' name and line. */
   /* 14 -> 13 (1 Oct 2026): the lede under the heading went. */
@@ -1498,7 +1507,8 @@ const BANDS: Record<string, readonly [number, number]> = {
    *  onboarded, and the two shift clients. */
   /* 75 -> 87 (5 Oct 2026): the SMB panel's client strip — its two-part
    *  heading and ten client names. */
-  smb: [0, 87],
+  /* 87 -> 82 (6 Oct 2026): the blue-collar punch clock went. */
+  smb: [0, 82],
   diligence: [0, 27],
   trustPlatform: [0, 52],
   /** New 30 Sep 2026: the field case — heading block and rail label (7),
@@ -1554,10 +1564,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
  *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
- *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients; 1702 -> 1712: `premiumServices`; 1712 -> 1724: the SMB client strip; 1724 -> 1728: the premium redesign's lede and audiences. */
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients; 1702 -> 1712: `premiumServices`; 1712 -> 1724: the SMB client strip; 1724 -> 1728: the premium redesign's lede and audiences. 1728 -> 1735: the blue-collar client rail; 1735 -> 1825: the two-workforce redesign; 1825 -> 1815: dropping its "Hiring both?" band; 1815 -> 1799: four named checks a collar, no descriptions; 1799 -> 1794: dropping the blue-collar punch clock; 1794 -> 1795: the WhatsApp ask's button. */
 check(
-  "sections holds 1728 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1728 &&
+  "sections holds 1795 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1795 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -1590,10 +1600,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691; `premiumServices` to 1701; the SMB client strip to 1713; the premium redesign to 1717. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691; `premiumServices` to 1701; the SMB client strip to 1713; the premium redesign to 1717; the blue-collar client rail to 1724; the two-workforce redesign to 1814; dropping its "Hiring both?" band to 1804; four named checks a collar to 1788; dropping the blue-collar punch clock to 1783; the WhatsApp ask's button to 1784. */
 check(
-  "sections: 1717 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1717 &&
+  "sections: 1784 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1784 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },
@@ -1869,7 +1879,7 @@ console.log("13. the numbers for `platform` and `governments`, and the keys they
  *      platform/technology               52       ->  53          1.02x  (old CMS copy, 5 Oct 2026)
  *      platform/security-compliance      43       ->  99          2.3x
  *      governments/page.tsx              46       ->  65          1.41x
- *      governments/health                15       ->  79          5.3x   (old CMS copy and order, 6 Oct 2026)
+ *      governments/health                15       ->  80          5.3x   (old CMS copy and order, 6 Oct 2026; hero CTA)
  *      governments/immigration           15       ->  75          5.0x   (old CMS copy and order, 6 Oct 2026)
  *      governments/manpower-education    15       ->  49          3.3x   (old CMS copy and order + the live MOHESR card, 6 Oct 2026)
  *      governments/trade                 15       ->  26          1.7x   (old CMS copy and order, 6 Oct 2026)
@@ -1906,14 +1916,17 @@ const EN_GOVERNMENTS = pick(GOVERNMENTS, DEFAULT);
 
 const PLATFORM_FILES: Record<string, readonly [number, number]> = {
   hub: [28, 26],
-  coverage: [33, 124],
+  /* 124 -> 131 (6 Oct 2026): the check builder — the count, sort label and
+   *  ten summary labels in (+12); Add, Explore More, View Less, Add Multiple
+   *  and the Action column out (-5). */
+  coverage: [33, 131],
   technology: [52, 57],
   security: [43, 99],
 };
 
 const GOVERNMENT_FILES: Record<string, readonly [number, number]> = {
   hub: [46, 65],
-  health: [15, 79],
+  health: [15, 80],
   immigration: [15, 75],
   manpowerEducation: [15, 49],
   trade: [15, 26],
@@ -1943,16 +1956,16 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 307 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 307 &&
+  "platform holds 314 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 314 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
 );
 
 check(
-  "governments holds 420 leaves for 150 matched nodes — six pages plus crumb and coverageLink",
-  leafPaths(EN_GOVERNMENTS).length === 420 &&
+  "governments holds 421 leaves for 150 matched nodes — six pages plus crumb and coverageLink",
+  leafPaths(EN_GOVERNMENTS).length === 421 &&
     Object.values(GOVERNMENT_FILES).reduce((a, b) => a + b[0], 0) === 150 &&
     Object.values(GOVERNMENT_FILES).reduce((a, b) => a + b[1], 0) + 2 ===
       leafPaths(EN_GOVERNMENTS).length,
@@ -1975,8 +1988,8 @@ check(
  *  paragraphs carrying a mid-sentence `<strong>`. Coverage and technology lost
  *  their strips, FAQs and closing copy to the old CMS copy on 5 Oct 2026. */
 check(
-  "platform: 287 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 287 &&
+  "platform: 294 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 294 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },
@@ -1990,8 +2003,8 @@ check(
  *  rebuilt on the old section order on 6 Oct 2026 and close on their last old
  *  section, so they carry no closing copy, strips or function leaves. */
 check(
-  "governments: 406 string leaves and 14 rich-text leaves",
-  stringLeaves(EN_GOVERNMENTS).length === 406 &&
+  "governments: 407 string leaves and 14 rich-text leaves",
+  stringLeaves(EN_GOVERNMENTS).length === 407 &&
     leafPaths(EN_GOVERNMENTS).length - stringLeaves(EN_GOVERNMENTS).length === 14 &&
     9 + 4 + 1 === 14,
   { strings: stringLeaves(EN_GOVERNMENTS).length, all: leafPaths(EN_GOVERNMENTS).length },

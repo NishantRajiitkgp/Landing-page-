@@ -77,6 +77,11 @@ export const STATIC_HI: Record<StaticSeoPath, PageCopy> = {
     description:
       "हर 8 में से 1 आवेदक अपनी शैक्षणिक योग्यता गलत प्रस्तुत करता है—यह जोखिम संगठन की विश्वसनीयता को प्रभावित कर सकता है। HelloVerify का AI‑ड्रिवन वेरिफिकेशन प्लेटफ़ॉर्म इन असंगतियों को जल्दी पहचानकर तेज़, स्मार्ट और भरोसेमंद निर्णय लेने में मदद करता है।",
   },
+  "/solutions/manpower-and-education-authorities/mohesr": {
+    title: "Ministry of Higher Education and Scientific Research (MOHESR) — HelloVerify",
+    description:
+      "HelloVerify संयुक्त अरब अमीरात के उच्च शिक्षा और वैज्ञानिक अनुसंधान मंत्रालय का सत्यापन भागीदार है। डिग्री सत्यापन AED 350 है, मानक डिलीवरी 18 कैलेंडर दिन।",
+  },
   "/governments/manpower-education/mohesr": {
     title: "UAE Ministry of Higher Education & Scientific Research — HelloVerify",
     description:

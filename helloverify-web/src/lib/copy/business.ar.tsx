@@ -309,7 +309,7 @@ export const ar: BusinessCopy = {
           info: "It includes verifying the candidate's claims about his/her tenure, etc. and establishment with respective employer. Hello Verify will reach out to the HR using automated email / telephone. Mode: Email/Database Additional Options for Verifications We also have verification methods via. PF/Form 16/Supervisor /UAN. These all are chargeable at an additional charge per check per method.",
         },
         education: {
-          n: "Education Check-Highest Education (Extra University Chargesapplicable)",
+          n: "Education Check-Highest Education (Extra University Charges applicable)",
           price: "₹999",
           info: "This check involves verifying the authenticity of candidate's educational & professional qualifications from the respective universities/colleges / trusted database. The names are run through Hello Verify's proprietary database of both known (trusted) and unknown (suspect) universities/institutes and organizations. Herein, TAT may vary subject to university/college (TAT) process. Mode: Database/Email Scope: 12th, Bachelors, Masters, Professional",
         },
@@ -483,6 +483,7 @@ export const ar: BusinessCopy = {
       checksInclude: "تشمل عمليات التحقق",
       empty: "اختر عمليات التحقق من الجدول لبناء باقتك.",
       buy: "اشترِ الآن",
+      cartName: "باقة مخصصة",
     },
     trusted: {
       h: "موثوق به من قبل الشركات والأفراد",
@@ -696,25 +697,25 @@ export const ar: BusinessCopy = {
       cta: "تحدث إلى المبيعات",
     },
     checks: {
-      h: "We Verify What Matters Most",
-      sub: "Our advance verification checks help you to onboard trustworthy vendors and minimise the risk across your supply chain.",
+      h: "نتحقق مما يهم أكثر",
+      sub: "تساعدك فحوصات التحقق المتقدمة لدينا على ضمّ موردين موثوقين وتقليل المخاطر عبر سلسلة التوريد بأكملها.",
       tabs: {
         business: {
-          label: "Business License & Promoter Verification",
+          label: "التحقق من الرخصة التجارية والمؤسسين",
           cards: {
-            tradeLicense: { t: "Trade License Check", p: "This check involves verifying a candidate's educational and professional qualifications, along with confirming the authenticity of the university, college, or academic institution from which the qualifications were obtained." },
-            defaultingDirectors: { t: "Defaulting Directors Check", p: "Defaulting Directors Check identifies whether a candidate has been listed as a defaulting director in any company due to non compliance, financial defaults or regulatory violations." },
-            criminalRecords: { t: "Criminal Records Check", p: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate." },
-            creditCompany: { t: "Credit & Company Check", p: "A Credit & Company Check in background verification evaluates a candidate's credit profile and verifies the legitimacy and status of associated companies through official and financial records." },
+            tradeLicense: { t: "فحص الرخصة التجارية", p: "يتضمن هذا الفحص التحقق من المؤهلات التعليمية والمهنية للمرشح، إلى جانب التأكد من موثوقية الجامعة أو الكلية أو المؤسسة الأكاديمية التي مُنحت منها المؤهلات." },
+            defaultingDirectors: { t: "فحص المديرين المتعثرين", p: "يحدد فحص المديرين المتعثرين ما إذا كان المرشح مُدرجًا كمدير متعثر في أي شركة بسبب عدم الامتثال أو التعثر المالي أو المخالفات التنظيمية." },
+            criminalRecords: { t: "فحص السجلات الجنائية", p: "يتضمن هذا الفحص البحث في سجلات المحاكم عبر مختلف الاختصاصات، بما فيها المحكمة العليا والمحاكم العليا في الولايات ومحاكم المقاطعات والهيئات القضائية، لتحديد أي تهم جنائية بحق المرشح." },
+            creditCompany: { t: "فحص الائتمان والشركات", p: "يقيّم فحص الائتمان والشركات ضمن التحقق من الخلفية الملف الائتماني للمرشح، ويتحقق من مشروعية الشركات المرتبطة به ووضعها عبر السجلات الرسمية والمالية." },
           },
         },
         vendor: {
-          label: "Vendor, Credit & Financial Verification",
+          label: "التحقق من الموردين والائتمان والوضع المالي",
           cards: {
-            financialAssessment: { t: "Financial\nAssessment Check", p: "Financial Assessment in business due diligence involves evaluating a company's financial health by reviewing its financial statements, credit profile, and key financial indicators to assess stability and risk." },
-            gstScreening: { t: "GST\nScreening Check", p: "GST Screening in business due diligence involves verifying a company's GST registration, status, and compliance through official records." },
-            creditCheck: { t: "Credit\nCheck", p: "The credit check involves verifying the candidate's credit score and risk parameters through a Credit Bureau. A credit score is generated based on the individual's credit history." },
-            promoterCriminal: { t: "Promoter Criminal\nHistory Check", p: "A Promoter Criminal History Check in business due diligence involves verifying whether company promoters have any criminal records through court and legal databases." },
+            financialAssessment: { t: "فحص\nالتقييم المالي", p: "يشمل التقييم المالي ضمن العناية الواجبة للأعمال تقييم الصحة المالية للشركة من خلال مراجعة قوائمها المالية وملفها الائتماني ومؤشراتها المالية الرئيسية، لتقدير الاستقرار والمخاطر." },
+            gstScreening: { t: "فحص\nتسجيل GST", p: "يشمل فحص GST ضمن العناية الواجبة للأعمال التحقق من تسجيل الشركة في ضريبة السلع والخدمات ووضعها وامتثالها عبر السجلات الرسمية." },
+            creditCheck: { t: "فحص\nالائتمان", p: "يتضمن فحص الائتمان التحقق من الدرجة الائتمانية للمرشح ومؤشرات المخاطر عبر مكتب ائتمان. تُحتسب الدرجة الائتمانية بناءً على التاريخ الائتماني للفرد." },
+            promoterCriminal: { t: "فحص السجل الجنائي\nللمؤسسين", p: "يشمل فحص السجل الجنائي للمؤسسين ضمن العناية الواجبة للأعمال التحقق مما إذا كان لدى مؤسسي الشركة أي سجلات جنائية عبر قواعد بيانات المحاكم والجهات القانونية." },
           },
         },
       },

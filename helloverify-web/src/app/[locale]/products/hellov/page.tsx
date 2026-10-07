@@ -2,6 +2,7 @@
  *  the Packages / Single Checks tabs, the Advanced Package cards. Copy is
  *  `hellov.base.json` word for word (`individuals.hellov`). */
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { copyFor } from "@/lib/seo/copy";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
@@ -10,18 +11,15 @@ import { PageShell } from "@/components/chrome/PageShell";
 import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
 import { CommerceCta } from "@/components/commerce/CommerceCta";
-import { HelloVTabs, type Single } from "@/components/hellov/HelloVTabs";
+import { HelloVTabs, HelloVTabsBound, type Single } from "@/components/hellov/HelloVTabs";
 import { HeaderIcon, CheckIcon, type HeaderIconId, type CheckIconId } from "@/components/hellov/HelloVIcons";
 import type { IndividualsCopy } from "@/lib/copy/individuals";
 import { INDIVIDUALS } from "@/lib/copy/individuals";
 import { copy } from "@/lib/copy/request";
+import { HELLOV_WHATSAPP } from "@/lib/hellov";
 
 const PATH = "/products/hellov";
 const SALES = "/contact?tab=enquiry&role=consumer&contact=general-queries";
-/** The old `HELLOV_WHATSAPP_URL`: every package Buy Now, the QR and Start
- *  Verification opened this chat. */
-const WHATSAPP = "https://api.whatsapp.com/send?phone=14157924931&text=Hellov";
-
 type AdvancedKey = keyof IndividualsCopy["hellov"]["advanced"]["cards"];
 
 /** Structure, not copy: the old CMS `unitAmount`, `verificationMinutes` and
@@ -97,7 +95,9 @@ export default async function HelloVPage({
         <p className="hv3-lead">{c.intro}</p>
       </div>
 
-      <HelloVTabs c={c} whatsapp={WHATSAPP} singles={SINGLES} />
+      <Suspense fallback={<HelloVTabs c={c} whatsapp={HELLOV_WHATSAPP} singles={SINGLES} />}>
+        <HelloVTabsBound c={c} whatsapp={HELLOV_WHATSAPP} singles={SINGLES} />
+      </Suspense>
 
       <div className="wrap sec3" id="hellov-premium">
         <div className="sec-head">

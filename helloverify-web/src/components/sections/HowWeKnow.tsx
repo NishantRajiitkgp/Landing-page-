@@ -29,11 +29,7 @@ export async function HowWeKnow() {
 
   return (
     <div className="wrap hair-top hw">
-      <div className="hw-mast">
-        <span className="k">{v2.kicker}</span>
-        <span className="hw-sheet">{v2.sheet}</span>
-      </div>
-      <div className="sec-head" style={{ marginTop: "22px" }}>
+      <div className="sec-head">
         <h2 className="h2">
           {t.headingA}
           <br />

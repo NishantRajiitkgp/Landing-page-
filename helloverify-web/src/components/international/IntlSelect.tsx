@@ -1,13 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useId, useRef, useState } from "react";
+import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 
 import type { IntlOption } from "@/lib/international/catalog";
 
 /** Searchable country list. Every option stays in the DOM (the menu is only
  *  `hidden`) so the CMS names and flag alts are on the page when it is closed.
- *  Catalog-only names sit on `data-audit-skip`. */
+ *  Catalog-only names sit on `data-audit-skip`. Options are grouped under
+ *  sticky A–Z headings; the arrow keys walk the visible options and Enter in
+ *  the search box takes the first match. */
 export function IntlSelect({
   label,
   value,
@@ -26,20 +28,29 @@ export function IntlSelect({
   const base = useId();
   const root = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
+  const list = useRef<HTMLUListElement>(null);
+  const menu = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
   const selected = options.find((o) => o.code === value) ?? options[0];
   const query = q.trim().toLowerCase();
-  const matches = query ? options.filter((o) => o.name.toLowerCase().includes(query)) : options;
+  const isMatch = (o: IntlOption) => !query || o.name.toLowerCase().includes(query);
+  const matches = options.filter(isMatch);
+  const letters = new Set(matches.map((o) => o.letter));
 
   useEffect(() => {
     if (!open) return;
     input.current?.focus();
+    list.current?.querySelector<HTMLElement>('[aria-current="true"]')?.scrollIntoView({ block: "center" });
     const close = (e: MouseEvent) => {
       if (!root.current?.contains(e.target as Node)) setOpen(false);
     };
-    const esc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+    const esc = (e: globalThis.KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        trigger.current?.focus();
+      }
     };
     document.addEventListener("mousedown", close);
     document.addEventListener("keydown", esc);
@@ -51,10 +62,44 @@ export function IntlSelect({
 
   if (!selected) return null;
 
+  const choose = (code: string) => {
+    onChange(code);
+    setOpen(false);
+    setQ("");
+    trigger.current?.focus();
+  };
+
+  const buttons = () => Array.from(list.current?.querySelectorAll<HTMLButtonElement>("li:not([hidden]) > button") ?? []);
+
+  const onListKey = (e: KeyboardEvent<HTMLUListElement>) => {
+    const all = buttons();
+    const at = all.indexOf(document.activeElement as HTMLButtonElement);
+    let next = -1;
+    if (e.key === "ArrowDown") next = Math.min(at + 1, all.length - 1);
+    else if (e.key === "ArrowUp") next = at - 1;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = all.length - 1;
+    else return;
+    e.preventDefault();
+    if (next < 0) input.current?.focus();
+    else all[next]?.focus();
+  };
+
+  const onSearchKey = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      buttons()[0]?.focus();
+    } else if (e.key === "Enter" && matches[0]) {
+      e.preventDefault();
+      choose(matches[0].code);
+    }
+  };
+
   return (
     <div className="intl3-select" ref={root}>
       <div role="group" aria-label={label}>
         <button
+          ref={trigger}
           type="button"
           className="intl3-trigger"
           aria-expanded={open}
@@ -70,33 +115,46 @@ export function IntlSelect({
           <Caret />
         </button>
       </div>
-      <div className="intl3-menu" id={base} hidden={!open}>
-        <input
-          ref={input}
-          type="search"
-          value={q}
-          placeholder={search}
-          aria-label={search}
-          autoComplete="off"
-          onChange={(e) => setQ(e.target.value)}
-        />
-        <ul>
-          {options.map((o) => (
-            <li key={o.code} hidden={query !== "" && !o.name.toLowerCase().includes(query)}>
-              <button
-                type="button"
-                aria-current={o.code === selected.code ? "true" : undefined}
-                data-audit-skip={o.cms ? undefined : "yes"}
-                onClick={() => {
-                  onChange(o.code);
-                  setOpen(false);
-                  setQ("");
-                }}
-              >
-                <Flag option={o} />
-                <span>{o.name}</span>
-              </button>
-            </li>
+      <div className="intl3-menu" id={base} hidden={!open} ref={menu}>
+        <div className="intl3-search">
+          <SearchIcon />
+          <input
+            ref={input}
+            type="search"
+            value={q}
+            placeholder={search}
+            aria-label={search}
+            autoComplete="off"
+            onChange={(e) => {
+              setQ(e.target.value);
+              menu.current?.scrollTo({ top: 0 });
+            }}
+            onKeyDown={onSearchKey}
+          />
+        </div>
+        <ul ref={list} onKeyDown={onListKey}>
+          {options.map((o, i) => (
+            <Fragment key={o.code}>
+              {o.letter !== options[i - 1]?.letter ? (
+                <li className="intl3-letter" aria-hidden="true" hidden={!letters.has(o.letter)}>
+                  {o.letter}
+                </li>
+              ) : null}
+              <li hidden={!isMatch(o)}>
+                <button
+                  type="button"
+                  aria-current={o.code === selected.code ? "true" : undefined}
+                  data-audit-skip={o.cms ? undefined : "yes"}
+                  onClick={() => choose(o.code)}
+                >
+                  <Flag option={o} />
+                  <span>
+                    <Highlight text={o.name} query={query} />
+                  </span>
+                  {o.code === selected.code ? <TickIcon /> : null}
+                </button>
+              </li>
+            </Fragment>
           ))}
         </ul>
         {query && matches.length === 0 ? (
@@ -109,21 +167,45 @@ export function IntlSelect({
   );
 }
 
-function Flag({ option }: { option: IntlOption }) {
-  if (option.flagSrc && option.flagAlt) {
-    return <Image className="intl3-flag" src={option.flagSrc} alt={option.flagAlt} width={22} height={15} />;
-  }
+function Highlight({ text, query }: { text: string; query: string }) {
+  const at = query ? text.toLowerCase().indexOf(query) : -1;
+  if (at < 0) return <>{text}</>;
   return (
-    <span className="intl3-badge" aria-hidden="true">
-      {option.code}
-    </span>
+    <>
+      {text.slice(0, at)}
+      <mark>{text.slice(at, at + query.length)}</mark>
+      {text.slice(at + query.length)}
+    </>
   );
+}
+
+/** The country's own flag, whole and 4:3. Decorative beside the name unless
+ *  the CMS gave it an alt. */
+export function Flag({ option }: { option: IntlOption }) {
+  return <Image className="intl3-flag" src={option.flagSrc} alt={option.flagAlt ?? ""} width={24} height={18} unoptimized />;
 }
 
 function Caret() {
   return (
     <svg className="intl3-caret" viewBox="0 0 12 12" aria-hidden="true">
       <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden="true">
+      <circle cx="7" cy="7" r="4.75" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M10.5 10.5 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function TickIcon() {
+  return (
+    <svg className="intl3-tick" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

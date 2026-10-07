@@ -157,7 +157,8 @@ export function SmbCustomize({ table, summary, rows }: { table: C["table"]; summ
             loginRedirect="products/bgv-smb"
             packageDetails={{
               packageType: "smb",
-              packageName: cartName(codes),
+              packageId: cartName(codes),
+              packageName: summary.cartName,
               description: summary.p,
               priceDisplay: price,
               unitAmount: total,

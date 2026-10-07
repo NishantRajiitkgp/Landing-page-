@@ -34,6 +34,12 @@ for (const path of ON_WWW) {
 
 const cartlist = LEGACY_ROUTES.find((r) => r.from === "/cartlist");
 check("/cartlist -> /cart on this host", cartlist?.to === "/cart", cartlist);
+const profileAlias = LEGACY_ROUTES.find((r) => r.from === "/orders/profile-settings");
+check(
+  "/orders/profile-settings -> /profile-settings on this host",
+  profileAlias?.to === "/profile-settings",
+  profileAlias,
+);
 
 console.log("2. emitted rules match the Part 5 invert");
 {

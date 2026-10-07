@@ -129,6 +129,11 @@ export const STATIC_EN = {
     description:
       "1 in 8 applicants misrepresent their academic credentials, creating risks that undermine organizational integrity. Our AI-driven onboarding and automated workflows support faster, more informed hiring decisions.",
   },
+  "/solutions/manpower-and-education-authorities/mohesr": {
+    title: "Ministry of Higher Education and Scientific Research (MOHESR) — HelloVerify",
+    description:
+      "HelloVerify is the verification partner for the UAE Ministry of Higher Education and Scientific Research. Degree verification is AED 350, with standard delivery in 18 calendar days.",
+  },
   "/governments/manpower-education/mohesr": {
     title: "UAE Ministry of Higher Education & Scientific Research — HelloVerify",
     description:

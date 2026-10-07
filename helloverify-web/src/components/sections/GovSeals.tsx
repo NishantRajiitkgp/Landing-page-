@@ -44,15 +44,15 @@ import { GovSealsStage } from "./GovSealsStage";
  *  applicants to the visa-screening page. Swap in the portals when known. */
 type Act = keyof SectionsCopy["govSeals"]["acts"];
 export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string; apply: string; ctas: Act[][] }[] = [
-  { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/governments/manpower-education/ministry-of-manpower", apply: "/governments/manpower-education/ministry-of-manpower", ctas: [["apply"], ["sales"]] },
-  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration/embassy-of-latvia", apply: "/individuals/immigration", ctas: [["visa"], ["partner"]] },
-  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/governments/immigration/embassy-of-italy", apply: "/individuals/immigration", ctas: [["visa"], ["partner"]] },
-  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/governments/manpower-education/mohesr", apply: "/contact", ctas: [["apply"], ["sales"]] },
+  { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/solutions/manpower-and-education-authorities/ministry-of-manpower", apply: "/solutions/manpower-and-education-authorities/ministry-of-manpower", ctas: [["apply"], ["sales"]] },
+  { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/solutions/immigration-authorities", apply: "/products/immigration", ctas: [["visa"], ["partner"]] },
+  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/solutions/immigration-authorities", apply: "/products/immigration", ctas: [["visa"], ["partner"]] },
+  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/solutions/manpower-and-education-authorities/mohesr", apply: "https://applicant.helloverify.ae/en/signin", ctas: [["apply"], ["sales"]] },
 ];
 
 /** Where the shared buttons go; `apply` is per authority (`SEALS`). */
 const ACT_HREF: Record<Exclude<Act, "apply">, string> = {
-  visa: "/individuals/immigration",
+  visa: "/products/immigration",
   partner: "/contact",
   sales: "/contact",
 };
@@ -98,11 +98,6 @@ export async function GovSeals() {
 
   return (
     <section className="wrap sv" aria-labelledby="sv-h">
-      <div className="sv-mast">
-        <span className="k">{t.kicker}</span>
-        <i aria-hidden="true" />
-        <span className="sv-mast-r">{t.kickerEnd}</span>
-      </div>
       <h2 className="sv-h" id="sv-h">
         {t.heading} <em>{t.headingEm}</em>
       </h2>

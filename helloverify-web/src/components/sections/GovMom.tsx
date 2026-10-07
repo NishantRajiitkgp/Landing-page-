@@ -15,7 +15,7 @@ import { copy } from "@/lib/copy/request";
 import { SECTIONS, type MomC2Id } from "@/lib/copy/sections";
 import { MomPicker } from "./MomPicker";
 
-const MOM_PAGE = "/governments/manpower-education/ministry-of-manpower";
+const MOM_PAGE = "/solutions/manpower-and-education-authorities/ministry-of-manpower";
 
 /** C2 options with the points each scores: the big figure the picker shows. */
 const C2: { id: MomC2Id; pts: number }[] = [
@@ -114,7 +114,7 @@ export async function GovMom() {
         </div>
         <div className="gv-prem-list">
           {PREMIUM.map((id, i) => (
-            <AppLink key={id} href="/individuals/immigration" className="gv-prem-row">
+            <AppLink key={id} href="/products/immigration" className="gv-prem-row">
               <span className="gv-prem-n" aria-hidden="true">{`0${i + 1}`}</span>
               <span><b>{t.premium.rows[id].t}</b><i>{t.premium.rows[id].p}</i></span>
               <Arrow />

@@ -114,7 +114,7 @@ export async function Enterprises() {
         ]}
       />
       <Nums k={e.numsK} items={e.nums} />
-      <Foot href="/business/enterprise" />
+      <Foot href="/products/bgv-enterprise" />
     </div>,
     <div key="c" className="en-panel">
       <div className="en-pk">
@@ -179,7 +179,7 @@ export async function Enterprises() {
         ]}
       />
       <Nums k={c.numsK} items={c.nums} />
-      <Foot href="/business/customer-kyc" />
+      <Foot href="/products/customer-kyc" />
     </div>,
     <div key="b" className="en-panel">
       <div className="en-pk">
@@ -228,7 +228,7 @@ export async function Enterprises() {
         ]}
       />
       <Nums k={b.numsK} items={b.nums} />
-      <Foot href="/business/certifier" />
+      <Foot href="/products/certifier" />
     </div>,
   ];
 
@@ -238,11 +238,7 @@ export async function Enterprises() {
   return (
     <MotionStage className="wrap en" pausedClassName="en-paused">
       <div className="en-mast">
-        <span className="k">{t.kicker}</span>
-        <span className="en-mast-r">
-          <MotionButton className="en-motion" pauseLabel={hero.pause} playLabel={hero.play} />
-          <span className="en-sheet">{t.sheet}</span>
-        </span>
+        <MotionButton className="en-motion" pauseLabel={hero.pause} playLabel={hero.play} />
       </div>
       <div className="sec-head en-head">
         <h2 className="h2 en-h2">

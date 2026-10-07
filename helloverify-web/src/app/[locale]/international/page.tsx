@@ -1,9 +1,9 @@
 /** /international — the old SPA's International Checks page
- *  (`international.base.json`). Packages are the CMS's four countries behind
- *  a searchable list (default United Kingdom). The checks table is the live
- *  catalog (default United States), seven rows then Explore More. The CMS
- *  check rows stay in the document so that copy is still on the page. Buy Now
- *  and Add go to the CMS link, `/contact?tab=enquiry`. */
+ *  (`international.base.json`). Packages show the CMS's United Kingdom
+ *  bundle; the country picker is the check builder's. The builder is the live
+ *  catalog (default United States) with a running summary. The CMS check
+ *  rows stay in the document so that copy is still on the page. Buy Now and
+ *  the summary's CTA go to the CMS link, `/contact?tab=enquiry`. */
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { pageMetadata } from "@/lib/seo/metadata";
@@ -42,6 +42,22 @@ export default async function InternationalPage({
   const c = t.coverage;
   const p = c.packages;
   const k = c.checks;
+  const checks = {
+    locale,
+    cols: k.cols,
+    countries: c.countries,
+    pick: k.pick,
+    search: k.search,
+    none: k.none,
+    empty: k.empty,
+    available: k.available,
+    sortBy: k.sortBy,
+    sort: k.sort,
+    up: k.up,
+    down: k.down,
+    select: k.select,
+    summary: k.summary,
+  };
 
   return (
     <PageShell crumbs={[{ label: c.crumb }]} closing={false}>
@@ -54,17 +70,7 @@ export default async function InternationalPage({
         <div className="sec-head">
           <h2 className="h2">{p.h}</h2>
         </div>
-        <IntlPackages
-          locale={locale}
-          includes={p.includes}
-          buy={p.buy}
-          cards={p.cards}
-          countries={c.countries}
-          pick={k.pick}
-          search={k.search}
-          none={k.none}
-          empty={k.empty}
-        />
+        <IntlPackages locale={locale} includes={p.includes} buy={p.buy} cards={p.cards} />
       </section>
 
       <section className="wrap sec3" id="international-checks-screening">
@@ -72,45 +78,8 @@ export default async function InternationalPage({
           <h2 className="h2">{k.h}</h2>
           <p className="lede">{k.lede}</p>
         </div>
-        <Suspense
-          fallback={
-            <IntlChecks
-              locale={locale}
-              initialCode="US"
-              cols={k.cols}
-              add={k.add}
-              more={k.more}
-              countries={c.countries}
-              pick={k.pick}
-              search={k.search}
-              none={k.none}
-              less={k.less}
-              empty={k.empty}
-              multi={k.multi}
-              sort={k.sort}
-              up={k.up}
-              down={k.down}
-              select={k.select}
-            />
-          }
-        >
-          <IntlChecksBound
-            locale={locale}
-            cols={k.cols}
-            add={k.add}
-            more={k.more}
-            countries={c.countries}
-            pick={k.pick}
-            search={k.search}
-            none={k.none}
-            less={k.less}
-            empty={k.empty}
-            multi={k.multi}
-            sort={k.sort}
-            up={k.up}
-            down={k.down}
-            select={k.select}
-          />
+        <Suspense fallback={<IntlChecks {...checks} initialCode="US" />}>
+          <IntlChecksBound {...checks} />
         </Suspense>
         <div hidden>
           {COUNTRIES.map((n) =>

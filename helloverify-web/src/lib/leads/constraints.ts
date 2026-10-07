@@ -75,11 +75,13 @@ export const LIMITS = {
 } as const;
 
 /** Unanchored on purpose: HTML `pattern` anchors implicitly, and `./schema`
- *  wraps it in `^(?:…)$` for zod. Written without backslash escapes so the two
- *  consumers cannot disagree about escaping. Deliberately permissive — this
+ *  wraps it in `^(?:…)$` for zod. The browser compiles `pattern` with the `v`
+ *  flag, where `(`, `)` and `-` inside a class must be escaped or the whole
+ *  pattern is discarded; the escapes below are equally valid without a flag,
+ *  so both consumers read it the same. Deliberately permissive — this
  *  catches a typo, it does not attempt to validate a phone number, which is
  *  not decidable from a string. */
-export const MOBILE_PATTERN = "[+]?[0-9][-0-9 ()]{6,19}";
+export const MOBILE_PATTERN = String.raw`[+]?[0-9][0-9 \(\)\-]{6,19}`;
 
 /** Honeypot. Named like a field a form-filling bot wants and a human never
  *  sees: rendered visually hidden, `tabIndex={-1}`, `autoComplete="off"`,

@@ -115,7 +115,7 @@ export async function SmbPanel() {
                 <div className="sm-each">{t.perCheck(B.rupees(perCheck(pk.price, n)))}</div>
                 {/* Three links read "Buy Now"; the package names each for a
                     screen reader, as the Large panel's Explore More does. */}
-                <AppLink href="/business/smb" className="btn btn-ink sp-buy" aria-label={`${t.buy}: ${pk.name}`}>
+                <AppLink href="/products/bgv-smb" className="btn btn-ink sp-buy" aria-label={`${t.buy}: ${pk.name}`}>
                   <span>{t.buy}</span>
                   <Arrow />
                 </AppLink>
@@ -152,7 +152,7 @@ export async function SmbPanel() {
           <AppLink href="/contact" className="btn btn-ghost sp-talk">
             <span>{biz.hero.talkFirst}</span>
           </AppLink>
-          <AppLink href="/business/smb" className="btn btn-ink sg-sales">
+          <AppLink href="/products/bgv-smb" className="btn btn-ink sg-sales">
             <span>{biz.closing.ctaLabel}</span>
             <Arrow />
           </AppLink>

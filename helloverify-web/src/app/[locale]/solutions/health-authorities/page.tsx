@@ -7,6 +7,7 @@ import { copyFor } from "@/lib/seo/copy";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
+import { AppLink } from "@/components/chrome/AppLink";
 import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { GOVERNMENTS } from "@/lib/copy/governments";
@@ -37,6 +38,8 @@ const SERVICE: ServiceFacts = {
   description: copyFor(PATH).description,
   serviceType: "Credential verification",
 };
+
+const SALES = "/contact?tab=enquiry&role=authority&service=healthcare-authority";
 
 const CATEGORY_IMAGES = {
   doctor: { src: "/img/health/doctor.png", w: 740, h: 518 },
@@ -73,6 +76,9 @@ export default async function Page({
       <div className="wrap hero3">
         <h1 className="h1">{d.h1}</h1>
         <p className="sub">{d.sub}</p>
+        <div className="hrow">
+          <AppLink href={SALES} className="btn btn-ink">{d.cta}</AppLink>
+        </div>
       </div>
 
       <div className="wrap sec3">

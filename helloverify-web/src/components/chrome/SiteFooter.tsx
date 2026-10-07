@@ -109,7 +109,6 @@ export async function SiteFooter() {
       <div className="wrap">
         <div className="fz-top">
           <div className="fz-end">
-            <span className="fz-end-k">{v.sheet}</span>
             <span className="fz-end-t">{v.end} <em>{v.endEm}</em></span>
           </div>
           {/* `#top` is the HTML spec's own fragment for the top of the

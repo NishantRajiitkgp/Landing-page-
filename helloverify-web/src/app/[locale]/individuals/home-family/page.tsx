@@ -62,8 +62,8 @@ export default async function Page({
       eyebrow={c.eyebrow}
       h1={c.h1}
       sub={c.sub}
-      primary={{ label: c.primary, href: "/products/hellov#plans" }}
-      secondary={{ label: c.secondary, href: "/products/hellov#singles" }}
+      primary={{ label: c.primary, href: "/products/hellov#hellov-product-tabs" }}
+      secondary={{ label: c.secondary, href: "/products/hellov?tab=single#hellov-product-tabs" }}
       strip={[c.strip.thirtyMin, c.strip.price, c.strip.whatsapp, c.strip.consent]}
       /* ANSWER BLOCKS (BUILD-SPEC §11a.2). Figures are the live HelloV
          catalogue — same SKUs as `/products/hellov`. No second household
@@ -124,7 +124,7 @@ export default async function Page({
         heading: c.closing.heading,
         sub: c.closing.sub,
         ctaLabel: c.closing.ctaLabel,
-        ctaHref: "/products/hellov#plans",
+        ctaHref: "/products/hellov#hellov-product-tabs",
         img: "/img/people/04-nanny-gurugram.jpg",
       }}
     />

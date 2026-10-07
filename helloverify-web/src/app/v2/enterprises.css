@@ -31,7 +31,7 @@
 
 /* ── Band ─────────────────────────────────────────────────────────────── */
 .en { padding-top: clamp(72px, 11.2vw, 120px); padding-bottom: clamp(72px, 13vw, 140px); }
-.en-mast { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 22px; }
+.en-mast { display: flex; justify-content: flex-end; align-items: center; }
 .en-mast-r { display: flex; align-items: center; gap: 22px; }
 .en-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 /* The pause control (WCAG 2.2.2), styled as the hero's: a mono caption

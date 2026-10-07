@@ -97,11 +97,7 @@ export async function Diligence() {
   return (
     <MotionStage className="wrap hair-top dd" pausedClassName="dd-paused">
       <div className="dd-mast">
-        <span className="k">{t.kicker}</span>
-        <span className="dd-mast-r">
-          <MotionButton className="dd-motion" pauseLabel={motion.pause} playLabel={motion.play} />
-          <span className="dd-sheet">{t.sheet}</span>
-        </span>
+        <MotionButton className="dd-motion" pauseLabel={motion.pause} playLabel={motion.play} />
       </div>
       <div className="sec-head dd-head">
         <h2 className="h2 dd-h2">
@@ -154,7 +150,7 @@ export async function Diligence() {
                     <b>{t.eta}</b>
                     <span>{t.etaLabel}</span>
                   </div>
-                  <AppLink href="/business/certifier" className="dd-more">
+                  <AppLink href="/products/certifier" className="dd-more">
                     {t.explore} <Arrow size="14" />
                   </AppLink>
                 </div>

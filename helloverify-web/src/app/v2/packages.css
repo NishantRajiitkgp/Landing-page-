@@ -1,82 +1,219 @@
-/* Homepage v2 · "Or take a package." — photo package cards (`pq-`).
-   Hand-ported from the canvas (`assemble_pkg.py`); imported by
-   `sections/Packages.tsx`. The header of `hero.css` explains why v2 sheets
-   are authored rather than generated.
+/* Homepage v2 · "Key Verification Solutions" — the two workforces (`kv-`).
+   Imported by `sections/Packages.tsx`. The header of `hero.css` explains why
+   v2 sheets are authored rather than generated.
+
+   Both panels are day panels (white, a dot grid, a pale red wash in opposite
+   corners). They share every rule below and differ only in the `.kv-blue` /
+   `.kv-white` overrides.
 
    One tree at every width: shared rules in the base, the board's desktop
-   layout under `min-width: 1081px`, the phone's under `max-width: 1080px`.
+   layout under `min-width: 1081px` (the two cards side by side), the phone's
+   under `max-width: 1080px` (stacked).
 
-   No literal colour. The board's rules (`#EDE9E0`, `#EEEAE2`) are within two
-   units of `--v2-paper-lo`; the photo placeholder is the per-image `tint()`
-   inline; and the pale mint of the turnaround on the glass chip (`#CFEBDD`)
-   is `--green-light` mixed 45% into `--white`, which lands within two units
-   of it. Text on the photograph sits on a scrim that reaches 72% ink at the
-   foot and on a 42%-ink glass chip, so the white text there is measured
-   against the darkened photo, not the photo. */
+   No literal colour: every value is a token, or a token at an alpha through
+   `rgb(from var(--x) r g b / a)`. Motion is CSS only and stops under
+   `prefers-reduced-motion`. Scroll-linked motion moves `translate` and
+   `scale`, never opacity, so no text is ever drawn half-transparent. */
 
-.pq-grid { display: grid; align-items: stretch; }
-.pq-card { position: relative; display: flex; flex-direction: column; border-radius: 26px; background: var(--white); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 34px 64px -44px rgb(from var(--ink) r g b / .5); overflow: hidden; transition: transform .55s cubic-bezier(.16, 1, .3, 1), box-shadow .55s; }
-.pq-card:hover { transform: translateY(-6px); box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .05), 0 50px 80px -46px rgb(from var(--ink) r g b / .55); }
-.pq-ph { position: relative; height: 290px; overflow: hidden; }
-.pq-ph img { object-fit: cover; display: block; transform: scale(1.02); transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
-.pq-card:hover .pq-ph img { transform: scale(1.08); }
-.pq-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(from var(--ink) r g b / .18) 0, rgb(from var(--ink) r g b / 0) 26%, rgb(from var(--ink) r g b / 0) 46%, rgb(from var(--ink) r g b / .72) 100%); pointer-events: none; }
-.pq-seg { position: absolute; inset-inline-start: 16px; top: 16px; height: 28px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
-.pq-time { position: absolute; inset-inline-end: 16px; top: 14px; display: flex; flex-direction: column; align-items: flex-end; padding: 8px 14px 9px; border-radius: 16px; background: rgb(from var(--ink) r g b / .42); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: var(--white); }
-.pq-time span { font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; }
-.pq-time b { margin-top: 2px; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 24px; line-height: 1; letter-spacing: -.01em; color: color-mix(in srgb, var(--primary-light) 45%, var(--white)); }
-.pq-cap { position: absolute; inset-inline: 22px; bottom: 18px; color: var(--white); }
-.pq-cap h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(28px, 1vw + 22px, 32px); line-height: 1.02; letter-spacing: -.022em; text-shadow: 0 2px 20px rgb(from var(--ink) r g b / .35); }
-.pq-cap p { margin: 6px 0 0; font-size: 14px; line-height: 1.4; }
-.pq-body { flex: 1; display: flex; flex-direction: column; padding: 20px 24px 22px; }
-.pq-bk { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.pq-bar { flex: 1; height: 2px; border-radius: 2px; background: var(--v2-paper-lo); overflow: hidden; }
-.pq-bar i { display: block; height: 100%; background: var(--primary); transform: scaleX(.18); transform-origin: var(--origin-x); transition: transform .9s cubic-bezier(.65, 0, .35, 1); }
-.pq-card:hover .pq-bar i, .pq-card:focus-within .pq-bar i { transform: scaleX(1); }
-.pq-list { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 2px; }
-.pq-list li { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 15px; color: var(--ink); border-bottom: 1px dashed var(--v2-paper-lo); }
-.pq-list li:last-child { border-bottom: 0; }
-.pq-tk { flex: none; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--white); color: var(--primary-ink); box-shadow: inset 0 0 0 1.4px rgb(from var(--primary) r g b / .4); transition: background .35s, color .35s, box-shadow .35s; transition-delay: calc(var(--i) * .09s); }
-.pq-tk .tick { width: 12px; height: 12px; color: inherit; }
-.pq-card:hover .pq-tk, .pq-card:focus-within .pq-tk { background: var(--primary-ink); color: var(--white); box-shadow: inset 0 0 0 1.4px var(--primary); }
-.pq-foot { margin-top: auto; padding-top: 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid var(--v2-paper-lo); }
-.pq-who { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.pq-more { display: inline-flex; align-items: center; gap: 8px; min-height: 24px; font-size: 14.5px; font-weight: 500; color: var(--ink); text-decoration: none; transition: gap .3s, color .3s; }
-.pq-more:hover { gap: 12px; color: var(--primary-ink); }
-.pq-buy { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 14px; font-weight: 500; text-decoration: none; white-space: nowrap; transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
-.pq-buy:hover { transform: translateY(-1px); }
-.pq-more:focus-visible, .pq-buy:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 999px; }
+.kv { padding-block: 72px 48px; }
 
+/* ── Heading ─────────────────────────────────────────────────────────────── */
+.kv-head { display: grid; gap: 24px; }
+.kv-kicker { display: inline-flex; align-items: center; gap: 12px; margin: 0 0 18px; }
+.kv-kicker::before { content: ""; width: 28px; height: 1.5px; background: var(--primary); }
+.kv-h2 em { display: block; margin-top: 10px; font-size: .72em; line-height: 1.02; font-style: italic; color: var(--primary-ink); }
+.kv-head-side { display: grid; gap: 22px; }
+.kv-jump { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.kv-jump a { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "i b" "s s"; align-items: center; gap: 10px 12px; padding: 14px 16px; border-radius: 18px; text-decoration: none; transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .35s; }
+.kv-jump a:hover { transform: translateY(-3px); }
+.kv-jump a:focus-visible { outline: 2px solid var(--primary); outline-offset: 3px; }
+.kv-jump i { grid-area: i; font-style: normal; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; }
+.kv-jump b { grid-area: b; justify-self: end; font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 22px; line-height: 1; letter-spacing: -.02em; }
+.kv-jump span { grid-area: s; font-size: 15px; font-weight: 500; }
+.kv-jump a { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--hair); }
+.kv-jump a:hover { color: var(--ink); box-shadow: inset 0 0 0 1px rgb(from var(--primary) r g b / .35), 0 18px 30px -22px rgb(from var(--ink) r g b / .45); }
+.kv-jump i { color: var(--muted); }
+.kv-jump b { color: var(--primary-ink); }
+
+/* ── The two panels ──────────────────────────────────────────────────────── */
+.kv-panels { margin-top: 36px; display: grid; gap: 22px; }
+.kv-panel { position: relative; display: grid; border-radius: 32px; overflow: hidden; isolation: isolate; scroll-margin-top: 96px; }
+.kv-panel::before { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+
+.kv-panel { background: var(--white); color: var(--ink); box-shadow: inset 0 0 0 1px var(--hair), 0 50px 90px -60px rgb(from var(--ink) r g b / .45); }
+.kv-blue::before {
+  background:
+    radial-gradient(ellipse 55% 45% at 100% 0%, rgb(from var(--primary) r g b / .1), transparent 70%),
+    radial-gradient(ellipse 45% 50% at 80% 105%, rgb(from var(--primary) r g b / .05), transparent 70%),
+    radial-gradient(circle, rgb(from var(--ink) r g b / .05) 1px, transparent 1.5px) 0 0 / 22px 22px;
+}
+.kv-white::before {
+  background:
+    radial-gradient(ellipse 55% 45% at 0% 0%, rgb(from var(--primary) r g b / .08), transparent 70%),
+    radial-gradient(circle, rgb(from var(--ink) r g b / .05) 1px, transparent 1.5px) 0 0 / 22px 22px;
+}
+
+/* ── Photograph, stamp and example case ──────────────────────────────────── */
+.kv-media { position: relative; min-height: 460px; overflow: hidden; background: var(--v2-paper-lo); }
+.kv-img { object-fit: cover; transition: transform 1.4s cubic-bezier(.16, 1, .3, 1); }
+.kv-panel:hover .kv-img { transform: scale(1.04); }
+.kv-scrim { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgb(from var(--ink) r g b / .4) 0, rgb(from var(--ink) r g b / 0) 28%, rgb(from var(--ink) r g b / 0) 42%, rgb(from var(--ink) r g b / .85) 100%); }
+
+.kv-seg { position: absolute; inset-inline-start: 18px; top: 18px; height: 28px; display: inline-flex; align-items: center; padding-inline: 12px; border-radius: 999px; background: rgb(from var(--white) r g b / .92); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); font-family: var(--mono); font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink); }
+
+.kv-seal { position: absolute; inset-inline-end: 16px; top: 14px; width: 96px; height: 96px; border-radius: 50%; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.kv-seal-bg { fill: rgb(from var(--ink) r g b / .38); stroke: rgb(from var(--white) r g b / .35); stroke-width: 1; }
+.kv-seal-spin { transform-box: view-box; transform-origin: 60px 60px; animation: kvSpin 22s linear infinite; }
+.kv-seal-txt { fill: var(--white); font-family: var(--mono); font-size: 9.5px; letter-spacing: .12em; }
+.kv-seal-core { fill: var(--primary-ink); }
+.kv-seal-tick { stroke: var(--white); stroke-dasharray: 40; stroke-dashoffset: 0; }
+
+/* The example case: a dark glass plate on the photograph's shadowed foot.
+   Three steps side by side, each under a track that fills in turn; the
+   last carries the verified tick. Phones stack the steps on a rail. */
+@property --kv-p { syntax: "<number>"; inherits: false; initial-value: 1; }
+.kv-case { position: absolute; inset-inline: 16px; bottom: 16px; padding-block: 16px 18px; padding-inline: 18px; border-radius: 22px; background: linear-gradient(180deg, rgb(from var(--ink) r g b / .58), rgb(from var(--ink) r g b / .8)); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); color: var(--white); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .14), inset 0 1px 0 rgb(from var(--white) r g b / .12), 0 30px 60px -30px rgb(from var(--ink) r g b / .9); }
+.kv-case-k { margin: 0 0 16px; display: inline-flex; align-items: center; gap: 8px; height: 26px; padding-inline: 10px; border-radius: 999px; background: rgb(from var(--white) r g b / .1); box-shadow: inset 0 0 0 1px rgb(from var(--white) r g b / .14); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: rgb(from var(--white) r g b / .86); }
+.kv-live { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--primary); animation: kvPulse 1.8s ease-out infinite; }
+.kv-steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.kv-steps li { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.kv-step-bar { position: relative; display: block; height: 3px; border-radius: 3px; overflow: hidden; background: rgb(from var(--white) r g b / .18); }
+.kv-step-bar::after { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; inline-size: calc(var(--kv-p) * 100%); border-radius: inherit; background: var(--primary); }
+.kv-steps li:nth-child(1) .kv-step-bar::after { animation: kvFill1 6s infinite; }
+.kv-steps li:nth-child(2) .kv-step-bar::after { animation: kvFill2 6s infinite; }
+.kv-steps li:nth-child(3) .kv-step-bar::after { animation: kvFill3 6s infinite; }
+.kv-step-t { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; color: rgb(from var(--white) r g b / .66); white-space: nowrap; }
+.kv-step-d { font-size: 13.5px; font-weight: 500; line-height: 1.35; letter-spacing: -.005em; color: rgb(from var(--white) r g b / .94); text-wrap: pretty; }
+.kv-steps li:last-child .kv-step-d { font-weight: 600; color: var(--white); }
+.kv-step-ok { flex: none; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--primary); color: var(--white); box-shadow: 0 0 0 4px rgb(from var(--primary) r g b / .25); animation: kvOk 6s infinite; }
+.kv-step-ok .tick { width: 11px; height: 11px; color: inherit; }
+
+/* ── Copy ────────────────────────────────────────────────────────────────── */
+.kv-body { position: relative; min-width: 0; display: flex; flex-direction: column; gap: 22px; padding-block: 30px 26px; padding-inline: 22px; }
+/* The panel number, as a watermark. A pseudo-element so it is decoration,
+   not text a screen reader or a contrast audit reads. */
+.kv-body::before { content: attr(data-idx); position: absolute; top: -18px; inset-inline-end: 14px; font-family: var(--serif); font-size: 150px; line-height: 1; letter-spacing: -.06em; pointer-events: none; }
+.kv-body::before { color: rgb(from var(--ink) r g b / .05); }
+
+.kv-k { position: relative; margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+.kv-k-n { display: inline-flex; align-items: center; height: 22px; padding-inline: 8px; border-radius: 999px; background: var(--primary-ink); color: var(--white); letter-spacing: .04em; }
+.kv-k { color: var(--muted); }
+
+.kv-h3 { position: relative; margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 9vw, 52px); line-height: .98; letter-spacing: -.035em; text-wrap: balance; }
+.kv-h3 em { display: block; margin-top: 6px; font-style: italic; font-size: .62em; line-height: 1.05; letter-spacing: -.02em; }
+.kv-h3 em { color: var(--primary-ink); }
+
+.kv-hook { position: relative; margin: 0; max-width: 58ch; font-size: 16px; line-height: 1.6; text-wrap: pretty; }
+.kv-hook { color: var(--ink-soft); }
+
+.kv-label { margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; }
+.kv-label { color: var(--muted); }
+
+.kv-sectors { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.kv-sectors ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.kv-sectors li { display: inline-flex; align-items: center; height: 32px; padding-inline: 13px; border-radius: 999px; font-size: 13px; }
+.kv-sectors li { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--hair); color: var(--ink); }
+
+.kv-metrics { margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.kv-metrics div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 6px; padding-block: 16px; min-width: 0; }
+.kv-metrics div + div { padding-inline-start: 14px; }
+.kv-metrics dd { margin: 0; font-family: var(--serif); font-size: 30px; line-height: 1; letter-spacing: -.03em; white-space: nowrap; }
+.kv-metrics dt { font-family: var(--mono); font-size: 10px; line-height: 1.35; letter-spacing: .06em; text-transform: uppercase; }
+.kv-metrics { border-block: 1px solid var(--hair); }
+.kv-metrics div + div { border-inline-start: 1px solid var(--hair); }
+.kv-metrics dt { color: var(--muted); }
+.kv-metrics div:first-child dd { color: var(--primary-ink); }
+
+.kv-checks { display: grid; gap: 12px; }
+.kv-label span { letter-spacing: .06em; }
+/* Four one-line tiles: a red seal, the check, its number. */
+.kv-checks ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 8px; }
+.kv-checks li { position: relative; display: flex; align-items: center; gap: 12px; min-height: 58px; padding-block: 10px; padding-inline: 12px; border-radius: 16px; background: linear-gradient(180deg, var(--white), var(--v2-paper-hi)); box-shadow: inset 0 0 0 1px var(--hair), 0 1px 0 var(--white); transition: transform .35s cubic-bezier(.16, 1, .3, 1), box-shadow .3s; }
+.kv-checks li:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgb(from var(--primary) r g b / .4), 0 16px 28px -18px rgb(from var(--primary) r g b / .45); }
+.kv-tk { flex: none; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--primary-ink); color: var(--white); box-shadow: 0 0 0 4px var(--primary-pale); transition: box-shadow .3s; }
+.kv-checks li:hover .kv-tk { box-shadow: 0 0 0 6px var(--primary-pale); }
+.kv-tk .tick { width: 13px; height: 13px; color: inherit; }
+.kv-ck { flex: 1; min-width: 0; font-size: 14.5px; font-weight: 600; line-height: 1.25; letter-spacing: -.005em; color: var(--ink); text-wrap: balance; }
+.kv-ci { flex: none; align-self: flex-start; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; color: var(--muted); }
+
+/* The client rail: the marks in their own colours on a white plate. White
+   collar's wells are the same size, dashed, until its logos arrive. */
+.kv-clients { display: grid; gap: 12px; }
+.kv-logos { list-style: none; margin: 0; padding-block: 10px; padding-inline: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 12px; border-radius: 20px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair), 0 18px 34px -26px rgb(from var(--ink) r g b / .35); }
+.kv-white .kv-logos { background: var(--v2-paper-hi); box-shadow: inset 0 0 0 1px var(--hair); }
+.kv-logos li { display: flex; align-items: center; justify-content: center; height: 56px; min-width: 0; }
+.kv-logos img { width: auto; height: auto; max-width: 100%; max-height: 30px; object-fit: contain; transition: transform .35s cubic-bezier(.16, 1, .3, 1); }
+.kv-logos li:hover img { transform: scale(1.08); }
+.kv-logo-badge img { max-height: 42px; }
+.kv-logo-square img { max-height: 46px; }
+.kv-logo-wide img { max-height: 28px; }
+.kv-logos-empty { padding-block: 12px; }
+.kv-slot { height: 44px; border-radius: 12px; border: 1.5px dashed var(--v2-dash); }
+
+.kv-acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 2px; }
+.kv-acts .btn { flex: 1 1 100%; }
+/* ── Motion ──────────────────────────────────────────────────────────────── */
+@keyframes kvSpin { to { transform: rotate(360deg); } }
+@keyframes kvPulse {
+  0% { box-shadow: 0 0 0 0 rgb(from var(--primary) r g b / .55); }
+  100% { box-shadow: 0 0 0 9px rgb(from var(--primary) r g b / 0); }
+}
+@keyframes kvTick { from { stroke-dashoffset: 40; } to { stroke-dashoffset: 0; } }
+@keyframes kvFill1 { 0% { --kv-p: 0; } 22%, 94% { --kv-p: 1; } 100% { --kv-p: 0; } }
+@keyframes kvFill2 { 0%, 26% { --kv-p: 0; } 48%, 94% { --kv-p: 1; } 100% { --kv-p: 0; } }
+@keyframes kvFill3 { 0%, 52% { --kv-p: 0; } 74%, 94% { --kv-p: 1; } 100% { --kv-p: 0; } }
+@keyframes kvOk { 0%, 74% { scale: 0; } 80% { scale: 1.15; } 84%, 94% { scale: 1; } 100% { scale: 0; } }
+@keyframes kvRise { from { translate: 0 56px; scale: .97; } to { translate: 0 0; scale: 1; } }
+@keyframes kvDrift { from { scale: 1.16; } to { scale: 1; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .kv-panel { animation: kvRise linear both; animation-timeline: view(); animation-range: entry 0% entry 45%; }
+    .kv-img { animation: kvDrift linear both; animation-timeline: view(); animation-range: cover 0% cover 100%; }
+    .kv-seal-tick { animation: kvTick linear both; animation-timeline: view(); animation-range: entry 60% cover 30%; }
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .pq-card, .pq-ph img, .pq-tk, .pq-bar i { transition: none; }
+  .kv-seal-spin, .kv-live, .kv-step-bar::after, .kv-step-ok { animation: none; }
+  .kv-img, .kv-jump a, .kv-checks li, .kv-logos img { transition: none; }
 }
 
-.pq { padding-block: 72px 32px; }
-
+/* ── Desktop ─────────────────────────────────────────────────────────────── */
 @media (min-width: 1081px) {
-  .pq { padding-block: 120px 150px; }
-  .pq .lede { margin-bottom: 8px; }
-  .pq-grid { margin-top: 80px; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px 28px; }
-  .pq-ph { height: 330px; }
+  .kv { padding-block: 120px 120px; }
+  .kv-head { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 64px; align-items: end; }
+  /* The two cards side by side, each a photograph over its copy; the copy
+     column stretches so both action rows land on one line. */
+  .kv-panels { margin-top: 56px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; align-items: stretch; }
+  .kv-panel { grid-template-rows: auto 1fr; }
+  .kv-media { min-height: 420px; }
+  .kv-seal { inset-inline-end: 20px; top: 18px; width: 108px; height: 108px; }
+  .kv-seg { inset-inline-start: 20px; top: 20px; }
+  .kv-case { inset-inline: 20px; bottom: 20px; padding-block: 18px 20px; padding-inline: 20px; }
+  .kv-body { gap: 22px; padding-block: 38px 36px; padding-inline: 38px; }
+  .kv-body::before { top: -26px; inset-inline-end: 26px; font-size: 200px; }
+  .kv-h3 { font-size: 54px; }
+  .kv-metrics div { padding-block: 16px; }
+  .kv-metrics div + div { padding-inline-start: 18px; }
+  .kv-metrics dd { font-size: 36px; }
+  .kv-checks ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .kv-logos li { height: 58px; }
+  .kv-logo-badge img { max-height: 44px; }
+  .kv-logo-square img { max-height: 48px; }
+  .kv-logo-wide img { max-height: 30px; }
+  .kv-acts { margin-top: auto; padding-top: 4px; }
+  .kv-acts .btn { flex: 0 0 auto; }
 }
 
-/* Phone and tablet: one scroll-snap row, bled to the screen edge and snapped
-   to the 20px gutter, the next card peeking in as the cue to swipe. The
-   padding keeps the cards' drop shadow and hover lift inside the scroller,
-   which clips both axes once it scrolls one. */
+/* ── Phone and tablet ────────────────────────────────────────────────────── */
 @media (max-width: 1080px) {
-  .pq-grid { margin-top: 36px; margin-inline: -20px; padding: 8px 20px 40px; grid-auto-flow: column; grid-auto-columns: min(78vw, 300px); gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 20px; overscroll-behavior-x: contain; scrollbar-width: none; }
-  .pq-card { scroll-snap-align: start; }
-  /* A 300px photo: at the board's insets and 24px turnaround the two glass
-     chips met ("Enterprise · SMB" beside "30 minutes"). */
-  .pq-seg { inset-inline-start: 12px; top: 12px; }
-  .pq-time { inset-inline-end: 12px; top: 10px; padding: 7px 12px 8px; }
-  .pq-time b { font-size: 20px; }
+  .kv-media { min-height: 560px; }
+  .kv-metrics dt { letter-spacing: .03em; }
 }
-
-/* No hover on a touch screen: show the list ticked, the state a pointer
-   reveals, rather than a check list that never fills. */
-@media (hover: none) {
-  .pq-tk { background: var(--primary-ink); color: var(--white); box-shadow: inset 0 0 0 1.4px var(--primary); }
-  .pq-bar i { transform: none; }
+@media (max-width: 560px) {
+  .kv-steps { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .kv-steps li { display: grid; grid-template-columns: 3px 58px minmax(0, 1fr); align-items: start; column-gap: 12px; }
+  .kv-step-bar { height: 100%; min-height: 20px; }
+  .kv-step-bar::after { inline-size: 100%; block-size: calc(var(--kv-p) * 100%); inset-block: 0 auto; }
+  .kv-step-t { margin-top: 0; gap: 6px; justify-content: flex-start; }
 }

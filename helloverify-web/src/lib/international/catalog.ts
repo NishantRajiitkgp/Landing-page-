@@ -1,15 +1,15 @@
-/** The country list and per-country checks the live International page paints.
+/** The country list and per-country checks for the International checks table.
  *
- *  The SMB checks endpoint answers this environment with an HTML 404, and the
- *  live bundle ships this catalog in memory instead. `catalog.json` is that
- *  list (48 countries). Package cards stay the CMS's four countries. */
+ *  `catalog.json` is generated from the ops sheets (International Pricing & TAT,
+ *  International Verification Checks V2 for turnarounds, Criminal for the
+ *  per-country criminal turnaround and feasibility). Package cards stay the
+ *  CMS's four countries. */
 import data from "./catalog.json";
 
 import { localise } from "@/lib/i18n/href";
 
 export type IntlCheck = {
   id: string;
-  code: string;
   name: string;
   price: string;
   tat: string;
@@ -31,13 +31,6 @@ const ISO_OF: Record<string, CmsCountryId> = {
   EG: "egypt",
 };
 
-const FLAG_SRC: Record<CmsCountryId, string> = {
-  uk: "/img/flags/uk.png",
-  uae: "/img/flags/uae.png",
-  philippines: "/img/flags/philippines.png",
-  egypt: "/img/flags/egypt.png",
-};
-
 export type CmsCountryCopy = {
   name: string;
   flagAlt: string;
@@ -48,8 +41,12 @@ export type IntlOption = {
   code: string;
   name: string;
   cms: boolean;
-  flagSrc?: string;
+  /** `public/flags/` (flag-icons, MIT), one 4:3 SVG per catalog country. */
+  flagSrc: string;
   flagAlt?: string;
+  /** The English name's initial: the list is in English order in every
+   *  locale, so its A–Z headings are too. */
+  letter: string;
 };
 
 export function cmsIdFor(code: string): CmsCountryId | undefined {
@@ -91,21 +88,24 @@ export function resolveIntlCode(hint: string): string {
 }
 
 /** CMS countries keep their localized name and flag alt. The rest use the
- *  catalog's English name and an emoji, and are marked so the audit skips them. */
+ *  catalog's English name, and are marked so the audit skips them. */
 export function intlOptions(
   countries: Record<CmsCountryId, CmsCountryCopy>,
   kind: "regional" | "checks",
 ): IntlOption[] {
   return INTL_COUNTRIES.map((c) => {
+    const flagSrc = `/flags/${c.code.toLowerCase()}.svg`;
+    const letter = c.name.charAt(0).toUpperCase();
     const id = ISO_OF[c.code];
-    if (!id) return { code: c.code, name: c.name, cms: false };
+    if (!id) return { code: c.code, name: c.name, cms: false, flagSrc, letter };
     const meta = countries[id];
     return {
       code: c.code,
       name: meta.name,
       cms: true,
-      flagSrc: FLAG_SRC[id],
+      flagSrc,
       flagAlt: kind === "checks" ? meta.checksFlagAlt : meta.flagAlt,
+      letter,
     };
   });
 }

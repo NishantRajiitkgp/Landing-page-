@@ -1,6 +1,7 @@
 import { SiteNav } from "@/components/chrome/SiteNav";
 import { Hero } from "@/components/sections/Hero";
 import { PeopleStrip } from "@/components/sections/PeopleStrip";
+import { HelloVAsk } from "@/components/sections/HelloVAsk";
 import { PremiumServices } from "@/components/sections/PremiumServices";
 import { OneInEight } from "@/components/sections/OneInEight";
 import { HowWeKnow } from "@/components/sections/HowWeKnow";
@@ -72,6 +73,7 @@ export default async function Home({
         {/* Individual Checks, then the old home page's country grid,
             restored (30 Sep 2026). */}
         <PeopleStrip />
+        <HelloVAsk />
         <PremiumServices />
         <IntlGrid />
         <Diligence />

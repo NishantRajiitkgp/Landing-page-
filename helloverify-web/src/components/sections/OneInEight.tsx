@@ -24,11 +24,7 @@ export async function OneInEight() {
 
   return (
     <div className="wrap hair-top ff">
-      <div className="ff-mast">
-        <span className="k">{t.sheet}</span>
-        <span className="ff-flag">{t.flag}</span>
-      </div>
-      <div className="sec-head" style={{ marginTop: "22px" }}>
+      <div className="sec-head">
         <h2 className="h2">{t.heading}</h2>
         <p className="lede" style={{ marginBottom: "8px" }}>
           <em className="ff-one">{t.ledeEm}</em> {t.lede}

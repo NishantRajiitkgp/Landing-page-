@@ -1,67 +1,221 @@
+import Image from "next/image";
+
+import { Arrow } from "@/components/brand/Arrow";
+import { Tick } from "@/components/brand/Tick";
+import { AppLink } from "@/components/chrome/AppLink";
+import { BLUE_COLLAR_CLIENTS, blueLogo } from "@/lib/blueCollarClients";
 import { copy } from "@/lib/copy/request";
-import { SECTIONS, type PackId, type PackLineId } from "@/lib/copy/sections";
+import { SECTIONS, type SectionsCopy } from "@/lib/copy/sections";
 // Homepage v2 styles are one sheet per section (see `app/v2/hero.css`).
 import "@/app/v2/packages.css";
-import { PackPhoto, type PackPhotoProps } from "./PackPhoto";
 
-/** Packages — six photo cards (`./PackPhoto`).
+/** Key Verification Solutions — the two workforces (6 Oct 2026 redesign).
  *
- *  HOMEPAGE V2, ONE TREE AT EVERY WIDTH (Sep 2026). On desktop the six sit in
- *  a three-column grid; on a phone they become one scroll-snap row, because
- *  six 600px-tall cards stacked would be a 3,700px band. The old phone tree —
- *  three of the six drawn as receipts, and a link to the rest — was deleted
- *  with its copy (`packages.headingMob`, `ledeMob`, `more`, `package`, `tot`).
+ *  Two light cards, side by side on desktop. Each opens on its photograph,
+ *  with a rotating verification stamp and an example case that plays its
+ *  three steps. Under it: the promise, who it is built for, three figures,
+ *  the four checks, the clients, and two actions.
+ *
+ *  White collar's client rail is six empty wells, the same size as the
+ *  blue-collar marks, so its logos can drop in without the layout moving.
+ *  Pure CSS motion (`app/v2/packages.css`), so this stays a Server Component.
  */
 
-type Pack = {
-  readonly k: PackId;
-  /** Which lines this card lists, and in what order. The words are one flat
-   *  table in `lib/copy/sections`. */
-  readonly lines: readonly PackLineId[];
-  /** The one consumer package sells directly; the other five link to a page. */
-  readonly buy?: boolean;
-};
+type CollarId = "blue" | "white";
 
-/** The six cards in order, and the only two things about one that are
- *  not words: which lines it lists, and whether it sells. Everything a reader
- *  sees is `lib/copy/sections`' `packages`. */
-const PACKS: readonly Pack[] = [
-  { k: "blueCollar", lines: ["pan", "rc", "licence", "criminal"] },
-  { k: "whiteCollar", lines: ["education", "employment", "moonlighting", "address"] },
-  { k: "driver", lines: ["licence", "criminal", "address"], buy: true },
-  { k: "tradeRisk", lines: ["tradeLicence", "directors", "criminalRecords", "credit"] },
-  { k: "vendorRisk", lines: ["financial", "gst", "creditChecks", "promoter"] },
-  { k: "visaHealth", lines: ["form", "prescreen", "primary"] },
+/** Photograph, focal point, the pack whose title and audience it carries,
+ *  and where Explore goes: each workforce's section of `/employee-verification`. */
+const PANELS: readonly {
+  id: CollarId;
+  pack: "blueCollar" | "whiteCollar";
+  src: string;
+  focus: string;
+  href: string;
+}[] = [
+  { id: "blue", pack: "blueCollar", src: "/img/v2/pkg-bluecollar.jpg", focus: "50% 35%", href: "/employee-verification#employees-blue-collar" },
+  { id: "white", pack: "whiteCollar", src: "/img/v2/pkg-whitecollar.jpg", focus: "50% 30%", href: "/employee-verification#employees-white-collar" },
 ];
 
-/** The card's photograph, its focal point, and where its link
- *  goes — the IA's page for that package's audience (`lib/seo/routes.ts`).
- *  The focal points are the board's. */
-const PHOTOS: Record<PackId, Pick<PackPhotoProps, "src" | "focus" | "href">> = {
-  blueCollar: { src: "/img/v2/pkg-bluecollar.jpg", focus: "50% 35%", href: "/business/smb" },
-  whiteCollar: { src: "/img/v2/pkg-whitecollar.jpg", focus: "50% 30%", href: "/business/enterprise" },
-  driver: { src: "/img/v2/pkg-driver.jpg", focus: "50% 40%", href: "/individuals/hellov" },
-  tradeRisk: { src: "/img/v2/pkg-trade.jpg", focus: "40% 40%", href: "/business/certifier" },
-  vendorRisk: { src: "/img/v2/pkg-vendor.jpg", focus: "50% 35%", href: "/business/certifier" },
-  visaHealth: { src: "/img/v2/pkg-visa.jpg", focus: "55% 40%", href: "/individuals/immigration" },
-};
+const SIZES_KV = "(max-width: 1080px) 92vw, 36vw";
+
+/** Six empty wells, matching the blue-collar marks one for one. */
+const WHITE_SLOTS = 6;
+
+function Seal({ id, ring }: { id: CollarId; ring: string }) {
+  const path = `kv-ring-${id}`;
+  return (
+    <svg className="kv-seal" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+      <defs>
+        <path id={path} d="M60 60m-45 0a45 45 0 1 1 90 0a45 45 0 1 1-90 0" />
+      </defs>
+      <circle className="kv-seal-bg" cx="60" cy="60" r="58" />
+      <g className="kv-seal-spin">
+        <text className="kv-seal-txt" direction="ltr">
+          <textPath href={`#${path}`} textLength="268" lengthAdjust="spacing">
+            {ring}
+          </textPath>
+        </text>
+      </g>
+      <circle className="kv-seal-core" cx="60" cy="60" r="27" />
+      <path className="kv-seal-tick" d="M48 61l8 8 16-18" fill="none" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function Panel({ p, t }: { p: (typeof PANELS)[number]; t: SectionsCopy["packages"] }) {
+  const c = t.collars[p.id];
+  const pk = t.packs[p.pack];
+  const title = `kv-t-${p.id}`;
+  const checks = Object.entries(c.checks) as [string, string][];
+
+  return (
+    <article id={`kv-${p.id}`} className={`kv-panel kv-${p.id}`} aria-labelledby={title}>
+      <div className="kv-media">
+        <Image className="kv-img" src={p.src} alt="" fill sizes={SIZES_KV} style={{ objectPosition: p.focus }} />
+        <div className="kv-scrim" />
+        <span className="kv-seg">{pk.hd}</span>
+        <Seal id={p.id} ring={t.sealRing} />
+        <div className="kv-case">
+          <p className="kv-case-k">
+            <span className="kv-live" aria-hidden="true" />
+            {c.case.label}
+          </p>
+          <ol className="kv-steps">
+            {(Object.entries(c.case.steps) as [string, { t: string; d: string }][]).map(([k, s], i, all) => (
+              <li key={k}>
+                <span className="kv-step-bar" aria-hidden="true" />
+                <span className="kv-step-t">
+                  {s.t}
+                  {i === all.length - 1 ? (
+                    <span className="kv-step-ok" aria-hidden="true">
+                      <Tick />
+                    </span>
+                  ) : null}
+                </span>
+                <span className="kv-step-d">{s.d}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
+      <div className="kv-body" data-idx={c.idx}>
+        <p className="kv-k">
+          <span className="kv-k-n">{c.idx}</span>
+          {c.k}
+        </p>
+        <h3 id={title} className="kv-h3">
+          {pk.tt}
+          <em>{c.em}</em>
+        </h3>
+        <p className="kv-hook">{c.hook}</p>
+
+        <div className="kv-sectors">
+          <span className="kv-label">{t.sectorsK}</span>
+          <ul>
+            {Object.entries(c.sectors).map(([k, s]) => (
+              <li key={k}>{s}</li>
+            ))}
+          </ul>
+        </div>
+
+        <dl className="kv-metrics">
+          {(Object.entries(c.metrics) as [string, { v: string; l: string }][]).map(([k, m]) => (
+            <div key={k}>
+              <dt>{m.l}</dt>
+              <dd>{m.v}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="kv-checks">
+          <p className="kv-label">
+            {t.checksK}
+            <span>{t.count(checks.length)}</span>
+          </p>
+          <ul>
+            {checks.map(([k, name], i) => (
+              <li key={k}>
+                <span className="kv-tk"><Tick /></span>
+                <span className="kv-ck">{name}</span>
+                <span className="kv-ci" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="kv-clients">
+          <p className="kv-label">{c.clientsH}</p>
+          {p.id === "blue" ? (
+            <ul className="kv-logos">
+              {BLUE_COLLAR_CLIENTS.map((cl) => (
+                <li key={cl.id} className={`kv-logo-${cl.fit}`}>
+                  <Image
+                    src={blueLogo(cl.id)}
+                    alt={t.clients[cl.id]}
+                    width={160}
+                    height={48}
+                    unoptimized={blueLogo(cl.id).endsWith(".svg")}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul className="kv-logos kv-logos-empty" aria-hidden="true">
+              {Array.from({ length: WHITE_SLOTS }, (_, i) => (
+                <li key={i} className="kv-slot" />
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="kv-acts">
+          <AppLink href="/contact" className="btn btn-ink kv-talk" aria-label={`${t.talk}: ${pk.tt}`}>
+            <span>{t.talk}</span>
+            <Arrow />
+          </AppLink>
+          <AppLink href={p.href} className="btn btn-ghost kv-more">
+            <span>{c.cta}</span>
+          </AppLink>
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export async function Packages() {
   const t = (await copy(SECTIONS)).packages;
 
   return (
-    <div className="wrap hair-top pq">
-      <div className="sec-head">
-        <h2 className="h2">{t.headingA}</h2>
-        <p className="lede">{t.lede}</p>
+    <div className="wrap hair-top kv">
+      <div className="kv-head">
+        <div>
+          <p className="k kv-kicker">{t.kicker}</p>
+          <h2 className="h2 kv-h2">
+            {t.headingA}
+            <em>{t.headingEm}</em>
+          </h2>
+        </div>
+        <div className="kv-head-side">
+          <p className="lede">{t.lede}</p>
+          <nav className="kv-jump" aria-label={t.jump}>
+            {PANELS.map((p) => {
+              const c = t.collars[p.id];
+              return (
+                <a key={p.id} href={`#kv-${p.id}`}>
+                  <i>{c.idx}</i>
+                  <span>{t.packs[p.pack].tt}</span>
+                  <b>{c.metrics.tat.v}</b>
+                </a>
+              );
+            })}
+          </nav>
+        </div>
       </div>
-      {/* On a phone a scroll-snap row. It needs no tabindex of its own:
-          every card holds a link, so the row is reachable by keyboard (axe
-          `scrollable-region-focusable` counts focusable descendants) and a
-          focused card scrolls itself into view. */}
-      <div className="pq-grid">
-        {PACKS.map((p) => (
-          <PackPhoto key={p.k} k={p.k} lines={p.lines} buy={p.buy} {...PHOTOS[p.k]} />
+
+      <div className="kv-panels">
+        {PANELS.map((p) => (
+          <Panel key={p.id} p={p} t={t} />
         ))}
       </div>
     </div>

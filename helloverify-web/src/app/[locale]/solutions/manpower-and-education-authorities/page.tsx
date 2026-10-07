@@ -42,7 +42,7 @@ const SERVICE: ServiceFacts = {
 /** Our Client, in the old CMS card order: logo, intrinsic size, destination. */
 const CLIENTS = [
   ["mom", "/img/education/mom-logo.png", 152, 152, "/solutions/manpower-and-education-authorities/ministry-of-manpower"],
-  ["mohesr", "/img/education/mohesr-logo.jpg", 800, 673, "/governments/manpower-education/mohesr"],
+  ["mohesr", "/img/education/mohesr-logo.jpg", 800, 673, "/solutions/manpower-and-education-authorities/mohesr"],
 ] as const;
 const SALES = "/contact?tab=enquiry&role=applicant&service=education-authority";
 

@@ -106,23 +106,23 @@ check(
 );
 check(
   "MOHESR record is live",
-  allRoutes().some((r) => r.path === "/governments/manpower-education/mohesr"),
+  allRoutes().some((r) => r.path === "/solutions/manpower-and-education-authorities/mohesr"),
 );
 {
   const row = LEGACY_ROUTES.find((r) => r.from === "/solutions/manpower-and-education-authorities/educationae");
   check(
     "educationae 308s to the live MOHESR record",
-    row?.to === "/governments/manpower-education/mohesr",
+    row?.to === "/solutions/manpower-and-education-authorities/mohesr",
     row,
   );
   const saudi = LEGACY_ROUTES.find((r) => r.from === "/premium/saudi");
   check("saudi still 308s home", saudi?.to === "/", saudi);
   check(
-    "/en/…/educationae 308s to /en/governments/manpower-education/mohesr",
+    "/en/…/educationae 308s to /en/solutions/manpower-and-education-authorities/mohesr",
     legacyRedirects().some(
       (r) =>
         r.source === "/en/solutions/manpower-and-education-authorities/educationae" &&
-        r.destination === "/en/governments/manpower-education/mohesr",
+        r.destination === "/en/solutions/manpower-and-education-authorities/mohesr",
     ),
   );
 }

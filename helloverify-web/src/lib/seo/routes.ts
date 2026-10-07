@@ -64,7 +64,7 @@ export const STATIC_ROUTES: readonly RouteEntry[] = [
   r("/solutions/immigration-authorities", "monthly", 0.8),
   r("/solutions/manpower-and-education-authorities", "monthly", 0.8),
   r("/solutions/manpower-and-education-authorities/ministry-of-manpower", "monthly", 0.8),
-  r("/governments/manpower-education/mohesr", "monthly", 0.7),
+  r("/solutions/manpower-and-education-authorities/mohesr", "monthly", 0.7),
   r("/governments/immigration/embassy-of-latvia", "monthly", 0.7),
   r("/governments/immigration/embassy-of-italy", "monthly", 0.7),
   r("/solutions/trade-authorities", "monthly", 0.8),

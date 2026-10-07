@@ -99,7 +99,8 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
         setEmail(id);
         setEmailSent(true);
         setShowMock(Boolean(res.mock));
-      } else setError(res.message ?? t.sendEmailOtpFailed);
+      } else if (res.message?.toLowerCase().includes("duplicate")) onDuplicate();
+      else setError(res.message ?? t.sendEmailOtpFailed);
     } catch (e) {
       setError(e instanceof Error ? e.message : t.sendEmailOtpFailed);
     } finally {

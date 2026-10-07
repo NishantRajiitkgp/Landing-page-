@@ -26,10 +26,10 @@ const REASONS: readonly WhyReasonId[] = ["01", "02", "03", "04", "05"];
  *  `/governments/*` page; the four "why we stand out" cards have no page of
  *  their own yet, so they open `/governments`, the page that sells them. */
 const DECK: readonly { id: WhyCardId; tint: string; href: string }[] = [
-  { id: "health", tint: "mint", href: "/governments/health" },
-  { id: "immigration", tint: "sky", href: "/governments/immigration" },
-  { id: "manpower", tint: "sand", href: "/governments/manpower-education" },
-  { id: "trade", tint: "lilac", href: "/governments/trade" },
+  { id: "health", tint: "mint", href: "/solutions/health-authorities" },
+  { id: "immigration", tint: "sky", href: "/solutions/immigration-authorities" },
+  { id: "manpower", tint: "sand", href: "/solutions/manpower-and-education-authorities" },
+  { id: "trade", tint: "lilac", href: "/solutions/trade-authorities" },
   { id: "fraud", tint: "rose", href: "/governments" },
   { id: "dashboards", tint: "teal", href: "/governments" },
   { id: "reports", tint: "paper", href: "/governments" },

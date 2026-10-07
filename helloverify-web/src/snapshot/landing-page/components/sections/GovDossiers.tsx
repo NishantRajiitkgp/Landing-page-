@@ -99,10 +99,6 @@ export async function GovDossiers() {
             </div>
             <div className="gv-stamp-wrap"><Stamp {...d.stamp} /></div>
           </div>
-          <div className="gv-proof">
-            {cta === "mom" ? <Image src="/snapshot-landing-page/img/mom.jpg" alt="" width={26} height={26} /> : <span className="gv-proof-dot" />}
-            <span>{d.proof}</span>
-          </div>
         </div>
         <div className="gv-contents">
           <div className="k">{d.k}</div>

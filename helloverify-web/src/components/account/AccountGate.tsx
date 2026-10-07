@@ -18,16 +18,16 @@ export function AccountGate({
   loading: string;
   children: ReactNode;
 }) {
-  const { ready, isLoggedIn, openLogin } = useAuth();
+  const { ready, isLoggedIn, signedOut, openLogin } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!ready) return;
     if (!isLoggedIn) {
-      openLogin({ redirect: "orders" });
+      if (!signedOut) openLogin({ redirect: "orders" });
       router.replace(localise("/", locale));
     }
-  }, [ready, isLoggedIn, openLogin, router, locale]);
+  }, [ready, isLoggedIn, signedOut, openLogin, router, locale]);
 
   if (!ready || !isLoggedIn) {
     return <p className="ac-status">{loading}</p>;

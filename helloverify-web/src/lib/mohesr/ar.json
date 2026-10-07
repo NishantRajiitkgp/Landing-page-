@@ -1,0 +1,429 @@
+{
+  "hero": {
+    "breadcrumb": [
+      { "label": "الرئيسية", "href": "/" },
+      { "label": "MOHESR" }
+    ],
+    "logoUrl": "/assets/mohesrEducationAuthorities/MOHESR.png",
+    "logoHeight": "70px",
+    "logoAlt": "وزارة التعليم العالي والبحث العلمي (MOHESR)",
+    "title": "وزارة التعليم العالي والبحث العلمي (MOHESR)",
+    "subtitle": "تلعب وزارة التعليم العالي والبحث العلمي (MOHESR) في دولة الإمارات دوراً محورياً في ترسيخ التميز الأكاديمي على مستوى الدولة. تعمل مجموعة Helloverify كشريك تحقق لدى MOHESR لمصادقة المؤهلات التعليمية للأفراد. عند اكتمال عملية التحقق، يحصل الأفراد على وثيقة التحقق من الدرجة العلمية.",
+    "priceStrip": [
+      {
+        "label": "التحقق من الدرجة العلمية",
+        "value": "AED 350",
+        "footnote": "غير شامل ضريبة القيمة المضافة 5%"
+      },
+      {
+        "label": "التسليم القياسي",
+        "value": "18 يوماً تقويمياً",
+        "footnote": ""
+      }
+    ]
+  },
+  "screening": {
+    "tabs": [
+      { "id": "overview", "label": "نظرة عامة" },
+      { "id": "documents", "label": "متطلبات الطلب" },
+      { "id": "track", "label": "تتبع الطلب" },
+      { "id": "appealProcess", "label": "عملية الاستئناف" },
+      { "id": "supportVisit", "label": "مركز الدعم" },
+      { "id": "faqs", "label": "الأسئلة الشائعة" }
+    ],
+    "roleCards": {
+      "candidates": {
+        "title": "للمتقدمين",
+        "iconSrc": "/assets/saudi/icon-candidates.svg",
+        "primaryCta": {
+          "label": "ابدأ التحقق",
+          "href": "https://applicant.helloverify.ae/ar/signin"
+        }
+      },
+      "employers": {
+        "title": "لأصحاب العمل والوكالات",
+        "iconSrc": "/assets/saudi/icon-employers.svg",
+        "primaryCta": { "label": "ابدأ التحقق", "href": "https://agency.helloverify.ae/", "hidden": true },
+        "secondaryCta": { "label": "تحدث إلى المبيعات", "href": "/contact?tab=enquiry&role=applicant&contact=mohesr" }
+      }
+    },
+    "overview": {
+      "psvIntro": {
+        "title": "ما هو التحقق من المصدر الأساسي؟",
+        "intro": "التحقق من المصدر الأساسي (PSV) هو عملية تأكيد مؤهلك الأكاديمي مباشرة مع الجامعة المُصدرة. تتطلب وزارة التعليم العالي والبحث العلمي (MOHESR) في الإمارات إجراء PSV قبل إصدار شهادة معادلة أو اعتراف لأي درجة حاصلة عليها خارج الإمارات.",
+        "cards": [
+          {
+            "iconSrc": "/assets/mohesrEducationAuthorities/psv-degree-authenticity.svg",
+            "title": "أصالة الدرجة العلمية",
+            "body": "يؤكد أن الدرجة مُنحت فعلياً من المؤسسة المذكورة."
+          },
+          {
+            "iconSrc": "/assets/mohesrEducationAuthorities/psv-institution-accreditation.svg",
+            "title": "اعتماد المؤسسة",
+            "body": "يتحقق من أن الجامعة معترف بها من جهة بلدها الأصلي."
+          }
+        ]
+      },
+      "whyChoose": {
+        "title": "لماذا HelloVerify؟",
+        "subtitle": "شريك معتمد لدى MOHESR. مبني للسرعة والامتثال والثقة.",
+        "cards": [
+          {
+            "title": "خبرة مُثبتة",
+            "body": "أكثر من 8 سنوات من الخبرة في التحقق من المصدر الأساسي، موثوقة من جهات حكومية حول العالم.",
+            "icon": "/assets/mohesrEducationAuthorities/why-trust-proven.svg",
+            "align": "start"
+          },
+          {
+            "title": "شركة تحقق عالمية",
+            "body": "نعمل في أكثر من 120 دولة مع وصول مباشر إلى آلاف الجامعات والمؤسسات المعتمدة.",
+            "icon": "/assets/mohesrEducationAuthorities/why-global-network.svg",
+            "align": "end"
+          },
+          {
+            "title": "آمن ومتوافق",
+            "body": "بياناتك الشخصية وسجلاتك الأكاديمية ومعلومات جواز سفرك محمية بضوابط أمان وخصوصية على مستوى المؤسسات.",
+            "icon": "/assets/mohesrEducationAuthorities/why-iso-security.svg",
+            "align": "start"
+          },
+          {
+            "title": "تتبع فوري",
+            "body": "تابع تقدم طلبك في كل مرحلة باستخدام رقم حالتك.",
+            "icon": "/assets/mohesrEducationAuthorities/why-realtime-tracking.svg",
+            "align": "end"
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "كيف تعمل الخدمة",
+        "subtitle": "رحلة التحقق في 4 خطوات",
+        "steps": [
+          { "step": "01", "title": "إنشاء حساب", "body": "سجّل وتحقق من هويتك للبدء." },
+          { "step": "02", "title": "تقديم المستندات", "body": "ارفع أوراقك الأكاديمية بأمان." },
+          { "step": "03", "title": "عملية التحقق", "body": "يقوم فريقنا بالتحقق من المصدر الأساسي ويوثّق مستنداتك مع الجهة المُصدرة." },
+          { "step": "04", "title": "إصدار التقرير", "body": "استلم وثيقة التحقق من الدرجة العلمية لجهة MOHESR." }
+        ]
+      },
+      "turnaround": {
+        "headline": "18 يوماً تقويمياً",
+        "body": "زمن الإنجاز القياسي",
+        "icon": "/assets/mohesrEducationAuthorities/turnaround-calendar.svg"
+      },
+      "support": {
+        "title": "الدعم والاستئناف",
+        "subtitle": "فريقنا هنا لمساعدتك في تحضير المستندات أو الإجابة عن أسئلة الأهلية.",
+        "cards": [
+          {
+            "title": "تواصل مع الدعم",
+            "body": "تحتاج مساعدة؟ فريق الدعم لدينا هنا لمساعدتك في أي أسئلة أو مشكلات.",
+            "cta": { "label": "تواصل الآن", "href": "mailto:mohesr@helloverify.ae" }
+          },
+          {
+            "title": "نظرة على الاستئناف",
+            "body": "لا توافق على نتائج التحقق؟ قدّم استئنافاً لإعادة التقييم.",
+            "cta": { "label": "تقديم استئناف", "href": "/contact?tab=enquiry&role=applicant&contact=mohesr" }
+          }
+        ]
+      }
+    },
+    "applicationProcess": {
+      "subTabs": {
+        "individual": {
+          "label": "فرد",
+          "title": "طلب فردي",
+          "intro": "للأفراد الراغبين في التحقق من الدرجة العلمية وشهادة الاعتراف للتطور المهني الشخصي.",
+          "uaePassBox": {
+            "intro": "المتقدمون من الخارج والزوار وغير المقيمين والمقيمين والمواطنون مؤهلون للحصول على حساب UAE PASS.",
+            "signInButtonLabel": "تسجيل الدخول عبر UAE PASS",
+            "signInUrl": "https://ids.uaepass.ae/authenticationendpoint/login.do",
+            "signInLogoUrl": "/assets/mohesrEducationAuthorities/uaepass_logo.png",
+            "signInLogoAlt": "UAE PASS",
+            "signUpPrefix": "ليس لديك حساب UAE PASS؟",
+            "signUpLinkLabel": "سجّل الآن",
+            "signUpQrModal": {
+              "androidTitle": "امسح هنا لتطبيق أندرويد",
+              "androidQrImageUrl": "/assets/mohesrEducationAuthorities/android_app_qr.png",
+              "androidQrAlt": "رمز QR لتطبيق UAE PASS أندرويد",
+              "androidCaption": "رمز QR لأندرويد",
+              "androidLinkLabel": "stg-android.uaepass.ae",
+              "iosTitle": "امسح هنا لتطبيق iOS",
+              "iosQrImageUrl": "/assets/mohesrEducationAuthorities/ios_app_qr.png",
+              "iosQrAlt": "رمز QR لتطبيق UAE PASS iOS",
+              "iosNote": "ملاحظة: لأجهزة iOS، انتقل إلى الإعدادات ثم إدارة الأجهزة والثقة بـ 'Dubai Smart Government'."
+            }
+          },
+          "uaePassInfo": {
+            "title": "ما هو UAE PASS؟",
+            "body": "UAE PASS هو توقيع رقمي واحد يتيح لك الوصول إلى الخدمات الحكومية في الإمارات بأمان وسهولة. يوفر نظام مصادقة موحد لجميع الخدمات الرقمية الحكومية الاتحادية والمحلية."
+          },
+          "features": [
+            {
+              "title": "تحقق درجة واحدة",
+              "description": "معالجة درجة واحدة في كل مرة مع دعم شخصي"
+            },
+            {
+              "title": "معالجة خلال 18 يوماً",
+              "description": "زمن معالجة قياسي مع خيار الترقية إلى المعالجة السريعة"
+            },
+            {
+              "title": "دعم مباشر",
+              "description": "الوصول إلى متخصصي التحقق طوال العملية"
+            }
+          ]
+        },
+        "business": {
+          "label": "أعمال",
+          "title": "طلب الأعمال",
+          "intro": "للمؤسسات التي تعالج تحققات متعددة للدرجات العلمية لموظفيها أو مرشحيها.",
+          "features": [
+            {
+              "title": "معالجة جماعية",
+              "description": "أرسل تحققات متعددة للدرجات العلمية في وقت واحد"
+            },
+            {
+              "title": "مدير حساب مخصص",
+              "description": "دعم ذو أولوية مع عضو فريق مخصص"
+            }
+          ],
+          "applyButtonLabel": "بدء التحقق",
+          "applyButtonLink": "https://applicant.helloverify.ae/"
+        }
+      }
+    },
+    "documents": {
+      "intro": {
+        "title": "استعد جيداً. أنجز أسرع.",
+        "subtitle": "جهّز هذه المستندات قبل البدء — سنرشدك إذا كان أي منها ناقصاً."
+      },
+      "uaePass": {
+        "headerTitle": "UAE Pass",
+        "headerIcon": "/assets/mohesrEducationAuthorities/uaepass_logo.png",
+        "intro": "لتبسيط عملية التقديم والحصول على اعتراف MOHESR، يجب أن يكون لديك UAE Pass. تأكد من دقة التفاصيل التالية لأنها ستُعبَّأ تلقائياً في طلب Helloverify:",
+        "checklist": [
+          "الاسم الكامل",
+          "البريد الإلكتروني",
+          "الجنسية",
+          "رقم الهاتف مع رمز الدولة",
+          "رقم الهوية الإماراتية (إن وجد)"
+        ],
+        "footer": "يمكن للمتقدمين التسجيل عبر تنزيل تطبيق UAE Pass من App Store أو Google Play. يمكن لجميع الأفراد — سواء الزوار من الخارج أو المقيمين أو المواطنين — الحصول على UAE Pass."
+      },
+      "columns": [
+        {
+          "id": "degreeCertificate",
+          "headerTitle": "شهادة الدرجة العلمية",
+          "headerIcon": "/assets/mohesrEducationAuthorities/doc-degree-certificate.svg",
+          "checklist": [
+            "يجب تحميل شهادة الدرجة النهائية وكشف درجات أو سجل أكاديمي لكامل فترة الدراسة، بما في ذلك المقررات والدرجات.",
+            "يجب أن تكون جميع المستندات بصيغة PDF أو JPEG وبحجم أقل من 10MB.",
+            "إذا كانت مستنداتك بلغة غير الإنجليزية أو العربية، يجب تقديم ترجمة قانونية إلى إحدى هاتين اللغتين."
+          ]
+        },
+        {
+          "id": "identity",
+          "headerTitle": "الهوية",
+          "headerIcon": "/assets/mohesrEducationAuthorities/doc-identity.svg",
+          "checklist": [
+            "نسخة جواز سفر سارية وواضحة (الوجه والظهر)",
+            "الهوية الإماراتية (اختياري)"
+          ]
+        }
+      ],
+      "notes": {
+        "title": "ملاحظات",
+        "items": [
+          "لتجنب التأخير، تأكد من أن جميع الملفات المرفوعة نسخ ممسوحة واضحة.",
+          "قد يتواصل فريقنا معك لطلب معلومات إضافية عند الحاجة."
+        ]
+      }
+    },
+    "track": {
+      "title": "تتبع تحققك",
+      "lead": "تتبع حالة تحققك وتقريرك بسهولة. نرسل تحديثات فورية عبر البريد والرسائل النصية. ستُبلغ عند جاهزية التقرير أو عند طلب مستندات إضافية. راجع بريدك وهاتفك للتنبيهات.",
+      "infoLead": "تحقق من حالة التحقق وحمّل تقريرك من بوابة المتقدمين في HelloVerify باستخدام بياناتك المسجّلة.",
+      "methods": [],
+      "portalCta": {
+        "label": "فتح بوابة المتقدمين",
+        "href": "https://applicant.helloverify.ae/"
+      }
+    },
+    "appealProcess": {
+      "title": "عملية الاستئناف",
+      "paragraphs": [
+        "إذا ذكر تقريرك \"تعذر التحقق\" أو \"وجود اختلاف\"، لا يمكنك المتابعة إلى المرحلة الثانية من طلب وزارة التعليم العالي والبحث العلمي للحصول على شهادة الاعتراف النهائية، لأن تقرير التحقق لم يستوفِ متطلبات الوزارة.",
+        "إذا كنت تعتقد أن نتيجة التحقق غير دقيقة، تواصل مع فريق الدعم لدينا على appeal.mohesr@helloverify.ae لتأكيد أهليتك لاستئناف لمرة واحدة دون رسوم."
+      ]
+    },
+    "faqs": {
+      "title": "الأسئلة الشائعة",
+      "subtitle": "أسئلة شائعة حول التحقق من المصدر الأساسي لوزارة التعليم العالي والبحث العلمي مع هيلوفيريفاي.",
+      "categories": [
+        {
+          "id": "uaePass",
+          "label": "الهوية الرقمية",
+          "items": [
+            {
+              "question": "كيف أنشئ حساب الهوية الرقمية؟",
+              "answer": "يمكنك إنشاء حساب UAE Pass بزيارة https://www.uaepass.ae/ حيث ستجد التعليمات ورمز QR لتحميل التطبيق."
+            },
+            {
+              "question": "كيف تساعد مجموعة هيلوفيريفاي في عملية الاعتراف بالمؤهلات لدى وزارة التعليم العالي والبحث العلمي؟",
+              "answer": "مجموعة Helloverify هي **شريك تحقق معتمد** لجهة MOHESR، تقدم خدمات تحقق تعليمي أساسية لطلبات الاعتراف.\nمن خلال هذه الخدمة، تتحقق Helloverify من مستنداتك وتصادق عليها، مما يتيح لك المتابعة إلى المرحلة الثانية من عملية الاعتراف والحصول على **شهادة الاعتراف** الرسمية لمؤهلك الدولي مباشرة من MOHESR."
+            },
+            {
+              "question": "كيف وأين يمكنني دفع رسوم الخدمة؟",
+              "answer": "الدفع هو الخطوة الأخيرة داخل بوابة Helloverify. بعد إكمال الطلب عبر الإنترنت ورفع جميع مستنداتك، ستُوجَّه إلى بوابة دفع MOHESR. عند نجاح الدفع، سيُرسل إيصال إلى بريدك الإلكتروني المسجّل."
+            },
+            {
+              "question": "كيف أعدّل بياناتي الشخصية؟",
+              "answer": "نحصل على معلوماتك الشخصية مباشرة من حساب UAE Pass الخاص بك. إذا رغبت بتغيير أي تفاصيل، يرجى تحديثها في ملفك الشخصي على UAE Pass قبل تقديم طلبك. ستنعكس التفاصيل المُصححة في بوابة Helloverify عند تقديم طلبك."
+            }
+          ]
+        },
+        {
+          "id": "documentRequirements",
+          "label": "متطلبات المستندات والتقديم",
+          "items": [
+            {
+              "question": "أي مستندات أحتاج لتقديمها للتحقق من اعتراف MOHESR عبر Helloverify؟",
+              "answer": "MOHESR في الإمارات هي الجهة الرسمية التي تُقيّم وتعتمد المؤهلات التعليمية لمطابقة معايير الإمارات. لمعرفة متطلبات المستندات، تفضل بزيارة هذا الرابط:\nhttps://www.mohesr.gov.ae/en/EServices/ServiceCard/pages/UniversiyCertificateEquilization.aspx"
+            },
+            {
+              "question": "هل يلزم توثيق أو تصديق المستندات قبل تقديمها للتحقق؟",
+              "answer": "لا يلزم أي توثيق أو تصديق خاص لمستنداتك في عملية الاعتراف مع Helloverify أو MOHESR. تحتاج فقط إلى تقديم نسخ ماسوحة واضحة من المستندات الأصلية كما استلمتها من جامعتك/مؤسستك."
+            },
+            {
+              "question": "لماذا خيار الترجمة القانونية للسجل الأكاديمي/الشهادة إلزامي حتى لو كانت وثيقتي بالإنجليزية أو العربية أصلاً؟",
+              "answer": "إذا كانت وثيقتك متوفرة بالإنجليزية أو العربية، يرجى الرجوع إلى قسم 'تفاصيل التعليم' واختيار 'نعم' للسؤال: 'هل درجتك وسجلاتك الأكاديمية بالإنجليزية أو العربية'. ستتيح لك هذه الخطوة المتابعة دون ترجمة."
+            },
+            {
+              "question": "هل يمكنني إضافة شهادة إضافية إلى طلب Helloverify الحالي؟",
+              "answer": "نعم، يمكنك رفع أي مستندات داعمة في قسم المستندات الإضافية.\nومع ذلك، إذا كنت ترغب في التقديم لمؤهلات متعددة، يجب تقديم كل مؤهل في طلب مستقل. بعد إصدار تقرير Helloverify بنتيجة 'إيجابية'، يمكنك المتابعة للحصول على شهادة الاعتراف المقابلة من MOHESR."
+            }
+          ]
+        },
+        {
+          "id": "processingReporting",
+          "label": "المعالجة والتقارير",
+          "items": [
+            {
+              "question": "كم يستغرق عادةً إجراء التحقق من الدرجة العلمية؟",
+              "answer": "تتم عملية التحقق عادةً **خلال 18 يوماً تقويمياً** بعد تقديمك لجميع المستندات والمعلومات المطلوبة. قد يعتمد الوقت الفعلي على سرعة استجابة جامعتك.\nإذا توقعنا أي تأخير لأسباب لا يمكن تجنبها أو للحاجة إلى معلومات إضافية، سنتواصل معك فوراً. لمنع التأخير، يرجى التأكد من تقديم مستندات دقيقة مع طلبك الأولي."
+            },
+            {
+              "question": "كيف يمكنني الحصول على نسخة من تقرير التحقق من الدرجة العلمية الخاص بـ Helloverify؟",
+              "answer": "ستُبلَّغ عبر البريد الإلكتروني عند اكتمال تحققك بنجاح. بعد استلام هذا الإشعار، يمكنك تسجيل الدخول مرة أخرى إلى بوابة طلب Helloverify لتحميل نسخة من شهادة التحقق."
+            },
+            {
+              "question": "ماذا يحدث بعد اكتمال طلبي؟",
+              "answer": "بعد اكتمال التحقق من درجتك العلمية بنجاح، يجب عليك الانتقال إلى بوابة MOHESR لمتابعة المرحلة الثانية والحصول على شهادة الاعتراف الرسمية."
+            }
+          ]
+        },
+        {
+          "id": "troubleshootingSupport",
+          "label": "استكشاف الأخطاء والدعم",
+          "items": [
+            {
+              "question": "ارتكبت خطأ في طلبي. هل يمكنني تعديله؟",
+              "answer": "قبل الدفع: إذا لم تدفع بعد رسوم التحقق، يمكنك إجراء التعديلات والتصحيحات المطلوبة مباشرة على بوابة Helloverify بنفسك.\nبعد الدفع: إذا احتجت لإجراء تصحيحات بعد تقديم طلبك ودفعه، يرجى التواصل مع دعم Helloverify عبر البريد الإلكتروني على MOHESR@helloverify.ae."
+            },
+            {
+              "question": "ماذا يجب أن أفعل إذا واجهت مشكلات تقنية عند رفع مستنداتي؟",
+              "answer": "1. تأكد من رفع جميع المستندات بصيغة **PDF أو JPG أو PNG أو HEIC أو JPEG**.\n2. يجب ألا يتجاوز حجم كل ملف مستند **10 ميجابايت**.\n3. تأكد من إكمال جميع الحقول المُعلَّمة بـ (*).\n4. إذا استمرت المشكلات التقنية، يرجى مراسلتنا مباشرة على MOHESR@helloverify.ae أو techsupport@helloverify.ae."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "authDialog": {
+    "login": "تسجيل الدخول",
+    "register": "التسجيل",
+    "loginDescription2": "أدخل بريدك الإلكتروني وكلمة المرور المسجّلين.",
+    "loginDescription3": "سيتم إرسال رمز تحقق إلى بريدك أو هاتفك المسجّل.",
+    "emailOrPhone": "البريد الإلكتروني",
+    "enterEmailOrPhone": "أدخل بريدك الإلكتروني",
+    "password": "كلمة المرور",
+    "enterPassword": "أدخل كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "otp": "رمز التحقق",
+    "enterOtp": "أدخل رمز التحقق",
+    "otpExpiresIn": "ينتهي رمز التحقق خلال",
+    "otpExpired": "انتهت صلاحية رمز التحقق",
+    "cancel": "إلغاء",
+    "loginButton": "تسجيل الدخول",
+    "verifyOtp": "تحقق من الرمز",
+    "changeEmailOrPhone": "تغيير البريد أو الهاتف",
+    "changeEmail": "تغيير البريد الإلكتروني",
+    "changePhone": "تغيير رقم الهاتف",
+    "countryCode": "رمز الاتصال",
+    "resendOtp": "إعادة إرسال الرمز",
+    "registerStep1": "أكمل البيانات للتسجيل.",
+    "registerStep2": "سيُطلب منك التحقق من بريدك وهاتفك برمز التحقق.",
+    "registerStep3": "يمكنك إكمال طلب التحقق الخاص بـ MOHESR بعد التسجيل.",
+    "firstName": "الاسم الأول",
+    "enterFirstName": "أدخل الاسم الأول",
+    "lastName": "اسم العائلة",
+    "enterLastName": "أدخل اسم العائلة",
+    "category": "الفئة",
+    "selectCategory": "اختر المهنة",
+    "subCategory": "الفئة الفرعية",
+    "selectSubCategory": "اختر الفئة الفرعية",
+    "selectPackage": "اختر الباقة",
+    "loadPackagesButton": "احصل على الباقات",
+    "defaultPackageLabel": "باقة التعليم",
+    "email": "البريد الإلكتروني",
+    "enterEmail": "أدخل البريد الإلكتروني",
+    "phone": "الهاتف",
+    "enterPhone": "أدخل رقم جوال مكوّناً من 10 أرقام",
+    "sendOtp": "إرسال رمز التحقق",
+    "verify": "تحقق",
+    "verified": "تم التحقق ✓",
+    "submitting": "جارٍ الإرسال...",
+    "registerButton": "التسجيل",
+    "resetPasswordDescription": "سيتم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك المسجّل.",
+    "sendResetLink": "إرسال رابط إعادة التعيين",
+    "sending": "جارٍ الإرسال...",
+    "registrationSuccessTitle": "تم التسجيل بنجاح",
+    "registrationSuccessStep1": "ستتلقى بريداً إلكترونياً يتضمن تعليمات الوصول إلى منصتنا.",
+    "registrationSuccessStep2": "سيُطلب منك إعادة تعيين كلمة المرور.",
+    "registrationSuccessStep3": "يمكنك تسجيل الدخول عبر زر «المتابعة كفرد» على الموقع أو باستخدام الرابط المذكور في البريد الإلكتروني <a href=\"https://applicant.helloverify.ae\" class=\"text-primary underline\">https://applicant.helloverify.ae</a>.",
+    "registrationSuccessOk": "موافق",
+    "accountAlreadyExistsTitle": "الحساب موجود مسبقاً",
+    "accountAlreadyExistsDescription": "يوجد حساب بهذا البريد أو رقم الهاتف. يرجى تسجيل الدخول للمتابعة.",
+    "goToLogin": "الانتقال لتسجيل الدخول",
+    "emailRequired": "البريد الإلكتروني مطلوب.",
+    "invalidEmail": "أدخل بريداً إلكترونياً صالحاً.",
+    "phoneRequired": "رقم الجوال مطلوب.",
+    "invalidPhone": "أدخل رقماً جوالاً صالحاً مكوّناً من 10 أرقام.",
+    "otpRequired": "رمز التحقق مطلوب.",
+    "invalidOtp": "أدخل رمز تحقق مكوّناً من 6 أرقام.",
+    "loadPackagesFailed": "فشل تحميل الباقات.",
+    "passwordRequired": "كلمة المرور مطلوبة.",
+    "loginFailed": "فشل تسجيل الدخول.",
+    "nameRequired": "الاسم الأول واسم العائلة مطلوبان.",
+    "sendEmailOtpFailed": "فشل إرسال رمز التحقق عبر البريد.",
+    "invalidEmailOtp": "رمز تحقق البريد غير صالح.",
+    "emailOtpVerifyFailed": "فشل التحقق من رمز البريد.",
+    "sendSmsOtpFailed": "فشل إرسال رمز التحقق عبر الرسائل.",
+    "invalidPhoneOtp": "رمز تحقق الهاتف غير صالح.",
+    "phoneOtpVerifyFailed": "فشل التحقق من رمز الهاتف.",
+    "completeRequiredFields": "يرجى إكمال جميع الحقول المطلوبة.",
+    "verifyEmailPhoneOtp": "يرجى التحقق من رمز البريد والهاتف.",
+    "resetLinkFailed": "فشل إرسال رابط إعادة التعيين.",
+    "professionOptionLabels": {
+      "Physician": "طبيب",
+      "Non Physician": "غير طبيب"
+    },
+    "subCategoryOptionLabels": {
+      "Doctor": "طبيب",
+      "Dentist": "طبيب أسنان",
+      "Allied Health Service": "الخدمات الصحية المساندة",
+      "Nurse": "ممرض/ة",
+      "Dental Assistant": "مساعد أسنان",
+      "Pharmacist": "صيدلي",
+      "Telemedicine": "الطب عن بُعد"
+    }
+  }
+}

@@ -16,6 +16,9 @@ import type { PackageCheckoutDetails, SessionPayload, TravelUser } from "@/lib/a
 type AuthContextValue = {
   ready: boolean;
   isLoggedIn: boolean;
+  /** True once `logout` has run in this page's lifetime, so a protected page
+   *  can send the visitor home without prompting them to log straight back in. */
+  signedOut: boolean;
   user: TravelUser | null;
   loginOpen: boolean;
   checkoutOpen: boolean;
@@ -40,6 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [loginRedirect, setLoginRedirect] = useState("orders");
   const [pendingCheckout, setPendingCheckout] = useState<PackageCheckoutDetails | null>(null);
+  const [signedOut, setSignedOut] = useState(false);
 
   const refreshSession = useCallback(() => {
     setSession(readSession());
@@ -58,11 +62,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const setUser = useCallback((payload: SessionPayload) => {
     writeSession(payload);
     setSession(payload);
+    setSignedOut(false);
   }, []);
 
   const logout = useCallback(() => {
     clearSession();
     setSession(null);
+    setSignedOut(true);
     setLoginOpen(false);
     setCheckoutOpen(false);
     setPendingCheckout(null);
@@ -95,6 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       ready,
       isLoggedIn: ready && hasValidAuthToken(),
+      signedOut,
       user: session?.user ?? null,
       loginOpen,
       checkoutOpen,
@@ -111,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [
       ready,
       session,
+      signedOut,
       loginOpen,
       checkoutOpen,
       loginRedirect,

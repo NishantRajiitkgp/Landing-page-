@@ -6,6 +6,7 @@
  *  shows, as the old page's content was all one tab away. */
 import { useState } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { CommerceCta } from "@/components/commerce/CommerceCta";
 import type { IndividualsCopy } from "@/lib/copy/individuals";
 
@@ -33,16 +34,39 @@ function Bolt() {
   );
 }
 
-export function HelloVTabs({
-  c,
-  whatsapp,
-  singles,
-}: {
+function Chevron() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 6l4 4 4-4" />
+    </svg>
+  );
+}
+
+function Tick() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3.5 8.5l3 3 6-7" />
+    </svg>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M3 8h10M9 4l4 4-4 4" />
+    </svg>
+  );
+}
+
+type HelloVTabsProps = {
   c: C;
   whatsapp: string;
   singles: readonly Single[];
-}) {
-  const [tab, setTab] = useState<Tab>("packages");
+  initial?: string | null;
+};
+
+export function HelloVTabs({ c, whatsapp, singles, initial }: HelloVTabsProps) {
+  const [tab, setTab] = useState<Tab>(() => (initial && initial in c.tabs ? (initial as Tab) : "packages"));
   const keys = Object.keys(c.packages.items) as PackageKey[];
   const [open, setOpen] = useState<PackageKey>(keys[0]);
   const [page, setPage] = useState(0);
@@ -89,29 +113,39 @@ export function HelloVTabs({
         </ol>
         <div className="hv3-grid">
           <ul className="hv3-acc">
-            {keys.map((k) => {
+            {keys.map((k, i) => {
               const it = p.items[k];
               const isOpen = open === k;
               return (
                 <li key={k} className={isOpen ? "on" : undefined}>
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-controls={`hv-pkg-${k}`}
-                    onClick={() => setOpen(k)}
-                  >
-                    <h3>{it.t}</h3>
-                  </button>
+                  <h3>
+                    <button
+                      type="button"
+                      aria-expanded={isOpen}
+                      aria-controls={`hv-pkg-${k}`}
+                      onClick={() => setOpen(k)}
+                    >
+                      <span className="ix" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="t">{it.t}</span>
+                      <span className="cv">
+                        <Chevron />
+                      </span>
+                    </button>
+                  </h3>
                   <div id={`hv-pkg-${k}`} className="bd" hidden={!isOpen}>
                     <p>{it.p}</p>
                     <p className="lb">{p.checksInclude}</p>
                     <ul className="pills">
                       {it.pills.map((x) => (
-                        <li key={x}>{x}</li>
+                        <li key={x}>
+                          <Tick />
+                          {x}
+                        </li>
                       ))}
                     </ul>
-                    <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-ghost btn-sm">
+                    <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-ink btn-sm">
                       {p.buy}
+                      <Arrow />
                     </a>
                   </div>
                 </li>
@@ -125,9 +159,12 @@ export function HelloVTabs({
               <Image src="/img/hellov/qr-code.png" alt="" width={1040} height={1040} sizes="240px" />
             </a>
             <p className="cp">{p.promo.caption}</p>
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-wa">
-              <span>{p.promo.cta}</span>
-              <Image src="/img/hellov/whatsapp.png" alt="" width={68} height={68} sizes="24px" />
+            <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="hv3-cta">
+              <span className="wa">
+                <Image src="/img/hellov/whatsapp.png" alt="" width={68} height={68} sizes="24px" />
+              </span>
+              <span className="lbl">{p.promo.cta}</span>
+              <Arrow />
             </a>
           </div>
         </div>
@@ -194,4 +231,8 @@ export function HelloVTabs({
       </div>
     </div>
   );
+}
+
+export function HelloVTabsBound(props: Omit<HelloVTabsProps, "initial">) {
+  return <HelloVTabs {...props} initial={useSearchParams().get("tab")} />;
 }

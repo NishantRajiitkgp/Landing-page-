@@ -21,6 +21,7 @@ import { NavAuth } from "@/components/auth/NavAuth";
 import { Logo } from "@/components/brand/Logo";
 import { AppLink } from "@/components/chrome/AppLink";
 import { LocaleSwitch } from "@/components/chrome/LocaleSwitch";
+import { MenuClose } from "@/components/chrome/MenuClose";
 import { NavDropdown } from "@/components/chrome/NavDropdown";
 import { CHROME, type ChromeCopy } from "@/lib/copy/chrome";
 import { copy } from "@/lib/copy/request";
@@ -211,6 +212,7 @@ export async function SiteNav({ showSignUp = true }: { showSignUp?: boolean } = 
         <NavAuth {...auth} placement="menu" />
         <LocaleSwitch />
       </nav>
+      <MenuClose />
     </header>
   );
 }

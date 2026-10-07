@@ -38,38 +38,14 @@ import { SmbSegments } from "./SmbSegments";
  *  it used the KYC phone's face close-up (`en-selfie`, still the phone's). */
 type Card = { id: string; photo: string; ring: "employees" | "customers" | "businesses"; href: string };
 const CARDS: Card[] = [
-  { id: "white", photo: "/img/v2/pkg-whitecollar.jpg", ring: "employees", href: "/business/employee-verification" },
-  { id: "blue", photo: "/img/v2/pkg-bluecollar.jpg", ring: "employees", href: "/business/employee-verification" },
-  { id: "kyc", photo: "/img/v2/sg-kyc.jpg", ring: "customers", href: "/business/customer-kyc" },
-  { id: "vendor", photo: "/img/v2/en-vendor.jpg", ring: "businesses", href: "/business/certifier" },
+  { id: "white", photo: "/img/v2/pkg-whitecollar.jpg", ring: "employees", href: "/employee-verification" },
+  { id: "blue", photo: "/img/v2/pkg-bluecollar.jpg", ring: "employees", href: "/employee-verification" },
+  { id: "kyc", photo: "/img/v2/sg-kyc.jpg", ring: "customers", href: "/products/customer-kyc" },
+  { id: "vendor", photo: "/img/v2/en-vendor.jpg", ring: "businesses", href: "/products/certifier" },
 ];
 /** 290px wide at the 1440 board (four in 1200 less gaps), 45vw two up on a
  *  tablet, the column on a phone. */
 const SIZES_SG_CARD = "(max-width: 639px) 92vw, (max-width: 1080px) 45vw, 290px";
-
-/** The blue-collar card's proof, under the pitch: the half hour, then the
- *  two shift clients' own marks. The photograph stays clear. */
-function BlueFloor({
-  shift,
-}: {
-  shift: { n: string; u: string; l: string; houses: Record<string, string> };
-}) {
-  return (
-    <div className="sg-floor">
-      <p className="sg-floor-k">{shift.l}</p>
-      <p className="sg-floor-n">
-        <b>{shift.n}</b> {shift.u}
-      </p>
-      <ul className="sg-houses">
-        {Object.entries(shift.houses).map(([id, name]) => (
-          <li key={id} className={`sg-house sg-house-${id}`}>
-            <Image src={`/img/clients/${id}.svg`} alt={name} width={id === "starbucks" ? 64 : 148} height={32} unoptimized />
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
 
 async function LargePanel() {
   const all = await copy(SECTIONS);
@@ -109,7 +85,6 @@ async function LargePanel() {
               <div className="sg-body">
                 <h3 className="sg-t">{b.t}</h3>
                 <p className="sg-p">{b.p}</p>
-                {c.id === "blue" ? <BlueFloor shift={s.shift} /> : null}
                 <ul className="sg-chips">
                   {b.chips.map((ch) => (
                     <li key={ch}>
@@ -166,10 +141,6 @@ export async function Smb() {
 
   return (
     <div className="wrap hair-top sm">
-      <div className="sm-mast">
-        <span className="k">{t.seg.kicker}</span>
-        <span className="sm-sheet">{t.sheet}</span>
-      </div>
       <SmbSegments
         label={t.seg.label}
         segments={[

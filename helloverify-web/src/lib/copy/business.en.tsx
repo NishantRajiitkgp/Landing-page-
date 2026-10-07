@@ -402,7 +402,7 @@ export const en = {
           info: "It includes verifying the candidate's claims about his/her tenure, etc. and establishment with respective employer. Hello Verify will reach out to the HR using automated email / telephone. Mode: Email/Database Additional Options for Verifications We also have verification methods via. PF/Form 16/Supervisor /UAN. These all are chargeable at an additional charge per check per method.",
         },
         education: {
-          n: "Education Check-Highest Education (Extra University Chargesapplicable)",
+          n: "Education Check-Highest Education (Extra University Charges applicable)",
           price: "₹999",
           info: "This check involves verifying the authenticity of candidate's educational & professional qualifications from the respective universities/colleges / trusted database. The names are run through Hello Verify's proprietary database of both known (trusted) and unknown (suspect) universities/institutes and organizations. Herein, TAT may vary subject to university/college (TAT) process. Mode: Database/Email Scope: 12th, Bachelors, Masters, Professional",
         },
@@ -576,6 +576,8 @@ export const en = {
       checksInclude: "Checks Include",
       empty: "Select checks from the table to build your package.",
       buy: "Buy Now",
+      /** The package's name in checkout, the cart and My Orders. */
+      cartName: "Custom Package",
     },
     trusted: {
       h: "Trusted by Businesses & Individuals",

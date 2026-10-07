@@ -77,6 +77,11 @@ export const STATIC_AR: Record<StaticSeoPath, PageCopy> = {
     description:
       "واحد من كل 8 متقدمين يسيء تمثيل مؤهلاته الأكاديمية—وهو خطر قد يقوض نزاهة المؤسسة بصمت. تكشف منصة HelloVerify للتحقق المدعومة بالذكاء الاصطناعي هذه الفروقات مبكرًا لتمكين قرارات أسرع وأذكى وأكثر موثوقية.",
   },
+  "/solutions/manpower-and-education-authorities/mohesr": {
+    title: "Ministry of Higher Education and Scientific Research (MOHESR) — HelloVerify",
+    description:
+      "HelloVerify شريك التحقق لوزارة التعليم العالي والبحث العلمي في الإمارات. التحقق من الدرجة 350 درهماً، والتسليم القياسي خلال 18 يوماً تقويمياً.",
+  },
   "/governments/manpower-education/mohesr": {
     title: "UAE Ministry of Higher Education & Scientific Research — HelloVerify",
     description:

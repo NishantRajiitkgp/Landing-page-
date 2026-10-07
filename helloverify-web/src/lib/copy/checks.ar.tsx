@@ -30,7 +30,6 @@ export const ar: ChecksCopy = {
     kicker: (group: ReactNode) => <>فحص · {group}</>,
     h1: (name: ReactNode) => <>تحقق {name}</>,
     talkToSales: "اتصل بالمبيعات",
-    buy: "اشتروا فحصاً واحداً",
   },
 
   strip: {

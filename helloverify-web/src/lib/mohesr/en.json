@@ -1,0 +1,429 @@
+{
+  "hero": {
+    "breadcrumb": [
+      { "label": "Home", "href": "/" },
+      { "label": "MOHESR" }
+    ],
+    "logoUrl": "/assets/mohesrEducationAuthorities/MOHESR.png",
+    "logoHeight": "70px",
+    "logoAlt": "Ministry of Higher Education and Scientific Research (MOHESR)",
+    "title": "Ministry of Higher Education and Scientific Research (MOHESR)",
+    "subtitle": "The UAE Ministry of Higher Education and Scientific Research (MOHESR) plays a central role in upholding academic excellence across the nation. Helloverify Group is serving as the verification partner for MOHESR to authenticate the educational credentials of individuals. Upon completion of the verification process, individuals receive a Degree Verification Document.",
+    "priceStrip": [
+      {
+        "label": "Degree Verification",
+        "value": "AED 350",
+        "footnote": "Exclusive of 5% VAT"
+      },
+      {
+        "label": "Standard Delivery",
+        "value": "18 Calendar days",
+        "footnote": ""
+      }
+    ]
+  },
+  "screening": {
+    "tabs": [
+      { "id": "overview", "label": "Overview" },
+      { "id": "documents", "label": "Application Requirement" },
+      { "id": "track", "label": "Track Application" },
+      { "id": "appealProcess", "label": "Appeal Process" },
+      { "id": "supportVisit", "label": "Support Center" },
+      { "id": "faqs", "label": "FAQs" }
+    ],
+    "roleCards": {
+      "candidates": {
+        "title": "For Candidates",
+        "iconSrc": "/assets/saudi/icon-candidates.svg",
+        "primaryCta": {
+          "label": "Start Verification",
+          "href": "https://applicant.helloverify.ae/en/signin"
+        }
+      },
+      "employers": {
+        "title": "For Employers & Agencies",
+        "iconSrc": "/assets/saudi/icon-employers.svg",
+        "primaryCta": { "label": "Start Verification", "href": "https://agency.helloverify.ae/", "hidden": true },
+        "secondaryCta": { "label": "Talk to Sales", "href": "/contact?tab=enquiry&role=applicant&contact=mohesr" }
+      }
+    },
+    "overview": {
+      "psvIntro": {
+        "title": "What is Primary Source Verification?",
+        "intro": "PSV is the process of confirming your academic qualification directly with the issuing university. The UAE Ministry of Higher Education & Scientific Research (MOHESR) requires PSV before issuing an equivalency or recognition certificate for any degree earned outside the UAE.",
+        "cards": [
+          {
+            "iconSrc": "/assets/mohesrEducationAuthorities/psv-degree-authenticity.svg",
+            "title": "Degree authenticity",
+            "body": "Confirms the degree was actually awarded by the named institution."
+          },
+          {
+            "iconSrc": "/assets/mohesrEducationAuthorities/psv-institution-accreditation.svg",
+            "title": "Institution accreditation",
+            "body": "Checks the university is recognised by its home-country authority."
+          }
+        ]
+      },
+      "whyChoose": {
+        "title": "Why Choose HelloVerify?",
+        "subtitle": "Empaneled with MOHESR. Built for speed, compliance and trust.",
+        "cards": [
+          {
+            "title": "Proven Expertise",
+            "body": "8+ years of expertise in primary source verification, trusted by government authorities worldwide.",
+            "icon": "/assets/mohesrEducationAuthorities/why-trust-proven.svg",
+            "align": "start"
+          },
+          {
+            "title": "Global Verification Company",
+            "body": "Operating across 120+ countries with direct access to thousands of universities and accredited institutions.",
+            "icon": "/assets/mohesrEducationAuthorities/why-global-network.svg",
+            "align": "end"
+          },
+          {
+            "title": "Secure and Compliant",
+            "body": "Your personal data, academic records, and passport information are protected by enterprise-grade security and privacy controls.",
+            "icon": "/assets/mohesrEducationAuthorities/why-iso-security.svg",
+            "align": "start"
+          },
+          {
+            "title": "Real-time tracking",
+            "body": "Follow your application's progress at every stage using your case number.",
+            "icon": "/assets/mohesrEducationAuthorities/why-realtime-tracking.svg",
+            "align": "end"
+          }
+        ]
+      },
+      "howItWorks": {
+        "title": "How it works",
+        "subtitle": "Your verification journey in 4 steps",
+        "steps": [
+          { "step": "01", "title": "Create account", "body": "Sign up and verify your identity to begin." },
+          { "step": "02", "title": "Submit documents", "body": "Upload your academic credentials securely." },
+          { "step": "03", "title": "Verification process", "body": "Our team performs primary source verification and authenticates your documents with the issuing authority." },
+          { "step": "04", "title": "Report generated", "body": "Receive your Degree Verification Document for MOHESR." }
+        ]
+      },
+      "turnaround": {
+        "headline": "18 Calendar Days",
+        "body": "Standard turnaround time",
+        "icon": "/assets/mohesrEducationAuthorities/turnaround-calendar.svg"
+      },
+      "support": {
+        "title": "Support & Appeal",
+        "subtitle": "Our team is here to assist you with document preparation or questions about eligibility.",
+        "cards": [
+          {
+            "title": "Contact Support",
+            "body": "Need help? Our support team is here to assist you with any questions or issues.",
+            "cta": { "label": "Contact Now", "href": "mailto:mohesr@helloverify.ae" }
+          },
+          {
+            "title": "Appeal Insights",
+            "body": "Disagree with verification results? Submit an appeal for re-evaluation.",
+            "cta": { "label": "Submit Appeal", "href": "/contact?tab=enquiry&role=applicant&contact=mohesr" }
+          }
+        ]
+      }
+    },
+    "applicationProcess": {
+      "subTabs": {
+        "individual": {
+          "label": "Individual",
+          "title": "Individual Application",
+          "intro": "For individuals seeking degree verification and Certificate of Recognition for personal career advancement.",
+          "uaePassBox": {
+            "intro": "Overseas applicants, visitors, non-residents, residents, and national applicants are eligible for a UAE PASS account.",
+            "signInButtonLabel": "Sign in with UAE PASS",
+            "signInUrl": "https://ids.uaepass.ae/authenticationendpoint/login.do",
+            "signInLogoUrl": "/assets/mohesrEducationAuthorities/uaepass_logo.png",
+            "signInLogoAlt": "UAE PASS",
+            "signUpPrefix": "Don't have a UAE PASS account?",
+            "signUpLinkLabel": "Sign Up now",
+            "signUpQrModal": {
+              "androidTitle": "Scan here for android app",
+              "androidQrImageUrl": "/assets/mohesrEducationAuthorities/android_app_qr.png",
+              "androidQrAlt": "UAE PASS Android app QR code",
+              "androidCaption": "Android QR Code",
+              "androidLinkLabel": "stg-android.uaepass.ae",
+              "iosTitle": "Scan here for iOS app",
+              "iosQrImageUrl": "/assets/mohesrEducationAuthorities/ios_app_qr.png",
+              "iosQrAlt": "UAE PASS iOS app QR code",
+              "iosNote": "Note: For iOS go to settings then Device Management and Trust 'Dubai Smart Government.'"
+            }
+          },
+          "uaePassInfo": {
+            "title": "What is UAE PASS?",
+            "body": "UAE PASS is a single digital signature that allows you to access government services across the UAE securely and conveniently. It provides a unified authentication system for all federal and local government digital services."
+          },
+          "features": [
+            {
+              "title": "Single Degree Verification",
+              "description": "Process one degree at a time with personalized support"
+            },
+            {
+              "title": "18-Day Processing",
+              "description": "Standard processing time with option to upgrade to express"
+            },
+            {
+              "title": "Direct Support",
+              "description": "Access to verification specialists throughout the process"
+            }
+          ]
+        },
+        "business": {
+          "label": "Business",
+          "title": "Business Application",
+          "intro": "For organizations processing multiple degree verifications for employees or candidates.",
+          "features": [
+            {
+              "title": "Bulk Processing",
+              "description": "Submit multiple degree verifications simultaneously"
+            },
+            {
+              "title": "Dedicated Account Manager",
+              "description": "Priority support with a dedicated team member"
+            }
+          ],
+          "applyButtonLabel": "Start Verification",
+          "applyButtonLink": "https://applicant.helloverify.ae/"
+        }
+      }
+    },
+    "documents": {
+      "intro": {
+        "title": "Come prepared. Finish faster.",
+        "subtitle": "Have these ready before you start we'll guide you if anything's missing."
+      },
+      "uaePass": {
+        "headerTitle": "UAE Pass",
+        "headerIcon": "/assets/mohesrEducationAuthorities/uaepass_logo.png",
+        "intro": "To simplify your application process and obtain MOHESR recognition, you must have a UAE Pass. Ensure the following pass details are accurate, as they will automatically populate your Helloverify application:",
+        "checklist": [
+          "Full Name",
+          "Email Address",
+          "Nationality",
+          "Phone number with country code",
+          "Emirates ID Number (If applicable)"
+        ],
+        "footer": "Applicants can register by downloading the UAE Pass app from the App Store or Google Play. All individuals, whether overseas visitors, residents, or locals, can obtain the UAE Pass."
+      },
+      "columns": [
+        {
+          "id": "degreeCertificate",
+          "headerTitle": "Degree certificate",
+          "headerIcon": "/assets/mohesrEducationAuthorities/doc-degree-certificate.svg",
+          "checklist": [
+            "You must upload your Final Degree Certification and a Full-Year Mark Sheet or Transcript that covers your entire study period, including the courses taken and grades received.",
+            "All documents must be in PDF or JPEG format and under 10MB.",
+            "If your documents are in a language other than English or Arabic, you must provide a legal translation into one of these languages."
+          ]
+        },
+        {
+          "id": "identity",
+          "headerTitle": "Identity",
+          "headerIcon": "/assets/mohesrEducationAuthorities/doc-identity.svg",
+          "checklist": [
+            "Valid and clear passport copy (front and back)",
+            "Emirates ID (Optional)"
+          ]
+        }
+      ],
+      "notes": {
+        "title": "Notes",
+        "items": [
+          "To avoid delays, make sure all uploaded files are clear, scanned copies.",
+          "Our team may contact you for additional information if needed."
+        ]
+      }
+    },
+    "track": {
+      "title": "Track Your Verification",
+      "lead": "Track the live status of your verification and report with ease. We send real-time updates via email and SMS. You'll be notified as soon as your report is ready or if any additional documents are required. Be sure to check your inbox and phone for alerts from our end.",
+      "infoLead": "Check verification status and download your report from the HelloVerify applicant portal using your registered credentials.",
+      "methods": [],
+      "portalCta": {
+        "label": "Open Applicant Portal",
+        "href": "https://applicant.helloverify.ae/"
+      }
+    },
+    "appealProcess": {
+      "title": "Appeal Process",
+      "paragraphs": [
+        "If your report states \"Unable to Verify\" or \"Discrepancy,\" you cannot proceed to Stage 2 of your Ministry of Higher Education and Scientific Research application for the final recognition certificate, as your verification report has not met MOHESR requirements.",
+        "If you believe the outcome of the verification is inaccurate, contact our support team at appeal.mohesr@helloverify.ae to confirm your eligibility for a one-time, free-of-charge appeal."
+      ]
+    },
+    "faqs": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Common questions about MOHESR primary source verification with HelloVerify.",
+      "categories": [
+        {
+          "id": "uaePass",
+          "label": "UAE Pass",
+          "items": [
+            {
+              "question": "How do I create a UAE PASS?",
+              "answer": "You can create your UAE Pass by visiting https://www.uaepass.ae/ where you can find instructions and the QR code to download the application."
+            },
+            {
+              "question": "How does the Helloverify Group assist with the recognition of qualifications process for the Ministry of Higher Education and Scientific Research (MOHESR)?",
+              "answer": "The Helloverify Group is an **authorized verification partner** for the UAE Ministry of Higher Education and Scientific Research (MOHESR), providing essential education verification services for Recognition applications.\nThrough this service, Helloverify validates and verifies your documents, which allows you to proceed to the second stage of the recognition process and obtain the official **Certificate of Recognition** for your international qualification directly from MOHESR."
+            },
+            {
+              "question": "How and where can I pay for the service?",
+              "answer": "Payment is the final step within the Helloverify portal. Once you have completed the online application and uploaded all your documents, you will be directed to the MOHESR payment gateway. Upon successful payment, a receipt will be sent to your registered email address."
+            },
+            {
+              "question": "How do I edit my personal details?",
+              "answer": "We obtain your personal information directly from your UAE Pass. If you want to change any details, please update them in your UAE Pass profile before submitting your application. The corrected details will then be reflected in your Helloverify portal when you submit your application."
+            }
+          ]
+        },
+        {
+          "id": "documentRequirements",
+          "label": "Document Requirements & Submissions",
+          "items": [
+            {
+              "question": "Which documents do I need to submit for verification for MOHESR recognition through Helloverify?",
+              "answer": "The Ministry of Higher Education and Scientific Research (MOHESR) in the UAE is the official authority that evaluates and approves educational qualifications to match UAE standards. To know about the document requirements, visit this link:\nhttps://www.mohesr.gov.ae/en/EServices/ServiceCard/pages/UniversiyCertificateEquilization.aspx"
+            },
+            {
+              "question": "Is document attestation or stamping required prior to submitting my documents for verification?",
+              "answer": "No special attestation or stamping is required on your documents for the recognition process with Helloverify or MOHESR. You only need to submit clear scanned copies of the original documents as received from your university/institution."
+            },
+            {
+              "question": "Why is the Legal Translation of Transcript/Degree option mandatory for me when my Transcript/Degree is already in English or Arabic?",
+              "answer": "If your document is available in English or Arabic, please return to the \"Education Detail\" section and choose \"Yes\" for the question: \"Are your degree and transcripts in English or Arabic. This step will allow you to proceed without a translation."
+            },
+            {
+              "question": "Can I add an additional certificate to my existing Helloverify application?",
+              "answer": "Yes, you can upload any supporting documents in the additional documents section.\nHowever, if you want to apply for multiple qualifications, then each qualification should be submitted in a separate application. Once your Helloverify report is issued as 'positive', you can proceed to obtain the respective recognition certificate from MOHESR."
+            }
+          ]
+        },
+        {
+          "id": "processingReporting",
+          "label": "Processing & Reporting",
+          "items": [
+            {
+              "question": "How long does the Degree Verification process usually take?",
+              "answer": "The verification process is usually done **within 18 Calendar days** after you submit all the required documents and information. The actual turnaround time can depend on the responsiveness of your university.\nIf we anticipate any delays due to unavoidable circumstances or a need for further information, we will contact you immediately. To prevent delays, please ensure you submit accurate documents with your initial application."
+            },
+            {
+              "question": "How can I get a copy of my Helloverify Degree Verification Report?",
+              "answer": "You will be notified by email once your verification is successfully completed. After receiving this notification, you can log back into the Helloverify application portal to download a copy of your verification certificate."
+            },
+            {
+              "question": "What happens once my application is completed?",
+              "answer": "Once your degree verification is successfully completed, you should go to the UAE Ministry of Higher Education and Scientific Research (MOHESR) portal to proceed with the second stage and obtain your official Certificate of Recognition."
+            }
+          ]
+        },
+        {
+          "id": "troubleshootingSupport",
+          "label": "Troubleshooting & Support",
+          "items": [
+            {
+              "question": "I have made a mistake in my application. Can I make changes to it?",
+              "answer": "Before Payment: If you have not yet paid for the verification, you can make the edits and corrections required directly on the Helloverify portal yourself.\nAfter Payment: If you need to make corrections after submitting and paying for your application, please connect to Helloverify support By Emailing at MOHESR@helloverify.ae."
+            },
+            {
+              "question": "What should I do if I encounter technical issues while uploading my documents?",
+              "answer": "1. Ensure all documents are uploaded in either **PDF, JPG, PNG, HEIC or JPEG format**.\n2. Each document file size should **not exceed 10MB**.\n3. Verify that you have completed all fields marked with a (*).\n4. If technical issues persist, please email us directly at MOHESR@helloverify.ae or techsupport@helloverify.ae."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "authDialog": {
+    "login": "Login",
+    "register": "Register",
+    "loginDescription2": "Enter your registered email and password.",
+    "loginDescription3": "An OTP will be sent to your registered email or phone number.",
+    "emailOrPhone": "Email ID",
+    "enterEmailOrPhone": "Enter your email",
+    "password": "Password",
+    "enterPassword": "Enter your password",
+    "forgotPassword": "Forgot Password?",
+    "otp": "OTP",
+    "enterOtp": "Enter OTP",
+    "otpExpiresIn": "OTP expires in",
+    "otpExpired": "OTP expired",
+    "cancel": "Cancel",
+    "loginButton": "Login",
+    "verifyOtp": "Verify OTP",
+    "changeEmailOrPhone": "Change Email or Phone",
+    "changeEmail": "Change Email",
+    "changePhone": "Change Phone Number",
+    "countryCode": "Dial code",
+    "resendOtp": "Resend Otp",
+    "registerStep1": "Fill the details to register.",
+    "registerStep2": "You will be requested to verify your email and phone with OTP.",
+    "registerStep3": "You can complete your MOHESR verification application after registration.",
+    "firstName": "First Name",
+    "enterFirstName": "Enter First Name",
+    "lastName": "Last Name",
+    "enterLastName": "Enter Last Name",
+    "category": "Category",
+    "selectCategory": "Select Profession",
+    "subCategory": "Sub Category",
+    "selectSubCategory": "Select Sub Category",
+    "selectPackage": "Select Package",
+    "loadPackagesButton": "Get packages",
+    "defaultPackageLabel": "Education Pack",
+    "email": "Email",
+    "enterEmail": "Enter Email Id",
+    "phone": "Phone",
+    "enterPhone": "Enter 10-digit phone number",
+    "sendOtp": "Send OTP",
+    "verify": "Verify",
+    "verified": "Verified ✓",
+    "submitting": "Submitting...",
+    "registerButton": "Register",
+    "resetPasswordDescription": "Password reset link will be sent to your registered email.",
+    "sendResetLink": "Send Reset Link",
+    "sending": "Sending...",
+    "registrationSuccessTitle": "Registration Successful",
+    "registrationSuccessStep1": "You will receive an email with instructions to access our platform.",
+    "registrationSuccessStep2": "You will be required to reset your password.",
+    "registrationSuccessStep3": "You can log in using the Proceed as an Individual button on the website or by using the URL mentioned in the email <a href=\"https://applicant.helloverify.ae\" class=\"text-primary underline\">https://applicant.helloverify.ae</a>.",
+    "registrationSuccessOk": "OK",
+    "accountAlreadyExistsTitle": "Account Already Exists",
+    "accountAlreadyExistsDescription": "An account with this email or phone number already exists. Please log in to continue.",
+    "goToLogin": "Go to Login",
+    "emailRequired": "Email is required.",
+    "invalidEmail": "Enter a valid email address.",
+    "phoneRequired": "Mobile number is required.",
+    "invalidPhone": "Enter a valid 10-digit mobile number.",
+    "otpRequired": "OTP is required.",
+    "invalidOtp": "Enter a valid 6-digit OTP.",
+    "loadPackagesFailed": "Failed to load packages.",
+    "passwordRequired": "Password is required.",
+    "loginFailed": "Login failed.",
+    "nameRequired": "First and last name are required.",
+    "sendEmailOtpFailed": "Failed to send email OTP.",
+    "invalidEmailOtp": "Invalid email OTP.",
+    "emailOtpVerifyFailed": "Email OTP verification failed.",
+    "sendSmsOtpFailed": "Failed to send SMS OTP.",
+    "invalidPhoneOtp": "Invalid phone OTP.",
+    "phoneOtpVerifyFailed": "Phone OTP verification failed.",
+    "completeRequiredFields": "Please complete all required fields.",
+    "verifyEmailPhoneOtp": "Please verify email and phone OTP.",
+    "resetLinkFailed": "Failed to send reset link.",
+    "professionOptionLabels": {
+      "Physician": "Physician",
+      "Non Physician": "Non Physician"
+    },
+    "subCategoryOptionLabels": {
+      "Doctor": "Doctor",
+      "Dentist": "Dentist",
+      "Allied Health Service": "Allied Health Service",
+      "Nurse": "Nurse",
+      "Dental Assistant": "Dental Assistant",
+      "Pharmacist": "Pharmacist",
+      "Telemedicine": "Telemedicine"
+    }
+  }
+}

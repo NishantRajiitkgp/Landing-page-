@@ -10,11 +10,13 @@ export function MomHub({
   initial,
   hero,
   children,
+  className = "mom3",
 }: {
   tabs: readonly Tab[];
   initial: string | null;
   hero: React.ReactNode;
   children: React.ReactNode;
+  className?: string;
 }) {
   const start = Math.max(0, tabs.findIndex((tab) => tab.id === initial));
   const [on, setOn] = useState(start);
@@ -35,7 +37,7 @@ export function MomHub({
   }
 
   return (
-    <div className="mom3" onClick={onClick}>
+    <div className={className} onClick={onClick}>
       {hero}
       <div className="wrap mom3-tabbar">
         <div className="mom3-tabs" role="tablist">

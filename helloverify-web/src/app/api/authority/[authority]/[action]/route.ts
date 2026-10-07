@@ -14,7 +14,15 @@ import {
 } from "@/lib/authority/mock";
 import { getAuthorityPortal, isAuthorityId } from "@/lib/authority/portals";
 import { authorityGet, authorityPost } from "@/lib/authority/upstream";
-import { isValidEmail, isValidOtp, isValidPhone, normalizeEmail, normalizeOtp, normalizePhoneDigits } from "@/lib/authority/validate";
+import {
+  isValidEmail,
+  isValidOtp,
+  isValidPhone,
+  isValidPhoneSpan,
+  normalizeEmail,
+  normalizeOtp,
+  normalizePhoneDigits,
+} from "@/lib/authority/validate";
 
 export const dynamic = "force-dynamic";
 
@@ -54,6 +62,8 @@ export async function POST(
   }
 
   const mock = useMockAuthorityAuth();
+  const phoneMax = authority === "mom" ? 15 : 10;
+  const phoneValid = (digits: string) => (authority === "mom" ? isValidPhoneSpan(digits, 7, 15) : isValidPhone(digits));
 
   try {
     if (action === "send-email-otp") {
@@ -67,10 +77,10 @@ export async function POST(
     }
 
     if (action === "send-mobile-otp") {
-      const mobile = normalizePhoneDigits(String(body.mobile ?? ""));
+      const mobile = normalizePhoneDigits(String(body.mobile ?? ""), phoneMax);
       const dialing_code = String(body.dialing_code ?? "").trim();
       const candidate_name = String(body.candidate_name ?? "").trim();
-      if (!isValidPhone(mobile) || !dialing_code || !candidate_name) {
+      if (!phoneValid(mobile) || !dialing_code || !candidate_name) {
         return fail("Valid phone, dial code and name are required");
       }
       const data = mock
@@ -87,7 +97,7 @@ export async function POST(
       const otp = normalizeOtp(String(body.otp ?? ""));
       if (!isValidOtp(otp)) return fail("OTP must be 6 digits");
       const email = body.email ? normalizeEmail(String(body.email)) : undefined;
-      const mobile = body.mobile ? normalizePhoneDigits(String(body.mobile)) : undefined;
+      const mobile = body.mobile ? normalizePhoneDigits(String(body.mobile), phoneMax) : undefined;
       const data = mock
         ? mockVerifyOtp(otp)
         : await authorityPost(authority, "agency_portal/verify-pre-registered-otp/", {

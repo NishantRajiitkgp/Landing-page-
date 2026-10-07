@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { submitLead } from "@/app/[locale]/contact/actions";
 import { contactEmail, type ContactCms } from "@/lib/contact/cms";
@@ -54,10 +55,24 @@ function Consent({
   );
 }
 
-function RoleFields({ role, locale, active }: { role: Role; locale: string; active: boolean }) {
-  const [values, setValues] = useState<Record<string, string>>({});
-  const set = (name: string, value: string) => setValues((prev) => ({ ...prev, [name]: value }));
+function RoleFields({
+  role,
+  locale,
+  active,
+  requestedService = "",
+}: {
+  role: Role;
+  locale: string;
+  active: boolean;
+  /** `?service=` from a vertical page's Talk to Sales link. */
+  requestedService?: string;
+}) {
   const service = role.fields.find((field) => field.name === "serviceInterest");
+  const [values, setValues] = useState((): Record<string, string> => {
+    const offered = service && "options" in service && service.options?.some((option) => option.value === requestedService);
+    return offered ? { serviceInterest: requestedService } : {};
+  });
+  const set = (name: string, value: string) => setValues((prev) => ({ ...prev, [name]: value }));
   const serviceLabel =
     service && "options" in service
       ? service.options?.find((option) => option.value === values.serviceInterest)?.label ?? ""
@@ -154,8 +169,8 @@ function FieldControl({
 function Cards({ cards }: { cards: Enquiry["contactCards"] }) {
   return (
     <div hidden>
-      {Object.values(cards).map((card) => (
-        <div key={card.title}>
+      {Object.entries(cards).map(([id, card]) => (
+        <div key={id}>
           <p>{card.title}</p>
           <p>{card.heading}</p>
           {card.columns.map((column) => (
@@ -169,16 +184,22 @@ function Cards({ cards }: { cards: Enquiry["contactCards"] }) {
   );
 }
 
-export function EnquiryForm({
-  enquiry,
-  locale,
-  status,
-}: {
+type EnquiryFormProps = {
   enquiry: Enquiry;
   locale: string;
   status: string;
-}) {
-  const [role, setRole] = useState(enquiry.defaultRole);
+  /** `?role=` and `?service=` from a vertical page's Talk to Sales link;
+   *  `EnquiryFormBound` reads them inside the page's Suspense boundary. */
+  requestedRole?: string | null;
+  requestedService?: string | null;
+};
+
+export function EnquiryForm({ enquiry, locale, status, requestedRole, requestedService }: EnquiryFormProps) {
+  const [role, setRole] = useState(() =>
+    requestedRole && enquiry.roleOptions.some((option) => option.value === requestedRole)
+      ? requestedRole
+      : enquiry.defaultRole,
+  );
   const [state, action, pending] = useActionState(submitLead, INITIAL_LEAD_FORM_STATE);
   const mountedAt = useRef(0);
   const elapsed = useRef<HTMLInputElement>(null);
@@ -220,7 +241,7 @@ export function EnquiryForm({
       </select>
       <Cards cards={enquiry.contactCards} />
       {roles.map((item) => (
-        <RoleFields key={item.role} role={item} locale={locale} active={item.role === role} />
+        <RoleFields key={item.role} role={item} locale={locale} active={item.role === role} requestedService={requestedService ?? ""} />
       ))}
       <div hidden>
         <RoleFields role={enquiry.talkToSales} locale={locale} active={false} />
@@ -232,4 +253,9 @@ export function EnquiryForm({
       {pending ? <span hidden>{enquiry.roles.business.submitLabel}</span> : null}
     </form>
   );
+}
+
+export function EnquiryFormBound(props: Omit<EnquiryFormProps, "requestedRole" | "requestedService">) {
+  const query = useSearchParams();
+  return <EnquiryForm {...props} requestedRole={query.get("role")} requestedService={query.get("service")} />;
 }

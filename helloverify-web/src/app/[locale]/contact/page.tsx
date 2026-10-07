@@ -7,7 +7,7 @@ import Image from "next/image";
 
 import { PageShell } from "@/components/chrome/PageShell";
 import { ContactTabs, ContactTabsBound } from "@/components/contact/ContactTabs";
-import { EnquiryForm } from "@/components/contact/EnquiryForm";
+import { EnquiryForm, EnquiryFormBound } from "@/components/contact/EnquiryForm";
 import { contactCms, type ContactCms } from "@/lib/contact/cms";
 import { CONTACT, type ContactCopy } from "@/lib/copy/contact";
 import { FORMS } from "@/lib/copy/forms";
@@ -38,7 +38,11 @@ function heroTitle(text: string) {
 }
 
 function panel(cms: ContactCms, locale: string, honest: ContactCopy, status: string, bound: boolean) {
-  const form = <EnquiryForm enquiry={cms.enquiry} locale={locale} status={status} />;
+  const form = bound ? (
+    <EnquiryFormBound enquiry={cms.enquiry} locale={locale} status={status} />
+  ) : (
+    <EnquiryForm enquiry={cms.enquiry} locale={locale} status={status} />
+  );
   const tabs = { aria: honest.tabs.aria, enquiry: cms.tabs.enquiryLabel, track: cms.tabs.trackLabel };
   return bound ? (
     <ContactTabsBound locale={locale} tabs={tabs} track={cms.track} honest={honest.track}>

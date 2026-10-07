@@ -54,10 +54,6 @@ export const en = {
     kicker: (group: ReactNode) => <>Check · {group}</>,
     h1: (name: ReactNode) => <>{name} verification</>,
     talkToSales: "Talk to sales",
-    /** The only outbound link on the page that is not an `AppLink` — it goes
-     *  to the app origin, so it is a plain `<a>`. The label is copy all the
-     *  same. */
-    buy: "Buy a single check",
   },
 
   /** The `.strip3` figures. `<b>` travels with each leaf for the reason

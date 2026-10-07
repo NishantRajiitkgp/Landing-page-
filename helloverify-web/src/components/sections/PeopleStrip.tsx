@@ -47,7 +47,7 @@ type Words = {
 type Chrome = { per: string; buy: string };
 
 /** Single checks are bought where the site sells à-la-carte checks. */
-const BUY_HREF = "/business/smb";
+const BUY_HREF = "/products/bgv-smb";
 
 type Person = {
   readonly src: PersonSrc;

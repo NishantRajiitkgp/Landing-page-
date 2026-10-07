@@ -7,7 +7,7 @@
     The words are rendered here on the server; `./ConsumerShopStage` owns
     the state. The statement, QR steps and WhatsApp phone that sat under the
     panels came off on 30 Sep 2026; `blocks/HelloVPhone` still plays on
-    `/individuals/hellov`. */
+    `/products/hellov`. */
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
 import { localise } from "@/lib/i18n/href";
@@ -72,11 +72,7 @@ export async function ConsumerShop() {
   });
 
   return (
-    <div className="wrap hair-top fm">
-      <div className="fm-mast">
-        <span className="k">{all.k}</span>
-        <span className="fm-sheet">{t.sheet}</span>
-      </div>
+    <div id="consumer-services" className="wrap hair-top fm">
       <div className="sec-head fm-sh">
         <h2 className="h2">
           {all.headingA}
@@ -98,7 +94,7 @@ export async function ConsumerShop() {
           buy: t.buy,
           pick: t.steps.s2.t,
         }}
-        buyHref={localise("/individuals/hellov", locale)}
+        buyHref={localise("/products/hellov", locale)}
       />
     </div>
   );

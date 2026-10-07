@@ -30,7 +30,6 @@ export const hi: ChecksCopy = {
     kicker: (group: ReactNode) => <>जाँच · {group}</>,
     h1: (name: ReactNode) => <>{name} सत्यापन</>,
     talkToSales: "बिक्री से संपर्क",
-    buy: "एक जाँच खरीदें",
   },
 
   strip: {

@@ -222,6 +222,11 @@ export const LEGACY_ROUTES: readonly LegacyRoute[] = [
   { from: "/platform/coverage", to: "/international", why: "Part 1 — old App.tsx path is canonical" },
 
   { from: "/cartlist", to: "/cart", why: "App.tsx LocaleRedirect; cart now lives on this host" },
+  {
+    from: "/orders/profile-settings",
+    to: "/profile-settings",
+    why: "App.tsx rendered ProfileSettingsPage at both paths; this host serves only /profile-settings",
+  },
 
   // Old aliases — destinations match App.tsx, not the audience-first tree.
   { from: "/enterprise", to: "/products/bgv-enterprise", why: "App.tsx duplicate of /products/bgv-enterprise; sitemap listed one" },
@@ -308,13 +313,13 @@ export const LEGACY_ROUTES: readonly LegacyRoute[] = [
   { from: "/premium/health-practitioners", to: "/", why: "App.tsx — temporarily hidden, redirect direct access to home" },
   {
     from: "/solutions/manpower-and-education-authorities/educationae",
-    to: "/governments/manpower-education/mohesr",
-    why: "Part 10 — old AE alias; MOHESR is live",
+    to: "/solutions/manpower-and-education-authorities/mohesr",
+    why: "Old AE alias; the live card opens /mohesr",
   },
   {
-    from: "/solutions/manpower-and-education-authorities/mohesr",
-    to: "/governments/manpower-education/mohesr",
-    why: "17.8 — the live Education page's MOHESR card links here",
+    from: "/governments/manpower-education/mohesr",
+    to: "/solutions/manpower-and-education-authorities/mohesr",
+    why: "The dossier was the wrong page; the live MOHESR screen is the solution URL",
   },
 ];
 

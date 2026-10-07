@@ -262,6 +262,7 @@ export const en = {
     crumb: "Health Authorities",
     h1: (<>Primary Source Verification for Healthcare <em>Workforce</em></>),
     sub: "Ensure credential accuracy and regulatory compliance by verifying doctors, nurses, and allied professionals directly from issuing authorities.",
+    cta: "Talk to Sales",
     overview: {
       h: "Overview",
       p: "In the GCC's fast-growing, highly regulated healthcare landscape, credentials are non-negotiable. HelloVerify is a globally recognised verification partner trusted by health authority in Saudi Arabia.",

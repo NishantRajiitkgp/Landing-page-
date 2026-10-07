@@ -48,13 +48,13 @@ const DOSSIERS: {
   cta: Cta;
   href: string;
 }[] = [
-  { id: "health", img: "/img/02-nurse-abudhabi.jpg", pos: "50% 30%", Stamp: StampRound, cta: "talk", href: "/governments/health" },
-  { id: "immigration", img: "/img/14-visa-counter.jpg", pos: "50% 40%", Stamp: StampRect, cta: "authority", href: "/governments/immigration" },
-  { id: "manpower", img: "/img/19-singapore.jpg", pos: "50% 35%", Stamp: StampOct, cta: "mom", href: "/governments/manpower-education" },
-  { id: "trade", img: "/img/13-factory-floor.jpg", pos: "50% 45%", Stamp: StampOval, cta: "talk", href: "/governments/trade" },
+  { id: "health", img: "/img/02-nurse-abudhabi.jpg", pos: "50% 30%", Stamp: StampRound, cta: "talk", href: "/solutions/health-authorities" },
+  { id: "immigration", img: "/img/14-visa-counter.jpg", pos: "50% 40%", Stamp: StampRect, cta: "authority", href: "/solutions/immigration-authorities" },
+  { id: "manpower", img: "/img/19-singapore.jpg", pos: "50% 35%", Stamp: StampOct, cta: "mom", href: "/solutions/manpower-and-education-authorities" },
+  { id: "trade", img: "/img/13-factory-floor.jpg", pos: "50% 45%", Stamp: StampOval, cta: "talk", href: "/solutions/trade-authorities" },
 ];
 
-const MOM_PAGE = "/governments/manpower-education/ministry-of-manpower";
+const MOM_PAGE = "/solutions/manpower-and-education-authorities/ministry-of-manpower";
 
 export async function GovDossiers() {
   const t = (await copy(SECTIONS)).govDossiers;
@@ -71,12 +71,12 @@ export async function GovDossiers() {
    *  dossier's vertical page. */
   const AUTH: Partial<Record<GovDossierId, { name: string; logo: string; href: string }[]>> = {
     immigration: [
-      { name: t.authorities.latvia, logo: "/img/latvia-coat-of-arms.png", href: "/governments/immigration" },
-      { name: t.authorities.italy, logo: "/img/italy-emblem.png", href: "/governments/immigration" },
+      { name: t.authorities.latvia, logo: "/img/latvia-coat-of-arms.png", href: "/solutions/immigration-authorities" },
+      { name: t.authorities.italy, logo: "/img/italy-emblem.png", href: "/solutions/immigration-authorities" },
     ],
     manpower: [
       { name: t.momCta, logo: "/img/mom.jpg", href: MOM_PAGE },
-      { name: t.authorities.mohesr, logo: "/img/mohesr-emblem.png", href: "/governments/manpower-education" },
+      { name: t.authorities.mohesr, logo: "/img/mohesr-emblem.png", href: "/solutions/manpower-and-education-authorities/mohesr" },
     ],
   };
   const authCards = (id: GovDossierId) => {
@@ -117,10 +117,6 @@ export async function GovDossiers() {
               {Object.values(d.chips).map((c) => <span key={c} className="gv-chip">{c}</span>)}
             </div>
             <div className="gv-stamp-wrap"><Stamp {...d.stamp} /></div>
-          </div>
-          <div className="gv-proof">
-            {cta === "mom" ? <Image src="/img/mom.jpg" alt="" width={26} height={26} /> : <span className="gv-proof-dot" />}
-            <span>{d.proof}</span>
           </div>
         </div>
         <div className="gv-contents">
@@ -174,7 +170,6 @@ export async function GovDossiers() {
     <section className="wrap hair-top gv" aria-labelledby="gv-h">
       <InkFilter />
       <div className="gv-mast">
-        <div className="gv-mast-k"><span className="k">{t.kicker}</span><span className="gv-sheet">{t.sheet}</span></div>
         <div className="sec-head gv-head">
           <h2 className="h2" id="gv-h">
             {t.heading} <em className="gv-it">{t.headingEm}</em>

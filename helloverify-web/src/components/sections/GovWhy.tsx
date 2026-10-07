@@ -53,11 +53,6 @@ export async function GovWhy() {
   return (
     <section className="gw" aria-labelledby="gw-h">
       <div className="wrap gw-in">
-        <div className="gw-mast">
-          <span className="gw-k">{t.kicker}</span>
-          <i aria-hidden="true" />
-          <span className="gw-k gw-k-end">{t.kickerEnd}</span>
-        </div>
         <h2 className="gw-h" id="gw-h">
           {t.headingA} <em>{t.headingB}</em>
         </h2>

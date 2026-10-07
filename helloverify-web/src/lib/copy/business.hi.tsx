@@ -309,7 +309,7 @@ export const hi: BusinessCopy = {
           info: "It includes verifying the candidate's claims about his/her tenure, etc. and establishment with respective employer. Hello Verify will reach out to the HR using automated email / telephone. Mode: Email/Database Additional Options for Verifications We also have verification methods via. PF/Form 16/Supervisor /UAN. These all are chargeable at an additional charge per check per method.",
         },
         education: {
-          n: "Education Check-Highest Education (Extra University Chargesapplicable)",
+          n: "Education Check-Highest Education (Extra University Charges applicable)",
           price: "₹999",
           info: "This check involves verifying the authenticity of candidate's educational & professional qualifications from the respective universities/colleges / trusted database. The names are run through Hello Verify's proprietary database of both known (trusted) and unknown (suspect) universities/institutes and organizations. Herein, TAT may vary subject to university/college (TAT) process. Mode: Database/Email Scope: 12th, Bachelors, Masters, Professional",
         },
@@ -483,6 +483,7 @@ export const hi: BusinessCopy = {
       checksInclude: "चेक्स में शामिल",
       empty: "अपना पैकेज बनाने के लिए टेबल से चेक्स चुनें।",
       buy: "अभी खरीदें",
+      cartName: "कस्टम पैकेज",
     },
     trusted: {
       h: "व्यवसायों और व्यक्तियों द्वारा भरोसेमंद",
@@ -696,25 +697,25 @@ export const hi: BusinessCopy = {
       cta: "सेल्स से बात करें",
     },
     checks: {
-      h: "We Verify What Matters Most",
-      sub: "Our advance verification checks help you to onboard trustworthy vendors and minimise the risk across your supply chain.",
+      h: "हम वही सत्यापित करते हैं जो सबसे ज़्यादा मायने रखता है",
+      sub: "हमारी उन्नत सत्यापन जाँचें आपको भरोसेमंद वेंडर जोड़ने और पूरी सप्लाई चेन में जोखिम कम करने में मदद करती हैं।",
       tabs: {
         business: {
-          label: "Business License & Promoter Verification",
+          label: "बिज़नेस लाइसेंस और प्रमोटर सत्यापन",
           cards: {
-            tradeLicense: { t: "Trade License Check", p: "This check involves verifying a candidate's educational and professional qualifications, along with confirming the authenticity of the university, college, or academic institution from which the qualifications were obtained." },
-            defaultingDirectors: { t: "Defaulting Directors Check", p: "Defaulting Directors Check identifies whether a candidate has been listed as a defaulting director in any company due to non compliance, financial defaults or regulatory violations." },
-            criminalRecords: { t: "Criminal Records Check", p: "This check involves searching court records across jurisdictions, including the Supreme Court, High Court, District Courts and tribunals to identify any criminal charges against the candidate." },
-            creditCompany: { t: "Credit & Company Check", p: "A Credit & Company Check in background verification evaluates a candidate's credit profile and verifies the legitimacy and status of associated companies through official and financial records." },
+            tradeLicense: { t: "ट्रेड लाइसेंस जाँच", p: "इस जाँच में उम्मीदवार की शैक्षणिक और व्यावसायिक योग्यताओं का सत्यापन किया जाता है, साथ ही उस विश्वविद्यालय, कॉलेज या शैक्षणिक संस्थान की प्रामाणिकता की पुष्टि की जाती है जहाँ से योग्यताएँ प्राप्त की गई थीं।" },
+            defaultingDirectors: { t: "डिफ़ॉल्टिंग डायरेक्टर्स जाँच", p: "डिफ़ॉल्टिंग डायरेक्टर्स जाँच यह पता लगाती है कि क्या उम्मीदवार गैर-अनुपालन, वित्तीय चूक या नियामक उल्लंघनों के कारण किसी कंपनी में डिफ़ॉल्टिंग डायरेक्टर के रूप में सूचीबद्ध है।" },
+            criminalRecords: { t: "आपराधिक रिकॉर्ड जाँच", p: "इस जाँच में सुप्रीम कोर्ट, हाई कोर्ट, ज़िला अदालतों और न्यायाधिकरणों सहित विभिन्न क्षेत्राधिकारों के अदालती रिकॉर्ड खोजे जाते हैं, ताकि उम्मीदवार के विरुद्ध किसी भी आपराधिक आरोप की पहचान हो सके।" },
+            creditCompany: { t: "क्रेडिट और कंपनी जाँच", p: "पृष्ठभूमि सत्यापन में क्रेडिट और कंपनी जाँच उम्मीदवार की क्रेडिट प्रोफ़ाइल का मूल्यांकन करती है और आधिकारिक व वित्तीय रिकॉर्ड के ज़रिए संबद्ध कंपनियों की वैधता और स्थिति सत्यापित करती है।" },
           },
         },
         vendor: {
-          label: "Vendor, Credit & Financial Verification",
+          label: "वेंडर, क्रेडिट और वित्तीय सत्यापन",
           cards: {
-            financialAssessment: { t: "Financial\nAssessment Check", p: "Financial Assessment in business due diligence involves evaluating a company's financial health by reviewing its financial statements, credit profile, and key financial indicators to assess stability and risk." },
-            gstScreening: { t: "GST\nScreening Check", p: "GST Screening in business due diligence involves verifying a company's GST registration, status, and compliance through official records." },
-            creditCheck: { t: "Credit\nCheck", p: "The credit check involves verifying the candidate's credit score and risk parameters through a Credit Bureau. A credit score is generated based on the individual's credit history." },
-            promoterCriminal: { t: "Promoter Criminal\nHistory Check", p: "A Promoter Criminal History Check in business due diligence involves verifying whether company promoters have any criminal records through court and legal databases." },
+            financialAssessment: { t: "वित्तीय\nमूल्यांकन जाँच", p: "बिज़नेस ड्यू डिलिजेंस में वित्तीय मूल्यांकन के तहत कंपनी के वित्तीय विवरणों, क्रेडिट प्रोफ़ाइल और प्रमुख वित्तीय संकेतकों की समीक्षा करके उसकी वित्तीय सेहत का आकलन किया जाता है, ताकि स्थिरता और जोखिम का अनुमान लगाया जा सके।" },
+            gstScreening: { t: "GST\nस्क्रीनिंग जाँच", p: "बिज़नेस ड्यू डिलिजेंस में GST स्क्रीनिंग के तहत आधिकारिक रिकॉर्ड के ज़रिए कंपनी के GST पंजीकरण, स्थिति और अनुपालन का सत्यापन किया जाता है।" },
+            creditCheck: { t: "क्रेडिट\nजाँच", p: "क्रेडिट जाँच में क्रेडिट ब्यूरो के ज़रिए उम्मीदवार के क्रेडिट स्कोर और जोखिम मानकों का सत्यापन किया जाता है। क्रेडिट स्कोर व्यक्ति के क्रेडिट इतिहास के आधार पर तैयार होता है।" },
+            promoterCriminal: { t: "प्रमोटर आपराधिक\nइतिहास जाँच", p: "बिज़नेस ड्यू डिलिजेंस में प्रमोटर आपराधिक इतिहास जाँच के तहत अदालती और कानूनी डेटाबेस के ज़रिए यह सत्यापित किया जाता है कि कंपनी के प्रमोटरों का कोई आपराधिक रिकॉर्ड तो नहीं है।" },
           },
         },
       },
