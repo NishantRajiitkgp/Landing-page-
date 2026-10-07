@@ -2353,9 +2353,12 @@ asked for the build to be finished, so each was decided rather than deferred:
   `data-processing-addendum` (11); the old Terms is website terms-of-use and
   never describes the verification service. The source turned out to be the
   CMS JSON, not the 2,949 lines of `.tsx`, which is the staler fallback copy
-  and disagrees with it in ~30 editorial ways. **Not yet placed anywhere:** the
-  nine jurisdiction supplements, 38,884 characters — more than half the privacy
-  policy — which need sections adding to `legal.ts`, a structure decision.
+  and disagrees with it in ~30 editorial ways. **Placed 7 Oct 2026:** the
+  nine jurisdiction supplements, the privacy tracking / AI / breach /
+  regulatory sections, the cookie functional / specific / questions blocks and
+  the terms links paragraph now have sections of their own (privacy 25/27,
+  cookie 10/11, terms 6/15). Only the old privacy table of contents and the
+  terms copyright line are left out.
   Original note, still true: The copy exists: the live site carries **2,949 lines** across
   `src/pages/policy/` and AUDIT.md classes it "Port verbatim — legally
   reviewed". Porting it restores parity with production; it is not counsel
