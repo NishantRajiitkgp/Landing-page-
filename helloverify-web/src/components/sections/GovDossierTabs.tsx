@@ -39,15 +39,12 @@ function reveal(strip: HTMLElement | null, tab: HTMLElement | undefined) {
 
 export function GovDossierTabs({
   tabs,
-  counts,
   panels,
   label,
   prevLabel,
   nextLabel,
 }: {
   tabs: string[];
-  /** "01 / 04" … — the pager's label for each sheet. */
-  counts: string[];
   panels: ReactNode[];
   label: string;
   prevLabel: string;
@@ -114,13 +111,11 @@ export function GovDossierTabs({
               tabIndex={on === i ? 0 : -1}
               onClick={() => go(i)}
             >
-              <span className="gv-tab-n">{`0${i + 1}`}</span>
               <span className="gv-tab-l">{t}</span>
             </button>
           ))}
         </div>
         <div className="gv-pager">
-          <span className="gv-count">{counts[on]}</span>
           <button type="button" className="gv-arrow" onClick={() => go(on - 1)} aria-label={prevLabel}>
             <svg className="gv-flip" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />

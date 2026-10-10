@@ -1,0 +1,27 @@
+import { chromium } from "@playwright/test";
+
+/** node tools/e2e/_mom-shot.mjs <outPrefix> <path> [desk|phone] [fullPage] */
+const out = process.argv[2] ?? "tools/e2e/_mom";
+const path = process.argv[3] ?? "/en";
+const only = process.argv[4];
+const full = process.argv[5] === "full";
+const browser = await chromium.launch();
+
+for (const [tag, viewport] of [
+  ["desk", { width: 1440, height: 900 }],
+  ["phone", { width: 390, height: 844 }],
+]) {
+  if (only && only !== tag) continue;
+  const page = await browser.newPage({ viewport });
+  const errors = [];
+  page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => m.type() === "error" && !/Content Security Policy/.test(m.text()) && errors.push(m.text()));
+  await page.goto(`http://localhost:3000${path}`, { waitUntil: "networkidle", timeout: 120000 });
+  await page.getByRole("button", { name: /^(Reject|رفض|अस्वीकार)/ }).first().click({ timeout: 3000 }).catch(() => {});
+  await page.waitForTimeout(2500);
+  await page.screenshot({ path: `${out}-${tag}.png`, fullPage: full });
+  const ov = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  console.log(tag, "x-overflow", ov, "errors", errors.length ? errors : "none");
+  await page.close();
+}
+await browser.close();

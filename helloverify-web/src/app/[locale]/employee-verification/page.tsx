@@ -12,12 +12,15 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { AppLink } from "@/components/chrome/AppLink";
+import { Arrow } from "@/components/brand/Arrow";
 import { setRequestLocale } from "next-intl/server";
-import { EmployeeChecks } from "@/components/employee/EmployeeChecks";
+import { EmployeeSegment, type SegmentClients } from "@/components/employee/EmployeeSegment";
 import { AutomateTabs } from "@/components/employee/AutomateTabs";
 import { EmployeeIcon, type EmployeeIconId } from "@/components/employee/EmployeeIcons";
 import { BUSINESS, type BusinessCopy } from "@/lib/copy/business";
+import { SECTIONS } from "@/lib/copy/sections";
 import { copy } from "@/lib/copy/request";
+import { WHITE_COLLAR_CLIENTS, whiteLogo } from "@/lib/whiteCollarClients";
 
 const PATH = "/employee-verification";
 const TALK = "/contact?tab=enquiry&role=business&contact=business-support";
@@ -26,6 +29,13 @@ type E = BusinessCopy["employeeVerification"];
 
 const WHITE_WHY: readonly [keyof E["whiteWhy"]["cards"], EmployeeIconId][] = [["integrity", "integrity"], ["hiring", "hiring"], ["compliance", "compliance"]];
 const BLUE_WHY: readonly [keyof E["blueWhy"]["cards"], EmployeeIconId][] = [["trust", "trustMinutes"], ["smart", "verifySmart"], ["compliance", "complianceShield"]];
+/** The two segment sections: anchor (linked from the homepage packages and
+ *  `/products/bgv-enterprise`), photo with its pixel size, and the
+ *  `service` the contact form preselects. */
+const SEGMENTS = {
+  white: { key: "white", id: "employees-white-collar", img: ["white-caller-verification.png", 1454, 1024], service: "white-collar-verification" },
+  blue: { key: "blue", id: "employees-blue-collar", img: ["blue-caller-verification.png", 1536, 1024], service: "blue-collar-verification" },
+} as const;
 /** Old CMS stat values; identical in every locale. */
 const STATS: readonly [keyof E["results"]["stats"], string][] = [["workflow", "91%"], ["accuracy", "88%"], ["experience", "81%"]];
 /** Old screenshots, `public/img/employee/`, with their pixel sizes. */
@@ -73,71 +83,115 @@ export default async function EmployeeVerificationPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const e = (await copy(BUSINESS)).employeeVerification;
+  /** The client marks and their label are the homepage packages' own copy. */
+  const kv = (await copy(SECTIONS)).packages;
+  const whiteClients: SegmentClients = {
+    h: kv.collars.white.clientsH,
+    items: WHITE_COLLAR_CLIENTS.map((cl) => ({ id: cl.id, fit: cl.fit, src: whiteLogo(cl.id), alt: kv.clients[cl.id] })),
+  };
+
+  const segments = [SEGMENTS.white, SEGMENTS.blue].map((s, i, all) => ({ id: s.id, img: s.img, no: i + 1, of: all.length, tone: s.key, c: e[s.key], href: `${TALK}&service=${s.service}` }));
 
   return (
     <PageShell crumbs={[{ label: e.crumb }]} closing={false}>
-      <div className="wrap hero3">
-        <h1 className="h1">{e.hero.h1}</h1>
-        <div className="hrow">
-          <AppLink href={TALK} className="btn btn-ink">
-            {e.hero.cta}
-          </AppLink>
-        </div>
-      </div>
-
-      <div className="wrap emp3-banner">
-        <h2 className="h2">{e.banner}</h2>
-      </div>
-
-      <Split id="employees-white-collar" c={e.white} img={["white-caller-verification.png", 1454, 1024]} service="white-collar-verification" />
-      <Why h={e.whiteWhy.h} cards={WHITE_WHY.map(([k, icon]) => ({ k, icon, ...e.whiteWhy.cards[k] }))} />
-
-      <div className="wrap sec3">
-        <div className="emp3-results">
-          <h2>{e.results.h}</h2>
-          <div className="smb3-stats">
-            {STATS.map(([k, v]) => (
-              <div key={k}>
-                <p className="v">{v}</p>
-                <p className="l">{e.results.stats[k]}</p>
-              </div>
-            ))}
+      <div className="emp4">
+        <div className="wrap emp4-hero">
+          <div className="tx">
+            <h1 className="h1">{e.hero.h1}</h1>
+            <div className="hrow">
+              <AppLink href={TALK} className="btn btn-ink">
+                {e.hero.cta}
+                <Arrow />
+              </AppLink>
+            </div>
           </div>
+          <nav className="emp4-index" aria-labelledby="emp4-index-h">
+            <h2 id="emp4-index-h">{e.banner}</h2>
+            <ul>
+              {segments.map(({ id, img: [file], c, no }) => {
+                const names = Object.values(c.checks).map((x) => x.n);
+                return (
+                  <li key={id}>
+                    <a href={`#${id}`} className="emp4-jump">
+                      <span className="im">
+                        <Image src={`/img/employee/${file}`} alt="" fill sizes="(max-width: 640px) 72px, 128px" />
+                      </span>
+                      <span className="tx">
+                        <span className="no" aria-hidden="true">{String(no).padStart(2, "0")}</span>
+                        <span className="t">{c.h}</span>
+                        <span className="ck">
+                          {names.slice(0, 2).map((n) => (
+                            <span key={n}>{n}</span>
+                          ))}
+                          {names.length > 2 && <b>{`+${names.length - 2}`}</b>}
+                        </span>
+                      </span>
+                      <span className="go" aria-hidden="true">
+                        <svg viewBox="0 0 16 16">
+                          <path d="M8 3v10M4 9l4 4 4-4" />
+                        </svg>
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
         </div>
-      </div>
 
-      <Split id="employees-blue-collar" c={e.blue} img={["blue-caller-verification.png", 1536, 1024]} service="blue-collar-verification" />
-      <Why h={e.blueWhy.h} cards={BLUE_WHY.map(([k, icon]) => ({ k, icon, ...e.blueWhy.cards[k] }))} />
+        <EmployeeSegment {...segments[0]} clients={whiteClients} />
+        <Why tone="white" h={e.whiteWhy.h} cards={WHITE_WHY.map(([k, icon]) => ({ k, icon, ...e.whiteWhy.cards[k] }))} />
 
-      <div className="wrap sec3">
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{e.automate.h}</h2>
-          <p className="lede">{e.automate.p}</p>
-        </div>
-        <AutomateTabs
-          items={AUTOMATE.map(([k, file, w, h]) => ({
-            k,
-            t: e.automate.tabs[k].t,
-            p: e.automate.tabs[k].p,
-            img: <Image src={`/img/employee/${file}`} alt={e.automate.tabs[k].alt} width={w} height={h} sizes="(max-width: 1080px) 92vw, 820px" />,
-          }))}
-        />
-      </div>
+        <section className="wrap sec3" aria-labelledby="emp4-results-h">
+          <div className="emp4-results">
+            <h2 id="emp4-results-h">{e.results.h}</h2>
+            <ul>
+              {STATS.map(([k, v]) => (
+                <li key={k}>
+                  <p className="v">{v}</p>
+                  <span className="bar" aria-hidden="true">
+                    <i style={{ inlineSize: v }} />
+                  </span>
+                  <p className="l">{e.results.stats[k]}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-      <div className="wrap sec3">
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{e.psv.h}</h2>
-        </div>
-        <ul className="body3 emp3-psv">
-          {PSV.map(([k, file, w, h]) => (
-            <li key={k}>
-              <span className="ic">
-                <Image src={`/img/employee/psv/${file}.svg`} alt="" width={w} height={h} unoptimized />
-              </span>
-              <p>{e.psv.items[k]}</p>
-            </li>
-          ))}
-        </ul>
+        <EmployeeSegment {...segments[1]} />
+        <Why tone="blue" h={e.blueWhy.h} cards={BLUE_WHY.map(([k, icon]) => ({ k, icon, ...e.blueWhy.cards[k] }))} />
+
+        <section className="wrap sec3" aria-labelledby="emp4-auto-h">
+          <div className="emp4-head">
+            <h2 className="h2" id="emp4-auto-h">{e.automate.h}</h2>
+            <p className="lede">{e.automate.p}</p>
+          </div>
+          <AutomateTabs
+            items={AUTOMATE.map(([k, file, w, h]) => ({
+              k,
+              t: e.automate.tabs[k].t,
+              p: e.automate.tabs[k].p,
+              img: <Image src={`/img/employee/${file}`} alt={e.automate.tabs[k].alt} width={w} height={h} sizes="(max-width: 1080px) 92vw, 860px" />,
+            }))}
+          />
+        </section>
+
+        <section className="wrap sec3" aria-labelledby="emp4-psv-h">
+          <div className="emp4-head">
+            <h2 className="h2" id="emp4-psv-h">{e.psv.h}</h2>
+          </div>
+          <ul className="emp4-psv">
+            {PSV.map(([k, file, w, h]) => (
+              <li key={k}>
+                <span className="glyph" aria-hidden="true">
+                  <span className="gl" style={{ width: w, height: h, maskImage: `url(/img/employee/psv/${file}.svg)` }} />
+                </span>
+                <p>{e.psv.items[k]}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
 
       <JsonLd data={serviceNode(locale, SERVICE)} />
@@ -145,57 +199,25 @@ export default async function EmployeeVerificationPage({
   );
 }
 
-/** The old split panel: title, intro and the checks card beside the photo,
- *  "Talk to Sales" centred below. */
-function Split({
-  id,
-  c,
-  img: [file, w, h],
-  service,
-}: {
-  id: string;
-  c: E["white"] | E["blue"];
-  img: readonly [string, number, number];
-  service: string;
-}) {
+function Why({ tone, h, cards }: { tone: "white" | "blue"; h: string; cards: readonly { k: string; icon: EmployeeIconId; t: string; p: string }[] }) {
   return (
-    <div className="wrap sec3" id={id}>
-      <div className="emp3-split">
-        <div className="emp3-copy">
-          <h2 className="h2">{c.h}</h2>
-          <p className="lede">{c.p}</p>
-          <EmployeeChecks id={id} items={Object.entries(c.checks).map(([k, x]) => ({ k, n: x.n, p: x.p }))} />
-        </div>
-        <figure className="emp3-fig">
-          <Image src={`/img/employee/${file}`} alt={c.alt} width={w} height={h} sizes="(max-width: 1080px) 92vw, 520px" />
-        </figure>
-      </div>
-      <div className="emp3-cta">
-        <AppLink href={`${TALK}&service=${service}`} className="btn btn-ink">
-          {c.cta}
-        </AppLink>
-      </div>
-    </div>
-  );
-}
-
-function Why({ h, cards }: { h: string; cards: readonly { k: string; icon: EmployeeIconId; t: string; p: string }[] }) {
-  return (
-    <div className="wrap sec3">
-      <div className="sec-head smb3-head">
+    <section className={`wrap sec3 emp4-why emp4-why-${tone}`}>
+      <div className="hd">
         <h2 className="h2">{h}</h2>
       </div>
-      <ul className="body3 smb3-cards">
+      <ul>
         {cards.map((x) => (
           <li key={x.k}>
-            <span className="ic">
+            <span className="glyph" aria-hidden="true">
               <EmployeeIcon id={x.icon} />
             </span>
-            <h3>{x.t}</h3>
-            <p>{x.p}</p>
+            <div>
+              <h3>{x.t}</h3>
+              <p>{x.p}</p>
+            </div>
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }

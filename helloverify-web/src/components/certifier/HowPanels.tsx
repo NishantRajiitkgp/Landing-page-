@@ -1,8 +1,7 @@
 /** `/products/certifier` — the four How Certifier Works panels, in the old
  *  CMS tab order: Virtual Onboarding (four STEP boxes), Vendor Monitoring
  *  (tick list), Statutory Screenings (tick list + id-card grid), Virtual
- *  Agreement (one tick line + id-card grid). "STEP" is the old component's
- *  hard-coded English. */
+ *  Agreement (one tick line + id-card grid). */
 import type { BusinessCopy } from "@/lib/copy/business";
 
 type How = BusinessCopy["certifier"]["how"];
@@ -50,10 +49,7 @@ export function howPanels(h: How) {
       <ol className="cert3-steps">
         {h.onboarding.steps.map((t, i) => (
           <li key={t}>
-            <span className="badge">
-              <span>STEP</span>
-              <b>{`0${i + 1}`}</b>
-            </span>
+            <span className="badge" aria-hidden="true">{`0${i + 1}`}</span>
             <p>{t}</p>
           </li>
         ))}

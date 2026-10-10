@@ -21,12 +21,17 @@
     in both the HTML and the flight payload. */
 
 import { useState, type ReactNode } from "react";
+import Image from "next/image";
 
 import { closedPolyline, polarRing } from "@/lib/svgPath";
 
 import { useMotionPaused } from "./BizMotion";
 
-export type Letter = { role: string; co: string; q: ReactNode };
+/** The company mark from `/about` for this letter. `w`/`h` are the file's
+ *  own pixel size; CSS sizes the rendered mark. */
+export type LetterLogo = { src: string; alt: string; w: number; h: number };
+
+export type Letter = { role: string; co: string; q: ReactNode; logo?: LetterLogo };
 
 /** Six offset rosettes of 14 lobes, r = 34 ± 5, and a plain ring at 24: the
  *  faint guilloche seal of the canvas letterhead (88-unit box). */
@@ -80,7 +85,7 @@ export function ClientLetters({
         <div className="lt-sel">
           {letters.map((l, k) => (
             <button
-              key={l.role}
+              key={l.logo?.alt ?? l.role}
               type="button"
               className={k === lt ? "lt-s lt-on" : "lt-s"}
               aria-pressed={k === lt}
@@ -91,6 +96,7 @@ export function ClientLetters({
             >
               <span className="lt-sn">{String(k + 1).padStart(2, "0")}</span>
               <span className="lt-sx">
+                {l.logo ? <LetterMark logo={l.logo} /> : null}
                 <b>{l.role}</b>
                 <em>{l.co}</em>
               </span>
@@ -106,16 +112,18 @@ export function ClientLetters({
           {letters.map((l, k) => {
             const rel = (k - lt + n) % n;
             return (
-              <figure key={l.role} className={`lt-l lt-f${rel}`} aria-hidden={rel !== 0}>
+              <figure key={l.logo?.alt ?? l.role} className={`lt-l lt-f${rel}`} aria-hidden={rel !== 0}>
                 <div className="lt-top">
                   <span>
                     {from} · {l.role}
                   </span>
-                  <span>{l.co}</span>
+                  {l.logo ? <LetterMark logo={l.logo} place="letter" /> : <span>{l.co}</span>}
                 </div>
-                <svg className="lt-seal" aria-hidden="true" focusable="false">
-                  <use href="#lt-seal" />
-                </svg>
+                {l.logo ? null : (
+                  <svg className="lt-seal" aria-hidden="true" focusable="false">
+                    <use href="#lt-seal" />
+                  </svg>
+                )}
                 <span className="lt-qm" aria-hidden="true">
                   “
                 </span>
@@ -130,5 +138,19 @@ export function ClientLetters({
         </div>
       </div>
     </div>
+  );
+}
+
+/** Same fit as the About page testimonial marks (`.tst3 .c .lg`): a wide
+ *  wordmark and a taller badge share one box without cropping. */
+function LetterMark({ logo, place }: { logo: LetterLogo; place?: "letter" }) {
+  return (
+    <Image
+      className={place === "letter" ? "lt-mark" : "lt-brand"}
+      src={logo.src}
+      alt={logo.alt}
+      width={logo.w}
+      height={logo.h}
+    />
   );
 }

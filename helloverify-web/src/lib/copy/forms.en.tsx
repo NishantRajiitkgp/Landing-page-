@@ -26,36 +26,64 @@ export const en = {
   },
 
   interests: {
-    enterprise: "Enterprise background verification",
-    smb: "SMB packages",
-    "employee-verification": "Employee verification",
-    "customer-kyc": "Customer KYC / Trust & Safety",
-    certifier: "Vendor due diligence (Certifier)",
-    governments: "Government / authority programme",
-    hellov: "Individual / HelloV",
+    "white-collar": "White Collar Verification",
+    "blue-collar": "Blue Collar Verification",
+    international: "International Check & Capability",
+    "vendor-due-diligence": "Vendor Due Diligence",
+    partnership: "Partnership (Request for a demo)",
+    "immigration-authority": "Immigration Authority",
+    "healthcare-authority": "Healthcare Authority",
+    "education-authority": "Education Authority",
+    "business-trade-authority": "Business & Trade Authority",
+    nanny: "Nanny Verification",
+    driver: "Driver Verification",
+    "home-staff": "Home Staff",
+    tenant: "Tenant Verification",
+    "other-verification": "Other Verification",
   },
+
+  forWhom: {
+    label: "This is for",
+    self: "For myself",
+    other: "For someone else",
+    promptSelf: "Which authority is it for, and what needs verifying?",
+  },
+  /** `{n}` is replaced with how many services are ticked. */
+  selectedCount: "{n} selected",
 
   fields: {
     name: { label: "Full name", placeholder: "Priya Menon" },
-    mobile: { label: "Mobile", placeholder: "+91" },
+    mobile: { label: "Mobile", placeholder: "9876543210" },
+    countryCode: "Country code",
+  },
+
+  checks: {
+    nameMissing: "Enter your full name.",
+    nameInvalid: "Use letters in the name.",
+    emailMissing: "Enter an email address we can reply to.",
+    emailInvalid: "Enter an email address we can reply to.",
+    phoneMissing: "Enter a mobile number.",
+    phoneInvalid: "Use digits only, up to 15.",
+    countryMissing: "Choose a country code.",
+    companyInvalid: "Use letters and numbers in the organisation name.",
   },
 
   audiences: {
     business: {
       company: { label: "Company", placeholder: "Company name" },
       email: { label: "Business email", placeholder: "name@company.com" },
-      interestPlaceholder: "Employee verification, KYC, Certifier, Consumer…",
+      interestPlaceholder: "Select Service Type",
       prompt: "How many checks a month, and where?",
     },
     government: {
       company: { label: "Department or authority", placeholder: "Ministry, department or agency" },
       email: { label: "Official email", placeholder: "name@department.gov" },
-      interestPlaceholder: "Government / authority programme",
+      interestPlaceholder: "Select Service Type",
       prompt: "Which programme is it for, and roughly how many applicants a year?",
     },
     individual: {
       email: { label: "Email", placeholder: "you@example.com" },
-      interestPlaceholder: "Individual / HelloV",
+      interestPlaceholder: "Select Service Type",
       prompt: "Who would you like to verify — a tenant, a nanny, a driver?",
     },
   },

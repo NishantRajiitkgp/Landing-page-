@@ -11,11 +11,13 @@ export function MomTrack({ track, locale }: { track: MomDoc["screening"]["track"
         <h2 className="h2">{track.title}</h2>
         <p className="lede">{track.lead}</p>
       </div>
-      <p className="mom3-lead">{track.infoLead}</p>
-      <div className="mom3-acts">
-        <MomLink href={track.portalCta.href} locale={locale} className="btn btn-ink btn-sm">
-          {track.portalCta.label}
-        </MomLink>
+      <div className="mom3-trackbox">
+        <p className="mom3-lead">{track.infoLead}</p>
+        <div className="mom3-acts">
+          <MomLink href={track.portalCta.href} locale={locale} className="btn btn-ink btn-sm">
+            {track.portalCta.label}
+          </MomLink>
+        </div>
       </div>
     </section>
   );

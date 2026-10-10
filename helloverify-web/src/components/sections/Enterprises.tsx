@@ -40,6 +40,14 @@ const VENDOR = "/img/v2/en-vendor.jpg";
 /** Faces on the phone and the certificate: 90px at most, 7vw at 1440. */
 const SIZES_EN_FACE = "(max-width: 1080px) 30vw, 7vw";
 
+/** The three letters are the About page's client voices, in the same order.
+ *  Logos are the marks that page already shows beside each quote. */
+const LETTER_LOGOS = {
+  hrShared: { src: "/img/clients/hcl.png", alt: "HCL", w: 300, h: 43 },
+  people: { src: "/img/clients/cognizant.png", alt: "Cognizant", w: 300, h: 54 },
+  associate: { src: "/img/clients/herofincorp.png", alt: "Hero Fincorp", w: 270, h: 104 },
+} as const;
+
 function Face({ src, className }: { src: string; className: string }) {
   return (
     <span className={className} style={{ background: tint(src) }}>
@@ -269,7 +277,10 @@ export async function Enterprises() {
           </>
         }
         from={L.from}
-        letters={Object.values(L.items)}
+        letters={(Object.keys(L.items) as (keyof typeof L.items)[]).map((k) => ({
+          ...L.items[k],
+          logo: LETTER_LOGOS[k],
+        }))}
       />
     </MotionStage>
   );

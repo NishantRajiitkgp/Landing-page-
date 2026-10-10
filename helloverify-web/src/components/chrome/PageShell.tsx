@@ -28,19 +28,23 @@ export async function PageShell({
   crumbs,
   children,
   closing,
+  showSignUp = true,
 }: {
   crumbs: readonly Crumb[];
   children: React.ReactNode;
   /** `false` drops the closing band, for pages whose old version ended on
    *  its last section. */
   closing?: React.ComponentProps<typeof ClosingCta> | false;
+  /** `false` on flows that have their own account, so the bar does not offer
+   *  Sign up next to that flow's Sign out. */
+  showSignUp?: boolean;
 }) {
   const locale = await getLocale();
   const breadcrumbs = breadcrumbList(crumbs, locale);
 
   return (
     <div className="page">
-      <SiteNav />
+      <SiteNav showSignUp={showSignUp} />
       <Breadcrumb items={crumbs} />
       {breadcrumbs && <JsonLd data={breadcrumbs} />}
       <main id="main-content">{children}</main>

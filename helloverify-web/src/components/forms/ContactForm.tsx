@@ -10,20 +10,28 @@
 // 20 KB further over the §9.1 script budget to duplicate a check the server has
 // to do anyway.
 
-import { useActionState, useEffect, useRef, useState, type ReactNode } from "react";
+import { useActionState, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 import { submitLead } from "@/app/[locale]/contact/actions";
+import { leadArrival } from "@/lib/leads/arrival";
 import {
   ELAPSED_FIELD,
+  FOR_VALUES,
   HONEYPOT_FIELD,
-  INTEREST_VALUES,
+  INTEREST_GROUPS,
+  type ForValue,
   type InterestValue,
   LIMITS,
   SEGMENT_VALUES,
+  contactDetailsRequired,
+  interestGroup,
+  interestIsMulti,
   type LeadField,
   type SegmentValue,
 } from "@/lib/leads/constraints";
-import { Field, SEGMENT_FORM, TEXT_FIELDS } from "@/components/forms/LeadFields";
+import { Field, TEXT_FIELDS } from "@/components/forms/LeadFields";
+import { MultiSelect } from "@/components/forms/MultiSelect";
+import { PhoneField } from "@/components/forms/PhoneField";
 import type { FormsUi } from "@/lib/copy/forms";
 import { INITIAL_LEAD_FORM_STATE } from "@/lib/leads/state";
 import { localise } from "@/lib/i18n/href";
@@ -59,7 +67,16 @@ export function ContactForm({
   const [segment, setSegment] = useState<SegmentValue>(
     (SEGMENT_VALUES as readonly string[]).includes(echoed ?? "") ? (echoed as SegmentValue) : "business",
   );
-  const cfg = SEGMENT_FORM[segment];
+  const echoedFor = state.values?.forWhom;
+  const [forWhom, setForWhom] = useState<ForValue>(
+    (FOR_VALUES as readonly string[]).includes(echoedFor ?? "") ? (echoedFor as ForValue) : "self",
+  );
+  /** Services named by the inbound link, applied once before paint. Empty
+   *  until then, and ignored once a failed submit has echoed the user's own
+   *  choices. */
+  const [arrived, setArrived] = useState<readonly InterestValue[]>([]);
+  const group = interestGroup(segment, forWhom);
+  const offered: readonly InterestValue[] = INTEREST_GROUPS[group];
   const id = (field: string) => idPrefix + field;
 
   /** Set in an effect, not as `useRef(Date.now())`.
@@ -88,42 +105,59 @@ export function ContactForm({
     }
   };
 
-  /** `/contact?interest=certifier` from a vertical page arrives pre-selected.
+  /** `/contact?role=applicant&service=education-authority` from a vertical
+   *  page arrives on the matching audience, with that service selected.
    *
-   *  Applied in an effect against the DOM rather than through `defaultValue`,
-   *  because the page is statically prerendered: deriving the default during
-   *  render would make the server's HTML and the client's first render
-   *  disagree and trip a hydration mismatch. Reading `searchParams` in the
-   *  Server Component is not an option either — it would opt /contact into
-   *  dynamic rendering and cost the build its zero-dynamic-routes property.
+   *  Applied before paint rather than as a render default, because the page
+   *  is statically prerendered: reading the query during render would make
+   *  the server's HTML and the client's first render disagree. Reading
+   *  `searchParams` in the Server Component is not an option either — it
+   *  would opt /contact into dynamic rendering.
    *
-   *  Runs once, and never overwrites a value, so it cannot clobber what the
-   *  user picked or the value echoed back after a failed submit. */
+   *  Runs once. A failed submit has already echoed `state.values` into the
+   *  initial state above, and this does not run again, so it cannot clobber
+   *  what the user picked. */
   const prefilled = useRef(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (prefilled.current) return;
     prefilled.current = true;
+    if (state.values?.segment || state.values?.interest || state.values?.forWhom) return;
 
-    const requested = new URLSearchParams(window.location.search).get("interest");
-    if (!requested) return;
-    if (!(INTEREST_VALUES as readonly string[]).includes(requested)) return;
+    const next = leadArrival(new URLSearchParams(window.location.search));
+    if (!next) return;
+    setSegment((current) => (current === next.segment ? current : next.segment));
+    setForWhom((current) => (current === next.forWhom ? current : next.forWhom));
+    if (next.interests.length) setArrived(next.interests);
+  }, [state.values?.forWhom, state.values?.interest, state.values?.segment]);
 
-    const select = document.getElementById(`${idPrefix}interest`);
-    if (select instanceof HTMLSelectElement && !select.value) {
-      select.value = requested as InterestValue;
-    }
-  }, [idPrefix]);
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    formRef.current?.querySelectorAll("input, select, textarea").forEach((node) => {
+      if (
+        node instanceof HTMLInputElement ||
+        node instanceof HTMLSelectElement ||
+        node instanceof HTMLTextAreaElement
+      ) {
+        node.setCustomValidity("");
+      }
+    });
+  }, [segment, forWhom]);
 
   const errorFor = (field: LeadField) => state.fieldErrors?.[field];
 
   const invalidProps = (field: LeadField) =>
     errorFor(field) ? { "aria-invalid": true as const, "aria-describedby": `${id(field)}-error` } : {};
 
-  /** The select's starting value: what was echoed back if this audience is
-   *  offered it, else the audience's preset, else the placeholder. */
-  const echoedInterest = state.values?.interest as InterestValue | undefined;
-  const interestDefault =
-    echoedInterest && cfg.interests.includes(echoedInterest) ? echoedInterest : (cfg.preset ?? "");
+  /** What was echoed back and is offered to this audience; several ticked
+   *  services come back comma-joined. A deep link's service is used only when
+   *  nothing was echoed. Empty shows the placeholder. */
+  const echoedInterests = (state.values?.interest ?? "")
+    .split(",")
+    .filter((value): value is InterestValue => offered.includes(value as InterestValue));
+  const picked = echoedInterests.length
+    ? echoedInterests
+    : arrived.filter((value) => offered.includes(value));
+  const interestDefault = picked[0] ?? "";
 
 
   if (state.status === "success") {
@@ -145,7 +179,7 @@ export function ContactForm({
   }
 
   return (
-    <form className="form" action={formAction} onInput={stampElapsed} onFocus={stampElapsed}>
+    <form ref={formRef} className="form" action={formAction} onInput={stampElapsed} onFocus={stampElapsed}>
       <div className="form-top">
         <div className="fld-l" style={{ marginBottom: 10 }}>
           {t.kicker}
@@ -169,6 +203,29 @@ export function ContactForm({
       </div>
 
       <div className={`fgrid fgrid-${segment}`} style={{ marginTop: 22 }}>
+        {segment === "individual" ? (
+          <div className="full2">
+            <div className="fld-l" id={id("forWhom-label")}>
+              {t.forWhom.label}
+            </div>
+            <div className="segs for-segs" role="radiogroup" aria-labelledby={id("forWhom-label")}>
+              {FOR_VALUES.map((value) => (
+                <label className="seg" key={value}>
+                  <input
+                    type="radio"
+                    name="forWhom"
+                    value={value}
+                    className="vh"
+                    checked={forWhom === value}
+                    onChange={() => setForWhom(value)}
+                  />
+                  {t.forWhom[value]}
+                </label>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
         {TEXT_FIELDS.map((base) => {
           const words =
             base.id === "company"
@@ -177,13 +234,16 @@ export function ContactForm({
                 : t.audiences[segment].company
               : base.id === "email"
                 ? t.audiences[segment].email
-                : base.id === "name"
-                  ? t.fields.name
-                  : t.fields.mobile;
+                : t.fields.name;
           if (!words) return null;
           const f = { ...base, ...words };
+          const must = f.id === "name" ? contactDetailsRequired(segment) : Boolean(f.required);
+          const missing =
+            f.id === "email" ? t.checks.emailMissing : f.id === "name" ? t.checks.nameMissing : t.checks.companyInvalid;
+          const bad =
+            f.id === "email" ? t.checks.emailInvalid : f.id === "name" ? t.checks.nameInvalid : t.checks.companyInvalid;
           return (
-            <Field key={f.id} id={f.id} label={f.label} message={errorFor(f.id)} idPrefix={idPrefix}>
+            <Field key={f.id} id={f.id} label={must ? `${f.label} *` : f.label} message={errorFor(f.id)} idPrefix={idPrefix}>
               <input
                 className="inp"
                 id={id(f.id)}
@@ -191,16 +251,36 @@ export function ContactForm({
                 type={f.type}
                 placeholder={f.placeholder}
                 autoComplete={f.autoComplete}
-                required={f.required}
+                required={must}
                 minLength={f.minLength}
                 pattern={f.pattern}
                 maxLength={f.maxLength}
                 defaultValue={state.values?.[f.id] ?? ""}
+                onInvalid={(e) => {
+                  const el = e.currentTarget;
+                  el.setCustomValidity(el.validity.valueMissing ? missing : bad);
+                }}
+                onInput={(e) => e.currentTarget.setCustomValidity("")}
                 {...invalidProps(f.id)}
               />
             </Field>
           );
         })}
+
+        <PhoneField
+          idPrefix={idPrefix}
+          required={contactDetailsRequired(segment)}
+          label={t.fields.mobile.label}
+          countryLabel={t.fields.countryCode}
+          placeholder={t.fields.mobile.placeholder}
+          dialDefault={state.values?.countryCode ?? ""}
+          numberDefault={state.values?.mobile ?? ""}
+          numberError={errorFor("mobile")}
+          countryError={errorFor("countryCode")}
+          missingMessage={t.checks.phoneMissing}
+          invalidMessage={t.checks.phoneInvalid}
+          countryMessage={t.checks.countryMissing}
+        />
 
         {/* Beside Mobile for an individual, who has no company row to fill
             the grid; across both columns otherwise. */}
@@ -213,25 +293,40 @@ export function ContactForm({
               selected at MOUNT only — so without a remount a failed submission
               silently cleared the service the user had picked. Measured, not
               theorised: it was the one field that came back empty. */}
-          {/* The segment is in the key too: switching audience remounts the
-              select with that audience's options and preset. */}
-          <select
-            key={`${state.token ?? 0}-${segment}`}
-            className="inp"
-            id={id("interest")}
-            name="interest"
-            defaultValue={interestDefault}
-            {...invalidProps("interest")}
-          >
-            <option value="" disabled>
-              {t.audiences[segment].interestPlaceholder}
-            </option>
-            {cfg.interests.map((value) => (
-              <option key={value} value={value}>
-                {t.interests[value]}
+          {/* The audience is in the key too: switching it remounts the
+              control with that audience's options. */}
+          {interestIsMulti(group) ? (
+            <MultiSelect
+              key={`${state.token ?? 0}-${group}-${picked.join(",")}`}
+              id={id("interest")}
+              name="interest"
+              label={t.interest}
+              options={offered.map((value) => ({ value, label: t.interests[value] }))}
+              placeholder={t.audiences[segment].interestPlaceholder}
+              countLabel={t.selectedCount}
+              defaultValue={picked}
+              invalid={Boolean(errorFor("interest"))}
+              describedBy={errorFor("interest") ? `${id("interest")}-error` : undefined}
+            />
+          ) : (
+            <select
+              key={`${state.token ?? 0}-${group}-${interestDefault}`}
+              className="inp"
+              id={id("interest")}
+              name="interest"
+              defaultValue={interestDefault}
+              {...invalidProps("interest")}
+            >
+              <option value="" disabled>
+                {t.audiences[segment].interestPlaceholder}
               </option>
-            ))}
-          </select>
+              {offered.map((value) => (
+                <option key={value} value={value}>
+                  {t.interests[value]}
+                </option>
+              ))}
+            </select>
+          )}
         </Field>
 
         <Field id="message" label={t.message} wide message={errorFor("message")} idPrefix={idPrefix}>
@@ -240,7 +335,7 @@ export function ContactForm({
             id={id("message")}
             name="message"
             rows={3}
-            placeholder={t.audiences[segment].prompt}
+            placeholder={segment === "individual" && forWhom === "self" ? t.forWhom.promptSelf : t.audiences[segment].prompt}
             maxLength={LIMITS.message.max}
             defaultValue={state.values?.message ?? ""}
             style={{

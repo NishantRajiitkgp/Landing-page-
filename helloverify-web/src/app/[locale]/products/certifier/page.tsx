@@ -12,6 +12,7 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { AppLink } from "@/components/chrome/AppLink";
+import { Arrow } from "@/components/brand/Arrow";
 import { setRequestLocale } from "next-intl/server";
 import { CertifierIcon, type CertifierIconId } from "@/components/certifier/CertifierIcons";
 import { CertifierChecks, CHECKS_ID } from "@/components/certifier/CertifierChecks";
@@ -96,115 +97,118 @@ export default async function CertifierPage({
 
   return (
     <PageShell crumbs={[{ label: c.crumb }]} closing={false}>
-      <div className="wrap hero3">
-        <h1 className="h1">{c.hero.h1}</h1>
-        <p className="sub">{c.hero.sub}</p>
-        <div className="hrow">
-          <AppLink href="/contact?tab=enquiry" className="btn btn-ink">
-            {c.hero.cta}
-          </AppLink>
+      <div className="cf4">
+        <div className="wrap cf4-hero">
+          <h1 className="h1">{c.hero.h1}</h1>
+          <p className="sub">{c.hero.sub}</p>
+          <div className="hrow">
+            <AppLink href="/contact?tab=enquiry" className="btn btn-ink">
+              {c.hero.cta}
+              <Arrow />
+            </AppLink>
+          </div>
         </div>
-      </div>
 
-      <div className="wrap sec3" id={CHECKS_ID}>
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{c.checks.h}</h2>
-          <p className="lede">{c.checks.sub}</p>
-        </div>
-        <CertifierChecks
-          tabs={CHECK_TABS.map(([k, id, icons]) => ({
-            id,
-            label: c.checks.tabs[k].label,
-            cards: icons.map((icon) => {
-              const card = (c.checks.tabs[k].cards as Record<string, { t: string; p: string }>)[icon];
-              return { icon, t: card.t, p: card.p };
-            }),
-          }))}
-        />
-      </div>
+        <section className="wrap sec3" id={CHECKS_ID} aria-labelledby="cf4-checks-h">
+          <div className="cf4-head">
+            <h2 className="h2" id="cf4-checks-h">{c.checks.h}</h2>
+            <p className="lede">{c.checks.sub}</p>
+          </div>
+          <CertifierChecks
+            tabs={CHECK_TABS.map(([k, id, icons]) => ({
+              id,
+              label: c.checks.tabs[k].label,
+              cards: icons.map((icon) => {
+                const card = (c.checks.tabs[k].cards as Record<string, { t: string; p: string }>)[icon];
+                return { icon, t: card.t, p: card.p };
+              }),
+            }))}
+          />
+        </section>
 
-      <div className="wrap sec3" id="certifier-how-it-works">
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{h.h}</h2>
-          {h.intro.map((x) => (
-            <p key={x} className="lede">
-              {x}
-            </p>
-          ))}
-        </div>
-        <CertifierHow
-          tabs={(["onboarding", "monitoring", "statutory", "agreement"] as const).map((k) => ({ k, label: h.tabs[k] }))}
-          panels={howPanels(h)}
-          slider={
-            <CertSlider
-              key="slider"
-              autoplay
-              className="cert3-shots"
-              slides={SLIDES.map(([f, w, ht], i) => (
-                <Image key={f} src={`/img/certifier/${f}`} alt={h.slides[i]} width={w} height={ht} sizes="(max-width: 900px) 100vw, 640px" />
+        <section className="wrap sec3" id="certifier-how-it-works" aria-labelledby="cf4-how-h">
+          <div className="cf4-head cf4-how-head">
+            <h2 className="h2" id="cf4-how-h">{h.h}</h2>
+            <div>
+              {h.intro.map((x) => (
+                <p key={x} className="lede">{x}</p>
               ))}
-            />
-          }
-        />
-      </div>
+            </div>
+          </div>
+          <CertifierHow
+            tabs={(["onboarding", "monitoring", "statutory", "agreement"] as const).map((k) => ({ k, label: h.tabs[k] }))}
+            panels={howPanels(h)}
+            slider={
+              <CertSlider
+                key="slider"
+                autoplay
+                className="cert3-shots"
+                slides={SLIDES.map(([f, w, ht], i) => (
+                  <Image key={f} src={`/img/certifier/${f}`} alt={h.slides[i]} width={w} height={ht} sizes="(max-width: 900px) 100vw, 640px" />
+                ))}
+              />
+            }
+          />
+        </section>
 
-      <div className="wrap sec3" id="certifier-industries-we-serve">
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{c.industries.h}</h2>
-          <p className="lede">{c.industries.p}</p>
-        </div>
-        <ul className="body3 cert3-ind">
-          {INDUSTRIES.map(([k, f, w, ht]) => (
-            <li key={k}>
-              <span className="ph">
-                <Image src={`/img/certifier/${f}`} alt={c.industries.cards[k].alt} width={w} height={ht} sizes="(max-width: 900px) 50vw, 320px" />
-              </span>
-              <h3>{c.industries.cards[k].t}</h3>
-            </li>
-          ))}
-        </ul>
-      </div>
+        <section className="wrap sec3" id="certifier-industries-we-serve" aria-labelledby="cf4-ind-h">
+          <div className="cf4-head">
+            <h2 className="h2" id="cf4-ind-h">{c.industries.h}</h2>
+            <p className="lede">{c.industries.p}</p>
+          </div>
+          <ul className="cf4-ind">
+            {INDUSTRIES.map(([k, f, w, ht]) => (
+              <li key={k}>
+                <span className="ph">
+                  <Image src={`/img/certifier/${f}`} alt={c.industries.cards[k].alt} width={w} height={ht} sizes="(max-width: 900px) 50vw, 320px" />
+                </span>
+                <h3>{c.industries.cards[k].t}</h3>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      <div className="wrap sec3" id="certifier-why-consider">
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{c.why.h}</h2>
-          <p className="lede">{c.why.p}</p>
-        </div>
-        <ul className="body3 smb3-cards smb3-cards-4">
-          {WHY.map(([k, icon]) => (
-            <li key={k}>
-              <span className="ic">
-                <CertifierIcon id={icon} />
-              </span>
-              <h3>{c.why.cards[k].t}</h3>
-              <p>{c.why.cards[k].p}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
+        <section className="wrap sec3" id="certifier-why-consider" aria-labelledby="cf4-why-h">
+          <div className="cf4-head">
+            <h2 className="h2" id="cf4-why-h">{c.why.h}</h2>
+            <p className="lede">{c.why.p}</p>
+          </div>
+          <ul className="cf4-grid">
+            {WHY.map(([k, icon]) => (
+              <li key={k}>
+                <span className="glyph" aria-hidden="true">
+                  <CertifierIcon id={icon} />
+                </span>
+                <h3>{c.why.cards[k].t}</h3>
+                <p>{c.why.cards[k].p}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
 
-      <div className="wrap sec3" id="certifier-api-counterparty-platform">
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{c.api.h}</h2>
-          <p className="lede">{c.api.p}</p>
-        </div>
-        <CertSlider
-          dots
-          className="body3 cert3-api"
-          slides={API.map((slide, i) => (
-            <ul key={i} className="smb3-cards smb3-cards-4">
-              {slide.map(([k, icon]) => (
-                <li key={k}>
-                  <span className="ic">
-                    <CertifierIcon id={icon} />
-                  </span>
-                  <h3>{c.api.cards[k].t}</h3>
-                  <p>{c.api.cards[k].p}</p>
-                </li>
-              ))}
-            </ul>
-          ))}
-        />
+        <section className="wrap sec3" id="certifier-api-counterparty-platform" aria-labelledby="cf4-api-h">
+          <div className="cf4-head">
+            <h2 className="h2" id="cf4-api-h">{c.api.h}</h2>
+            <p className="lede">{c.api.p}</p>
+          </div>
+          <CertSlider
+            dots
+            className="cert3-api"
+            slides={API.map((slide, i) => (
+              <ul key={i} className="cf4-grid">
+                {slide.map(([k, icon]) => (
+                  <li key={k}>
+                    <span className="glyph" aria-hidden="true">
+                      <CertifierIcon id={icon} />
+                    </span>
+                    <h3>{c.api.cards[k].t}</h3>
+                    <p>{c.api.cards[k].p}</p>
+                  </li>
+                ))}
+              </ul>
+            ))}
+          />
+        </section>
       </div>
 
       <JsonLd data={serviceNode(locale, SERVICE)} />

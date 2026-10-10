@@ -10,8 +10,7 @@
  *  Domino's, Starbucks and Reliance Retail still need written approval
  *  before this page goes live. They are shown now for testing.
  *
- *  White-collar marks are not in this list. The white-collar panel keeps an
- *  empty rail of the same height until those files arrive. */
+ *  The white-collar panel's marks are in `./whiteCollarClients`. */
 export type BlueLogoFit = "badge" | "square" | "wide";
 
 export const BLUE_COLLAR_CLIENTS: readonly { id: BlueClientId; fit: BlueLogoFit }[] = [

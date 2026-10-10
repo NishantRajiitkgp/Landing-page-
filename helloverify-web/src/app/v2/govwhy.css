@@ -166,21 +166,24 @@
    `GovWhyTrust.tsx` says what the picture tells; this is its clock, one
    12 s cycle, here in seconds:
      0.2       HelloVerify surfaces under the ground; 0.4–1.2 the pipes are laid
-     1.0       a worker walks in; 2.0 at the labour ministry, a "?"
-     2.1–3.8   the question goes down (2.6 at HelloVerify), on to the three
-               sources (lit 3.1) and back (3.7: the record is held), and up
-     4.3       the ministry is lit, the worker verified
-     5.5 / 7.6 / 9.7  immigration, the health regulator, the employer: down
+     2.1–3.8   the manpower ministry's question goes down (2.6 at
+               HelloVerify), on to the three sources (lit 3.1, ticked
+               3.1 / 3.2 / 3.3) and the pass back (3.7), and up
+     4.3       the ministry is lit
+     5.6 / 7.7 / 9.8  immigration, the health authority, the employer: down
                and straight back up in under a second each (lit 6.5, 8.6,
-               10.7) — the record is already in the layer. The plane: 6.6.
-     10.8–11.5 every pipe runs at once; 11.5–12 the scene clears.
-   What switches on and stays (`gwtOn*`, the walk, the bubbles) is written
-   on the absolute clock; one-shots (packets, rings, pops) share a keyframe
-   and start on a `gwt-dNN` delay class, NN in tenths of a second. At rest
-   (no `.gw-go`, or reduced motion) it is the last frame: all lit, every
-   pipe live, nothing in flight. */
+               10.7) — the sources have already passed it.
+     11.5–12   the scene clears.
+   What switches on and stays (`gwtOn*`) is written on the absolute clock;
+   one-shots (packets, rings, pops) share a keyframe and start on a
+   `gwt-dNN` delay class, NN in tenths of a second. At rest (no `.gw-go`,
+   or reduced motion) it is the last frame: all lit, every source ticked,
+   nothing in flight. The pared-back look (9 Oct 2026) is `.gwt-min`, so
+   the plates that share this kit and have not been redone keep theirs. */
 .gw-viz-full { overflow: hidden; }
-.gwt { display: block; width: 100%; height: 100%; overflow: visible; }
+/* The drawings are laid out left to right in every locale; `ltr` keeps a
+   text's anchor where its x says, and Arabic still reads right to left. */
+.gwt { display: block; width: 100%; height: 100%; overflow: visible; direction: ltr; }
 .gwt text { font-family: var(--sans); font-size: 8px; fill: var(--ink-soft); }
 .gwt .gwt-mono { font-family: var(--mono); font-size: 6.8px; letter-spacing: .1em; text-transform: uppercase; fill: var(--muted); }
 .gwt .gwt-mono-hot { fill: var(--primary-ink); }
@@ -203,10 +206,8 @@
 .gwt-fin { opacity: 0; }
 .gwt-pk { fill: none; stroke: var(--primary); stroke-width: 4.6; stroke-linecap: round; stroke-dasharray: .08 1.3; opacity: 0; }
 .gwt-core { fill: var(--white); stroke: var(--primary); stroke-width: 1.4; }
-.gwt-core-g, .gwt-pop, .gwt-ring, .gwt-ask, .gwt-ok { transform-box: fill-box; transform-origin: 50% 50%; }
+.gwt-core-g, .gwt-pop, .gwt-ring { transform-box: fill-box; transform-origin: 50% 50%; }
 .gwt-ring { fill: none; stroke: var(--primary); stroke-width: 1.2; opacity: 0; }
-.gwt-link { fill: none; stroke: var(--primary); stroke-width: 1.2; stroke-dasharray: 1.5 2; }
-.gwt-rec > rect { fill: var(--white); stroke: rgb(from var(--primary) r g b / .45); stroke-width: 1; }
 .gwt-src-o { fill: var(--white); stroke: rgb(from var(--ink) r g b / .3); stroke-width: 1.1; }
 .gwt-src-on > circle { fill: var(--primary); }
 .gwt-src-on .gw-ico { stroke: var(--white); }
@@ -220,19 +221,22 @@
 .gwt-lit .gwt-a { fill: var(--primary); }
 .gwt-lit .gwt-pole { stroke: var(--primary); }
 .gwt .gwt-lit text { fill: var(--primary-ink); }
-.gwt-plane { fill: var(--primary); opacity: 0; }
-.gwt-me { opacity: 0; }
 .gwt-me-o { fill: var(--white); stroke: rgb(from var(--ink) r g b / .5); stroke-width: 1.2; }
 .gwt-me-i { fill: none; stroke: var(--ink-soft); stroke-width: 1.3; stroke-linecap: round; }
-.gwt-me-ring { fill: none; stroke: var(--primary); stroke-width: 1.8; }
-.gwt-ask, .gwt-ok { opacity: 0; }
-.gwt-ask circle { fill: var(--white); stroke: rgb(from var(--ink) r g b / .4); stroke-width: 1; }
-.gwt .gwt-ask text { font-family: var(--mono); font-size: 7px; font-weight: 600; fill: var(--ink); }
+/* 01, pared back: names that read at a glance, hairline pipes, a lit
+   source outlined rather than filled so its tick is the accent. */
+.gwt .gwt-name { font-size: 9px; font-weight: 600; letter-spacing: -.01em; fill: var(--ink); }
+.gwt-min .gwt-pipe { stroke: rgb(from var(--ink) r g b / .2); stroke-width: 1.3; }
+.gwt-min .gwt-live { stroke-dasharray: none; stroke-width: 1.4; }
+.gwt-min .gwt-live-s { stroke: var(--primary); stroke-width: 1.4; }
+.gwt-min .gwt-pk { stroke-width: 3.6; }
+.gwt-min .gwt-strata { stroke-dasharray: none; stroke: rgb(from var(--ink) r g b / .12); }
+.gwt-min .gwt-src-on > circle { fill: var(--primary-pale); stroke: var(--primary); stroke-width: 1.2; }
+.gwt-min .gwt-src-on .gw-ico { stroke: var(--primary); }
 
 .gw-go .gwt-pipe, .gw-go .gwt-pipe-in { animation: gwtLay 12s cubic-bezier(.65, 0, .35, 1) infinite both; }
 .gw-go .gwt-core-g { animation: gwtCore 12s cubic-bezier(.3, 1.4, .5, 1) infinite both; }
 .gw-go .gwt-on-s { animation: gwtOnS 12s ease infinite both; }
-.gw-go .gwt-on-r { animation: gwtOnR 12s ease infinite both; }
 .gw-go .gwt-on-0 { animation: gwtOn0 12s ease infinite both; }
 .gw-go .gwt-on-1 { animation: gwtOn1 12s ease infinite both; }
 .gw-go .gwt-on-2 { animation: gwtOn2 12s ease infinite both; }
@@ -244,94 +248,78 @@
 .gw-go .gwt-rev { animation-name: gwtRev; }
 .gw-go .gwt-ring { animation: gwtRing 12s cubic-bezier(.16, 1, .3, 1) infinite both; }
 .gw-go .gwt-pop { animation: gwtPop 12s cubic-bezier(.3, 1.5, .5, 1) infinite both; }
-.gw-go .gwt-me { animation: gwtWalk 12s ease-in-out infinite both; }
-.gw-go .gwt-ask { animation: gwtAsk 12s ease infinite both; }
-.gw-go .gwt-ok { animation: gwtOk 12s ease infinite both; }
-.gw-go .gwt-plane { animation: gwtPlane 12s cubic-bezier(.4, 0, .6, 1) infinite both; }
 
-/* ── 02 · SCALE: the first door (3 Oct 2026) ──
-   `GovWhyScale.tsx` tells it; same kit and 12 s clock as 01 (ground, pill,
-   packets, rings, delay classes). In seconds:
-     0.3        the queue fades in; the sign reads the front application
-     0.6–2.0    work permit: down to India (mark 1.3), back; 2.0 tick, the
-                barrier lifts, through with the document; the gate stays lit
-     3.0–4.3    visa: the UK, the same
-     5.1–6.3    licence: Nigeria answers a mismatch — 6.3 the "×", they
-                step aside, the line goes on
-     7.5–8.6    clearance: the US; the barrier now stays up
-     9.2–10.3   profession: the Philippines
-     10.4–11.0  the rush: people stream, two countries a tenth
-     11.0–11.6  the whole map lights and the 20M+ is earned; then it clears
-   "?" / tick / "×" sit on the gate, not the person. At rest: one through,
-   the rejected one aside, the queue waiting, every mark lit, the figure. */
-.gwt .gwp-num { font-family: var(--serif); font-size: 22px; letter-spacing: -.03em; fill: var(--ink); }
-.gwp-big { transform-box: fill-box; transform-origin: 100% 50%; }
-.gwp-map { fill: none; stroke: rgb(from var(--ink) r g b / .32); stroke-width: 3.1; stroke-linecap: round; }
-.gwp-map-hot { fill: none; stroke: rgb(from var(--primary) r g b / .62); stroke-width: 3.1; stroke-linecap: round; }
-.gwp-lit { fill: var(--primary); }
-.gwp-root { fill: none; stroke: rgb(from var(--primary) r g b / .55); stroke-width: 1.3; stroke-linecap: round; stroke-dasharray: 1; }
-.gwp-zap { fill: none; stroke: var(--primary); stroke-width: 1.2; stroke-linecap: round; stroke-dasharray: 1; opacity: 0; }
-.gwp-blip { fill: var(--primary); opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; }
-.gwp-badge > circle { fill: var(--primary); stroke: var(--white); stroke-width: 1.2; }
-.gwp-badge .gw-ico { stroke: var(--white); }
-.gwp-badge-no > circle { fill: var(--ink); }
-.gwp-pk-no { stroke: var(--ink); }
-.gwp-ripple { fill: none; stroke: var(--primary); stroke-width: 1.1; opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; }
-.gwp-ripple-no { stroke: var(--ink); }
-.gwp-arm { fill: var(--primary); }
-.gwp-stripe { fill: none; stroke: var(--white); stroke-width: 2.6; }
-.gwp-bar { transform-box: fill-box; transform-origin: 100% 50%; }
+/* ── 02 · SCALE: the counter (9 Oct 2026) ──
+   `GovWhyScale.tsx` tells it; same kit and 12 s clock as 01. In seconds:
+     0.3        Month 1 lights; the counter reads 20K
+     0.4 / 2.0 / 3.6  a person walks up and is held at the gate; the check
+                goes down to a country and back (blip), a tick, through.
+                The gate stays lit from the first (2.5). The sign turns to
+                the next kind of claim before each (2.7, 4.3)
+     5.4–10.2   the stream: one every 0.4 s, each check fired as they cross
+     6.6 / 7.4 / 8.2 / 9.0 / 9.8  months 2–6: the counter steps 8K a time,
+                a segment fills, a band of the map lights outward
+     9.8–11.5   60K holds; then it clears
+   At rest: 60K, every month lit, nobody in flight. `.gwp-board` stays
+   here because 05's window uses it. */
 .gwp-board { fill: var(--white); stroke: var(--primary); stroke-width: 1.2; }
-.gwt .gwp-sign text { font-size: 8px; font-weight: 500; fill: var(--ink); }
-.gwp-ico-hot { stroke: var(--primary); }
-.gwp-roll { transform: translate(0, -90px); }
-.gwp-p1 { transform: translate(236px, 0); }
-.gwp-p2 { transform: translate(108px, 0); }
-.gwp-p3 { transform: translate(102px, 16px); }
-.gwp-p4 { transform: translate(68px, 0); }
-.gwp-p5 { transform: translate(44px, 0); }
-.gwp-dash { opacity: 0; }
-.gwp-doc { transform-box: fill-box; transform-origin: 50% 50%; transform: scale(0); }
-.gwp-p1 .gwp-doc { transform: none; }
-.gwp-doc rect { fill: var(--primary); }
-.gwp-doc path { fill: none; stroke: var(--white); stroke-width: 1; stroke-linecap: round; }
-.gwp-face { opacity: 0; }
-.gwp-out { opacity: 1; }
-.gwp-out > circle { fill: var(--v2-paper-lo); stroke: var(--ink); stroke-width: 1.2; stroke-dasharray: 2 1.5; }
-.gwp-out .gwt-me-i { stroke: var(--muted); }
-.gwp-ask, .gwp-ok, .gwp-no { opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; }
-.gwp-ask circle { fill: var(--white); stroke: rgb(from var(--ink) r g b / .4); stroke-width: 1; }
-.gwt .gwp-ask text { font-family: var(--mono); font-size: 7px; font-weight: 600; fill: var(--ink); }
-.gwp-no circle { fill: var(--ink); }
-.gwp-no path { fill: none; stroke: var(--white); stroke-width: 1.4; stroke-linecap: round; }
+.gwt .gws-num { font-family: var(--serif); font-size: 24px; letter-spacing: -.03em; fill: var(--ink); }
+.gwt .gws-unit { font-size: 8px; fill: var(--ink-soft); }
+.gwt .gws-halo { paint-order: stroke; stroke: var(--v2-paper-lo); stroke-width: 4px; stroke-linejoin: round; }
+.gwt .gws-sign text { font-size: 8px; font-weight: 500; fill: var(--ink); }
+.gws-map { fill: none; stroke: rgb(from var(--ink) r g b / .26); stroke-width: 3.1; stroke-linecap: round; }
+.gws-map-hot { fill: none; stroke: rgb(from var(--primary) r g b / .62); stroke-width: 3.1; stroke-linecap: round; }
+.gws-seg { fill: rgb(from var(--ink) r g b / .12); }
+.gws-seg-on { fill: var(--primary); }
+.gws-roll { transform: translate(0, -140px); }
+.gws-walk, .gws-dash, .gws-ok, .gws-blip { opacity: 0; }
+.gws-ok, .gws-blip { transform-box: fill-box; transform-origin: 50% 50%; }
+.gws-blip { fill: var(--primary); }
 
-.gw-go .gwp-p1 { animation: gwpP1 12s ease-in-out infinite both; }
-.gw-go .gwp-p2 { animation: gwpP2 12s ease-in-out infinite both; }
-.gw-go .gwp-p3 { animation: gwpP3 12s ease-in-out infinite both; }
-.gw-go .gwp-p4 { animation: gwpP4 12s ease-in-out infinite both; }
-.gw-go .gwp-p5 { animation: gwpP5 12s ease-in-out infinite both; }
-.gw-go .gwp-ask { animation: gwpAsk 12s ease infinite both; }
-.gw-go .gwp-ok { animation: gwpOk 12s ease infinite both; }
-.gw-go .gwp-no { animation: gwpNo 12s ease infinite both; }
-.gw-go .gwp-out { animation: gwpOut 12s ease infinite both; }
-.gw-go .gwp-face { animation: gwpFace 12s ease infinite both; }
-.gw-go .gwp-bar { animation: gwpBar 12s cubic-bezier(.5, 0, .3, 1.15) infinite both; }
-.gw-go .gwp-roll { animation: gwpRoll 12s cubic-bezier(.3, 1.3, .5, 1) infinite both; }
-.gw-go .gwp-sign { animation: gwpShake 12s linear infinite both; }
-.gw-go .gwp-gate-lit { animation: gwpGate 12s ease infinite both; }
-.gw-go .gwp-on-a { animation: gwpRootA 12s cubic-bezier(.45, 0, .55, 1) infinite both; }
-.gw-go .gwp-on-b { animation: gwpRootB 12s cubic-bezier(.45, 0, .55, 1) infinite both; }
-.gw-go .gwp-on-c { animation: gwpRootC 12s cubic-bezier(.45, 0, .55, 1) infinite both; }
-.gw-go .gwp-on-d { animation: gwpRootD 12s cubic-bezier(.45, 0, .55, 1) infinite both; }
-.gw-go .gwp-on-e { animation: gwpRootE 12s cubic-bezier(.45, 0, .55, 1) infinite both; }
-.gw-go .gwp-ripple { animation: gwpRipple 12s cubic-bezier(.16, 1, .3, 1) infinite both; }
-.gw-go .gwp-zap { animation: gwpZap 12s linear infinite both; }
-.gw-go .gwp-blip { animation: gwpBlip 12s ease infinite both; }
-.gw-go .gwp-fin { animation: gwpFin 12s ease infinite both; }
-.gw-go .gwp-dash { animation: gwpDash 12s linear infinite both; }
-.gw-go .gwp-dash-card { animation: gwpDashCard 12s cubic-bezier(.3, 1.5, .5, 1) infinite both; }
-.gw-go .gwp-card { animation: gwpCard 12s cubic-bezier(.3, 1.5, .5, 1) infinite both; }
-.gw-go .gwp-big { animation: gwpBig 12s ease infinite both; }
+.gw-go .gws-walk { animation: gwsWalk 12s ease-in-out infinite both; }
+.gw-go .gws-dash { animation: gwsDash 12s linear infinite both; }
+.gw-go .gws-ok { animation: gwsOk 12s cubic-bezier(.3, 1.5, .5, 1) infinite both; }
+.gw-go .gws-blip { animation: gwsBlip 12s ease infinite both; }
+.gw-go .gws-gate { animation: gwsGate 12s ease infinite both; }
+.gw-go .gws-roll { animation: gwsCount 12s cubic-bezier(.3, 1.3, .5, 1) infinite both; }
+.gw-go .gws-sign { animation: gwsSign 12s cubic-bezier(.3, 1.3, .5, 1) infinite both; }
+.gw-go .gws-m0 { animation: gwsM0 12s ease infinite both; }
+.gw-go .gws-m1 { animation: gwsM1 12s ease infinite both; }
+.gw-go .gws-m2 { animation: gwsM2 12s ease infinite both; }
+.gw-go .gws-m3 { animation: gwsM3 12s ease infinite both; }
+.gw-go .gws-m4 { animation: gwsM4 12s ease infinite both; }
+.gw-go .gws-m5 { animation: gwsM5 12s ease infinite both; }
+
+/* Walk up in 1.2 s, held 1.1 s while the check goes and comes back, out
+   in 1.2 s. The stream crosses in 1.6 s, at the gate 0.8 s in. */
+@keyframes gwsWalk { 0% { transform: translate(-14px, 0); opacity: 0; } .8% { opacity: 1; } 10%, 19.2% { transform: translate(160px, 0); } 29.2% { transform: translate(340px, 0); opacity: 1; } 30%, 100% { transform: translate(340px, 0); opacity: 0; } }
+@keyframes gwsDash { 0% { transform: translate(-14px, 0); opacity: 0; } .5% { opacity: 1; } 13.3% { transform: translate(340px, 0); opacity: 1; } 13.8%, 100% { transform: translate(340px, 0); opacity: 0; } }
+@keyframes gwsOk { 0% { opacity: 0; transform: scale(.4); } 1.2% { opacity: 1; transform: scale(1.2); } 2.2% { transform: scale(1); } 5% { opacity: 1; } 6.5%, 100% { opacity: 0; transform: scale(1); } }
+@keyframes gwsBlip { 0% { opacity: 0; transform: scale(.3); } 1.5% { opacity: 1; transform: scale(1.6); } 3% { transform: scale(1); } 6% { opacity: 1; } 9%, 100% { opacity: 0; transform: scale(1); } }
+@keyframes gwsGate { 0%, 20.5% { opacity: 0; } 21.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwsCount {
+  0%, 54.5% { transform: translate(0, 0); }
+  55.5%, 61.2% { transform: translate(0, -28px); }
+  62.2%, 67.8% { transform: translate(0, -56px); }
+  68.8%, 74.5% { transform: translate(0, -84px); }
+  75.5%, 81.2% { transform: translate(0, -112px); }
+  82.2%, 97% { transform: translate(0, -140px); }
+  99.5%, 100% { transform: translate(0, 0); }
+}
+@keyframes gwsSign {
+  0%, 22% { transform: translate(0, 0); }
+  23%, 35.3% { transform: translate(0, -18px); }
+  36.3%, 51.2% { transform: translate(0, -36px); }
+  52.2%, 67.8% { transform: translate(0, -54px); }
+  68.8%, 97% { transform: translate(0, -72px); }
+  99%, 100% { transform: translate(0, 0); }
+}
+@keyframes gwsM0 { 0%, 2.5% { opacity: 0; } 4%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwsM1 { 0%, 54.5% { opacity: 0; } 55.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwsM2 { 0%, 61.2% { opacity: 0; } 62.2%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwsM3 { 0%, 67.8% { opacity: 0; } 68.8%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwsM4 { 0%, 74.5% { opacity: 0; } 75.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwsM5 { 0%, 81.2% { opacity: 0; } 82.2%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
 
 /* Where the one-shots of 01 and 02 start. After every shorthand above,
    so the delay survives them. */
@@ -385,11 +373,39 @@
 .gw-go .gwt-d103 { animation-delay: 10.3s; }
 .gw-go .gwt-d107 { animation-delay: 10.7s; }
 .gw-go .gwt-d88 { animation-delay: 8.8s; }
+.gw-go .gwt-d16 { animation-delay: 1.6s; }
+.gw-go .gwt-d25 { animation-delay: 2.5s; }
+.gw-go .gwt-d48 { animation-delay: 4.8s; }
+.gw-go .gwt-d54 { animation-delay: 5.4s; }
+.gw-go .gwt-d66 { animation-delay: 6.6s; }
+.gw-go .gwt-d70 { animation-delay: 7s; }
+.gw-go .gwt-d74 { animation-delay: 7.4s; }
+.gw-go .gwt-d78 { animation-delay: 7.8s; }
+.gw-go .gwt-d90 { animation-delay: 9s; }
+.gw-go .gwt-d94 { animation-delay: 9.4s; }
+.gw-go .gwt-d12 { animation-delay: 1.2s; }
+.gw-go .gwt-d24 { animation-delay: 2.4s; }
+.gw-go .gwt-d30 { animation-delay: 3s; }
+.gw-go .gwt-d34 { animation-delay: 3.4s; }
+.gw-go .gwt-d42 { animation-delay: 4.2s; }
+.gw-go .gwt-d44 { animation-delay: 4.4s; }
+.gw-go .gwt-d84 { animation-delay: 8.4s; }
+.gw-go .gwt-d96 { animation-delay: 9.6s; }
+.gw-go .gwt-d100 { animation-delay: 10s; }
+.gw-go .gwt-d10 { animation-delay: 1s; }
+.gw-go .gwt-d17 { animation-delay: 1.7s; }
+.gw-go .gwt-d19 { animation-delay: 1.9s; }
+.gw-go .gwt-d23 { animation-delay: 2.3s; }
+.gw-go .gwt-d40 { animation-delay: 4s; }
+.gw-go .gwt-d47 { animation-delay: 4.7s; }
+.gw-go .gwt-d49 { animation-delay: 4.9s; }
+.gw-go .gwt-d73 { animation-delay: 7.3s; }
+.gw-go .gwt-d79 { animation-delay: 7.9s; }
+.gw-go .gwt-d83 { animation-delay: 8.3s; }
 
 @keyframes gwtLay { 0%, 3% { stroke-dashoffset: 1; opacity: 1; } 10%, 95.5% { stroke-dashoffset: 0; opacity: 1; } 99%, 100% { stroke-dashoffset: 0; opacity: 0; } }
 @keyframes gwtCore { 0%, 1.5% { opacity: 0; transform: scale(.5); } 4.5% { opacity: 1; transform: scale(1.08); } 6.5%, 95.5% { opacity: 1; transform: scale(1); } 99%, 100% { opacity: 0; transform: scale(1); } }
 @keyframes gwtOnS { 0%, 25.5% { opacity: 0; } 27%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwtOnR { 0%, 30.5% { opacity: 0; } 32%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
 @keyframes gwtOn0 { 0%, 35.5% { opacity: 0; } 37%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
 @keyframes gwtOn1 { 0%, 53.9% { opacity: 0; } 55.4%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
 @keyframes gwtOn2 { 0%, 71.4% { opacity: 0; } 72.9%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
@@ -402,203 +418,78 @@
 @keyframes gwtRev { 0% { stroke-dashoffset: -1; opacity: 0; } .3% { opacity: 1; } 3.6% { stroke-dashoffset: .08; opacity: 1; } 3.8%, 100% { stroke-dashoffset: .08; opacity: 0; } }
 @keyframes gwtRing { 0% { transform: scale(1); opacity: 0; } .3% { opacity: .75; } 7%, 100% { transform: scale(1.35); opacity: 0; } }
 @keyframes gwtPop { 0% { transform: scale(.2); } 2.4% { transform: scale(1.3); } 4%, 100% { transform: scale(1); } }
-/* At each door (x 46, 122, 198, 274) while that building is asked and
-   answered; off to the right at the end. */
-@keyframes gwtWalk {
-  0%, 8.2% { transform: translate(-14px, 0); opacity: 0; }
-  8.4% { opacity: 1; }
-  16.7%, 38.3% { transform: translate(46px, 0); }
-  45.8%, 55.8% { transform: translate(122px, 0); }
-  63.3%, 73.3% { transform: translate(198px, 0); }
-  80.8%, 90.8% { transform: translate(274px, 0); }
-  97.5% { transform: translate(340px, 0); opacity: 1; }
-  98.5%, 100% { transform: translate(340px, 0); opacity: 0; }
-}
-@keyframes gwtAsk {
-  0%, 16.9% { opacity: 0; transform: scale(.4); }
-  17.6%, 35.6% { opacity: 1; transform: scale(1); }
-  36%, 46% { opacity: 0; transform: scale(.4); }
-  46.7%, 54% { opacity: 1; transform: scale(1); }
-  54.4%, 63.5% { opacity: 0; transform: scale(.4); }
-  64.2%, 71.5% { opacity: 1; transform: scale(1); }
-  71.9%, 81% { opacity: 0; transform: scale(.4); }
-  81.7%, 89% { opacity: 1; transform: scale(1); }
-  89.4%, 100% { opacity: 0; transform: scale(.4); }
-}
-@keyframes gwtOk {
-  0%, 35.8% { opacity: 0; transform: scale(.4); }
-  36.6%, 39.5% { opacity: 1; transform: scale(1); }
-  40.2%, 54.2% { opacity: 0; transform: scale(.4); }
-  55%, 57.6% { opacity: 1; transform: scale(1); }
-  58.2%, 71.7% { opacity: 0; transform: scale(.4); }
-  72.5%, 75% { opacity: 1; transform: scale(1); }
-  75.6%, 89.2% { opacity: 0; transform: scale(.4); }
-  90%, 92.4% { opacity: 1; transform: scale(1); }
-  93%, 100% { opacity: 0; transform: scale(.4); }
-}
-@keyframes gwtPlane { 0%, 55% { transform: translate(0, 0); opacity: 0; } 56% { opacity: 1; } 63% { transform: translate(26px, 0); opacity: 1; } 65.5%, 100% { transform: translate(32px, 0); opacity: 0; } }
-
-/* 02: the queue. 108 is in front of the barrier; each steps up 22. */
-@keyframes gwpP1 { 0% { transform: translate(108px, 0); opacity: 0; } 2.5% { opacity: 1; } 18.3% { transform: translate(108px, 0); } 26.7% { transform: translate(340px, 0); opacity: 1; } 27.5%, 100% { transform: translate(340px, 0); opacity: 0; } }
-@keyframes gwpP2 { 0% { transform: translate(86px, 0); opacity: 0; } 2.5% { opacity: 1; } 20% { transform: translate(86px, 0); } 24.2%, 36.7% { transform: translate(108px, 0); } 44.2% { transform: translate(340px, 0); opacity: 1; } 45%, 100% { transform: translate(340px, 0); opacity: 0; } }
-@keyframes gwpP3 { 0% { transform: translate(64px, 0); opacity: 0; } 2.5% { opacity: 1; } 20% { transform: translate(64px, 0); } 24.2%, 38.3% { transform: translate(86px, 0); } 41.7%, 52.5% { transform: translate(108px, 0); opacity: 1; } 56%, 95.5% { transform: translate(102px, 16px); opacity: 1; } 99%, 100% { transform: translate(102px, 16px); opacity: 0; } }
-@keyframes gwpP4 { 0% { transform: translate(42px, 0); opacity: 0; } 2.5% { opacity: 1; } 20% { transform: translate(42px, 0); } 24.2%, 38.3% { transform: translate(64px, 0); } 41.7%, 58.3% { transform: translate(86px, 0); } 61.7%, 72.5% { transform: translate(108px, 0); } 79.2% { transform: translate(340px, 0); opacity: 1; } 80%, 100% { transform: translate(340px, 0); opacity: 0; } }
-@keyframes gwpP5 { 0% { transform: translate(20px, 0); opacity: 0; } 2.5% { opacity: 1; } 20% { transform: translate(20px, 0); } 24.2%, 38.3% { transform: translate(42px, 0); } 41.7%, 58.3% { transform: translate(64px, 0); } 61.7%, 72.9% { transform: translate(86px, 0); } 76.3%, 86.3% { transform: translate(108px, 0); } 91.7% { transform: translate(340px, 0); opacity: 1; } 92.5%, 100% { transform: translate(340px, 0); opacity: 0; } }
-@keyframes gwpFace { 0%, 52.8% { opacity: 1; } 53.2%, 100% { opacity: 0; } }
-@keyframes gwpGate { 0%, 16.5% { opacity: 0; } 17.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwpBig { 0%, 90% { opacity: 0; transform: scale(.92); } 92.5%, 95.5% { opacity: 1; transform: scale(1); } 99%, 100% { opacity: 0; } }
-@keyframes gwpAsk {
-  0%, 4.6% { opacity: 0; transform: scale(.4); }
-  5.6%, 16.4% { opacity: 1; transform: scale(1); }
-  17%, 24.6% { opacity: 0; transform: scale(.4); }
-  25.6%, 35.5% { opacity: 1; transform: scale(1); }
-  36.1%, 42.1% { opacity: 0; transform: scale(.4); }
-  43.1%, 52.2% { opacity: 1; transform: scale(1); }
-  52.8%, 62.1% { opacity: 0; transform: scale(.4); }
-  63.1%, 71.4% { opacity: 1; transform: scale(1); }
-  72%, 76.3% { opacity: 0; transform: scale(.4); }
-  77.3%, 85.5% { opacity: 1; transform: scale(1); }
-  86.1%, 100% { opacity: 0; transform: scale(.4); }
-}
-@keyframes gwpOk {
-  0%, 16.5% { opacity: 0; transform: scale(.4); }
-  17.3%, 19.6% { opacity: 1; transform: scale(1); }
-  20.2%, 35.7% { opacity: 0; transform: scale(.4); }
-  36.5%, 38.8% { opacity: 1; transform: scale(1); }
-  39.4%, 71.5% { opacity: 0; transform: scale(.4); }
-  72.3%, 74.6% { opacity: 1; transform: scale(1); }
-  75.2%, 85.7% { opacity: 0; transform: scale(.4); }
-  86.5%, 88.8% { opacity: 1; transform: scale(1); }
-  89.4%, 100% { opacity: 0; transform: scale(.4); }
-}
-@keyframes gwpNo { 0%, 52.4% { opacity: 0; transform: scale(.4); } 53.2%, 57.6% { opacity: 1; transform: scale(1); } 58.3%, 100% { opacity: 0; transform: scale(.4); } }
-@keyframes gwpOut { 0%, 52.4% { opacity: 0; } 53.2%, 100% { opacity: 1; } }
-/* Up for the work permit and the visa; a shudder, and down, for the
-   mismatch; up from the clearance on, through the rush. */
-@keyframes gwpBar {
-  0%, 16.7% { transform: rotate(0deg); }
-  18.3%, 23.3% { transform: rotate(80deg); }
-  25%, 35.8% { transform: rotate(0deg); }
-  37.5%, 41.7% { transform: rotate(80deg); }
-  43.3%, 52.5% { transform: rotate(0deg); }
-  53.1% { transform: rotate(7deg); }
-  53.7% { transform: rotate(0deg); }
-  54.2% { transform: rotate(4deg); }
-  54.8%, 71.7% { transform: rotate(0deg); }
-  73.3%, 95.8% { transform: rotate(80deg); }
-  98.3%, 100% { transform: rotate(0deg); }
-}
-/* One 18px face per application, then all five; back to the first. */
-@keyframes gwpRoll {
-  0%, 24.4% { transform: translate(0, 0); }
-  25.6%, 41.1% { transform: translate(0, -18px); }
-  42.3%, 60.3% { transform: translate(0, -36px); }
-  61.5%, 72.8% { transform: translate(0, -54px); }
-  74%, 86.1% { transform: translate(0, -72px); }
-  87.3%, 97% { transform: translate(0, -90px); }
-  98.5%, 100% { transform: translate(0, 0); }
-}
-@keyframes gwpShake { 0%, 52.5% { transform: translate(0, 0); } 53% { transform: translate(-2px, 0); } 53.5% { transform: translate(2px, 0); } 54% { transform: translate(-1.5px, 0); } 54.5% { transform: translate(1px, 0); } 55%, 100% { transform: translate(0, 0); } }
-/* Each root draws with its check going down, and stays; the source dot
-   rides the same clock 0.4 s later (`gwt-d4`), as the check lands. */
-@keyframes gwpRootA { 0%, 7.5% { stroke-dashoffset: 1; opacity: 0; } 7.7% { opacity: 1; } 10.9%, 90% { stroke-dashoffset: 0; opacity: 1; } 93%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes gwpRootB { 0%, 26.7% { stroke-dashoffset: 1; opacity: 0; } 26.9% { opacity: 1; } 30.1%, 90% { stroke-dashoffset: 0; opacity: 1; } 93%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes gwpRootC { 0%, 44.2% { stroke-dashoffset: 1; opacity: 0; } 44.4% { opacity: 1; } 47.6%, 90% { stroke-dashoffset: 0; opacity: 1; } 93%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes gwpRootD { 0%, 63.3% { stroke-dashoffset: 1; opacity: 0; } 63.5% { opacity: 1; } 66.8%, 90% { stroke-dashoffset: 0; opacity: 1; } 93%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes gwpRootE { 0%, 77.5% { stroke-dashoffset: 1; opacity: 0; } 77.7% { opacity: 1; } 80.9%, 90% { stroke-dashoffset: 0; opacity: 1; } 93%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes gwpRipple { 0% { transform: scale(1); opacity: 0; } .3% { opacity: .8; } 8%, 100% { transform: scale(3.4); opacity: 0; } }
-@keyframes gwpZap { 0% { stroke-dashoffset: 1; opacity: 1; } 2.5% { stroke-dashoffset: 0; opacity: 1; } 6.5%, 100% { stroke-dashoffset: 0; opacity: 0; } }
-@keyframes gwpBlip { 0% { transform: scale(.3); opacity: 0; } 1.5% { transform: scale(1.5); opacity: 1; } 3% { transform: scale(1); } 6% { opacity: 1; } 8%, 100% { transform: scale(1); opacity: 0; } }
-@keyframes gwpFin { 0%, 91.5% { opacity: 0; } 93%, 96% { opacity: 1; } 99%, 100% { opacity: 0; } }
-/* The rush: straight through in a second, handed the document at the gate. */
-@keyframes gwpDash { 0% { transform: translate(-14px, 0); opacity: 0; } .6% { opacity: 1; } 8.3% { transform: translate(340px, 0); opacity: 1; } 8.8%, 100% { transform: translate(340px, 0); opacity: 0; } }
-@keyframes gwpDashCard { 0%, 3.9% { transform: scale(0); } 4.8% { transform: scale(1.35); } 5.6%, 100% { transform: scale(1); } }
-@keyframes gwpCard { 0% { transform: scale(0); } 2% { transform: scale(1.3); } 3.5%, 11% { transform: scale(1); } 12%, 100% { transform: scale(0); } }
-
-/* ── 03 · PLATFORM: private and public on one layer (3 Oct 2026) ──
+/* ── 03 · PLATFORM: the ecosystem on one platform (9 Oct 2026) ──
    `GovWhyPlatform.tsx` tells it. Same 12 s clock. In seconds:
-     0.3        the layer and the AI hex are in; pipes lay
-     0.8–2.0    a business: ? down through the AI, tick, lights
-     2.2        the supplier truck rolls in; 2.6–3.8 the same
-     4.3–6.2    a contractor
-     6.5–8.6    the public institution
-     8.8–10.2   a current runs private → public through HelloVerify
-     10.2–11.6  the ground glows; then it clears
-   At rest: all four lit, the unify current live. */
-.gwa-split { fill: none; stroke: rgb(from var(--ink) r g b / .18); stroke-width: 1; stroke-dasharray: 2 3; }
+     0.2        HelloVerify and the AI are in; the pipes lay
+     0.8 / 2.6 / 4.4 / 6.2 / 8.0  employer, driver, tenant, vendor,
+                supplier in turn: the check goes down, on to the government
+                (lit from the first, 1.6) and back up; the party lights 1.6 s
+                after it asked (2.4, 4.2, 6.0, 7.8, 9.6)
+     10.0       all five on: HelloVerify pulses once
+     11.5–12    it clears
+   At rest: every party and the government lit. */
+.gwt .gwa-name { font-size: 8.5px; font-weight: 600; letter-spacing: -.01em; fill: var(--ink); }
+.gwt .gwa-role { font-size: 6.8px; fill: var(--ink-soft); }
 .gwa-tok > circle { fill: var(--white); stroke: rgb(from var(--ink) r g b / .4); stroke-width: 1.2; }
 .gwa-tok .gw-ico { stroke: var(--muted); }
 .gwa-tok-on > circle { fill: var(--primary-pale); stroke: var(--primary); }
 .gwa-tok-on .gw-ico { stroke: var(--primary); }
-.gwa-q { opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; }
-.gwa-q circle { fill: var(--white); stroke: rgb(from var(--ink) r g b / .4); stroke-width: 1; }
-.gwt .gwa-q text { font-family: var(--mono); font-size: 7px; font-weight: 600; fill: var(--ink); }
 .gwa-hex { fill: var(--white); stroke: var(--primary); stroke-width: 1.3; stroke-linejoin: round; }
-.gwt .gwa-ai-t { font-family: var(--mono); font-size: 8px; font-weight: 600; letter-spacing: .06em; fill: var(--primary); }
-.gwa-hex-r { fill: none; stroke: var(--primary); stroke-width: 1.2; opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; }
+.gwt .gwa-ai-t { font-family: var(--mono); font-size: 7px; font-weight: 600; letter-spacing: .06em; fill: var(--primary); }
 .gwa-ai { transform-box: fill-box; transform-origin: 50% 50%; }
-.gwa-uni { opacity: 1; }
 
 .gw-go .gwa-on-0 { animation: gwaOn0 12s ease infinite both; }
 .gw-go .gwa-on-1 { animation: gwaOn1 12s ease infinite both; }
 .gw-go .gwa-on-2 { animation: gwaOn2 12s ease infinite both; }
 .gw-go .gwa-on-3 { animation: gwaOn3 12s ease infinite both; }
-.gw-go .gwa-q { animation: gwaQ 12s ease infinite both; }
-.gw-go .gwa-b { animation: gwaTruck 12s ease-out infinite both; }
-.gw-go .gwa-uni { animation: gwaUni 12s ease infinite both; }
-.gw-go .gwa-hex-r { animation: gwtRing 12s cubic-bezier(.16, 1, .3, 1) infinite both; }
+.gw-go .gwa-on-4 { animation: gwaOn4 12s ease infinite both; }
+.gw-go .gwa-on-g { animation: gwaOnG 12s ease infinite both; }
 .gw-go .gwa-ai { animation: gwaAi 12s ease infinite both; }
-/* Delays again: the shorthands above would otherwise reset them. */
-.gw-go .gwt-d8 { animation-delay: .8s; }
-.gw-go .gwt-d13 { animation-delay: 1.3s; }
-.gw-go .gwt-d26 { animation-delay: 2.6s; }
-.gw-go .gwt-d32 { animation-delay: 3.2s; }
-.gw-go .gwt-d43 { animation-delay: 4.3s; }
-.gw-go .gwt-d56 { animation-delay: 5.6s; }
-.gw-go .gwt-d65 { animation-delay: 6.5s; }
-.gw-go .gwt-d80 { animation-delay: 8s; }
 
-@keyframes gwaOn0 { 0%, 16.4% { opacity: 0; } 17.2%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwaOn1 { 0%, 31.4% { opacity: 0; } 32.2%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwaOn2 { 0%, 51.4% { opacity: 0; } 52.2%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwaOn3 { 0%, 71.4% { opacity: 0; } 72.2%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwaQ { 0% { opacity: 0; transform: scale(.4); } 1.6% { opacity: 1; transform: scale(1.15); } 3% { transform: scale(1); } 10% { opacity: 1; } 12%, 100% { opacity: 0; transform: scale(.4); } }
-@keyframes gwaTruck { 0%, 16% { transform: translate(-54px, 0); opacity: 0; } 18% { opacity: 1; } 22.5%, 95.5% { transform: translate(0, 0); opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwaUni { 0%, 72.5% { opacity: 0; } 74.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwaOnG { 0%, 12.5% { opacity: 0; } 13.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwaOn0 { 0%, 19.5% { opacity: 0; } 20.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwaOn1 { 0%, 34.5% { opacity: 0; } 35.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwaOn2 { 0%, 49.5% { opacity: 0; } 50.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwaOn3 { 0%, 64.5% { opacity: 0; } 65.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwaOn4 { 0%, 79.5% { opacity: 0; } 80.5%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
 @keyframes gwaAi { 0%, 2% { transform: scale(.6); opacity: 0; } 6% { transform: scale(1.08); opacity: 1; } 8%, 95.5% { transform: scale(1); opacity: 1; } 99%, 100% { opacity: 0; } }
 
-/* ── 04 · GOVS: seats on the bus (4 Oct 2026) ──
-   `GovWhyGovs.tsx`. No crests. One bus through HelloVerify; halls and
-   offices take a seat, from the middle outward, and the row is clipped
-   at both edges. In seconds:
-     0.4        the bus is laid
-     1.2        the middle authority connects
-     2.9 / 4.6 / 6.2 / 7.9  the next pair out, each side together
-     9.2–11.4   the whole bus runs; then it clears
-   At rest: every seat lit, including the two the frame cuts off. */
-.gwt .gwb-leg { font-size: 8px; fill: var(--ink-soft); }
-.gwb-on > circle { fill: var(--primary); }
-.gwb-on .gw-ico { stroke: var(--white); }
-.gwb-stem { stroke-width: 1.6; }
-.gwb-flow { opacity: 1; }
-.gwb-fin { opacity: 0; }
-.gwb-j { opacity: 1; }
+/* ── 04 · GOVS: who trusts it, region by region (9 Oct 2026) ──
+   `GovWhyGovs.tsx` tells it. Same 12 s clock. In seconds:
+     0.2        HelloVerify is in; the pipes lay
+     1.0 / 4.0 / 7.0  Singapore, the UAE, Europe in turn: an application
+                lands on the authority; its check goes down (+0.3), reaches
+                HelloVerify (+0.7) and comes back up (+0.9); the authority
+                lights, ticked (+1.3); its enterprise joins (+1.8)
+     10.0       all three regions on: HelloVerify pulses once
+     11.5–12    it clears
+   At rest: every region lit. */
+.gwt .gwb-reg { font-size: 9px; font-weight: 600; letter-spacing: -.01em; fill: var(--ink); }
+.gwt .gwb-auth { font-size: 6.8px; fill: var(--ink-soft); }
+.gwt .gwb-wf { font-size: 5.6px; letter-spacing: .08em; }
+.gwt .gwb-key { font-size: 7.5px; fill: var(--ink-soft); }
+.gwb-doc { opacity: 0; transform-box: fill-box; transform-origin: 50% 50%; }
+.gwb-doc rect { fill: var(--white); stroke: var(--primary); stroke-width: 1; }
+.gwb-doc path { fill: none; stroke: var(--primary); stroke-width: .9; stroke-linecap: round; }
 
-.gw-go .gwb-flow { animation: gwbFlow 12s ease infinite both; }
-.gw-go .gwb-fin { animation: gwbFin 12s ease infinite both; }
-.gw-go .gwb-r0 { animation: gwbR0 12s ease infinite both; }
-.gw-go .gwb-r1 { animation: gwbR1 12s ease infinite both; }
-.gw-go .gwb-r2 { animation: gwbR2 12s ease infinite both; }
-.gw-go .gwb-r3 { animation: gwbR3 12s ease infinite both; }
-.gw-go .gwb-r4 { animation: gwbR4 12s ease infinite both; }
+.gw-go .gwb-a0 { animation: gwbA0 12s ease infinite both; }
+.gw-go .gwb-a1 { animation: gwbA1 12s ease infinite both; }
+.gw-go .gwb-a2 { animation: gwbA2 12s ease infinite both; }
+.gw-go .gwb-e0 { animation: gwbE0 12s ease infinite both; }
+.gw-go .gwb-e1 { animation: gwbE1 12s ease infinite both; }
+.gw-go .gwb-e2 { animation: gwbE2 12s ease infinite both; }
+/* Longhands: this sits after the `gwt-dNN` delays, and a shorthand here
+   would reset them. */
+.gw-go .gwb-doc { animation-name: gwbDoc; animation-duration: 12s; animation-timing-function: ease; animation-iteration-count: infinite; animation-fill-mode: both; }
 
-@keyframes gwbFlow { 0%, 8% { opacity: 0; } 14%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwbFin { 0%, 76% { opacity: 0; } 82%, 95% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwbR0 { 0%, 8% { opacity: 0; } 12%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwbR1 { 0%, 22% { opacity: 0; } 26%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwbR2 { 0%, 36% { opacity: 0; } 40%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwbR3 { 0%, 50% { opacity: 0; } 54%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
-@keyframes gwbR4 { 0%, 64% { opacity: 0; } 68%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwbA0 { 0%, 18.7% { opacity: 0; } 19.7%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwbA1 { 0%, 43.7% { opacity: 0; } 44.7%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwbA2 { 0%, 68.7% { opacity: 0; } 69.7%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwbE0 { 0%, 22.8% { opacity: 0; } 23.8%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwbE1 { 0%, 47.8% { opacity: 0; } 48.8%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+@keyframes gwbE2 { 0%, 72.8% { opacity: 0; } 73.8%, 95.5% { opacity: 1; } 99%, 100% { opacity: 0; } }
+/* An application drops onto the authority's roof, then into it. */
+@keyframes gwbDoc { 0% { opacity: 0; transform: translate(0, -6px); } 1.2% { opacity: 1; transform: translate(0, 0); } 2.2% { opacity: 1; transform: translate(0, 0); } 3.4%, 100% { opacity: 0; transform: translate(0, 9px); } }
 
 /* ── 05 · YEARS: the core sample (4 Oct 2026) ──
    `GovWhyYears.tsx`. HelloVerify stays. The years slam into the rock

@@ -114,7 +114,7 @@ export const en = {
   footer: {
     logoHome: "HelloVerify — home",
     blurb:
-      "Background verification at the primary source — for enterprises, governments and families.",
+      "Global leading AI-powered background verification platform enabling trusted hiring, workforce integrity, and compliance-driven onboarding across global enterprises.",
     /** Accessible names for the three icon-only anchors. Kept as copy rather
      *  than hardcoded product names: they are what a screen reader announces,
      *  and a locale that transliterates them should be able to. */
@@ -159,7 +159,7 @@ export const en = {
       "/resources/glossary": "Glossary",
       "/resources/blog": "Blog",
     },
-    /** `alt` text for the five certification marks. Deliberately NOT sourced
+    /** `alt` text for the certification marks. Deliberately NOT sourced
      *  from `CREDENTIAL_MARKS` in `lib/content/company.ts`: that table is the
      *  one place the site's CLAIMS live and `chrome/CertCard.tsx` reads it,
      *  but the footer strip renders a different set in a different order and
@@ -170,9 +170,8 @@ export const en = {
       gdpr: "GDPR",
       pbsa: "PBSA",
       nsr: "NSR",
-      mom: "Ministry of Manpower, Singapore",
     },
-    certline: "ISO 27001 · GDPR · PBSA · NSR · Ministry of Manpower (SG)",
+    certline: "ISO 27001 · GDPR · PBSA · NSR",
     copyright: "© 2026 All rights reserved. Hello Verify India Private Ltd.",
     /** Three leaves rather than a table keyed by href, because the component
      *  writes these three anchors out longhand and has no `key` on them.
@@ -220,7 +219,6 @@ export const en = {
         gdpr: "GDPR",
         pbsa: "PBSA",
         nsr: "NSR",
-        mom: "Ministry of Manpower (SG)",
       },
       markHint: "UV · move your cursor over the mark",
       /** One repeat of the microtext under the wordmark; the component tiles

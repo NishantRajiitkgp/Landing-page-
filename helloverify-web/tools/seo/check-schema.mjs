@@ -151,7 +151,7 @@ const sitemapPaths = new Set(
 
 const pageFiles = await htmlPages(root);
 /** Gated account shells — prerendered, noindex, not in the sitemap. */
-const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings)$/;
+const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings|solutions\/manpower-and-education-authorities\/ministry-of-manpower\/(?:register|sign-in|apply|authorise|employers(?:\/register|\/sign-in)?))$/;
 
 // ------------------------------------------------------------------ parsing
 const LD = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;

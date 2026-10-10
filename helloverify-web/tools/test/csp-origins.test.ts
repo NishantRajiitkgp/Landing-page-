@@ -120,6 +120,14 @@ check(
 );
 
 check(
+  "both files also open Razorpay when MOM_APPLY_LIVE is set, and neither does it alone",
+  configCode.includes("MOM_APPLY_LIVE") &&
+    injectorCode.includes("MOM_APPLY_LIVE") &&
+    configCode.indexOf("MOM_APPLY_LIVE") < configCode.indexOf(RZP_SCRIPT_ORIGIN) &&
+    injectorCode.indexOf("MOM_APPLY_LIVE") < injectorCode.indexOf(RZP_SCRIPT_ORIGIN),
+);
+
+check(
   "inject-csp.mjs names no origin other than GA4's and Razorpay's",
   origins(injectorCode).every((o) => o === GA_SCRIPT_ORIGIN || o === RZP_SCRIPT_ORIGIN),
   origins(injectorCode),

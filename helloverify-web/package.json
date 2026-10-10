@@ -31,7 +31,7 @@
     "check:logical": "node tools/a11y/check-logical-css.mjs",
     "check:csp": "node tools/ci/check-csp.mjs",
     "perf:lab": "lhci autorun --config=lighthouserc.json",
-  "test:e2e": "playwright test",
+    "test:e2e": "playwright test",
     "test:a11y": "playwright test tools/e2e/a11y.spec.ts",
     "lint": "eslint ."
   },
@@ -40,6 +40,7 @@
     "next-intl": "^4.14.5",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "read-excel-file": "^9.3.12",
     "server-only": "^0.0.1",
     "sharp": "^0.35.4",
     "zod": "^4.6.5"

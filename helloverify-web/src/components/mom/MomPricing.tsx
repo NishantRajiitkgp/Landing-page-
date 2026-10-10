@@ -42,7 +42,7 @@ export function MomPricing({ band, locale }: { band: Band; locale: string }) {
               </h4>
               <p>{band.included.tapHint}</p>
               {pkg.includedChecks.map((item) => (
-                <div key={item.title}>
+                <div key={item.title} className="mom3-check">
                   <h4>{item.title}</h4>
                   <p>{item.priceLabel}</p>
                   <p>{item.summary}</p>
@@ -59,46 +59,46 @@ export function MomPricing({ band, locale }: { band: Band; locale: string }) {
       </section>
 
       <section className="wrap sec3">
-        <article className="mom3-card">
-          <h2>
-            {express.title} {express.optionalLabel}
-          </h2>
-          <p>{express.description}</p>
-          <p>{express.descriptionEmphasis}</p>
-          <p className="mom3-pop">{express.priceBadge}</p>
-          <p>{express.summaryLabel}</p>
-          <h3>{check.title}</h3>
-          <p>{check.priceLabel}</p>
-          <p>{check.summary}</p>
-          <ul className="mom3-list">
-            {check.bullets.map((bullet) => (
-              <li key={bullet}>{bullet}</li>
-            ))}
-          </ul>
-        </article>
-      </section>
+        <div className="mom3-grid2 mom3-addons">
+          <article className="mom3-card mom3-express">
+            <h2>
+              {express.title} {express.optionalLabel}
+            </h2>
+            <p>{express.description}</p>
+            <p>{express.descriptionEmphasis}</p>
+            <p className="mom3-pop">{express.priceBadge}</p>
+            <p>{express.summaryLabel}</p>
+            <h3>{check.title}</h3>
+            <p>{check.priceLabel}</p>
+            <p>{check.summary}</p>
+            <ul className="mom3-list">
+              {check.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+          </article>
 
-      <section className="wrap sec3">
-        <article className="mom3-card">
-          <h2>
-            {band.packages[0].name}
-            {band.summary.titleSuffix}
-          </h2>
-          <p>{band.summary.subtotalLabel}</p>
-          <p>{band.summary.gstLabel}</p>
-          <p>{band.summary.totalLabel}</p>
-          <div className="mom3-acts">
-            <MomLink href={band.summary.cta.href} locale={locale} className="btn btn-ink btn-sm">
-              {band.summary.cta.label}
-            </MomLink>
-          </div>
-          <p>{band.summary.footer}</p>
-        </article>
+          <article className="mom3-card mom3-summary">
+            <h2>
+              {band.packages[0].name}
+              {band.summary.titleSuffix}
+            </h2>
+            <p>{band.summary.subtotalLabel}</p>
+            <p>{band.summary.gstLabel}</p>
+            <p>{band.summary.totalLabel}</p>
+            <div className="mom3-acts">
+              <MomLink href={band.summary.cta.href} locale={locale} className="btn btn-ink btn-sm">
+                {band.summary.cta.label}
+              </MomLink>
+            </div>
+            <p>{band.summary.footer}</p>
+          </article>
+        </div>
       </section>
 
       <section className="wrap sec3">
         <h2 className="h2">{band.reportIncludes.title}</h2>
-        <div className="mom3-grid2">
+        <div className="mom3-grid2 mom3-report">
           <ul className="mom3-list">
             {band.reportIncludes.leftColumn.map((item) => (
               <li key={item}>{item}</li>

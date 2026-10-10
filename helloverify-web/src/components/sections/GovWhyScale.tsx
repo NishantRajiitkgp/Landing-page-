@@ -2,12 +2,16 @@
 
     Same kit and 12 s beat as `./GovWhyTrust`. 01 laid the layer; 02 is the
     first door, close up: nobody walks through until the source that issued
-    the claim has answered, and those sources are the world. The sign rolls
-    through work permit / visa / licence / clearance / profession; a root
-    runs to India, the UK, Nigeria, the US, the Philippines and lights the
-    matching mark from 01. The third is a mismatch and steps aside. Then
-    the map lights and the 20M+ is earned. Clock: `govwhy.css` "02 · SCALE".
-    At rest: one through, one aside, the queue, every mark lit, the figure. */
+    the claim has answered, and those sources are the world.
+
+    Rebuilt 9 Oct 2026 to show the scale itself, minimal ("show 20K
+    verifications, then in 6 months 60K"). Month 1: three people, one at a
+    time, each held at the gate while the check goes down to a country and
+    back; the counter reads 20K. Months 2–6: people stream through without
+    stopping, the counter climbs to 60K, the month bar fills and the map
+    lights outward from HelloVerify. The sign rolls through the kinds of
+    claim. Clock: `govwhy.css` "02 · SCALE".
+    At rest: 60K, Month 6, the whole map lit. */
 import { Logo } from "@/components/brand/Logo";
 import type { SectionsCopy } from "@/lib/copy/sections";
 
@@ -33,62 +37,27 @@ const MAP = [
 ];
 type Pt = readonly [number, number];
 const at = (c: number, r: number): Pt => [4 + c * 4.9, Math.round((152 + r * 4.3) * 10) / 10];
-const MAP_D = MAP.flatMap((row, r) => [...row].map((ch, c) => (ch === "x" ? `M${at(c, r).join(" ")}h0` : ""))).join("");
-const root = ([x, y]: Pt) => `M160 148C160 158 ${x} ${y - 12} ${x} ${y}`;
+const dots = (keep: (c: number) => boolean) =>
+  MAP.flatMap((row, r) => [...row].map((ch, c) => (ch === "x" && keep(c) ? `M${at(c, r).join(" ")}h0` : ""))).join("");
+const MAP_D = dots(() => true);
+/** One band of the map per month, outward from the column under the core. */
+const MONTHS = 6;
+const band = (c: number) => Math.min(MONTHS - 1, Math.floor(Math.abs(c - 32) / 5.4));
+const BANDS = Array.from({ length: MONTHS }, (_, k) => dots((c) => band(c) === k));
+/** From the gate's floor, down through HelloVerify, to a source. */
+const route = ([x, y]: Pt) => `M160 100V148C160 158 ${x} ${y - 12} ${x} ${y}`;
 
-/** 01's three bedrock marks, plus a shield for a clearance. */
-const mark = {
-  degree: () => (
-    <>
-      <path d="M-8-1.5L0-5.5l8 4-8 4z" />
-      <path d="M-4.5.5v3.2c0 1.4 2 2.3 4.5 2.3s4.5-.9 4.5-2.3V.5M8-1.5V3" />
-    </>
-  ),
-  licence: () => (
-    <>
-      <path d="M-7-6.5h14v9H-7zM-4-3.5h8M-4-.8h4.5" />
-      <circle cx="3.5" cy="4.3" r="2.2" />
-      <path d="M2.4 6.2L1.8 8.6l1.7-.8 1.7.8-.6-2.4" />
-    </>
-  ),
-  identity: () => (
-    <>
-      <rect x="-8" y="-5.5" width="16" height="11" rx="2" />
-      <circle cx="-3.4" cy="-1.3" r="1.9" />
-      <path d="M-6.4 3.3c.4-2.2 5.6-2.2 6 0M1.5-2h4.5M1.5 1h3.5" />
-    </>
-  ),
-  shield: () => (
-    <>
-      <path d="M0-7l6 2.2v4.3c0 3.6-2.5 6-6 7.5-3.5-1.5-6-3.9-6-7.5v-4.3z" />
-      <path d="M-2.2.2l1.5 1.5 3-3.2" />
-    </>
-  ),
-};
-
-/** Queue order: India, the UK, Nigeria (mismatch), the US, the Philippines. */
-const CHECKS = [
-  { src: at(45, 5), mark: mark.identity, on: "gwp-on-a", down: "gwt-d9", up: "gwt-d14", ring: "gwt-d13" },
-  { src: at(32, 2), mark: mark.identity, on: "gwp-on-b", down: "gwt-d32", up: "gwt-d37", ring: "gwt-d36" },
-  { src: at(33, 7), mark: mark.licence, on: "gwp-on-c", down: "gwt-d53", up: "gwt-d58", ring: "gwt-d57" },
-  { src: at(15, 3), mark: mark.shield, on: "gwp-on-d", down: "gwt-d76", up: "gwt-d81", ring: "gwt-d80" },
-  { src: at(53, 6), mark: mark.degree, on: "gwp-on-e", down: "gwt-d93", up: "gwt-d98", ring: "gwt-d97" },
+/** Month 1: one at a time, held at the gate while India, the UK and the
+ *  Philippines answer. `go` starts the walk; the check leaves 1.2 s in. */
+const SLOW = [
+  { go: "gwt-d4", down: "gwt-d16", up: "gwt-d21", ok: "gwt-d25", src: at(45, 5) },
+  { go: "gwt-d20", down: "gwt-d32", up: "gwt-d37", ok: "gwt-d41", src: at(32, 2) },
+  { go: "gwt-d36", down: "gwt-d48", up: "gwt-d53", ok: "gwt-d57", src: at(53, 6) },
 ];
-const MISMATCH = 2;
-/** The rush: two more countries every tenth of a second. */
-const RUSH = [
-  [23, 10], [56, 4], [11, 2], [38, 8], [58, 12], [34, 2], [14, 6],
-  [52, 3], [36, 11], [38, 1], [41, 5], [21, 12], [51, 9], [37, 4],
-].map(([c, r], i) => ({ src: at(c, r), d: `gwt-d${104 + Math.floor(i / 2)}` }));
-const CORE_PINGS = ["gwt-d8", "gwt-d18", "gwt-d31", "gwt-d41", "gwt-d52", "gwt-d62", "gwt-d75", "gwt-d85", "gwt-d92", "gwt-d102"];
-const QUEUE = [
-  { cls: "gwp-p1", card: "gwt-d20" },
-  { cls: "gwp-p2", card: "gwt-d43" },
-  { cls: "gwp-p3" },
-  { cls: "gwp-p4", card: "gwt-d86" },
-  { cls: "gwp-p5", card: "gwt-d103" },
-];
-const STREAM = ["gwt-d104", "gwt-d106", "gwt-d108", "gwt-d110"];
+/** Months 2–6: a stream, each one's check fired as they cross (0.8 s in). */
+const FAST = [
+  [23, 10], [56, 4], [11, 2], [38, 8], [58, 12], [34, 2], [14, 6], [52, 3], [36, 11], [41, 5], [21, 12],
+].map(([c, r], i) => ({ go: `gwt-d${54 + i * 4}`, down: `gwt-d${62 + i * 4}`, hit: `gwt-d${66 + i * 4}`, src: at(c, r) }));
 
 /** Gate faces, in `creds` order: briefcase, passport, certificate, shield, scope. */
 const credIcon = [
@@ -127,15 +96,6 @@ function Person() {
   );
 }
 
-function Doc({ cls }: { cls: string }) {
-  return (
-    <g className={`gwp-doc ${cls}`}>
-      <rect x="7" y="-11" width="8" height="10" rx="1.3" />
-      <path d="M8.8-8h4.2M8.8-5.4h3" />
-    </g>
-  );
-}
-
 function Gate() {
   return (
     <>
@@ -144,8 +104,6 @@ function Gate() {
       <rect className="gwt-o" x="118" y="32" width="84" height="6" />
       <rect className="gwt-o" x="120" y="38" width="9" height="59" />
       <rect className="gwt-o" x="191" y="38" width="9" height="59" />
-      <rect className="gwt-o" x="118" y="38" width="13" height="4" />
-      <rect className="gwt-o" x="189" y="38" width="13" height="4" />
       <rect className="gwt-o" x="114" y="97" width="92" height="3" />
     </>
   );
@@ -153,148 +111,106 @@ function Gate() {
 
 export function ArtScale({ s, layer }: { s: S; layer: string }) {
   const creds = Object.values(s.creds);
+  const step = (s.count.to - s.count.from) / (MONTHS - 1);
+  const counts = Array.from({ length: MONTHS }, (_, k) => `${Math.round(s.count.from + step * k)}${s.count.suffix}`);
   return (
-    <svg className="gwt gwp" viewBox="0 0 320 210" aria-hidden="true" focusable="false">
+    <svg className="gwt gwt-min gws" viewBox="0 0 320 210" aria-hidden="true" focusable="false">
       <defs>
-        <pattern id="gwp-soil" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <path className="gwt-hatch" d="M0 0V7" />
-        </pattern>
-        <radialGradient id="gwp-glow">
-          <stop offset="0" className="gwt-glow-a" />
-          <stop offset="1" className="gwt-glow-b" />
-        </radialGradient>
-        <clipPath id="gwp-win">
+        <clipPath id="gws-win">
           <rect x="126" y="10" width="68" height="18" />
+        </clipPath>
+        <clipPath id="gws-num">
+          <rect x="0" y="12" width="110" height="30" />
         </clipPath>
       </defs>
 
       <rect className="gwt-rock" x="-200" y="168" width="720" height="240" />
       <rect className="gwt-soil" x="-200" y="100" width="720" height="68" />
-      <rect x="-200" y="100" width="720" height="68" fill="url(#gwp-soil)" />
       <path className="gwt-strata" d="M-200 168H520" />
       <path className="gwt-ground" d="M-200 100H520" />
-      <circle cx="160" cy="134" r="78" fill="url(#gwp-glow)" />
       <text className="gwt-mono gwt-mono-hot" x="6" y="137">{layer}</text>
-      <text className="gwt-mono" x="6" y="207">{s.countries}</text>
-
       <g>
         <title>{s.sources}</title>
-        <path className="gwp-map" d={MAP_D} />
+        <path className="gws-map" d={MAP_D} />
       </g>
-      <g className="gwp-fin">
-        <path className="gwp-map-hot" d={MAP_D} />
-        {RUSH.map((r) => <circle key={r.d + r.src} className="gwp-lit" cx={r.src[0]} cy={r.src[1]} r="2.2" />)}
+
+      {/* The counter, its unit and the six months it takes. Each month
+          fills its segment and its band of the map together. */}
+      <g clipPath="url(#gws-num)">
+        <g className="gws-roll">
+          {counts.map((c, k) => (
+            <text key={c} className="gws-num" x="8" y={36 + k * 28}>{c}</text>
+          ))}
+        </g>
       </g>
-      {RUSH.map((r) => (
-        <g key={r.d + r.src}>
-          <path className={`gwp-zap ${r.d}`} pathLength={1} d={root(r.src)} />
-          <circle className={`gwp-blip ${r.d}`} cx={r.src[0]} cy={r.src[1]} r="2.4" />
+      <text className="gws-unit" x="8" y="50">{s.unit}</text>
+      {BANDS.map((d, k) => <rect key={d} className="gws-seg" x={8 + k * 15} y="56" width="13" height="3" rx="1.5" />)}
+      {BANDS.map((d, k) => (
+        <g key={d} className={`gws-m${k}`}>
+          <path className="gws-map-hot" d={d} />
+          <rect className="gws-seg-on" x={8 + k * 15} y="56" width="13" height="3" rx="1.5" />
         </g>
       ))}
-      {CHECKS.map((c, i) => (
-        <g key={c.on}>
-          <path className={`gwp-root ${c.on}`} pathLength={1} d={root(c.src)} />
-          <path className={`gwt-pk ${c.down}`} pathLength={1} d={root(c.src)} />
-          <path className={`gwt-pk gwt-rev ${c.up}${i === MISMATCH ? " gwp-pk-no" : ""}`} pathLength={1} d={root(c.src)} />
-          <circle className={`gwp-ripple ${c.ring}${i === MISMATCH ? " gwp-ripple-no" : ""}`} cx={c.src[0]} cy={c.src[1]} r="8" />
-          <g className={`${c.on} gwt-d4`} transform={`translate(${c.src[0]} ${c.src[1]})`}>
-            <g className={i === MISMATCH ? "gwp-badge gwp-badge-no" : "gwp-badge"}>
-              <circle r="8" />
-              <g className="gw-ico" transform="scale(.55)">{c.mark()}</g>
-            </g>
-          </g>
+      <text className="gwt-mono gws-halo" x="6" y="207">{s.countries}</text>
+      <text className="gwt-mono" x="8" y="68">{s.months.first}</text>
+      <text className="gwt-mono" x="98" y="68" textAnchor="end">{s.months.last}</text>
+
+      {/* The checks: Month 1's down and back, the stream's down. */}
+      {SLOW.map((p) => (
+        <g key={p.go}>
+          <path className={`gwt-pk ${p.down}`} pathLength={1} d={route(p.src)} />
+          <path className={`gwt-pk gwt-rev ${p.up}`} pathLength={1} d={route(p.src)} />
+          <circle className={`gws-blip ${p.up}`} cx={p.src[0]} cy={p.src[1]} r="2.6" />
+        </g>
+      ))}
+      {FAST.map((p) => (
+        <g key={p.go}>
+          <path className={`gwt-pk ${p.down}`} pathLength={1} d={route(p.src)} />
+          <circle className={`gws-blip ${p.hit}`} cx={p.src[0]} cy={p.src[1]} r="2.6" />
         </g>
       ))}
 
       <path className="gwt-pipe" pathLength={1} d="M160 120V100" />
-      <path className="gwt-pipe-in" pathLength={1} d="M160 120V100" />
-      <path className="gwt-live" d="M160 120V100" />
-      <path className="gwt-pk gwt-rev gwt-d8" pathLength={1} d="M160 120V100" />
-      <path className="gwt-pk gwt-d18" pathLength={1} d="M160 120V100" />
+      <g className="gws-gate">
+        <path className="gwt-live" d="M160 120V100" />
+      </g>
       <g className="gwt-core-g">
         <rect className="gwt-core" x="114" y="120" width="92" height="28" rx="14" />
         <g transform="translate(127 124.5)">
           <Logo width={66} height={19} />
         </g>
       </g>
-      {CORE_PINGS.map((d) => (
-        <rect key={d} className={`gwt-ring ${d}`} x="114" y="120" width="92" height="28" rx="14" />
-      ))}
 
       <g className="gwt-b"><Gate /></g>
-      <g className="gwt-lit gwp-gate-lit"><Gate /></g>
-      <g className="gwp-bar">
-        <rect className="gwp-arm" x="140" y="68" width="46" height="4" rx="2" />
-        <path className="gwp-stripe" d="M146 70h5M156 70h5M166 70h5M176 70h5" />
-      </g>
+      <g className="gwt-lit gws-gate"><Gate /></g>
 
-      <g className="gwp-sign">
-        <rect className="gwp-board" x="122" y="8" width="76" height="22" rx="5" />
-        <g clipPath="url(#gwp-win)">
-          <g className="gwp-roll">
-            {creds.map((c, i) => (
-              <g key={c} transform={`translate(0 ${i * 18})`}>
-                <g className="gw-ico" transform="translate(138 19) scale(.7)">{credIcon[i]()}</g>
-                <text x="148" y="21.8">{c}</text>
-              </g>
-            ))}
-            <g transform="translate(0 90)">
-              {credIcon.map((icon, i) => (
-                <g key={i} className="gw-ico gwp-ico-hot" transform={`translate(${134 + i * 13} 19) scale(.55)`}>
-                  {icon()}
-                </g>
-              ))}
+      <rect className="gwp-board" x="122" y="8" width="76" height="22" rx="5" />
+      <g clipPath="url(#gws-win)">
+        <g className="gws-sign">
+          {creds.map((c, i) => (
+            <g key={c} transform={`translate(0 ${i * 18})`}>
+              <g className="gw-ico" transform="translate(138 19) scale(.7)">{credIcon[i]()}</g>
+              <text x="148" y="21.8">{c}</text>
             </g>
-          </g>
+          ))}
         </g>
       </g>
 
-      {QUEUE.map((p, i) => (
-        <g key={p.cls} transform="translate(0 91)">
-          <g className={p.cls}>
-            <g className={i === MISMATCH ? "gwp-face" : undefined}>
-              <Person />
-            </g>
-            {p.card && <Doc cls={`gwp-card ${p.card}`} />}
-            {i === MISMATCH && (
-              <g className="gwp-out">
-                <circle r="8" />
-                <g className="gwt-me-i">
-                  <circle cy="-2.6" r="2.3" />
-                  <path d="M-4.2 4.6c.4-3.6 8-3.6 8.4 0" />
-                </g>
-              </g>
-            )}
+      {SLOW.map((p) => (
+        <g key={p.go}>
+          <g transform="translate(0 91)">
+            <g className={`gws-walk ${p.go}`}><Person /></g>
+          </g>
+          <g className={`gws-ok ${p.ok}`}>
+            <Tick x={160} y={60} />
           </g>
         </g>
       ))}
-      {STREAM.map((d) => (
-        <g key={d} transform="translate(0 91)">
-          <g className={`gwp-dash ${d}`}>
-            <Person />
-            <Doc cls={`gwp-dash-card ${d}`} />
-          </g>
+      {FAST.map((p) => (
+        <g key={p.go} transform="translate(0 91)">
+          <g className={`gws-dash ${p.go}`}><Person /></g>
         </g>
       ))}
-
-      <g transform="translate(108 64)">
-        <g className="gwp-ask">
-          <circle r="5.5" />
-          <text y="2.5" textAnchor="middle">?</text>
-        </g>
-        <g className="gwp-ok">
-          <Tick x={0} y={0} />
-        </g>
-        <g className="gwp-no">
-          <circle r="5.5" />
-          <path d="M-2-2l4 4m0-4l-4 4" />
-        </g>
-      </g>
-
-      <g className="gwp-big">
-        <text className="gwp-num" x="314" y="28" textAnchor="end">{s.big}</text>
-        <text className="gwt-mono" x="314" y="39" textAnchor="end">{s.bigL}</text>
-      </g>
     </svg>
   );
 }

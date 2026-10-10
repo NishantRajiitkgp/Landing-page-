@@ -127,9 +127,8 @@ export const ar: ChromeCopy = {
       gdpr: "GDPR",
       pbsa: "PBSA",
       nsr: "NSR",
-      mom: "وزارة القوى العاملة، سنغافورة",
     },
-    certline: "ISO 27001 · GDPR · PBSA · NSR · وزارة القوى العاملة (SG)",
+    certline: "ISO 27001 · GDPR · PBSA · NSR",
     copyright: "© 2026 جميع الحقوق محفوظة. Hello Verify India Private Ltd.",
     legal: {
       privacy: "سياسة الخصوصية",
@@ -160,7 +159,6 @@ export const ar: ChromeCopy = {
         gdpr: "GDPR",
         pbsa: "PBSA",
         nsr: "NSR",
-        mom: "وزارة القوى العاملة (SG)",
       },
       markHint: "UV · حرِّك المؤشر فوق العلامة",
       microtext:

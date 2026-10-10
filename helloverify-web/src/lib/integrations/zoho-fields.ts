@@ -23,7 +23,7 @@
  */
 import "server-only";
 
-import { INTEREST_LABELS, SEGMENT_LABELS } from "@/lib/leads/constraints";
+import { FOR_LABELS, INTEREST_LABELS, SEGMENT_LABELS } from "@/lib/leads/constraints";
 import type { Lead } from "@/lib/leads/schema";
 
 /** Zoho rejects an over-long value rather than truncating it. Limits are the
@@ -45,6 +45,11 @@ const clip = (value: string, max: number) => value.trim().slice(0, max);
  *  space is wrong for plenty of naming conventions, which is exactly why the
  *  whole unsplit name is repeated in the description: whatever this does to
  *  `First_Name`/`Last_Name`, the human-entered original survives verbatim. */
+function phoneOf(lead: Lead): string | undefined {
+  if (lead.countryCode && lead.mobile) return `${lead.countryCode} ${lead.mobile}`;
+  return lead.mobile;
+}
+
 function splitName(fullName: string): { first: string; last: string } {
   const parts = fullName.trim().split(/\s+/).filter(Boolean);
   if (parts.length === 0) return { first: "", last: "" };
@@ -58,13 +63,15 @@ const NOT_PROVIDED = "Not provided";
  *  views and several export paths collapse newlines, so a single line with an
  *  explicit separator survives more round trips than a paragraph. */
 function describe(lead: Lead): string {
+  const services = lead.interests ?? (lead.interest ? [lead.interest] : []);
   const rows: Array<[string, string | undefined]> = [
     ["Segment", SEGMENT_LABELS[lead.segment]],
-    ["Services of interest", lead.interest ? INTEREST_LABELS[lead.interest] : undefined],
-    ["Full name as entered", lead.name],
+    ...(lead.forWhom ? [["Individual", FOR_LABELS[lead.forWhom]] as [string, string]] : []),
+    ["Services of interest", services.map((value) => INTEREST_LABELS[value]).join(", ") || undefined],
+    ["Full name as entered", lead.name || undefined],
     ["Company", lead.company],
     ["Email", lead.email],
-    ["Mobile", lead.mobile],
+    ["Mobile", phoneOf(lead)],
     ["Message", lead.message],
     ["Source", "helloverify.com contact form"],
   ];
@@ -83,7 +90,7 @@ export interface ZohoLeadRecord {
 }
 
 export function toZohoLead(lead: Lead, leadSource?: string): ZohoLeadRecord {
-  const { first, last } = splitName(lead.name);
+  const { first, last } = splitName(lead.name ?? "");
 
   const record: ZohoLeadRecord = {
     Last_Name: clip(last || first || "Lead", MAX.lastName),
@@ -93,7 +100,8 @@ export function toZohoLead(lead: Lead, leadSource?: string): ZohoLeadRecord {
   };
 
   if (first) record.First_Name = clip(first, MAX.firstName);
-  if (lead.mobile) record.Phone = clip(lead.mobile, MAX.phone);
+  const phone = phoneOf(lead);
+  if (phone) record.Phone = clip(phone, MAX.phone);
   // Omitted entirely when unconfigured. An unrecognised picklist value is the
   // one field that used to lose leads silently; `zoho.ts` checks the configured
   // value against the live picklist before the first send.

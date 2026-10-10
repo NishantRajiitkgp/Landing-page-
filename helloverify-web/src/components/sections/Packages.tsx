@@ -3,7 +3,8 @@ import Image from "next/image";
 import { Arrow } from "@/components/brand/Arrow";
 import { Tick } from "@/components/brand/Tick";
 import { AppLink } from "@/components/chrome/AppLink";
-import { BLUE_COLLAR_CLIENTS, blueLogo } from "@/lib/blueCollarClients";
+import { BLUE_COLLAR_CLIENTS, blueLogo, type BlueClientId, type BlueLogoFit } from "@/lib/blueCollarClients";
+import { WHITE_COLLAR_CLIENTS, whiteLogo, type WhiteClientId } from "@/lib/whiteCollarClients";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS, type SectionsCopy } from "@/lib/copy/sections";
 // Homepage v2 styles are one sheet per section (see `app/v2/hero.css`).
@@ -16,8 +17,6 @@ import "@/app/v2/packages.css";
  *  three steps. Under it: the promise, who it is built for, three figures,
  *  the four checks, the clients, and two actions.
  *
- *  White collar's client rail is six empty wells, the same size as the
- *  blue-collar marks, so its logos can drop in without the layout moving.
  *  Pure CSS motion (`app/v2/packages.css`), so this stays a Server Component.
  */
 
@@ -38,8 +37,11 @@ const PANELS: readonly {
 
 const SIZES_KV = "(max-width: 1080px) 92vw, 36vw";
 
-/** Six empty wells, matching the blue-collar marks one for one. */
-const WHITE_SLOTS = 6;
+/** Each workforce's client marks, in strip order. */
+const MARKS: Record<CollarId, readonly { id: BlueClientId | WhiteClientId; fit?: BlueLogoFit; src: string }[]> = {
+  blue: BLUE_COLLAR_CLIENTS.map((cl) => ({ ...cl, src: blueLogo(cl.id) })),
+  white: WHITE_COLLAR_CLIENTS.map((cl) => ({ ...cl, src: whiteLogo(cl.id) })),
+};
 
 function Seal({ id, ring }: { id: CollarId; ring: string }) {
   const path = `kv-ring-${id}`;
@@ -73,7 +75,6 @@ function Panel({ p, t }: { p: (typeof PANELS)[number]; t: SectionsCopy["packages
       <div className="kv-media">
         <Image className="kv-img" src={p.src} alt="" fill sizes={SIZES_KV} style={{ objectPosition: p.focus }} />
         <div className="kv-scrim" />
-        <span className="kv-seg">{pk.hd}</span>
         <Seal id={p.id} ring={t.sealRing} />
         <div className="kv-case">
           <p className="kv-case-k">
@@ -129,16 +130,12 @@ function Panel({ p, t }: { p: (typeof PANELS)[number]; t: SectionsCopy["packages
         </dl>
 
         <div className="kv-checks">
-          <p className="kv-label">
-            {t.checksK}
-            <span>{t.count(checks.length)}</span>
-          </p>
+          <p className="kv-label">{t.checksK}</p>
           <ul>
-            {checks.map(([k, name], i) => (
+            {checks.map(([k, name]) => (
               <li key={k}>
                 <span className="kv-tk"><Tick /></span>
                 <span className="kv-ck">{name}</span>
-                <span className="kv-ci" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
               </li>
             ))}
           </ul>
@@ -146,27 +143,13 @@ function Panel({ p, t }: { p: (typeof PANELS)[number]; t: SectionsCopy["packages
 
         <div className="kv-clients">
           <p className="kv-label">{c.clientsH}</p>
-          {p.id === "blue" ? (
-            <ul className="kv-logos">
-              {BLUE_COLLAR_CLIENTS.map((cl) => (
-                <li key={cl.id} className={`kv-logo-${cl.fit}`}>
-                  <Image
-                    src={blueLogo(cl.id)}
-                    alt={t.clients[cl.id]}
-                    width={160}
-                    height={48}
-                    unoptimized={blueLogo(cl.id).endsWith(".svg")}
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <ul className="kv-logos kv-logos-empty" aria-hidden="true">
-              {Array.from({ length: WHITE_SLOTS }, (_, i) => (
-                <li key={i} className="kv-slot" />
-              ))}
-            </ul>
-          )}
+          <ul className="kv-logos">
+            {MARKS[p.id].map((m) => (
+              <li key={m.id} className={m.fit ? `kv-logo-${m.fit}` : undefined}>
+                <Image src={m.src} alt={t.clients[m.id]} width={160} height={48} unoptimized={m.src.endsWith(".svg")} />
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="kv-acts">

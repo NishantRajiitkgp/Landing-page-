@@ -1,21 +1,12 @@
 import { Steps } from "@/components/chrome/Steps";
-import type { AuthorityCopy } from "@/lib/copy/authority";
 import type { MomDoc } from "@/lib/mom/doc";
+import { MOM_ORG_REGISTER_PATH, MOM_REGISTER_PATH } from "@/lib/mom/paths";
 
 import { MomIcon, MomLink } from "./MomBits";
-import { MomStart } from "./MomStart";
 
 type Overview = MomDoc["screening"]["overview"];
 
-export function MomOverview({
-  overview,
-  locale,
-  authority,
-}: {
-  overview: Overview;
-  locale: string;
-  authority: AuthorityCopy;
-}) {
+export function MomOverview({ overview, locale }: { overview: Overview; locale: string }) {
   const roles = overview.roleCards;
   const prices = overview.transparentPricing;
   const why = overview.whyChoose;
@@ -29,20 +20,22 @@ export function MomOverview({
     <>
       <section className="wrap sec3">
         <div className="mom3-grid2">
-          <article className="mom3-card">
+          <article className="mom3-card mom3-role">
             <MomIcon src={roles.candidates.iconSrc} />
             <h2>{roles.candidates.title}</h2>
             <p>{roles.candidates.body}</p>
             <div className="mom3-acts">
-              <MomStart label={roles.candidates.primaryCta.label} t={authority} />
+              <MomLink href={MOM_REGISTER_PATH} locale={locale} className="btn btn-ink btn-sm">
+                {roles.candidates.primaryCta.label}
+              </MomLink>
             </div>
           </article>
-          <article className="mom3-card">
+          <article className="mom3-card mom3-role">
             <MomIcon src={roles.employers.iconSrc} />
             <h2>{roles.employers.title}</h2>
             <p>{roles.employers.body}</p>
             <div className="mom3-acts">
-              <MomLink href={roles.employers.primaryCta.href} locale={locale} className="btn btn-ink btn-sm">
+              <MomLink href={MOM_ORG_REGISTER_PATH} locale={locale} className="btn btn-ink btn-sm">
                 {roles.employers.primaryCta.label}
               </MomLink>
               <MomLink href={roles.employers.secondaryCta.href} locale={locale} className="btn btn-line btn-sm">
@@ -57,7 +50,7 @@ export function MomOverview({
         <div className="sec-head">
           <h2 className="h2">{prices.title}</h2>
         </div>
-        <div className="mom3-grid3">
+        <div className="mom3-grid3 mom3-prices">
           {prices.items.map((item) => (
             <article key={item.title} className="mom3-card">
               <MomIcon src={item.iconSrc} />
@@ -202,7 +195,7 @@ export function MomOverview({
           </article>
           <article className="mom3-card">
             <h3>{compass.linksCard.title}</h3>
-            <ul className="mom3-list">
+            <ul className="mom3-list mom3-linklist">
               {compass.linksCard.links.map((link) => (
                 <li key={link.label}>
                   <MomLink href={link.href} locale={locale}>

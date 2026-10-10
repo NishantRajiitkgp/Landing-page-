@@ -30,38 +30,82 @@ export const SEGMENT_LABELS: Record<SegmentValue, string> = {
   individual: "Individual",
 };
 
+/** Who an individual is verifying. The old site's Applicant (their own
+ *  credentials, for an authority) and Consumer (a nanny, a driver, a tenant). */
+export const FOR_VALUES = ["self", "other"] as const;
+export type ForValue = (typeof FOR_VALUES)[number];
+
+export const FOR_LABELS: Record<ForValue, string> = {
+  self: "For myself (Applicant)",
+  other: "For someone else (Consumer)",
+};
+
 /** Optional. Sharpens routing; deliberately not required — every extra
  *  mandatory field on a conversion page costs completions (DESIGN-RESEARCH).
  *
- *  Each slug is the last path segment of the route that sells that thing
- *  (`certifier` -> /products/certifier, `hellov` -> /products/hellov), so a
- *  vertical page can deep-link `/contact?interest=<its own slug>` and arrive
- *  pre-selected. One taxonomy across URLs, JSON-LD and CRM reporting rather
- *  than three. The old site's 15 slugs are deliberately NOT carried over: they
- *  lived only in a `?service=` query parameter that nothing ever linked to, so
- *  there is no ranking equity in them, only a second vocabulary to maintain.
- *
- *  The LABEL, not the slug, is what reaches Zoho. */
+ *  The old site's "Services of Interest" lists, in its order. The LABEL, not
+ *  the slug, is what reaches Zoho. */
 export const INTEREST_VALUES = [
-  "enterprise",
-  "smb",
-  "employee-verification",
-  "customer-kyc",
-  "certifier",
-  "governments",
-  "hellov",
+  "white-collar",
+  "blue-collar",
+  "international",
+  "vendor-due-diligence",
+  "partnership",
+  "immigration-authority",
+  "healthcare-authority",
+  "education-authority",
+  "business-trade-authority",
+  "nanny",
+  "driver",
+  "home-staff",
+  "tenant",
+  "other-verification",
 ] as const;
 export type InterestValue = (typeof INTEREST_VALUES)[number];
 
 export const INTEREST_LABELS: Record<InterestValue, string> = {
-  enterprise: "Enterprise background verification",
-  smb: "SMB packages",
-  "employee-verification": "Employee verification",
-  "customer-kyc": "Customer KYC / Trust & Safety",
-  certifier: "Vendor due diligence (Certifier)",
-  governments: "Government / authority programme",
-  hellov: "Individual / HelloV",
+  "white-collar": "White Collar Verification",
+  "blue-collar": "Blue Collar Verification",
+  international: "International Check & Capability",
+  "vendor-due-diligence": "Vendor Due Diligence",
+  partnership: "Partnership (Request for a demo)",
+  "immigration-authority": "Immigration Authority",
+  "healthcare-authority": "Healthcare Authority",
+  "education-authority": "Education Authority",
+  "business-trade-authority": "Business & Trade Authority",
+  nanny: "Nanny Verification",
+  driver: "Driver Verification",
+  "home-staff": "Home Staff",
+  tenant: "Tenant Verification",
+  "other-verification": "Other Verification",
 };
+
+const AUTHORITY_INTERESTS = [
+  "immigration-authority",
+  "healthcare-authority",
+  "education-authority",
+  "business-trade-authority",
+] as const satisfies readonly InterestValue[];
+
+/** The services each audience is offered, in display order. The server
+ *  rejects anything outside the list for the posted audience. */
+export const INTEREST_GROUPS = {
+  business: ["white-collar", "blue-collar", "international", "vendor-due-diligence", "partnership"],
+  government: AUTHORITY_INTERESTS,
+  self: AUTHORITY_INTERESTS,
+  other: ["nanny", "driver", "home-staff", "tenant", "other-verification"],
+} as const satisfies Record<"business" | "government" | ForValue, readonly InterestValue[]>;
+
+export type InterestGroup = keyof typeof INTEREST_GROUPS;
+
+export function interestGroup(segment: SegmentValue, forWhom: ForValue): InterestGroup {
+  return segment === "individual" ? forWhom : segment;
+}
+
+/** Only someone verifying other people may pick more than one service. */
+export function interestIsMulti(group: InterestGroup): boolean {
+  return group === "other";
+}
 
 /** Length bounds. `max` doubles as the input's `maxLength`, so a value that
  *  would fail server validation cannot normally be typed in the first place. */
@@ -70,9 +114,18 @@ export const LIMITS = {
   company: { min: 0, max: 120 },
   /** RFC 5321 caps an address at 254 octets. */
   email: { min: 6, max: 254 },
+  /** Legacy formatted numbers (`+91 98765 43210`) from the contact-page enquiry. */
   mobile: { min: 7, max: 20 },
+  /** National number on the sales form: digits only, country code is separate. */
+  phone: { min: 6, max: 15 },
   message: { min: 0, max: 2000 },
 } as const;
+
+/** Government asks for an email only. Business and individual also require a
+ *  name and a mobile number. */
+export function contactDetailsRequired(segment: SegmentValue): boolean {
+  return segment !== "government";
+}
 
 /** Unanchored on purpose: HTML `pattern` anchors implicitly, and `./schema`
  *  wraps it in `^(?:…)$` for zod. The browser compiles `pattern` with the `v`
@@ -82,6 +135,22 @@ export const LIMITS = {
  *  catches a typo, it does not attempt to validate a phone number, which is
  *  not decidable from a string. */
 export const MOBILE_PATTERN = String.raw`[+]?[0-9][0-9 \(\)\-]{6,19}`;
+
+/** National number. HTML `pattern` anchors this; the server wraps it the same
+ *  way as `MOBILE_PATTERN`. Built from `LIMITS.phone` so the two cannot drift. */
+export const PHONE_DIGITS_PATTERN = `[0-9]{${LIMITS.phone.min},${LIMITS.phone.max}}`;
+
+/** A letter, then letters, combining marks (Devanagari vowel signs and the
+ *  like), spaces, apostrophes, periods, hyphens. `-`, `(` and `)` are escaped
+ *  because the browser compiles `pattern` with the `v` flag. `\p{L}` and
+ *  `\p{M}` are valid there and under the `u` flag the server uses. */
+export const NAME_PATTERN = String.raw`[\p{L}][\p{L}\p{M} .'\-]{1,99}`;
+
+/** Organisation names: a letter or digit, then the same, marks, and light punctuation. */
+export const COMPANY_PATTERN = String.raw`[\p{L}\p{N}][\p{L}\p{N}\p{M} .,&'\(\)\-\/+]{1,119}`;
+
+/** A reply address with a real domain. `type="email"` alone accepts `a@b`. */
+export const EMAIL_PATTERN = String.raw`[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}`;
 
 /** Honeypot. Named like a field a form-filling bot wants and a human never
  *  sees: rendered visually hidden, `tabIndex={-1}`, `autoComplete="off"`,
@@ -96,9 +165,11 @@ export const ELAPSED_FIELD = "elapsed_ms";
  *  the form cannot disagree about a string literal. */
 export const FIELDS = {
   segment: "segment",
+  forWhom: "forWhom",
   name: "name",
   company: "company",
   email: "email",
+  countryCode: "countryCode",
   mobile: "mobile",
   interest: "interest",
   message: "message",

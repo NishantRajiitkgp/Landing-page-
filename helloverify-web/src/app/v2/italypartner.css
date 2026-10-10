@@ -1,0 +1,25 @@
+/* Italy partner workspace. The account pages reuse momapply.css. */
+.ip-work { margin-top: 22px; max-inline-size: 760px; }
+.ip-hold { display: flex; align-items: center; gap: 8px; margin: 22px 0 0; font-size: 14.5px; color: var(--ink-soft); }
+.ip-hold .tick { width: 16px; height: 16px; color: var(--ink); }
+.ip-letter { margin-top: 22px; padding: 28px 32px 24px; border-radius: 18px; background: var(--paper); border: 1px solid var(--hair); }
+.ip-letter .k { margin: 0; }
+.ip-letter h3 { margin: 10px 0 0; font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.15; letter-spacing: -.02em; color: var(--ink); }
+.ip-letter .who { margin: 6px 0 0; font-size: 14.5px; color: var(--ink-soft); }
+.ip-letter ol { display: grid; gap: 10px; margin: 18px 0 0; padding: 0; list-style: none; }
+.ip-letter li { font-size: 15px; line-height: 1.45; color: var(--ink); }
+.ip-sign { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px; margin-top: 28px; }
+.ip-sign p { margin: 0; }
+.ip-sign i { display: block; height: 1px; margin-bottom: 8px; background: var(--ink); }
+.ip-sign span { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.ip-dl { margin: 16px 0 0; }
+.ip-who { margin: 14px 0 0; font-size: 16px; color: var(--ink-soft); }
+.ip-live-k { margin: 26px 0 0; }
+.ip-code-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin-top: 8px; }
+.ip-code { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1; letter-spacing: -.03em; color: var(--ink); }
+@media (max-width: 440px) {
+  .ip-letter { padding: 20px 16px 18px; }
+  .ip-letter h3 { font-size: 24px; }
+  .ip-sign { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .ip-code { font-size: 36px; }
+}

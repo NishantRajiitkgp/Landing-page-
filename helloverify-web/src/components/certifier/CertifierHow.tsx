@@ -17,8 +17,8 @@ export function CertifierHow({
 }) {
   const [on, setOn] = useState(0);
   return (
-    <div className="body3">
-      <div className="cert3-how-tabs" role="tablist">
+    <div className="cf4-how">
+      <div className="cf4-tabs cf4-how-tabs" role="tablist">
         {tabs.map((t, i) => (
           <button
             key={t.k}
@@ -34,8 +34,8 @@ export function CertifierHow({
           </button>
         ))}
       </div>
-      <div className="cert3-how">
-        <div className="cert3-how-left">
+      <div className="cf4-how-body">
+        <div className="cf4-how-left">
           {tabs.map((t, i) => (
             <div key={t.k} role="tabpanel" id={`cert3-how-panel-${t.k}`} aria-labelledby={`cert3-how-tab-${t.k}`} hidden={on !== i}>
               {panels[i]}

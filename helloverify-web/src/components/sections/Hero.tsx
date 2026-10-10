@@ -13,9 +13,6 @@
     same markup out below 1081px with the content in flow. On
     a touch screen the lamp rests lit and a tap moves it. */
 import { YCBadge } from "@/components/brand/YCBadge";
-// The ghost button's arrow is the shared `brand/Arrow.tsx` — an inline copy
-// is the template the next one gets pasted from (§4 rule 2, §17 cond. 22).
-import { Arrow } from "@/components/brand/Arrow";
 import { AppLink } from "@/components/chrome/AppLink";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
@@ -112,10 +109,6 @@ export async function Hero() {
         <p className="rise d3 hv-lede">{t.lede}</p>
         <div className="rise d4 hv-ctas">
           <AppLink href="/contact" className="btn btn-ink">{t.cta}</AppLink>
-          <AppLink href="/resources/checks" className="btn btn-ghost">
-            <span>{t.checks}</span>
-            <Arrow />
-          </AppLink>
         </div>
         <div className="rise d6 hv-lg-wrap">
           <HeroLedger

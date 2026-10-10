@@ -1,17 +1,19 @@
-/** /contact — the old Contact Us page (`contactUs.base.json`). The enquiry
- *  form is the old four-role form; the track tab stays, with an honest
- *  "no live lookup" answer. Office titles follow the live CMS (New Delhi). */
+/** /contact — the Contact Us page. The enquiry tab is the homepage sales
+ *  form (`forms/ContactForm`); `?role=` and `?service=` from a vertical page
+ *  open the matching audience. The track tab stays, with an honest "no live
+ *  lookup" answer. Office titles follow the live CMS (New Delhi). */
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Image from "next/image";
 
 import { PageShell } from "@/components/chrome/PageShell";
 import { ContactTabs, ContactTabsBound } from "@/components/contact/ContactTabs";
-import { EnquiryForm, EnquiryFormBound } from "@/components/contact/EnquiryForm";
+import { ContactForm } from "@/components/forms/ContactForm";
 import { contactCms, type ContactCms } from "@/lib/contact/cms";
 import { CONTACT, type ContactCopy } from "@/lib/copy/contact";
-import { FORMS } from "@/lib/copy/forms";
+import { FORMS, formsUi, type FormsUi } from "@/lib/copy/forms";
 import { copy } from "@/lib/copy/request";
+import "@/app/v2/contact.css";
 import { SIZES_SIDE } from "@/lib/img";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { setRequestLocale } from "next-intl/server";
@@ -37,11 +39,11 @@ function heroTitle(text: string) {
   );
 }
 
-function panel(cms: ContactCms, locale: string, honest: ContactCopy, status: string, bound: boolean) {
-  const form = bound ? (
-    <EnquiryFormBound enquiry={cms.enquiry} locale={locale} status={status} />
-  ) : (
-    <EnquiryForm enquiry={cms.enquiry} locale={locale} status={status} />
+function panel(cms: ContactCms, locale: string, honest: ContactCopy, ui: FormsUi, bound: boolean) {
+  const form = (
+    <div className="hc">
+      <ContactForm locale={locale} t={ui} idPrefix="c-" />
+    </div>
   );
   const tabs = { aria: honest.tabs.aria, enquiry: cms.tabs.enquiryLabel, track: cms.tabs.trackLabel };
   return bound ? (
@@ -84,9 +86,9 @@ export default async function ContactPage({
               <p className="p">{cms.leftIntro.body}</p>
             </div>
           </div>
-          <Suspense fallback={panel(cms, locale, t, form.status.ok, false)}>
-            {panel(cms, locale, t, form.status.ok, true)}
-          </Suspense>
+      <Suspense fallback={panel(cms, locale, t, formsUi(form), false)}>
+        {panel(cms, locale, t, formsUi(form), true)}
+      </Suspense>
         </div>
       </div>
 

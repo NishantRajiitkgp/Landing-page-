@@ -1,6 +1,6 @@
 "use client";
 
-import { Children, useState } from "react";
+import { Children, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 type Tab = { id: string; label: string };
@@ -21,6 +21,27 @@ export function MomHub({
   const start = Math.max(0, tabs.findIndex((tab) => tab.id === initial));
   const [on, setOn] = useState(start);
   const panels = Children.toArray(children);
+  const anchor = useRef<HTMLDivElement>(null);
+  const list = useRef<HTMLDivElement>(null);
+
+  /** The tab bar is sticky, so a tab picked from deep inside a long panel
+   *  would otherwise open the next one at the old scroll depth. */
+  function select(index: number) {
+    setOn(index);
+    const top = anchor.current?.getBoundingClientRect().top;
+    if (top !== undefined && top < 0) window.scrollTo({ top: window.scrollY + top });
+  }
+
+  function onKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    const rtl = getComputedStyle(event.currentTarget).direction === "rtl";
+    const step = { ArrowRight: rtl ? -1 : 1, ArrowLeft: rtl ? 1 : -1 }[event.key];
+    const index =
+      event.key === "Home" ? 0 : event.key === "End" ? tabs.length - 1 : step ? (on + step + tabs.length) % tabs.length : -1;
+    if (index < 0) return;
+    event.preventDefault();
+    select(index);
+    list.current?.querySelectorAll<HTMLButtonElement>("[role=tab]")[index]?.focus();
+  }
 
   function onClick(event: React.MouseEvent<HTMLDivElement>) {
     const anchor = (event.target as HTMLElement).closest("a");
@@ -39,15 +60,17 @@ export function MomHub({
   return (
     <div className={className} onClick={onClick}>
       {hero}
+      <div ref={anchor} aria-hidden="true" />
       <div className="wrap mom3-tabbar">
-        <div className="mom3-tabs" role="tablist">
+        <div className="mom3-tabs" role="tablist" ref={list} onKeyDown={onKeyDown}>
           {tabs.map((tab, index) => (
             <button
               key={tab.id}
               type="button"
               role="tab"
               aria-selected={index === on}
-              onClick={() => setOn(index)}
+              tabIndex={index === on ? 0 : -1}
+              onClick={() => select(index)}
             >
               {tab.label}
             </button>

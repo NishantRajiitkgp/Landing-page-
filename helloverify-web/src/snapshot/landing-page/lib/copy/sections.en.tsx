@@ -428,7 +428,7 @@ export const en = {
           title: "Driver Verification",
           line: "Comprehensive driver verification ensures safe and reliable hiring.",
           basic: ["Driving License Check", "Criminal Check"],
-          advanced: ["Driving License Check", "Criminal Check", "Voter Id Check", "Address Check"],
+          advanced: ["Driving License Check", "Criminal Check", "Address Check"],
           price: "₹1799",
         },
         homeStaff: {

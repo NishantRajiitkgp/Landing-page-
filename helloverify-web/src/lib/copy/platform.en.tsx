@@ -231,6 +231,11 @@ export const en = {
         remove: "Remove {{name}}",
         note: "Prices are per check, in US $.",
         review: "Review",
+        fast: {
+          t: "Go fast",
+          p: "Half the turnaround on this request.",
+          extra: "+30%",
+        },
       },
       rows: {
         education: {
@@ -330,6 +335,15 @@ export const en = {
           tat: "10-15 days",
         },
       },
+    },
+
+    /** The band under the check builder, above the footer. */
+    soon: {
+      kicker: "Coming soon",
+      before: "in",
+      n: "50+",
+      after: "more countries.",
+      p: "The same source check, opening in the places we don’t reach yet.",
     },
   },
 

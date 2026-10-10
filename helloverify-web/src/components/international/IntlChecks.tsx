@@ -28,6 +28,7 @@ export type SummaryCopy = {
   remove: string;
   note: string;
   review: string;
+  fast: { t: string; p: string; extra: string };
 };
 
 type ChecksProps = {
@@ -74,16 +75,21 @@ export function IntlChecks({
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
-  const href = enquiryHref(locale);
+  const [fast, setFast] = useState(false);
+  const href = enquiryHref(locale) + (fast ? "&rush=1" : "");
   const options = intlOptions(countries, "checks");
   const country = options.find((o) => o.code === code);
   const rows = INTL_CHECKS[code] ?? [];
   const sorted = sortKey ? [...rows].sort((a, b) => compare(a, b, sortKey, sortDir)) : rows;
   const maxDays = Math.max(0, ...rows.map(daysOf).filter(Number.isFinite));
   const picked = rows.filter((r) => checked.has(r.id));
-  const total = picked.reduce((sum, r) => sum + priceOf(r), 0);
+  const rushOn = fast && picked.length > 0;
+  const subtotal = picked.reduce((sum, r) => sum + priceOf(r), 0);
+  const rushFee = Math.round(subtotal * 0.3);
+  const total = subtotal + (rushOn ? rushFee : 0);
   const longest = picked.reduce<IntlCheck | null>((max, r) => (!max || daysOf(r) > daysOf(max) ? r : max), null);
-  const totalLabel = `$${total.toLocaleString("en-US")}`;
+  const readyTat = longest ? (rushOn ? halfTat(longest.tat) : longest.tat) : "";
+  const totalLabel = money(total);
   const countLabel = summary.count.replace("{{count}}", String(picked.length));
 
   const pickCountry = (next: string) => {
@@ -91,6 +97,7 @@ export function IntlChecks({
     setSortKey(null);
     setSortDir("asc");
     setChecked(new Set());
+    setFast(false);
   };
 
   const toggleSort = (key: SortKey) => {
@@ -250,6 +257,28 @@ export function IntlChecks({
           </ul>
         )}
 
+        {picked.length > 0 ? (
+          <label className={`ic-fast${rushOn ? " on" : ""}`}>
+            <input
+              type="checkbox"
+              className="ic-input"
+              checked={rushOn}
+              onChange={() => setFast((v) => !v)}
+            />
+            <span className="ic-box" aria-hidden="true">
+              <TickIcon />
+            </span>
+            <span className="ic-fast-tx">
+              <b>{summary.fast.t}</b>
+              <span>{summary.fast.p}</span>
+            </span>
+            <span className="ic-fast-fee">
+              <i>{summary.fast.extra}</i>
+              <bdi dir="ltr">+{money(rushFee)}</bdi>
+            </span>
+          </label>
+        ) : null}
+
         <div className={`ic-total${picked.length ? "" : " zero"}`}>
           <span className="ic-k">{summary.total}</span>
           <b>
@@ -257,12 +286,13 @@ export function IntlChecks({
           </b>
           {picked.length > 0 ? <span className="ic-total-n">{countLabel}</span> : null}
         </div>
+
         {longest ? (
-          <p className="ic-ready">
+          <p className={`ic-ready${rushOn ? " rush" : ""}`}>
             <ClockIcon />
             <span>{summary.ready}</span>
             <b data-audit-skip="yes">
-              <bdi>{longest.tat}</bdi>
+              <bdi>{readyTat}</bdi>
             </b>
           </p>
         ) : null}
@@ -272,7 +302,7 @@ export function IntlChecks({
           <ArrowIcon />
         </a>
         {picked.length > 0 ? (
-          <button type="button" className="ic-clear" onClick={() => setChecked(new Set())}>
+          <button type="button" className="ic-clear" onClick={() => { setChecked(new Set()); setFast(false); }}>
             {summary.clear}
           </button>
         ) : null}
@@ -327,6 +357,15 @@ function ArrowIcon() {
 export function IntlChecksBound(props: ChecksProps) {
   const hint = useSearchParams().get("country") ?? "";
   return <IntlChecks {...props} initialCode={resolveIntlCode(hint) || "US"} />;
+}
+
+function money(n: number) {
+  return `$${n.toLocaleString("en-US")}`;
+}
+
+/** Halve every figure in a TAT string. One working day is the floor. */
+function halfTat(tat: string) {
+  return tat.replace(/\d+/g, (n) => String(Math.max(1, Math.ceil(Number(n) / 2))));
 }
 
 /** `$135/check` → [`$135`, `/check`]. */

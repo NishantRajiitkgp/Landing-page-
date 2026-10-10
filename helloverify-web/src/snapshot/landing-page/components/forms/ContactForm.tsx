@@ -15,17 +15,27 @@ import { useActionState, useEffect, useRef, useState, type ReactNode } from "rea
 import { submitLead } from "@/app/[locale]/contact/actions";
 import {
   ELAPSED_FIELD,
+  FOR_VALUES,
   HONEYPOT_FIELD,
+  INTEREST_GROUPS,
   INTEREST_LABELS,
   INTEREST_VALUES,
+  type ForValue,
   type InterestValue,
   LIMITS,
   SEGMENT_LABELS,
   SEGMENT_VALUES,
+  contactDetailsRequired,
+  interestGroup,
+  interestIsMulti,
   type LeadField,
   type SegmentValue,
 } from "@/lib/leads/constraints";
 import { Field, SEGMENT_FORM, TEXT_FIELDS } from "@/snapshot/landing-page/components/forms/LeadFields";
+import { MultiSelect } from "@/components/forms/MultiSelect";
+import { PhoneField } from "@/components/forms/PhoneField";
+
+const FOR_TEXT: Record<ForValue, string> = { self: "For myself", other: "For someone else" };
 import { INITIAL_LEAD_FORM_STATE } from "@/lib/leads/state";
 import { localise } from "@/lib/i18n/href";
 
@@ -56,7 +66,13 @@ export function ContactForm({
   const [segment, setSegment] = useState<SegmentValue>(
     (SEGMENT_VALUES as readonly string[]).includes(echoed ?? "") ? (echoed as SegmentValue) : "business",
   );
+  const echoedFor = state.values?.forWhom;
+  const [forWhom, setForWhom] = useState<ForValue>(
+    (FOR_VALUES as readonly string[]).includes(echoedFor ?? "") ? (echoedFor as ForValue) : "self",
+  );
   const cfg = SEGMENT_FORM[segment];
+  const group = interestGroup(segment, forWhom);
+  const offered: readonly InterestValue[] = INTEREST_GROUPS[group];
   const id = (field: string) => idPrefix + field;
 
   /** Set in an effect, not as `useRef(Date.now())`.
@@ -111,16 +127,30 @@ export function ContactForm({
     }
   }, [idPrefix]);
 
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    formRef.current?.querySelectorAll("input, select, textarea").forEach((node) => {
+      if (
+        node instanceof HTMLInputElement ||
+        node instanceof HTMLSelectElement ||
+        node instanceof HTMLTextAreaElement
+      ) {
+        node.setCustomValidity("");
+      }
+    });
+  }, [segment, forWhom]);
+
   const errorFor = (field: LeadField) => state.fieldErrors?.[field];
 
   const invalidProps = (field: LeadField) =>
     errorFor(field) ? { "aria-invalid": true as const, "aria-describedby": `${id(field)}-error` } : {};
 
-  /** The select's starting value: what was echoed back if this audience is
-   *  offered it, else the audience's preset, else the placeholder. */
-  const echoedInterest = state.values?.interest as InterestValue | undefined;
-  const interestDefault =
-    echoedInterest && cfg.interests.includes(echoedInterest) ? echoedInterest : (cfg.preset ?? "");
+  /** What was echoed back and is offered to this audience; several ticked
+   *  services come back comma-joined. Empty shows the placeholder. */
+  const echoedInterests = (state.values?.interest ?? "")
+    .split(",")
+    .filter((value): value is InterestValue => offered.includes(value as InterestValue));
+  const interestDefault = echoedInterests[0] ?? "";
 
 
   if (state.status === "success") {
@@ -142,7 +172,7 @@ export function ContactForm({
   }
 
   return (
-    <form className="form" action={formAction} onInput={stampElapsed} onFocus={stampElapsed}>
+    <form ref={formRef} className="form" action={formAction} onInput={stampElapsed} onFocus={stampElapsed}>
       <div className="form-top">
         <div className="fld-l" style={{ marginBottom: 10 }}>
           Talk to sales
@@ -166,12 +196,43 @@ export function ContactForm({
       </div>
 
       <div className={`fgrid fgrid-${segment}`} style={{ marginTop: 22 }}>
+        {segment === "individual" ? (
+          <div className="full2">
+            <div className="fld-l" id={id("forWhom-label")}>
+              This is for
+            </div>
+            <div className="segs for-segs" role="radiogroup" aria-labelledby={id("forWhom-label")}>
+              {FOR_VALUES.map((value) => (
+                <label className="seg" key={value}>
+                  <input
+                    type="radio"
+                    name="forWhom"
+                    value={value}
+                    className="vh"
+                    checked={forWhom === value}
+                    onChange={() => setForWhom(value)}
+                  />
+                  {FOR_TEXT[value]}
+                </label>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
         {TEXT_FIELDS.map((base) => {
           const words = base.id === "company" ? cfg.company : base.id === "email" ? cfg.email : base;
           if (!words) return null;
           const f = { ...base, ...words };
+          const must = f.id === "name" ? contactDetailsRequired(segment) : Boolean(f.required);
+          const missing = f.id === "email" ? "Enter an email address we can reply to." : "Enter your full name.";
+          const bad =
+            f.id === "email"
+              ? "Enter an email address we can reply to."
+              : f.id === "name"
+                ? "Use letters in the name."
+                : "Use letters and numbers in the organisation name.";
           return (
-            <Field key={f.id} id={f.id} label={f.label} message={errorFor(f.id)} idPrefix={idPrefix}>
+            <Field key={f.id} id={f.id} label={must ? `${f.label} *` : f.label} message={errorFor(f.id)} idPrefix={idPrefix}>
               <input
                 className="inp"
                 id={id(f.id)}
@@ -179,16 +240,36 @@ export function ContactForm({
                 type={f.type}
                 placeholder={f.placeholder}
                 autoComplete={f.autoComplete}
-                required={f.required}
+                required={must}
                 minLength={f.minLength}
                 pattern={f.pattern}
                 maxLength={f.maxLength}
                 defaultValue={state.values?.[f.id] ?? ""}
+                onInvalid={(e) => {
+                  const el = e.currentTarget;
+                  el.setCustomValidity(el.validity.valueMissing ? missing : bad);
+                }}
+                onInput={(e) => e.currentTarget.setCustomValidity("")}
                 {...invalidProps(f.id)}
               />
             </Field>
           );
         })}
+
+        <PhoneField
+          idPrefix={idPrefix}
+          required={contactDetailsRequired(segment)}
+          label="Mobile"
+          countryLabel="Country code"
+          placeholder="9876543210"
+          dialDefault={state.values?.countryCode ?? ""}
+          numberDefault={state.values?.mobile ?? ""}
+          numberError={errorFor("mobile")}
+          countryError={errorFor("countryCode")}
+          missingMessage="Enter a mobile number."
+          invalidMessage="Use digits only, up to 15."
+          countryMessage="Choose a country code."
+        />
 
         {/* Beside Mobile for an individual, who has no company row to fill
             the grid; across both columns otherwise. */}
@@ -201,25 +282,40 @@ export function ContactForm({
               selected at MOUNT only — so without a remount a failed submission
               silently cleared the service the user had picked. Measured, not
               theorised: it was the one field that came back empty. */}
-          {/* The segment is in the key too: switching audience remounts the
-              select with that audience's options and preset. */}
-          <select
-            key={`${state.token ?? 0}-${segment}`}
-            className="inp"
-            id={id("interest")}
-            name="interest"
-            defaultValue={interestDefault}
-            {...invalidProps("interest")}
-          >
-            <option value="" disabled>
-              {cfg.interestPlaceholder}
-            </option>
-            {cfg.interests.map((value) => (
-              <option key={value} value={value}>
-                {INTEREST_LABELS[value]}
+          {/* The audience is in the key too: switching it remounts the
+              control with that audience's options. */}
+          {interestIsMulti(group) ? (
+            <MultiSelect
+              key={`${state.token ?? 0}-${group}`}
+              id={id("interest")}
+              name="interest"
+              label="Services of interest"
+              options={offered.map((value) => ({ value, label: INTEREST_LABELS[value] }))}
+              placeholder={cfg.interestPlaceholder}
+              countLabel="{n} selected"
+              defaultValue={echoedInterests}
+              invalid={Boolean(errorFor("interest"))}
+              describedBy={errorFor("interest") ? `${id("interest")}-error` : undefined}
+            />
+          ) : (
+            <select
+              key={`${state.token ?? 0}-${group}`}
+              className="inp"
+              id={id("interest")}
+              name="interest"
+              defaultValue={interestDefault}
+              {...invalidProps("interest")}
+            >
+              <option value="" disabled>
+                {cfg.interestPlaceholder}
               </option>
-            ))}
-          </select>
+              {offered.map((value) => (
+                <option key={value} value={value}>
+                  {INTEREST_LABELS[value]}
+                </option>
+              ))}
+            </select>
+          )}
         </Field>
 
         <Field id="message" label="Message" wide message={errorFor("message")} idPrefix={idPrefix}>
@@ -228,7 +324,11 @@ export function ContactForm({
             id={id("message")}
             name="message"
             rows={3}
-            placeholder={cfg.message}
+            placeholder={
+              segment === "individual" && forWhom === "self"
+                ? "Which authority is it for, and what needs verifying?"
+                : cfg.message
+            }
             maxLength={LIMITS.message.max}
             defaultValue={state.values?.message ?? ""}
             style={{

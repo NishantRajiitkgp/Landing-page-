@@ -107,15 +107,11 @@ export async function GovDossiers() {
       <Fragment key={id}>
         <Watermark id={id} />
         <div className="gv-cover">
-          <div className="gv-cover-k"><span>{d.n}</span><span>{d.tab}</span></div>
+          <div className="gv-cover-k"><span>{d.tab}</span></div>
           <h3 className="gv-title">{d.title}</h3>
           <p className="gv-sub">{d.sub}</p>
           <div className="gv-photo ph" style={{ background: tint(img) }}>
             <Image className="pimg" src={img} alt="" fill sizes={SIZES_GV_PHOTO} style={{ objectPosition: pos }} />
-            <div className="scrim" />
-            <div className="gv-chips">
-              {Object.values(d.chips).map((c) => <span key={c} className="gv-chip">{c}</span>)}
-            </div>
             <div className="gv-stamp-wrap"><Stamp {...d.stamp} /></div>
           </div>
         </div>
@@ -179,7 +175,6 @@ export async function GovDossiers() {
       </div>
       <GovDossierTabs
         tabs={DOSSIERS.map(({ id }) => t.items[id].tab)}
-        counts={DOSSIERS.map(({ id }) => t.items[id].count)}
         panels={panels}
         label={t.tabsLabel}
         prevLabel={t.prev}

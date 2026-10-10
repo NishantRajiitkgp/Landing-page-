@@ -158,6 +158,11 @@ export const ar: PlatformCopy = {
         remove: "إزالة {{name}}",
         note: "الأسعار لكل فحص بالدولار الأمريكي.",
         review: "مراجعة",
+        fast: {
+          t: "أسرع",
+          p: "نصف مدة الإنجاز لهذا الطلب.",
+          extra: "+30%",
+        },
       },
       rows: {
         education: {
@@ -257,6 +262,14 @@ export const ar: PlatformCopy = {
           tat: "10-15 يوم",
         },
       },
+    },
+
+    soon: {
+      kicker: "قريبًا",
+      before: "في",
+      n: "50+",
+      after: "دولة إضافية.",
+      p: "التحقق نفسه من المصدر، في أماكن لم نصل إليها بعد.",
     },
   },
 

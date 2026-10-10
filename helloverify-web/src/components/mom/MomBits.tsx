@@ -5,7 +5,11 @@ import { localise } from "@/lib/i18n/href";
 /** Decorative mark from the old `/assets/ministryOfManpower` set. */
 export function MomIcon({ src }: { src: string }) {
   const file = src.split("/").pop() ?? "";
-  return <Image src={`/img/mom/${file}`} alt="" width={28} height={28} />;
+  return (
+    <span className="mom3-ic" aria-hidden="true">
+      <Image src={`/img/mom/${file}`} alt="" width={28} height={28} />
+    </span>
+  );
 }
 
 export function MomLink({

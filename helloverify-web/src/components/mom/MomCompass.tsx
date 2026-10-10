@@ -32,7 +32,7 @@ export function MomCompass({ compass, locale }: { compass: Compass; locale: stri
       <section className="wrap sec3">
         <h2 className="h2">{story.whatIs.title}</h2>
         <p className="mom3-lead">{story.whatIs.intro}</p>
-        <article className="mom3-card">
+        <article className="mom3-card mom3-callout">
           <MomIcon src={story.whatIs.notice.iconSrc} />
           <h3>{story.whatIs.notice.title}</h3>
           <p>
@@ -42,7 +42,7 @@ export function MomCompass({ compass, locale }: { compass: Compass; locale: stri
       </section>
 
       <section className="wrap sec3">
-        <div className="mom3-card">
+        <div className="mom3-titlerow">
           <MomIcon src={story.accreditation.iconSrc} />
           <h2>{story.accreditation.title}</h2>
         </div>
@@ -78,13 +78,15 @@ export function MomCompass({ compass, locale }: { compass: Compass; locale: stri
       <section className="wrap sec3">
         <h2 className="h2">{detail.c2Scoring.title}</h2>
         <p className="mom3-lead">{detail.c2Scoring.intro}</p>
-        {detail.c2Scoring.rows.map((row) => (
-          <p key={row.pointsLabel} className="mom3-row">
-            <MomIcon src={detail.c2Scoring.checklistIconSrc} />
-            <b>{row.pointsLabel}</b>
-            <span>{row.body}</span>
-          </p>
-        ))}
+        <div className="mom3-card mom3-rows">
+          {detail.c2Scoring.rows.map((row) => (
+            <p key={row.pointsLabel} className="mom3-row">
+              <MomIcon src={detail.c2Scoring.checklistIconSrc} />
+              <b>{row.pointsLabel}</b>
+              <span>{row.body}</span>
+            </p>
+          ))}
+        </div>
       </section>
 
       <section className="wrap sec3">
@@ -112,7 +114,7 @@ export function MomCompass({ compass, locale }: { compass: Compass; locale: stri
 
       <section className="wrap sec3">
         <h2 className="h2">{detail.officialResources.title}</h2>
-        <ul className="mom3-list">
+        <ul className="mom3-links">
           {detail.officialResources.links.map((link) => (
             <li key={link.label}>
               <MomIcon src={detail.officialResources.linkIconSrc} />

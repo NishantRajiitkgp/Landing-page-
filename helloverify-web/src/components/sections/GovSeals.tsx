@@ -22,6 +22,7 @@ import { copy } from "@/lib/copy/request";
 import { SECTIONS, type GovSealId, type SectionsCopy } from "@/lib/copy/sections";
 import { threadPath } from "@/lib/govArt";
 import { localise } from "@/lib/i18n/href";
+import { ITALY_JOIN_PATH } from "@/lib/italy/paths";
 import "@/app/v2/govseals.css";
 import type { SealItem } from "./GovSealParts";
 import { GovSealsStage } from "./GovSealsStage";
@@ -43,14 +44,21 @@ import { GovSealsStage } from "./GovSealsStage";
  *  carries the COMPASS pricing; MOHESR's to the contact page; visa
  *  applicants to the visa-screening page. Swap in the portals when known. */
 type Act = keyof SectionsCopy["govSeals"]["acts"];
-export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string; apply: string; ctas: Act[][] }[] = [
+export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href: string; apply: string; partner?: string; ctas: Act[][] }[] = [
   { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/solutions/manpower-and-education-authorities/ministry-of-manpower", apply: "/solutions/manpower-and-education-authorities/ministry-of-manpower", ctas: [["apply"], ["sales"]] },
   { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/solutions/immigration-authorities", apply: "/products/immigration", ctas: [["visa"], ["partner"]] },
-  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/solutions/immigration-authorities", apply: "/products/immigration", ctas: [["visa"], ["partner"]] },
+  { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/solutions/immigration-authorities", apply: "/products/immigration", partner: ITALY_JOIN_PATH, ctas: [["visa"], ["partner"]] },
   { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/solutions/manpower-and-education-authorities/mohesr", apply: "https://applicant.helloverify.ae/en/signin", ctas: [["apply"], ["sales"]] },
 ];
 
-/** Where the shared buttons go; `apply` is per authority (`SEALS`). */
+function actHref(s: (typeof SEALS)[number], a: Act): string {
+  if (a === "apply") return s.apply;
+  if (a === "partner" && s.partner) return s.partner;
+  return ACT_HREF[a];
+}
+
+/** Where the shared buttons go; `apply` is per authority (`SEALS`). Italy's
+ *  partner button opens its own programme; the others stay on contact. */
 const ACT_HREF: Record<Exclude<Act, "apply">, string> = {
   visa: "/products/immigration",
   partner: "/contact",
@@ -70,7 +78,7 @@ export async function sealItem(id: GovSealId): Promise<SealItem> {
   const ctas = Object.values(g.ctas).map((c, j) => ({
     k: c.k,
     p: c.p,
-    acts: s.ctas[j].map((a) => ({ t: t.acts[a], href: localise(a === "apply" ? s.apply : ACT_HREF[a], locale) })),
+    acts: s.ctas[j].map((a) => ({ t: t.acts[a], href: localise(actHref(s, a), locale) })),
   }));
   return {
     name: g.name,

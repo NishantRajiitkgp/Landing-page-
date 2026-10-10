@@ -107,7 +107,7 @@ const lead = {
   company: "Acme Pvt Ltd",
   email: "priya@example.com",
   mobile: "+91 98765 43210",
-  interest: "certifier",
+  interest: "vendor-due-diligence",
   message: "About 400 checks a month.",
 } as never;
 
@@ -121,7 +121,7 @@ console.log("1. field mapping (pure)");
   check("Phone", r.Phone === "+91 98765 43210", r);
   check("Lead_Source set", r.Lead_Source === "Web Form", r);
   check("no Annual_Revenue invented", !("Annual_Revenue" in r), Object.keys(r));
-  check("description carries label not slug", r.Description.includes("Vendor due diligence (Certifier)"), r.Description);
+  check("description carries label not slug", r.Description.includes("Vendor Due Diligence"), r.Description);
   check("description carries segment label", r.Description.includes("Segment: Business"), r.Description);
   check("description carries unsplit name", r.Description.includes("Full name as entered: Priya Menon"), r.Description);
 
@@ -132,6 +132,18 @@ console.log("1. field mapping (pure)");
   const bare = toZohoLead({ segment: "individual", name: "A Singh", email: "a@b.co" } as never);
   check("missing company -> Not provided", bare.Company === "Not provided", bare);
   check("missing mobile -> no Phone key", !("Phone" in bare), Object.keys(bare));
+
+  const dialled = toZohoLead({ segment: "business", name: "Priya Menon", email: "priya@example.com", mobile: "501234567", countryCode: "+971" } as never);
+  check("dial code prefixed on Phone", dialled.Phone === "+971 501234567", dialled.Phone);
+  check("description shows the full number", dialled.Description.includes("Mobile: +971 501234567"), dialled.Description);
+
+  const consumer = toZohoLead({ segment: "individual", forWhom: "other", name: "A Singh", email: "a@b.co", interest: "nanny", interests: ["nanny", "tenant"] } as never);
+  check("every ticked service listed", consumer.Description.includes("Services of interest: Nanny Verification, Tenant Verification"), consumer.Description);
+  check("individual kind listed", consumer.Description.includes("Individual: For someone else (Consumer)"), consumer.Description);
+
+  const gov = toZohoLead({ segment: "government", name: "", email: "a@dept.gov" } as never);
+  check("blank name -> Lead", gov.Last_Name === "Lead", gov);
+  check("blank name has no Phone", !("Phone" in gov), Object.keys(gov));
 }
 
 console.log("2. transport");

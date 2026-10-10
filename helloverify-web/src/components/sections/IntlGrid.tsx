@@ -1,8 +1,7 @@
 /** International Background Verification — the old home page's country grid
     (30 Sep 2026), which the v2 homepage had dropped. One featured country
     (the United Kingdom) and four more, each a photograph, its flag, the old
-    site's line, the turnaround from its country guide, and a link to that
-    guide (`/countries/[slug]`).
+    site's line, and a link to that guide (`/countries/[slug]`).
 
     FLAGS ARE SHOWN AS THEY ARE. Each is the country's own flag from
     `public/flags/` (the MIT-licensed flag-icons set, the files the relay
@@ -14,7 +13,6 @@ import Image from "next/image";
 
 import { Arrow } from "@/components/brand/Arrow";
 import { AppLink } from "@/components/chrome/AppLink";
-import { getCountry } from "@/lib/content/countries";
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
 import { tint } from "@/lib/img";
@@ -57,7 +55,6 @@ export async function IntlGrid() {
       <ul className="ig-grid">
         {CARDS.map(({ k, flag, slug, img, pos, big }) => {
           const it = t.items[k];
-          const c = getCountry(slug);
           return (
             <li key={k} className={big ? "ig-card ig-big" : "ig-card"}>
               <AppLink href={`/countries/${slug}`} className="ig-link">
@@ -73,12 +70,6 @@ export async function IntlGrid() {
                     <b>{it.name}</b>
                   </span>
                   <span className="ig-p">{it.p}</span>
-                  {c && (
-                    <span className="ig-tat">
-                      <i>{t.turnK}</i>
-                      {c.turnaround}
-                    </span>
-                  )}
                 </span>
                 <span className="ig-go" aria-hidden="true">
                   <Arrow />
@@ -89,7 +80,7 @@ export async function IntlGrid() {
         })}
       </ul>
       <div className="ig-foot">
-        <AppLink href="/resources/countries" className="btn btn-ghost ig-more">
+        <AppLink href="/international" className="btn btn-ghost ig-more">
           <span>{t.cta}</span>
           <Arrow />
         </AppLink>

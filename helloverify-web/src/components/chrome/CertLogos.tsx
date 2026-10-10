@@ -3,9 +3,9 @@
  *  and GDPR, as the old CMS lists them. */
 import Image from "next/image";
 
-type Alts = { nsr: string; pbsa: string; iso9001: string; gdpr: string };
+export type Alts = { nsr: string; pbsa: string; iso9001: string; gdpr: string };
 
-const LOGOS = {
+export const LOGOS = {
   nsr: { src: "/img/certs/nsr.png", w: 231, h: 144 },
   pbsa: { src: "/img/certs/pbsa.png", w: 195, h: 146 },
   iso9001: { src: "/img/certs/iso-9001.png", w: 206, h: 208 },

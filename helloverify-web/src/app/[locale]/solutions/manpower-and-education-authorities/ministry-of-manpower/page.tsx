@@ -1,7 +1,7 @@
 /** Ministry of Manpower — `ministryOfManpower.base.json` hero + screening.
  *  Tab labels, then every panel (overview, track, COMPASS, pricing,
- *  resources, FAQs). Hidden panels stay in the document. The applicant
- *  dialog opens from "Start Verification" and is not in the initial HTML. */
+ *  resources, FAQs). Hidden panels stay in the document. "Start
+ *  Verification" goes to the applicant flow's register page. */
 import type { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -12,8 +12,6 @@ import { MomOverview } from "@/components/mom/MomOverview";
 import { MomPricing } from "@/components/mom/MomPricing";
 import { MomFaqs, MomResources, MomTrack } from "@/components/mom/MomRest";
 import { PageShell } from "@/components/chrome/PageShell";
-import { AUTHORITY } from "@/lib/copy/authority";
-import type { AuthorityCopy } from "@/lib/copy/authority";
 import { momDoc, type MomDoc } from "@/lib/mom/doc";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { setRequestLocale } from "next-intl/server";
@@ -27,10 +25,10 @@ export async function generateMetadata({
   return pageMetadata(locale, "/solutions/manpower-and-education-authorities/ministry-of-manpower");
 }
 
-function panels(doc: MomDoc, locale: string, authority: AuthorityCopy) {
+function panels(doc: MomDoc, locale: string) {
   const screening = doc.screening;
   return [
-    <MomOverview key="overview" overview={screening.overview} locale={locale} authority={authority} />,
+    <MomOverview key="overview" overview={screening.overview} locale={locale} />,
     <MomTrack key="track" track={screening.track} locale={locale} />,
     <MomCompass key="compass" compass={screening.compass} locale={locale} />,
     <MomPricing key="pricing" band={screening.pricing.packagesBand} locale={locale} />,
@@ -47,15 +45,14 @@ export default async function MinistryOfManpower({
   const { locale } = await params;
   setRequestLocale(locale);
   const doc = momDoc(locale);
-  const authority = AUTHORITY[locale as "en" | "hi" | "ar"] ?? AUTHORITY.en;
   const tabs = doc.screening.tabs.map((tab) => ({ id: tab.id, label: tab.label }));
   const hero = <MomHero hero={doc.hero} locale={locale} />;
 
   return (
     <PageShell crumbs={[{ label: doc.hero.breadcrumb[1].label }]} closing={false}>
-      <Suspense fallback={<MomHub tabs={tabs} initial={null} hero={hero}>{panels(doc, locale, authority)}</MomHub>}>
+      <Suspense fallback={<MomHub tabs={tabs} initial={null} hero={hero}>{panels(doc, locale)}</MomHub>}>
         <MomHubBound tabs={tabs} hero={hero}>
-          {panels(doc, locale, authority)}
+          {panels(doc, locale)}
         </MomHubBound>
       </Suspense>
     </PageShell>

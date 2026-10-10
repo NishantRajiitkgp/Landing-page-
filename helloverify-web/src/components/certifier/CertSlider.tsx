@@ -45,32 +45,37 @@ export function CertSlider({
       role="region"
       aria-roledescription="carousel"
       aria-label={label}
-      tabIndex={dots ? 0 : undefined}
-      onKeyDown={dots ? onKey : undefined}
+      tabIndex={n > 1 ? 0 : undefined}
+      onKeyDown={n > 1 ? onKey : undefined}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="frame" aria-live={dots ? "polite" : undefined}>
+      <div className="frame" aria-live="polite">
         {slides.map((s, k) => (
           <div key={k} className="slide" hidden={k !== i}>
             {s}
           </div>
         ))}
-        {n > 1 && (
-          <>
-            <button type="button" className="nav prev" aria-label="Previous slide" onClick={() => go(-1)}>
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="M10 3 5 8l5 5" />
-              </svg>
-            </button>
-            <button type="button" className="nav next" aria-label="Next slide" onClick={() => go(1)}>
-              <svg viewBox="0 0 16 16" aria-hidden="true">
-                <path d="m6 3 5 5-5 5" />
-              </svg>
-            </button>
-          </>
-        )}
       </div>
+      {n > 1 && !dots && (
+        <div className="bar">
+          <button type="button" className="nav prev" aria-label="Previous slide" onClick={() => go(-1)}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M10 3 5 8l5 5" />
+            </svg>
+          </button>
+          <ol className="track" aria-hidden="true">
+            {slides.map((_, k) => (
+              <li key={k} className={k === i ? "on" : undefined} />
+            ))}
+          </ol>
+          <button type="button" className="nav next" aria-label="Next slide" onClick={() => go(1)}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="m6 3 5 5-5 5" />
+            </svg>
+          </button>
+        </div>
+      )}
       {dots && n > 1 && (
         <div className="dots">
           {slides.map((_, k) => (

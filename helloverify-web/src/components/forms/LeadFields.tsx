@@ -1,5 +1,5 @@
-import type { InterestValue, LeadField, SegmentValue } from "@/lib/leads/constraints";
-import { LIMITS, MOBILE_PATTERN } from "@/lib/leads/constraints";
+import type { LeadField, SegmentValue } from "@/lib/leads/constraints";
+import { COMPANY_PATTERN, EMAIL_PATTERN, LIMITS, NAME_PATTERN } from "@/lib/leads/constraints";
 
 /** The lead form's field primitives, lifted out of `ContactForm.tsx`.
  *
@@ -85,24 +85,19 @@ export type TextField = {
  *  emits attributes in props order and an omitted one is simply absent - so one
  *  ordering reproduces all four inputs.
  *
- *  Be precise about what that evidence covers: swapping `required` and
- *  `pattern` is a measured NO-OP, because no field carries both - `mobile` is
- *  the only one with a pattern and the only text input without `required`. What
- *  is load-bearing is that `maxLength` follows them and `defaultValue` follows
- *  that. The relative order of the first three is convention, not a tested
- *  fact, and is kept only so a field that one day needs both lands right.
+ *  `maxLength` follows the constraint attrs and `defaultValue` follows that.
+ *  The phone control is not in this list: country code and the national
+ *  number are `PhoneField`.
  *
  *  Every limit still comes from `lib/leads/constraints`, the module the server
  *  schema is built from, so the browser and the server cannot disagree. */
 export const TEXT_FIELDS: readonly TextField[] = [
   { id: "name", label: "Full name", type: "text", placeholder: "Priya Menon", autoComplete: "name",
-    required: true, minLength: LIMITS.name.min, maxLength: LIMITS.name.max },
+    required: true, minLength: LIMITS.name.min, maxLength: LIMITS.name.max, pattern: NAME_PATTERN },
   { id: "company", label: "Company", type: "text", placeholder: "Company name",
-    autoComplete: "organization", maxLength: LIMITS.company.max },
+    autoComplete: "organization", minLength: 2, maxLength: LIMITS.company.max, pattern: COMPANY_PATTERN },
   { id: "email", label: "Business email", type: "email", placeholder: "name@company.com",
-    autoComplete: "email", required: true, maxLength: LIMITS.email.max },
-  { id: "mobile", label: "Mobile", type: "tel", placeholder: "+91", autoComplete: "tel",
-    pattern: MOBILE_PATTERN, maxLength: LIMITS.mobile.max },
+    autoComplete: "email", required: true, maxLength: LIMITS.email.max, pattern: EMAIL_PATTERN },
 ];
 
 /** What the form asks each audience (24 Sep 2026). The segment chips used to
@@ -113,17 +108,12 @@ export const TEXT_FIELDS: readonly TextField[] = [
  *  - `company` is the organisation field's wording, or absent: an individual
  *    has none, so the field is not rendered and nothing is posted (the
  *    schema already treats `company` as optional).
- *  - `interests` is the subset of `INTEREST_VALUES` that audience is offered,
- *    in order; `preset` is selected on switching to the segment, where one
- *    answer is overwhelmingly the likely one.
  *
- *  Business keeps the form's original wording exactly. The government and
- *  individual strings are NEW MICROCOPY, not from the old site. */
+ *  The services each audience is offered are `INTEREST_GROUPS` in
+ *  `lib/leads/constraints`, which the server checks against too. */
 export type SegmentForm = {
   readonly company?: { readonly label: string; readonly placeholder: string };
   readonly email: { readonly label: string; readonly placeholder: string };
-  readonly interests: readonly InterestValue[];
-  readonly preset?: InterestValue;
   readonly interestPlaceholder: string;
   readonly message: string;
 };
@@ -132,23 +122,18 @@ export const SEGMENT_FORM: Record<SegmentValue, SegmentForm> = {
   business: {
     company: { label: "Company", placeholder: "Company name" },
     email: { label: "Business email", placeholder: "name@company.com" },
-    interests: ["enterprise", "smb", "employee-verification", "customer-kyc", "certifier"],
-    interestPlaceholder: "Employee verification, KYC, Certifier, Consumer…",
+    interestPlaceholder: "Select Service Type",
     message: "How many checks a month, and where?",
   },
   government: {
     company: { label: "Department or authority", placeholder: "Ministry, department or agency" },
     email: { label: "Official email", placeholder: "name@department.gov" },
-    interests: ["governments", "employee-verification"],
-    preset: "governments",
-    interestPlaceholder: "Government / authority programme",
+    interestPlaceholder: "Select Service Type",
     message: "Which programme is it for, and roughly how many applicants a year?",
   },
   individual: {
     email: { label: "Email", placeholder: "you@example.com" },
-    interests: ["hellov"],
-    preset: "hellov",
-    interestPlaceholder: "Individual / HelloV",
+    interestPlaceholder: "Select Service Type",
     message: "Who would you like to verify — a tenant, a nanny, a driver?",
   },
 };

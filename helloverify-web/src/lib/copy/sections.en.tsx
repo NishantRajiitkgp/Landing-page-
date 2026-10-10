@@ -319,9 +319,6 @@ export const en = {
           chip: "Blue-collar · 30\u00a0min",
           role: "Delivery rider",
           city: "Bengaluru",
-          /** The shift clients this route is selling (4 Oct 2026). Alts for
-           *  their marks on the route and on the case's result. */
-          houses: { starbucks: "Starbucks", dominos: "Domino’s" },
           caseNo: "CASE HV-0417 · DRIVING LICENCE · KARNATAKA",
           from: "09:40",
           to: "10:10",
@@ -444,7 +441,7 @@ export const en = {
           title: "Driver Verification",
           line: "Comprehensive driver verification ensures safe and reliable hiring.",
           basic: ["Driving License Check", "Criminal Check"],
-          advanced: ["Driving License Check", "Criminal Check", "Voter Id Check", "Address Check"],
+          advanced: ["Driving License Check", "Criminal Check", "Address Check"],
           price: "₹1799",
         },
         homeStaff: {
@@ -862,9 +859,10 @@ export const en = {
         cta: "Explore white-collar checks",
       },
     },
-    /** Alt text for the blue-collar marks, in `lib/blueCollarClients.ts`
-     *  order. Domino's, Starbucks and Reliance Retail are on the page for
-     *  testing and still need approval before launch. */
+    /** Alt text for the client marks: blue collar in `lib/blueCollarClients.ts`
+     *  order, then white collar in `lib/whiteCollarClients.ts` order.
+     *  Domino's, Starbucks and Reliance Retail are on the page for testing
+     *  and still need approval before launch. */
     clients: {
       haldiram: "Haldiram",
       cafeDelhiHeights: "Café Delhi Heights",
@@ -872,6 +870,13 @@ export const en = {
       dominos: "Domino's",
       starbucks: "Starbucks",
       relianceRetail: "Reliance Retail",
+      tataElxsi: "Tata Elxsi",
+      mphasis: "Mphasis",
+      globalLogic: "GlobalLogic",
+      exl: "EXL",
+      teleperformance: "Teleperformance",
+      randstad: "Randstad",
+      xavient: "Xavient Digital",
     },
     /** ONE FLAT TABLE for every line on every card, not a `lines` nested per
      *  pack — the shape `consumer.checkLines` already uses. Two reasons, and
@@ -1653,9 +1658,11 @@ export const en = {
     },
     /** The three client letters. The quotes are the old site's "What Our
      *  Client Speak" cards (`about.base.json` → `sections[5].cards[]`),
-     *  verbatim including their punctuation, and de-identified as the old
-     *  site had them — role and company line, no name, no logo. `q` is rich
-     *  text because the canvas highlights one phrase per letter with `<mark>`. */
+     *  verbatim including their punctuation. The speaker stays a role and a
+     *  company line; the mark beside each is the logo `/about` already uses
+     *  for that letter (HCL, Cognizant, Hero Fincorp), attached in
+     *  `Enterprises.tsx`. `q` is rich text because the canvas highlights one
+     *  phrase per letter with `<mark>`. */
     letters: {
       kicker: "What Our Client Speak",
       hA: "Trusted by India’s top IT/ITES companies for",
@@ -2019,7 +2026,7 @@ export const en = {
         p: "Verify individuals before they receive a work permit, immigration approval, professional licence, security clearance, or access to regulated professions.",
       },
       platform: {
-        t: "AI Powered Trust Platform",
+        t: "AI powered platform",
         p: "The same platform verifies businesses, suppliers, contractors, and institutions unifying trust across public and private ecosystems.",
       },
       govs: {
@@ -2032,7 +2039,7 @@ export const en = {
       },
       evidence: {
         t: "Evidence-Backed Reports",
-        p: "Every verification is supported with clear remarks, verification artefacts and an auditable trail for confident decision making.",
+        p: "Every verification is supported with clear remarks, verification artifacts and an auditable trail for confident decision making.",
       },
     },
     /** 1 Oct 2026, on the founder's review ("not at all relevant… just for
@@ -2044,37 +2051,62 @@ export const en = {
     viz: {
       /** 01 · the nation in cross-section: the institutions above ground
        *  (`to`), HelloVerify as the layer under them, the primary sources
-       *  at the bedrock (hover titles `rows`), the record it holds (`k`). */
+       *  at the bedrock (hover titles `rows`), the tick under each (`k`). */
       trust: {
         k: "Verified record",
         rows: { r1: "Degree", r2: "Licence", r3: "Identity" },
-        to: { a1: "Labour ministry", a2: "Immigration", a3: "Health regulator", a4: "Employer" },
+        to: { a1: "Manpower Ministry", a2: "Immigration Authority", a3: "Health Authority", a4: "Employer" },
         layer: "Trust infrastructure",
         sources: "Primary sources",
       },
       /** 02 · the checkpoint: what the gate's sign rolls through (`creds`),
        *  the world at the bedrock (`countries`; `sources` is its hover
-       *  title), the scale in the corner (`big`, `bigL`). */
+       *  title), the counter on the left: `count` from Month 1 to Month 6
+       *  in equal steps, its `unit`, the bar's two ends (`months`). `big`
+       *  is 05's figure. */
       scale: {
         big: "20M+",
-        bigL: "checks at the source",
+        count: { from: 20, to: 60, suffix: "K" },
+        unit: "verifications",
+        months: { first: "Month 1", last: "Month 6" },
         countries: "Primary sources · 120+ countries",
         sources: "Universities · Police · Registrars · Employers",
         creds: { c1: "Work permit", c2: "Visa", c3: "Licence", c4: "Clearance", c5: "Profession" },
       },
       core: "AI",
-      nodes: { n1: "Businesses", n2: "Suppliers", n3: "Contractors", n4: "Institutions" },
-      /** 03 · the two ecosystems the layer unifies. */
-      sides: { priv: "Private", pub: "Public" },
-      /** 04 · the two kinds of seat on the bus. No crests: the set grows. */
-      who: { a: "Authorities", e: "Enterprises" },
+      /** 03 · the ecosystem: who is on the one platform, each party's
+       *  name (`n`) and what it does there (`r`, kept short: it sits over
+       *  a 60-unit column and breaks to two lines past 15 characters). */
+      eco: {
+        layer: "One platform",
+        players: {
+          employer: { n: "Employer", r: "Verifies new hires" },
+          driver: { n: "Driver", r: "Shares licence & ID" },
+          tenant: { n: "Tenant", r: "Proves identity" },
+          vendor: { n: "Vendor", r: "Gets onboarded" },
+          supplier: { n: "Supplier", r: "Proves compliance" },
+        },
+        gov: { n: "Government authorities", r: "Confirm the records" },
+      },
+      /** 04 · the plate's sentence, drawn: per region (`n`) the authority
+       *  we work with there (`a`, as named in `govSeals`) and the workflow
+       *  we run for it (`w`); the key names the two kinds of client. Each
+       *  label sits over a 105-unit column, so `a` stays short. */
+      govs: {
+        regions: {
+          sg: { n: "Singapore", a: "Ministry of Manpower", w: "Work pass degrees" },
+          uae: { n: "UAE", a: "MOHESR", w: "Degree recognition" },
+          eu: { n: "Europe", a: "Embassies of Italy & Latvia", w: "Visa documents" },
+        },
+        key: { a: "Government authorities", e: "Leading enterprises" },
+      },
       since: "2018",
       today: "Today · 20M+ checks",
       ahead: "Years to come",
       /** 06 · a report with something in it. */
       report: { k: "Verification report", r1: "Source · Registrar", r2: "Result · Genuine", r3: "Remarks · Name matches" },
       stamp: "VERIFIED",
-      proofs: { p1: "Clear remarks", p2: "Verification artefacts", p3: "Auditable trail" },
+      proofs: { p1: "Clear remarks", p2: "Verification artifacts", p3: "Auditable trail" },
     },
     /** The band's foot: the ask, worded as the homepage's other sales
      *  buttons (1 Oct 2026; the certifications line beside it went). */

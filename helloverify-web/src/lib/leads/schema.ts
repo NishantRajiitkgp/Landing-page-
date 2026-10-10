@@ -10,13 +10,25 @@
 import "server-only";
 import { z } from "zod";
 
+import { isDialCode } from "./dial-codes";
 import {
+  COMPANY_PATTERN,
   ELAPSED_FIELD,
+  EMAIL_PATTERN,
+  FOR_VALUES,
   HONEYPOT_FIELD,
+  INTEREST_GROUPS,
   INTEREST_VALUES,
   LIMITS,
   MOBILE_PATTERN,
+  NAME_PATTERN,
+  PHONE_DIGITS_PATTERN,
   SEGMENT_VALUES,
+  contactDetailsRequired,
+  interestGroup,
+  interestIsMulti,
+  type ForValue,
+  type InterestValue,
   type LeadField,
 } from "./constraints";
 import type { FieldErrors } from "./state";
@@ -25,6 +37,10 @@ import type { FieldErrors } from "./state";
  *  accident or someone probing how the value gets serialised downstream;
  *  neither belongs in a CRM record. `message` is exempt — it is prose. */
 const NO_CONTROL_CHARS = /^[^\u0000-\u001F\u007F]*$/;
+const NAME_RE = new RegExp(`^(?:${NAME_PATTERN})$`, "u");
+const COMPANY_RE = new RegExp(`^(?:${COMPANY_PATTERN})$`, "u");
+const EMAIL_RE = new RegExp(`^(?:${EMAIL_PATTERN})$`);
+const PHONE_RE = new RegExp(`^(?:${PHONE_DIGITS_PATTERN})$`);
 
 const singleLine = (max: number) =>
   z
@@ -88,9 +104,102 @@ export const leadSchema = z.object({
   ),
 });
 
+const personName = optional(
+  singleLine(LIMITS.name.max)
+    .min(LIMITS.name.min, { error: "Enter your full name." })
+    .regex(NAME_RE, { error: "Use letters in the name." }),
+);
+
+const organisation = optional(
+  singleLine(LIMITS.company.max)
+    .min(2, { error: "Enter the organisation name." })
+    .regex(COMPANY_RE, { error: "Use letters and numbers in the organisation name." }),
+);
+
+const replyEmail = z
+  .string()
+  .trim()
+  .toLowerCase()
+  .max(LIMITS.email.max, { error: "That address is too long to be valid." })
+  .regex(EMAIL_RE, { error: "Enter an email address we can reply to." })
+  .pipe(z.email({ error: "Enter an email address we can reply to." }));
+
+/** The sales form posts `countryCode` (a dial code) beside a digits-only
+ *  national number. The contact-page enquiry form does not, and still sends
+ *  one formatted `mobile` string — that path stays on `leadSchema`.
+ *
+ *  Government requires the email only. Business and individual also require
+ *  a name and a mobile number. A country code is required whenever a number
+ *  is, and for business and individual even before one is typed.
+ *
+ *  `interest` arrives as every posted value: an individual verifying someone
+ *  else may tick several services, everyone else picks one. */
+export const dialLeadSchema = z
+  .object({
+    segment: z.enum(SEGMENT_VALUES, {
+      error: "Choose whether you are a business, a government body, or an individual.",
+    }),
+    forWhom: optional(z.enum(FOR_VALUES, { error: "Choose who the check is for." })),
+    name: personName,
+    company: organisation,
+    email: replyEmail,
+    countryCode: optional(
+      z.string().trim().refine(isDialCode, { error: "Choose a country code." }),
+    ),
+    mobile: optional(
+      z.string().trim().regex(PHONE_RE, { error: "Use digits only, up to 15." }),
+    ),
+    interest: z
+      .array(z.enum(INTEREST_VALUES, { error: "Pick one of the listed services." }))
+      .max(INTEREST_VALUES.length, { error: "Pick one of the listed services." })
+      .transform((values) => [...new Set(values)]),
+    message: optional(
+      z.string().trim().max(LIMITS.message.max, {
+        error: `Keep the message under ${LIMITS.message.max} characters.`,
+      }),
+    ),
+  })
+  .superRefine((data, ctx) => {
+    if (data.segment === "individual" && !data.forWhom) {
+      ctx.addIssue({ code: "custom", path: ["forWhom"], message: "Choose who the check is for." });
+    }
+    const group = interestGroup(data.segment, data.forWhom ?? "self");
+    const offered: readonly InterestValue[] = INTEREST_GROUPS[group];
+    if (data.interest.some((value) => !offered.includes(value))) {
+      ctx.addIssue({ code: "custom", path: ["interest"], message: "Pick one of the listed services." });
+    } else if (!interestIsMulti(group) && data.interest.length > 1) {
+      ctx.addIssue({ code: "custom", path: ["interest"], message: "Pick one service." });
+    }
+
+    const details = contactDetailsRequired(data.segment);
+    if (details && !data.name) {
+      ctx.addIssue({ code: "custom", path: ["name"], message: "Enter your full name." });
+    }
+    if ((details || data.mobile) && !data.countryCode) {
+      ctx.addIssue({ code: "custom", path: ["countryCode"], message: "Choose a country code." });
+    }
+    if (details && !data.mobile) {
+      ctx.addIssue({ code: "custom", path: ["mobile"], message: "Enter a mobile number." });
+    }
+  })
+  .transform(({ interest, forWhom, ...data }) => ({
+    ...data,
+    name: data.name ?? "",
+    countryCode: data.mobile ? data.countryCode : undefined,
+    forWhom: data.segment === "individual" ? forWhom : undefined,
+    interest: interest[0],
+    interests: interest.length ? interest : undefined,
+  }));
+
 /** A validated lead. This type — not `FormData`, not a loose record — is what
- *  every downstream layer takes. */
-export type Lead = z.output<typeof leadSchema>;
+ *  every downstream layer takes. `countryCode` is set only when the sales form
+ *  sent a national number alongside a dial code. `interests` is every service
+ *  the sales form posted; `interest` stays the first. */
+export type Lead = z.output<typeof leadSchema> & {
+  countryCode?: string;
+  forWhom?: ForValue;
+  interests?: InterestValue[];
+};
 
 /** Abuse signals, read structurally and never rejected here: whether a 400 ms
  *  fill time is *acceptable* is policy, and policy lives in `./abuse`. A
@@ -130,7 +239,13 @@ export function parseSubmission(form: FormData): ParsedSubmission {
     if (typeof value === "string") raw[key] = value;
   }
 
-  const parsed = leadSchema.safeParse(raw);
+  const parsed =
+    "countryCode" in raw
+      ? dialLeadSchema.safeParse({
+          ...raw,
+          interest: form.getAll("interest").filter((v): v is string => typeof v === "string" && v.trim() !== ""),
+        })
+      : leadSchema.safeParse(raw);
   if (!parsed.success) {
     const flat = z.flattenError(parsed.error);
     const fieldErrors: FieldErrors = {};

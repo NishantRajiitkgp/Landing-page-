@@ -1,52 +1,29 @@
-"use client";
-
-/** `/employee-verification` — the old split panel's checks card
- *  (`EmployeesWhiteCollarVerification`): the check names as a vertical tab
- *  list, the selected one's name and description beside it. Every
- *  definition stays in the DOM (`hidden`). */
-import { useState } from "react";
+/** `/employee-verification` — every check a workforce segment covers, each
+ *  with its mark and definition, as one hairline grid of numbered cells. All of them
+ *  are on the page at once: the old vertical tab list hid all but one
+ *  definition and scrolled its own names inside a 268px box. `cta`, when
+ *  given, closes the grid as its last cell. */
+import type { ReactNode } from "react";
+import { CheckIcon } from "./CheckIcons";
 
 export type EmployeeCheck = { k: string; n: string; p: string };
 
-export function EmployeeChecks({ id, items }: { id: string; items: readonly EmployeeCheck[] }) {
-  const [on, setOn] = useState(items[0]?.k);
+export function EmployeeChecks({ items, cta }: { items: readonly EmployeeCheck[]; cta?: ReactNode }) {
   return (
-    <div className="emp3-checks">
-      <div className="emp3-list" role="tablist" aria-orientation="vertical">
-        {items.map((c) => (
-          <button
-            key={c.k}
-            type="button"
-            role="tab"
-            id={`${id}-tab-${c.k}`}
-            aria-selected={on === c.k}
-            aria-controls={`${id}-panel-${c.k}`}
-            className={on === c.k ? "on" : undefined}
-            onClick={() => setOn(c.k)}
-          >
-            {c.n}
-          </button>
-        ))}
-      </div>
-      {items.map((c) => (
-        <div
-          key={c.k}
-          role="tabpanel"
-          id={`${id}-panel-${c.k}`}
-          aria-labelledby={`${id}-tab-${c.k}`}
-          className="emp3-def"
-          hidden={on !== c.k}
-        >
-          <h4>
-            <svg viewBox="0 0 20 20" aria-hidden="true">
-              <circle cx="10" cy="10" r="9" />
-              <path d="M6 10.2 8.8 13 14 7.4" />
-            </svg>
-            {c.n}
-          </h4>
+    <ul className="emp4-checks">
+      {items.map((c, i) => (
+        <li key={c.k}>
+          <span className="hd" aria-hidden="true">
+            <span className="emp4-ic">
+              <CheckIcon k={c.k} />
+            </span>
+            <span className="no">{String(i + 1).padStart(2, "0")}</span>
+          </span>
+          <h3>{c.n}</h3>
           <p>{c.p}</p>
-        </div>
+        </li>
       ))}
-    </div>
+      {cta ? <li className="cta">{cta}</li> : null}
+    </ul>
   );
 }

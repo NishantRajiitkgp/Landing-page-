@@ -119,11 +119,15 @@ const nextConfig: NextConfig = {
       (process.env.TRAVEL_AUTH_MOCK ?? "").trim().toLowerCase(),
     );
     const liveTravel = Boolean(process.env.TRAVEL_AUTH_BASE?.trim()) && !mockForced;
-    const rzp = liveTravel ? " https://checkout.razorpay.com" : "";
-    const rzpConnect = liveTravel
+    /** MOM applicant pay loads checkout.js only once `MOM_APPLY_LIVE` is on.
+     *  The demo confirms in-page and never requests the script. */
+    const momApplyLive = ["1", "true", "yes"].includes((process.env.MOM_APPLY_LIVE ?? "").trim().toLowerCase());
+    const liveRzp = liveTravel || momApplyLive;
+    const rzp = liveRzp ? " https://checkout.razorpay.com" : "";
+    const rzpConnect = liveRzp
       ? " https://api.razorpay.com https://lumberjack.razorpay.com https://checkout.razorpay.com"
       : "";
-    const rzpFrame = liveTravel ? "https://api.razorpay.com https://checkout.razorpay.com" : "'none'";
+    const rzpFrame = liveRzp ? "https://api.razorpay.com https://checkout.razorpay.com" : "'none'";
 
     const csp = [
       "default-src 'self'",

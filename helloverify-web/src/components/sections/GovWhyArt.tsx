@@ -26,7 +26,8 @@
     01–06 are no longer here: they became full motion graphics, chapters
     of one story (3–4 Oct 2026), in `./GovWhyTrust`, `./GovWhyScale`,
     `./GovWhyPlatform`, `./GovWhyGovs`, `./GovWhyYears` and
-    `./GovWhyReport`. What stays is the tick those chapters share. */
+    `./GovWhyReport`. What stays is what those chapters share: the tick,
+    and the way a long label breaks. */
 
 export function Tick({ x, y }: { x: number; y: number }) {
   return (
@@ -35,4 +36,14 @@ export function Tick({ x, y }: { x: number; y: number }) {
       <path d={`M${x - 2.4} ${y + 0.2}l1.6 1.6 3.2-3.4`} />
     </g>
   );
+}
+
+/** A label on one line, or two split at the space nearest its middle once
+ *  it is longer than `max` characters. */
+export function lines(s: string, max = 0): string[] {
+  const gaps = s.split("").flatMap((c, k) => (c === " " ? [k] : []));
+  if (!gaps.length || s.length <= max) return [s];
+  const mid = s.length / 2;
+  const at = gaps.reduce((a, b) => (Math.abs(b - mid) < Math.abs(a - mid) ? b : a));
+  return [s.slice(0, at), s.slice(at + 1)];
 }

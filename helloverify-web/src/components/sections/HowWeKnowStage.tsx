@@ -68,17 +68,6 @@ function OkMark() {
   );
 }
 
-/** Starbucks and Domino's, on the blue-collar route and on its result. */
-function HouseMarks({ houses }: { houses: Record<string, string> }) {
-  return (
-    <span className="hw-houses">
-      {Object.entries(houses).map(([id, name]) => (
-        <Image key={id} className={`hw-house hw-house-${id}`} src={`/img/clients/${id}.svg`} alt={name} width={id === "starbucks" ? 32 : 96} height={24} unoptimized />
-      ))}
-    </span>
-  );
-}
-
 /** `children` is the run indicator and its pause button, which sit in the
  *  specimen's caption row but belong to the stage, not to one route. */
 function CaseFile({ route, t, labels, children }: { route: RouteId; t: V2; labels: Labels; children: ReactNode }) {
@@ -165,11 +154,6 @@ function CaseFile({ route, t, labels, children }: { route: RouteId; t: V2; label
               );
             })}
           </ol>
-          {route === "licence" ? (
-            <div className="hw2-for">
-              <HouseMarks houses={t.routes.licence.houses} />
-            </div>
-          ) : null}
           <div className="hw2-verdict">
             <span className="hw2-v-seal" aria-hidden="true">{t.verified}</span>
             <span className="hw2-v-t">{r.verdict}</span>
@@ -238,7 +222,6 @@ export function HowWeKnowStage({
               <span className="hw-rt">
                 <span className="hw-chip"><span className="dot" />{x.chip}</span>
                 <span className="hw-who"><b>{x.role}</b><i>{x.city}</i></span>
-                {"houses" in x ? <HouseMarks houses={x.houses} /> : null}
               </span>
               <span className="hw-play" aria-hidden="true">
                 <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 2l7 4-7 4z" fill="currentColor" /></svg>

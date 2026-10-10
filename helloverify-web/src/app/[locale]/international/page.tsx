@@ -10,6 +10,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
 import { IntlChecks, IntlChecksBound } from "@/components/international/IntlChecks";
 import { IntlPackages } from "@/components/international/IntlPackages";
+import { IntlSoon } from "@/components/international/IntlSoon";
 import { setRequestLocale } from "next-intl/server";
 import { PLATFORM, type CoverageCheck, type CoverageCountry } from "@/lib/copy/platform";
 import { copy } from "@/lib/copy/request";
@@ -94,6 +95,14 @@ export default async function InternationalPage({
           )}
         </div>
       </section>
+
+      <IntlSoon
+        kicker={c.soon.kicker}
+        before={c.soon.before}
+        n={c.soon.n}
+        after={c.soon.after}
+        lede={c.soon.p}
+      />
     </PageShell>
   );
 }

@@ -38,12 +38,16 @@ function statusCopy(form: FormData) {
 
 /** The user's own input, read back verbatim so a failed submission does not
  *  cost them their typing. Only the known fields — never the whole FormData,
- *  which also carries React's `$ACTION_` entries and the honeypot. */
+ *  which also carries React's `$ACTION_` entries and the honeypot. Several
+ *  ticked services come back comma-joined; no service slug has a comma. */
 function echo(form: FormData): Partial<Record<LeadField, string>> {
   const values: Partial<Record<LeadField, string>> = {};
   for (const field of Object.keys(FIELDS) as LeadField[]) {
-    const raw = form.get(FIELDS[field]);
-    if (typeof raw === "string" && raw !== "") values[field] = raw;
+    const raw = form
+      .getAll(FIELDS[field])
+      .filter((v): v is string => typeof v === "string" && v !== "")
+      .join(",");
+    if (raw !== "") values[field] = raw;
   }
   return values;
 }

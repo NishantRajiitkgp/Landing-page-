@@ -7,9 +7,9 @@
     of its reason that loops (`./GovWhyArt`, `./GovWhyTrust`, `./GovWhyScale`)
     under a "Pause motion" control. The six plates are one film, left to
     right, top to bottom: 01 lays the layer under a nation; 02 is the first
-    door of that layer, asking the source anywhere in the world; 03 takes
-    companies through the same layer, not only people; 04 is who is already
-    on it — seats on the bus, not a crest each; 05 is the years settling
+    door of that layer, asking the source anywhere in the world, at scale;
+    03 is every party on the one platform; 04 is who already trusts it —
+    the authorities and enterprises, region by region; 05 is the years settling
     into the rock under it, and then not stopping; 06 is that answer
     coming back up as one stamped report. It closes on
     the ask. (Built dark first; made
@@ -44,8 +44,8 @@ export async function GovWhy() {
   const art: Record<GovWhyId, React.ReactNode> = {
     trust: <ArtTrust t={v.trust} />,
     psv: <ArtScale s={v.scale} layer={v.trust.layer} />,
-    platform: <ArtPlatform core={v.core} nodes={v.nodes} layer={v.trust.layer} sides={v.sides} />,
-    govs: <ArtGovs layer={v.trust.layer} who={v.who} />,
+    platform: <ArtPlatform core={v.core} eco={v.eco} />,
+    govs: <ArtGovs layer={v.trust.layer} g={v.govs} />,
     longTerm: <ArtYears since={v.since} today={v.today} ahead={v.ahead} big={v.scale.big} layer={v.trust.layer} />,
     evidence: <ArtReport report={v.report} stamp={v.stamp} proofs={v.proofs} layer={v.trust.layer} />,
   };

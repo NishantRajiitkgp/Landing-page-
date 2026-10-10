@@ -160,6 +160,11 @@ export const hi: PlatformCopy = {
         remove: "{{name}} हटाएँ",
         note: "कीमतें प्रति जाँच, US $ में हैं।",
         review: "देखें",
+        fast: {
+          t: "तेज़ करें",
+          p: "इस अनुरोध का समय आधा।",
+          extra: "+30%",
+        },
       },
       rows: {
         education: {
@@ -259,6 +264,14 @@ export const hi: PlatformCopy = {
           tat: "10-15 दिन",
         },
       },
+    },
+
+    soon: {
+      kicker: "जल्द आ रहा है",
+      before: "",
+      n: "50+",
+      after: "और देशों में।",
+      p: "वही स्रोत जाँच, उन जगहों पर खुल रही है जहाँ हम अभी नहीं पहुँचते।",
     },
   },
 

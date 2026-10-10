@@ -79,6 +79,10 @@ import { ar as resourcesAr } from "../../src/lib/copy/resources.ar.tsx";
 import { FORMS } from "../../src/lib/copy/forms.ts";
 import { ACCOUNT } from "../../src/lib/copy/account.ts";
 import { AUTHORITY } from "../../src/lib/copy/authority.ts";
+import { ITALY_PARTNER } from "../../src/lib/copy/italyPartner.ts";
+import { MOM_APPLY } from "../../src/lib/copy/momApply.ts";
+import { MOM_ORG } from "../../src/lib/copy/momOrg.ts";
+import { MOM_STEPS } from "../../src/lib/copy/momSteps.ts";
 import {
   ARTEFACT_ORDER,
   CERT_IDS,
@@ -124,6 +128,10 @@ const NAMESPACES: readonly { name: string; dict: Dictionary<unknown> }[] = [
   { name: "forms", dict: FORMS },
   { name: "account", dict: ACCOUNT },
   { name: "authority", dict: AUTHORITY },
+  { name: "italyPartner", dict: ITALY_PARTNER },
+  { name: "momApply", dict: MOM_APPLY },
+  { name: "momSteps", dict: MOM_STEPS },
+  { name: "momOrg", dict: MOM_ORG },
 ];
 
 /** Dotted paths to every LEAF. A leaf is anything that is not a plain object:
@@ -1416,7 +1424,8 @@ const BANDS: Record<string, readonly [number, number]> = {
   /* 62 -> 152 (6 Oct 2026): the two-workforce redesign — heading, jump
    *  links, stamp, and per collar its promise, sectors, figures, checks,
    *  example case and client heading (+91); "Trusted by" went (-1). */
-  packages: [7, 126],
+  /* 126 -> 133 (7 Oct 2026): the white-collar client rail's seven names. */
+  packages: [7, 133],
   /** New 30 Sep 2026: the old site's country grid — heading, lede, the
    *  turnaround label, the CTA and five countries' name and line. */
   /* 14 -> 13 (1 Oct 2026): the lede under the heading went. */
@@ -1564,10 +1573,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
  *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
- *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients; 1702 -> 1712: `premiumServices`; 1712 -> 1724: the SMB client strip; 1724 -> 1728: the premium redesign's lede and audiences. 1728 -> 1735: the blue-collar client rail; 1735 -> 1825: the two-workforce redesign; 1825 -> 1815: dropping its "Hiring both?" band; 1815 -> 1799: four named checks a collar, no descriptions; 1799 -> 1794: dropping the blue-collar punch clock; 1794 -> 1795: the WhatsApp ask's button. */
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients; 1702 -> 1712: `premiumServices`; 1712 -> 1724: the SMB client strip; 1724 -> 1728: the premium redesign's lede and audiences. 1728 -> 1735: the blue-collar client rail; 1735 -> 1825: the two-workforce redesign; 1825 -> 1815: dropping its "Hiring both?" band; 1815 -> 1799: four named checks a collar, no descriptions; 1799 -> 1794: dropping the blue-collar punch clock; 1794 -> 1795: the WhatsApp ask's button; 1795 -> 1802: the white-collar client rail's seven names. */
 check(
-  "sections holds 1795 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1795 &&
+  "sections holds 1802 leaves for 106 nodes and blocks 22 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1802 &&
     leafPaths(EN_BLOCKS).length === 22 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -1600,10 +1609,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691; `premiumServices` to 1701; the SMB client strip to 1713; the premium redesign to 1717; the blue-collar client rail to 1724; the two-workforce redesign to 1814; dropping its "Hiring both?" band to 1804; four named checks a collar to 1788; dropping the blue-collar punch clock to 1783; the WhatsApp ask's button to 1784. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691; `premiumServices` to 1701; the SMB client strip to 1713; the premium redesign to 1717; the blue-collar client rail to 1724; the two-workforce redesign to 1814; dropping its "Hiring both?" band to 1804; four named checks a collar to 1788; dropping the blue-collar punch clock to 1783; the WhatsApp ask's button to 1784; the white-collar client rail to 1791. */
 check(
-  "sections: 1784 string leaves, 6 rich-text leaves and 5 function leaves",
-  stringLeaves(EN_SECTIONS).length === 1784 &&
+  "sections: 1791 string leaves, 6 rich-text leaves and 5 function leaves",
+  stringLeaves(EN_SECTIONS).length === 1791 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 11 &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
   { strings: stringLeaves(EN_SECTIONS).length, all: leafPaths(EN_SECTIONS).length },

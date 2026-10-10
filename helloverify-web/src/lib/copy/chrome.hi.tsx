@@ -135,9 +135,8 @@ export const hi: ChromeCopy = {
       gdpr: "GDPR",
       pbsa: "PBSA",
       nsr: "NSR",
-      mom: "Ministry of Manpower, सिंगापुर",
     },
-    certline: "ISO 27001 · GDPR · PBSA · NSR · Ministry of Manpower (SG)",
+    certline: "ISO 27001 · GDPR · PBSA · NSR",
     copyright: "© 2026 सर्वाधिकार सुरक्षित। Hello Verify India Private Ltd.",
     legal: {
       privacy: "गोपनीयता नीति",
@@ -168,7 +167,6 @@ export const hi: ChromeCopy = {
         gdpr: "GDPR",
         pbsa: "PBSA",
         nsr: "NSR",
-        mom: "Ministry of Manpower (SG)",
       },
       markHint: "UV · निशान पर कर्सर ले जाएँ",
       microtext:

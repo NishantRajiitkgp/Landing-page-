@@ -29,8 +29,8 @@ export function CertifierChecks({ tabs }: { tabs: readonly CheckTab[] }) {
   }, [tabs]);
 
   return (
-    <div className="body3">
-      <div className="hv3-tabs" role="tablist">
+    <div className="cf4-checks">
+      <div className="cf4-tabs" role="tablist">
         {tabs.map((t) => (
           <button
             key={t.id}
@@ -39,7 +39,7 @@ export function CertifierChecks({ tabs }: { tabs: readonly CheckTab[] }) {
             id={`cert3-tab-${t.id}`}
             aria-selected={on === t.id}
             aria-controls={`cert3-panel-${t.id}`}
-            className={on === t.id ? "seg on" : "seg"}
+            className={on === t.id ? "on" : undefined}
             onClick={() => setOn(t.id)}
           >
             {t.label}
@@ -47,17 +47,19 @@ export function CertifierChecks({ tabs }: { tabs: readonly CheckTab[] }) {
         ))}
       </div>
       {tabs.map((t) => (
-        <ul key={t.id} role="tabpanel" id={`cert3-panel-${t.id}`} aria-labelledby={`cert3-tab-${t.id}`} className="smb3-cards smb3-cards-4 cert3-cards" hidden={on !== t.id}>
-          {t.cards.map((c) => (
-            <li key={c.icon}>
-              <span className="ic">
-                <CertifierIcon id={c.icon} />
-              </span>
-              <h3>{c.t}</h3>
-              <p>{c.p}</p>
-            </li>
-          ))}
-        </ul>
+        <div key={t.id} role="tabpanel" id={`cert3-panel-${t.id}`} aria-labelledby={`cert3-tab-${t.id}`} hidden={on !== t.id}>
+          <ul className="cf4-grid">
+            {t.cards.map((c) => (
+              <li key={c.icon}>
+                <span className="glyph" aria-hidden="true">
+                  <CertifierIcon id={c.icon} />
+                </span>
+                <h3>{c.t}</h3>
+                <p>{c.p}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
     </div>
   );

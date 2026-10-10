@@ -296,6 +296,9 @@
    3:1 large-text bar). Active stays green, so the selection still reads. */
 .lt-sn { font-family: var(--serif); font-style: italic; font-size: 24px; color: var(--muted); transition: color .4s; }
 .lt-sx b { display: block; font-size: 17px; font-weight: 500; letter-spacing: -.01em; color: var(--ink-soft); transition: color .4s; }
+/* The company mark, sized like the About page cards so a wide wordmark
+   (HCL, Cognizant) and a taller badge (Hero Fincorp) share one box. */
+.lt-brand { display: block; width: auto; height: auto; max-width: 118px; max-height: 28px; margin-bottom: 8px; object-fit: contain; object-position: left center; }
 .lt-sx em { display: block; margin-top: 4px; font-style: normal; font-family: var(--mono); font-size: 11px; color: var(--muted); }
 /* Straddles the rule below the row; `z-index` so the next row's border,
    painted later, does not cover its lower half. */
@@ -318,8 +321,9 @@
 .lt-f1 { z-index: 2; transform: translate(calc(var(--flip) * 18px), 16px) rotate(calc(var(--flip) * 1.6deg)); opacity: .85; }
 .lt-f2 { z-index: 1; transform: translate(calc(var(--flip) * 34px), 30px) rotate(calc(var(--flip) * -1.2deg)); opacity: .6; }
 .lt-f1 .lt-q, .lt-f2 .lt-q, .lt-f1 .lt-sig, .lt-f2 .lt-sig, .lt-f1 .lt-qm, .lt-f2 .lt-qm { opacity: 0; }
-.lt-top { position: relative; display: flex; justify-content: space-between; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--v2-lt-rule); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.lt-top { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--v2-lt-rule); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .lt-top span:last-child { text-transform: none; letter-spacing: .02em; }
+.lt-top .lt-mark { display: block; width: auto; height: auto; max-width: 168px; max-height: 40px; object-fit: contain; object-position: right center; flex: none; }
 /* Fill and stroke sit on the `<svg>` and inherit into the `<use>`d
    symbol; a selector on the symbol's own paths is not what a use-tree
    reliably matches. */
@@ -397,6 +401,8 @@
   .lt-f1 { transform: translate(calc(var(--flip) * 8px), 8px) rotate(calc(var(--flip) * 1.6deg)); }
   .lt-f2 { transform: translate(calc(var(--flip) * 16px), 16px) rotate(calc(var(--flip) * -1.2deg)); }
   .lt-seal { inset-inline-end: 18px; top: 52px; width: 64px; height: 64px; }
+  .lt-brand { max-width: 100px; max-height: 24px; }
+  .lt-top .lt-mark { max-width: 112px; max-height: 32px; }
   .lt-qm { height: 40px; font-size: 72px; }
   .lt-q { font-size: 19px; }
   .lt-sig b { font-size: 21px; }

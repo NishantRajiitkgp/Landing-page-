@@ -80,12 +80,13 @@ const COLS: readonly { k: FooterColKey; links: readonly FooterHref[] }[] = [
  *  still draws it at 34px from the same srcset. */
 const SEAL_BOX = 40;
 
-const CERTS: readonly { id: FooterCertId; img: string }[] = [
+/** NSR is a wide wordmark (240×112). The other marks are round seals and
+ *  fill the disc; this one is fitted inside it so the swoosh is not cropped. */
+const CERTS: readonly { id: FooterCertId; img: string; wide?: boolean }[] = [
   { id: "iso", img: "/img/iso.jpg" },
   { id: "gdpr", img: "/img/gdpr.jpg" },
   { id: "pbsa", img: "/img/pbsa.jpg" },
-  { id: "nsr", img: "/img/nsr.jpg" },
-  { id: "mom", img: "/img/mom.jpg" },
+  { id: "nsr", img: "/img/nsr.jpg", wide: true },
 ];
 
 export async function SiteFooter() {
@@ -209,7 +210,13 @@ export async function SiteFooter() {
           {CERTS.map((c) => (
             <span key={t.certs[c.id]} className="fz-seal">
               <span className="fz-seal-d">
-                <Image src={c.img} alt={t.certs[c.id]} width={SEAL_BOX} height={SEAL_BOX} />
+                <Image
+                  className={c.wide ? "fz-seal-wide" : undefined}
+                  src={c.img}
+                  alt={t.certs[c.id]}
+                  width={c.wide ? 56 : SEAL_BOX}
+                  height={c.wide ? 26 : SEAL_BOX}
+                />
               </span>
               <span className="fz-seal-l" aria-hidden="true">{v.seals[c.id]}</span>
             </span>

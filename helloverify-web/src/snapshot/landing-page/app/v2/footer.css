@@ -85,11 +85,13 @@
   .foot2.fz .fcol2 a:hover .fz-arr, .foot2.fz .fcol2 a:focus-visible .fz-arr { opacity: 1; transform: none; }
 
   /* ── Embossed seals ───────────────────────────────────────────────────── */
-  .foot2.fz .certline { margin-top: 72px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; padding: 28px 0; }
+  .foot2.fz .certline { margin-top: 72px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; padding: 28px 0; }
   .foot2.fz .certline .t { display: none; }
   .fz-seal { display: flex; align-items: center; gap: 14px; }
   .fz-seal-d { width: 64px; height: 64px; flex: none; border-radius: 50%; background: var(--paper); display: flex; align-items: center; justify-content: center; box-shadow: inset 2px 2px 4px rgb(from var(--ink) r g b / .12), inset -2px -2px 4px rgb(from var(--white) r g b / .9), 0 0 0 1px var(--hair); transition: box-shadow .35s; }
   .foot2.fz .fz-seal-d img { width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: none; object-fit: cover; filter: grayscale(1) contrast(1.05); opacity: .75; mix-blend-mode: multiply; transition: filter .35s, opacity .35s; }
+  /* NSR is a horizontal wordmark. Cover + a circle crops the swoosh. */
+  .foot2.fz .fz-seal-d img.fz-seal-wide { width: 56px; height: 26px; border-radius: 0; object-fit: contain; }
   .fz-seal:hover .fz-seal-d { box-shadow: inset 1px 1px 2px rgb(from var(--ink) r g b / .1), inset -1px -1px 2px rgb(from var(--white) r g b / .9), 0 0 0 1px var(--green), 0 10px 22px -14px rgb(from var(--green) r g b / .6); }
   .foot2.fz .fz-seal:hover img { filter: none; opacity: 1; }
   .fz-seal-l { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }

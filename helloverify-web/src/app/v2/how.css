@@ -43,14 +43,6 @@
 .hw-chip { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 26px; padding: 0 10px; border-radius: 999px; background: var(--paper); font-family: var(--mono); font-size: 11.5px; color: var(--ink); }
 .hw-who b { display: block; font-family: var(--serif); font-weight: 400; font-size: 22px; line-height: 1; letter-spacing: -.015em; }
 .hw-who i { display: block; margin-top: 3px; font-style: normal; font-size: 13px; color: var(--muted); }
-.hw-houses { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-.hw-houses img { display: block; width: auto; height: 22px; }
-.hw-house-starbucks { width: 22px; height: 22px; }
-.hw2-for { margin-block-start: auto; padding-block-start: 14px; }
-.hw2-for .hw-houses { margin-top: 0; gap: 14px; }
-.hw2-for .hw-houses img { height: 28px; }
-.hw2-for .hw-house-starbucks { width: 32px; height: 32px; }
-.hw2-ledger:has(.hw2-for) .hw2-verdict { margin-top: 10px; }
 .hw-play { margin-inline-start: auto; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--hair); display: inline-flex; align-items: center; justify-content: center; color: var(--muted); transition: background .3s, color .3s, border-color .3s; }
 .hw-on .hw-play { background: var(--ink); border-color: var(--ink); color: var(--white); }
 .hw-run .hw-on .hw-chip .dot { animation: pulse 1.6s ease-in-out infinite; }

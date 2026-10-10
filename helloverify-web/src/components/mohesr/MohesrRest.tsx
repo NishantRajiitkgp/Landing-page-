@@ -12,6 +12,19 @@ function pretty(text: string) {
   );
 }
 
+/** Addresses in the appeal copy become mailto links in every locale. */
+function withMailto(text: string) {
+  return text.split(/([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi).map((part, index) =>
+    part.includes("@") ? (
+      <a key={index} href={`mailto:${part}`}>
+        {part}
+      </a>
+    ) : (
+      part
+    ),
+  );
+}
+
 export function MohesrRequirements({ screening }: { screening: Screening }) {
   const process = screening.applicationProcess.subTabs;
   const individual = process.individual;
@@ -128,11 +141,13 @@ export function MohesrTrack({ screening }: { screening: Screening }) {
         <h2 className="h2">{track.title}</h2>
         <p className="lede">{track.lead}</p>
       </div>
-      <p className="mohesr-copy">{track.infoLead}</p>
-      <div className="mom3-acts">
-        <a className="btn btn-ink" href={track.portalCta.href}>
-          {track.portalCta.label}
-        </a>
+      <div className="mom3-trackbox">
+        <p className="mohesr-copy">{track.infoLead}</p>
+        <div className="mom3-acts">
+          <a className="btn btn-ink" href={track.portalCta.href}>
+            {track.portalCta.label}
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -145,7 +160,7 @@ export function MohesrAppeal({ screening }: { screening: Screening }) {
       <h2 className="h2">{appeal.title}</h2>
       <div className="mohesr-prose">
         {appeal.paragraphs.map((paragraph) => (
-          <p key={paragraph}>{paragraph}</p>
+          <p key={paragraph}>{withMailto(paragraph)}</p>
         ))}
       </div>
     </section>
