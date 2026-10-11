@@ -9,9 +9,9 @@
     right, top to bottom: 01 lays the layer under a nation; 02 is the first
     door of that layer, asking the source anywhere in the world, at scale;
     03 is every party on the one platform; 04 is who already trusts it —
-    the authorities and enterprises, region by region; 05 is the years settling
-    into the rock under it, and then not stopping; 06 is that answer
-    coming back up as one stamped report. It closes on
+    the authorities and enterprises, region by region; 05 is what plugs into
+    it next, on a rail that runs on past the card; 06 is the case file —
+    trail, artifact, remarks — stamped, and the client approving. It closes on
     the ask. (Built dark first; made
     light on review, to sit in the page's paper.)
 
@@ -46,8 +46,8 @@ export async function GovWhy() {
     psv: <ArtScale s={v.scale} layer={v.trust.layer} />,
     platform: <ArtPlatform core={v.core} eco={v.eco} />,
     govs: <ArtGovs layer={v.trust.layer} g={v.govs} />,
-    longTerm: <ArtYears since={v.since} today={v.today} ahead={v.ahead} big={v.scale.big} layer={v.trust.layer} />,
-    evidence: <ArtReport report={v.report} stamp={v.stamp} proofs={v.proofs} layer={v.trust.layer} />,
+    longTerm: <ArtYears core={v.core} f={v.future} />,
+    evidence: <ArtReport report={v.report} stamp={v.stamp} proofs={v.proofs} audit={v.audit} />,
   };
 
   return (

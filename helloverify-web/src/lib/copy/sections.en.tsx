@@ -2062,10 +2062,8 @@ export const en = {
       /** 02 · the checkpoint: what the gate's sign rolls through (`creds`),
        *  the world at the bedrock (`countries`; `sources` is its hover
        *  title), the counter on the left: `count` from Month 1 to Month 6
-       *  in equal steps, its `unit`, the bar's two ends (`months`). `big`
-       *  is 05's figure. */
+       *  in equal steps, its `unit`, the bar's two ends (`months`). */
       scale: {
-        big: "20M+",
         count: { from: 20, to: 60, suffix: "K" },
         unit: "verifications",
         months: { first: "Month 1", last: "Month 6" },
@@ -2100,13 +2098,36 @@ export const en = {
         },
         key: { a: "Government authorities", e: "Leading enterprises" },
       },
-      since: "2018",
-      today: "Today · 20M+ checks",
-      ahead: "Years to come",
-      /** 06 · a report with something in it. */
+      /** 05 · the roadmap on one rail. `live` is what runs today, `next`
+       *  what plugs in. Grounded 9 Oct 2026: `reuse` and `watch` are the
+       *  /technology page's "Trusted Access" and "Persistent Trust Layer",
+       *  `reach` its "Coming soon in 50+ more countries"; `wallet` follows
+       *  UAE PASS sign-in (live on MOHESR) and the EU's digital identity
+       *  wallets, due in every member state by the end of 2026. Module
+       *  names break to two lines at their middle space. */
+      future: {
+        live: "Live today",
+        next: "Next",
+        ai: "AI · learns from every check",
+        base: "20M+ checks since 2018",
+        ahead: "Years to come",
+        mods: {
+          source: "Source checks",
+          read: "AI document reading",
+          reuse: "Reusable credentials",
+          watch: "Continuous monitoring",
+          wallet: "Digital ID wallets",
+          reach: "50+ more countries",
+        },
+      },
+      /** 06 · the case file: the paragraph's three proofs, each drawn as
+       *  itself. The trail's steps (`audit` s1–s3) sit 60 units apart, so
+       *  they stay short; `issuer` is the source at the bedrock; `ask` and
+       *  `done` are the client's button, before and after the click. */
       report: { k: "Verification report", r1: "Source · Registrar", r2: "Result · Genuine", r3: "Remarks · Name matches" },
       stamp: "VERIFIED",
       proofs: { p1: "Clear remarks", p2: "Verification artifacts", p3: "Auditable trail" },
+      audit: { s1: "Request", s2: "Issuer confirmed", s3: "Report sealed", issuer: "Registrar", ask: "Approve", done: "Approved" },
     },
     /** The band's foot: the ask, worded as the homepage's other sales
      *  buttons (1 Oct 2026; the certifications line beside it went). */
