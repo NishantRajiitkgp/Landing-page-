@@ -1,32 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
 import { saveLoginUserDetail } from "@/lib/auth/client";
-import { readSession } from "@/lib/auth/storage";
+import type { TravelUser } from "@/lib/auth/types";
 import { isEmail, isGender, isName } from "@/lib/auth/validate";
 import type { AccountCopy } from "@/lib/copy/account";
 
 export function ProfileForm({ t }: { t: AccountCopy["profile"] }) {
-  const { setUser, user } = useAuth();
+  const { ready, setUser, user } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const [gender, setGender] = useState("");
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const session = readSession()?.user ?? user;
-    setName(session?.name ?? "");
-    setEmail(session?.email ?? "");
-    setMobile(session?.mobile_num ?? session?.phone ?? "");
-    setGender(session?.gender ?? "");
-    setLoading(false);
-  }, [user]);
+  /** The fields re-seed whenever the stored user changes, including after a
+   *  save; `undefined` means not seeded yet, which `null` (no user) is not. */
+  const [seeded, setSeeded] = useState<TravelUser | null | undefined>(undefined);
+  if (ready && user !== seeded) {
+    setSeeded(user);
+    setName(user?.name ?? "");
+    setEmail(user?.email ?? "");
+    setMobile(user?.mobile_num ?? user?.phone ?? "");
+    setGender(user?.gender ?? "");
+  }
+  const loading = seeded === undefined;
 
   async function save(e: React.FormEvent) {
     e.preventDefault();

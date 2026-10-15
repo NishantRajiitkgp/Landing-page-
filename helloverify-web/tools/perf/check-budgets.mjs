@@ -106,6 +106,21 @@ const CEILING = {
    *    42.3 KB for phone layouts of 19 sections, while the page TOTAL fell
    *    435.7 -> 427.8 KB (one tree instead of two in the HTML and flight).
    *    Total is lowered to the new measurement + ~2% so that saving holds.
+   *  - script 188 -> 195, stylesheet 43 -> 54, total 436 -> 462 (14 Oct 2026):
+   *    the 5 Oct commit (products/solutions IA, auth and commerce, ar/hi)
+   *    landed without a reset, and a clean build of it measures script
+   *    193.4, stylesheet 52.6, total 454.0 KB, so this gate was already red.
+   *    Since then: the GovWhy rebuild (−12.1 KB raw `v2/govwhy.css`), the
+   *    WhatsApp phone (+10.8 KB raw `v2/consumer.css`), and 181 rules whose
+   *    classes nothing in `src/` references deleted (17.6 KB raw across 13
+   *    sheets, most of it in `inner.css`/`design.css`). Measured now: script
+   *    190.7, stylesheet 52.2, total 452.6 KB — each below the 5 Oct build.
+   *    Getting stylesheet back to 43 means removing shipped homepage UI, which
+   *    is a product decision, not a perf one. Script +2%, stylesheet +3%,
+   *    total +2%; total stays under §9.1's 500.
+   *    /hi and /ar are now the worst pages but only by their HTML text: script
+   *    and stylesheet equal /en exactly and fonts do not move (the Noto faces
+   *    still load with `preload: false`), so they need no ceiling of their own.
    *
    *  LOWERED, so the saving cannot quietly erode:
    *  - font 245 -> 127: 123.3 KB after the wght pin (was 241.9).
@@ -119,10 +134,10 @@ const CEILING = {
    *  number to hide that. See `src/lib/i18n/fonts.ts`.
    *
    *  Each is the measurement plus ~3%, the headroom rule stated above. */
-  script: 188,
-  stylesheet: 43,
+  script: 195,
+  stylesheet: 54,
   font: 127,
-  total: 436,
+  total: 462,
   thirdParty: 5,
 };
 

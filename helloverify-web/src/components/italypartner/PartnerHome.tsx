@@ -11,7 +11,7 @@ import { ITALY_SIGN_IN_PATH } from "@/lib/italy/paths";
 import type { Partner } from "@/lib/italy/partner/types";
 
 import { AgreeStep } from "./AgreeStep";
-import { useAgency, type AgencyDraft } from "./agency";
+import { forgetAgency, useAgency, type AgencyDraft } from "./agency";
 import { AgencyStep } from "./AgencyStep";
 import { DocsStep } from "./DocsStep";
 import { LiveStep } from "./LiveStep";
@@ -47,13 +47,15 @@ export function PartnerHome({ t, locale }: { t: ItalyPartnerCopy; locale: string
     );
   }
 
+  const partner = session.partner;
   return (
     <Workspace
       t={t}
       locale={locale}
-      partner={session.partner}
+      partner={partner}
       demo={session.demo}
       onSignOut={async () => {
+        forgetAgency(partner.id);
         await italyPartner.signOut();
         router.replace(signInHref);
       }}

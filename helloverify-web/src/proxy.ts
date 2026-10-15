@@ -20,10 +20,20 @@
  *  Action rather than here.
  */
 import createMiddleware from "next-intl/middleware";
+import type { NextRequest } from "next/server";
 
 import { routing } from "@/lib/i18n/routing";
 
-export default createMiddleware(routing);
+const intl = createMiddleware(routing);
+
+/** `SITE_NOINDEX=1` keeps a staging origin out of search. Read per request
+ *  rather than at build, so the image promoted to production does not carry
+ *  it. */
+export default function proxy(req: NextRequest) {
+  const res = intl(req);
+  if (process.env.SITE_NOINDEX === "1") res.headers.set("X-Robots-Tag", "noindex, nofollow");
+  return res;
+}
 
 export const config = {
   /** Everything except API routes, Next's own assets, and any path that looks

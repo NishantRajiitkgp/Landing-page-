@@ -30,7 +30,6 @@
   --v2-su-dusk: #787C8C;
 }
 
-.rl-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
 .rl { margin-top: 28px; }
 .rl-live-d { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgb(from var(--primary) r g b / .15); animation: rlBlink 2s ease-in-out infinite; }
 @keyframes rlBlink { 50% { box-shadow: 0 0 0 7px rgb(from var(--primary) r g b / .04); } }

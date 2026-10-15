@@ -220,9 +220,12 @@
   text-wrap: balance;
 }
 .tk-step p { margin: 20px 0 0; max-width: 460px; font-size: 17px; line-height: 1.65; color: var(--muted); text-wrap: pretty; }
-.tk-step h3, .tk-step p { opacity: .32; transition: opacity .6s cubic-bezier(.2, .8, .2, 1); }
+/* Only the heading dims, and only to .5: --ink at .5 on --paper is 3.4:1,
+   which large text (30px and up here) passes. The paragraph is already
+   --muted, the lightest tier that passes 4.5:1, so any fade would fail. */
+.tk-step h3 { opacity: .5; transition: opacity .6s cubic-bezier(.2, .8, .2, 1); }
 
-:is([data-active="0"] .tk-step:nth-child(1), [data-active="1"] .tk-step:nth-child(2), [data-active="2"] .tk-step:nth-child(3)) :is(h3, p) { opacity: 1; }
+:is([data-active="0"] .tk-step:nth-child(1), [data-active="1"] .tk-step:nth-child(2), [data-active="2"] .tk-step:nth-child(3)) h3 { opacity: 1; }
 :is([data-active="0"] .tk-step:nth-child(1), [data-active="1"] .tk-step:nth-child(2), [data-active="2"] .tk-step:nth-child(3)) .tk-step-n { color: var(--primary-ink); }
 :is([data-active="0"] .tk-step:nth-child(1), [data-active="1"] .tk-step:nth-child(2), [data-active="2"] .tk-step:nth-child(3))::before {
   background: var(--primary); border-color: var(--primary);

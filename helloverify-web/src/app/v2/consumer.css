@@ -12,10 +12,24 @@
    hero.css's `--v2-paper-lo`. */
 :root {
   --v2-cx-wa-tint: #E7F7EC;
+  /* WhatsApp's own light theme, used only on the homepage phone: the
+     wallpaper, an incoming and an outgoing bubble, the link preview, text,
+     muted text, the read tick, links and "Read more", the send button, the
+     verified seal, and the Razorpay mark in the payment preview. */
+  --v2-wa-bg: #EFEAE2;
+  --v2-wa-in: var(--white);
+  --v2-wa-out: #D9FDD3;
+  --v2-wa-card: #F0F2F5;
+  --v2-wa-ink: #111B21;
+  --v2-wa-mute: #667781;
+  --v2-wa-tick: #53BDEB;
+  --v2-wa-green: #008069;
+  --v2-wa-send: #1DAA61;
+  --v2-wa-seal: #1D9BF0;
+  --v2-rzp-navy: #072654;
+  --v2-rzp-blue: #3395FF;
 }
 
-.fm-mast { display: flex; justify-content: space-between; align-items: center; }
-.fm-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 #consumer-services { scroll-margin-top: 96px; }
 .fm-sh { margin-top: 22px; }
 .fm-sh .h2 { font-size: clamp(36px, 10vw, 60px); }
@@ -91,9 +105,6 @@
 .cx-on .cx-card { opacity: 1; visibility: visible; transform: none; transition: opacity .35s .45s, transform .6s cubic-bezier(.16, 1, .3, 1) .45s, visibility 0s .45s; }
 
 /* ── Statement, QR, phone ─────────────────────────────────────────────── */
-.cx-row { display: grid; align-items: center; }
-.cx-send { margin: 0; max-width: 640px; font-family: var(--serif); font-size: clamp(28px, 7.5vw, 42px); line-height: 1.1; letter-spacing: -.025em; color: var(--ink); text-wrap: balance; }
-.fm-how { margin-top: 36px; display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 18px; align-items: center; padding: 18px; border-radius: 18px; background: var(--white); border: 1px solid var(--hair); }
 .fm-qr { width: 120px; height: 120px; padding: 8px; box-sizing: border-box; border-radius: 12px; background: var(--white); box-shadow: inset 0 0 0 1px var(--hair); }
 .fm-qr svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; }
 .fm-steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 13px; line-height: 1.4; color: var(--ink-soft); }
@@ -102,7 +113,6 @@
 .fm-phone { display: flex; justify-content: center; }
 .fm-phone .phone2 { animation: cxIn .55s cubic-bezier(.16, 1, .3, 1) both; }
 @keyframes cxIn { 0% { opacity: 0; transform: translateY(14px); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
-.fm-phone .cmsgs { position: relative; gap: 7px; padding: 12px; flex: 1; }
 .fm-phone .typing { position: absolute; inset-inline-start: 12px; bottom: 14px; margin: 0; }
 .fm-phone .lic.chat { width: 132px; height: 80px; }
 .fm-phone .b { font-size: 12px; padding: 8px 11px 7px; }
@@ -122,7 +132,6 @@
   .cx-card { position: absolute; inset-inline-end: 18px; bottom: 18px; width: 290px; }
   .cx-on, .cx-on:hover { flex-grow: 9; }
   .cx-on .cx-img { object-position: var(--pos-on); }
-  .cx-row { margin-top: 56px; grid-template-columns: minmax(0, 1fr) auto; gap: 56px; }
 }
 
 /* The phone: the panels stack as an accordion — seven closed strips with
@@ -151,7 +160,6 @@
   .cx-cap { padding: 0 22px 18px; }
   /* Edge to edge, so the photo's end at 340px is never seen beside it. */
   .cx-card { padding: 20px 22px 22px; border-radius: 20px 20px 0 0; }
-  .cx-row { margin-top: 48px; gap: 40px; }
 }
 
 /* The chat loops every 14 s. Paused — or with reduced motion, where the
@@ -161,7 +169,7 @@
    typing indicators have gone. `!important` because the timing is inline on
    each bubble (`blocks/HelloVPhone`) and the global reduced-motion rule is
    itself `!important`. */
-.cx-paused .phone2 .cmsgs > *, .cx-paused .phone2 .dot {
+.cx-paused .phone2 .cmsgs > *, .cx-paused .phone2 .dot, .cx-paused .phone2 .wa-anim {
   animation-duration: 14s !important;
   animation-iteration-count: 1 !important;
   animation-delay: -11.2s !important;
@@ -234,12 +242,127 @@
   letter-spacing: 0.08em;
   color: var(--primary-ink);
 }
-.hv-wa .cav { background: var(--primary); }
-.hv-wa .cst2 { color: var(--primary-ink); }
 .hv-wa .phone2 {
-  background: linear-gradient(160deg, var(--primary), var(--primary-deep) 62%);
-  box-shadow: 0 50px 90px -40px color-mix(in srgb, var(--primary) 55%, transparent), inset 0 0 0 1px color-mix(in srgb, var(--white) 20%, transparent);
+  background: var(--ink);
+  box-shadow: 0 50px 90px -40px rgb(from var(--ink) r g b / .55), inset 0 0 0 1px rgb(from var(--white) r g b / .12);
 }
+
+.hv-wa .fm-steps .hv-wa-sd { display: block; margin-top: 4px; font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+
+/* The homepage phone is the HelloV bot in WhatsApp's light theme, as it looks
+   on an Android phone: the brand logo and verified seal in the header, top
+   tails on the bubbles, a link preview on the payment message. */
+.phone2.wa .scr { background: var(--white); color: var(--v2-wa-ink); font-family: var(--sans); }
+.phone2.wa .wa-ic { width: 20px; height: 20px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.phone2.wa .wa-top { position: relative; flex: none; padding-top: 42px; background: var(--white); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .08); z-index: 1; }
+.phone2.wa .wa-status { position: absolute; z-index: 6; top: 15px; inset-inline: 30px 24px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; letter-spacing: .01em; }
+.phone2.wa .wa-sys { display: flex; align-items: center; gap: 5px; }
+.phone2.wa .wa-sys .wa-ic { width: 14px; height: 14px; }
+.phone2.wa .wa-bat { position: relative; width: 20px; height: 10px; border: 1.4px solid currentColor; border-radius: 2px; padding: 1px; }
+.phone2.wa .wa-bat::after { content: ""; position: absolute; inset-inline-end: -3px; top: 2px; width: 1.5px; height: 4px; border-radius: 0 1px 1px 0; background: currentColor; }
+.phone2.wa .wa-bat i { display: block; width: 72%; height: 100%; border-radius: 1px; background: currentColor; }
+.phone2.wa .wa-head { display: flex; align-items: center; gap: 8px; padding-block: 4px 10px; padding-inline: 8px 10px; }
+.phone2.wa .wa-back { transform: scaleX(var(--flip)); }
+.phone2.wa .wa-av { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; overflow: hidden; background: var(--white); box-shadow: inset 0 0 0 1px rgb(from var(--ink) r g b / .08); }
+.phone2.wa .wa-av img { width: 31px; height: auto; }
+.phone2.wa .wa-who { flex: 1; min-width: 0; display: flex; align-items: center; gap: 4px; }
+.phone2.wa .wa-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 16px; font-weight: 500; letter-spacing: -.005em; }
+.phone2.wa .wa-badge { flex: none; width: 16px; height: 16px; }
+.phone2.wa .wa-badge-seal { fill: var(--v2-wa-seal); }
+.phone2.wa .wa-badge-tick { fill: none; stroke: var(--white); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; }
+
+/* The thread. Each row is a one-cell grid whose track animates 0fr -> 1fr,
+   so an unsent message takes no room; the track is pinned to the bottom of
+   the chat once it outgrows it, which is the scroll. */
+.phone2.wa .wa-chat {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
+  container-type: size;
+  background-color: var(--v2-wa-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none'%3E%3Cg stroke='%236F6B62' stroke-opacity='.14' stroke-width='1.15'%3E%3Ccircle cx='22' cy='24' r='8'/%3E%3Cpath d='M46 78h14M53 71v14M108 36h18v12h-18zM128 112c8 0 10 8 10 8s-2 8-10 8-10-8-10-8 2-8 10-8zM30 120l8 8 8-8M78 130v14M86 48c6-8 16-8 16 2'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+.phone2.wa .wa-track { display: flex; flex-direction: column; padding-block: 8px 6px; padding-inline: 12px; transform: translateY(min(0px, calc(100cqh - 100%))); }
+.phone2.wa .wa-day { align-self: center; margin-bottom: 6px; padding-block: 4px; padding-inline: 10px; border-radius: 8px; background: var(--v2-wa-in); color: var(--v2-wa-mute); font-size: 11px; font-weight: 500; box-shadow: 0 1px .5px rgb(from var(--ink) r g b / .13); }
+.phone2.wa .wa-row { display: grid; grid-template-rows: 0fr; }
+.phone2.wa .wa-cell { min-height: 0; overflow: hidden; margin-inline: -8px; padding-inline: 8px; }
+.phone2.wa .wa-line { display: flex; align-items: center; gap: 8px; padding-block: 3px; }
+.phone2.wa .wa-row.out .wa-line { justify-content: flex-end; }
+
+.phone2.wa .wa-msg { position: relative; display: flow-root; max-width: 84%; padding-block: 5px 4px; padding-inline: 8px; border-radius: 8px; background: var(--v2-wa-in); font-size: 11.5px; line-height: 1.38; box-shadow: 0 1px .5px rgb(from var(--ink) r g b / .13); }
+.phone2.wa .wa-msg.in { border-start-start-radius: 0; }
+.phone2.wa .wa-msg.out { background: var(--v2-wa-out); border-start-end-radius: 0; }
+.phone2.wa :is(.wa-msg, .wa-typing)::before { content: ""; position: absolute; top: 0; width: 8px; height: 10px; background: inherit; transform: scaleX(var(--flip)); }
+.phone2.wa :is(.wa-msg.in, .wa-typing)::before { inset-inline-start: -7px; clip-path: polygon(0 0, 100% 0, 100% 100%); }
+.phone2.wa .wa-msg.out::before { inset-inline-end: -7px; clip-path: polygon(0 0, 100% 0, 0 100%); }
+.phone2.wa .wa-msg p { margin: 0; }
+.phone2.wa .wa-msg p + p { margin-top: 10px; }
+.phone2.wa .wa-msg b { font-weight: 600; }
+.phone2.wa .wa-more, .phone2.wa .wa-link { color: var(--v2-wa-green); font-weight: 500; }
+.phone2.wa .wa-link { word-break: break-all; }
+.phone2.wa .wa-ts { float: inline-end; position: relative; top: 4px; display: inline-flex; align-items: center; gap: 3px; margin-block: 4px 0; margin-inline: 10px -2px; font-size: 9.5px; line-height: 1; opacity: .62; direction: ltr; unicode-bidi: isolate; }
+.phone2.wa .wa-msg.out .wa-ts { opacity: .78; }
+.phone2.wa .wa-tick { flex: none; width: 16px; height: 11px; fill: none; stroke: var(--v2-wa-tick); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.phone2.wa .wa-typing { position: relative; display: flex; align-items: center; gap: 4px; height: 30px; padding-inline: 12px; border-radius: 8px; border-start-start-radius: 0; background: var(--v2-wa-in); }
+.phone2.wa .wa-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--v2-wa-mute); animation: bounce 1.2s ease-in-out infinite; }
+.phone2.wa .wa-typing i:nth-child(2) { animation-delay: .15s; }
+.phone2.wa .wa-typing i:nth-child(3) { animation-delay: .3s; }
+
+/* The payment message: Razorpay's link preview, then the bot's text. */
+.phone2.wa .wa-pay { padding: 3px; }
+.phone2.wa .wa-pay p { padding-inline: 5px; }
+.phone2.wa .wa-pay .wa-ts { margin-inline-end: 3px; }
+.phone2.wa .wa-prev { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 9px; margin-bottom: 8px; border-radius: 6px; overflow: hidden; background: var(--v2-wa-card); }
+.phone2.wa .wa-rzp { display: block; width: 62px; height: 100%; min-height: 66px; }
+.phone2.wa .wa-rzp rect { fill: var(--white); }
+.phone2.wa .wa-rzp-lo { fill: var(--v2-rzp-blue); }
+.phone2.wa .wa-rzp-hi { fill: var(--v2-rzp-navy); }
+.phone2.wa .wa-prev-t { display: grid; align-content: center; gap: 2px; min-width: 0; padding-block: 6px; padding-inline-end: 8px; }
+.phone2.wa .wa-prev-t b { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 11.5px; font-weight: 500; line-height: 1.3; }
+.phone2.wa .wa-prev-t small, .phone2.wa .wa-host { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--v2-wa-mute); font-size: 10.5px; }
+.phone2.wa .wa-host { display: flex; align-items: center; gap: 3px; }
+.phone2.wa .wa-host .wa-ic { width: 11px; height: 11px; stroke-width: 2.2; }
+.phone2.wa .wa-fwd { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgb(from var(--white) r g b / .75); color: var(--v2-wa-mute); box-shadow: 0 1px .5px rgb(from var(--ink) r g b / .13); }
+.phone2.wa .wa-fwd .wa-ic { width: 15px; height: 15px; transform: scaleX(var(--flip)); }
+
+/* The composer types "HelloV", then "1", before each is sent. */
+.phone2.wa .wa-dock { flex: none; display: flex; align-items: center; gap: 6px; padding-block: 6px 16px; padding-inline: 8px; background: var(--v2-wa-bg); }
+.phone2.wa .wa-field { flex: 1; min-width: 0; display: flex; align-items: center; gap: 9px; height: 42px; padding-inline: 12px; border-radius: 22px; background: var(--v2-wa-in); color: var(--v2-wa-mute); box-shadow: 0 1px .5px rgb(from var(--ink) r g b / .13); }
+.phone2.wa .wa-input { position: relative; flex: 1; min-width: 0; height: 20px; font-size: 14px; }
+.phone2.wa .wa-input > span { position: absolute; inset: 0; display: flex; align-items: center; white-space: nowrap; }
+.phone2.wa :is(.wa-k1, .wa-k2) { color: var(--v2-wa-ink); }
+.phone2.wa :is(.wa-k1, .wa-k2)::after { content: ""; width: 1.5px; height: 17px; margin-inline-start: 1px; background: var(--v2-wa-send); animation: caret 1s steps(1) infinite; }
+.phone2.wa .wa-send { position: relative; flex: none; width: 42px; height: 42px; border-radius: 50%; background: var(--v2-wa-send); color: var(--white); }
+.phone2.wa .wa-send .wa-ic { position: absolute; inset: 0; margin: auto; width: 20px; height: 20px; }
+.phone2.wa .wa-ks { transform: scaleX(var(--flip)); }
+
+/* The 14 s loop. HelloV is typed and sent, the bot types and sends the
+   menu, "1" is typed and sent, the bot sends the payment link; everything
+   holds, then fades. At 80% (the pause point below) every message is
+   open, both typing rows are shut and the composer is empty. */
+.phone2.wa .wa-anim { animation-duration: 14s; animation-timing-function: cubic-bezier(.16, 1, .3, 1); animation-iteration-count: infinite; animation-fill-mode: both; }
+.phone2.wa .wa-r1 { animation-name: wa-r1; }
+.phone2.wa .wa-t1 { animation-name: wa-t1; }
+.phone2.wa .wa-r2 { animation-name: wa-r2; }
+.phone2.wa .wa-r3 { animation-name: wa-r3; }
+.phone2.wa .wa-t2 { animation-name: wa-t2; }
+.phone2.wa .wa-r4 { animation-name: wa-r4; }
+.phone2.wa :is(.wa-kp, .wa-km) { animation-name: wa-idle; animation-timing-function: steps(1, end); }
+.phone2.wa .wa-k1 { animation-name: wa-k1; animation-timing-function: steps(1, end); }
+.phone2.wa .wa-k2 { animation-name: wa-k2; animation-timing-function: steps(1, end); }
+.phone2.wa .wa-ks { animation-name: wa-busy; animation-timing-function: steps(1, end); }
+@keyframes wa-r1 { 0%, 5% { grid-template-rows: 0fr; opacity: 0; transform: translateY(8px); } 8.5%, 96% { grid-template-rows: 1fr; opacity: 1; transform: none; } 99%, 100% { grid-template-rows: 1fr; opacity: 0; transform: none; } }
+@keyframes wa-t1 { 0%, 10% { grid-template-rows: 0fr; opacity: 0; } 12%, 20% { grid-template-rows: 1fr; opacity: 1; } 23%, 100% { grid-template-rows: 0fr; opacity: 0; } }
+@keyframes wa-r2 { 0%, 21.5% { grid-template-rows: 0fr; opacity: 0; transform: translateY(8px); } 27%, 96% { grid-template-rows: 1fr; opacity: 1; transform: none; } 99%, 100% { grid-template-rows: 1fr; opacity: 0; transform: none; } }
+@keyframes wa-r3 { 0%, 46% { grid-template-rows: 0fr; opacity: 0; transform: translateY(8px); } 49.5%, 96% { grid-template-rows: 1fr; opacity: 1; transform: none; } 99%, 100% { grid-template-rows: 1fr; opacity: 0; transform: none; } }
+@keyframes wa-t2 { 0%, 52% { grid-template-rows: 0fr; opacity: 0; } 54%, 61% { grid-template-rows: 1fr; opacity: 1; } 64%, 100% { grid-template-rows: 0fr; opacity: 0; } }
+@keyframes wa-r4 { 0%, 62.5% { grid-template-rows: 0fr; opacity: 0; transform: translateY(8px); } 68%, 96% { grid-template-rows: 1fr; opacity: 1; transform: none; } 99%, 100% { grid-template-rows: 1fr; opacity: 0; transform: none; } }
+@keyframes wa-idle { 0% { opacity: 1; } 1% { opacity: 0; } 5% { opacity: 1; } 39% { opacity: 0; } 46%, 100% { opacity: 1; } }
+@keyframes wa-busy { 0% { opacity: 0; } 1% { opacity: 1; } 5% { opacity: 0; } 39% { opacity: 1; } 46%, 100% { opacity: 0; } }
+@keyframes wa-k1 { 0% { opacity: 0; } 1% { opacity: 1; } 5%, 100% { opacity: 0; } }
+@keyframes wa-k2 { 0% { opacity: 0; } 39% { opacity: 1; } 46%, 100% { opacity: 0; } }
 @media (max-width: 1080px) {
   .hv-wa-row { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .hv-wa-panel { grid-template-columns: minmax(0, 220px) minmax(0, 1fr); }
@@ -251,7 +374,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fm-phone .phone2 .cmsgs > * {
+  .fm-phone .phone2 .cmsgs > *, .fm-phone .phone2 .wa-anim {
     animation-duration: 14s !important;
     animation-iteration-count: 1 !important;
     animation-delay: -11.2s !important;

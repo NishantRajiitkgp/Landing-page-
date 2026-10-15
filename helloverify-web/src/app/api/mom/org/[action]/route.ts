@@ -5,7 +5,7 @@ import type { NextRequest, NextResponse } from "next/server";
 import { logEvent } from "@/lib/leads/log";
 import { clientKey, spend } from "@/lib/mom/account/limits";
 import { maskEmail, SIGN_IN_CODE_SECONDS } from "@/lib/mom/account/policy";
-import { seal, unseal } from "@/lib/mom/account/seal";
+import { seal, sealRemaining, unseal } from "@/lib/mom/account/seal";
 import { failure, reply, sameOrigin } from "@/lib/mom/http";
 import { AccountError, demoOrgBackend, liveOrgBackend, OrgDirectory, type CodeTarget, type OrgTicket } from "@/lib/mom/org/backend";
 import { orgKey, orgLive } from "@/lib/mom/org/env";
@@ -19,7 +19,7 @@ import {
   signInVerifySchema,
   verifyCodeSchema,
 } from "@/lib/mom/org/requests";
-import { clearOrgSession, readOrgDemo, readOrgSession, writeOrgDemo, writeOrgSession } from "@/lib/mom/org/session";
+import { ORG_SESSION_COOKIE, clearOrgSession, readOrgDemo, readOrgSession, writeOrgDemo, writeOrgSession } from "@/lib/mom/org/session";
 import type { OrgKind } from "@/lib/mom/org/types";
 
 export const dynamic = "force-dynamic";
@@ -35,7 +35,8 @@ export async function GET(req: NextRequest, ctx: RouteContext<"/api/mom/org/[act
   if (!key) return failure("not_connected");
   const session = readOrgSession(req, key);
   const res = reply({ ok: true, user: session?.user ?? null, demo: !orgLive() });
-  if (session) writeOrgSession(res, key, session);
+  const ttl = sealRemaining(key, "session", req.cookies.get(ORG_SESSION_COOKIE)?.value);
+  if (session && ttl) writeOrgSession(res, key, session, ttl);
   return res;
 }
 

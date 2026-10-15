@@ -11,7 +11,8 @@ test.describe("account routes", () => {
   test("logged-in session can open cart, orders, and profile", async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== "desktop", "Sign Up in the bar is the desktop control");
 
-    await page.goto("/en");
+    // The homepage bar has no Sign Up (`SiteNav showSignUp={false}`); inner pages do.
+    await page.goto("/en/individuals");
     await page.getByRole("button", { name: "Sign Up" }).click();
     await page.getByLabel("Mobile Number").fill("9876543210");
     await page.getByRole("button", { name: "Login Via OTP" }).click();

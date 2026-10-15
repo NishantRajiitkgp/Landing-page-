@@ -3,10 +3,13 @@ import "server-only";
 
 import { createHash } from "node:crypto";
 
+import { demoAllowed } from "@/lib/runtime/demo";
+
 const TRUE = new Set(["1", "true", "yes"]);
 
+/** Always live in production; see `momLive`. */
 export function italyLive(): boolean {
-  return TRUE.has((process.env.ITALY_PARTNER_LIVE ?? "").trim().toLowerCase());
+  return !demoAllowed() || TRUE.has((process.env.ITALY_PARTNER_LIVE ?? "").trim().toLowerCase());
 }
 
 /** 32-byte key. Live refuses to run without a real secret. */

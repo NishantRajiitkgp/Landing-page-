@@ -1,4 +1,8 @@
+import Image from "next/image";
+
+import { JsonLd } from "@/components/seo/JsonLd";
 import type { MohesrDoc } from "@/lib/mohesr/doc";
+import { faqPage } from "@/lib/seo/schema/faq";
 
 type Screening = MohesrDoc["screening"];
 
@@ -53,13 +57,13 @@ export function MohesrRequirements({ screening }: { screening: Screening }) {
             {box.signUpPrefix} {box.signUpLinkLabel}
           </p>
           <div hidden>
-            <img alt={box.signInLogoAlt} src="/img/mohesr-emblem.png" />
+            <Image alt={box.signInLogoAlt} src="/img/mohesr-emblem.png" width={220} height={264} />
             <p>{box.signUpQrModal.androidTitle}</p>
-            <img alt={box.signUpQrModal.androidQrAlt} src="/img/mohesr-emblem.png" />
+            <Image alt={box.signUpQrModal.androidQrAlt} src="/img/mohesr-emblem.png" width={220} height={264} />
             <p>{box.signUpQrModal.androidCaption}</p>
             <p>{box.signUpQrModal.androidLinkLabel}</p>
             <p>{box.signUpQrModal.iosTitle}</p>
-            <img alt={box.signUpQrModal.iosQrAlt} src="/img/mohesr-emblem.png" />
+            <Image alt={box.signUpQrModal.iosQrAlt} src="/img/mohesr-emblem.png" width={220} height={264} />
             <p>{box.signUpQrModal.iosNote}</p>
           </div>
         </article>
@@ -196,6 +200,13 @@ export function MohesrFaqs({ screening }: { screening: Screening }) {
           </div>
         </section>
       ))}
+      <JsonLd
+        data={faqPage(
+          faqs.categories.flatMap((category) =>
+            category.items.map((item) => ({ q: item.question, a: item.answer.replace(/\*\*/g, "") })),
+          ),
+        )}
+      />
     </div>
   );
 }

@@ -118,6 +118,11 @@ export function LoaSign({ t, s, locale }: { t: MomOrgCopy; s: MomStepsCopy; loca
     setBusy(false);
     if (res.ok) {
       setProof(res.proof);
+      setOpened((prev) =>
+        prev && !("fail" in prev) && prev.token === token
+          ? { ...prev, view: { ...prev.view, passportNo: res.passportNo, dob: res.dob } }
+          : prev,
+      );
       go("check");
       return;
     }

@@ -48,10 +48,24 @@ export function deviceStore<T>(prefix: string, parse: (raw: string | null) => T,
     };
   }
 
+  function forget(id: string) {
+    const key = prefix + id;
+    memory.delete(key);
+    try {
+      window.localStorage.removeItem(key);
+    } catch {
+      /* already unreachable */
+    }
+    if (cache?.key === key) cache = null;
+    listeners.forEach((l) => l());
+  }
+
   /** The value and a functional updater; `stamp` runs on every write. */
-  return function useDeviceValue(id: string, stamp: (value: T) => T = (v) => v) {
+  function useDeviceValue(id: string, stamp: (value: T) => T = (v) => v) {
     const value = useSyncExternalStore(subscribe, () => read(id), () => empty);
     const update = useCallback((change: (value: T) => T) => write(id, stamp(change(read(id)))), [id, stamp]);
     return [value, update] as const;
-  };
+  }
+
+  return Object.assign(useDeviceValue, { forget });
 }

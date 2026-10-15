@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 
 import { AccountEmpty } from "@/components/account/AccountEmpty";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { SessionExpired } from "@/lib/auth/expired";
 import { extractCurrencyPrefix, formatMoney } from "@/lib/cart/price";
 import type { AccountCopy } from "@/lib/copy/account";
 import { localise } from "@/lib/i18n/href";
@@ -12,6 +14,7 @@ import { persistCandidateRoute } from "@/lib/orders/route";
 import type { OrderRow } from "@/lib/orders/types";
 
 export function OrdersView({ locale, t }: { locale: string; t: AccountCopy["orders"] }) {
+  const { refreshSession } = useAuth();
   const [orders, setOrders] = useState<OrderRow[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,10 +22,14 @@ export function OrdersView({ locale, t }: { locale: string; t: AccountCopy["orde
     void getOrderList()
       .then((res) => setOrders(res.data ?? []))
       .catch((e) => {
+        if (e instanceof SessionExpired) {
+          refreshSession();
+          return;
+        }
         setOrders([]);
-        setError(e instanceof Error ? e.message : t.errors.load);
+        setError(t.errors.load);
       });
-  }, [t.errors.load]);
+  }, [refreshSession, t.errors.load]);
 
   if (orders === null) return <p className="ac-status">{t.loading}</p>;
   if (orders.length === 0) {

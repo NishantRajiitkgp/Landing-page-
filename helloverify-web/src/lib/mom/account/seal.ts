@@ -17,7 +17,7 @@ export function seal<T>(key: Buffer, purpose: SealPurpose, data: T, ttlSeconds: 
   return Buffer.concat([iv, cipher.getAuthTag(), encrypted]).toString("base64url");
 }
 
-export function unseal<T>(key: Buffer, purpose: SealPurpose, token: string | undefined | null): T | null {
+function open<T>(key: Buffer, purpose: SealPurpose, token: string | undefined | null): Envelope<T> | null {
   if (!token) return null;
   try {
     const raw = Buffer.from(token, "base64url");
@@ -28,8 +28,21 @@ export function unseal<T>(key: Buffer, purpose: SealPurpose, token: string | und
     const json = Buffer.concat([decipher.update(raw.subarray(28)), decipher.final()]).toString("utf8");
     const body = JSON.parse(json) as Envelope<T>;
     if (typeof body.exp !== "number" || body.exp < Date.now()) return null;
-    return body.data;
+    return body;
   } catch {
     return null;
   }
+}
+
+export function unseal<T>(key: Buffer, purpose: SealPurpose, token: string | undefined | null): T | null {
+  return open<T>(key, purpose, token)?.data ?? null;
+}
+
+/** Seconds left on a seal. Re-issuing a cookie with this keeps the original
+ *  deadline instead of granting a fresh one on every request. */
+export function sealRemaining(key: Buffer, purpose: SealPurpose, token: string | undefined | null): number | null {
+  const exp = open(key, purpose, token)?.exp;
+  if (typeof exp !== "number") return null;
+  const left = Math.ceil((exp - Date.now()) / 1000);
+  return left > 0 ? left : null;
 }

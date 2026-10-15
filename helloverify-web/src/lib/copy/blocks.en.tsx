@@ -39,51 +39,50 @@
 
 export const en = {
 
-  /** `blocks/HelloVPhone.tsx` — a WhatsApp thread, so the leaves are keyed by
-   *  message. The timestamps are copy and not structure: they are rendered
-   *  text, and a locale that writes 24-hour clocks differently has to be able
-   *  to move them. */
+  /** `blocks/HelloVPhone.tsx` — the real HelloV bot on WhatsApp (Oct 2026
+   *  screenshots): "HelloV", the numbered menu, a pick, the Razorpay link.
+   *  The menu and the payment message are the bot's own words, prices
+   *  included. Timestamps are copy: a locale that writes clocks differently
+   *  has to be able to move them. `menu.welcome`, `pay.thanks` and `pay.note`
+   *  carry the words the phone bolds (`menu.brand`, `pay.service`,
+   *  `pay.noteBold`) verbatim, so each sentence stays whole for a translator. */
   helloVPhone: {
-    name: "HelloV",
-    status: "online · WhatsApp",
-    /** The licence card inside the fourth bubble. Duplicated from
-     *  `panels.licence` rather than shared, for the reason `chrome` gives for
-     *  duplicating `logoHome`: they are two drawings a translator meets in two
-     *  places, and one shared leaf would be a structural rule to explain for
-     *  two words. */
-    licence: { title: "Driving licence", region: "IND" },
-    msgs: {
-      m1: { text: "Hi Priya — who are we verifying today?", ts: "09:12" },
-      m2: { text: "A driver for the school run. Advanced please.", ts: "09:13" },
-      m3: { text: "Send a photo of his driving licence, front and back.", ts: "09:13" },
-      /** The image bubble: its only words are the timestamp and the licence
-       *  card above. */
-      m4: { ts: "09:15" },
-      /** Three text nodes around a `<b>`, so three leaves, and the split is
-       *  an artefact of the bold rather than a translator's idea of a
-       *  sentence. The function-leaf shape `./index` describes for a sentence
-       *  wrapping a component-owned node would fix that and would also fold
-       *  the three children into one — different bytes on every page that
-       *  renders the phone. Deferred for the same reason `chrome.consent.body`
-       *  was: the day a locale needs it is the day the HTML is allowed to
-       *  move. */
-      m5: {
-        lead: "Read in 1.2 s ·",
-        plate: "MH12 •••• 3391",
-        tail: ", valid till 2031. Checking with RTO Pune and the courts now.",
-        ts: "09:15",
+    name: "Helloverify",
+    verified: "Verified business",
+    clock: "12:17",
+    today: "Today",
+    message: "Message",
+    hello: { text: "HelloV", ts: "12:17 PM" },
+    menu: {
+      welcome: "Welcome to Helloverify.",
+      brand: "Helloverify",
+      pick: "Please select and type 1, 2, 3, 4, 5, 6, 7, 8 or 9 from the following options:",
+      price: "Price",
+      items: {
+        nanny: { t: "Verify Nanny", amount: "₹1499", p: "Ensure your child is in safe hands." },
+        driver: { t: "Verify Driver", amount: "₹1499", p: "Make your family's daily commute safer." },
+        help: { t: "Verify Domestic Help/Security Guard", amount: "₹1499", p: "Build a safer environment for your family." },
+        anyone: { t: "Verify Anyone", amount: "₹1499", p: "Know your tenant, tutor, caretaker or anyone else." },
+        identity: { t: "Know the Identity", amount: "₹849", p: "Protect yourself from Online identity fraud." },
+        date: { t: "Profile your date", amount: "₹849", p: "Protect yourself from online cheats, creeps and cat-fishes. Verify your partner." },
+        cyber: { t: "Get your Cyber Identity verified", amount: "₹1499", p: "Prove your identity for online transactions and showcase your credibility" },
       },
-      m6: { ts: "09:42" },
+      more: "Read more",
+      ts: "12:17 PM",
     },
-    report: {
-      verdict: "Verified",
-      elapsed: "27 min",
-      rows: {
-        licence: "Driving licence · valid",
-        criminal: "Criminal record · none found",
-        address: "Current address · confirmed",
-      },
-      file: "Report PDF · 2 pages",
+    choice: { text: "1", ts: "12:18 PM" },
+    pay: {
+      title: "Payment of INR 1499.00 requested",
+      sub: "Click on this link to pay",
+      host: "rzp.io",
+      thanks: "Thank you for choosing Verify Nanny - Verify the Identity & Criminal Record.",
+      service: "Verify Nanny - Verify the Identity & Criminal Record.",
+      click: "Please click on the link below to make the payment.",
+      link: "https://rzp.io/rzp/Qd2jl3a",
+      noteK: "Note:",
+      note: "The link is valid only for 30 mins.",
+      noteBold: "30 mins",
+      ts: "12:18 PM",
     },
   },
 

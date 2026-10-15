@@ -1,6 +1,7 @@
 /** Browser calls to `/api/cart/*`. Mock lines persist in sessionStorage. */
 
-import { getAuthToken } from "@/lib/auth/storage";
+import { SessionExpired } from "@/lib/auth/expired";
+import { clearAuthStorage, getAuthToken } from "@/lib/auth/storage";
 import type { ApiEnvelope } from "@/lib/auth/types";
 
 import { appendMockCart, completeMockPayment, readMockCart, removeMockCartItem } from "./storage";
@@ -28,8 +29,12 @@ async function call<T>(path: string, body?: unknown): Promise<T> {
   } catch {
     throw new Error(`Request failed (${res.status})`);
   }
+  if (res.status === 401) {
+    clearAuthStorage();
+    throw new SessionExpired();
+  }
   if (!res.ok) {
-    throw new Error(json?.message ?? `Request failed (${res.status})`);
+    throw new Error("Cart request failed");
   }
   return json;
 }

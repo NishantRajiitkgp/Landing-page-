@@ -30,8 +30,8 @@ export function readSession(req: NextRequest, key: Buffer): SessionData | null {
   return unseal<SessionData>(key, "session", req.cookies.get(SESSION_COOKIE)?.value);
 }
 
-export function writeSession(res: NextResponse, key: Buffer, data: SessionData) {
-  res.cookies.set(SESSION_COOKIE, seal(key, "session", data, SESSION_TTL), options(SESSION_TTL));
+export function writeSession(res: NextResponse, key: Buffer, data: SessionData, ttl = SESSION_TTL) {
+  res.cookies.set(SESSION_COOKIE, seal(key, "session", data, ttl), options(ttl));
 }
 
 export function clearSession(res: NextResponse) {

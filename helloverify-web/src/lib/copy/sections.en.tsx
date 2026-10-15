@@ -402,7 +402,7 @@ export const en = {
     k: "Consumer · HelloV",
     headingA: "Consumer Services",
     headingB: "Verify anyone, from your phone, in 30 minutes.",
-    lede: "Send a photo of the document over WhatsApp. We do the rest and message you back with the report.",
+    lede: "Verify Anyone Instantly on WhatsApp",
     /** Homepage v2: the HelloV storefront, at every width — eight photo panels,
      *  a price card, the QR steps and the phone. `k`, `headingA`, `headingB`
      *  and `lede` above are this tree's too, so they are not repeated
@@ -427,10 +427,13 @@ export const en = {
       qr: "QR code: verify on WhatsApp",
       /** The ask's button: opens the same chat the QR encodes, for anyone already on their phone. */
       cta: "Continue on WhatsApp",
+      /** The bot's real flow (`blocks.helloVPhone`): say HelloV, reply with a
+       *  number, pay the Razorpay link. `s2.t` is also the storefront's group
+       *  label. */
       steps: {
-        s1: { k: "STEP 01", t: "Scan QR Code using Whatsapp Camera" },
-        s2: { k: "STEP 02", t: "Select who you want to verify" },
-        s3: { k: "STEP 03", t: "The Person being verified using Whatsapp Camera" },
+        s1: { k: "STEP 01", t: "Say “HelloV” on WhatsApp", d: "Scan the QR code with your phone camera, or tap the button below." },
+        s2: { k: "STEP 02", t: "Select who you want to verify", d: "Reply with a number from the menu: nanny, driver, house help, or anyone else." },
+        s3: { k: "STEP 03", t: "Pay with the secure link", d: "A Razorpay payment link arrives in the chat, valid for 30 minutes." },
       },
       /** The phone replays its chat on a loop, so it carries the hero's pause
        *  (WCAG 2.2.2) — the same two words. */
@@ -1049,19 +1052,19 @@ export const en = {
 
   /** `sections/IntlGrid.tsx` — "International Background Verification"
    *  (30 Sep 2026), the old home page's `internationalGrid` block, which the
-   *  v2 homepage had dropped. The country names and the five lines are the
-   *  old site's, verbatim; each card's turnaround is its country guide's
-   *  (`lib/content/countries.ts`), not copy. */
+   *  v2 homepage had dropped. The country names are the old site's, verbatim.
+   *  The five lines under them went on 13 Oct 2026. Each card's turnaround
+   *  is its country guide's (`lib/content/countries.ts`), not copy. */
   intlGrid: {
     heading: "International Background Verification",
     turnK: "Typical turnaround",
     cta: "Explore More",
     items: {
-      uk: { name: "United Kingdom", p: "Hire drivers you can trust." },
-      ph: { name: "Philippines", p: "Know your tenant before you rent." },
-      ae: { name: "United Arab Emirates", p: "Screen for criminal records with confidence." },
-      sg: { name: "Singapore", p: "Verify education credentials in minutes." },
-      eg: { name: "Egypt", p: "Confirm employment history before you hire." },
+      uk: { name: "United Kingdom" },
+      ph: { name: "Philippines" },
+      ae: { name: "United Arab Emirates" },
+      sg: { name: "Singapore" },
+      eg: { name: "Egypt" },
     },
   },
 
@@ -2203,7 +2206,7 @@ export const en = {
         stamp: { big: "PRE-SCREENED", small: "APPLICANT VERIFICATION" },
       },
       manpower: {
-        tab: "Manpower & Education",
+        tab: "Manpower & Education Authorities",
         n: "Dossier 03 / 04",
         count: "03 / 04",
         title: "AI-Powered Education Equivalency & Qualification Checks",
@@ -2221,7 +2224,7 @@ export const en = {
         stamp: { big: "ACCREDITED", small: "INSTITUTION ACCREDITATION" },
       },
       trade: {
-        tab: "Business & Trade",
+        tab: "Business & Trade Authorities",
         n: "Dossier 04 / 04",
         count: "04 / 04",
         title: "Authentication of credentials for foreign workers & business entities.",

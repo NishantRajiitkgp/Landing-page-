@@ -21,8 +21,8 @@ import { CandidatesStep } from "./batch/CandidatesStep";
 import { BatchPaid } from "./batch/BatchPaid";
 import { DocsStep } from "./batch/DocsStep";
 import { ReviewStep } from "./batch/ReviewStep";
-import { emptyBatch, useBatch } from "./batch/useBatch";
-import { usePaid } from "./batch/usePaid";
+import { emptyBatch, forgetBatch, useBatch } from "./batch/useBatch";
+import { forgetPaid, usePaid } from "./batch/usePaid";
 import { useOrgSession } from "./useOrgSession";
 
 type Props = { t: MomOrgCopy; s: MomStepsCopy; locale: string; prices: Prices };
@@ -49,11 +49,14 @@ export function OrgHome(props: Props) {
     );
   }
 
+  const user = session.user;
   return (
     <Workspace
       {...props}
-      user={session.user}
+      user={user}
       onSignOut={async () => {
+        forgetBatch(user.id);
+        forgetPaid(user.id);
         await momOrg.signOut();
         router.replace(signInHref);
       }}

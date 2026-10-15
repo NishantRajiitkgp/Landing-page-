@@ -22,9 +22,6 @@
 }
 
 .sv { position: relative; }
-.sv-mast { display: flex; align-items: center; gap: clamp(12px, 2.23vw, 24px); }
-.sv-mast i { flex: 1; height: 1px; background: var(--hair); }
-.sv-mast-r { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .sv-h { margin: clamp(32px, 5.93vw, 64px) 0 0; text-align: center; font-family: var(--serif); font-weight: 400; font-size: clamp(46px, 9.63vw, 104px); line-height: .95; letter-spacing: -.045em; color: var(--ink); }
 .sv-h em { font-style: italic; color: var(--primary-ink); }
 .sv-lede { margin: 30px auto 0; max-width: 900px; text-align: center; font-size: clamp(16px, 1.76vw, 19px); line-height: 1.6; color: var(--muted); text-wrap: balance; }
@@ -120,7 +117,7 @@
 .sv-cta-k { margin: 0; font-family: var(--serif); font-size: 22px; line-height: 1.15; letter-spacing: -.015em; color: var(--ink); }
 .sv-cta-p { margin: 8px 0 0; font-size: 14px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
 .sv-cta-main .sv-cta-k { color: var(--white); }
-.sv-cta-main .sv-cta-p { color: rgb(from var(--white) r g b / .85); }
+.sv-cta-main .sv-cta-p { color: rgb(from var(--white) r g b / .92); }
 .sv-cta-acts { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 10px; }
 .sv-cta-btn { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding-inline: 20px; border-radius: 999px; background: var(--ink); color: var(--white); font-size: 14.5px; font-weight: 600; text-decoration: none; transition: transform .3s cubic-bezier(.16, 1, .3, 1), background .25s; }
 .sv-cta-alt { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
@@ -198,8 +195,8 @@ a.sv-seal, a.sv-ln { text-decoration: none; }
      full stop from starting a line (a button is an atomic inline, so the
      line could otherwise break right after it). */
   .sv-ln { white-space: normal; max-width: calc(100% - .5em); }
-  /* Beside the emblem, clear of the cards, and far enough in that its
-     1.9× landing stays inside a 390px screen (`rtl.spec` measures it). */
+  /* Beside the emblem, clear of the cards. Its 1.9× tilted landing is 234px
+     and overshoots a 390px screen by ~8px for .6s; `.sv` clips it. */
   .sv-stamp-w { inset-inline-end: 32px; top: 16px; }
   .sv-stamp { width: 112px; height: 112px; }
 }
@@ -208,4 +205,8 @@ a.sv-seal, a.sv-ln { text-decoration: none; }
   .sv-rose, .sv-micro { animation: none; }
   .sv-auto .sv-on .sv-prog { animation: none; opacity: 0; }
   .sv-motion { display: none; }
+  /* The global rule shortens the stamp's landing but keeps its 1.6s delay, so
+     it would sit at 1.9× and then snap down. Already landed instead. */
+  .sv-stamp { animation: none; opacity: .82; transform: rotate(-12deg); }
+  .sv-wait .sv-stamp { opacity: 0; }
 }

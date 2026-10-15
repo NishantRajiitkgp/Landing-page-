@@ -20,8 +20,6 @@
 
 /* Shared by every width; the desktop layout and the phone layout follow. */
 .ff { position: relative; padding-top: 72px; }
-.ff-mast { display: flex; justify-content: space-between; align-items: center; }
-.ff-flag { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .ff-one { font-style: italic; }
 .ff-sup { font-family: var(--mono); font-size: .22em; letter-spacing: 0; vertical-align: super; color: var(--muted); margin-inline-start: 2px; }
 .lede .ff-sup { font-size: .62em; }
@@ -43,11 +41,13 @@
    its own proportions (`--ar`): landscape ones span the well's width,
    portrait ones its height. `direction: ltr` because a sheet does not
    mirror in Arabic, and the marks drawn on it are placed in its own
-   left-to-right percentages. */
+   left-to-right percentages. `--flip` and `--origin-x` go back to their
+   ltr values with it: inherited from `[dir="rtl"]`, they pushed the
+   centred REF stamp a full width past the sheet. */
 .ff-cert, .ff-uvc { flex-direction: column; gap: 10px; }
 .ff-cert { display: flex; }
 .ff-well { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
-.ff-doc { position: relative; display: block; aspect-ratio: var(--ar); direction: ltr; transform: rotate(var(--tilt)); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .16), 0 16px 26px -16px rgb(from var(--ink) r g b / .5); transition: opacity .4s, filter .4s; }
+.ff-doc { position: relative; display: block; aspect-ratio: var(--ar); direction: ltr; --flip: 1; --origin-x: left; transform: rotate(var(--tilt)); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .16), 0 16px 26px -16px rgb(from var(--ink) r g b / .5); transition: opacity .4s, filter .4s; }
 .ff-doc-l { width: 100%; }
 .ff-doc-p { height: 100%; }
 .ff-doc-img { object-fit: cover; }
@@ -126,7 +126,7 @@
 .ff-view:hover { color: var(--ink); }
 .ff-view.is-on { background: var(--ink); color: var(--white); }
 .ff-view:focus-visible, .ff-find:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-.ff-case-doc { position: relative; margin-top: 14px; aspect-ratio: var(--ar, 1045 / 1400); direction: ltr; border-radius: 3px; overflow: hidden; background: var(--v2-ff-uv-lo); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .16), 0 30px 50px -30px rgb(from var(--ink) r g b / .55); }
+.ff-case-doc { position: relative; margin-top: 14px; aspect-ratio: var(--ar, 1045 / 1400); direction: ltr; --flip: 1; --origin-x: left; border-radius: 3px; overflow: hidden; background: var(--v2-ff-uv-lo); box-shadow: 0 1px 2px rgb(from var(--ink) r g b / .16), 0 30px 50px -30px rgb(from var(--ink) r g b / .55); }
 .ff-case-img { object-fit: cover; opacity: 0; transition: opacity .35s ease; }
 .ff-case-img.is-on { opacity: 1; }
 .ff-case-marks { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }

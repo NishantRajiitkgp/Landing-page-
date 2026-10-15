@@ -30,14 +30,17 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** Only GETs retry: a timed-out POST may already have sent an SMS or created
+ *  a registration upstream. */
 export async function authorityRequest(
   authorityId: AuthorityId,
   path: string,
   init: RequestInit,
 ): Promise<Record<string, unknown>> {
   const base = getAuthorityPortal(authorityId).apiBase;
+  const retries = (init.method ?? "GET") === "GET" ? MAX_RETRIES : 0;
   let last: Error | null = null;
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
     try {
       const res = await fetch(`${base}${path}`, init);
       const json = await readPayload(res);
@@ -45,7 +48,7 @@ export async function authorityRequest(
       throw new AuthorityHttpError(String(json.message ?? `Request failed (${res.status})`), res.status);
     } catch (e) {
       last = e instanceof Error ? e : new Error(String(e));
-      const retry = attempt < MAX_RETRIES && (e instanceof AuthorityHttpError ? e.retryable : true);
+      const retry = attempt < retries && (e instanceof AuthorityHttpError ? e.retryable : true);
       if (!retry) throw last;
     }
     await sleep(500 * 2 ** attempt);

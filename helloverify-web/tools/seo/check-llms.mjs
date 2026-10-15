@@ -141,7 +141,10 @@ if (meta.headers?.["content-type"] !== "text/plain; charset=utf-8") {
 // --------------------------------------------- §8.3's invariant, both ways
 const llmsPaths = new Set(entries.map((e) => new URL(e.url).pathname));
 
-const missingFromLlms = [...sitemapPaths].filter((p) => !llmsPaths.has(p)).sort();
+/** `llms.txt` is not localised (see `app/llms.txt/route.ts`): one `en` entry
+ *  per route, while the sitemap lists every route in every locale. */
+const sitemapEn = [...sitemapPaths].filter((p) => p === "/en" || p.startsWith("/en/"));
+const missingFromLlms = sitemapEn.filter((p) => !llmsPaths.has(p)).sort();
 const missingFromSitemap = [...llmsPaths].filter((p) => !sitemapPaths.has(p)).sort();
 
 if (missingFromLlms.length) {

@@ -143,7 +143,7 @@ export const ar: IndividualsCopy = {
       steps: {
         scan: { t: "امسح رمز QR", p: "بكاميرا WhatsApp" },
         select: { t: "اختر", p: "من تريد التحقق منه" },
-        person: { t: "الشخص الذي يتم التحقق منه", p: "بكاميرا WhatsApp" },
+        photo: { t: "أرسل صورة", p: "للوثيقة" },
       },
       checksInclude: "الفحوصات المشمولة",
       buy: "اشترِ الآن",

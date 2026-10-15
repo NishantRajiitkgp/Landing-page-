@@ -222,19 +222,53 @@ export const en = {
       select: "Select {{name}}",
       summary: {
         h: "Your request",
-        empty: "Tick the checks you need. Prices add up here as you go.",
+        empty: "Tick the checks you need. Prices add up here as you go, in {{currency}}.",
         count: "{{count}} selected",
         total: "Estimated total",
-        ready: "Longest turnaround",
+        lines: "Checks ({{count}})",
+        readyBy: "Results by {{date}}",
         cta: "Request these checks",
         clear: "Clear all",
         remove: "Remove {{name}}",
         note: "Prices are per check, in US $.",
         review: "Review",
         fast: {
-          t: "Go fast",
+          t: "Fast track",
           p: "Half the turnaround on this request.",
           extra: "+30%",
+        },
+        /** 13 Oct 2026: local currency, the high-risk fee, the delivery
+         *  choice and the turnaround disclaimer. `{{currency}}` is the
+         *  browser's own name for the code, in the page's language. */
+        fx: {
+          rate: "Prices per check in {{code}} · 1 US $ = {{rate}} {{code}} on {{date}}",
+          charge: "Currency conversion charge",
+        },
+        risk: {
+          tag: "Extended coverage",
+          h: "{{country}} is covered through our extended verification network.",
+          p: "Additional local coordination is built into every check.",
+          fee: "fee per check, already included in the prices below",
+          row: "incl. extended coverage fee",
+          menuB: "Extended coverage:",
+          menuP: "verified through our extended local network. An extended coverage fee applies to each check.",
+        },
+        moved: {
+          one: "1 check isn’t offered in {{country}} and was removed: {{names}}.",
+          many: "{{count}} checks aren’t offered in {{country}} and were removed: {{names}}.",
+        },
+        delivery: {
+          h: "How would you like your reports?",
+          each: { t: "As reports are finalised", p: "Results arrive separately", when: "from {{date}}" },
+          together: { t: "All in one report", p: "One combined report", when: "on {{date}}" },
+        },
+        tatNote: {
+          b: "Turnaround times are for reference only.",
+          p: "HelloVerify delivers 99% of verifications within the stated time. Events beyond our control, such as natural disasters, war or political unrest, can extend it, and HelloVerify is not liable for such delays. If your request is affected, we’ll let you know in advance.",
+        },
+        feeNote: {
+          b: "Third-party fees",
+          p: "Courts, universities and official registries sometimes charge their own access fees. Where they apply, HelloVerify passes them on at actual cost, with no markup.",
         },
       },
       rows: {

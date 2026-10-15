@@ -74,7 +74,7 @@
 }
 .ab-photo img { display: block; width: 100%; height: auto; }
 .ab-st + .ab-st { margin-block-start: 52px; padding-block-start: 52px; border-block-start: 1px solid var(--hair); }
-.ab-st-n { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--primary); }
+.ab-st-n { display: flex; align-items: center; gap: 12px; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--primary-ink); }
 .ab-st-n::after { content: ""; width: 40px; height: 1px; background: currentColor; }
 .ab-st-h {
   margin: 18px 0 0;

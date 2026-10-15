@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useState, useSyncExternalStore, type ReactNode } from "react";
 
 import { ContactTrackForm } from "@/components/forms/ContactTrackForm";
 import type { ContactCopy } from "@/lib/copy/contact";
 import { parseContactTab, writeContactTab, type ContactTab } from "@/lib/contact/tab";
+
+/** Read once at hydration; after that the visitor's clicks own the tab. */
+const noSubscribe = () => () => {};
+const tabFromUrl = () => parseContactTab(new URLSearchParams(window.location.search).get("tab"));
 
 /** Old `?tab=enquiry` / `?tab=track`. The page stays statically prerendered:
  *  the query is read after mount, the same way `ContactForm` reads `?interest=`. */
@@ -19,14 +23,12 @@ export function ContactTabs({
   track: ContactCopy["track"];
   children: ReactNode;
 }) {
-  const [tab, setTab] = useState<ContactTab>("enquiry");
-
-  useEffect(() => {
-    setTab(parseContactTab(new URLSearchParams(window.location.search).get("tab")));
-  }, []);
+  const fromUrl = useSyncExternalStore(noSubscribe, tabFromUrl, () => "enquiry" as const);
+  const [chosen, setChosen] = useState<ContactTab | null>(null);
+  const tab = chosen ?? fromUrl;
 
   function go(next: ContactTab) {
-    setTab(next);
+    setChosen(next);
     writeContactTab(next);
   }
 

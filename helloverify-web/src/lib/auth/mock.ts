@@ -34,7 +34,7 @@ export async function mockSendOtp(mobile: string): Promise<OtpSendResponse> {
     status: true,
     message: "OTP sent (mock). Use 123456",
     mock: true,
-    data: { user: mockUserToken(mobile), otp_code: MOCK_OTP },
+    data: { user: mockUserToken(mobile) },
   };
 }
 

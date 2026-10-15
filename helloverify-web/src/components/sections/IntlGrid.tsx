@@ -1,7 +1,8 @@
 /** International Background Verification — the old home page's country grid
     (30 Sep 2026), which the v2 homepage had dropped. One featured country
-    (the United Kingdom) and four more, each a photograph, its flag, the old
-    site's line, and a link to that guide (`/countries/[slug]`).
+    (the United Kingdom) and four more, each a photograph, its flag, the
+    country's name, and a link to that guide (`/countries/[slug]`). The
+    line under the name went on 13 Oct 2026.
 
     FLAGS ARE SHOWN AS THEY ARE. Each is the country's own flag from
     `public/flags/` (the MIT-licensed flag-icons set, the files the relay
@@ -69,7 +70,6 @@ export async function IntlGrid() {
                     </span>
                     <b>{it.name}</b>
                   </span>
-                  <span className="ig-p">{it.p}</span>
                 </span>
                 <span className="ig-go" aria-hidden="true">
                   <Arrow />

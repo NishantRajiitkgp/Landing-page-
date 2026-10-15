@@ -141,24 +141,29 @@ const failures = [];
 const accepted = [];
 
 console.log(`tokens: ${Object.keys(tokens).length}   text usages parsed: ${usages.size} token(s)\n`);
-console.log("  token      smallest use   on paper   required   verdict");
+console.log("  token      smallest use   ratio on    required   verdict");
 
 for (const [token, use] of [...usages].sort((a, b) => a[1].smallest - b[1].smallest)) {
   const large = use.smallest >= 24 || (use.boldAtSmallest && use.smallest >= 18.66);
   const required = large ? AA_LARGE : AA_NORMAL;
-  const measured = ratio(tokens[token], SURFACES.paper);
+  /** A light colour used as text is reversed text: it is legible on nothing
+   *  but a dark band, so it is measured against --ink, the darkest surface
+   *  and the one every reversed rule in this CSS sits on. Measuring it on
+   *  --paper reported --white at 1.10:1 for the white-on-ink buttons. */
+  const on = luminance(tokens[token]) > 0.5 ? "ink" : "paper";
+  const measured = ratio(tokens[token], SURFACES[on]);
   const ok = measured >= required;
   const exempt = ACCEPTED.find((a) => a.token === token);
 
   const verdict = ok ? "ok" : exempt ? "ACCEPTED" : "FAIL";
   console.log(
     `  --${token.padEnd(9)} ${String(use.smallest).padStart(6)}px${large ? " (lg)" : "     "}` +
-      `  ${measured.toFixed(2).padStart(7)}  ${required.toFixed(1).padStart(9)}   ${verdict}`,
+      `  ${measured.toFixed(2).padStart(7)} ${on.padEnd(5)}  ${required.toFixed(1).padStart(4)}   ${verdict}`,
   );
 
   if (!ok && !exempt) {
     failures.push(
-      `--${token} is ${measured.toFixed(2)}:1 on --paper but is used as text at ` +
+      `--${token} is ${measured.toFixed(2)}:1 on --${on} but is used as text at ` +
         `${use.smallest}px (${use.sample}), which needs ${required}:1. ` +
         `${use.count} selector(s).`,
     );

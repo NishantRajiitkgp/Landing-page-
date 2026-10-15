@@ -25,12 +25,15 @@ export function ApplicantDialog({
   const [tab, setTab] = useState<"login" | "register">(defaultTab(authority));
   const [panel, setPanel] = useState<Panel>("form");
 
-  useEffect(() => {
+  /** Closing, or switching authority while closed, starts the next visit afresh. */
+  const [shown, setShown] = useState({ open, authority });
+  if (shown.open !== open || shown.authority !== authority) {
+    setShown({ open, authority });
     if (!open) {
       setTab(defaultTab(authority));
       setPanel("form");
     }
-  }, [open, authority]);
+  }
 
   useEffect(() => {
     if (!open) return;

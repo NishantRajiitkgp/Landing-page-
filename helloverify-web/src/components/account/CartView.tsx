@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { AccountEmpty } from "@/components/account/AccountEmpty";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { SessionExpired } from "@/lib/auth/expired";
 import {
   finishMockPayment,
   getCartDetails,
@@ -21,7 +22,7 @@ import { localise } from "@/lib/i18n/href";
 
 export function CartView({ locale, t }: { locale: string; t: AccountCopy["cart"] }) {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, refreshSession } = useAuth();
   const [items, setItems] = useState<CartItem[] | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [paying, setPaying] = useState(false);
@@ -30,8 +31,11 @@ export function CartView({ locale, t }: { locale: string; t: AccountCopy["cart"]
   useEffect(() => {
     void getCartDetails()
       .then((res) => setItems(res.data ?? []))
-      .catch(() => setItems([]));
-  }, []);
+      .catch((e) => {
+        if (e instanceof SessionExpired) refreshSession();
+        else setItems([]);
+      });
+  }, [refreshSession]);
 
   async function remove(uuid: string) {
     if (!window.confirm(t.removeConfirm)) return;

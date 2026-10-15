@@ -12,8 +12,8 @@ import { expect, test } from "@playwright/test";
 const PAGES = ["/en", "/en/business", "/en/technology", "/en/contact"];
 
 /** Hrefs that are deliberately not routes. `#` is the design-phase
- *  placeholder — the language switcher and the three social icons — and
- *  `app.helloverify.com` is the product, which is not this site. */
+ *  placeholder for the three social icons, and `app.helloverify.com` is the
+ *  product, which is not this site. */
 const NOT_A_ROUTE = (href: string) =>
   href === "#" ||
   href.startsWith("http") ||
@@ -26,7 +26,9 @@ test.describe("navigation", () => {
     test(`${path}: every internal link carries the locale`, async ({ page }) => {
       await page.goto(path);
 
-      const hrefs = await page.locator("a[href]").evaluateAll((els) =>
+      // `[hreflang]` is the language switcher (`chrome/LocaleSwitch.tsx`),
+      // whose whole job is to link out of this locale.
+      const hrefs = await page.locator("a[href]:not([hreflang])").evaluateAll((els) =>
         els.map((e) => e.getAttribute("href") ?? ""),
       );
       const internal = hrefs.filter((h) => !NOT_A_ROUTE(h));
@@ -36,7 +38,8 @@ test.describe("navigation", () => {
       // `href="/about"` would still resolve — `src/proxy.ts` would redirect it
       // — at the cost of a round trip on every click, which is exactly the
       // kind of thing that is invisible until someone measures navigation.
-      const unprefixed = internal.filter((h) => h !== "/en" && !h.startsWith("/en/"));
+      // `/en#section` and `/en?q` are the homepage, prefixed.
+      const unprefixed = internal.filter((h) => !/^\/en(?:[/?#]|$)/.test(h));
       expect(unprefixed, `hrefs missing the /en prefix on ${path}`).toEqual([]);
     });
   }

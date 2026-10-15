@@ -1,5 +1,7 @@
 /** OTP proxy. Mock when `TRAVEL_AUTH_BASE` is unset (see `.env.example`). */
-import { useMockTravelAuth } from "@/lib/auth/env";
+import { isMockTravelAuth } from "@/lib/auth/env";
+import { proxyFail } from "@/lib/auth/failure";
+import { otpLimits, spend, tooMany } from "@/lib/auth/limits";
 import { mockSaveLoginUserDetail, mockSendOtp, mockVerifyOtp } from "@/lib/auth/mock";
 import { upstreamLogin, upstreamSaveProfile, upstreamSendOtp } from "@/lib/auth/upstream";
 import { isEmail, isGender, isMobile, isName, isOtp } from "@/lib/auth/validate";
@@ -37,12 +39,22 @@ export async function POST(
     return fail("Invalid JSON");
   }
 
+  const limits = otpLimits("auth", req.headers);
+
   try {
     if (action === "send-otp") {
       const mobile = String(body.mobile ?? "").trim();
       if (!isMobile(mobile)) return fail("Mobile number must be 10 digits");
-      const data = useMockTravelAuth() ? await mockSendOtp(mobile) : await upstreamSendOtp(mobile);
-      return json(data);
+      const wait = await spend(limits.send(mobile));
+      if (wait) return tooMany(wait);
+      const data = isMockTravelAuth() ? await mockSendOtp(mobile) : await upstreamSendOtp(mobile);
+      // Only the handshake id leaves this host; the old API also echoed the code.
+      return json({
+        status: data.status,
+        message: data.message,
+        mock: data.mock,
+        data: data.data?.user ? { user: data.data.user } : undefined,
+      });
     }
 
     if (action === "login") {
@@ -50,7 +62,9 @@ export async function POST(
       const otp = String(body.otp ?? "").trim();
       if (!user) return fail("Missing user token");
       if (!isOtp(otp)) return fail("OTP must be 6 digits");
-      const data = useMockTravelAuth() ? await mockVerifyOtp(user, otp) : await upstreamLogin(user, otp);
+      const wait = await spend(limits.verify(user));
+      if (wait) return tooMany(wait);
+      const data = isMockTravelAuth() ? await mockVerifyOtp(user, otp) : await upstreamLogin(user, otp);
       return json(data);
     }
 
@@ -63,12 +77,13 @@ export async function POST(
       return fail("Please complete all required fields");
     }
     const payload = { name: name.trim(), email, mobile_num, gender };
-    const data = useMockTravelAuth()
+    const token = bearer(req);
+    if (!isMockTravelAuth() && !token) return fail("Please sign in again", 401);
+    const data = isMockTravelAuth()
       ? await mockSaveLoginUserDetail(payload)
-      : await upstreamSaveProfile(payload, bearer(req));
+      : await upstreamSaveProfile(payload, token);
     return json(data);
   } catch (e) {
-    const message = e instanceof Error ? e.message : "Auth request failed";
-    return fail(message, 502);
+    return proxyFail(e, "Auth request failed");
   }
 }

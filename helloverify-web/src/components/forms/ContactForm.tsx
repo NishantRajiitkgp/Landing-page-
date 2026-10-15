@@ -25,12 +25,11 @@ import {
   SEGMENT_VALUES,
   contactDetailsRequired,
   interestGroup,
-  interestIsMulti,
   type LeadField,
   type SegmentValue,
 } from "@/lib/leads/constraints";
-import { Field, TEXT_FIELDS } from "@/components/forms/LeadFields";
-import { MultiSelect } from "@/components/forms/MultiSelect";
+import { ContactSuccess, InterestField, LeadTextFields, invalidProps } from "@/components/forms/ContactFormFields";
+import { Field } from "@/components/forms/LeadFields";
 import { PhoneField } from "@/components/forms/PhoneField";
 import type { FormsUi } from "@/lib/copy/forms";
 import { INITIAL_LEAD_FORM_STATE } from "@/lib/leads/state";
@@ -125,6 +124,9 @@ export function ContactForm({
 
     const next = leadArrival(new URLSearchParams(window.location.search));
     if (!next) return;
+    // A browser-only read that must land before paint, which is this rule's
+    // documented exception; the alternatives above each break prerendering.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSegment((current) => (current === next.segment ? current : next.segment));
     setForWhom((current) => (current === next.forWhom ? current : next.forWhom));
     if (next.interests.length) setArrived(next.interests);
@@ -145,9 +147,6 @@ export function ContactForm({
 
   const errorFor = (field: LeadField) => state.fieldErrors?.[field];
 
-  const invalidProps = (field: LeadField) =>
-    errorFor(field) ? { "aria-invalid": true as const, "aria-describedby": `${id(field)}-error` } : {};
-
   /** What was echoed back and is offered to this audience; several ticked
    *  services come back comma-joined. A deep link's service is used only when
    *  nothing was echoed. Empty shows the placeholder. */
@@ -157,26 +156,8 @@ export function ContactForm({
   const picked = echoedInterests.length
     ? echoedInterests
     : arrived.filter((value) => offered.includes(value));
-  const interestDefault = picked[0] ?? "";
 
-
-  if (state.status === "success") {
-    return (
-      <div className="form">
-        <div className="fld-l" style={{ marginBottom: 10 }}>
-          {t.kicker}
-        </div>
-        <div className="status ok" role="status">
-          {state.message}
-        </div>
-        <p className="consent">
-          {t.success.lead}{" "}
-          <a href={L("/platform/security-compliance")}>{t.success.pack}</a> {t.success.mid}{" "}
-          <a href={L("/resources/checks")}>{t.success.library}</a> {t.success.end}
-        </p>
-      </div>
-    );
-  }
+  if (state.status === "success") return <ContactSuccess t={t} locale={locale} message={state.message} />;
 
   return (
     <form ref={formRef} className="form" action={formAction} onInput={stampElapsed} onFocus={stampElapsed}>
@@ -226,46 +207,7 @@ export function ContactForm({
           </div>
         ) : null}
 
-        {TEXT_FIELDS.map((base) => {
-          const words =
-            base.id === "company"
-              ? segment === "individual"
-                ? undefined
-                : t.audiences[segment].company
-              : base.id === "email"
-                ? t.audiences[segment].email
-                : t.fields.name;
-          if (!words) return null;
-          const f = { ...base, ...words };
-          const must = f.id === "name" ? contactDetailsRequired(segment) : Boolean(f.required);
-          const missing =
-            f.id === "email" ? t.checks.emailMissing : f.id === "name" ? t.checks.nameMissing : t.checks.companyInvalid;
-          const bad =
-            f.id === "email" ? t.checks.emailInvalid : f.id === "name" ? t.checks.nameInvalid : t.checks.companyInvalid;
-          return (
-            <Field key={f.id} id={f.id} label={must ? `${f.label} *` : f.label} message={errorFor(f.id)} idPrefix={idPrefix}>
-              <input
-                className="inp"
-                id={id(f.id)}
-                name={f.id}
-                type={f.type}
-                placeholder={f.placeholder}
-                autoComplete={f.autoComplete}
-                required={must}
-                minLength={f.minLength}
-                pattern={f.pattern}
-                maxLength={f.maxLength}
-                defaultValue={state.values?.[f.id] ?? ""}
-                onInvalid={(e) => {
-                  const el = e.currentTarget;
-                  el.setCustomValidity(el.validity.valueMissing ? missing : bad);
-                }}
-                onInput={(e) => e.currentTarget.setCustomValidity("")}
-                {...invalidProps(f.id)}
-              />
-            </Field>
-          );
-        })}
+        <LeadTextFields t={t} segment={segment} values={state.values} errors={state.fieldErrors} idPrefix={idPrefix} />
 
         <PhoneField
           idPrefix={idPrefix}
@@ -282,52 +224,16 @@ export function ContactForm({
           countryMessage={t.checks.countryMissing}
         />
 
-        {/* Beside Mobile for an individual, who has no company row to fill
-            the grid; across both columns otherwise. */}
-        <Field id="interest" label={t.interest} wide={segment !== "individual"} message={errorFor("interest")} idPrefix={idPrefix}>
-          {/* `key` forces a remount on each submission, and it is doing real
-              work. React resets the form once the action resolves; for an
-              <input> that is harmless because `defaultValue` becomes the value
-              attribute and the reset restores it. A <select> has no such
-              attribute — React applies `defaultValue` by marking an option
-              selected at MOUNT only — so without a remount a failed submission
-              silently cleared the service the user had picked. Measured, not
-              theorised: it was the one field that came back empty. */}
-          {/* The audience is in the key too: switching it remounts the
-              control with that audience's options. */}
-          {interestIsMulti(group) ? (
-            <MultiSelect
-              key={`${state.token ?? 0}-${group}-${picked.join(",")}`}
-              id={id("interest")}
-              name="interest"
-              label={t.interest}
-              options={offered.map((value) => ({ value, label: t.interests[value] }))}
-              placeholder={t.audiences[segment].interestPlaceholder}
-              countLabel={t.selectedCount}
-              defaultValue={picked}
-              invalid={Boolean(errorFor("interest"))}
-              describedBy={errorFor("interest") ? `${id("interest")}-error` : undefined}
-            />
-          ) : (
-            <select
-              key={`${state.token ?? 0}-${group}-${interestDefault}`}
-              className="inp"
-              id={id("interest")}
-              name="interest"
-              defaultValue={interestDefault}
-              {...invalidProps("interest")}
-            >
-              <option value="" disabled>
-                {t.audiences[segment].interestPlaceholder}
-              </option>
-              {offered.map((value) => (
-                <option key={value} value={value}>
-                  {t.interests[value]}
-                </option>
-              ))}
-            </select>
-          )}
-        </Field>
+        <InterestField
+          t={t}
+          segment={segment}
+          group={group}
+          offered={offered}
+          picked={picked}
+          token={state.token}
+          errors={state.fieldErrors}
+          idPrefix={idPrefix}
+        />
 
         <Field id="message" label={t.message} wide message={errorFor("message")} idPrefix={idPrefix}>
           <textarea
@@ -345,7 +251,7 @@ export function ContactForm({
               alignItems: "flex-start",
               resize: "vertical",
             }}
-            {...invalidProps("message")}
+            {...invalidProps(state.fieldErrors, "message", idPrefix)}
           />
         </Field>
       </div>

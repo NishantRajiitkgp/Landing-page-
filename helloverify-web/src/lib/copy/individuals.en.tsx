@@ -248,7 +248,7 @@ export const en = {
       steps: {
         scan: { t: "Scan QR Code", p: "using Whatsapp Camera" },
         select: { t: "Select", p: "who you want to verify" },
-        person: { t: "The Person being verified", p: "using Whatsapp Camera" },
+        photo: { t: "Send a photo", p: "of the document" },
       },
       checksInclude: "Checks Include",
       buy: "Buy Now",

@@ -3,8 +3,14 @@
  *  `catalog.json` is generated from the ops sheets (International Pricing & TAT,
  *  International Verification Checks V2 for turnarounds, Criminal for the
  *  per-country criminal turnaround and feasibility). Package cards stay the
- *  CMS's four countries. */
+ *  CMS's four countries.
+ *
+ *  `fx.json` is each country's currency, a dated US $ rate snapshot
+ *  (`npm run fx:refresh`), the conversion charge, and the high-risk
+ *  countries (World Bank FCV list) that carry a flat fee on every check. The
+ *  site makes no third-party calls, so rates ship with the build. */
 import data from "./catalog.json";
+import fx from "./fx.json";
 
 import { localise } from "@/lib/i18n/href";
 
@@ -47,7 +53,56 @@ export type IntlOption = {
   /** The English name's initial: the list is in English order in every
    *  locale, so its A–Z headings are too. */
   letter: string;
+  currency: string;
+  risk: boolean;
 };
+
+export const FX_AS_OF = fx.asOf;
+export const FX_CONVERSION = fx.conversionPct;
+export const RISK_FEE_USD = fx.highRisk.feeUsd;
+
+const RATES = fx.rates as Record<string, number>;
+const CURRENCY = fx.currency as Record<string, string>;
+const HIGH_RISK = new Set(fx.highRisk.countries);
+
+export function currencyOf(code: string): string {
+  const cur = CURRENCY[code];
+  return cur && RATES[cur] ? cur : "USD";
+}
+
+export function rateOf(cur: string): number {
+  return RATES[cur] ?? 1;
+}
+
+export function isHighRisk(code: string): boolean {
+  return HIGH_RISK.has(code);
+}
+
+/** KWD, BHD and OMR keep two decimals; every other currency is whole units. */
+function decimalsOf(cur: string): number {
+  return rateOf(cur) < 0.5 ? 2 : 0;
+}
+
+export function roundIn(n: number, cur: string): number {
+  const f = 10 ** decimalsOf(cur);
+  return Math.round(n * f) / f;
+}
+
+export function toLocal(usd: number, cur: string): number {
+  return roundIn(usd * rateOf(cur), cur);
+}
+
+export function formatMoney(n: number, cur: string): string {
+  const dp = decimalsOf(cur);
+  if (cur === "USD") return `$${n.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp })}`;
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: cur,
+    currencyDisplay: "symbol",
+    minimumFractionDigits: dp,
+    maximumFractionDigits: dp,
+  }).format(n);
+}
 
 export function cmsIdFor(code: string): CmsCountryId | undefined {
   return ISO_OF[code];
@@ -96,8 +151,10 @@ export function intlOptions(
   return INTL_COUNTRIES.map((c) => {
     const flagSrc = `/flags/${c.code.toLowerCase()}.svg`;
     const letter = c.name.charAt(0).toUpperCase();
+    const currency = currencyOf(c.code);
+    const risk = isHighRisk(c.code);
     const id = ISO_OF[c.code];
-    if (!id) return { code: c.code, name: c.name, cms: false, flagSrc, letter };
+    if (!id) return { code: c.code, name: c.name, cms: false, flagSrc, letter, currency, risk };
     const meta = countries[id];
     return {
       code: c.code,
@@ -106,6 +163,8 @@ export function intlOptions(
       flagSrc,
       flagAlt: kind === "checks" ? meta.checksFlagAlt : meta.flagAlt,
       letter,
+      currency,
+      risk,
     };
   });
 }

@@ -6,10 +6,14 @@
  */
 import "server-only";
 
+import { demoAllowed } from "@/lib/runtime/demo";
+
 export const MOCK_OTP = "123456";
 export const MOCK_NEW_USER_MOBILE = "9111111111";
 
-export function useMockTravelAuth(): boolean {
+/** Never true in production; there an unset base makes every call fail. */
+export function isMockTravelAuth(): boolean {
+  if (!demoAllowed()) return false;
   const forced = process.env.TRAVEL_AUTH_MOCK?.trim().toLowerCase();
   if (forced === "1" || forced === "true" || forced === "yes") return true;
   if (forced === "0" || forced === "false" || forced === "no") return false;
@@ -17,10 +21,9 @@ export function useMockTravelAuth(): boolean {
 }
 
 function travelBase(): string {
-  return (process.env.TRAVEL_AUTH_BASE ?? "https://aitravelassistance.helloverify.com").replace(
-    /\/+$/,
-    "",
-  );
+  const base = process.env.TRAVEL_AUTH_BASE?.trim();
+  if (!base && !demoAllowed()) throw new Error("This service is not available right now");
+  return (base || "https://aitravelassistance.helloverify.com").replace(/\/+$/, "");
 }
 
 export function travelAuthApi(): string {

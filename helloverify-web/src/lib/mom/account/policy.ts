@@ -75,6 +75,13 @@ export function maskEmail(email: string): string {
   return `${user.slice(0, Math.min(2, user.length))}•••@${domain}`;
 }
 
+/** `K1234567` → `•••••567`. Shown before the email code is confirmed. */
+export function maskPassport(value: string): string {
+  const clean = value.replace(/\s/g, "");
+  if (clean.length <= 3) return "•••";
+  return `${"•".repeat(clean.length - 3)}${clean.slice(-3)}`;
+}
+
 /** `+65`, `91234567` → `+65 •••• 4567`. */
 export function maskPhone(dial: string, digits: string): string {
   return `${dial} •••• ${digits.slice(-4)}`;

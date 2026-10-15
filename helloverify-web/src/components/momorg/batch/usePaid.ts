@@ -33,6 +33,10 @@ function parse(raw: string | null): Held[] {
 
 const useStored = deviceStore("hv-mom-paid:", parse, NONE);
 
+export function forgetPaid(orgUserId: string) {
+  useStored.forget(orgUserId);
+}
+
 export function usePaid(orgUserId: string) {
   const [held, update] = useStored(orgUserId);
   const add = (h: Held) => update((list) => [h, ...list.filter((x) => x.batch.id !== h.batch.id)].slice(0, KEEP));

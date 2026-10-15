@@ -151,7 +151,10 @@ const sitemapPaths = new Set(
 
 const pageFiles = await htmlPages(root);
 /** Gated account shells — prerendered, noindex, not in the sitemap. */
-const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings|solutions\/manpower-and-education-authorities\/ministry-of-manpower\/(?:register|sign-in|apply|authorise|employers(?:\/register|\/sign-in)?))$/;
+const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings|solutions\/manpower-and-education-authorities\/ministry-of-manpower\/(?:register|sign-in|apply|authorise|employers(?:\/register|\/sign-in)?)|governments\/immigration\/embassy-of-italy\/partners(?:\/join|\/sign-in)?)$/;
+/** The per-page decisions below are written once, against `/en`; `hi` and
+ *  `ar` render the same templates, so they inherit the English row. */
+const asEn = (path) => path.replace(/^\/[a-z]{2}(?=\/|$)/, "/en");
 
 // ------------------------------------------------------------------ parsing
 const LD = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
@@ -208,11 +211,13 @@ function visibleSteps(html) {
   return strips;
 }
 
+/** Read from the first `.faq3` on: the nav's menus are `<summary>`s too.
+ *  Inline tags are dropped so a bolded phrase compares as its words. */
 function visibleFaqs(html) {
-  const qs = [...html.matchAll(/<summary>([\s\S]*?)<span class="m">/g)].map((m) =>
-    decodeEntities(m[1]),
-  );
-  const as = [...html.matchAll(/<p class="a">([\s\S]*?)<\/p>/g)].map((m) => decodeEntities(m[1]));
+  const body = html.slice(html.indexOf('<div class="faq3">'));
+  const text = (s) => decodeEntities(s.replace(/<[^>]+>/g, ""));
+  const qs = [...body.matchAll(/<summary>([\s\S]*?)<span class="m"/g)].map((m) => text(m[1]));
+  const as = [...body.matchAll(/<p class="a"[^>]*>([\s\S]*?)<\/p>/g)].map((m) => text(m[1]));
   return { qs, as };
 }
 
@@ -411,8 +416,8 @@ for (const [path, file] of pageFiles) {
   stepCards += strips.reduce((n, cards) => n + cards.length, 0);
   const howtoBlocks = raw.filter((b) => b.includes('"@type":"HowTo"'));
   const howto = byType.get("HowTo");
-  const expectHowTo = HOWTO_PAGES.has(path);
-  const skipped = HOWTO_NOT_A_SEQUENCE.has(path);
+  const expectHowTo = HOWTO_PAGES.has(asEn(path));
+  const skipped = HOWTO_NOT_A_SEQUENCE.has(asEn(path));
 
   if (expectHowTo && skipped) {
     howToProblems.push(`${path}: in HOWTO_PAGES and HOWTO_NOT_A_SEQUENCE at once`);
@@ -432,7 +437,7 @@ for (const [path, file] of pageFiles) {
   if (expectHowTo !== Boolean(howto)) {
     howToProblems.push(
       `${path}: expected HowTo ${expectHowTo}, found ${Boolean(howto)}` +
-        (skipped ? ` (HOWTO_NOT_A_SEQUENCE: ${HOWTO_NOT_A_SEQUENCE.get(path)})` : ""),
+        (skipped ? ` (HOWTO_NOT_A_SEQUENCE: ${HOWTO_NOT_A_SEQUENCE.get(asEn(path))})` : ""),
     );
   } else if (howto) {
     const problems = [];
@@ -473,9 +478,9 @@ for (const [path, file] of pageFiles) {
 
   // --- Service
   const svc = byType.get("Service");
-  if (SERVICE_PAGES.has(path) !== Boolean(svc)) {
+  if (SERVICE_PAGES.has(asEn(path)) !== Boolean(svc)) {
     serviceProblems.push(
-      `${path}: expected Service ${SERVICE_PAGES.has(path)}, found ${Boolean(svc)}`,
+      `${path}: expected Service ${SERVICE_PAGES.has(asEn(path))}, found ${Boolean(svc)}`,
     );
   } else if (svc) {
     const problems = [];
@@ -500,7 +505,7 @@ for (const [path, file] of pageFiles) {
   }
 
   // --- BlogPosting
-  const post = POSTS.find((p) => path === `/en/resources/blog/${p.slug}`);
+  const post = POSTS.find((p) => asEn(path) === `/en/resources/blog/${p.slug}`);
   const bp = byType.get("BlogPosting");
   if (Boolean(post) !== Boolean(bp)) {
     blogProblems.push(`${path}: post ${Boolean(post)}, BlogPosting ${Boolean(bp)}`);

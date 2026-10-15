@@ -1,6 +1,7 @@
 /** Browser calls to `/api/orders/*`. Mock orders persist in sessionStorage. */
 
-import { getAuthToken } from "@/lib/auth/storage";
+import { SessionExpired } from "@/lib/auth/expired";
+import { clearAuthStorage, getAuthToken } from "@/lib/auth/storage";
 import { applyMockSmbInvite, applyMockTravelInvite, readMockOrders } from "@/lib/cart/storage";
 
 import type { InviteResponse, OrderListResponse, SendInvitePayload, SmbSendInvitePayload } from "./types";
@@ -20,8 +21,12 @@ async function call<T>(path: string, body?: unknown): Promise<T> {
   } catch {
     throw new Error(`Request failed (${res.status})`);
   }
+  if (res.status === 401) {
+    clearAuthStorage();
+    throw new SessionExpired();
+  }
   if (!res.ok) {
-    throw new Error(json?.message ?? `Request failed (${res.status})`);
+    throw new Error("Orders request failed");
   }
   return json;
 }

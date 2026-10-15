@@ -25,8 +25,6 @@
 
 .gv { position: relative; padding-top: clamp(64px, 11.11vw, 120px); padding-bottom: clamp(72px, 12.96vw, 140px); }
 .gv-defs { position: absolute; }
-.gv-mast-k { display: flex; justify-content: space-between; align-items: center; }
-.gv-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .gv-head { margin-top: 22px; }
 .gv-lede { margin-bottom: 8px; }
 .gv-it { font-style: italic; }
@@ -81,10 +79,6 @@
 .gv-stamp { display: block; width: 150px; height: 150px; overflow: visible; color: var(--primary); mix-blend-mode: multiply; transform-origin: 50% 50%; animation: gvStamp .6s cubic-bezier(.3, 1.35, .5, 1) .55s both; }
 .gv-stamp-wide { width: 196px; height: auto; }
 @keyframes gvStamp { 0% { opacity: 0; transform: scale(1.8) rotate(4deg); } 55% { opacity: .97; transform: scale(.95) rotate(-11deg); } to { opacity: .95; transform: scale(1) rotate(-10deg); } }
-.gv-proof { display: flex; align-items: center; gap: 12px; margin-top: 20px; font-size: 14.5px; line-height: 1.45; color: var(--ink-soft); }
-.gv-proof img { flex: none; border-radius: 6px; }
-.gv-proof-dot { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 4px rgb(from var(--primary) r g b / .12); }
-
 /* ── The contents page: rows that open, the chain at the foot ── */
 .gv-contents { position: relative; box-sizing: border-box; display: flex; flex-direction: column; }
 .gv-rows { margin-top: 10px; }
@@ -117,8 +111,6 @@
 .gv-foot { position: relative; padding-top: 20px; display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 16px 20px; }
 .gv-ctas { display: flex; align-items: center; gap: 10px; }
 .gv-explore { height: 40px; padding: 0 10px; font-size: 14px; }
-.gv-mom-cta { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding-block: 0; padding-inline: 10px 16px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; transition: border-color .25s; }
-.gv-mom-cta:hover { border-color: var(--ink); }
 .gv-mom-cta:focus-visible, .gv-explore:focus-visible, .gv-sel-menu a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 /* The authorities a dossier names, as logo cards (30 Sep 2026): replaced the
    "Select Authority" dropdown and the MOM pill. Each card is the whole link. */
@@ -277,7 +269,6 @@
   .gv-ctas { flex: 1 1 100%; flex-wrap: wrap; justify-content: space-between; }
   /* `design.css` has no phone `.btn-sm`. */
   .gv-ctas .btn-sm { height: 40px; padding: 0 18px; font-size: 14px; }
-  .gv-mom-cta { max-width: 100%; padding-block: 6px; }
   /* The menu spans the foot rather than hanging off its button, which may
      have wrapped to either end of the line. */
   .gv-sel-menu { inset-inline: 0; }

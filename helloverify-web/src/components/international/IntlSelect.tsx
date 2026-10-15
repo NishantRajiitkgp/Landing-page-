@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { Fragment, useEffect, useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
 import type { IntlOption } from "@/lib/international/catalog";
 
@@ -9,13 +9,17 @@ import type { IntlOption } from "@/lib/international/catalog";
  *  `hidden`) so the CMS names and flag alts are on the page when it is closed.
  *  Catalog-only names sit on `data-audit-skip`. Options are grouped under
  *  sticky A–Z headings; the arrow keys walk the visible options and Enter in
- *  the search box takes the first match. */
+ *  the search box takes the first match. With `riskTag`, each option shows
+ *  its currency code, high-risk countries carry the tag under their name,
+ *  and the search also matches the currency code. `note` closes the menu. */
 export function IntlSelect({
   label,
   value,
   options,
   search,
   none,
+  riskTag,
+  note,
   onChange,
 }: {
   label: string;
@@ -23,6 +27,8 @@ export function IntlSelect({
   options: readonly IntlOption[];
   search: string;
   none: string;
+  riskTag?: string;
+  note?: ReactNode;
   onChange: (code: string) => void;
 }) {
   const base = useId();
@@ -35,7 +41,8 @@ export function IntlSelect({
   const [q, setQ] = useState("");
   const selected = options.find((o) => o.code === value) ?? options[0];
   const query = q.trim().toLowerCase();
-  const isMatch = (o: IntlOption) => !query || o.name.toLowerCase().includes(query);
+  const isMatch = (o: IntlOption) =>
+    !query || o.name.toLowerCase().includes(query) || (riskTag !== undefined && o.currency.toLowerCase() === query);
   const matches = options.filter(isMatch);
   const letters = new Set(matches.map((o) => o.letter));
 
@@ -111,7 +118,11 @@ export function IntlSelect({
           }}
         >
           <Flag option={selected} />
-          <span>{selected.name}</span>
+          <span className="intl3-cn">
+            <span>{selected.name}</span>
+            {riskTag !== undefined && selected.risk ? <small className="intl3-xc">{riskTag}</small> : null}
+          </span>
+          {riskTag !== undefined ? <Currency option={selected} /> : null}
           <Caret />
         </button>
       </div>
@@ -148,9 +159,13 @@ export function IntlSelect({
                   onClick={() => choose(o.code)}
                 >
                   <Flag option={o} />
-                  <span>
-                    <Highlight text={o.name} query={query} />
+                  <span className="intl3-cn">
+                    <span>
+                      <Highlight text={o.name} query={query} />
+                    </span>
+                    {riskTag !== undefined && o.risk ? <small className="intl3-xc">{riskTag}</small> : null}
                   </span>
+                  {riskTag !== undefined ? <Currency option={o} /> : null}
                   {o.code === selected.code ? <TickIcon /> : null}
                 </button>
               </li>
@@ -162,6 +177,7 @@ export function IntlSelect({
             {none}
           </p>
         ) : null}
+        {note ? <p className="intl3-note">{note}</p> : null}
       </div>
     </div>
   );
@@ -183,6 +199,14 @@ function Highlight({ text, query }: { text: string; query: string }) {
  *  the CMS gave it an alt. */
 export function Flag({ option }: { option: IntlOption }) {
   return <Image className="intl3-flag" src={option.flagSrc} alt={option.flagAlt ?? ""} width={24} height={18} unoptimized />;
+}
+
+function Currency({ option }: { option: IntlOption }) {
+  return (
+    <small className="intl3-cur" dir="ltr">
+      {option.currency}
+    </small>
+  );
 }
 
 function Caret() {

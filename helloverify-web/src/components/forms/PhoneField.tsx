@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useState } from "react";
 
 import { ErrorText, Field } from "@/components/forms/LeadFields";
 import { DEFAULT_DIAL, DIAL_CODES, dialCountry, flagSrc } from "@/lib/leads/dial-codes";
@@ -54,11 +55,13 @@ export function PhoneField({
   const [dial, setDial] = useState(() => knownDial(dialDefault));
   const [number, setNumber] = useState(() => nationalDigits(numberDefault, knownDial(dialDefault)));
 
-  useEffect(() => {
+  const [seed, setSeed] = useState({ dialDefault, numberDefault });
+  if (seed.dialDefault !== dialDefault || seed.numberDefault !== numberDefault) {
     const next = knownDial(dialDefault);
+    setSeed({ dialDefault, numberDefault });
     setDial(next);
     setNumber(nationalDigits(numberDefault, next));
-  }, [dialDefault, numberDefault]);
+  }
 
   const country = dialCountry(dial) ?? DIAL_CODES[0];
   const id = (field: string) => idPrefix + field;
@@ -72,7 +75,7 @@ export function PhoneField({
     >
       <div className="phone inp" dir="ltr">
         <div className="phone-dial" title={country.name}>
-          <img className="phone-flag" src={flagSrc(country.iso)} alt="" width={22} height={16} />
+          <Image className="phone-flag" src={flagSrc(country.iso)} alt="" width={22} height={16} unoptimized />
           <span className="phone-code">{country.dial}</span>
           <svg className="phone-chevron" width="12" height="8" viewBox="0 0 12 8" aria-hidden="true">
             <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

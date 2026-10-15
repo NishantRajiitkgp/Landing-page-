@@ -21,6 +21,8 @@ import { SiteFooter } from "@/components/chrome/SiteFooter";
 import { Breadcrumb } from "@/components/chrome/Breadcrumb";
 import { ClosingCta } from "@/components/chrome/ClosingCta";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { CHROME } from "@/lib/copy/chrome";
+import { copy } from "@/lib/copy/request";
 import { breadcrumbList, type Crumb } from "@/lib/seo/schema/breadcrumbs";
 import { getLocale } from "next-intl/server";
 
@@ -40,7 +42,7 @@ export async function PageShell({
   showSignUp?: boolean;
 }) {
   const locale = await getLocale();
-  const breadcrumbs = breadcrumbList(crumbs, locale);
+  const breadcrumbs = breadcrumbList(crumbs, locale, (await copy(CHROME)).breadcrumb.home);
 
   return (
     <div className="page">

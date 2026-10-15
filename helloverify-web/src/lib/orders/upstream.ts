@@ -1,22 +1,14 @@
 import "server-only";
 
 import { smbApi, travelUserApi } from "@/lib/auth/env";
+import { UpstreamFailure } from "@/lib/auth/failure";
 
 import type { InviteResponse, OrderListResponse, SendInvitePayload, SmbSendInvitePayload } from "./types";
 
 const TIMEOUT_MS = 12_000;
 
 async function readJson<T>(res: Response): Promise<T> {
-  if (!res.ok) {
-    let message = `Request failed (${res.status})`;
-    try {
-      const err = (await res.json()) as { message?: string };
-      if (err?.message) message = err.message;
-    } catch {
-      /* empty */
-    }
-    throw new Error(message);
-  }
+  if (!res.ok) throw new UpstreamFailure(res.status);
   return (await res.json()) as T;
 }
 

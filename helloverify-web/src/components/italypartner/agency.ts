@@ -182,6 +182,18 @@ export function markSigned(id: string, live: boolean) {
   write(id, { ...prev, signed: true, live, code: live ? (prev.code ?? agentCode(id)) : prev.code });
 }
 
+export function forgetAgency(id: string) {
+  const key = PREFIX + id;
+  memory.delete(key);
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    /* already unreachable */
+  }
+  if (cache?.key === key) cache = null;
+  listeners.forEach((fn) => fn());
+}
+
 export function useAgency(id: string): AgencyDraft | null {
   return useSyncExternalStore(
     (onStoreChange) => {

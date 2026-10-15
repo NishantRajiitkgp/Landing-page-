@@ -66,6 +66,10 @@ const stamp = (b: Batch): Batch => ({ ...b, savedAt: Date.now() });
 
 export type UpdateBatch = (change: (batch: Batch) => Batch) => void;
 
+export function forgetBatch(orgUserId: string) {
+  useStored.forget(orgUserId);
+}
+
 export function useBatch(orgUserId: string): { batch: Batch; update: UpdateBatch } {
   const [batch, update] = useStored(orgUserId, stamp);
   return { batch, update };

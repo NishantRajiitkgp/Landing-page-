@@ -45,12 +45,32 @@
    "name": "Brazil"
   },
   {
+   "code": "BF",
+   "name": "Burkina Faso"
+  },
+  {
+   "code": "CM",
+   "name": "Cameroon"
+  },
+  {
+   "code": "CF",
+   "name": "Central African Republic"
+  },
+  {
    "code": "CN",
    "name": "China"
   },
   {
+   "code": "CD",
+   "name": "DR Congo"
+  },
+  {
    "code": "EG",
    "name": "Egypt"
+  },
+  {
+   "code": "ET",
+   "name": "Ethiopia"
   },
   {
    "code": "FI",
@@ -65,8 +85,20 @@
    "name": "Germany"
   },
   {
+   "code": "HT",
+   "name": "Haiti"
+  },
+  {
    "code": "ID",
    "name": "Indonesia"
+  },
+  {
+   "code": "IR",
+   "name": "Iran"
+  },
+  {
+   "code": "IQ",
+   "name": "Iraq"
   },
   {
    "code": "IL",
@@ -85,12 +117,24 @@
    "name": "Kuwait"
   },
   {
+   "code": "LB",
+   "name": "Lebanon"
+  },
+  {
+   "code": "LY",
+   "name": "Libya"
+  },
+  {
    "code": "MY",
    "name": "Malaysia"
   },
   {
    "code": "MV",
    "name": "Maldives"
+  },
+  {
+   "code": "ML",
+   "name": "Mali"
   },
   {
    "code": "MU",
@@ -101,6 +145,14 @@
    "name": "Mexico"
   },
   {
+   "code": "MZ",
+   "name": "Mozambique"
+  },
+  {
+   "code": "MM",
+   "name": "Myanmar"
+  },
+  {
    "code": "NP",
    "name": "Nepal"
   },
@@ -109,12 +161,24 @@
    "name": "New Zealand"
   },
   {
+   "code": "NE",
+   "name": "Niger"
+  },
+  {
+   "code": "NG",
+   "name": "Nigeria"
+  },
+  {
    "code": "NO",
    "name": "Norway"
   },
   {
    "code": "OM",
    "name": "Oman"
+  },
+  {
+   "code": "PG",
+   "name": "Papua New Guinea"
   },
   {
    "code": "PH",
@@ -145,12 +209,20 @@
    "name": "Slovakia"
   },
   {
+   "code": "SO",
+   "name": "Somalia"
+  },
+  {
    "code": "ZA",
    "name": "South Africa"
   },
   {
    "code": "KR",
    "name": "South Korea"
+  },
+  {
+   "code": "SS",
+   "name": "South Sudan"
   },
   {
    "code": "ES",
@@ -161,12 +233,20 @@
    "name": "Sri Lanka"
   },
   {
+   "code": "SD",
+   "name": "Sudan"
+  },
+  {
    "code": "SE",
    "name": "Sweden"
   },
   {
    "code": "CH",
    "name": "Switzerland"
+  },
+  {
+   "code": "SY",
+   "name": "Syria"
   },
   {
    "code": "TH",
@@ -195,6 +275,14 @@
   {
    "code": "VN",
    "name": "Vietnam"
+  },
+  {
+   "code": "PS",
+   "name": "West Bank and Gaza"
+  },
+  {
+   "code": "YE",
+   "name": "Yemen"
   },
   {
    "code": "ZW",
@@ -3509,6 +3597,1458 @@
    },
    {
     "id": "ZW-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "BF": [
+   {
+    "id": "BF-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "BF-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "BF-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "BF-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "BF-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "BF-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "BF-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "BF-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "BF-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "BF-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "CM": [
+   {
+    "id": "CM-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "CM-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "CM-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "CM-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "CM-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "CM-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "CM-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "CM-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "CM-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "CM-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "CF": [
+   {
+    "id": "CF-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "CF-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "CF-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "CF-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "CF-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "CF-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "CF-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "CF-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "CF-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "CF-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "CD": [
+   {
+    "id": "CD-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "CD-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "CD-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "CD-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "CD-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "CD-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "CD-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "CD-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "CD-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "CD-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "ET": [
+   {
+    "id": "ET-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "ET-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "ET-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "ET-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "ET-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "ET-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "ET-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "ET-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "ET-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "ET-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "HT": [
+   {
+    "id": "HT-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "HT-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "HT-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "HT-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "HT-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "HT-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "HT-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "HT-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "HT-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "HT-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "IR": [
+   {
+    "id": "IR-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "IR-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "IR-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "IR-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "IR-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "IR-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "IR-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "IR-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "IR-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "IR-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "IQ": [
+   {
+    "id": "IQ-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "IQ-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "IQ-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "IQ-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "IQ-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "IQ-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "IQ-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "IQ-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "IQ-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "IQ-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "LB": [
+   {
+    "id": "LB-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "LB-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "LB-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "LB-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "LB-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "LB-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "LB-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "LB-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "LB-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "LB-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "LY": [
+   {
+    "id": "LY-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "LY-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "LY-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "LY-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "LY-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "LY-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "LY-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "LY-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "LY-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "LY-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "ML": [
+   {
+    "id": "ML-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "ML-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "ML-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "ML-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "ML-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "ML-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "ML-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "ML-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "ML-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "ML-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "MZ": [
+   {
+    "id": "MZ-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "MZ-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "MZ-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "MZ-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "MZ-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "MZ-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "MZ-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "MZ-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "MZ-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "MZ-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "MM": [
+   {
+    "id": "MM-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "MM-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "MM-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "MM-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "MM-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "MM-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "MM-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "MM-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "MM-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "MM-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "NE": [
+   {
+    "id": "NE-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "NE-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "NE-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "NE-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "NE-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "NE-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "NE-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "NE-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "NE-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "NE-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "NG": [
+   {
+    "id": "NG-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "NG-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "NG-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "NG-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "NG-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "NG-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "NG-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "NG-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "NG-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "NG-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "PG": [
+   {
+    "id": "PG-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "PG-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "PG-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "PG-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "PG-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "PG-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "PG-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "PG-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "PG-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "PG-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "SO": [
+   {
+    "id": "SO-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "SO-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "SO-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "SO-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "SO-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "SO-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "SO-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "SO-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "SO-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "SO-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "SS": [
+   {
+    "id": "SS-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "SS-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "SS-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "SS-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "SS-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "SS-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "SS-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "SS-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "SS-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "SS-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "SD": [
+   {
+    "id": "SD-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "SD-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "SD-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "SD-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "SD-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "SD-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "SD-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "SD-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "SD-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "SD-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "SY": [
+   {
+    "id": "SY-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "SY-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "SY-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "SY-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "SY-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "SY-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "SY-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "SY-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "SY-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "SY-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "PS": [
+   {
+    "id": "PS-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "PS-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "PS-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "PS-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "PS-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "PS-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "PS-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "PS-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "PS-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "PS-HLV",
+    "name": "Healthcare License Verification",
+    "price": "$175/check",
+    "tat": "Within 9 Working Days"
+   }
+  ],
+  "YE": [
+   {
+    "id": "YE-EDU",
+    "name": "Educational Qualification Verification",
+    "price": "$135/check",
+    "tat": "Within 9 Working Days",
+    "details": "Under Graduation & Post Graduation"
+   },
+   {
+    "id": "YE-EMP",
+    "name": "Employment Experience Verification",
+    "price": "$95/check",
+    "tat": "Within 9 Working Days",
+    "details": "Confirms a candidate’s current employer, job title, and employment status."
+   },
+   {
+    "id": "YE-CV",
+    "name": "Resume Verification",
+    "price": "$25/check",
+    "tat": "Within 2 Working Days"
+   },
+   {
+    "id": "YE-PASS",
+    "name": "Passport Verification",
+    "price": "$35/check",
+    "tat": "Within 1 Working Day"
+   },
+   {
+    "id": "YE-CRIM",
+    "name": "Criminal Record Check",
+    "price": "$85/check",
+    "tat": "4-7 Working Days"
+   },
+   {
+    "id": "YE-REF",
+    "name": "Professional Reference Check",
+    "price": "$35/check",
+    "tat": "Within 2 Working Days",
+    "details": "Conducts automated reference verification to validate professional claims"
+   },
+   {
+    "id": "YE-GDB",
+    "name": "Global Database Check",
+    "price": "$10/check",
+    "tat": "Within 1 Working Day",
+    "details": "Screens candidates against international criminal watchlists."
+   },
+   {
+    "id": "YE-RTW",
+    "name": "Right to Work Verification",
+    "price": "$50/check",
+    "tat": "Within 3 Working Days"
+   },
+   {
+    "id": "YE-PLV",
+    "name": "Professional License Verification",
+    "price": "$145/check",
+    "tat": "Within 9 Working Days"
+   },
+   {
+    "id": "YE-HLV",
     "name": "Healthcare License Verification",
     "price": "$175/check",
     "tat": "Within 9 Working Days"

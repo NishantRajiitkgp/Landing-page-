@@ -29,8 +29,6 @@
 
 /* Shared by every width; the desktop layout and the phone layout follow. */
 .hw { padding-top: 72px; padding-bottom: 72px; }
-.hw-mast { display: flex; justify-content: space-between; align-items: center; }
-.hw-sheet { font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 .hw-it { font-style: italic; }
 
 /* ── The route switch ──────────────────────────────────────────────── */

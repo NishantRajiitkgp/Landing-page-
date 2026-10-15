@@ -63,6 +63,18 @@ function write(id: string, draft: Draft) {
   listeners.forEach((l) => l());
 }
 
+export function forgetDraft(id: string) {
+  const key = PREFIX + id;
+  memory.delete(key);
+  try {
+    window.localStorage.removeItem(key);
+  } catch {
+    /* already unreachable */
+  }
+  if (cache?.key === key) cache = null;
+  listeners.forEach((l) => l());
+}
+
 function subscribe(listener: () => void) {
   listeners.add(listener);
   return () => listeners.delete(listener);

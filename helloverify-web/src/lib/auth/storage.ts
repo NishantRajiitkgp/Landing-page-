@@ -20,9 +20,15 @@ function store(): Storage | null {
   }
 }
 
-function isJwtExpired(token: string): boolean {
+/** JWT segments are base64url (`-`, `_`, no padding), which `atob` rejects. */
+function decodeSegment(segment: string): string {
+  const b64 = segment.replace(/-/g, "+").replace(/_/g, "/");
+  return atob(b64.padEnd(b64.length + ((4 - (b64.length % 4)) % 4), "="));
+}
+
+export function isJwtExpired(token: string): boolean {
   try {
-    const payload = JSON.parse(atob(token.split(".")[1] ?? "")) as { exp?: number };
+    const payload = JSON.parse(decodeSegment(token.split(".")[1] ?? "")) as { exp?: number };
     if (typeof payload.exp !== "number") return false;
     return Date.now() > payload.exp * 1000;
   } catch {

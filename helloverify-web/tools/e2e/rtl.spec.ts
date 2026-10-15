@@ -73,12 +73,23 @@ import { settle } from "./settle";
  *  pass really was `ltr`. Broken deliberately by rewriting to `dir="ltr"`
  *  instead: the run fails on that assertion on every page rather than passing
  *  quietly, which is the behaviour that makes the rest evidence.
+ *
+ *  ## `/ar` is measured as served
+ *
+ *  `ar` now ships, so its pages arrive with `dir="rtl"` and need no rewrite.
+ *  They are measured as they are, against their `/en` twin as the LTR
+ *  control. `hi` is left out: it is LTR and renders the same templates as
+ *  `en`, so rewriting it would repeat the `/en` pass in another script.
+ *  `/landing-page` is left out too: a frozen English snapshot outside
+ *  `[locale]`, never served rtl, whose copied stylesheet predates the
+ *  isolated-arrow rule this checks.
  */
 const root = pathToFileURL(`${process.cwd()}/`);
+const NATIVE_RTL = /^\/ar(?=\/|$)/;
 const pages = ([...htmlPagesSync(root).keys()] as string[])
   // Next's own error documents, not routes in the manifest. `check:static` and
   // the axe scan exclude them on the same grounds.
-  .filter((p) => !p.startsWith("/_"))
+  .filter((p) => !p.startsWith("/_") && !/^\/hi(?=\/|$)/.test(p) && p !== "/landing-page")
   .sort();
 
 /** Serve every document mirrored.
@@ -121,6 +132,28 @@ async function measure(page: Page, path: string): Promise<Geometry> {
     const doc = document.documentElement;
     const outside: Record<string, number> = {};
 
+    /** Inside an ancestor that clips the inline axis and is itself on screen,
+     *  a box shows only where it overlaps that ancestor. The people strip
+     *  (`v2/strip.css`) is the case: a 3D drum whose cards the loop turns each
+     *  frame, so which off-screen cards a pass caught depended on the frame,
+     *  and the homepage failed one run in two at 390px under load. */
+    const clippedOnScreen = (el: Element) => {
+      for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+        const overflow = getComputedStyle(a).overflowX;
+        if (overflow !== "hidden" && overflow !== "clip") continue;
+        const box = a.getBoundingClientRect();
+        if (box.left >= -1 && box.right <= doc.clientWidth + 1) return true;
+      }
+      return false;
+    };
+
+    // `content-visibility: auto` (`app/v2/home.css`) skips layout for bands
+    // off screen, so what was measurable depended on where `settle()` left
+    // the scroll: the two passes compared different sets of laid-out bands.
+    for (const el of Array.from(document.querySelectorAll<HTMLElement>("body *"))) {
+      if (getComputedStyle(el).contentVisibility === "auto") el.style.contentVisibility = "visible";
+    }
+
     for (const el of Array.from(document.querySelectorAll<HTMLElement>("body *"))) {
       const box = el.getBoundingClientRect();
       // Zero-area nodes have no side to be on. `clip-path: inset(50%)` visually
@@ -129,7 +162,15 @@ async function measure(page: Page, path: string): Promise<Geometry> {
       // 1px of slack each way: `clientWidth` is an integer and sub-pixel layout
       // at 390px leaves a fractional tail on boxes that are flush, not outside.
       if (box.left >= -1 && box.right <= doc.clientWidth + 1) continue;
-      const cls = el.className?.toString().trim().split(/\s+/).join(".") ?? "";
+      // Unpainted boxes have no side either. The field case's map overlays
+      // (`v2/field.css`) wait `visibility: hidden` at the stage's corner until
+      // the loop places them, and under rtl that corner is the viewport's left
+      // edge. Scroll they could cause is still caught: that is `overshoot`.
+      if (getComputedStyle(el).visibility !== "visible") continue;
+      if (clippedOnScreen(el)) continue;
+      // The attribute, not `className`: on an SVG element that is an
+      // `SVGAnimatedString`, and every SVG keyed as `[object.SVGAnimatedString]`.
+      const cls = (el.getAttribute("class") ?? "").trim().split(/\s+/).filter(Boolean).join(".");
       const key = cls ? `${el.tagName.toLowerCase()}.${cls}` : el.tagName.toLowerCase();
       outside[key] = (outside[key] ?? 0) + 1;
     }
@@ -200,10 +241,11 @@ test.describe("rtl", () => {
 
   for (const path of pages) {
     test(`${path}: mirrors without breaking the inline axis`, async ({ page }, testInfo) => {
-      const ltr = await measure(page, path);
+      const native = NATIVE_RTL.test(path);
+      const ltr = await measure(page, native ? path.replace(NATIVE_RTL, "/en") : path);
       expect(ltr.direction, "the control pass must be ltr").toBe("ltr");
 
-      await serveRtl(page);
+      if (!native) await serveRtl(page);
       const rtl = await measure(page, path);
 
       // The guard. Everything below compares a page against itself otherwise.

@@ -393,15 +393,18 @@ check(
   "the layout asks scriptStackOf(locale) rather than inlining the map",
   layoutCode.includes("scriptStackOf(locale)"),
 );
+/** The faces are declared beside the layout, in `fonts.ts`. */
+const fontSource = readFileSync(new URL("../../src/app/[locale]/fonts.ts", import.meta.url), "utf8");
+const fontCode = fontSource.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 check(
   "every Noto localFont call disables preload — /en must not fetch them",
-  (layoutCode.match(/preload:\s*false/g) || []).length >= 4,
-  layoutCode.match(/preload:\s*false/g),
+  (fontCode.match(/preload:\s*false/g) || []).length >= 4,
+  fontCode.match(/preload:\s*false/g),
 );
 check(
   "the four Noto files are the ones under src/fonts/",
   ["/noto-sans-devanagari.woff2", "/noto-serif-devanagari.woff2", "/noto-sans-arabic.woff2", "/noto-naskh-arabic.woff2"].every(
-    (f) => layoutSource.includes(f),
+    (f) => fontSource.includes(f),
   ),
 );
 

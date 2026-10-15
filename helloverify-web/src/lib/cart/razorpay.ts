@@ -54,7 +54,9 @@ export async function openRazorpayCheckout(options: RazorpayOpenOptions): Promis
     order_id: options.order_id,
     handler: (res: RazorpaySuccessPayload) => options.onSuccess(res),
     prefill: options.prefill,
-    theme: { color: "#15140F" },
+    /** Checkout paints inside Razorpay's own iframe, where `var(--ink)` means
+     *  nothing, so it gets the token's resolved value. */
+    theme: { color: getComputedStyle(document.documentElement).getPropertyValue("--ink").trim() },
     modal: {
       ondismiss: () => options.onDismiss?.(),
     },

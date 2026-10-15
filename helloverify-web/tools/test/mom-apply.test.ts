@@ -18,7 +18,8 @@ import {
   signIssues,
   SLOT_RE,
 } from "../../src/lib/mom/apply/policy.ts";
-import { seal, unseal } from "../../src/lib/mom/account/seal.ts";
+import { maskPassport } from "../../src/lib/mom/account/policy.ts";
+import { seal, sealRemaining, unseal } from "../../src/lib/mom/account/seal.ts";
 import { readSubmission, rejectReceipts } from "../../src/lib/mom/apply/submit.ts";
 import { money, quote, type Prices } from "../../src/lib/mom/apply/pricing.ts";
 import type { About, DocRef, Draft, Qual } from "../../src/lib/mom/apply/types.ts";
@@ -119,6 +120,13 @@ const key = createHash("sha256").update("mom-apply-test").digest();
 const receipt = seal(key, "document", { a: "demo-applicant", s: "passport", r: "demo-abc" }, 60);
 const open = (token: string) => unseal<{ a: string; s: string; r: string }>(key, "document", token);
 check("a receipt opens only for its own purpose", open(receipt)?.r === "demo-abc" && unseal(key, "payment", receipt) === null);
+const session = seal(key, "session", { a: 1 }, 100);
+const left = sealRemaining(key, "session", session);
+check("a session reports time left inside its original ttl", left !== null && left <= 100 && left > 90, left);
+const renewed = seal(key, "session", { a: 1 }, left ?? 100);
+const again = sealRemaining(key, "session", renewed);
+check("rewriting a session does not extend it", again !== null && left !== null && again <= left, again);
+check("passport keeps only its last three characters", maskPassport("K1234567") === "•••••567");
 if (accepted.ok) {
   const draft = accepted.draft;
   check("another applicant's receipt is rejected", rejectReceipts(draft, "demo-applicant", () => ({ a: "someone-else", s: "passport", r: "x" })) === "about");

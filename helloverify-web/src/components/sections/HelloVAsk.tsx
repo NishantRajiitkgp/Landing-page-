@@ -98,6 +98,7 @@ export async function HelloVAsk() {
                   <li key={step.k}>
                     <b>{step.k}</b>
                     {step.t}
+                    <span className="hv-wa-sd">{step.d}</span>
                   </li>
                 ))}
               </ol>

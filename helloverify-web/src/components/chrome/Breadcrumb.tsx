@@ -5,12 +5,8 @@
  *  `BreadcrumbList` — the two have to agree, and `check-schema.mjs` compares
  *  what this renders against what that emits, per page.
  *
- *  THAT RUNG IS NOW `chrome.breadcrumb.home`, so the two sides are a string in
- *  a dictionary and a literal in a schema builder. They cannot disagree today
- *  (`en` is the only locale, so both are "Home"), and `tools/test/copy.test.ts`
- *  runs the real `breadcrumbList()` and compares its first item's `name`
- *  against this key so that they cannot disagree tomorrow either. See the
- *  "Known couplings" note in `lib/copy/index.ts`.
+ *  That rung is `chrome.breadcrumb.home`, and `PageShell` hands the same leaf
+ *  to `breadcrumbList()`, so the two agree in every locale.
  */
 import { AppLink } from "@/components/chrome/AppLink";
 import type { Crumb } from "@/lib/seo/schema/breadcrumbs";

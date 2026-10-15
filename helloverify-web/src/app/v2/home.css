@@ -1,0 +1,27 @@
+/* Homepage v2 · rendering budget. Scoped to `.page.hv-home`
+   (`app/[locale]/page.tsx`).
+
+   The page is eighteen bands and ~6,000 elements, most of them animated.
+   Measured with Lighthouse (mobile, 14 Oct 2026): 8.5 s of style and layout
+   and 5.1 s of other rendering on the main thread, almost all of it for
+   bands nobody had scrolled to yet. `content-visibility: auto` lets the
+   browser skip style, layout, paint and animation work for a band until it
+   nears the viewport; the band stays in the DOM, in find-in-page and in the
+   accessibility tree.
+
+   The hero is excluded: it is the LCP and is always on screen. The
+   placeholder heights are the average band height at each width (page
+   height / band count), and `auto` swaps in each band's real height once
+   it has rendered, so the scrollbar settles rather than jumping back.
+
+   Two side effects of the paint containment this implies, both checked
+   against this page: content that overflows a band is clipped (none does),
+   and a band becomes the containing block for `position: fixed` inside it
+   (none has any — the login and consent overlays live outside <main>). */
+.page.hv-home main > :not(.hv-hero) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1300px;
+}
+@media (max-width: 1080px) {
+  .page.hv-home main > :not(.hv-hero) { contain-intrinsic-size: auto 1800px; }
+}

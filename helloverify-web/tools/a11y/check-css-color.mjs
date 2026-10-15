@@ -408,6 +408,21 @@ const BASELINE = {
   //    The chip's mint. Buy Now is `--primary-ink`, so the WhatsApp green is gone.
   "decl #117F45": { n: 0, why: "--v2-cx-wa retired 4 Oct 2026: Buy Now is --primary-ink" },
   "decl #E7F7EC": { n: 1, why: "--v2-cx-wa-tint: the WhatsApp chip behind --primary-ink text" },
+  //    The homepage phone plays the real bot (14 Oct 2026): the teal header
+  //    and separate mic colour went with the old chat.
+  "decl #075E54": { n: 0, why: "--v2-wa-bar retired 14 Oct 2026: the header is --white" },
+  "decl #00A884": { n: 0, why: "--v2-wa-mic retired 14 Oct 2026: the button is --v2-wa-send" },
+  "decl #D9FDD3": { n: 1, why: "--v2-wa-out: an outgoing WhatsApp bubble" },
+  "decl #F0F2F5": { n: 1, why: "--v2-wa-card: the link preview inside the payment bubble" },
+  "decl #53BDEB": { n: 1, why: "--v2-wa-tick: a read receipt on an outgoing bubble" },
+  "decl #EFEAE2": { n: 1, why: "--v2-wa-bg: WhatsApp's chat wallpaper and composer bar" },
+  "decl #111B21": { n: 1, why: "--v2-wa-ink: bubble text, 17:1 on --white and 15:1 on --v2-wa-out" },
+  "decl #667781": { n: 1, why: "--v2-wa-mute: the date chip and link-preview meta, 4.6:1 on --white" },
+  "decl #008069": { n: 1, why: "--v2-wa-green: links and Read more, 4.9:1 on --white" },
+  "decl #1DAA61": { n: 1, why: "--v2-wa-send: the send/mic button and the composer caret, no text" },
+  "decl #1D9BF0": { n: 1, why: "--v2-wa-seal: the verified-business seal beside the name" },
+  "decl #072654": { n: 1, why: "--v2-rzp-navy: Razorpay's mark in the payment preview" },
+  "decl #3395FF": { n: 1, why: "--v2-rzp-blue: Razorpay's mark in the payment preview" },
   // ── homepage v2 · business bands (`app/v2/enterprises.css`, `smb.css`,
   //    `diligence.css`, Sep 2026). Surfaces only; every text colour in the
   //    three sheets is a token. A tint within a couple of units of an existing

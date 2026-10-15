@@ -4,10 +4,14 @@ import "server-only";
 
 import { createHash } from "node:crypto";
 
+import { demoAllowed } from "@/lib/runtime/demo";
+
 const TRUE = new Set(["1", "true", "yes"]);
 
+/** Always live in production, so a missing setting answers `not_connected`
+ *  rather than accepting 123456. */
 export function momLive(): boolean {
-  return TRUE.has((process.env.MOM_APPLY_LIVE ?? "").trim().toLowerCase());
+  return !demoAllowed() || TRUE.has((process.env.MOM_APPLY_LIVE ?? "").trim().toLowerCase());
 }
 
 /** 32-byte key for sealed cookies and tokens. Live refuses to run without a

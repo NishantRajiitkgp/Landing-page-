@@ -5,6 +5,7 @@ import {
   CREDENTIALS_KEY,
   clearAuthStorage,
   hasValidAuthToken,
+  isJwtExpired,
   persistLoginData,
   persistOtpSendData,
   readSession,
@@ -117,4 +118,14 @@ console.log("3. sessionStorage keys match the old SPA; localStorage is left alon
   const payload = Buffer.from(JSON.stringify({ exp: Math.floor(Date.now() / 1000) - 10 })).toString("base64url");
   session.setItem(AUTH_TOKEN_KEY, `x.${payload}.y`);
   check("expired jwt is not valid", hasValidAuthToken() === false);
+}
+
+{
+  // "?>~" encodes to `-`/`_` in base64url, which `atob` alone rejects.
+  const claims = { exp: Math.floor(Date.now() / 1000) + 600, name: "?>~?>~" };
+  const payload = Buffer.from(JSON.stringify(claims)).toString("base64url");
+  check("payload exercises base64url", /[-_]/.test(payload), payload);
+  check("live base64url jwt is not expired", !isJwtExpired(`x.${payload}.y`));
+  session.setItem(AUTH_TOKEN_KEY, `x.${payload}.y`);
+  check("live base64url jwt is valid", hasValidAuthToken() === true);
 }

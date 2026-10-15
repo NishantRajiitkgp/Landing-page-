@@ -9,7 +9,7 @@ import { LIMITS } from "@/lib/italy/partner/limits";
 import { receiveUpload } from "@/lib/italy/partner/receive";
 import { clientKey, spend } from "@/lib/mom/account/limits";
 import { maskEmail, SIGN_IN_CODE_SECONDS } from "@/lib/mom/account/policy";
-import { seal, unseal } from "@/lib/mom/account/seal";
+import { seal, sealRemaining, unseal } from "@/lib/mom/account/seal";
 import { failure, reply, sameOrigin } from "@/lib/mom/http";
 import {
   firstField,
@@ -20,7 +20,7 @@ import {
   signInVerifySchema,
   verifyCodeSchema,
 } from "@/lib/italy/partner/requests";
-import { clearSession, readDemo, readSession, writeDemo, writeSession } from "@/lib/italy/partner/session";
+import { SESSION_COOKIE, clearSession, readDemo, readSession, writeDemo, writeSession } from "@/lib/italy/partner/session";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +35,8 @@ export async function GET(req: NextRequest, ctx: RouteContext<"/api/italy/partne
   if (!key) return failure("not_connected");
   const session = readSession(req, key);
   const res = reply({ ok: true, partner: session?.partner ?? null, demo: !italyLive() });
-  if (session) writeSession(res, key, session);
+  const ttl = sealRemaining(key, "session", req.cookies.get(SESSION_COOKIE)?.value);
+  if (session && ttl) writeSession(res, key, session, ttl);
   return res;
 }
 

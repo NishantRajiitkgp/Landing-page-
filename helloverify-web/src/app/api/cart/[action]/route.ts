@@ -1,5 +1,6 @@
 /** Cart + payment proxy. Mock when `TRAVEL_AUTH_BASE` is unset. */
-import { useMockTravelAuth } from "@/lib/auth/env";
+import { isMockTravelAuth } from "@/lib/auth/env";
+import { proxyFail, UpstreamFailure } from "@/lib/auth/failure";
 import {
   mockAddToCart,
   mockGetCartDetails,
@@ -36,14 +37,20 @@ function bearer(req: Request): string | null {
   return token || null;
 }
 
+function liveBearer(req: Request): string | null {
+  const token = bearer(req);
+  if (!isMockTravelAuth() && !token) throw new UpstreamFailure(401);
+  return token;
+}
+
 export async function GET(req: Request, ctx: { params: Promise<{ action: string }> }) {
   const { action } = await ctx.params;
   if (!GET_ACTIONS.has(action)) return fail("Unknown cart action", 404);
   try {
-    const data = useMockTravelAuth() ? mockGetCartDetails() : await upstreamCartList(bearer(req));
+    const data = isMockTravelAuth() ? mockGetCartDetails() : await upstreamCartList(liveBearer(req));
     return json(data);
   } catch (e) {
-    return fail(e instanceof Error ? e.message : "Cart request failed", 502);
+    return proxyFail(e, "Cart request failed");
   }
 }
 
@@ -52,10 +59,10 @@ export async function POST(req: Request, ctx: { params: Promise<{ action: string
   if (!POST_ACTIONS.has(action)) return fail("Unknown cart action", 404);
   if (action === "list") {
     try {
-      const data = useMockTravelAuth() ? mockGetCartDetails() : await upstreamCartList(bearer(req));
+      const data = isMockTravelAuth() ? mockGetCartDetails() : await upstreamCartList(liveBearer(req));
       return json(data);
     } catch (e) {
-      return fail(e instanceof Error ? e.message : "Cart request failed", 502);
+      return proxyFail(e, "Cart request failed");
     }
   }
 
@@ -68,15 +75,15 @@ export async function POST(req: Request, ctx: { params: Promise<{ action: string
 
   try {
     if (action === "add") {
-      const data = useMockTravelAuth() ? mockAddToCart(body) : await upstreamAddToCart(body, bearer(req));
+      const data = isMockTravelAuth() ? mockAddToCart(body) : await upstreamAddToCart(body, liveBearer(req));
       return json(data);
     }
     if (action === "remove") {
-      const data = useMockTravelAuth() ? mockRemoveCartItem() : await upstreamRemoveCartItem(body, bearer(req));
+      const data = isMockTravelAuth() ? mockRemoveCartItem() : await upstreamRemoveCartItem(body, liveBearer(req));
       return json(data);
     }
     if (action === "pay-init") {
-      if (useMockTravelAuth()) return json(mockPaymentInit());
+      if (isMockTravelAuth()) return json(mockPaymentInit());
       const ids = Array.isArray(body.user_card_ids)
         ? body.user_card_ids.filter((id): id is string => typeof id === "string" && id.length > 0)
         : [];
@@ -88,13 +95,13 @@ export async function POST(req: Request, ctx: { params: Promise<{ action: string
             is_cart_payment: body.is_cart_payment === true,
             currency: typeof body.currency === "string" ? body.currency : "INR",
           },
-          bearer(req),
+          liveBearer(req),
         ),
       );
     }
-    if (useMockTravelAuth()) return json(mockPaymentCallback());
-    return json(await upstreamPaymentCallback(body as unknown as RazorpaySuccessPayload, bearer(req)));
+    if (isMockTravelAuth()) return json(mockPaymentCallback());
+    return json(await upstreamPaymentCallback(body as unknown as RazorpaySuccessPayload, liveBearer(req)));
   } catch (e) {
-    return fail(e instanceof Error ? e.message : "Cart request failed", 502);
+    return proxyFail(e, "Cart request failed");
   }
 }

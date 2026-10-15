@@ -1,5 +1,6 @@
 /** Order list + candidate invite proxy. Mock when `TRAVEL_AUTH_BASE` is unset. */
-import { useMockTravelAuth } from "@/lib/auth/env";
+import { isMockTravelAuth } from "@/lib/auth/env";
+import { proxyFail, UpstreamFailure } from "@/lib/auth/failure";
 import { mockOrderList, mockSmbInvite, mockTravelInvite } from "@/lib/orders/mock";
 import { upstreamOrderList, upstreamSmbInvite, upstreamTravelInvite } from "@/lib/orders/upstream";
 import type { SendInvitePayload, SmbSendInvitePayload } from "@/lib/orders/types";
@@ -21,14 +22,20 @@ function bearer(req: Request): string | null {
   return token || null;
 }
 
+function liveBearer(req: Request): string | null {
+  const token = bearer(req);
+  if (!isMockTravelAuth() && !token) throw new UpstreamFailure(401);
+  return token;
+}
+
 export async function GET(req: Request, ctx: { params: Promise<{ action: string }> }) {
   const { action } = await ctx.params;
   if (action !== "list") return fail("Unknown orders action", 404);
   try {
-    const data = useMockTravelAuth() ? mockOrderList() : await upstreamOrderList(bearer(req));
+    const data = isMockTravelAuth() ? mockOrderList() : await upstreamOrderList(liveBearer(req));
     return json(data);
   } catch (e) {
-    return fail(e instanceof Error ? e.message : "Orders request failed", 502);
+    return proxyFail(e, "Orders request failed");
   }
 }
 
@@ -36,10 +43,10 @@ export async function POST(req: Request, ctx: { params: Promise<{ action: string
   const { action } = await ctx.params;
   if (action === "list") {
     try {
-      const data = useMockTravelAuth() ? mockOrderList() : await upstreamOrderList(bearer(req));
+      const data = isMockTravelAuth() ? mockOrderList() : await upstreamOrderList(liveBearer(req));
       return json(data);
     } catch (e) {
-      return fail(e instanceof Error ? e.message : "Orders request failed", 502);
+      return proxyFail(e, "Orders request failed");
     }
   }
   if (action !== "invite-smb" && action !== "invite-travel") return fail("Unknown orders action", 404);
@@ -53,12 +60,12 @@ export async function POST(req: Request, ctx: { params: Promise<{ action: string
 
   try {
     if (action === "invite-smb") {
-      if (useMockTravelAuth()) return json(mockSmbInvite());
-      return json(await upstreamSmbInvite(body as unknown as SmbSendInvitePayload, bearer(req)));
+      if (isMockTravelAuth()) return json(mockSmbInvite());
+      return json(await upstreamSmbInvite(body as unknown as SmbSendInvitePayload, liveBearer(req)));
     }
-    if (useMockTravelAuth()) return json(mockTravelInvite());
-    return json(await upstreamTravelInvite(body as unknown as SendInvitePayload, bearer(req)));
+    if (isMockTravelAuth()) return json(mockTravelInvite());
+    return json(await upstreamTravelInvite(body as unknown as SendInvitePayload, liveBearer(req)));
   } catch (e) {
-    return fail(e instanceof Error ? e.message : "Invite request failed", 502);
+    return proxyFail(e, "Invite request failed");
   }
 }

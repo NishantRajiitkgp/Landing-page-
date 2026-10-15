@@ -132,8 +132,10 @@ function PersonCard({ p, w, c, loading }: { p: Person; w: Words; c: Chrome; load
  *  element, at `left -621, right -401`, with LCP 5,042 ms against a 2,000 ms
  *  budget. The largest contentful paint was an image nobody could see.
  *
- *  The visible half stays eager on purpose: the strip animates from first
- *  paint, and a lazy first card pops in under the reader's eye. */
+ *  The visible half is lazy too since the strip moved to the eighth band
+ *  (30 Sep 2026): eager, its six photographs were preloaded at high
+ *  priority ahead of the hero on every homepage visit, for a band ~10,000px
+ *  down. The lazy loader fetches them well before the band is reached. */
 function Track({ words, c }: { words: Readonly<Record<PersonSrc, Words>>; c: Chrome }) {
   return (
     <div className="track">
@@ -144,7 +146,7 @@ function Track({ words, c }: { words: Readonly<Record<PersonSrc, Words>>; c: Chr
               assistive tech so each check is announced once, and its Buy
               links are out of the tab order. */}
           {i < PEOPLE.length ? (
-            <PersonCard p={p} w={words[p.src]} c={c} loading="eager" />
+            <PersonCard p={p} w={words[p.src]} c={c} loading="lazy" />
           ) : (
             <div className="ic-dupe" aria-hidden="true" inert>
               <PersonCard p={p} w={words[p.src]} c={c} loading="lazy" />

@@ -144,7 +144,7 @@ export const hi: IndividualsCopy = {
       steps: {
         scan: { t: "QR कोड स्कैन करें", p: "WhatsApp कैमरा से" },
         select: { t: "चुनें", p: "आप किसका वेरिफाई करना चाहते हैं" },
-        person: { t: "वेरिफाई होने वाला व्यक्ति", p: "WhatsApp कैमरा से" },
+        photo: { t: "फ़ोटो भेजें", p: "दस्तावेज़ का" },
       },
       checksInclude: "शामिल जाँचें",
       buy: "अभी खरीदें",

@@ -27,6 +27,7 @@
     REJECTED: drawing the pins on the canvas and hit-testing clicks. It
     matches the board pixel for pixel and gives a keyboard user nothing. */
 
+import Image from "next/image";
 import { useEffect, useId, useRef, useState, type PointerEvent, type ReactNode } from "react";
 
 import type { GlobeEngine } from "@/lib/globeEngine";
@@ -70,8 +71,7 @@ function Badge({ pin, lg = false }: { pin: GlobePin; lg?: boolean }) {
   // recoloured. Decorative: the country's name is on the pin and the card.
   return (
     <span className={lg ? "gb-flag gb-flag-lg" : "gb-flag"} aria-hidden="true">
-      {/* eslint-disable-next-line @next/next/no-img-element -- a 2 KB SVG; next/image adds nothing */}
-      <img src={pin.flag} alt="" width={lg ? 48 : 32} height={lg ? 36 : 24} draggable={false} />
+      <Image src={pin.flag} alt="" width={lg ? 48 : 32} height={lg ? 36 : 24} draggable={false} unoptimized />
     </span>
   );
 }

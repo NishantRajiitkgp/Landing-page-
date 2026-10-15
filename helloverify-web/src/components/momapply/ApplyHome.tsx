@@ -20,7 +20,7 @@ import { failureText, fill } from "./fill";
 import { AboutStep } from "./flow/AboutStep";
 import { ApplySummary } from "./flow/ApplySummary";
 import { ChecksStep } from "./flow/ChecksStep";
-import { useDraft } from "./flow/draft";
+import { forgetDraft, useDraft } from "./flow/draft";
 import { PayStep } from "./flow/PayStep";
 import { QualStep } from "./flow/QualStep";
 import { ReviewStep } from "./flow/ReviewStep";
@@ -51,11 +51,13 @@ export function ApplyHome(props: Props) {
     );
   }
 
+  const applicant = session.applicant;
   return (
     <Workspace
       {...props}
-      applicant={session.applicant}
+      applicant={applicant}
       onSignOut={async () => {
+        forgetDraft(applicant.id);
         await momAccount.signOut();
         router.replace(signInHref);
       }}

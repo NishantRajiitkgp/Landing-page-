@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 /** The lead form, driven by a real browser (BUILD-SPEC §14.1's E2E row, §10).
  *
@@ -27,6 +27,25 @@ import { expect, test } from "@playwright/test";
 
 const CONTACT = "/en/contact";
 
+/** The page renders the enquiry form with `idPrefix="c-"`, beside the track
+ *  tab's own `form.form`, so both are addressed through these. */
+const field = (id: string) => `#c-${id}`;
+const enquiryForm = (page: Page) =>
+  page.locator("form.form").filter({ has: page.locator("input[name='segment']") });
+
+/** Navigate, then wait until React owns the form. A click that lands before
+ *  hydration is a native POST that `useActionState` never sees, which under
+ *  a loaded parallel run is what made the mobile select test fail once and
+ *  pass on its own. React tags a hydrated element with `__reactProps$…`. */
+async function open(page: Page, url = CONTACT): Promise<void> {
+  await page.goto(url);
+  await expect
+    .poll(() => enquiryForm(page).evaluate((f) => Object.keys(f).some((k) => k.startsWith("__reactProps"))), {
+      timeout: 30_000,
+    })
+    .toBe(true);
+}
+
 /** `example.com` is reserved by RFC 2606 and has no mail server, which the
  *  undeliverable-email check would normally reject — so these tests assert the
  *  path they actually reach rather than assuming a success. */
@@ -40,7 +59,7 @@ const SYNTHETIC = {
 
 test.describe("contact form", () => {
   test("the browser blocks an empty submit before any POST", async ({ page }) => {
-    await page.goto(CONTACT);
+    await open(page);
 
     let posted = false;
     page.on("request", (r) => {
@@ -53,20 +72,20 @@ test.describe("contact form", () => {
     // module the server schema is built from. This asserts the browser is
     // actually enforcing them — the reason the form ships no client validator
     // and no zod on the client at all.
-    await expect(page.locator("#name")).toBeFocused();
+    await expect(page.locator(field("name"))).toBeFocused();
     expect(posted, "no POST should be made for an invalid form").toBe(false);
   });
 
   test("a server-side field error comes back attached to its input", async ({ page }) => {
-    await page.goto(CONTACT);
+    await open(page);
 
     // `novalidate` the browser's own pass so the POST actually happens: the
     // point is to see what the SERVER says, which is the path a visitor with
     // an odd autofill or a scripted client takes.
-    await page.locator("form.form").evaluate((f: HTMLFormElement) => f.setAttribute("novalidate", ""));
+    await enquiryForm(page).evaluate((f: HTMLFormElement) => f.setAttribute("novalidate", ""));
 
-    await page.locator("#name").fill("x"); // below LIMITS.name.min
-    await page.locator("#email").fill("not-an-email");
+    await page.locator(field("name")).fill("x"); // below LIMITS.name.min
+    await page.locator(field("email")).fill("not-an-email");
     await page.getByRole("button", { name: "Submit" }).click();
 
     const status = page.locator(".status[role='status']");
@@ -74,39 +93,39 @@ test.describe("contact form", () => {
 
     // The error is not merely on screen — it is associated, which is what a
     // screen reader needs and what jsdom-axe cannot confirm on a POST result.
-    const email = page.locator("#email");
+    const email = page.locator(field("email"));
     await expect(email).toHaveAttribute("aria-invalid", "true");
-    await expect(email).toHaveAttribute("aria-describedby", "email-error");
-    await expect(page.locator("#email-error")).toBeVisible();
+    await expect(email).toHaveAttribute("aria-describedby", "c-email-error");
+    await expect(page.locator(field("email-error"))).toBeVisible();
   });
 
   test("what the user typed survives a rejected submission", async ({ page }) => {
-    await page.goto(CONTACT);
-    await page.locator("form.form").evaluate((f: HTMLFormElement) => f.setAttribute("novalidate", ""));
+    await open(page);
+    await enquiryForm(page).evaluate((f: HTMLFormElement) => f.setAttribute("novalidate", ""));
 
-    await page.locator("#name").fill(SYNTHETIC.name);
-    await page.locator("#company").fill(SYNTHETIC.company);
-    await page.locator("#email").fill("not-an-email");
-    await page.locator("#message").fill(SYNTHETIC.message);
+    await page.locator(field("name")).fill(SYNTHETIC.name);
+    await page.locator(field("company")).fill(SYNTHETIC.company);
+    await page.locator(field("email")).fill("not-an-email");
+    await page.locator(field("message")).fill(SYNTHETIC.message);
     await page.getByRole("button", { name: "Submit" }).click();
 
     await expect(page.locator(".status[role='status']")).toBeVisible();
     // `echo()` in the action reads the known fields back deliberately so a
     // failed submission does not cost the visitor their typing.
-    await expect(page.locator("#name")).toHaveValue(SYNTHETIC.name);
-    await expect(page.locator("#company")).toHaveValue(SYNTHETIC.company);
-    await expect(page.locator("#message")).toHaveValue(SYNTHETIC.message);
+    await expect(page.locator(field("name"))).toHaveValue(SYNTHETIC.name);
+    await expect(page.locator(field("company"))).toHaveValue(SYNTHETIC.company);
+    await expect(page.locator(field("message"))).toHaveValue(SYNTHETIC.message);
   });
 
   test("the select keeps its choice across a rejected submission", async ({ page }) => {
-    await page.goto(CONTACT);
-    await page.locator("form.form").evaluate((f: HTMLFormElement) => f.setAttribute("novalidate", ""));
+    await open(page);
+    await enquiryForm(page).evaluate((f: HTMLFormElement) => f.setAttribute("novalidate", ""));
 
-    const interest = page.locator("#interest");
+    const interest = page.locator(field("interest"));
     const value = await interest.locator("option").nth(1).getAttribute("value");
     await interest.selectOption(value!);
 
-    await page.locator("#email").fill("not-an-email");
+    await page.locator(field("email")).fill("not-an-email");
     await page.getByRole("button", { name: "Submit" }).click();
     await expect(page.locator(".status[role='status']")).toBeVisible();
 
@@ -118,23 +137,23 @@ test.describe("contact form", () => {
   });
 
   test("?interest= arrives pre-selected", async ({ page }) => {
-    await page.goto(CONTACT);
-    const value = await page.locator("#interest option").nth(1).getAttribute("value");
+    await open(page);
+    const value = await page.locator(`${field("interest")} option`).nth(1).getAttribute("value");
 
-    await page.goto(`${CONTACT}?interest=${value}`);
+    await open(page, `${CONTACT}?interest=${value}`);
     // Applied in an effect against the DOM rather than through `defaultValue`,
     // because /contact is statically prerendered and deriving it during render
     // would be a hydration mismatch. So it is only true after hydration.
-    await expect(page.locator("#interest")).toHaveValue(value!);
+    await expect(page.locator(field("interest"))).toHaveValue(value!);
   });
 
   test("an unknown ?interest= is ignored rather than injected", async ({ page }) => {
-    await page.goto(`${CONTACT}?interest=not-a-real-option`);
-    await expect(page.locator("#interest")).toHaveValue("");
+    await open(page, `${CONTACT}?interest=not-a-real-option`);
+    await expect(page.locator(field("interest"))).toHaveValue("");
   });
 
   test("the honeypot is present, hidden, and off the keyboard path", async ({ page }) => {
-    await page.goto(CONTACT);
+    await open(page);
     const pot = page.locator("input.vh[aria-hidden='true']");
     await expect(pot).toHaveCount(1);
 
@@ -156,7 +175,7 @@ test.describe("contact form", () => {
     // And it must not be reachable by keyboard, which is the property
     // `tabindex="-1"` is actually for. Tabbing from the last real control
     // must never land on it.
-    await page.locator("#message").focus();
+    await page.locator(field("message")).focus();
     await page.keyboard.press("Tab");
     await expect(pot).not.toBeFocused();
   });

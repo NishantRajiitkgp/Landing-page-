@@ -21,7 +21,6 @@
 .ig-flag { flex: none; display: block; width: 40px; height: 30px; border-radius: 2px; overflow: hidden; box-shadow: 0 0 0 2px var(--white), 0 6px 14px -6px rgb(from var(--ink) r g b / .7); }
 .ig-flag img { display: block; width: 100%; height: 100%; }
 .ig-title b { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.2vw, 30px); line-height: 1.05; letter-spacing: -.02em; }
-.ig-p { font-size: 15px; line-height: 1.45; color: rgb(from var(--white) r g b / .86); }
 .ig-go { position: absolute; inset-inline-end: 20px; top: 20px; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--white); color: var(--ink); opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s cubic-bezier(.16, 1, .3, 1); }
 .ig-card:hover .ig-go, .ig-link:focus-visible .ig-go { opacity: 1; transform: none; }
 .ig-card:hover .pimg { transform: scale(1.05); }
@@ -47,7 +46,6 @@
 @media (max-width: 639px) {
   .ig-grid { grid-template-columns: minmax(0, 1fr); grid-auto-rows: minmax(220px, auto); gap: 14px; }
   .ig-body { inset-inline: 18px; bottom: 18px; }
-  .ig-p { font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ig-ph .pimg, .ig-go { transition: none; }

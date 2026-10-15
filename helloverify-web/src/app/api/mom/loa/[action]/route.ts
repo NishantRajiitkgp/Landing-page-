@@ -6,7 +6,7 @@ import type { NextRequest, NextResponse } from "next/server";
 import { logEvent } from "@/lib/leads/log";
 import { AccountError } from "@/lib/mom/account/backend";
 import { clientKey, spend } from "@/lib/mom/account/limits";
-import { maskEmail } from "@/lib/mom/account/policy";
+import { maskEmail, maskPassport } from "@/lib/mom/account/policy";
 import { seal, unseal } from "@/lib/mom/account/seal";
 import { signatureMatches } from "@/lib/mom/apply/policy";
 import { failure, reply, sameOrigin } from "@/lib/mom/http";
@@ -52,8 +52,8 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/mom/loa/[ac
       const view: LoaView = {
         id: c.id,
         name: c.name,
-        passportNo: c.passportNo,
-        dob: c.dob,
+        passportNo: maskPassport(c.passportNo),
+        dob: "",
         nationality: c.nationality,
         passType: c.passType,
         quals: c.quals,
@@ -84,7 +84,12 @@ export async function POST(req: NextRequest, ctx: RouteContext<"/api/mom/loa/[ac
       const wait = await spend([[`loa:verify:${id}`, 8, 10 * MINUTE]]);
       if (wait) return failure("rate_limited", { retryAfter: wait });
       await backend.verifyCode(ticket, code);
-      return reply({ ok: true, proof: seal(key, "loa-proof", { k: id }, LOA_PROOF_TTL) });
+      return reply({
+        ok: true,
+        proof: seal(key, "loa-proof", { k: id }, LOA_PROOF_TTL),
+        passportNo: ticket.c.passportNo,
+        dob: ticket.c.dob,
+      });
     }
 
     const proof = unseal<{ k: string }>(key, "loa-proof", typeof body.proof === "string" ? body.proof : null);

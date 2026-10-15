@@ -31,8 +31,8 @@ export function readOrgSession(req: NextRequest, key: Buffer): OrgSession | null
   return unseal<OrgSession>(key, "session", req.cookies.get(ORG_SESSION_COOKIE)?.value);
 }
 
-export function writeOrgSession(res: NextResponse, key: Buffer, data: OrgSession) {
-  res.cookies.set(ORG_SESSION_COOKIE, seal(key, "session", data, SESSION_TTL), options(SESSION_TTL));
+export function writeOrgSession(res: NextResponse, key: Buffer, data: OrgSession, ttl = SESSION_TTL) {
+  res.cookies.set(ORG_SESSION_COOKIE, seal(key, "session", data, ttl), options(ttl));
 }
 
 export function clearOrgSession(res: NextResponse) {

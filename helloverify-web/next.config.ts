@@ -7,6 +7,17 @@ import { legacyRedirects } from "./src/lib/seo/redirects";
 const withNextIntl = createNextIntlPlugin("./src/lib/i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  /** The default `X-Powered-By: Next.js` names the framework on every response. */
+  poweredByHeader: false,
+
+  experimental: {
+    /** On by default since 16.4, and it writes every browser console line to
+     *  `.next/dev/logs/next-development.log`. On Windows each write wakes the
+     *  dev watcher, the rebuild reloads the page, the reload logs again — a
+     *  reload every 2-5 s with no source change. Nothing here uses `/_next/mcp`. */
+    mcpServer: false,
+  },
+
   /** §6.1: one URL form, never two. Next's default, set explicitly because the
    *  old site served `/en`, `/en/` AND `/en/index.html` as three live URLs for
    *  the same page and nobody had written down which one was real (AUDIT A2). */
@@ -215,6 +226,16 @@ const nextConfig: NextConfig = {
           { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
         ],
       },
+      /** `public/` files are served `max-age=0` by default, so every visit
+       *  re-validates every flag, logo and unoptimised image (measured on
+       *  `next start`, 14 Oct 2026). They are not content-hashed, so not
+       *  `immutable`: a day fresh, then served stale for a week while the
+       *  browser or CDN revalidates in the background. Hashed `/_next/static`
+       *  and optimised `/_next/image` responses keep Next's own headers. */
+      ...["/img/:path*", "/flags/:path*", "/logo.png"].map((source) => ({
+        source,
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" }],
+      })),
     ];
   },
 

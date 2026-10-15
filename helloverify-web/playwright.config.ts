@@ -113,6 +113,8 @@ export default defineConfig({
 
   webServer: {
     command: `npx next start -p ${PORT}`,
+    // The account spec signs in with the mock OTP; see src/lib/runtime/demo.ts.
+    env: { HV_E2E_DEMO: "1" },
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

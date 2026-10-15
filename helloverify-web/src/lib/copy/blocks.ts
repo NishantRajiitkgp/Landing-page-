@@ -22,9 +22,6 @@ export type BlocksCopy = typeof en;
 
 export const BLOCKS: Dictionary<BlocksCopy> = { en, hi, ar };
 
-/** A message in the HelloV thread. */
-export type PhoneMsgId = keyof BlocksCopy["helloVPhone"]["msgs"];
-
-/** A line in the phone's finished report. */
-export type PhoneReportRow = keyof BlocksCopy["helloVPhone"]["report"]["rows"];
+/** An option in the HelloV bot's menu. */
+export type PhoneMenuItem = keyof BlocksCopy["helloVPhone"]["menu"]["items"];
 

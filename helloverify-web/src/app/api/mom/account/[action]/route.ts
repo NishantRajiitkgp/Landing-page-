@@ -23,8 +23,8 @@ import {
   signInVerifySchema,
   verifyCodeSchema,
 } from "@/lib/mom/account/requests";
-import { seal, unseal } from "@/lib/mom/account/seal";
-import { clearSession, readDemo, readSession, writeDemo, writeSession } from "@/lib/mom/account/session";
+import { seal, sealRemaining, unseal } from "@/lib/mom/account/seal";
+import { SESSION_COOKIE, clearSession, readDemo, readSession, writeDemo, writeSession } from "@/lib/mom/account/session";
 import { failure, reply, sameOrigin } from "@/lib/mom/http";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +40,8 @@ export async function GET(req: NextRequest, ctx: RouteContext<"/api/mom/account/
   if (!key) return failure("not_connected");
   const session = readSession(req, key);
   const res = reply({ ok: true, applicant: session?.applicant ?? null, demo: !momLive() });
-  if (session) writeSession(res, key, session);
+  const ttl = sealRemaining(key, "session", req.cookies.get(SESSION_COOKIE)?.value);
+  if (session && ttl) writeSession(res, key, session, ttl);
   return res;
 }
 

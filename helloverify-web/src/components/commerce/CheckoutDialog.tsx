@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useAuth } from "@/components/auth/AuthProvider";
+import type { PackageCheckoutDetails } from "@/lib/auth/types";
 import { addToCart } from "@/lib/cart/client";
 import { buildAddToCartPayload } from "@/lib/cart/payload";
 import { resolveCheckoutPricing } from "@/lib/cart/price";
@@ -26,12 +27,17 @@ export function CheckoutDialog({ t, locale }: { t: CheckoutCopy; locale: string 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!checkoutOpen) return;
-    const fromForm = Number(pendingCheckout?.addToCartBody?.initial_unit_count);
-    setPersons(fromForm > 0 ? fromForm : 1);
-    setError(null);
-  }, [checkoutOpen, pendingCheckout]);
+  /** Re-seed for each package the dialog opens on. */
+  const opening = checkoutOpen ? pendingCheckout : null;
+  const [seededFor, setSeededFor] = useState<PackageCheckoutDetails | null>(null);
+  if (opening !== seededFor) {
+    setSeededFor(opening);
+    if (opening) {
+      const fromForm = Number(opening.addToCartBody?.initial_unit_count);
+      setPersons(fromForm > 0 ? fromForm : 1);
+      setError(null);
+    }
+  }
 
   const pricing = useMemo(
     () =>

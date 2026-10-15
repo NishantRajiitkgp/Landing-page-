@@ -26,6 +26,7 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 // One CTA system for the homepage (`.hv-home`), after every section sheet.
 import "@/app/v2/ctas.css";
+import "@/app/v2/home.css";
 
 /** The homepage inherited its title and description from the root layout and
  *  needed no export of its own — until §8.1, because a canonical cannot be

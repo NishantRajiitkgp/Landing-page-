@@ -3,9 +3,14 @@
 import { useSearchParams } from "next/navigation";
 import { useId, useState } from "react";
 
-import { Flag, IntlSelect } from "@/components/international/IntlSelect";
+import { SortArrow, TickIcon } from "@/components/international/checkIcons";
+import { IntlNotices } from "@/components/international/IntlNotices";
+import { IntlSelect } from "@/components/international/IntlSelect";
+import { IntlSummary, type SummaryCopy } from "@/components/international/IntlSummary";
 import {
+  currencyOf,
   enquiryHref,
+  formatMoney,
   INTL_CHECKS,
   intlOptions,
   resolveIntlCode,
@@ -13,23 +18,10 @@ import {
   type CmsCountryId,
   type IntlCheck,
 } from "@/lib/international/catalog";
+import { daysOf, localPrice, priceOf, quoteOf, sizeOf, type Delivery } from "@/lib/international/order";
 
 type SortKey = "name" | "price" | "tat";
 const SORTS: readonly SortKey[] = ["name", "price", "tat"];
-
-export type SummaryCopy = {
-  h: string;
-  empty: string;
-  count: string;
-  total: string;
-  ready: string;
-  cta: string;
-  clear: string;
-  remove: string;
-  note: string;
-  review: string;
-  fast: { t: string; p: string; extra: string };
-};
 
 type ChecksProps = {
   locale: string;
@@ -52,7 +44,10 @@ type ChecksProps = {
  *  the list adds up the price and the longest turnaround; its one CTA goes
  *  to the enquiry form. Default country is the CMS `US`. Names, prices and
  *  turnarounds are the ops catalog, so they are audit-skipped — the CMS
- *  rows are rendered separately by the page. */
+ *  rows are rendered separately by the page. Prices show in the country's
+ *  currency, with the high-risk fee already in them (`lib/international/order`).
+ *  Changing country keeps every ticked check the new one offers (matched by
+ *  name) and says which were dropped. */
 export function IntlChecks({
   locale,
   initialCode,
@@ -76,28 +71,38 @@ export function IntlChecks({
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [checked, setChecked] = useState<ReadonlySet<string>>(new Set());
   const [fast, setFast] = useState(false);
-  const href = enquiryHref(locale) + (fast ? "&rush=1" : "");
+  const [delivery, setDelivery] = useState<Delivery>("each");
+  const [dropped, setDropped] = useState<readonly string[]>([]);
   const options = intlOptions(countries, "checks");
   const country = options.find((o) => o.code === code);
+  const cur = currencyOf(code);
   const rows = INTL_CHECKS[code] ?? [];
   const sorted = sortKey ? [...rows].sort((a, b) => compare(a, b, sortKey, sortDir)) : rows;
   const maxDays = Math.max(0, ...rows.map(daysOf).filter(Number.isFinite));
   const picked = rows.filter((r) => checked.has(r.id));
-  const rushOn = fast && picked.length > 0;
-  const subtotal = picked.reduce((sum, r) => sum + priceOf(r), 0);
-  const rushFee = Math.round(subtotal * 0.3);
-  const total = subtotal + (rushOn ? rushFee : 0);
-  const longest = picked.reduce<IntlCheck | null>((max, r) => (!max || daysOf(r) > daysOf(max) ? r : max), null);
-  const readyTat = longest ? (rushOn ? halfTat(longest.tat) : longest.tat) : "";
-  const totalLabel = money(total);
+  const quote = quoteOf(code, picked, fast, delivery);
+  const href = enquiryHref(locale) + (quote.rushOn ? "&rush=1" : "") + (quote.together ? "&delivery=together" : "");
+  const totalLabel = formatMoney(quote.total, cur);
   const countLabel = summary.count.replace("{{count}}", String(picked.length));
 
-  const pickCountry = (next: string) => {
-    setCode(next);
-    setSortKey(null);
-    setSortDir("asc");
+  const reset = () => {
     setChecked(new Set());
     setFast(false);
+    setDelivery("each");
+    setDropped([]);
+  };
+
+  const pickCountry = (next: string) => {
+    if (next === code) return;
+    const offered = new Map((INTL_CHECKS[next] ?? []).map((r) => [r.name, r.id]));
+    const kept = picked.flatMap((r) => offered.get(r.name) ?? []);
+    setCode(next);
+    setChecked(new Set(kept));
+    setDropped(picked.filter((r) => !offered.has(r.name)).map((r) => r.name));
+    if (kept.length === 0) {
+      setFast(false);
+      setDelivery("each");
+    }
   };
 
   const toggleSort = (key: SortKey) => {
@@ -109,6 +114,7 @@ export function IntlChecks({
   };
 
   const toggleChecked = (id: string) => {
+    setDropped([]);
     setChecked((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
@@ -131,7 +137,20 @@ export function IntlChecks({
             <span className="ic-k" aria-hidden="true">
               {pick}
             </span>
-            <IntlSelect label={pick} value={code} options={options} search={search} none={none} onChange={pickCountry} />
+            <IntlSelect
+              label={pick}
+              value={code}
+              options={options}
+              search={search}
+              none={none}
+              riskTag={summary.risk.tag}
+              note={
+                <>
+                  <b>{summary.risk.menuB}</b> {summary.risk.menuP}
+                </>
+              }
+              onChange={pickCountry}
+            />
           </div>
           <div className="ic-sort">
             <span className="ic-k" aria-hidden="true">
@@ -159,13 +178,16 @@ export function IntlChecks({
           {available.replace("{{count}}", String(rows.length))}
         </p>
 
+        <IntlNotices copy={summary} country={country} dropped={dropped} />
+
         {rows.length === 0 ? (
           <p className="intl3-empty">{empty}</p>
         ) : (
           <ul className="ic-list">
             {sorted.map((row) => {
               const on = checked.has(row.id);
-              const [amount, unit] = splitPrice(row.price);
+              const amount = formatMoney(localPrice(row, code), cur);
+              const unit = splitPrice(row.price)[1];
               return (
                 <li key={row.id}>
                   <label className={`ic-row${on ? " on" : ""}`}>
@@ -198,10 +220,11 @@ export function IntlChecks({
                       ) : null}
                     </span>
                     <span className="ic-price" data-audit-skip="yes">
-                      <bdi dir="ltr">
+                      <bdi dir="ltr" className={sizeOf(amount)}>
                         <b>{amount}</b>
                         {unit ? <small>{unit}</small> : null}
                       </bdi>
+                      {quote.feeUsd ? <span className="ic-fee">{summary.risk.row}</span> : null}
                     </span>
                   </label>
                 </li>
@@ -221,135 +244,22 @@ export function IntlChecks({
         ) : null}
       </div>
 
-      <aside className="ic-sum" id={sumId} aria-label={summary.h}>
-        <div className="ic-sum-hd">
-          <span className="ic-k">{summary.h}</span>
-          {country ? (
-            <span className="ic-sum-where" data-audit-skip={country.cms ? undefined : "yes"}>
-              <Flag option={country} />
-              {country.name}
-            </span>
-          ) : null}
-        </div>
-
-        {picked.length === 0 ? (
-          <div className="ic-empty">
-            <span className="ic-empty-ic" aria-hidden="true">
-              <TickIcon />
-            </span>
-            <p>{summary.empty}</p>
-          </div>
-        ) : (
-          <ul className="ic-picked">
-            {picked.map((r) => (
-              <li key={r.id}>
-                <span data-audit-skip="yes">
-                  <bdi>{r.name}</bdi>
-                </span>
-                <bdi dir="ltr" data-audit-skip="yes">
-                  {splitPrice(r.price)[0]}
-                </bdi>
-                <button type="button" aria-label={summary.remove.replace("{{name}}", r.name)} onClick={() => toggleChecked(r.id)}>
-                  <CloseIcon />
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {picked.length > 0 ? (
-          <label className={`ic-fast${rushOn ? " on" : ""}`}>
-            <input
-              type="checkbox"
-              className="ic-input"
-              checked={rushOn}
-              onChange={() => setFast((v) => !v)}
-            />
-            <span className="ic-box" aria-hidden="true">
-              <TickIcon />
-            </span>
-            <span className="ic-fast-tx">
-              <b>{summary.fast.t}</b>
-              <span>{summary.fast.p}</span>
-            </span>
-            <span className="ic-fast-fee">
-              <i>{summary.fast.extra}</i>
-              <bdi dir="ltr">+{money(rushFee)}</bdi>
-            </span>
-          </label>
-        ) : null}
-
-        <div className={`ic-total${picked.length ? "" : " zero"}`}>
-          <span className="ic-k">{summary.total}</span>
-          <b>
-            <bdi dir="ltr">{totalLabel}</bdi>
-          </b>
-          {picked.length > 0 ? <span className="ic-total-n">{countLabel}</span> : null}
-        </div>
-
-        {longest ? (
-          <p className={`ic-ready${rushOn ? " rush" : ""}`}>
-            <ClockIcon />
-            <span>{summary.ready}</span>
-            <b data-audit-skip="yes">
-              <bdi>{readyTat}</bdi>
-            </b>
-          </p>
-        ) : null}
-
-        <a className={`ic-cta${picked.length ? " on" : ""}`} href={href}>
-          <span>{summary.cta}</span>
-          <ArrowIcon />
-        </a>
-        {picked.length > 0 ? (
-          <button type="button" className="ic-clear" onClick={() => { setChecked(new Set()); setFast(false); }}>
-            {summary.clear}
-          </button>
-        ) : null}
-        <p className="ic-note">{summary.note}</p>
-      </aside>
+      <IntlSummary
+        id={sumId}
+        locale={locale}
+        copy={summary}
+        country={country}
+        code={code}
+        picked={picked}
+        quote={quote}
+        delivery={delivery}
+        href={href}
+        onRemove={toggleChecked}
+        onRush={() => setFast((v) => !v)}
+        onDelivery={setDelivery}
+        onClear={reset}
+      />
     </div>
-  );
-}
-
-function SortArrow({ dir }: { dir?: "asc" | "desc" }) {
-  return (
-    <svg className={`ic-arrow${dir ? ` ${dir}` : ""}`} viewBox="0 0 12 12" aria-hidden="true">
-      <path d="M6 2.5v7M3 6.5l3 3 3-3" />
-    </svg>
-  );
-}
-
-function TickIcon() {
-  return (
-    <svg viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M3.5 8.5l3 3 6-7" pathLength={1} />
-    </svg>
-  );
-}
-
-function ClockIcon() {
-  return (
-    <svg className="ic-clock" viewBox="0 0 16 16" aria-hidden="true">
-      <circle cx="8" cy="8" r="6.25" />
-      <path d="M8 4.75V8l2.25 1.5" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg viewBox="0 0 12 12" aria-hidden="true">
-      <path d="M3 3l6 6M9 3l-6 6" />
-    </svg>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg className="ic-go" viewBox="0 0 16 16" aria-hidden="true">
-      <path d="M3 8h10M9 4l4 4-4 4" />
-    </svg>
   );
 }
 
@@ -359,30 +269,10 @@ export function IntlChecksBound(props: ChecksProps) {
   return <IntlChecks {...props} initialCode={resolveIntlCode(hint) || "US"} />;
 }
 
-function money(n: number) {
-  return `$${n.toLocaleString("en-US")}`;
-}
-
-/** Halve every figure in a TAT string. One working day is the floor. */
-function halfTat(tat: string) {
-  return tat.replace(/\d+/g, (n) => String(Math.max(1, Math.ceil(Number(n) / 2))));
-}
-
 /** `$135/check` → [`$135`, `/check`]. */
 function splitPrice(price: string): [string, string] {
   const at = price.indexOf("/");
   return at < 0 ? [price, ""] : [price.slice(0, at), price.slice(at)];
-}
-
-function priceOf(row: IntlCheck): number {
-  const n = Number(row.price.replace(/[^0-9.]/g, ""));
-  return Number.isFinite(n) ? n : 0;
-}
-
-/** The slowest figure in a turnaround: "4-7 Working Days" is 7. */
-function daysOf(row: IntlCheck): number {
-  const nums = row.tat.match(/\d+/g)?.map(Number) ?? [];
-  return nums.length ? Math.max(...nums) : Number.POSITIVE_INFINITY;
 }
 
 function compare(a: IntlCheck, b: IntlCheck, key: SortKey, dir: "asc" | "desc") {

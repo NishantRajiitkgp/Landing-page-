@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { authorityClient } from "@/lib/authority/client";
-import { buildInvitePayload, flattenPackages, type PackageRow } from "@/lib/authority/invite";
+import { buildInvitePayload } from "@/lib/authority/invite";
 import type { AuthorityId } from "@/lib/authority/portals";
 import {
   isValidEmail,
@@ -15,6 +15,9 @@ import {
   normalizePhoneDigits,
 } from "@/lib/authority/validate";
 import type { AuthorityCopy } from "@/lib/copy/authority";
+
+import { ApplicantPackages, useRegisterOptions } from "./ApplicantPackages";
+import { ApplicantVerifyRow } from "./ApplicantVerifyRow";
 
 type Props = {
   authority: AuthorityId;
@@ -30,11 +33,6 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
   const [last, setLast] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [dial, setDial] = useState("+91");
-  const [dials, setDials] = useState<Array<{ Dialingcode: string; country_name?: string }>>([]);
-  const [packages, setPackages] = useState<PackageRow[]>([]);
-  const [pkgId, setPkgId] = useState<number | null>(null);
-  const [pkgLoading, setPkgLoading] = useState(false);
   const [emailOtp, setEmailOtp] = useState("");
   const [smsOtp, setSmsOtp] = useState("");
   const [emailSent, setEmailSent] = useState(false);
@@ -45,41 +43,14 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const selected = packages.find((p) => p.client_package_id === pkgId) ?? null;
+  const { dial, setDial, dials, packages, pkgId, setPkgId, pkgLoading, loadPackages, selected } =
+    useRegisterOptions(authority, t.loadPackagesFailed, setError);
   const fullName = `${name.trim()} ${last.trim()}`.trim();
   const phoneMax = authority === "mom" ? 15 : 10;
   const phonePlaceholder = authority === "mom" ? t.momPhonePlaceholder : t.phonePlaceholder;
   const phoneError = authority === "mom" ? t.momInvalidPhone : t.invalidPhone;
   const phoneDigits = (value: string) => normalizePhoneDigits(value, phoneMax);
   const phoneValid = (value: string) => (authority === "mom" ? isValidPhoneSpan(value, 7, 15) : isValidPhone(value));
-
-  async function loadPackages() {
-    setPkgLoading(true);
-    setError(null);
-    try {
-      const res = await authorityClient.packages(authority);
-      const list = flattenPackages(res);
-      setPackages(list);
-      if (list[0]) setPkgId(list[0].client_package_id);
-      if (!list.length) setError(t.loadPackagesFailed);
-    } catch {
-      setError(t.loadPackagesFailed);
-    } finally {
-      setPkgLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    void loadPackages();
-    void authorityClient.dialCodes(authority).then((res) => {
-      const rows = (res.result ?? []).filter((r) => r.Dialingcode);
-      if (rows.length) {
-        setDials(rows);
-        const preferred = rows.find((r) => r.Dialingcode === "+91") ?? rows[0];
-        if (preferred) setDial(preferred.Dialingcode);
-      }
-    });
-  }, [authority]);
 
   async function sendEmail() {
     if (!name.trim() || !last.trim()) {
@@ -99,7 +70,7 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
         setEmail(id);
         setEmailSent(true);
         setShowMock(Boolean(res.mock));
-      } else if (res.message?.toLowerCase().includes("duplicate")) onDuplicate();
+      } else if (res.data?.duplicate_found || res.message?.toLowerCase().includes("duplicate")) onDuplicate();
       else setError(res.message ?? t.sendEmailOtpFailed);
     } catch (e) {
       setError(e instanceof Error ? e.message : t.sendEmailOtpFailed);
@@ -259,90 +230,56 @@ export function ApplicantRegister({ authority, t, mockHint, onClose, onDuplicate
         </div>
       </div>
 
-      <span className="lg-label">{t.selectPackage}</span>
-      {pkgLoading && packages.length === 0 ? <p className="lg-sub">{t.loadingPackages}</p> : null}
-      {!pkgLoading && packages.length === 0 ? (
-        <button type="button" className="btn btn-line btn-sm" onClick={() => void loadPackages()}>
-          {t.loadPackages}
-        </button>
-      ) : null}
-      {packages.map((pkg) => (
-        <label key={pkg.client_package_id} className={`lg-pkg${pkgId === pkg.client_package_id ? " is-on" : ""}`}>
-          <input
-            type="radio"
-            name="ap-pkg"
-            checked={pkgId === pkg.client_package_id}
-            onChange={() => setPkgId(pkg.client_package_id)}
-          />
-          <span>
-            <strong>{pkg.package}</strong>
-            {pkg.checks ? (
-              <span className="lg-sub"> {Array.isArray(pkg.checks) ? pkg.checks.join(", ") : pkg.checks}</span>
-            ) : null}
-          </span>
-        </label>
-      ))}
+      <ApplicantPackages t={t} packages={packages} pkgId={pkgId} onPick={setPkgId} loading={pkgLoading} onLoad={loadPackages} />
 
-      <label className="lg-label" htmlFor="ap-reg-email">
-        {t.email}
-      </label>
-      {emailOk ? (
-        <p className="lg-sent">
-          {email} <strong>{t.verified}</strong>
-        </p>
-      ) : emailSent ? (
-        <div className="lg-inline">
-          <input className="inp lg-input" value={email} disabled />
-          <input className="inp lg-input" inputMode="numeric" maxLength={6} value={emailOtp} placeholder={t.otpPlaceholder} onChange={(e) => setEmailOtp(normalizeOtp(e.target.value))} aria-label={t.otp} />
-          <button type="button" className="btn btn-ink btn-sm" disabled={loading} onClick={() => void verifyEmail()}>
-            {t.verify}
-          </button>
-          <button type="button" className="lg-edit" onClick={() => { setEmailSent(false); setEmailOtp(""); }}>
-            {t.changeEmail}
-          </button>
-        </div>
-      ) : (
-        <div className="lg-inline">
-          <input id="ap-reg-email" className="inp lg-input" type="email" value={email} placeholder={t.emailPlaceholder} onChange={(e) => setEmail(e.target.value)} />
-          <button type="button" className="btn btn-ink btn-sm" disabled={loading} onClick={() => void sendEmail()}>
-            {t.sendOtp}
-          </button>
-        </div>
-      )}
+      <ApplicantVerifyRow
+        t={t}
+        label={t.email}
+        htmlFor="ap-reg-email"
+        value={email}
+        verified={emailOk}
+        sent={emailSent}
+        otp={emailOtp}
+        onOtp={setEmailOtp}
+        onSend={() => void sendEmail()}
+        onVerify={() => void verifyEmail()}
+        onChange={() => {
+          setEmailSent(false);
+          setEmailOtp("");
+        }}
+        changeLabel={t.changeEmail}
+        loading={loading}
+      >
+        <input id="ap-reg-email" className="inp lg-input" type="email" value={email} placeholder={t.emailPlaceholder} onChange={(e) => setEmail(e.target.value)} />
+      </ApplicantVerifyRow>
 
-      <label className="lg-label" htmlFor="ap-reg-phone">
-        {t.phone}
-      </label>
-      {phoneOk ? (
-        <p className="lg-sent">
-          {dial} {phone} <strong>{t.verified}</strong>
-        </p>
-      ) : smsSent ? (
-        <div className="lg-inline">
-          <input className="inp lg-input" value={`${dial} ${phone}`} disabled />
-          <input className="inp lg-input" inputMode="numeric" maxLength={6} value={smsOtp} placeholder={t.otpPlaceholder} onChange={(e) => setSmsOtp(normalizeOtp(e.target.value))} aria-label={t.otp} />
-          <button type="button" className="btn btn-ink btn-sm" disabled={loading} onClick={() => void verifySms()}>
-            {t.verify}
-          </button>
-          <button type="button" className="lg-edit" onClick={() => { setSmsSent(false); setSmsOtp(""); }}>
-            {t.changePhone}
-          </button>
-        </div>
-      ) : (
-        <div className="lg-inline">
-          <select className="inp lg-input" aria-label={t.countryCode} value={dial} onChange={(e) => setDial(e.target.value)}>
-            {(dials.length ? dials : [{ Dialingcode: "+91", country_name: "India" }, { Dialingcode: "+65", country_name: "Singapore" }, { Dialingcode: "+971", country_name: "UAE" }]).map((row) => (
-              <option key={`${row.Dialingcode}-${row.country_name}`} value={row.Dialingcode}>
-                {row.Dialingcode} {row.country_name ?? ""}
-              </option>
-            ))}
-          </select>
-          <input id="ap-reg-phone" className="inp lg-input" type="tel" inputMode="numeric" maxLength={phoneMax} value={phone} placeholder={phonePlaceholder} onChange={(e) => setPhone(phoneDigits(e.target.value))} />
-          <button type="button" className="btn btn-ink btn-sm" disabled={loading} onClick={() => void sendSms()}>
-            {t.sendOtp}
-          </button>
-        </div>
-      )}
+      <ApplicantVerifyRow
+        t={t}
+        label={t.phone}
+        htmlFor="ap-reg-phone"
+        value={`${dial} ${phone}`}
+        verified={phoneOk}
+        sent={smsSent}
+        otp={smsOtp}
+        onOtp={setSmsOtp}
+        onSend={() => void sendSms()}
+        onVerify={() => void verifySms()}
+        onChange={() => {
+          setSmsSent(false);
+          setSmsOtp("");
+        }}
+        changeLabel={t.changePhone}
+        loading={loading}
+      >
+        <select className="inp lg-input" aria-label={t.countryCode} value={dial} onChange={(e) => setDial(e.target.value)}>
+          {dials.map((row) => (
+            <option key={`${row.Dialingcode}-${row.country_name}`} value={row.Dialingcode}>
+              {row.Dialingcode} {row.country_name ?? ""}
+            </option>
+          ))}
+        </select>
+        <input id="ap-reg-phone" className="inp lg-input" type="tel" inputMode="numeric" maxLength={phoneMax} value={phone} placeholder={phonePlaceholder} onChange={(e) => setPhone(phoneDigits(e.target.value))} />
+      </ApplicantVerifyRow>
 
       <button type="submit" className="btn btn-ink btn-sm lg-btn" disabled={loading}>
         {loading ? t.submitting : t.registerButton}
