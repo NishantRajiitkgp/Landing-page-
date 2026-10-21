@@ -1419,8 +1419,11 @@ const BANDS: Record<string, readonly [number, number]> = {
   howItWorks: [5, 141],
   /* 136 -> 137 (6 Oct 2026): the WhatsApp ask's button, `shop.cta`. 136 -> 139
    *  (14 Oct 2026): a detail line under each QR step (`shop.steps.s*.d`); the
-   *  band measured 136 when they were added. */
-  consumer: [10, 139],
+   *  band measured 136 when they were added. 139 -> 143 (16 Oct 2026): a
+   *  Basic price for each home service (`shop.services.*.basicPrice`).
+   *  143 -> 151 (21 Oct 2026): Basic and Advanced prices on the four
+   *  online services, the same ₹699 / ₹1499 as Hello Staff. */
+  consumer: [10, 151],
   checks: [7, 59],
   /* 117 -> 127 (30 Sep 2026): sales pass: impact figures and actions. */
   /* 127 -> 126 (30 Sep 2026): the KSA code went: Saudi Arabia shows its flag. */
@@ -1586,10 +1589,10 @@ for (const [k, v] of Object.entries(EN_BLOCKS)) {
  *  seals' closing line it took over (-3). 1419 -> 1431: `smb.seg`. 1431 -> 1479:
  *  the presence relay (+48, see `BANDS`). 1479 -> 1587: eight forgeries on
  *  the evidence table (`oneInEight`, see `BANDS`). 1587 -> 1586:
- *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients; 1702 -> 1712: `premiumServices`; 1712 -> 1724: the SMB client strip; 1724 -> 1728: the premium redesign's lede and audiences. 1728 -> 1735: the blue-collar client rail; 1735 -> 1825: the two-workforce redesign; 1825 -> 1815: dropping its "Hiring both?" band; 1815 -> 1799: four named checks a collar, no descriptions; 1799 -> 1794: dropping the blue-collar punch clock; 1794 -> 1795: the WhatsApp ask's button; 1795 -> 1802: the white-collar client rail's seven names; 1802 -> 1831: `govWhy`'s clock (+34), `howItWorks` dropping its shift clients (-2), the WhatsApp steps' lines (`consumer` +2) and the country cards' pitches (`intlGrid` -5). */
+ *  `hero.ledger.pace`. 1586 -> 1673: the field case (`fieldCase`); 1673 -> 1692: its orbit; 1692 -> 1688: the seals' `where` lines; 1688 -> 1691: Individual Checks; 1691 -> 1690: packages' one-line heading; 1690 -> 1704: `intlGrid`; 1749 -> 1752: `smb.demo`; 1752 -> 1765: the Enterprises sales pass; 1765 -> 1764: `govWhy.certs`; 1764 -> 1719: the authority records' CTA cards; 1719 -> 1694: their "Why HelloVerify" reasons; 1694 -> 1696: Latvia's employers & agencies card; 1696 -> 1684: the records' partner pitch; 1684 -> 1683: `intlGrid.lede`; 1683 -> 1686: `govWhy` plate 01's cross-section; 1686 -> 1691: plate 02's checkpoint; 1691 -> 1693: plate 03's ecosystems; 1693 -> 1695: plate 04's seats; 1695 -> 1700: the blue-collar punch clock; 1700 -> 1702: the licence route's two clients; 1702 -> 1712: `premiumServices`; 1712 -> 1724: the SMB client strip; 1724 -> 1728: the premium redesign's lede and audiences. 1728 -> 1735: the blue-collar client rail; 1735 -> 1825: the two-workforce redesign; 1825 -> 1815: dropping its "Hiring both?" band; 1815 -> 1799: four named checks a collar, no descriptions; 1799 -> 1794: dropping the blue-collar punch clock; 1794 -> 1795: the WhatsApp ask's button; 1795 -> 1802: the white-collar client rail's seven names; 1802 -> 1831: `govWhy`'s clock (+34), `howItWorks` dropping its shift clients (-2), the WhatsApp steps' lines (`consumer` +2) and the country cards' pitches (`intlGrid` -5). 1831 -> 1835: the four home services' Basic prices (`shop.services.*.basicPrice`). 1835 -> 1843: Basic and Advanced prices on the four online services. */
 check(
-  "sections holds 1831 leaves for 106 nodes and blocks 47 for 15 (438 before homepage v2)",
-  leafPaths(EN_SECTIONS).length === 1831 &&
+  "sections holds 1843 leaves for 106 nodes and blocks 47 for 15 (438 before homepage v2)",
+  leafPaths(EN_SECTIONS).length === 1843 &&
     leafPaths(EN_BLOCKS).length === 47 &&
     Object.values(BANDS).reduce((a, b) => a + b[0], 0) === 106 &&
     Object.values(BLOCK_FILES).reduce((a, b) => a + b[0], 0) === 15,
@@ -1622,10 +1625,10 @@ check(
  *  rich-text — `checks.items.directorsGst.name`, `packages.lines.credit`,
  *  `packages.packs.visaHealth.tt` and the three letter quotes — and five
  *  functions. The specimen scans (29 Sep 2026) took the strings to 1311,
- *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691; `premiumServices` to 1701; the SMB client strip to 1713; the premium redesign to 1717; the blue-collar client rail to 1724; the two-workforce redesign to 1814; dropping its "Hiring both?" band to 1804; four named checks a collar to 1788; dropping the blue-collar punch clock to 1783; the WhatsApp ask's button to 1784; the white-collar client rail to 1791; the leaf moves above to 1818. `govWhy`'s clock also brought the first two number leaves, `govWhy.viz.scale.count.from` and `.to`. */
+ *  and the lens callouts to 1320; `hero.headlineEmEnd` to 1322; the presence hour strip to 1315; `hero.ledger` to 1321; the four-seal governments band to 1353, and its pitch records to 1375; `govWhy` to 1408; `smb.seg` to 1420; the presence relay to 1468; eight forgeries on the evidence table to 1576; dropping `hero.ledger.pace` to 1575; the field case to 1662, and its orbit to 1681; the seals' `where` lines to 1677; Individual Checks to 1680; packages' one-line heading to 1679; `intlGrid` to 1693; `smb.demo` to 1741; the Enterprises sales pass (three figures a panel, `smb.seg.lede`) to 1754; dropping `govWhy.certs` to 1753; the authority records' CTA cards to 1708; dropping their "Why HelloVerify" reasons to 1683; Latvia's employers & agencies card to 1685; dropping the records' partner pitch to 1673; dropping `intlGrid.lede` to 1672; `govWhy` plate 01's cross-section to 1675; plate 02's checkpoint to 1680; plate 03's ecosystems to 1682; plate 04's seats to 1684; the blue-collar punch clock to 1689; the licence route's two clients to 1691; `premiumServices` to 1701; the SMB client strip to 1713; the premium redesign to 1717; the blue-collar client rail to 1724; the two-workforce redesign to 1814; dropping its "Hiring both?" band to 1804; four named checks a collar to 1788; dropping the blue-collar punch clock to 1783; the WhatsApp ask's button to 1784; the white-collar client rail to 1791; the leaf moves above to 1818; the home services' Basic prices to 1822; the four online services' prices to 1830. `govWhy`'s clock also brought the first two number leaves, `govWhy.viz.scale.count.from` and `.to`. */
 check(
-  "sections: 1818 string leaves, 6 rich-text, 5 function and 2 number leaves",
-  stringLeaves(EN_SECTIONS).length === 1818 &&
+  "sections: 1830 string leaves, 6 rich-text, 5 function and 2 number leaves",
+  stringLeaves(EN_SECTIONS).length === 1830 &&
     leafPaths(EN_SECTIONS).length - stringLeaves(EN_SECTIONS).length === 13 &&
     typeof EN_SECTIONS.govWhy.viz.scale.count.from === "number" &&
     [EN_SECTIONS.smb.perCheck, EN_SECTIONS.packages.count, EN_SECTIONS.smb.tot, EN_SECTIONS.smb.build.count, EN_SECTIONS.smb.build.rupees].every((f) => typeof f === "function"),
@@ -2293,7 +2296,7 @@ console.log("15. the numbers for `individuals` and `resources`, and the keys the
  *  slice counted 71 and 44 against this run's 105 and 90 — the same
  *  disagreement §7 and §9 record, stated rather than reconciled.
  *
- *      individuals  105 nodes -> 402 leaves
+ *      individuals  105 nodes -> 373 leaves
  *      resources     90       ->  98
  *
  *  AND THE SPREAD IS INSIDE `individuals`, not between the two:
@@ -2328,7 +2331,11 @@ const EN_RES = pick(RESOURCES, DEFAULT);
 const IND_FILES: Record<string, readonly [number, number]> = {
   crumb: [0, 1],
   hub: [22, 52],
-  hellov: [59, 102],
+  /* 102 -> 101 (16 Oct 2026): the Advanced driver card lists Hello Staff's
+   * three checks, not four. 101 -> 73 (16 Oct 2026): the Packages tab lost
+   * its WhatsApp step pills, QR card and per-package check pills (28); its
+   * tiers are `sections.consumer.shop`'s. */
+  hellov: [59, 73],
   homeFamily: [11, 86],
   immigration: [13, 161],
 };
@@ -2363,8 +2370,8 @@ for (const [k, v] of Object.entries(EN_RES)) {
 }
 
 check(
-  "individuals holds 402 leaves for 105 nodes and resources 98 for 90",
-  leafPaths(EN_IND).length === 402 &&
+  "individuals holds 373 leaves for 105 nodes and resources 98 for 90",
+  leafPaths(EN_IND).length === 373 &&
     leafPaths(EN_RES).length === 98 &&
     Object.values(IND_FILES).reduce((a, b) => a + b[0], 0) === 105 &&
     Object.values(RES_FILES).reduce((a, b) => a + b[0], 0) === 90,
@@ -2391,8 +2398,8 @@ check(
  *  than a node because it replaced a template literal in an attribute-shaped
  *  position. */
 check(
-  "individuals: 387 string leaves and 15 rich-text or function leaves",
-  stringLeaves(EN_IND).length === 387 &&
+  "individuals: 358 string leaves and 15 rich-text or function leaves",
+  stringLeaves(EN_IND).length === 358 &&
     leafPaths(EN_IND).length - stringLeaves(EN_IND).length === 15,
   { strings: stringLeaves(EN_IND).length, all: leafPaths(EN_IND).length },
 );
@@ -2493,24 +2500,22 @@ check(
   ],
 );
 
-// HelloV took the old hellov.base.json on 6 Oct 2026: its STEP pills, the
-// eight packages, the six single checks and the four Advanced cards, in order.
+// HelloV took the old hellov.base.json on 6 Oct 2026: the eight packages,
+// the six single checks and the four Advanced cards, in order. Its WhatsApp
+// STEP pills went on 16 Oct 2026 with the QR card.
 check(
-  "HelloV's step pills, packages, single checks and Advanced cards are the old ones, in order",
+  "HelloV's packages, single checks and Advanced cards are the old ones, in order",
   [
-    joinKeys(EN_IND.hellov.packages.steps, "t"),
     joinKeys(EN_IND.hellov.packages.items, "t"),
     joinKeys(EN_IND.hellov.singles.cards, "t"),
     joinKeys(EN_IND.hellov.advanced.cards, "t"),
   ].join(" / ") ===
-    "Scan QR Code|Select|Send a photo / " +
-      "Driver Verification|Home Staff|Tenant Verification|Nanny Verification|Verify Anyone|" +
+    "Driver Verification|Home Staff|Tenant Verification|Nanny Verification|Verify Anyone|" +
       "Cyber Identity Verification|Know The Identity|Know Your Contact / " +
       "Age Verification|Digital Employment Check|Driving License Check|Pan Card Check|" +
       "Criminal Record Check|Digital Address Check / " +
       "Home Staff Verification|Nanny Verification|Driver Verification|Tenant Verification",
   [
-    joinKeys(EN_IND.hellov.packages.steps, "t"),
     joinKeys(EN_IND.hellov.packages.items, "t"),
     joinKeys(EN_IND.hellov.singles.cards, "t"),
     joinKeys(EN_IND.hellov.advanced.cards, "t"),

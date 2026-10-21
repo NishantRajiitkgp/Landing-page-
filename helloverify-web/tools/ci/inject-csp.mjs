@@ -98,8 +98,9 @@ const mockForced = ["1", "true", "yes"].includes(
   (process.env.TRAVEL_AUTH_MOCK ?? "").trim().toLowerCase(),
 );
 const momApplyLive = ["1", "true", "yes"].includes((process.env.MOM_APPLY_LIVE ?? "").trim().toLowerCase());
+const helloStaffLive = ["1", "true", "yes"].includes((process.env.HELLOSTAFF_LIVE ?? "").trim().toLowerCase());
 const RAZORPAY_ORIGINS =
-  (Boolean(process.env.TRAVEL_AUTH_BASE?.trim()) && !mockForced) || momApplyLive
+  (Boolean(process.env.TRAVEL_AUTH_BASE?.trim()) && !mockForced) || momApplyLive || helloStaffLive
     ? ["https://checkout.razorpay.com"]
     : [];
 

@@ -1,11 +1,16 @@
 import Image from "next/image";
 
-import { localise } from "@/lib/i18n/href";
 import type { MomDoc } from "@/lib/mom/doc";
+import { MOM_ORG_REGISTER_PATH, MOM_REGISTER_PATH } from "@/lib/mom/paths";
 
-/** Hero fields follow each locale's CMS key order in the DOM. CSS `order`
- *  keeps one visual sequence: logo and caption, the alt line, the title. */
-export function MomHero({ hero, locale }: { hero: MomDoc["hero"]; locale: string }) {
+import { MomIcon, MomLink } from "./MomBits";
+
+type Roles = MomDoc["screening"]["overview"]["roleCards"];
+
+/** Hero fields follow each locale's CMS key order in the DOM. CSS places
+ *  each one: logo and caption, the alt line, the title. The applicant and
+ *  employer cards fill the column beside the title. */
+export function MomHero({ hero, roles, locale }: { hero: MomDoc["hero"]; roles: Roles; locale: string }) {
   const caption = hero.logoCaption.replace(/\s+/g, " ").trim();
   const alt = hero.logoAlt.replace(/\s+/g, " ").trim();
   const same = caption === alt;
@@ -36,22 +41,36 @@ export function MomHero({ hero, locale }: { hero: MomDoc["hero"]; locale: string
         {hero.subtitle}
       </p>
     ),
-    priceStrip: (
-      <div key="priceStrip" className="strip3">
-        {hero.priceStrip.map((item) => (
-          <a key={item.label} className="it" href={localise(item.href, locale)}>
-            <b>{item.value}</b>
-            <span>{item.label}</span>
-            <span>{item.footnote}</span>
-          </a>
-        ))}
-      </div>
-    ),
   };
 
   return (
-    <div className="wrap hero3 mom3-hero">
+    <div className="wrap hero3 mom3-hero mom3-hero-split">
       {Object.keys(hero).map((key) => slots[key] ?? null)}
+      <div className="mom3-hero-roles">
+        <article className="mom3-card mom3-role">
+          <MomIcon src={roles.candidates.iconSrc} />
+          <h2>{roles.candidates.title}</h2>
+          <p>{roles.candidates.body}</p>
+          <div className="mom3-acts">
+            <MomLink href={MOM_REGISTER_PATH} locale={locale} className="btn btn-ink btn-sm">
+              {roles.candidates.primaryCta.label}
+            </MomLink>
+          </div>
+        </article>
+        <article className="mom3-card mom3-role">
+          <MomIcon src={roles.employers.iconSrc} />
+          <h2>{roles.employers.title}</h2>
+          <p>{roles.employers.body}</p>
+          <div className="mom3-acts">
+            <MomLink href={MOM_ORG_REGISTER_PATH} locale={locale} className="btn btn-ink btn-sm">
+              {roles.employers.primaryCta.label}
+            </MomLink>
+            <MomLink href={roles.employers.secondaryCta.href} locale={locale} className="btn btn-line btn-sm">
+              {roles.employers.secondaryCta.label}
+            </MomLink>
+          </div>
+        </article>
+      </div>
     </div>
   );
 }

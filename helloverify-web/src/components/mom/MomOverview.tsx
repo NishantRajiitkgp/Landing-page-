@@ -1,13 +1,11 @@
 import { Steps } from "@/components/chrome/Steps";
 import type { MomDoc } from "@/lib/mom/doc";
-import { MOM_ORG_REGISTER_PATH, MOM_REGISTER_PATH } from "@/lib/mom/paths";
 
 import { MomIcon, MomLink } from "./MomBits";
 
 type Overview = MomDoc["screening"]["overview"];
 
 export function MomOverview({ overview, locale }: { overview: Overview; locale: string }) {
-  const roles = overview.roleCards;
   const prices = overview.transparentPricing;
   const why = overview.whyChoose;
   const services = overview.ourServices;
@@ -19,43 +17,15 @@ export function MomOverview({ overview, locale }: { overview: Overview; locale: 
   return (
     <>
       <section className="wrap sec3">
-        <div className="mom3-grid2">
-          <article className="mom3-card mom3-role">
-            <MomIcon src={roles.candidates.iconSrc} />
-            <h2>{roles.candidates.title}</h2>
-            <p>{roles.candidates.body}</p>
-            <div className="mom3-acts">
-              <MomLink href={MOM_REGISTER_PATH} locale={locale} className="btn btn-ink btn-sm">
-                {roles.candidates.primaryCta.label}
-              </MomLink>
-            </div>
-          </article>
-          <article className="mom3-card mom3-role">
-            <MomIcon src={roles.employers.iconSrc} />
-            <h2>{roles.employers.title}</h2>
-            <p>{roles.employers.body}</p>
-            <div className="mom3-acts">
-              <MomLink href={MOM_ORG_REGISTER_PATH} locale={locale} className="btn btn-ink btn-sm">
-                {roles.employers.primaryCta.label}
-              </MomLink>
-              <MomLink href={roles.employers.secondaryCta.href} locale={locale} className="btn btn-line btn-sm">
-                {roles.employers.secondaryCta.label}
-              </MomLink>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section className="wrap sec3">
         <div className="sec-head">
           <h2 className="h2">{prices.title}</h2>
         </div>
-        <div className="mom3-grid3 mom3-prices">
+        <div className="mom3-pricebreak">
           {prices.items.map((item) => (
-            <article key={item.title} className="mom3-card">
-              <MomIcon src={item.iconSrc} />
+            <article key={item.title}>
+              <b>{item.price}</b>
               <h3>{item.title}</h3>
-              <p>{item.subtitle}</p>
+              <p>{item.footnote}</p>
             </article>
           ))}
         </div>

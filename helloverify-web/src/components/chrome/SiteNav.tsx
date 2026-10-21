@@ -20,6 +20,7 @@ import { getLocale } from "next-intl/server";
 import { NavAuth } from "@/components/auth/NavAuth";
 import { Logo } from "@/components/brand/Logo";
 import { AppLink } from "@/components/chrome/AppLink";
+import { HELLOSTAFF_LIVE } from "@/lib/hellostaff/live";
 import { LocaleSwitch } from "@/components/chrome/LocaleSwitch";
 import { MenuClose } from "@/components/chrome/MenuClose";
 import { NavDropdown } from "@/components/chrome/NavDropdown";
@@ -30,8 +31,9 @@ type T = ChromeCopy["nav"];
 type ItemId = keyof T["items"];
 type ColId = keyof T["menus"]["solutions"]["cols"];
 type IconId = "heart" | "bank" | "doc" | "building" | "case" | "store" | "user" | "id" | "star" | "passport" | "globe" | "badge" | "chat" | "shield" | "mail";
-/** `href` is absent where the old menu's entry was not a link. */
-type Item = { id: ItemId; href?: string; icon: IconId };
+/** `href` is absent where the old menu's entry was not a link.
+ *  `external` opens that href in a new tab. */
+type Item = { id: ItemId; href?: string; icon: IconId; external?: boolean };
 
 /** 24-unit line icons, stroked from CSS (`.nv-ic svg`). */
 const ICONS: Record<IconId, React.ReactNode> = {
@@ -87,7 +89,7 @@ const PRODUCTS: Item[] = [
 const PREMIUM: Item[] = [
   { id: "premHealth", icon: "heart" },
   { id: "premImmigration", href: "/products/immigration?tab=applicant", icon: "passport" },
-  { id: "premConsumer", href: "/products/hellov", icon: "id" },
+  { id: "premConsumer", href: HELLOSTAFF_LIVE, icon: "id", external: true },
 ];
 
 const ENQUIRY = "/contact?tab=enquiry";
@@ -107,7 +109,15 @@ function Entry({ item, t }: { item: Item; t: T }) {
     </>
   );
   if (!item.href) return <div className="nv-i nv-static">{body}</div>;
-  return <AppLink href={item.href} className="nv-i">{body}</AppLink>;
+  return (
+    <AppLink
+      href={item.href}
+      className="nv-i"
+      {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+    >
+      {body}
+    </AppLink>
+  );
 }
 
 /** `showSignUp={false}` drops the logged-out Sign Up button from the bar and

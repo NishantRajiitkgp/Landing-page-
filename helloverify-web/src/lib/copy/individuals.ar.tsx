@@ -123,8 +123,9 @@ export const ar: IndividualsCopy = {
   /** `/products/hellov` — the old `hellov.base.json`, word for word, in its
    *  order: hero, intro, the Packages / Single Checks tabs (the AI Travel tab
    *  was switched off, `showAi: false`), the Advanced Package cards.
-   *  `checksInclude` is the old `common.checksInclude` label; `stepLabel`,
-   *  `banner` and `mins` were hard-coded English in the old components and
+   *  The Packages tab's WhatsApp steps, QR card and check pills went on
+   *  16 Oct 2026: its Basic / Advanced tiers are the homepage storefront's
+   *  (`sections.consumer.shop`). `banner` and `mins` were hard-coded English in the old components and
    *  stay English in every locale, as the old page showed them. `pager` is
    *  the old pager's aria labels. */
   hellov: {
@@ -139,62 +140,40 @@ export const ar: IndividualsCopy = {
     packages: {
       h: "الباقات",
       sub: "العملية سهلة جدًا ويمكنك القيام بها بنفسك",
-      stepLabel: "STEP",
-      steps: {
-        scan: { t: "امسح رمز QR", p: "بكاميرا WhatsApp" },
-        select: { t: "اختر", p: "من تريد التحقق منه" },
-        photo: { t: "أرسل صورة", p: "للوثيقة" },
-      },
-      checksInclude: "الفحوصات المشمولة",
       buy: "اشترِ الآن",
       items: {
         driver: {
           t: "التحقق من السائق",
           p: "تحقق سريع من رخصة القيادة والهوية لتأكيد الأصالة والأهلية، لمساعدتك على اتخاذ قرارات أكثر أمانًا وثقة عبر فحص رقمي سريع وآمن وسهل الاستخدام.",
-          pills: ["Driving License Check", "Address Check"],
         },
         homeStaff: {
           t: "طاقم المنزل",
           p: "تحقق من العمالة المنزلية وموظفي الأمن قبل التوظيف. ابنِ بيئة أكثر أمانًا لعائلتك عبر فحوصات رقمية موثوقة يمكنك الاعتماد عليها بسرعة.",
-          pills: ["Criminal Check", "Identity Check"],
         },
         tenant: {
           t: "التحقق من المستأجر",
           p: "قبل اتخاذ القرار، اعرف من تسمح له بالدخول. تحقق من المستأجر أو المدرس أو مقدم الرعاية أو أي شخص آخر بهوية واضحة وموقع موثوق.",
-          pills: ["Identity Check", "Address Check"],
         },
         nanny: {
           t: "التحقق من المربية",
           p: "تأكد أن طفلك في أيدٍ أمينة. تحقق من المربيات ومقدمي الرعاية عبر فحوصات تعكس حجم الثقة التي تمنحها لشخص ما.",
-          pills: ["Criminal Check", "Identity Check"],
         },
         verifyAnyone: {
           t: "التحقق من أي شخص",
           p: "قبل اتخاذ قرارك، تحقق من أي شخص تحتاج إلى الوثوق به. أكد الهوية والسجل الجنائي عبر فحوصات رقمية سريعة وآمنة يمكنك الاعتماد عليها.",
-          pills: ["Identity Check", "Criminal Check"],
         },
         cyberIdentity: {
           t: "التحقق من الهوية السيبرانية",
           p: "احمِ نفسك من الاحتيال وانتحال الهوية عبر الإنترنت. تحقق من الهوية السيبرانية بفحوصات سريعة وآمنة تساعدك على الثقة بالتفاعلات الرقمية.",
-          pills: ["Identity Check", "Criminal Check"],
         },
         knowIdentity: {
           t: "تعرّف على الهوية",
           p: "احمِ نفسك من الاحتيال على الهوية عبر الإنترنت. تحقق من المستندات وقواعد البيانات بفحوصات سريعة ودقيقة تؤكد هوية الشخص الحقيقية.",
-          pills: ["Identity Check"],
         },
         knowContact: {
           t: "تعرّف على جهة الاتصال",
           p: "قبل أن تثق بجهة اتصال جديدة، اعرف من تتعامل معه. تحقق من الصورة والهوية والسجل عبر فحوصات سريعة وموثوقة يمكنك التصرف بناءً عليها بسرعة.",
-          pills: ["Identity Check", "Criminal Check"],
         },
-      },
-      promo: {
-        brand: "HelloV",
-        tagline: "تحقق من أي شخص فورًا على WhatsApp",
-        qrAlt: "امسح لفتح HelloV على WhatsApp",
-        caption: "التحقق أصبح سهلًا على WhatsApp بواسطة HelloVerify.",
-        cta: "ابدأ التحقق",
       },
     },
     singles: {
@@ -243,23 +222,23 @@ export const ar: IndividualsCopy = {
       cards: {
         homeStaff: {
           t: "Home Staff Verification",
-          price: "INR ₹1399",
-          checks: ["Voter Id Check", "Criminal Check", "Address Check"],
+          price: "INR ₹699",
+          checks: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
         },
         nanny: {
           t: "Nanny Verification",
-          price: "INR ₹1399",
-          checks: ["Identity Check", "Criminal Check", "Address Check"],
+          price: "INR ₹899",
+          checks: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
         },
         driver: {
           t: "Driver Verification",
-          price: "INR ₹1799",
-          checks: ["Driving License Check", "Criminal Check", "Voter Id Check", "Address Check"],
+          price: "INR ₹799",
+          checks: ["Driving License Check", "Court Records", "FIR Record"],
         },
         tenant: {
           t: "Tenant Verification",
-          price: "INR ₹1799",
-          checks: ["Credit Check", "Criminal Check", "Aadhaar Check"],
+          price: "INR ₹1299",
+          checks: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
         },
       },
     },

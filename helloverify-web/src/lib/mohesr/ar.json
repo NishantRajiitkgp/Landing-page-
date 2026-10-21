@@ -34,6 +34,7 @@
     "roleCards": {
       "candidates": {
         "title": "للمتقدمين",
+        "body": "تحقّق من اعتمادك ومؤهلاتك التعليمية عبر بوابة الخدمة الذاتية، بدعم من عملية تحقق موجَّهة لتجربة سلسة وخالية من المتاعب",
         "iconSrc": "/assets/saudi/icon-candidates.svg",
         "primaryCta": {
           "label": "ابدأ التحقق",
@@ -42,6 +43,7 @@
       },
       "employers": {
         "title": "لأصحاب العمل والوكالات",
+        "body": "تحقق من مؤهلات الموظفين على نطاق واسع، وأدر حالات متعددة، واحصل على دعم مخصص مع وثائق جاهزة للامتثال.",
         "iconSrc": "/assets/saudi/icon-employers.svg",
         "primaryCta": { "label": "ابدأ التحقق", "href": "https://agency.helloverify.ae/", "hidden": true },
         "secondaryCta": { "label": "تحدث إلى المبيعات", "href": "/contact?tab=enquiry&role=applicant&contact=mohesr" }

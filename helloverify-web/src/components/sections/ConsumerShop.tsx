@@ -11,6 +11,7 @@
 import { copy } from "@/lib/copy/request";
 import { SECTIONS } from "@/lib/copy/sections";
 import { localise } from "@/lib/i18n/href";
+import { liveBuyUrl } from "@/lib/hellostaff/live";
 import { tint } from "@/lib/img";
 import { getLocale } from "next-intl/server";
 import "@/app/v2/consumer.css";
@@ -53,16 +54,20 @@ export async function ConsumerShop() {
   const services: ShopService[] = SERVICES.map(({ id, src, pos, posOn }, i) => {
     const s = t.services[id];
     const price = "price" in s ? s.price : undefined;
+    const basicPrice = "basicPrice" in s ? s.basicPrice : undefined;
+    const from = basicPrice ?? price;
     return {
       id,
       short: s.short,
       title: s.title,
       line: s.line,
       group: i < 4 ? t.groups.home : t.groups.online,
-      tag: price ? `${t.from} ${price}` : t.eta,
+      tag: from ? `${t.from} ${from}` : t.eta,
       basic: s.basic,
       advanced: s.advanced,
+      basicPrice,
       price,
+      buy: { basic: liveBuyUrl(id, "basic"), advanced: liveBuyUrl(id, "advanced") },
       popular: id === "driver",
       src,
       bg: tint(src),

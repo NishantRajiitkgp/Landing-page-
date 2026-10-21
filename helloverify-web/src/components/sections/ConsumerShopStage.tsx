@@ -27,11 +27,14 @@ export type ShopService = {
   title: string;
   line: string;
   group: string;
-  /** "from ₹1799" on a closed panel, or the turnaround when unpriced. */
+  /** "from ₹499" on a closed panel, or the turnaround when unpriced. */
   tag: string;
   basic: string[];
   advanced: string[];
+  basicPrice?: string;
   price?: string;
+  /** Per-tier checkout on the live Hello Staff site. */
+  buy?: { basic: string; advanced: string };
   popular: boolean;
   src: string;
   bg: string;
@@ -151,7 +154,7 @@ export function ConsumerShopStage({
                 <div className={`cx-tiers cx-v${tier}`}>
                   <div className="cx-tier cx-t0">
                     <div className="cx-tn">{l.tierNames.basic}</div>
-                    <Price l={l} />
+                    <Price value={s.basicPrice} l={l} />
                     <Checks items={s.basic} />
                   </div>
                   <div className="cx-tier cx-t1">
@@ -161,7 +164,13 @@ export function ConsumerShopStage({
                     <Checks items={s.advanced} />
                   </div>
                 </div>
-                <a href={buyHref} className="cx-buy"><WhatsAppIcon />{l.buy}</a>
+                {s.buy ? (
+                  <a href={tier === 0 ? s.buy.basic : s.buy.advanced} className="cx-buy" target="_blank" rel="noopener noreferrer">
+                    {l.buy}
+                  </a>
+                ) : (
+                  <a href={buyHref} className="cx-buy"><WhatsAppIcon />{l.buy}</a>
+                )}
               </div>
             </div>
           );

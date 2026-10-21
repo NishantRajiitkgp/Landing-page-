@@ -26,7 +26,7 @@ export async function generateMetadata({
 function panels(doc: MohesrDoc, locale: string) {
   const screening = doc.screening;
   return [
-    <MohesrOverview key="overview" screening={screening} locale={locale} />,
+    <MohesrOverview key="overview" screening={screening} prices={doc.hero.priceStrip} locale={locale} />,
     <MohesrRequirements key="documents" screening={screening} />,
     <MohesrTrack key="track" screening={screening} />,
     <MohesrAppeal key="appeal" screening={screening} />,
@@ -44,7 +44,7 @@ export default async function MohesrPage({
   setRequestLocale(locale);
   const doc = mohesrDoc(locale);
   const tabs = doc.screening.tabs.map((tab) => ({ id: tab.id, label: tab.label }));
-  const hero = <MohesrHero hero={doc.hero} />;
+  const hero = <MohesrHero hero={doc.hero} roles={doc.screening.roleCards} />;
 
   return (
     <PageShell crumbs={[{ label: doc.hero.breadcrumb[1].label }]} closing={false}>
