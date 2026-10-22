@@ -1,156 +1,115 @@
-/** The `/technology` hero: the headline beside its sentence as one small
-    object, an exploded stack of three glass planes.
+/** The `/technology` hero: the headline beside its sentence, drawn top to
+    bottom as one small board.
 
-      top     the document handed over
-      middle  AI, reading it: the scan passes, each detail is framed
-      bottom  the network of authorised sources, a hub among institutions
+      0.1s  the document is handed over
+      0.4s  AI, inside a field of past verifications, reads it: each detail
+            on the document is framed
+      0.7s  below, three countries, each with its own authorised sources
+      2.0s  the AI routes straight to the institution that issued the
+            document, which confirms; the answer climbs back
+      3.4s  the document is sealed, and the field of past verifications —
+            the millions it was trained on — lights up
 
-    One red signal plays the process once, in under five seconds: it drops
-    through the stack to the hub, is routed to the institution that issued
-    the document, which confirms; the answer climbs back and the document is
-    sealed. The drawing carries no text, so it mirrors whole under
-    `dir="rtl"`. Decoration, `aria-hidden`. */
+    Every sideways measure mirrors under `dir="rtl"`, labels counter-flip.
+    Decoration, `aria-hidden`. */
 import type { CSSProperties, ReactNode } from "react";
 import { AppLink } from "@/components/chrome/AppLink";
 import { Arrow } from "@/components/brand/Arrow";
 import { splitWords } from "@/components/brand/splitWords";
 import "@/app/v2/tech.css";
-import type { TechArt } from "./TechPillarKit";
+import { CAP, CASE, GLOBE, Glyph, ID, INST, Label, OFFICE, Ok, SPARK, d, type TechArt } from "./TechPillarKit";
 
-const d = (s: number) => ({ "--d": `${s.toFixed(2)}s` }) as CSSProperties;
+const C = { x: 200, y: 236 };
+const DOTS = (() => {
+  const out: { x: number; y: number; early: boolean }[] = [];
+  let i = 0;
+  for (let x = 44; x <= 356; x += 12)
+    for (let y = 152; y <= 316; y += 12) {
+      const r = Math.hypot(x - C.x, y - C.y);
+      if (r > 66 && r < 156) out.push({ x, y, early: i % 6 === 0 });
+      i++;
+    }
+  return out;
+})();
 
-/** Isometric planes, 160 square, drawn flat and projected. The tops of the
-    three planes sit at these heights; a plane's centre is 80 below. */
-const CX = 260;
-const DOC = 20;
-const AI = 125;
-const SRC = 230;
-const iso = (top: number) => `matrix(.866 .5 -.866 .5 ${CX} ${top})`;
-const at = (u: number, v: number, top: number) => [CX + (u - v) * 0.866, top + (u + v) * 0.5] as const;
-
-/** Institutions round the hub; the first is the one that issued the document. */
-const NODES = [-20, 60, 130, 200, 250, 300].map((a) => {
-  const r = (a * Math.PI) / 180;
-  return { u: +(80 + 58 * Math.cos(r)).toFixed(1), v: +(80 + 58 * Math.sin(r)).toFixed(1) };
-});
-const ISSUER = NODES[0];
-const [PX, PY] = at(ISSUER.u, ISSUER.v, SRC);
-
-const CREST = "M3.5 9.5 12 5l8.5 4.5zM5.5 10.5v6M9.8 10.5v6M14.2 10.5v6M18.5 10.5v6M3.5 19h17";
-const LINES = [
-  { y: 62, w: 96, h: 7, cls: "tk-i-ln-strong" },
-  { y: 80, w: 110, h: 5, cls: "tk-i-ln" },
-  { y: 94, w: 80, h: 5, cls: "tk-i-ln" },
-  { y: 122, w: 40, h: 4, cls: "tk-i-ln" },
+/** Three countries, each with two authorised sources. The middle country's
+    first source issued the document. */
+const REGIONS = [
+  { x: 16, a: INST, z: CASE },
+  { x: 144, a: CAP, z: INST },
+  { x: 272, a: ID, z: OFFICE },
 ];
-const SCAN_AT = [1.52, 1.64, 1.72, 1.88];
+const ISSUER = { x: 178, y: 404 };
+const ROUTE = `M200 274V340C200 370 ${ISSUER.x} 370 ${ISSUER.x} ${ISSUER.y - 17}`;
 
-function Tick({ x, y, r, cls }: { x: number; y: number; r: number; cls: string }) {
-  const k = r / 9;
+function Proof({ l }: { l: TechArt }) {
   return (
-    <g className={`tk-i-ok ${cls}`}>
-      <circle className="tk-i-ok-bg" cx={x} cy={y} r={r} />
-      <path className="tk-i-ok-tick" d={`M${x - 3.6 * k} ${y + 0.2 * k}l${2.6 * k} ${2.6 * k} ${4.8 * k} -${5.2 * k}`} pathLength="1" />
-    </g>
-  );
-}
-
-function Layer({ top, from, delay, children, after }: { top: number; from: number; delay: number; children: ReactNode; after?: ReactNode }) {
-  return (
-    <g className="tk-i-in" style={{ "--from": `${from}px`, ...d(delay) } as CSSProperties}>
-      <g className="tk-i-plane">
-        <g transform={iso(top)}>{children}</g>
-      </g>
-      {after}
-    </g>
-  );
-}
-
-const ns = { vectorEffect: "non-scaling-stroke" } as const;
-
-function Stack() {
-  return (
-    <svg className="tk-i-svg tk-mirror" viewBox="96 0 328 404" fill="none">
-      <defs>
-        <pattern id="tk-i-dots" width="10" height="10" patternUnits="userSpaceOnUse">
-          <circle cx="5" cy="5" r="1" fill="currentColor" />
-        </pattern>
-      </defs>
-
-      <path className="tk-i-guide" d={`M${CX - 138.6} ${DOC + 80}V${SRC + 80}M${CX + 138.6} ${DOC + 80}V${SRC + 80}`} />
-
-      {/* The authorised sources */}
-      <Layer
-        top={SRC}
-        from={34}
-        delay={0.15}
-        after={
-          <>
-            <path className="tk-i-stem" d={`M${PX} ${PY}V${PY - 26}`} pathLength="1" />
-            <g className="tk-i-pin">
-              <circle className="tk-i-badge" cx={PX} cy={PY - 39} r="13" />
-              <path className="tk-i-glyph" d={CREST} transform={`translate(${PX - 7.5} ${PY - 46.5}) scale(.625)`} />
-            </g>
-            <Tick x={PX + 10} y={PY - 49} r={6} cls="tk-i-ok-pin" />
-          </>
-        }
-      >
-        <rect className="tk-i-face tk-i-face-src" width="160" height="160" rx="14" {...ns} />
-        {[24, 41, 58].map((r, i) => (
-          <circle key={r} className="tk-i-ring" cx="80" cy="80" r={r} pathLength="1" style={d(0.5 + i * 0.12)} {...ns} />
-        ))}
-        {NODES.map((n, i) => (
-          <path key={i} className="tk-i-spoke" d={`M80 80L${n.u} ${n.v}`} pathLength="1" style={d(0.8 + i * 0.06)} {...ns} />
-        ))}
-        <path className="tk-i-route" d={`M80 80L${ISSUER.u} ${ISSUER.v}`} pathLength="1" {...ns} />
-        <path className="tk-i-comet tk-i-c3" d={`M80 80L${ISSUER.u} ${ISSUER.v}`} pathLength="1" {...ns} />
-        <path className="tk-i-comet tk-i-c3b" d={`M80 80L${ISSUER.u} ${ISSUER.v}`} pathLength="1" {...ns} />
-        {NODES.map((n, i) => (
-          <circle key={i} className={i ? "tk-i-node" : "tk-i-node tk-i-issuer"} cx={n.u} cy={n.v} r="3.4" style={d(0.95 + i * 0.06)} />
-        ))}
-        <circle className="tk-i-rip tk-i-rip-src" cx={ISSUER.u} cy={ISSUER.v} r="9" {...ns} />
-        <circle className="tk-i-rip tk-i-rip-hub" cx="80" cy="80" r="9" {...ns} />
-        <circle className="tk-i-hub" cx="80" cy="80" r="6.5" {...ns} />
-      </Layer>
-
-      <path className="tk-i-beam tk-i-b2" d={`M${CX} ${AI + 80}V${SRC + 80}`} pathLength="1" />
-      <path className="tk-i-comet tk-i-c2" d={`M${CX} ${AI + 80}V${SRC + 80}`} pathLength="1" />
-      <path className="tk-i-comet tk-i-c2b" d={`M${CX} ${AI + 80}V${SRC + 80}`} pathLength="1" />
-
-      {/* AI, reading the document */}
-      <Layer top={AI} from={0} delay={0.3}>
-        <rect className="tk-i-face tk-i-face-ai" width="160" height="160" rx="14" {...ns} />
-        <rect className="tk-i-dots" x="6" y="6" width="148" height="148" rx="9" fill="url(#tk-i-dots)" />
-        <path className="tk-i-corner" d="M14 30V14H30M130 14H146V30M146 130V146H130M30 146H14V130" {...ns} />
-        {LINES.map((l, i) => (
-          <rect key={i} className="tk-i-frame" x="21" y={l.y - 5} width={l.w + 10} height={l.h + 10} rx="3" pathLength="1" style={d(SCAN_AT[i])} {...ns} />
-        ))}
-        <path className="tk-i-scan" d="M8 0H152" {...ns} />
-      </Layer>
-
-      <path className="tk-i-beam tk-i-b1" d={`M${CX} ${DOC + 80}V${AI + 80}`} pathLength="1" />
-      <path className="tk-i-comet tk-i-c1" d={`M${CX} ${DOC + 80}V${AI + 80}`} pathLength="1" />
-      <path className="tk-i-comet tk-i-c1b" d={`M${CX} ${DOC + 80}V${AI + 80}`} pathLength="1" />
+    <svg className="tk-h-svg tk-mirror" viewBox="0 0 400 476" fill="none">
+      {DOTS.filter((p) => p.early).map((p) => (
+        <circle key={`${p.x}-${p.y}`} className="tk-h-dot tk-a-fade" cx={p.x} cy={p.y} r="1.5" style={d(0.6)} />
+      ))}
+      {DOTS.map((p) => (
+        <circle key={`${p.x}-${p.y}`} className="tk-h-dot-on tk-a-fade" cx={p.x} cy={p.y} r="1.6" style={d(3.6 + (p.x % 5) * 0.06)} />
+      ))}
 
       {/* The document */}
-      <Layer
-        top={DOC}
-        from={-34}
-        delay={0.45}
-        after={
-          <g className="tk-i-seal">
-            <circle className="tk-i-seal-ring" cx={CX} cy={DOC + 128} r="20" />
-            <Tick x={CX} y={DOC + 128} r={13} cls="tk-i-ok-seal" />
+      <g className="tk-a-drop" style={d(0.1)}>
+        <rect className="tk-sheet" x="128" y="18" width="144" height="112" rx="12" />
+        <circle className="tk-paperfill" cx="152" cy="44" r="12" />
+        <Glyph g={CAP} x={152} y={44} s={0.6} />
+        <rect className="tk-inkbar" x="172" y="38" width="64" height="6" rx="3" />
+        <rect className="tk-soft" x="172" y="50" width="40" height="5" rx="2.5" />
+        <rect className="tk-bar" x="142" y="74" width="116" height="5" rx="2.5" />
+        <rect className="tk-bar" x="142" y="90" width="96" height="5" rx="2.5" />
+        <rect className="tk-bar" x="142" y="106" width="70" height="5" rx="2.5" />
+      </g>
+      {[
+        [166, 32, 76, 28],
+        [137, 69, 126, 15],
+        [137, 101, 80, 15],
+      ].map(([x, y, w, h], i) => (
+        <rect key={y} className="tk-fbox tk-a-draw" x={x} y={y} width={w} height={h} rx="4" pathLength="1" style={d(1.2 + i * 0.16, { "--t": ".3s" })} />
+      ))}
+
+      {/* AI reads it */}
+      <path className="tk-p-link tk-a-draw" d="M200 130V198" pathLength="1" style={d(1, { "--t": ".3s" })} />
+      <path className="tk-comet tk-a-comet" d="M200 130V198" pathLength="1" style={d(1, { "--t": ".3s" })} />
+      <circle className="tk-h-ring tk-a-fade" cx={C.x} cy={C.y} r="56" style={d(0.5)} />
+      <g className="tk-a-pop" style={d(0.4)}>
+        <rect className="tk-eng" x="162" y="198" width="76" height="76" rx="22" />
+        <Glyph g={SPARK} x={C.x} y={C.y} s={1.25} cls="tk-ic tk-ic-w" />
+      </g>
+      <Label x={308} y={240} at={0.6}>{l.ai}</Label>
+
+      {/* Three countries' authorised sources */}
+      {REGIONS.map((r, i) => {
+        const cx = r.x + 56;
+        return (
+          <g key={r.x}>
+            <path className="tk-edge2 tk-a-draw" d={`M200 274C200 305 ${cx} 305 ${cx} 336`} pathLength="1" style={d(0.9 + i * 0.08)} />
+            <g className="tk-a-in" style={d(0.7 + i * 0.1)}>
+              <rect className="tk-sheet" x={r.x} y="336" width="112" height="96" rx="14" />
+              <circle className="tk-node" cx={r.x + 18} cy="354" r="10" />
+              <Glyph g={GLOBE} x={r.x + 18} y={354} s={0.42} cls="tk-ic tk-ic-m" />
+              <path className="tk-hair" d={`M${cx - 22} 404H${cx + 22}`} />
+              <circle className="tk-node" cx={cx - 22} cy="404" r="17" />
+              <Glyph g={r.a} x={cx - 22} y={404} s={0.62} />
+              <circle className="tk-node" cx={cx + 22} cy="404" r="17" />
+              <Glyph g={r.z} x={cx + 22} y={404} s={0.62} />
+            </g>
           </g>
-        }
-      >
-        <rect className="tk-i-face tk-i-face-doc" width="160" height="160" rx="14" {...ns} />
-        <rect className="tk-i-border" x="9" y="9" width="142" height="142" rx="8" {...ns} />
-        <circle className="tk-i-crest" cx="36" cy="34" r="11" {...ns} />
-        {LINES.map((l, i) => (
-          <rect key={i} className={l.cls} x="26" y={l.y} width={l.w} height={l.h} rx={l.h / 2} />
-        ))}
-      </Layer>
+        );
+      })}
+      <Label x={200} y={466} at={1}>{l.sources}</Label>
+
+      {/* Routed to the issuer, who confirms; the document is sealed */}
+      <path className="tk-p-link tk-a-draw" d={ROUTE} pathLength="1" style={d(2, { "--t": ".5s" })} />
+      <path className="tk-comet tk-a-back" d={ROUTE} pathLength="1" style={d(3, { "--t": ".4s" })} />
+      <path className="tk-comet tk-a-back" d="M200 130V198" pathLength="1" style={d(3.3, { "--t": ".25s" })} />
+      <circle className="tk-hi-ring tk-a-pop" cx={ISSUER.x} cy={ISSUER.y} r="21" style={d(2.5)} />
+      <Ok x={ISSUER.x + 14} y={ISSUER.y - 15} r={7} at={2.7} />
+      <circle className="tk-pale tk-a-pop" cx="250" cy="112" r="19" style={d(3.4)} />
+      <Ok x={250} y={112} r={13} at={3.5} />
     </svg>
   );
 }
@@ -161,6 +120,7 @@ export function TechHero({
   sub,
   cta,
   href,
+  art,
 }: {
   kicker: string;
   h1: ReactNode;
@@ -191,7 +151,7 @@ export function TechHero({
         </div>
 
         <div className="tk-proof" aria-hidden="true">
-          <Stack />
+          <Proof l={art} />
         </div>
       </div>
     </section>
