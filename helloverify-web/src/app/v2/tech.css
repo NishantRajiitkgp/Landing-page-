@@ -305,6 +305,14 @@
   stroke: var(--primary); stroke-width: 3; stroke-linecap: round; stroke-dasharray: .08 2; stroke-dashoffset: .08; opacity: 0;
   filter: drop-shadow(0 0 4px rgb(from var(--primary) r g b / .6));
 }
+/* Labels turn back on themselves inside a mirrored board. Tracking and
+   capitals only in English: spacing breaks Arabic joining and Devanagari. */
+.tk-lbl {
+  font-family: var(--mono); font-size: 11px; font-weight: 500; fill: var(--muted);
+  transform: scaleX(var(--flip)); transform-box: fill-box; transform-origin: center;
+}
+.tk-lbl:lang(en) { letter-spacing: .08em; text-transform: uppercase; }
+.tk-lbl-r { fill: var(--primary-ink); }
 
 /* ── 01 · Onboarding: uploaded, captured, structured, validated, ready ── */
 .tk-zone { fill: rgb(from var(--paper) r g b / .55); stroke: var(--tick-off); stroke-width: 1.2; stroke-dasharray: 5 5; }

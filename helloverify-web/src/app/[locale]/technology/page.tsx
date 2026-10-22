@@ -50,9 +50,10 @@ export default async function TechnologyPage({
         sub={d.hero.sub}
         cta={d.hero.cta}
         href={ENQUIRY}
+        art={d.art}
       />
 
-      <TechPillars h={d.pillars.h} sub={d.pillars.sub} cards={Object.values(d.pillars.cards)} />
+      <TechPillars h={d.pillars.h} sub={d.pillars.sub} cards={Object.values(d.pillars.cards)} art={d.art} />
 
       <TechCompound
         h={d.compound.h}
@@ -60,15 +61,17 @@ export default async function TechnologyPage({
         cards={Object.values(d.compound.cards)}
         trust={d.compound.trust}
         orbit={d.compound.orbit}
+        art={d.art}
       />
 
       <TechAreas
         h={d.platform.h}
         sub={d.platform.sub}
         areas={Object.entries(d.platform.cards).map(([key, c]) => ({ key, ...c }))}
+        art={d.art}
       />
 
-      <TechFuture h={d.future.h} cards={Object.values(d.future.cards)} />
+      <TechFuture h={d.future.h} cards={Object.values(d.future.cards)} art={d.art} />
 
       <TechCerts h={d.certs.h} lede={d.certs.lede} alts={d.certs.logos} />
     </PageShell>

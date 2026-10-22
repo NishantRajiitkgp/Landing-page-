@@ -9,6 +9,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import "@/app/v2/tech.css";
 import { TechCompoundStage } from "./TechCompoundStage";
+import type { TechArt } from "./TechPillarKit";
 
 const ORBIT = ["verifications", "intelligence", "institutions", "customers", "ecosystem"] as const;
 type OrbitKey = (typeof ORBIT)[number];
@@ -52,6 +53,7 @@ export function TechCompound({
   cards: { t: string; p: string }[];
   trust: string;
   orbit: Record<OrbitKey, string>;
+  art: TechArt;
 }) {
   return (
     <TechCompoundStage>

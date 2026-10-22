@@ -15,6 +15,7 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { Arrow } from "@/components/brand/Arrow";
 import { splitWords } from "@/components/brand/splitWords";
 import "@/app/v2/tech.css";
+import type { TechArt } from "./TechPillarKit";
 
 const d = (s: number) => ({ "--d": `${s.toFixed(2)}s` }) as CSSProperties;
 
@@ -166,6 +167,7 @@ export function TechHero({
   sub: string;
   cta: string;
   href: string;
+  art: TechArt;
 }) {
   const count = { i: 0 };
   const headline = splitWords(h1, "tk-w", count);

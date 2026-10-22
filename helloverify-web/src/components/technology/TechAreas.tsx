@@ -6,6 +6,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import "@/app/v2/tech.css";
 import { TechAreasStage } from "./TechAreasStage";
+import type { TechArt } from "./TechPillarKit";
 
 const ICONS: Record<string, ReactNode> = {
   workforceMobility: <path d="M9 7.5V6a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 6v1.5M4 7.5h16v11H4zM4 12.5h16M10.5 12.5v1.6h3v-1.6" />,
@@ -85,6 +86,7 @@ export function TechAreas({
   h: string;
   sub: string;
   areas: { key: string; t: string; p: string }[];
+  art: TechArt;
 }) {
   return (
     <TechAreasStage>

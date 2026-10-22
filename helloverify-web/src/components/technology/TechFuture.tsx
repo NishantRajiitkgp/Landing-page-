@@ -7,6 +7,7 @@
 import type { CSSProperties } from "react";
 import "@/app/v2/tech.css";
 import { TechFutureStage } from "./TechFutureStage";
+import type { TechArt } from "./TechPillarKit";
 
 const HELD = new Set([1, 6, 8, 11, 13]);
 const CORNERS = [
@@ -79,7 +80,7 @@ function Infrastructure() {
 
 const FACES = [Persistent, Access, Infrastructure];
 
-export function TechFuture({ h, cards }: { h: string; cards: { t: string; p: string }[] }) {
+export function TechFuture({ h, cards }: { h: string; cards: { t: string; p: string }[]; art: TechArt }) {
   return (
     <TechFutureStage>
       <div className="tk-fut-grid">

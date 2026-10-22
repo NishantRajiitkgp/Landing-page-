@@ -1,19 +1,27 @@
 /** The `/technology` AI pillars as a scroll story: the three steps run down
     a rail on one side while a sticky stage on the other draws the active
-    pillar (`./TechPillarArt`). On a phone the stage pins above the steps. */
+    pillar. On a phone the stage pins above the steps. */
+import type { ReactNode } from "react";
 import "@/app/v2/tech.css";
-import { CaptureArt, ResearchArt } from "./TechPillarArt";
+import { CaptureArt } from "./TechCaptureArt";
+import { ResearchArt } from "./TechResearchArt";
 import { RouteArt } from "./TechRouteArt";
+import type { TechArt } from "./TechPillarKit";
 import { TechPillarsStage } from "./TechPillarsStage";
+
+/** One board per step, in step order; each draws its own labels from `l`. */
+const BOARDS: ((p: { l: TechArt }) => ReactNode)[] = [CaptureArt, ResearchArt, RouteArt];
 
 export function TechPillars({
   h,
   sub,
   cards,
+  art,
 }: {
   h: string;
   sub: string;
   cards: { t: string; p: string }[];
+  art: TechArt;
 }) {
   return (
     <TechPillarsStage>
@@ -32,9 +40,11 @@ export function TechPillars({
             </span>
             <span className="tk-stage-of">/ 03</span>
           </div>
-          <div className="tk-vis tk-v1"><CaptureArt /></div>
-          <div className="tk-vis tk-v2"><ResearchArt /></div>
-          <div className="tk-vis tk-v3"><RouteArt /></div>
+          {BOARDS.map((Board, i) => (
+            <div key={i} className={`tk-vis tk-v${i + 1}`}>
+              <Board l={art} />
+            </div>
+          ))}
           <div className="tk-stage-bar">
             <i />
             <i />
