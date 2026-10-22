@@ -437,6 +437,8 @@ export const hi: PlatformCopy = {
       fraudDb: "धोखाधड़ी डेटाबेस",
       learns: "सीखता है",
       router: "ML राउटर",
+      routed: "रूट",
+      abroad: "विदेश",
       consent: "सहमति",
       legalised: "वैधीकरण",
       residency: "डेटा निवास",

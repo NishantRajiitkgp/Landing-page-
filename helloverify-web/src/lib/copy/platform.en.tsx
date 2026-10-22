@@ -515,6 +515,8 @@ export const en = {
       fraudDb: "Fraud database",
       learns: "Learns",
       router: "ML router",
+      routed: "Routed",
+      abroad: "Abroad",
       consent: "Consent",
       legalised: "Legalisation",
       residency: "Data residency",

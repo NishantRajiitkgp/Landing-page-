@@ -435,6 +435,8 @@ export const ar: PlatformCopy = {
       fraudDb: "قاعدة بيانات الاحتيال",
       learns: "يتعلّم",
       router: "موجّه ML",
+      routed: "مُوجَّه",
+      abroad: "الخارج",
       consent: "الموافقة",
       legalised: "التصديق",
       residency: "إقامة البيانات",

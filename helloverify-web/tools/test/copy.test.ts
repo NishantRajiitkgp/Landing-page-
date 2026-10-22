@@ -1952,8 +1952,9 @@ const PLATFORM_FILES: Record<string, readonly [number, number]> = {
   coverage: [33, 162],
   /* 57 -> 73 (22 Oct 2026): sixteen short labels drawn inside the page's
    *  illustrations (`technology.art`). All plain strings.
-   *  73 -> 75: "Research" and "Fraud", the two words on the research board. */
-  technology: [52, 75],
+   *  73 -> 75: "Research" and "Fraud", the two words on the research board.
+   *  75 -> 77: "Routed" and "Abroad", the two words on the orchestration board. */
+  technology: [52, 77],
   security: [43, 99],
 };
 
@@ -1989,8 +1990,8 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 363 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 363 &&
+  "platform holds 365 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 365 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
@@ -2024,10 +2025,10 @@ check(
  *  323 -> 341 (22 Oct 2026): sixteen illustration labels in `technology.art`,
  *  all plain strings, plus two string leaves the tree already held above the
  *  written 323 before that addition. 341 -> 343: Research and Fraud.
- *  Rich text is unchanged at 20. */
+ *  343 -> 345: Routed and Abroad. Rich text is unchanged at 20. */
 check(
-  "platform: 343 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 343 &&
+  "platform: 345 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 345 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },
