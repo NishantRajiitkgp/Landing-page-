@@ -501,8 +501,8 @@ export const en = {
     },
 
     /** The short labels drawn inside the page's illustrations. Not part of the
-     *  old SPA copy, and never read out: every drawing is `aria-hidden`. Keep
-     *  each to a word or two — the boards leave about 120px for one. */
+     *  old SPA copy, and never read out: every drawing is `aria-hidden`.
+     *  `orch` is the orchestration map's own captions, taken from the diagram. */
     art: {
       ai: "AI",
       sources: "Authorised sources",
@@ -524,6 +524,28 @@ export const en = {
       compounding: "Compounding",
       monitored: "Monitored",
       once: "Verified once",
+      orch: {
+        kyc: "Individual KYC",
+        student: "Student Verification",
+        employment: "Employment Check",
+        requests: "Verification requests",
+        requestsSub: "Multiple document types and use cases",
+        understand: "Document Understanding",
+        risk: "Risk & Fraud Detection",
+        policy: "Policy & Compliance Engine",
+        routing: "Intelligent Routing",
+        ml: "ML orchestration",
+        uae: "UAE",
+        uaeRole: "Government / Regulator",
+        usa: "USA",
+        usaRole: "Academic Institution",
+        uk: "UK",
+        ukRole: "Employment / Corporate",
+        sg: "Singapore",
+        sgRole: "Financial Institution",
+        done: "Verification Complete",
+        doneSub: "Result delivered to your system",
+      },
     },
   },
 

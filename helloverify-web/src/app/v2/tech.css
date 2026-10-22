@@ -277,6 +277,102 @@
 .tk-o-rip { fill: none; stroke: var(--primary); opacity: 0; }
 .tk-fork { fill: var(--white); stroke: var(--ink); stroke-width: 1.3; }
 
+/* ── 03 · The orchestration map ── */
+.tk-orch { container-type: size; height: 100%; display: grid; place-items: center; }
+.tk-orch-in {
+  position: relative; container-type: size;
+  width: min(100%, calc(100cqh * 1000 / 700)); aspect-ratio: 1000 / 700;
+}
+.tk-orch-wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tk-orch-halo { fill: rgb(from var(--primary) r g b / .09); }
+.tk-orch-land { fill: var(--tick-off); opacity: .7; }
+.tk-orch-ring { fill: none; stroke: var(--primary); stroke-width: 1.2; stroke-dasharray: 2 8; opacity: .28; }
+.tk-orch-wires .tk-p-link { stroke-width: 2; }
+.tk-orch-wires .tk-edge2 { stroke-width: 1.8; }
+.tk-orch-node { fill: var(--primary); }
+.tk-orch-dotline { fill: none; stroke: var(--primary); stroke-width: 1.8; stroke-dasharray: 1.4 7; stroke-linecap: round; opacity: .55; }
+.tk-orch-dash { fill: none; stroke: var(--primary); stroke-width: 2; stroke-dasharray: 5 6; stroke-linecap: round; }
+.tk-orch-head { fill: var(--primary); }
+.tk-orch-pin { fill: var(--primary); }
+.tk-orch-pin-h { fill: var(--white); }
+.tk-orch-star { fill: var(--white); }
+.tk-orch-card {
+  position: absolute; z-index: 1; display: flex; align-items: center; gap: .7cqw;
+  min-height: 8cqh; padding: .7cqw .9cqw; border-radius: 12px;
+  background: var(--white); border: 1px solid var(--hair);
+  box-shadow: 0 12px 24px -18px rgb(from var(--ink) r g b / .45);
+}
+.tk-orch-card > span { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.tk-orch-card b { font-size: clamp(8px, 1.85cqw, 12.5px); font-weight: 600; line-height: 1.15; color: var(--ink); }
+.tk-orch-card small { font-size: clamp(7px, 1.35cqw, 10px); line-height: 1.2; color: var(--muted); }
+.tk-orch-ico { width: clamp(12px, 2.5cqw, 16px); height: clamp(12px, 2.5cqw, 16px); flex: none; fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tk-orch-ico-hot { stroke: var(--primary); }
+.tk-orch-card > .tk-orch-ico:last-child { margin-inline-start: auto; stroke: var(--muted); }
+.tk-orch-mini { display: flex; align-items: center; gap: 4px; margin-top: 2px; }
+.tk-orch-mini .tk-orch-ico { width: 10px; height: 10px; stroke: var(--muted); }
+.tk-orch-mini i { height: 3px; border-radius: 2px; background: var(--hair); }
+.tk-orch-mini i:first-of-type { width: 28px; }
+.tk-orch-mini i:last-of-type { width: 16px; background: var(--tick-off); }
+.tk-orch-more { justify-content: center; gap: 5px; min-height: 0; }
+.tk-orch-more i { width: 5px; height: 5px; border-radius: 50%; background: var(--tick-off); }
+.tk-orch-cap { position: absolute; z-index: 1; margin: 0; color: var(--muted); font-size: clamp(8px, 1.5cqw, 11px); line-height: 1.35; }
+.tk-orch-cap b { display: block; margin-bottom: 2px; color: var(--ink-soft); font-weight: 600; font-size: clamp(7.5px, 1.35cqw, 10px); }
+.tk-orch-cap b:lang(en) { font-family: var(--mono); font-weight: 500; letter-spacing: .11em; text-transform: uppercase; }
+.tk-orch-pill {
+  position: absolute; z-index: 2; display: flex; align-items: center; gap: 6px;
+  height: 28px; padding-inline: 8px 10px; border-radius: 999px;
+  background: var(--white); border: 1px solid var(--hair);
+  box-shadow: 0 8px 16px -12px rgb(from var(--ink) r g b / .35);
+  font-size: clamp(8px, 1.7cqw, 11.5px); font-weight: 500; color: var(--ink); white-space: nowrap;
+}
+.tk-orch-hub {
+  position: absolute; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  border-radius: 22px; background: var(--white); border: 1px solid var(--hair);
+  box-shadow: 0 0 0 10px rgb(from var(--primary) r g b / .05), 0 0 42px 6px rgb(from var(--primary) r g b / .16), 0 18px 30px -22px rgb(from var(--ink) r g b / .4);
+}
+.tk-orch-hub > svg { width: 78%; height: auto; }
+.tk-orch-hub > span:last-child { font-size: clamp(7px, 1.25cqw, 9px); color: var(--muted); }
+.tk-orch-hub > span:last-child:lang(en) { font-family: var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+.tk-orch-spark {
+  position: absolute; top: -16px; inset-inline-start: 50%;
+  transform: translateX(calc(var(--flip) * -50%));
+  width: 28px; height: 28px;
+  filter: drop-shadow(0 6px 8px rgb(from var(--primary) r g b / .35));
+}
+.tk-orch-spark svg { display: block; width: 100%; height: 100%; }
+.tk-orch-country img { width: 22px; height: 15px; object-fit: cover; border-radius: 2px; flex: none; box-shadow: 0 0 0 1px var(--hair); }
+.tk-orch-tick { position: absolute; top: -7px; inset-inline-end: -7px; width: 16px; height: 16px; }
+.tk-orch-done {
+  position: absolute; z-index: 2; display: flex; align-items: center; gap: 12px;
+  min-height: 11cqh; padding: 1cqw 1.4cqw; border-radius: 16px;
+  background: var(--white); border: 1px solid var(--hair);
+  box-shadow: 0 16px 30px -20px rgb(from var(--ink) r g b / .4);
+}
+.tk-orch-done > svg { width: 34px; height: 34px; flex: none; }
+.tk-orch-done b { display: block; font-size: clamp(10px, 2cqw, 14px); font-weight: 650; color: var(--ink); }
+.tk-orch-done small { display: block; margin-top: 2px; font-size: clamp(8px, 1.45cqw, 11px); color: var(--muted); }
+.tk-orch-proof { margin-inline-start: auto; display: flex; gap: 6px; }
+.tk-orch-proof .tk-orch-ico { width: 26px; height: 20px; padding: 2px; border-radius: 6px; background: var(--primary-pale); box-sizing: border-box; }
+@media (max-width: 700px) {
+  .tk-orch-pill { height: 20px; gap: 3px; padding-inline: 5px 6px; font-size: 7px; }
+  .tk-orch-pill .tk-orch-ico { width: 10px; height: 10px; }
+  .tk-orch-p2 { inset-inline-end: 1% !important; }
+  .tk-orch-p4 { inset-inline-end: 1% !important; }
+  .tk-orch-hub { gap: 2px; border-radius: 12px; }
+  .tk-orch-hub > span:last-child { font-size: 6px; white-space: nowrap; }
+  .tk-orch-hub > span:last-child:lang(en) { letter-spacing: .04em; }
+  .tk-orch-card { gap: 3px; padding: 3px 4px; border-radius: 8px; }
+  .tk-orch-card b { font-size: 7.5px; }
+  .tk-orch-card small { font-size: 6px; }
+  .tk-orch-country img { width: 14px; height: 10px; }
+  .tk-orch-spark { width: 16px; height: 16px; top: -8px; }
+  .tk-orch-cap, .tk-orch-cap b { font-size: 6.5px; }
+  .tk-orch-done { gap: 6px; padding: 6px 8px; }
+  .tk-orch-done > svg { width: 22px; height: 22px; }
+  .tk-orch-done b { font-size: 9px; }
+  .tk-orch-done small { font-size: 7px; }
+}
+
 /* ── Motion: each beat runs only while its board is the active one ── */
 :is(.tk-in[data-active="0"] .tk-v1, .tk-in[data-active="1"] .tk-v2, .tk-in[data-active="2"] .tk-v3) .tk-a-in { animation: tkArtIn .7s cubic-bezier(.2, .8, .2, 1) var(--d) both; }
 :is(.tk-in[data-active="0"] .tk-v1, .tk-in[data-active="1"] .tk-v2, .tk-in[data-active="2"] .tk-v3) .tk-a-drop { animation: tkDropIn .6s cubic-bezier(.2, .8, .2, 1) var(--d) both; }
