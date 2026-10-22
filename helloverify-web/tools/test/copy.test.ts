@@ -2018,10 +2018,14 @@ check(
  *  put two adjacent text children where one sits today), 1 `FaqSection` head —
  *  security's —, `security.certs.h`'s `<br />`, and the two accessibility
  *  paragraphs carrying a mid-sentence `<strong>`. Coverage and technology lost
- *  their strips, FAQs and closing copy to the old CMS copy on 5 Oct 2026. */
+ *  their strips, FAQs and closing copy to the old CMS copy on 5 Oct 2026.
+ *
+ *  323 -> 341 (22 Oct 2026): sixteen illustration labels in `technology.art`,
+ *  all plain strings, plus two string leaves the tree already held above the
+ *  written 323 before that addition. Rich text is unchanged at 20. */
 check(
-  "platform: 323 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 323 &&
+  "platform: 341 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 341 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },
