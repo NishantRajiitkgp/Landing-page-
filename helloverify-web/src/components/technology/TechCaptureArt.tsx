@@ -6,6 +6,7 @@
       1.7s  it structures: each detail runs into its own row of one record
       2.9s  it validates every row; the record is verification-ready, and
             the crossed-out hand says nobody typed any of it */
+import { Logo } from "@/components/brand/Logo";
 import { CAL, CAP, Glyph, HAND, HASH, Label, Ok, PERSON, SPARK, UPLOAD, d, type TechArt } from "./TechPillarKit";
 
 const DOCS = [
@@ -83,14 +84,22 @@ export function CaptureArt({ l }: { l: TechArt }) {
       ))}
 
       {/* AI captures the key detail on each */}
-      {["M234 88C262 88 262 181 274 181", "M254 182H274", "M232 278C262 278 262 181 274 181"].map((p, i) => (
+      {["M234 88C246 88 248 158 274 168", "M254 182H274", "M232 278C262 278 262 181 274 181"].map((p, i) => (
         <path key={p} className="tk-edge2 tk-a-draw" d={p} pathLength="1" style={d(0.95 + i * 0.05)} />
       ))}
       <g className="tk-a-pop" style={d(0.9)}>
         <rect className="tk-eng" x="274" y="158" width="46" height="46" rx="14" />
         <Glyph g={SPARK} x={297} y={181} s={0.95} cls="tk-ic tk-ic-w" />
       </g>
-      <Label x={297} y={146} at={1}>{l.ai}</Label>
+      {/* The wordmark sits above the engine and flips back under RTL, the
+          same way the board's labels do. */}
+      <g className="tk-a-fade" style={d(1)} transform="translate(294 30)">
+        <g className="tk-uf">
+          <g transform="translate(-36 -10.5)">
+            <Logo width={72} height={21} />
+          </g>
+        </g>
+      </g>
       {DOCS.map((doc, k) => {
         const [x, y, w, h] = doc.frame;
         return (
