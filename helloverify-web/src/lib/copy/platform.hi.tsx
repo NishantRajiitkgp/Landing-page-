@@ -432,6 +432,8 @@ export const hi: PlatformCopy = {
       ready: "सत्यापन के लिए तैयार",
       manual: "कोई मैन्युअल प्रविष्टि नहीं",
       registrar: "रजिस्ट्रार",
+      research: "शोध",
+      fraud: "धोखाधड़ी",
       fraudDb: "धोखाधड़ी डेटाबेस",
       learns: "सीखता है",
       router: "ML राउटर",

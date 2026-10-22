@@ -510,6 +510,8 @@ export const en = {
       ready: "Verification-ready",
       manual: "No manual entry",
       registrar: "Registrar",
+      research: "Research",
+      fraud: "Fraud",
       fraudDb: "Fraud database",
       learns: "Learns",
       router: "ML router",

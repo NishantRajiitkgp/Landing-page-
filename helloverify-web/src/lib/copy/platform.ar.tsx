@@ -430,6 +430,8 @@ export const ar: PlatformCopy = {
       ready: "جاهزة للتحقق",
       manual: "دون إدخال يدوي",
       registrar: "المسجّل",
+      research: "بحث",
+      fraud: "احتيال",
       fraudDb: "قاعدة بيانات الاحتيال",
       learns: "يتعلّم",
       router: "موجّه ML",
