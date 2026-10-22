@@ -1,114 +1,146 @@
-/** The first pillar drawing on the `/technology` stage (`./TechPillars`), on
-    a 560 × 360 board like the other two. It acts out its paragraph beat by
-    beat; motion lives in `tech.css` as `tk-a-*` classes that only run while
-    the board is the active one. */
-import { CAL, CAP, CASE, Glyph, HASH, INST, Ok, PERSON, UPLOAD, d } from "./TechPillarKit";
+/** The first pillar drawing on the `/technology` stage (`./TechPillars`).
 
-/* ── 01 · Onboarding: documents are uploaded; AI captures each detail,
-   structures it into one record, validates it, and the record is ready. ── */
+      0s    the applicant uploads a passport, a degree and a payslip from a
+            phone, as they come: tilted and mixed
+      0.9s  AI captures: it frames the key detail on every document
+      1.7s  it structures: each detail runs into its own row of one record
+      2.9s  it validates every row; the record is verification-ready, and
+            the crossed-out hand says nobody typed any of it */
+import { CAL, CAP, Glyph, HAND, HASH, Label, Ok, PERSON, SPARK, UPLOAD, d, type TechArt } from "./TechPillarKit";
 
-/** A detail's capture box on its document, the record row it fills, and the
-    row's glyph: name, ID number, degree, date, employer. */
-const FIELDS = [
-  { box: [115, 87, 82, 17], g: PERSON, w: 104, at: 1.0 },
-  { box: [63, 146, 158, 12], g: HASH, w: 120, at: 1.12 },
-  { box: [101, 195, 106, 17], g: CAP, w: 92, at: 1.45 },
-  { box: [101, 225, 68, 15], g: CAL, w: 64, at: 1.58 },
-  { box: [63, 297, 82, 24], g: CASE, w: 98, at: 1.9 },
+const DOCS = [
+  { t: "translate(128 50) rotate(-7)", frame: [38, 10, 58, 24], at: 0.2 },
+  { t: "translate(150 146) rotate(5)", frame: [36, 11, 60, 24], at: 0.32 },
+  { t: "translate(128 248) rotate(-4)", frame: [64, 20, 36, 34], at: 0.44 },
 ];
-const ROW_Y = [156, 192, 228, 264, 300];
+const ROWS = [
+  { y: 124, g: PERSON, w: 72 },
+  { y: 164, g: HASH, w: 90 },
+  { y: 204, g: CAP, w: 64 },
+  { y: 244, g: CAL, w: 40 },
+];
 
-export function CaptureArt() {
+function DocFace({ k }: { k: number }) {
   return (
-    <svg className="tk-art tk-mirror" viewBox="20 40 560 360" fill="none">
-      {/* Uploaded */}
-      <rect className="tk-zone tk-a-fade" x="44" y="58" width="196" height="336" rx="18" style={d(0)} />
-      <g className="tk-a-pop" style={d(0.05)}>
-        <circle className="tk-node" cx="142" cy="58" r="13" />
-        <Glyph g={UPLOAD} x={142} y={58} s={0.58} />
-      </g>
+    <>
+      <rect className="tk-sheet" width="104" height="66" rx="10" />
+      {k === 0 && (
+        <>
+          <rect className="tk-paperfill" x="10" y="10" width="24" height="30" rx="5" />
+          <Glyph g={PERSON} x={22} y={25} s={0.55} cls="tk-ic tk-ic-m" />
+          <rect className="tk-inkbar" x="42" y="14" width="48" height="6" rx="3" />
+          <rect className="tk-soft" x="42" y="27" width="34" height="5" rx="2.5" />
+          <rect className="tk-inkbar tk-faint" x="10" y="50" width="84" height="4" rx="2" />
+        </>
+      )}
+      {k === 1 && (
+        <>
+          <circle className="tk-paperfill" cx="22" cy="22" r="11" />
+          <Glyph g={CAP} x={22} y={22} s={0.55} cls="tk-ic tk-ic-m" />
+          <rect className="tk-inkbar" x="40" y="15" width="52" height="6" rx="3" />
+          <rect className="tk-soft" x="40" y="28" width="40" height="5" rx="2.5" />
+          <rect className="tk-bar" x="12" y="46" width="44" height="5" rx="2.5" />
+          <path className="tk-sign" d="M66 50c4-7 7-7 9-2s4 5 7-1 5-5 7 0" />
+        </>
+      )}
+      {k === 2 && (
+        <>
+          <rect className="tk-red" x="10" y="10" width="44" height="6" rx="3" />
+          {[24, 36, 48].map((y, i) => (
+            <g key={y}>
+              <rect className="tk-bar" x="10" y={y} width={[46, 38, 42][i]} height="5" rx="2.5" />
+              <rect className="tk-inkbar" x="70" y={y} width="24" height="5" rx="2.5" />
+            </g>
+          ))}
+        </>
+      )}
+    </>
+  );
+}
 
-      <g className="tk-a-drop" style={d(0.15)}>
-        <rect className="tk-sheet" x="56" y="74" width="172" height="92" rx="10" />
-        <rect className="tk-paperfill" x="68" y="86" width="40" height="52" rx="6" />
-        <circle className="tk-soft" cx="88" cy="105" r="8" />
-        <path className="tk-soft" d="M76 133a12 9 0 0 1 24 0z" />
-        <rect className="tk-inkbar" x="120" y="92" width="72" height="7" rx="3.5" />
-        <rect className="tk-bar" x="120" y="108" width="52" height="5" rx="2.5" />
-        <rect className="tk-bar" x="120" y="120" width="62" height="5" rx="2.5" />
-        <path className="tk-mrz" d="M68 152H216" />
+export function CaptureArt({ l }: { l: TechArt }) {
+  return (
+    <svg className="tk-art tk-mirror" viewBox="0 0 560 360" fill="none">
+      {/* Uploaded from a phone */}
+      <g className="tk-a-in" style={d(0)}>
+        <rect className="tk-phone" x="30" y="118" width="64" height="122" rx="13" />
+        <rect className="tk-soft" x="52" y="226" width="20" height="4" rx="2" />
       </g>
-      <g className="tk-a-drop" style={d(0.3)}>
-        <rect className="tk-sheet" x="56" y="182" width="172" height="92" rx="10" />
-        <circle className="tk-paperfill" cx="82" cy="208" r="13" />
-        <Glyph g={INST} x={82} y={208} s={0.55} />
-        <rect className="tk-inkbar" x="106" y="200" width="96" height="7" rx="3.5" />
-        <rect className="tk-bar" x="106" y="215" width="70" height="5" rx="2.5" />
-        <rect className="tk-bar" x="106" y="230" width="58" height="5" rx="2.5" />
-        <path className="tk-sign" d="M146 258c6-9 10-9 12-3s5 6 9-1 7-6 9 0" />
-        <circle className="tk-ringl" cx="208" cy="254" r="9" />
+      <g className="tk-a-pop" style={d(0.1)}>
+        <circle className="tk-pale" cx="62" cy="172" r="17" />
+        <Glyph g={UPLOAD} x={62} y={172} s={0.7} cls="tk-ic tk-ic-r" />
       </g>
-      <g className="tk-a-drop" style={d(0.45)}>
-        <rect className="tk-sheet" x="56" y="290" width="172" height="92" rx="10" />
-        <rect className="tk-red" x="68" y="303" width="66" height="6" rx="3" />
-        <rect className="tk-soft" x="68" y="314" width="44" height="4" rx="2" />
-        {[60, 48, 54].map((w, i) => (
-          <g key={i}>
-            <rect className="tk-bar" x="68" y={330 + i * 14} width={w} height="5" rx="2.5" />
-            <rect className="tk-inkbar tk-faint" x="176" y={330 + i * 14} width={i === 1 ? 34 : 40} height="5" rx="2.5" />
+      <Label x={62} y={260} at={0.2}>{l.uploaded}</Label>
+      {["M94 150C110 150 112 92 128 88", "M94 178H150", "M94 206C110 206 112 270 128 278"].map((p, i) => (
+        <path key={p} className="tk-dash tk-a-fade" d={p} style={d(0.15 + i * 0.1)} />
+      ))}
+      {DOCS.map((doc, k) => (
+        <g key={k} className="tk-a-drop" style={d(doc.at)}>
+          <g transform={doc.t}>
+            <DocFace k={k} />
           </g>
-        ))}
+        </g>
+      ))}
+
+      {/* AI captures the key detail on each */}
+      {["M234 88C262 88 262 181 274 181", "M254 182H274", "M232 278C262 278 262 181 274 181"].map((p, i) => (
+        <path key={p} className="tk-edge2 tk-a-draw" d={p} pathLength="1" style={d(0.95 + i * 0.05)} />
+      ))}
+      <g className="tk-a-pop" style={d(0.9)}>
+        <rect className="tk-eng" x="274" y="158" width="46" height="46" rx="14" />
+        <Glyph g={SPARK} x={297} y={181} s={0.95} cls="tk-ic tk-ic-w" />
       </g>
-
-      {/* AI captures: each document is read, each detail boxed */}
-      {[76, 184, 292].map((y, i) => (
-        <path key={y} className="tk-scanl tk-a-scan" d={`M58 ${y}H226`} style={d([0.85, 1.3, 1.75][i], { "--dy": "88px", "--t": ".45s" })} />
-      ))}
-      {FIELDS.map((f, i) => (
-        <rect key={i} className="tk-fbox tk-a-draw" x={f.box[0]} y={f.box[1]} width={f.box[2]} height={f.box[3]} rx="4" pathLength="1" style={d(f.at, { "--t": ".3s" })} />
-      ))}
-
-      {/* …structures it: each detail runs to its row */}
-      {FIELDS.map((f, i) => {
-        const [bx, by, bw, bh] = f.box;
-        const x1 = bx + bw;
-        const y1 = by + bh / 2;
-        const p = `M${x1} ${y1}C${x1 + 56} ${y1} 278 ${ROW_Y[i]} 334 ${ROW_Y[i]}`;
+      <Label x={297} y={146} at={1}>{l.ai}</Label>
+      {DOCS.map((doc, k) => {
+        const [x, y, w, h] = doc.frame;
         return (
-          <g key={i}>
-            <path className="tk-wire tk-a-draw" d={p} pathLength="1" style={d(f.at + 0.15)} />
-            <path className="tk-comet tk-a-comet" d={p} pathLength="1" style={d(f.at + 0.15)} />
+          <g key={k} transform={doc.t}>
+            <rect className="tk-fbox tk-a-draw" x={x} y={y} width={w} height={h} rx="4" pathLength="1" style={d(1.1 + k * 0.15, { "--t": ".3s" })} />
           </g>
         );
       })}
 
-      {/* The record */}
-      <g className="tk-a-in" style={d(0.35)}>
-        <rect className="tk-sheet" x="322" y="66" width="238" height="310" rx="16" />
-        <circle className="tk-paperfill" cx="350" cy="100" r="15" />
-        <Glyph g={PERSON} x={350} y={100} s={0.6} />
-        <rect className="tk-inkbar" x="374" y="92" width="88" height="7" rx="3.5" />
-        <rect className="tk-soft" x="374" y="106" width="56" height="5" rx="2.5" />
-        <circle className="tk-pend" cx="536" cy="100" r="9" />
-        <path className="tk-hair" d="M322 128H560" />
-        {FIELDS.map((f, i) => (
-          <g key={i}>
-            <rect className="tk-paperfill" x="334" y={ROW_Y[i] - 14} width="214" height="28" rx="8" />
-            <Glyph g={f.g} x={352} y={ROW_Y[i]} s={0.6} />
-            <rect className="tk-soft" x="372" y={ROW_Y[i] - 3.5} width={f.w} height="7" rx="3.5" />
-            <path className="tk-val tk-a-draw" d={`M375.5 ${ROW_Y[i]}h${f.w - 7}`} pathLength="1" style={d(f.at + 0.55, { "--t": ".35s" })} />
+      {/* …structures it into one record */}
+      <g className="tk-a-in" style={d(1.6)}>
+        <rect className="tk-sheet" x="358" y="46" width="180" height="262" rx="16" />
+        <circle className="tk-paperfill" cx="384" cy="74" r="14" />
+        <Glyph g={PERSON} x={384} y={74} s={0.6} />
+        <rect className="tk-inkbar" x="406" y="66" width="70" height="6" rx="3" />
+        <rect className="tk-soft" x="406" y="78" width="44" height="5" rx="2.5" />
+        <path className="tk-hair" d="M358 98H538" />
+        {ROWS.map((r) => (
+          <g key={r.y}>
+            <rect className="tk-paperfill" x="370" y={r.y - 14} width="156" height="28" rx="8" />
+            <Glyph g={r.g} x={386} y={r.y} s={0.55} />
+            <rect className="tk-soft" x="402" y={r.y - 3} width={r.w + 6} height="6" rx="3" />
           </g>
         ))}
-        <path className="tk-track" d="M340 348H542" />
+        <path className="tk-track" d="M372 286H524" />
       </g>
+      {ROWS.map((r, i) => {
+        const p = `M320 181C344 181 346 ${r.y} 370 ${r.y}`;
+        return (
+          <g key={r.y}>
+            <path className="tk-wire tk-a-draw" d={p} pathLength="1" style={d(1.9 + i * 0.1)} />
+            <path className="tk-comet tk-a-comet" d={p} pathLength="1" style={d(1.9 + i * 0.1)} />
+            <path className="tk-val tk-a-draw" d={`M405 ${r.y}h${r.w}`} pathLength="1" style={d(2.25 + i * 0.12, { "--t": ".35s" })} />
+          </g>
+        );
+      })}
 
-      {/* …validates every row; the record is verification-ready */}
-      {FIELDS.map((_, i) => (
-        <Ok key={i} x={532} y={ROW_Y[i]} at={2.65 + i * 0.12} />
+      {/* …validates every row: verification-ready, no manual entry */}
+      {ROWS.map((r, i) => (
+        <Ok key={r.y} x={512} y={r.y} r={7} at={2.9 + i * 0.12} />
       ))}
-      <path className="tk-ready tk-a-draw" d="M340 348H542" pathLength="1" style={d(3.25, { "--t": ".55s" })} />
-      <rect className="tk-ready-ring tk-a-fade" x="322" y="66" width="238" height="310" rx="16" style={d(3.8)} />
-      <Ok x={536} y={100} r={9} at={3.8} />
+      <path className="tk-ready tk-a-draw" d="M372 286H524" pathLength="1" style={d(3.4, { "--t": ".5s" })} />
+      <Ok x={514} y={74} r={8} at={3.5} />
+      <Label x={448} y={330} at={3.6} red>{l.ready}</Label>
+      <g className="tk-a-pop" style={d(3.7)}>
+        <circle className="tk-node" cx="297" cy="290" r="19" />
+        <Glyph g={HAND} x={297} y={290} s={0.7} cls="tk-ic tk-ic-m" />
+      </g>
+      <path className="tk-strike tk-a-draw" d="M284 277 310 303" pathLength="1" style={d(3.9, { "--t": ".25s" })} />
+      <Label x={297} y={330} at={4}>{l.manual}</Label>
     </svg>
   );
 }
