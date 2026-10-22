@@ -84,15 +84,15 @@ export function CaptureArt({ l }: { l: TechArt }) {
       ))}
 
       {/* AI captures the key detail on each */}
-      {["M234 88C250 88 250 181 262 181", "M254 182H262", "M232 278C250 278 250 181 262 181"].map((p, i) => (
+      {["M234 88C250 88 250 181 273 181", "M254 182H273", "M232 278C250 278 250 181 273 181"].map((p, i) => (
         <path key={p} className="tk-edge2 tk-a-draw" d={p} pathLength="1" style={d(0.95 + i * 0.05)} />
       ))}
       {/* The wordmark replaces the star, centred on the same spot. */}
       <g className="tk-a-pop" style={d(0.9)} transform="translate(312 181)">
         <g className="tk-uf">
-          <rect className="tk-sheet" x="-48" y="-18" width="96" height="36" rx="12" />
-          <g transform="translate(-44 -13)">
-            <Logo width={88} height={26} />
+          <rect className="tk-sheet" x="-39" y="-15" width="78" height="30" rx="10" />
+          <g transform="translate(-35 -10)">
+            <Logo width={70} height={20} />
           </g>
         </g>
       </g>
@@ -123,7 +123,7 @@ export function CaptureArt({ l }: { l: TechArt }) {
         <path className="tk-track" d="M372 286H524" />
       </g>
       {ROWS.map((r, i) => {
-        const p = `M360 181C366 181 368 ${r.y} 370 ${r.y}`;
+        const p = `M351 181C362 181 364 ${r.y} 370 ${r.y}`;
         return (
           <g key={r.y}>
             <path className="tk-wire tk-a-draw" d={p} pathLength="1" style={d(1.9 + i * 0.1)} />
