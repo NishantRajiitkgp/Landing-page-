@@ -17,7 +17,8 @@ import { AppLink } from "@/components/chrome/AppLink";
 import { Arrow } from "@/components/brand/Arrow";
 import { splitWords } from "@/components/brand/splitWords";
 import "@/app/v2/tech.css";
-import { CAP, CASE, GLOBE, Glyph, ID, INST, Label, OFFICE, Ok, SPARK, d, type TechArt } from "./TechPillarKit";
+import { Logo } from "@/components/brand/Logo";
+import { CAP, CASE, GLOBE, Glyph, ID, INST, Label, OFFICE, Ok, d, type TechArt } from "./TechPillarKit";
 
 const C = { x: 200, y: 236 };
 const DOTS = (() => {
@@ -40,7 +41,7 @@ const REGIONS = [
   { x: 272, a: ID, z: OFFICE },
 ];
 const ISSUER = { x: 178, y: 404 };
-const ROUTE = `M200 274V340C200 370 ${ISSUER.x} 370 ${ISSUER.x} ${ISSUER.y - 17}`;
+const ROUTE = `M200 252V340C200 370 ${ISSUER.x} 370 ${ISSUER.x} ${ISSUER.y - 17}`;
 
 function Proof({ l }: { l: TechArt }) {
   return (
@@ -71,22 +72,25 @@ function Proof({ l }: { l: TechArt }) {
         <rect key={y} className="tk-fbox tk-a-draw" x={x} y={y} width={w} height={h} rx="4" pathLength="1" style={d(1.2 + i * 0.16, { "--t": ".3s" })} />
       ))}
 
-      {/* AI reads it */}
-      <path className="tk-p-link tk-a-draw" d="M200 130V198" pathLength="1" style={d(1, { "--t": ".3s" })} />
-      <path className="tk-comet tk-a-comet" d="M200 130V198" pathLength="1" style={d(1, { "--t": ".3s" })} />
+      {/* The wordmark reads the document, then routes it on */}
+      <path className="tk-p-link tk-a-draw" d="M200 130V220" pathLength="1" style={d(1, { "--t": ".3s" })} />
+      <path className="tk-comet tk-a-comet" d="M200 130V220" pathLength="1" style={d(1, { "--t": ".3s" })} />
       <circle className="tk-h-ring tk-a-fade" cx={C.x} cy={C.y} r="56" style={d(0.5)} />
-      <g className="tk-a-pop" style={d(0.4)}>
-        <rect className="tk-eng" x="162" y="198" width="76" height="76" rx="22" />
-        <Glyph g={SPARK} x={C.x} y={C.y} s={1.25} cls="tk-ic tk-ic-w" />
+      <g className="tk-a-pop" style={d(0.4)} transform="translate(200 236)">
+        <g className="tk-uf">
+          <rect className="tk-sheet" x="-40" y="-16" width="80" height="32" rx="10" />
+          <g transform="translate(-36 -10.5)">
+            <Logo width={72} height={21} />
+          </g>
+        </g>
       </g>
-      <Label x={308} y={240} at={0.6}>{l.ai}</Label>
 
       {/* Three countries' authorised sources */}
       {REGIONS.map((r, i) => {
         const cx = r.x + 56;
         return (
           <g key={r.x}>
-            <path className="tk-edge2 tk-a-draw" d={`M200 274C200 305 ${cx} 305 ${cx} 336`} pathLength="1" style={d(0.9 + i * 0.08)} />
+            <path className="tk-edge2 tk-a-draw" d={`M200 252C200 300 ${cx} 300 ${cx} 336`} pathLength="1" style={d(0.9 + i * 0.08)} />
             <g className="tk-a-in" style={d(0.7 + i * 0.1)}>
               <rect className="tk-sheet" x={r.x} y="336" width="112" height="96" rx="14" />
               <circle className="tk-node" cx={r.x + 18} cy="354" r="10" />
@@ -105,7 +109,7 @@ function Proof({ l }: { l: TechArt }) {
       {/* Routed to the issuer, who confirms; the document is sealed */}
       <path className="tk-p-link tk-a-draw" d={ROUTE} pathLength="1" style={d(2, { "--t": ".5s" })} />
       <path className="tk-comet tk-a-back" d={ROUTE} pathLength="1" style={d(3, { "--t": ".4s" })} />
-      <path className="tk-comet tk-a-back" d="M200 130V198" pathLength="1" style={d(3.3, { "--t": ".25s" })} />
+      <path className="tk-comet tk-a-back" d="M200 130V220" pathLength="1" style={d(3.3, { "--t": ".25s" })} />
       <circle className="tk-hi-ring tk-a-pop" cx={ISSUER.x} cy={ISSUER.y} r="21" style={d(2.5)} />
       <Ok x={ISSUER.x + 14} y={ISSUER.y - 15} r={7} at={2.7} />
       <circle className="tk-pale tk-a-pop" cx="250" cy="112" r="19" style={d(3.4)} />
