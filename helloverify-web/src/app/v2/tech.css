@@ -654,6 +654,8 @@
 .tk-dial-body { fill: var(--primary); }
 .tk-dial-ok { stroke: var(--white); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; }
 .tk-dial-rip { stroke: var(--primary); stroke-width: 1.5; opacity: 0; transform-box: fill-box; transform-origin: center; }
+:is(.tk-layer, .tk-layer-ok) { transform-box: fill-box; transform-origin: center; }
+.tk-layer-ok { transition: opacity .3s ease, scale .45s cubic-bezier(.2, 1.5, .4, 1); transition-delay: calc(.45s + var(--i) * .12s); }
 
 /* The seals: in colour at rest where there's no hover; where there is, quiet
    until pointed at. */
@@ -675,7 +677,9 @@
   .tk-sec:not(.tk-in) :is(.tk-vault, .tk-seal) { opacity: 0; }
   .tk-sec:not([data-lock]) .tk-shackle { translate: 0 -10px; }
   .tk-sec:not([data-lock]) .tk-dial-ok { stroke-dashoffset: 1; }
+  .tk-sec:not([data-lock]) .tk-layer-ok { opacity: 0; scale: 0; }
 }
+.tk-in .tk-layer { animation: tkPopIn .5s cubic-bezier(.2, 1.4, .4, 1) var(--d) both; }
 .tk-in .tk-vault { animation: tkArtIn 1s cubic-bezier(.2, .8, .2, 1) both; }
 .tk-in .tk-dial-ring { animation: tkDraw 1.4s cubic-bezier(.4, 0, .2, 1) var(--d) both; }
 .tk-in :is(.tk-dial-rot, .tk-dial-rot2, .tk-dial-shield) { animation: tkFadeIn 1s ease .45s both; }
