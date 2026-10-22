@@ -499,6 +499,28 @@ export const en = {
       lede: "Your data security is our top priority with multiple layers of protection and global compliance standards.",
       logos: { nsr: "NSR — Credible Data, Credible People", pbsa: "PBSA — Professional Background Screening Association", iso9001: "ISO 9001", gdpr: "GDPR — General Data Protection Regulation" },
     },
+
+    /** The short labels drawn inside the page's illustrations. Not part of the
+     *  old SPA copy, and never read out: every drawing is `aria-hidden`. Keep
+     *  each to a word or two — the boards leave about 120px for one. */
+    art: {
+      ai: "AI",
+      sources: "Authorised sources",
+      uploaded: "Uploaded",
+      ready: "Verification-ready",
+      manual: "No manual entry",
+      registrar: "Registrar",
+      fraudDb: "Fraud database",
+      learns: "Learns",
+      router: "ML router",
+      consent: "Consent",
+      legalised: "Legalisation",
+      residency: "Data residency",
+      static: "Static",
+      compounding: "Compounding",
+      monitored: "Monitored",
+      once: "Verified once",
+    },
   },
 
   /** `/platform/security-compliance` — the procurement page.
