@@ -485,48 +485,47 @@
 }
 .tk-tile:hover { transform: translateY(-4px); box-shadow: 0 44px 74px -48px rgb(from var(--primary) r g b / .42); }
 
-.tk-tile-top { display: flex; align-items: flex-start; justify-content: space-between; }
-.tk-tile-ic {
-  width: 44px; height: 44px; border-radius: 13px; display: grid; place-items: center;
-  color: var(--primary-ink); background: var(--primary-pale); border: 1px solid rgb(from var(--primary) r g b / .16);
-  transition: background .4s, color .4s, box-shadow .4s, scale .5s cubic-bezier(.2, 1.4, .4, 1);
-}
-.tk-tile-ic svg { width: 22px; height: 22px; }
-.tk-tile:hover .tk-tile-ic { background: var(--primary); color: var(--white); scale: 1.08; box-shadow: 0 12px 24px -10px rgb(from var(--primary) r g b / .7); }
+.tk-tile-top { display: flex; align-items: flex-start; justify-content: flex-end; }
 .tk-tile-n { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; color: var(--muted); }
 .tk-tile-tx { margin-block-start: auto; }
 .tk-tile h3 { margin: 0; font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1.08; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
 .tk-tile p { margin: 10px 0 0; max-width: 36ch; font-size: 15px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
 
-/* Feature tile: routes between cities. */
+/* Every tile's scene: the small ones sit between the number and the copy. */
+.tk-tile-art { display: block; width: 100%; height: auto; overflow: visible; }
+.tk-sc { max-width: 260px; margin-inline: auto; }
+.tk-sc-ring { fill: none; stroke: var(--primary); stroke-width: 1.2; stroke-dasharray: 3 4; }
+.tk-sc-land { fill: var(--paper); }
+.tk-sc-phone { fill: var(--white); stroke: var(--ink); stroke-width: 1.5; }
+.tk-sc-rail { stroke: var(--ink-soft); stroke-width: 1.4; stroke-dasharray: 1; }
+.tk-sc-sleeper { stroke: var(--tick-off); stroke-width: 1.2; }
+
+/* Feature tile: a professional crossing a border between cities. */
 .tk-tile-a { background: radial-gradient(circle at 70% 35%, var(--primary-pale), transparent 55%), var(--white); }
 .tk-tile-a h3 { font-size: 46px; }
 .tk-tile-a p { font-size: 17px; }
-.tk-tile-art { display: block; width: 100%; height: auto; overflow: visible; }
-.tk-tile-a .tk-tile-art { margin-block: 18px 0; }
+.tk-tile-a .tk-sc { max-width: none; margin-block: 18px 0; }
 .tk-route { stroke: rgb(from var(--primary) r g b / .45); stroke-width: 1.3; stroke-dasharray: 1; }
-.tk-route-pk { stroke-width: 7; }
 .tk-city-halo { fill: rgb(from var(--primary) r g b / .12); }
 
 /* Wide tile: the credential chain beside the copy. */
 .tk-tile-h { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); grid-template-rows: auto 1fr; column-gap: 28px; }
-.tk-tile-h .tk-tile-top { grid-column: 1; grid-row: 1; }
+.tk-tile-h .tk-tile-top { grid-column: 1; grid-row: 1; justify-content: flex-start; }
 .tk-tile-h .tk-tile-tx { grid-column: 1; grid-row: 2; align-self: end; }
-.tk-tile-h .tk-tile-art { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+.tk-tile-h .tk-sc { grid-column: 2; grid-row: 1 / 3; align-self: center; max-width: none; }
 .tk-chain-link { stroke: var(--primary-light); stroke-width: 1.5; stroke-dasharray: 1; }
-:is(.tk-city, .tk-cred, .tk-cred-seal) { transform-box: fill-box; transform-origin: center; }
 
 @media (scripting: enabled) {
   .tk-areas:not(.tk-in) .tk-tile { opacity: 0; }
 }
 .tk-in .tk-tile { animation: tkTileIn .9s cubic-bezier(.2, .8, .2, 1) var(--d) both; }
-.tk-in .tk-route { animation: tkDraw 1s cubic-bezier(.4, 0, .2, 1) var(--d) both; }
-.tk-in .tk-route-pk { animation: tkPk 1.3s cubic-bezier(.45, 0, .3, 1) var(--d) both; }
-.tk-in .tk-city { animation: tkPopIn .5s cubic-bezier(.2, 1.5, .4, 1) var(--d) both; }
-.tk-in .tk-cred { animation: tkArtIn .6s cubic-bezier(.2, .8, .2, 1) var(--d) both; }
-.tk-in .tk-chain-link { animation: tkDraw .5s ease var(--d) both; }
-.tk-in .tk-cred-seal { animation: tkStamp .55s cubic-bezier(.2, 1.3, .4, 1) var(--d) both; }
+.tk-in .tk-sc .tk-a-in { animation: tkArtIn .6s cubic-bezier(.2, .8, .2, 1) calc(var(--d) + var(--s, 0s)) both; }
+.tk-in .tk-sc .tk-a-fade { animation: tkFadeIn .5s ease calc(var(--d) + var(--s, 0s)) both; }
+.tk-in .tk-sc .tk-a-pop { animation: tkPopIn .42s cubic-bezier(.2, 1.5, .4, 1) calc(var(--d) + var(--s, 0s)) both; }
+.tk-in .tk-sc .tk-a-draw { animation: tkDraw .6s cubic-bezier(.4, 0, .2, 1) calc(var(--d) + var(--s, 0s)) both; }
+.tk-in .tk-sc-train { animation: tkTrain 1.4s cubic-bezier(.3, 0, .2, 1) calc(var(--d) + var(--s, 0s)) both; }
 @keyframes tkTileIn { from { opacity: 0; translate: 0 30px; scale: .97; } }
+@keyframes tkTrain { from { opacity: 0; translate: -60px 0; } 30% { opacity: 1; } }
 
 @media (max-width: 1080px) {
   .tk-areas { padding-block-start: 84px; }
