@@ -356,6 +356,7 @@
 .tk-router-g { stroke: var(--white); stroke-width: 1.5; }
 .tk-router-end { fill: var(--white); }
 .tk-o-rip { fill: none; stroke: var(--primary); opacity: 0; }
+.tk-fork { fill: var(--white); stroke: var(--ink); stroke-width: 1.3; }
 
 /* ── Motion: each beat runs only while its board is the active one ── */
 :is(.tk-in[data-active="0"] .tk-v1, .tk-in[data-active="1"] .tk-v2, .tk-in[data-active="2"] .tk-v3) .tk-a-in { animation: tkArtIn .7s cubic-bezier(.2, .8, .2, 1) var(--d) both; }
