@@ -24,7 +24,7 @@
    for the case on its way, green for what has been confirmed. */
 
 .tk-hero { position: relative; isolation: isolate; padding-block: 72px 24px; overflow: clip; }
-.tk-hero-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); align-items: center; gap: 48px; }
+.tk-hero-in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: center; gap: 40px; }
 .tk-hero::before {
   content: ""; position: absolute; z-index: -1; inset-inline: 0; top: 30%; height: 80%; pointer-events: none;
   background: radial-gradient(ellipse 52% 46% at 50% 42%, var(--white), transparent 72%);
@@ -65,7 +65,8 @@
      checking then confirming, and the answer flies home. The canvas draws
      the globe and the routes; the engine moves the words below onto their
      points (a transform each frame) and on through their `data-s`. A board
-     of 520 × 560 units, `--gu` px each, so the words scale with it. ── */
+     of 560 × 540 units, `--gu` px each, so the words scale with it; the
+     globe is cut by its foot and fades out there. ── */
 .tk-proof { position: relative; }
 .tk-proof::before {
   content: ""; position: absolute; inset: -10% -14%; z-index: -1; pointer-events: none;
@@ -74,9 +75,10 @@
     radial-gradient(ellipse 50% 50% at 50% 50%, var(--white), transparent 70%);
   mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 40%, transparent 78%);
 }
-.tk-gl { width: 100%; aspect-ratio: 520 / 560; container-type: inline-size; }
-.tk-gl-art { --gu: calc(100cqw / 520); position: absolute; inset: 0; font-size: max(9px, calc(var(--gu) * 11)); line-height: 1.25; color: var(--ink); }
-.tk-gl-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
+.tk-gl { width: 100%; aspect-ratio: 560 / 540; container-type: inline-size; }
+.tk-gl-art { --gu: calc(100cqw / 560); position: absolute; inset: 0; font-size: max(11px, calc(var(--gu) * 13)); line-height: 1.25; color: var(--ink); }
+/* 70 units wider than the board on each side (techGlobe's PAD): the halo runs out under the copy's gap. */
+.tk-gl-cv { position: absolute; inset-block: 0; inset-inline: calc(var(--gu) * -70); width: calc(100% + var(--gu) * 140); height: 100%; mask-image: linear-gradient(black 80%, transparent 99%); }
 .tk-gl-ico { flex: none; width: 1.3em; height: 1.3em; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .tk-gl-flag { flex: none; width: 1.45em; height: 1em; border-radius: 2px; object-fit: cover; box-shadow: 0 0 0 1px var(--hair); }
 .tk-gl-tile { flex: none; display: grid; place-items: center; width: 2.5em; height: 2.5em; border-radius: .7em; background: var(--primary-pale); color: var(--primary); transition: background .4s ease, color .4s ease; }
@@ -89,13 +91,12 @@
 :is(.tk-gl-hub, .tk-gl-pin) { position: absolute; z-index: 2; top: 0; inset-inline-start: 0; opacity: 0; will-change: transform, opacity; }
 .tk-gl-hub { z-index: 3; display: grid; justify-items: center; gap: calc(var(--gu) * 5); translate: calc(var(--flip) * -50%) calc(var(--gu) * 14); transition: opacity .45s ease; }
 .tk-gl-hub-in {
-  display: inline-flex; align-items: center; gap: calc(var(--gu) * 7); height: calc(var(--gu) * 34); padding-inline: calc(var(--gu) * 12) calc(var(--gu) * 6);
+  display: inline-flex; align-items: center; height: calc(var(--gu) * 42); padding-inline: calc(var(--gu) * 16);
   border-radius: 999px; border: 1px solid var(--hair); background: var(--white);
   box-shadow: 0 0 0 calc(var(--gu) * 5) rgb(from var(--primary) r g b / .08), 0 calc(var(--gu) * 14) calc(var(--gu) * 26) calc(var(--gu) * -14) rgb(from var(--ink) r g b / .45);
 }
-.tk-gl-hub-in svg { width: calc(var(--gu) * 74); height: auto; }
-.tk-gl-hub-in b { display: grid; place-items: center; height: calc(var(--gu) * 21); padding-inline: calc(var(--gu) * 8); border-radius: 999px; background: var(--primary); color: var(--white); font-family: var(--mono); font-size: .8em; font-weight: 600; white-space: nowrap; }
-.tk-gl-hub small { padding: calc(var(--gu) * 2) calc(var(--gu) * 8); border-radius: 999px; background: rgb(from var(--white) r g b / .88); font-family: var(--mono); font-size: .78em; color: var(--muted); white-space: nowrap; }
+.tk-gl-hub-in svg { width: max(84px, calc(var(--gu) * 100)); height: auto; }
+.tk-gl-hub small { padding: calc(var(--gu) * 3) calc(var(--gu) * 10); border-radius: 999px; background: rgb(from var(--white) r g b / .9); font-family: var(--mono); font-size: .86em; color: var(--ink-soft); white-space: nowrap; }
 .tk-gl-pin {
   display: flex; align-items: center; gap: calc(var(--gu) * 8); padding-block: calc(var(--gu) * 6); padding-inline: calc(var(--gu) * 6) calc(var(--gu) * 8);
   translate: calc(var(--flip) * -50%) calc(-100% - var(--gu) * 16);
@@ -124,7 +125,7 @@
 
 /* The case card: its four checks, each waiting, on its way, being checked, confirmed */
 .tk-gl-case {
-  position: absolute; z-index: 3; top: calc(var(--gu) * 6); inset-inline-start: 0; box-sizing: border-box; width: calc(var(--gu) * 206);
+  position: absolute; z-index: 3; top: 0; inset-inline-start: 0; box-sizing: border-box; width: max(196px, calc(var(--gu) * 232));
   display: grid; gap: calc(var(--gu) * 8); padding: calc(var(--gu) * 12);
   border-radius: calc(var(--gu) * 16); border: 1px solid var(--hair); background: var(--white);
   box-shadow: 0 calc(var(--gu) * 24) calc(var(--gu) * 40) calc(var(--gu) * -26) rgb(from var(--ink) r g b / .5);
@@ -137,7 +138,8 @@
 .tk-gl-case:is([data-s="done"], [data-s="out"]) .tk-gl-case-h .tk-gl-tile { background: var(--tk-ok-pale); color: var(--tk-ok-ink); }
 .tk-gl-case-s { display: grid; padding-block: calc(var(--gu) * 6); border-block: 1px solid var(--hair); font-family: var(--mono); font-size: .76em; font-weight: 600; }
 .tk-gl-case-s:lang(en) { letter-spacing: .06em; text-transform: uppercase; }
-.tk-gl-case-s > span { grid-area: 1 / 1; transition: opacity .4s ease; }
+.tk-gl-case-s > span { grid-area: 1 / 1; transition: opacity .15s ease; }
+.tk-gl-case:is([data-s="done"], [data-s="out"]) .tk-gl-case-s > span:last-child { transition: opacity .35s ease .15s; }
 .tk-gl-case-s > span:first-child { color: var(--primary-ink); }
 .tk-gl-case-s > span:last-child { color: var(--tk-ok-ink); opacity: 0; }
 .tk-gl-case:is([data-s="done"], [data-s="out"]) .tk-gl-case-s > span:first-child { opacity: 0; }
@@ -185,7 +187,7 @@
   .tk-h1 { font-size: clamp(44px, 12vw, 76px); max-width: none; }
   .tk-sub { margin-block-start: 22px; font-size: 16.5px; }
   .tk-acts { margin-block-start: 28px; }
-  .tk-gl { width: min(100%, 480px); margin: 36px auto 0; }
+  .tk-gl { width: min(100%, 600px); margin: 28px auto 0; }
 }
 
 /* ══════════════════════════════════════════════════════════ AI PILLARS ═══

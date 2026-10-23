@@ -20,12 +20,17 @@ import { cssRgb, type RGB } from "@/lib/cssColour";
 import { arc, landPoints, vec, type Vec } from "@/lib/globeDraw";
 import { LAND } from "@/lib/globeLand";
 
-/** The board, in its own units; the island scales it to fit. */
-export const BW = 520;
-export const BH = 560;
-const CX = 280;
-const CY = 322;
-const R = 184;
+/** The board, in its own units; the island scales it to fit. The globe is
+    wider than the board is tall below it, so its foot runs off the bottom
+    (the stylesheet fades it out there). */
+export const BW = 560;
+export const BH = 540;
+const CX = 292;
+const CY = 356;
+const R = 252;
+/** How far the canvas runs past the board on either side, so the halo is
+    never cut by the board's edge. */
+const PAD = 70;
 const TAU = Math.PI * 2;
 
 type Place = readonly [lat: number, lon: number];
@@ -139,7 +144,7 @@ export class TechGlobe {
   private size() {
     this.s = this.board.clientWidth / BW || 1;
     this.dpr = Math.min(2, window.devicePixelRatio || 1);
-    this.canvas.width = Math.round(BW * this.s * this.dpr);
+    this.canvas.width = Math.round((BW + 2 * PAD) * this.s * this.dpr);
     this.canvas.height = Math.round(BH * this.s * this.dpr);
   }
 
@@ -204,8 +209,8 @@ export class TechGlobe {
       ctx.arc(x, y, r, 0, TAU);
     };
     const m = this.dpr * this.s;
-    ctx.setTransform(m, 0, 0, m, 0, 0);
-    ctx.clearRect(0, 0, BW, BH);
+    ctx.setTransform(m, 0, 0, m, PAD * m, 0);
+    ctx.clearRect(-PAD, 0, BW + 2 * PAD, BH);
 
     let g = ctx.createRadialGradient(CX, CY, R * 0.9, CX, CY, R * 1.34);
     g.addColorStop(0, rgba(pal.redLight, 0.32));
@@ -248,7 +253,7 @@ export class TechGlobe {
       const z0 = -pts[i] * sl + pts[i + 2] * cl;
       const z = pts[i + 1] * sp + z0 * cp;
       if (z <= 0) continue;
-      const sz = 1 + z * 1.35;
+      const sz = 1.2 + z * 1.7;
       ctx.fillStyle = ink + (0.1 + z * 0.3).toFixed(3) + ")";
       ctx.fillRect(CX + R * (pts[i] * cl + pts[i + 2] * sl) - sz / 2, CY - R * (pts[i + 1] * cp - z0 * sp) - sz / 2, sz, sz);
     }
@@ -375,7 +380,7 @@ export class TechGlobe {
     // The case itself: filed into the hub, then along the route, then home.
     const feed = clamp((t - FEED.at) / FEED.dur, 0, 1);
     if (feed > 0 && feed < 1 && h[2] > 0) {
-      const a: [number, number] = [this.rtl ? BW - 186 : 186, 150];
+      const a: [number, number] = [this.rtl ? BW - 212 : 212, 196];
       const f = ease(feed);
       const cx = h[0], cy = a[1];
       const x = (1 - f) ** 2 * a[0] + 2 * (1 - f) * f * cx + f * f * h[0];

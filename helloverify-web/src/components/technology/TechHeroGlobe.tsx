@@ -100,8 +100,7 @@ export function TechHeroGlobe({ art }: { art: TechArt }) {
 
         <div className="tk-gl-hub">
           <span className="tk-gl-hub-in">
-            <Logo width={80} height={23} />
-            <b>{art.ai}</b>
+            <Logo width={96} height={28} />
           </span>
           <small>{g.trained}</small>
         </div>
