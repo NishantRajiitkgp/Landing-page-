@@ -435,6 +435,17 @@ export const en = {
         customers: "Customers",
         ecosystem: "Ecosystem",
       },
+      /** The flywheel's four stations, one figure each. Every figure is one
+       *  the site already states (`/about`, the homepage's fraud band); none
+       *  is new here. */
+      stats: {
+        verifications: { v: "20M+", l: "checks completed since 2018" },
+        intelligence: { v: "12–14%", l: "of applications flagged for fraud" },
+        institutions: { v: "120+", l: "countries, checked at the source" },
+        customers: { v: "2,000+", l: "enterprise clients" },
+      },
+      pause: "Pause animation",
+      play: "Play animation",
     },
 
     platform: {

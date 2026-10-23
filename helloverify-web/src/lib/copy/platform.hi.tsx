@@ -360,6 +360,14 @@ export const hi: PlatformCopy = {
         customers: "Customers",
         ecosystem: "Ecosystem",
       },
+      stats: {
+        verifications: { v: "20M+", l: "2018 से पूरे किए गए चेक" },
+        intelligence: { v: "12–14%", l: "आवेदनों में धोखाधड़ी चिह्नित" },
+        institutions: { v: "120+", l: "देश, सीधे स्रोत पर सत्यापन" },
+        customers: { v: "2,000+", l: "एंटरप्राइज़ क्लाइंट" },
+      },
+      pause: "एनिमेशन रोकें",
+      play: "एनिमेशन चलाएँ",
     },
 
     platform: {

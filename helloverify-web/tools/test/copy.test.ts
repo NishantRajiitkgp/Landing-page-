@@ -1962,8 +1962,10 @@ const PLATFORM_FILES: Record<string, readonly [number, number]> = {
    *  139 -> 159: the hero globe's 20 (`technology.art.globe`), two of them
    *  the pause control's labels. The case itself is the pillar story's
    *  applicant, so it is not counted again. 159 -> 158: the globe's caption
-   *  is one phrase, so `art.sources` is no longer drawn. All plain strings. */
-  technology: [52, 158],
+   *  is one phrase, so `art.sources` is no longer drawn. All plain strings.
+   *  158 -> 168: the flywheel's four figures (a value and a label each, all
+   *  already on `/about` or the homepage) and its pause control's two labels. */
+  technology: [52, 168],
   security: [43, 99],
 };
 
@@ -1999,8 +2001,8 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 446 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 446 &&
+  "platform holds 456 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 456 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
@@ -2037,11 +2039,11 @@ check(
  *  343 -> 345: Routed and Abroad. 345 -> 365: the orchestration map's
  *  captions. 365 -> 407 (23 Oct 2026): the pillar story, 67 labels in for
  *  25 out (see `technology` above). 407 -> 426: the hero globe's 20, less
- *  the `art.sources` label the caption no longer draws. Rich text is
- *  unchanged at 20. */
+ *  the `art.sources` label the caption no longer draws. 426 -> 436: the
+ *  flywheel's figures and motion labels. Rich text is unchanged at 20. */
 check(
-  "platform: 426 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 426 &&
+  "platform: 436 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 436 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },

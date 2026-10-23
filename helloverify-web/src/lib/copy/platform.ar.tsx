@@ -358,6 +358,14 @@ export const ar: PlatformCopy = {
         customers: "Customers",
         ecosystem: "Ecosystem",
       },
+      stats: {
+        verifications: { v: "20M+", l: "فحوصات مكتملة منذ 2018" },
+        intelligence: { v: "12–14%", l: "من الطلبات أُشير إليها للاحتيال" },
+        institutions: { v: "120+", l: "دولة، تحقق من المصدر" },
+        customers: { v: "2,000+", l: "عملاء مؤسسات" },
+      },
+      pause: "إيقاف الحركة مؤقتًا",
+      play: "تشغيل الحركة",
     },
 
     platform: {

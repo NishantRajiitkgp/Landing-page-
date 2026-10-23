@@ -1,61 +1,58 @@
 /** "A platform that gets stronger with every verification" on `/technology`:
-    the three compounding claims beside a drawing of the difference. In the
-    corner, a static system: a closed circle that never grows. Ours is a
-    spiral round the Trust core, one turn per claim:
+    the three compounding claims beside the flywheel that makes them true.
 
-      turn 1  every completed check (a red dot) feeds the core's intelligence
-      turn 2  institutions join as permanent nodes, wired to the core
-      turn 3  customers join and bring more checks; the dots get denser with
-              every turn, and that density is the compounding
+    Four stations on one wheel, each with the figure that proves it:
+    verifications (every case starts here), intelligence (each one teaches
+    the fraud engine), institutions (each authority reached joins the
+    network) and customers (each brings more verifications), and round again.
+    A pulse runs the loop; every lap draws a ring outside the last, adds the
+    nodes it earned and goes round faster, and Trust at the centre grows. In
+    the corner, the static system it is set against: a loop that never grows.
+    The claims light in step with the wheel. `./TechCompoundStage` runs it.
 
-    The orbit words sit in the gaps between the turns. Hovering a claim or a
-    word lights the part of the spiral it is about.
-
-    The drawing is `aria-hidden`: its words repeat `compound.orbit`, and the
-    claims beside it carry the meaning. */
+    The board is `aria-hidden`: its figures are the site's own (`/about`,
+    the homepage fraud band), and the claims beside it carry the meaning. */
 import type { CSSProperties, ReactNode } from "react";
 import "@/app/v2/tech.css";
 import { TechCompoundStage } from "./TechCompoundStage";
-import { Glyph, INST, Label, PERSON, type TechArt } from "./TechPillarKit";
+import { DOC, Glyph, INST, OFFICE, PERSON, SPARK, type TechArt } from "./TechPillarKit";
 
-const ORBIT = ["verifications", "intelligence", "institutions", "customers", "ecosystem"] as const;
-type OrbitKey = (typeof ORBIT)[number];
+type Station = "verifications" | "intelligence" | "institutions" | "customers";
+type Stat = { v: string; l: string };
 
-const C = 280;
-const TURN = Math.PI * 2;
-const R0 = 58;
-const R1 = 214;
-const rad = (t: number) => R0 + (t * (R1 - R0)) / (3 * TURN);
-const at = (t: number) => ({ x: +(C + rad(t) * Math.cos(t - Math.PI / 2)).toFixed(1), y: +(C + rad(t) * Math.sin(t - Math.PI / 2)).toFixed(1) });
-/** Each turn starts drawing here (s) and takes 1.1s; a point on it lands in step. */
-const TURN_AT = [0.6, 1.9, 3.2];
-const when = (t: number) => TURN_AT[Math.min(2, Math.floor(t / TURN))] + ((t % TURN) / TURN) * 1.1;
-
-const SPIRAL = TURN_AT.map((_, k) => {
-  const pts: string[] = [];
-  for (let t = k * TURN; t <= (k + 1) * TURN + 1e-6; t += 0.06) pts.push(`${at(t).x} ${at(t).y}`);
-  return `M${pts.join("L")}`;
-});
-
-/** Where each orbit word sits, between two turns at the top or bottom. */
-const PILLS: Record<OrbitKey, number> = { customers: 92, institutions: 145, intelligence: 197, verifications: 388, ecosystem: 505 };
-const NODE_CARDS: Record<OrbitKey, string> = { verifications: "c0", intelligence: "c0", institutions: "c1", customers: "c2", ecosystem: "c2" };
-/** Each word arrives with the turn it names. */
-const PILL_AT: Record<OrbitKey, number> = { intelligence: 0.5, verifications: 1.1, institutions: 2.3, customers: 3.6, ecosystem: 4.4 };
-
-const INSTS = [0.8, 2.2, 4.1, 5.5].map((o) => TURN + o).concat([0.5, 2.6, 3.8].map((o) => 2 * TURN + o));
-const CUSTS = [1.25, 2.05, 4.4, 5.2, 5.85].map((o) => 2 * TURN + o);
-const clear = (p: { x: number; y: number }) =>
-  Object.values(PILLS).every((y) => Math.abs(p.x - C) > 66 || Math.abs(p.y - y) > 21) &&
-  [...INSTS, ...CUSTS].every((t) => Math.hypot(at(t).x - p.x, at(t).y - p.y) > 16);
-const DOTS = (() => {
-  const out: { x: number; y: number; t: number }[] = [];
-  for (let t = 0.35; t < 3 * TURN; t += 21 / rad(t)) if (clear(at(t))) out.push({ ...at(t), t });
-  return out;
-})();
-
+const C = 300;
+const RING = 168;
+const STATIONS: { k: Station; a: number; g: string }[] = [
+  { k: "verifications", a: 0, g: DOC },
+  { k: "intelligence", a: 90, g: SPARK },
+  { k: "institutions", a: 180, g: INST },
+  { k: "customers", a: 270, g: OFFICE },
+];
+/** A clock angle (0 at the top, clockwise) and radius, on the 600 board. */
+const pt = (a: number, r: number) => {
+  const t = (a * Math.PI) / 180;
+  return { x: +(C + r * Math.sin(t)).toFixed(1), y: +(C - r * Math.cos(t)).toFixed(1) };
+};
 const pct = (v: number) => `${((v / (C * 2)) * 100).toFixed(3)}%`;
-const delay = (s: number) => ({ "--d": `${s.toFixed(2)}s` }) as CSSProperties;
+const v = (o: Record<string, number | string>) => o as CSSProperties;
+
+/** What the engine has learned: a cloud that thickens every lap. One dot in
+    eight is a fraud pattern, which is the 12–14% the station states. */
+const DOTS = Array.from({ length: 24 }, (_, i) => ({ ...pt((i * 137.508) % 360, 78 + ((i * 29) % 38)), bad: i % 8 === 3 }));
+/** Two institutions and two customers join per lap, in this order. */
+const INSTS = [130, 230, 145, 215, 118, 242, 158, 202].map((a) => ({ a, ...pt(a, 246) }));
+const CUSTS = [310, 50, 325, 35, 298, 62, 338, 22].map((a) => ({ a, ...pt(a, 246) }));
+
+function Node({ a, x, y, i, g, cls }: { a: number; x: number; y: number; i: number; g: string; cls: string }) {
+  const end = pt(a, 184);
+  return (
+    <g className={`tk-fw-node ${cls}`} style={v({ "--i": i })}>
+      <line className="tk-fw-link" x1={end.x} y1={end.y} x2={x} y2={y} />
+      <circle className="tk-node" cx={x} cy={y} r="15" />
+      <Glyph g={g} x={x} y={y} s={0.56} cls={cls === "tk-fw-cust" ? "tk-ic tk-ic-r" : "tk-ic"} />
+    </g>
+  );
+}
 
 export function TechCompound({
   h,
@@ -63,13 +60,17 @@ export function TechCompound({
   cards,
   trust,
   orbit,
+  stats,
+  motion,
   art,
 }: {
   h: ReactNode;
   sub: string;
   cards: { t: string; p: string }[];
   trust: string;
-  orbit: Record<OrbitKey, string>;
+  orbit: Record<Station | "ecosystem", string>;
+  stats: Record<Station, Stat>;
+  motion: { pause: string; play: string };
   art: TechArt;
 }) {
   return (
@@ -82,7 +83,7 @@ export function TechCompound({
       <div className="tk-cmp-grid">
         <ol className="tk-cmp-list">
           {cards.map((c, i) => (
-            <li key={c.t} className="tk-cmp-c" data-k={`c${i}`} style={delay(0.35 + i * 0.15)}>
+            <li key={c.t} className="tk-cmp-c" data-k={`c${i}`} style={v({ "--d": `${(0.35 + i * 0.15).toFixed(2)}s` })}>
               <span className="tk-cmp-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
               <div>
                 <h3>{c.t}</h3>
@@ -92,65 +93,68 @@ export function TechCompound({
           ))}
         </ol>
 
-        <div className="tk-net-box" aria-hidden="true">
-          <div className="tk-net">
-            <svg className="tk-net-svg tk-mirror" viewBox="0 0 560 560" fill="none">
-              {/* Static: a closed loop that never grows */}
-              <g className="tk-st" style={delay(0.2)}>
-                <circle className="tk-st-c" cx="66" cy="66" r="34" />
-                {[-90, 30, 150].map((a) => (
-                  <circle key={a} className="tk-st-n" cx={+(66 + 34 * Math.cos((a * Math.PI) / 180)).toFixed(1)} cy={+(66 + 34 * Math.sin((a * Math.PI) / 180)).toFixed(1)} r="5" />
-                ))}
+        <div className="tk-net-box tk-fw-box">
+          <div className="tk-fw" aria-hidden="true">
+            <svg className="tk-fw-svg tk-mirror" viewBox="0 0 600 600" fill="none">
+              <circle className="tk-fw-glow" cx={C} cy={C} r={RING + 40} />
+              <circle className="tk-fw-track" cx={C} cy={C} r={RING} />
+              {[0, 1, 2, 3].map((k) => (
+                <circle key={k} className="tk-fw-lap" cx={C} cy={C} r={RING + k * 10} pathLength="1" style={v({ "--k": k })} />
+              ))}
+              {DOTS.map((d, i) => (
+                <circle key={i} className={d.bad ? "tk-fw-dot tk-fw-bad" : "tk-fw-dot"} cx={d.x} cy={d.y} r="4.2" style={v({ "--i": i })} />
+              ))}
+              {INSTS.map((n, i) => (
+                <Node key={n.a} {...n} i={i} g={INST} cls="tk-fw-inst" />
+              ))}
+              {CUSTS.map((n, i) => (
+                <Node key={n.a} {...n} i={i} g={PERSON} cls="tk-fw-cust" />
+              ))}
+              <g className="tk-fw-pulse">
+                <circle className="tk-fw-pulse-glow" cx={C} cy={C - RING} r="16" />
+                <circle className="tk-fw-pulse-dot" cx={C} cy={C - RING} r="6" />
               </g>
-              <Label x={66} y={122} at={0.3}>{art.static}</Label>
-
-              {/* Ours: three turns, each wider than the last */}
-              <circle className="tk-sp-core on-p1 on-c0" cx={C} cy={C} r="54" />
-              {INSTS.map((t) => (
-                <line key={`l${t}`} className="tk-sp-link on-p2 on-c1" x1={C} y1={C} x2={at(t).x} y2={at(t).y} pathLength="1" style={delay(when(t) + 0.1)} />
-              ))}
-              {SPIRAL.map((p, k) => (
-                <path key={k} className={k === 2 ? "tk-sp tk-sp-out on-p4 on-c2" : "tk-sp on-p4"} d={p} pathLength="1" style={delay(TURN_AT[k])} />
-              ))}
-              <path className="tk-sp-tip" d="M291 66l-11-6v12z" style={delay(4.3)} />
-              <Label x={350} y={48} at={4.3} red>{art.compounding}</Label>
-              {DOTS.map((p) => (
-                <circle key={p.t} className="tk-sp-dot on-p0 on-c0" cx={p.x} cy={p.y} r="3" style={delay(when(p.t))} />
-              ))}
-              {INSTS.map((t) => (
-                <g key={t} className="tk-sp-node on-p2 on-c1" style={delay(when(t))}>
-                  <circle className="tk-node" cx={at(t).x} cy={at(t).y} r="13" />
-                  <Glyph g={INST} x={at(t).x} y={at(t).y} s={0.5} />
-                </g>
-              ))}
-              {CUSTS.map((t) => (
-                <g key={t} className="tk-sp-node on-p3 on-c2" style={delay(when(t))}>
-                  <circle className="tk-node tk-node-r" cx={at(t).x} cy={at(t).y} r="13" />
-                  <Glyph g={PERSON} x={at(t).x} y={at(t).y} s={0.5} cls="tk-ic tk-ic-r" />
-                </g>
-              ))}
             </svg>
 
-            <div className="tk-core" style={delay(0.1)}>
+            <div className="tk-core">
               <span className="tk-core-rip" />
-              <span className="tk-core-rip tk-core-rip2" />
               <span className="tk-core-in">{trust}</span>
             </div>
 
-            {ORBIT.map((key, k) => (
-              <span
-                key={key}
-                className={`tk-pill on-p${k} on-${NODE_CARDS[key]}`}
-                data-k={`p${k}`}
-                style={{ insetInlineStart: pct(C), top: pct(PILLS[key]), ...delay(PILL_AT[key]) }}
-              >
-                <span className="tk-pill-in">
-                  <i />
-                  {orbit[key]}
-                </span>
+            {STATIONS.map((s, i) => {
+              const p = pt(s.a, RING);
+              return (
+                <div key={s.k} className="tk-fw-st" data-s={i} style={{ insetInlineStart: pct(p.x), top: pct(p.y) }}>
+                  <span className="tk-fw-st-k">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d={s.g} />
+                    </svg>
+                    {orbit[s.k]}
+                  </span>
+                  <b>{stats[s.k].v}</b>
+                  <small>{stats[s.k].l}</small>
+                </div>
+              );
+            })}
+
+            <div className="tk-fw-leg">
+              <span>
+                <i className="tk-fw-leg-st" />
+                {art.static}
               </span>
-            ))}
+              <span>
+                <i className="tk-fw-leg-cp" />
+                {art.compounding}
+              </span>
+            </div>
+            <span className="tk-fw-eco">{orbit.ecosystem}</span>
           </div>
+
+          <button type="button" className="tk-gl-pause tk-fw-pause" data-fw-pause="" data-pause={motion.pause} data-play={motion.play} aria-label={motion.pause}>
+            <svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="M5 3.5h2v9H5zM9 3.5h2v9H9z" />
+            </svg>
+          </button>
         </div>
       </div>
     </TechCompoundStage>
