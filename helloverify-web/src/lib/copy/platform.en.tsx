@@ -524,7 +524,7 @@ export const en = {
         upload: "Upload documents",
         extract: "AI extracts",
         structure: "Structured profile",
-        validate: "Verified fields",
+        validate: "Verified data",
         profile: "Candidate profile",
         sources: "Research sources",
         intel: "AI research intelligence",
@@ -541,7 +541,7 @@ export const en = {
         degree: "University Degree",
         letter: "Employment Letter",
         republic: "Republic of India",
-        fieldCheck: "Field validation",
+        fieldCheck: "Data validation",
 
         name: "Full name",
         passportNo: "Passport No.",

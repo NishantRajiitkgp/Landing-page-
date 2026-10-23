@@ -132,7 +132,7 @@ export function OnboardCard({ s, ready, manual }: { s: Story; ready: string; man
         <Profile s={s} fill={640} />
       </At>
 
-      {/* Verified fields: each row validated, nobody typed any of it */}
+      {/* Verified data: each row validated, nobody typed any of it */}
       <At x={926} y={60} w={242} h={240} at={890}>
         <Profile s={s} title={s.fieldCheck} ticks={950}>
           <span className="tk-sy-ready">

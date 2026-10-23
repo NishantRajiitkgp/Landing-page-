@@ -443,7 +443,7 @@ export const ar: PlatformCopy = {
         upload: "رفع المستندات",
         extract: "استخراج بالذكاء الاصطناعي",
         structure: "ملف منظَّم",
-        validate: "حقول موثَّقة",
+        validate: "بيانات موثَّقة",
         profile: "ملف المرشح",
         sources: "مصادر البحث",
         intel: "ذكاء البحث",
@@ -460,7 +460,7 @@ export const ar: PlatformCopy = {
         degree: "شهادة جامعية",
         letter: "خطاب العمل",
         republic: "جمهورية الهند",
-        fieldCheck: "التحقق من الحقول",
+        fieldCheck: "التحقق من البيانات",
 
         name: "الاسم الكامل",
         passportNo: "رقم الجواز",

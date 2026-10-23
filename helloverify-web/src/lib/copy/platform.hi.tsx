@@ -445,7 +445,7 @@ export const hi: PlatformCopy = {
         upload: "दस्तावेज़ अपलोड",
         extract: "AI निकालता है",
         structure: "संरचित प्रोफ़ाइल",
-        validate: "सत्यापित फ़ील्ड",
+        validate: "सत्यापित डेटा",
         profile: "उम्मीदवार प्रोफ़ाइल",
         sources: "शोध स्रोत",
         intel: "AI शोध इंटेलिजेंस",
@@ -462,7 +462,7 @@ export const hi: PlatformCopy = {
         degree: "विश्वविद्यालय डिग्री",
         letter: "रोज़गार पत्र",
         republic: "भारत गणराज्य",
-        fieldCheck: "फ़ील्ड सत्यापन",
+        fieldCheck: "डेटा सत्यापन",
 
         name: "पूरा नाम",
         passportNo: "पासपोर्ट नं.",
