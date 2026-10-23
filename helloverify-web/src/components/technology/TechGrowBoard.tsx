@@ -4,24 +4,29 @@
     network, so each part carries its place there: `--x`/`--y`, in scene
     units, of the wide layout (`./techGrowPlan`); `./techGrow` moves them
     to the tall one on a phone. Every card has one chip, the institution or
-    the fraud its check gives up. The first candidate, the look-alike and
-    four of the cities are the pillar story's and the hero's. Nothing here
-    is read out. */
+    the fraud its check gives up. Each bond is two strands braided round a
+    curve, with a glow under it and a pulse each way; trusted nodes knit
+    into a web, and rings of trust gather round the hub. The first
+    candidate, the look-alike and four of the cities are the pillar story's
+    and the hero's. Nothing here is read out. */
 import Image from "next/image";
 import type { CSSProperties } from "react";
 import { Logo } from "@/components/brand/Logo";
 import type { PlatformCopy } from "@/lib/copy/platform";
-import { CAP, DB as DB_ICON, INST, OFFICE, PERSON, SEAL, SHIELD, CASE, CAL, type TechArt } from "./TechPillarKit";
-import { CARDS, FRAUDS, INSTS, ROWS, SH, WIDE as L, hubOf, rowAt, slotAt } from "./techGrowPlan";
+import { CAP, DB as DB_ICON, INST, OFFICE, PERSON, SEAL, SHIELD, type TechArt } from "./TechPillarKit";
+import { TechGrowCrowd } from "./TechGrowCrowd";
+import { CARDS, CHIP, FRAUDS, INSTS, MESH, ROWS, SH, WIDE as L, curveD, hubOf, rowAt, slotAt, strands, tieOf } from "./techGrowPlan";
 
 type G = PlatformCopy["technology"]["compound"]["grow"];
 const CROSS = "M9.5 4.5h5v5h5v5h-5v5h-5v-5h-5v-5h5z";
 const GLYPH = { uni: CAP, firm: OFFICE, council: CROSS, regulator: SHIELD } as const;
-const FRAUD_GLYPH = { lookalike: INST, seal: SEAL, employer: CASE, dates: CAL } as const;
+const FRAUD_GLYPH = { lookalike: INST, seal: SEAL } as const;
 const TICK = "M4.4 8.3 6.9 10.8 11.6 5.6";
 const NO = "M5.6 5.6l4.8 4.8M10.4 5.6l-4.8 4.8";
 /** Case numbers for the rows the database already held. */
-const CASES = ["#20418", "#31077", "#48212"];
+const CASES = ["#20418", "#31077", "#48212", "#52906", "#60133"];
+/** The rings of trust round the hub: radii across and down. */
+const AURA = [[104, 54], [134, 72], [164, 90]] as const;
 
 const at = (p: { x: number; y: number }, more: Record<string, number> = {}) => ({ "--x": p.x, "--y": p.y, ...more }) as CSSProperties;
 
@@ -45,7 +50,7 @@ function Mark({ bad }: { bad?: boolean }) {
 }
 
 function Flag({ cc }: { cc: string }) {
-  return <Image className="tk-cx-flag" src={`/flags/${cc}.svg`} alt="" width={10} height={7} unoptimized />;
+  return <Image className="tk-cx-flag" src={`/flags/${cc}.svg`} alt="" width={11} height={8} unoptimized />;
 }
 
 export function TechGrowBoard({ g, art }: { g: G; art: TechArt }) {
@@ -53,29 +58,27 @@ export function TechGrowBoard({ g, art }: { g: G; art: TechArt }) {
   const gl = art.globe;
   const who: Record<string, string> = {
     person: s.person, p2: g.p2, p3: g.p3, p4: g.p4, p5: g.p5, p6: g.p6, p7: g.p7, p8: g.p8,
-    p9: g.p9, p10: g.p10, p11: g.p11, p12: g.p12, p13: g.p13, p14: g.p14, p15: g.p15,
+    p10: g.p10, p12: g.p12, p13: g.p13, p14: g.p14,
   };
   const check = { degree: s.degreeKey, employment: s.employment, licence: g.licence, registration: g.registration };
   const city = {
     delhi: g.delhi, singapore: gl.singapore, london: gl.london, dubai: gl.dubai, boston: gl.boston,
     frankfurt: g.frankfurt, sydney: g.sydney, manila: g.manila, riyadh: g.riyadh, tokyo: g.tokyo,
   };
-  /** Each fraud's chip: what it is, and what it read as before the check. */
+  /** Each fraud's chip: what it read as before the check, and what it is. */
   const fraud = {
-    lookalike: { b: s.fake, was: g.uni, is: s.blacklisted },
-    seal: { b: g.seal, was: g.sealSub, is: g.sealSub },
-    employer: { b: g.employer, was: g.shell, is: g.shell },
-    dates: { b: g.dates, was: g.sealSub, is: g.sealSub },
+    lookalike: { was: [s.fake, g.uni], is: [s.fake, s.blacklisted] },
+    seal: { was: [g.uni, gl.london], is: [g.seal, g.sealSub] },
   };
   const masked = (r: number) => who[CARDS.find((c) => c.fraud === r)?.who ?? ""];
   const rows = [
     { label: s.blacklisted, id: masked(0) },
     { label: g.seal, id: masked(1) },
-    { label: g.employer, id: masked(2) },
-    { label: g.dates, id: masked(3) },
-    { label: g.grades, id: CASES[0] },
-    { label: g.fakeLicence, id: CASES[1] },
-    { label: g.identity, id: CASES[2] },
+    { label: g.employer, id: CASES[0] },
+    { label: g.dates, id: CASES[1] },
+    { label: g.grades, id: CASES[2] },
+    { label: g.fakeLicence, id: CASES[3] },
+    { label: g.identity, id: CASES[4] },
   ].slice(0, ROWS);
   const hub = hubOf(L);
 
@@ -84,15 +87,35 @@ export function TechGrowBoard({ g, art }: { g: G; art: TechArt }) {
       <div className="tk-cx-art" data-act="1">
         <div className="tk-cx-world">
           <svg className="tk-cx-bonds" viewBox={`0 0 ${L.sw} ${SH}`}>
+            <g className="tk-cx-far">
+              {L.wider.map((w, i) => (
+                <line key={i} x1={hub.cx} y1={hub.cy} x2={w.x + CHIP.w / 2} y2={w.y + CHIP.h / 2} />
+              ))}
+            </g>
+            {AURA.map(([rx, ry], i) => (
+              <ellipse key={rx} className="tk-cx-aura" data-aura={i} cx={hub.cx} cy={hub.cy} rx={rx} ry={ry} />
+            ))}
             <line className="tk-cx-dblink" x1={hub.cx} y1={hub.cy} x2={hub.cx} y2={L.db.y} />
-            {INSTS.map((c, k) => (
-              <line key={c.city} className="tk-cx-bond" x1={hub.cx} y1={hub.cy} x2={L.insts[k][0]} y2={L.insts[k][1]} pathLength={1} />
+            {MESH.map(([a, b], i) => (
+              <line key={i} className="tk-cx-mesh" data-mesh={i} x1={L.insts[a][0]} y1={L.insts[a][1]} x2={L.insts[b][0]} y2={L.insts[b][1]} />
             ))}
-            {INSTS.map((c) => (
-              <circle key={c.city} className="tk-cx-pulse" r={3} cx={hub.cx} cy={hub.cy} />
-            ))}
-            <circle className="tk-cx-pulse tk-cx-pulse-bad" r={3} cx={hub.cx} cy={hub.cy} />
+            {INSTS.map((c, k) => {
+              const cv = tieOf(L, k);
+              const [sa, sb] = strands(cv, 1, 1, 0);
+              return (
+                <g key={c.city} className="tk-cx-tie" data-tie={k}>
+                  <path className="tk-cx-tie-glow" d={curveD(cv)} pathLength={1} />
+                  <path className="tk-cx-tie-a" d={sa} />
+                  <path className="tk-cx-tie-b" d={sb} />
+                  <circle className="tk-cx-pulse" r={3} cx={hub.cx} cy={hub.cy} />
+                  <circle className="tk-cx-pulse tk-cx-pulse-back" r={2.2} cx={hub.cx} cy={hub.cy} />
+                </g>
+              );
+            })}
+            <circle className="tk-cx-pulse tk-cx-pulse-bad" data-dbpulse="" r={3} cx={hub.cx} cy={hub.cy} />
           </svg>
+
+          <TechGrowCrowd />
 
           {CARDS.map((c, i) => (
             <div key={c.who} className="tk-cx-at tk-cx-card" data-card={i} data-bad={c.fraud === undefined ? undefined : ""} style={at({ x: L.cards[i][0], y: L.cards[i][1] })}>
@@ -152,10 +175,13 @@ export function TechGrowBoard({ g, art }: { g: G; art: TechArt }) {
                     <Ico g={FRAUD_GLYPH[FRAUDS[c.fraud]]} />
                   </span>
                   <span className="tk-cx-tx">
-                    <b>{f.b}</b>
+                    <b className="tk-cx-swap">
+                      <span>{f.was[0]}</span>
+                      <span>{f.is[0]}</span>
+                    </b>
                     <small className="tk-cx-swap">
-                      <span>{f.was}</span>
-                      <span>{f.is}</span>
+                      <span>{f.was[1]}</span>
+                      <span>{f.is[1]}</span>
                     </small>
                   </span>
                   <Mark bad />
@@ -183,7 +209,7 @@ export function TechGrowBoard({ g, art }: { g: G; art: TechArt }) {
         </div>
 
         <div className="tk-cx-figs">
-          {[g.checks, g.clients, g.countries, g.flagged].map((f) => (
+          {[g.checks, g.clients, g.countries].map((f) => (
             <span key={f.l}>
               <b data-fig={f.v}>{f.v}</b>
               <small>{f.l}</small>

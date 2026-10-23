@@ -709,15 +709,15 @@
 
 /* ── Act one: a candidate's check, read top to bottom ── */
 .tk-cx-card {
-  box-sizing: border-box; width: calc(var(--su) * 120); height: calc(var(--su) * 70); padding: calc(var(--su) * 8); overflow: hidden; opacity: 0;
-  border-radius: calc(var(--su) * 11); border: 1px solid var(--hair); background: var(--white);
+  box-sizing: border-box; width: calc(var(--su) * 136); height: calc(var(--su) * 78); padding: calc(var(--su) * 9); overflow: hidden; opacity: 0;
+  border-radius: calc(var(--su) * 12); border: 1px solid var(--hair); background: var(--white);
   box-shadow: 0 calc(var(--su) * 12) calc(var(--su) * 22) calc(var(--su) * -14) rgb(from var(--ink) r g b / .3);
   transition: border-color .35s ease;
 }
-.tk-cx-who { display: flex; align-items: center; gap: calc(var(--su) * 6); }
-.tk-cx-who .tk-cx-tx b { font-size: max(8px, calc(var(--su) * 10)); }
-.tk-cx-who .tk-cx-tx small { display: block; font-size: max(7.5px, calc(var(--su) * 8.5)); text-overflow: ellipsis; }
-.tk-cx-face { position: relative; flex: none; display: grid; place-items: center; width: calc(var(--su) * 22); height: calc(var(--su) * 22); border-radius: 50%; background: var(--paper); color: var(--ink-soft); }
+.tk-cx-who { display: flex; align-items: center; gap: calc(var(--su) * 7); }
+.tk-cx-who .tk-cx-tx b { font-size: max(8.5px, calc(var(--su) * 11)); }
+.tk-cx-who .tk-cx-tx small { display: block; font-size: max(7.5px, calc(var(--su) * 9)); text-overflow: ellipsis; }
+.tk-cx-face { position: relative; flex: none; display: grid; place-items: center; width: calc(var(--su) * 24); height: calc(var(--su) * 24); border-radius: 50%; background: var(--paper); color: var(--ink-soft); }
 .tk-cx-face > svg { width: 62%; height: 62%; stroke-width: 1.7; }
 /* Verified, or caught, as a badge on the candidate's picture */
 .tk-cx-face .tk-cx-mk {
@@ -727,7 +727,7 @@
 .tk-cx-beam {
   position: absolute; z-index: 3; inset-inline: 0; top: 0; height: calc(var(--su) * 1.6); opacity: 0;
   background: var(--primary); box-shadow: 0 0 calc(var(--su) * 8) calc(var(--su) * 1.5) rgb(from var(--primary) r g b / .45);
-  translate: 0 calc(var(--scan, 0) * var(--su) * 68); transition: opacity .2s ease;
+  translate: 0 calc(var(--scan, 0) * var(--su) * 76); transition: opacity .2s ease;
 }
 .tk-cx-beam::before { content: ""; position: absolute; inset-inline: 0; bottom: 100%; height: calc(var(--su) * 30); background: linear-gradient(to top, rgb(from var(--primary) r g b / .13), transparent); }
 .tk-cx-card[data-s="scan"] { border-color: rgb(from var(--primary) r g b / .5); }
@@ -737,18 +737,25 @@
 
 /* ── What a check gives up: an institution, or a fraud ── */
 .tk-cx-chip {
-  z-index: 1; box-sizing: border-box; display: flex; align-items: center; gap: calc(var(--su) * 5);
-  width: calc(var(--su) * 108); height: calc(var(--su) * 26); padding-inline: calc(var(--su) * 4) calc(var(--su) * 6);
-  border-radius: calc(var(--su) * 8); border: 1px dashed var(--tick-off); background: transparent;
+  z-index: 1; box-sizing: border-box; display: flex; align-items: center; gap: calc(var(--su) * 6);
+  width: calc(var(--su) * 122); height: calc(var(--su) * 30); padding-inline: calc(var(--su) * 5) calc(var(--su) * 7);
+  border-radius: calc(var(--su) * 9); border: 1px dashed var(--tick-off); background: transparent;
   transition: border-color .35s ease, background-color .35s ease, box-shadow .35s ease;
 }
 .tk-cx-chip[data-s="fraud"] { opacity: 0; }
-.tk-cx-chip .tk-cx-mk { position: absolute; inset-block-start: calc(var(--su) * -5); inset-inline-end: calc(var(--su) * -5); border-radius: 50%; box-shadow: 0 0 0 1.5px var(--white); }
-.tk-cx-ico { flex: none; display: grid; place-items: center; width: calc(var(--su) * 18); height: calc(var(--su) * 18); border-radius: calc(var(--su) * 5); background: var(--paper); color: var(--muted); transition: background-color .35s ease, color .35s ease; }
+.tk-cx-chip .tk-cx-mk { position: absolute; inset-block-start: calc(var(--su) * -5); inset-inline-end: calc(var(--su) * -5); width: calc(var(--su) * 13); height: calc(var(--su) * 13); border-radius: 50%; box-shadow: 0 0 0 1.5px var(--white); }
+.tk-cx-ico { flex: none; display: grid; place-items: center; width: calc(var(--su) * 20); height: calc(var(--su) * 20); border-radius: calc(var(--su) * 6); background: var(--paper); color: var(--muted); transition: background-color .35s ease, color .35s ease; }
 .tk-cx-ico svg { width: 68%; height: 68%; stroke-width: 1.7; }
-.tk-cx-chip .tk-cx-tx b { font-size: max(8px, calc(var(--su) * 9.5)); color: var(--ink-soft); }
-.tk-cx-chip .tk-cx-tx small { font-size: max(7px, calc(var(--su) * 8)); }
-.tk-cx-trust { position: absolute; inset-inline: calc(var(--su) * 6); inset-block-end: calc(var(--su) * 2.5); height: calc(var(--su) * 2); overflow: hidden; opacity: 0; border-radius: 2px; background: var(--hair); transition: opacity .3s ease; }
+.tk-cx-chip .tk-cx-tx b { font-size: max(8.5px, calc(var(--su) * 10.5)); color: var(--ink-soft); }
+.tk-cx-chip .tk-cx-tx small { font-size: max(7px, calc(var(--su) * 8.5)); }
+.tk-cx-chip .tk-cx-flag { width: calc(var(--su) * 11); }
+.tk-cx-trust { position: absolute; inset-inline: calc(var(--su) * 7); inset-block-end: calc(var(--su) * 3); height: calc(var(--su) * 2.2); overflow: hidden; opacity: 0; border-radius: 2px; background: var(--hair); transition: opacity .3s ease; }
+/* The moment a node is trusted: a ring goes out from it, once */
+.tk-cx-chip[data-s="trusted"]::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; border: 2px solid var(--tk-ok); pointer-events: none;
+  animation: tkCxSeal 1s cubic-bezier(.2, .8, .2, 1) both;
+}
+@keyframes tkCxSeal { from { opacity: .9; scale: 1; } to { opacity: 0; scale: 1.25 1.8; } }
 .tk-cx-trust::after { content: ""; position: absolute; inset: 0; background: var(--tk-ok); transform: scaleX(var(--trust, 0)); transform-origin: var(--origin-x); }
 .tk-cx-chip:not([data-s="raw"]) {
   border-style: solid; border-color: var(--hair); background: var(--white);
@@ -779,13 +786,50 @@
 .tk-cx-hub small:lang(en) { letter-spacing: .08em; text-transform: uppercase; }
 .tk-cx-year { direction: ltr; unicode-bidi: isolate; font-family: var(--serif); font-size: max(9px, calc(var(--su) * 11)); font-weight: 400; letter-spacing: 0; color: var(--ink); }
 .tk-cx-bonds { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transform: scaleX(var(--flip)); }
-.tk-cx-bond {
-  fill: none; stroke: color-mix(in srgb, var(--tk-ok) calc(var(--b, 1) * 100%), var(--tick-off)); stroke-width: calc(.8px + var(--b, 1) * 1.8px); stroke-linecap: round;
-  stroke-dasharray: 1; stroke-dashoffset: calc(1 - min(1, var(--b, 1) * 3)); opacity: calc(.4 + .6 * var(--b, 1));
+/* A bond: a glow along its curve that widens with trust, and two strands
+   braided round it that start grey and loose and draw green and tight. */
+.tk-cx-tie-glow {
+  fill: none; stroke: var(--tk-ok); stroke-linecap: round; stroke-width: calc(2px + var(--b, 1) * 10px);
+  stroke-dasharray: 1; stroke-dashoffset: calc(1 - min(1, var(--b, 1) * 3)); opacity: calc(var(--b, 1) * .13);
 }
+:is(.tk-cx-tie-a, .tk-cx-tie-b) { fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-width: calc(.9px + var(--b, 1) * .9px); }
+.tk-cx-tie-a { stroke: color-mix(in srgb, var(--tk-ok) calc(var(--b, 1) * 100%), var(--tick-off)); }
+.tk-cx-tie-b { stroke: color-mix(in srgb, var(--tk-ok-ink) calc(var(--b, 1) * 100%), var(--tick-off)); opacity: .8; }
+.tk-cx-mesh { stroke: var(--tk-ok); stroke-width: 1px; stroke-dasharray: 2 4; stroke-linecap: round; opacity: calc(var(--m, 1) * .5); }
+.tk-cx-aura { fill: none; stroke: var(--tk-ok); stroke-width: 1px; stroke-dasharray: 3 6; opacity: calc(var(--a, 1) * .45); }
+.tk-cx-far { opacity: .9; filter: blur(1px); }
+.tk-cx-far line { stroke: var(--tk-ok); stroke-width: 1px; stroke-dasharray: 3 5; opacity: .28; }
 .tk-cx-dblink { fill: none; stroke: var(--primary); stroke-width: 1.2px; stroke-dasharray: 3 4; }
 .tk-cx-pulse { fill: var(--tk-ok); opacity: 0; }
+.tk-cx-pulse-back { fill: var(--white); stroke: var(--tk-ok); stroke-width: 1.2px; }
 .tk-cx-pulse-bad { fill: var(--primary); }
+
+/* The crowd out of focus: cards and nodes in outline, soft with distance */
+.tk-cx-ghost { filter: blur(calc(var(--blur, 2) * var(--su))); pointer-events: none; }
+.tk-cx-ghost-card {
+  box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; gap: calc(var(--su) * 6) calc(var(--su) * 7);
+  width: calc(var(--su) * 136); height: calc(var(--su) * 78); padding: calc(var(--su) * 10); opacity: 0;
+  border-radius: calc(var(--su) * 12); border: 1px solid var(--hair); background: var(--white);
+  box-shadow: 0 calc(var(--su) * 12) calc(var(--su) * 22) calc(var(--su) * -14) rgb(from var(--ink) r g b / .25);
+  transition: border-color .4s ease;
+}
+.tk-cx-ghost-card b { display: block; height: calc(var(--su) * 5); border-radius: 3px; background: var(--tick-off); }
+.tk-cx-ghost-card b:nth-child(1) { grid-row: span 2; width: calc(var(--su) * 24); height: calc(var(--su) * 24); border-radius: 50%; background: var(--paper); }
+.tk-cx-ghost-card b:nth-child(2) { width: 70%; margin-block-start: calc(var(--su) * 4); }
+.tk-cx-ghost-card b:nth-child(3) { width: 46%; }
+.tk-cx-ghost-card b:nth-child(4) { grid-column: 1 / -1; height: calc(var(--su) * 22); margin-block-start: calc(var(--su) * 4); border-radius: calc(var(--su) * 8); background: var(--paper); }
+.tk-cx-ghost-card[data-s="ok"] { border-color: rgb(from var(--tk-ok) r g b / .6); }
+.tk-cx-ghost-card[data-s="bad"] { border-color: rgb(from var(--primary) r g b / .6); }
+.tk-cx-ghost-card[data-s="bad"] b:nth-child(4) { background: var(--primary-pale); }
+.tk-cx-ghost-chip {
+  box-sizing: border-box; display: flex; align-items: center; gap: calc(var(--su) * 7);
+  width: calc(var(--su) * 122); height: calc(var(--su) * 30); padding-inline: calc(var(--su) * 5) calc(var(--su) * 10); opacity: var(--alpha, .4);
+  border-radius: calc(var(--su) * 9); border: 1px solid var(--hair); background: var(--white); transition: border-color .4s ease;
+}
+.tk-cx-ghost-chip b:nth-child(1) { flex: none; width: calc(var(--su) * 20); height: calc(var(--su) * 20); border-radius: calc(var(--su) * 6); background: var(--paper); transition: background-color .4s ease; }
+.tk-cx-ghost-chip b:nth-child(2) { flex: 1; height: calc(var(--su) * 6); border-radius: 3px; background: var(--tick-off); }
+.tk-cx-ghost-chip[data-s="trusted"] { border-color: rgb(from var(--tk-ok) r g b / .55); }
+.tk-cx-ghost-chip[data-s="trusted"] b:nth-child(1) { background: var(--tk-ok-pale); }
 
 .tk-cx-db {
   box-sizing: border-box; width: calc(var(--su) * 280); height: calc(var(--su) * 236); padding: calc(var(--su) * 9);
@@ -817,7 +861,7 @@
 /* ── Act three: the site's figures, and the caption under the mark ── */
 .tk-cx-figs {
   position: absolute; z-index: 3; inset-inline: calc(var(--su) * 10); inset-block-end: 0;
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--su) * 16); padding-block: calc(var(--su) * 26) calc(var(--su) * 4);
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--su) * 16); padding-block: calc(var(--su) * 26) calc(var(--su) * 4);
   background: linear-gradient(to top, var(--paper) 62%, rgb(from var(--paper) r g b / 0));
   opacity: 0; translate: 0 10px; transition: opacity .4s ease, translate .6s cubic-bezier(.2, .8, .2, 1);
 }
@@ -852,7 +896,6 @@
 @media (max-width: 1080px) and (scripting: enabled) {
   .tk-cx-art { --sw: 400; }
   .tk-cx-cap { inset-inline: calc(var(--su) * 24); }
-  .tk-cx-figs { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: calc(var(--su) * 10); }
 }
 @media (max-width: 1080px) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .tk-cx-copy { display: grid; }

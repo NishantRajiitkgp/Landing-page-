@@ -3,14 +3,14 @@
     units, and when it moves, in story time (0 to `END`; the runway is that
     long).
 
-    Act one, from 0: fifteen candidates' checks float in from every side
-    and are read, and each gives up what is behind it: an institution, or
-    a fraud. Act two, from `ACT[1]`: the candidates drift away. The
-    institutions bond to HelloVerify one by one until each is a trusted
-    node (a second check from a known university joins the node it already
-    has), and the frauds are masked into the fraud database. Act three,
-    from `ACT[2]`: the view pulls back over every check since 2018, and the
-    dots draw the mark.
+    Act one, from 0: twelve candidates' checks float in from every side,
+    amid a crowd of others out of focus, and are read; each gives up what
+    is behind it: an institution, or a fraud. Act two, from `ACT[1]`: the
+    candidates drift away. The institutions bond to HelloVerify one by one,
+    each bond braiding tighter until the node is trusted, the trusted nodes
+    knit into a web, and the frauds are masked into the fraud database; a
+    wider network waits out of focus. Act three, from `ACT[2]`: the view
+    pulls back over every check since 2018, and the dots draw the mark.
 
     The places come in two layouts: `WIDE` beside the claims, `TALL` under
     them on a phone. The stylesheet picks one through `--sw`, the scene's
@@ -25,12 +25,12 @@ export const CONCLUDE = 8.9;
 /** When the caption under the finished mark shows. */
 export const CAPTION = 9.1;
 
-export const CARD = { w: 120, h: 70 } as const;
-export const CHIP = { w: 108, h: 26 } as const;
+export const CARD = { w: 136, h: 78 } as const;
+export const CHIP = { w: 122, h: 30 } as const;
 export const HUB_W = 150;
 export const HUB_H = 60;
 /** A card's chip sits along its foot in act one. */
-export const CHIP_IN = { x: 6, y: 38 } as const;
+export const CHIP_IN = { x: 7, y: 42 } as const;
 /** The middle of the finished mark. */
 export const MARK_Y = 250;
 
@@ -47,42 +47,40 @@ export const INSTS = [
   { kind: "council", city: "riyadh", flag: "sa" },
   { kind: "firm", city: "tokyo", flag: "jp" },
 ] as const;
+/** Trusted neighbours that knit into a web: round each orbit, and across. */
+export const MESH = [[7, 3], [3, 5], [5, 9], [9, 6], [6, 4], [4, 8], [0, 2], [2, 1], [0, 3], [0, 5], [1, 4], [1, 6], [2, 9]] as const;
 
 /** The frauds, each the database row of the same index. */
-export const FRAUDS = ["lookalike", "seal", "employer", "dates"] as const;
-/** The database's rows: the four frauds, then three it already held. */
+export const FRAUDS = ["lookalike", "seal"] as const;
+/** The database's rows: the two frauds, then five it already held. */
 export const ROWS = 7;
 
 type Card = { who: string; check: "degree" | "employment" | "licence" | "registration"; inst?: number; fraud?: number };
 
-/** The candidates, and what each check gives up. */
+/** The candidates in focus, and what each check gives up. */
 export const CARDS: readonly Card[] = [
   { who: "person", check: "degree", inst: 0 },
   { who: "p2", check: "employment", inst: 1 },
   { who: "p3", check: "licence", inst: 2 },
   { who: "p4", check: "degree", fraud: 0 },
   { who: "p5", check: "registration", inst: 3 },
-  { who: "p6", check: "degree", fraud: 1 },
   { who: "p7", check: "degree", inst: 4 },
+  { who: "p6", check: "degree", fraud: 1 },
   { who: "p8", check: "employment", inst: 5 },
-  { who: "p9", check: "degree", inst: 0 },
   { who: "p10", check: "degree", inst: 6 },
-  { who: "p11", check: "employment", fraud: 2 },
   { who: "p12", check: "registration", inst: 7 },
-  { who: "p13", check: "employment", inst: 9 },
   { who: "p14", check: "licence", inst: 8 },
-  { who: "p15", check: "degree", fraud: 3 },
+  { who: "p13", check: "employment", inst: 9 },
 ];
 
-/** For each institution, the card whose chip becomes its node; any later
-    card from the same institution merges into it. */
-export const PRIMARY = INSTS.map((_, k) => CARDS.findIndex((c) => c.inst === k));
-
 type Pt = readonly [number, number];
+/** One of the crowd out of focus: its corner, how far out it lies (0 at
+    the edge of focus, 1 far out), and when it is read, and how it reads. */
+export type Ghost = { x: number; y: number; depth: number; at: number; bad: boolean };
 export type Layout = {
   /** The scene's width, in units. */
   sw: number;
-  /** Each card's corner in act one, scattered over the scene. */
+  /** Each card's corner in act one. */
   cards: readonly Pt[];
   /** Each institution's node in act two, round the hub. */
   insts: readonly Pt[];
@@ -91,40 +89,62 @@ export type Layout = {
   lw: number;
   /** The field once the view has pulled back: its radii, and its dots. */
   field: readonly [rx: number, ry: number, n: number];
+  /** The crowd round the cards, and the wider network round the nodes. */
+  crowd: readonly Ghost[];
+  wider: readonly Ghost[];
 };
+
+export const GHOSTS = 26;
+export const WIDER = 18;
+const rand = (s: number) => () => (s = (s * 16807) % 2147483647) / 2147483647;
+/** `n` places on a squared-off ring round (`cx`, `cy`), so the corners are
+    filled as well as the sides, skipping the arc under the hub that the
+    database takes when `gap` is set. Each sits `w` × `h` on its point. */
+function ring(n: number, cx: number, cy: number, rx: number, ry: number, w: number, h: number, seed: number, gap = false): Ghost[] {
+  const r = rand(seed);
+  const out: Ghost[] = [];
+  const skip = gap ? 0.5 : 0;
+  for (let i = 0; i < n; i++) {
+    let a = ((i + r() * 0.5) / n) * Math.PI * 2;
+    if (skip) a = Math.PI / 2 + skip + (a / (Math.PI * 2)) * (Math.PI * 2 - 2 * skip);
+    const c = Math.cos(a);
+    const s = Math.sin(a);
+    const f = (c ** 4 + s ** 4) ** -0.25;
+    const j = 1 + (r() - 0.5) * 0.22;
+    out.push({ x: cx + rx * c * f * j - w / 2, y: cy + ry * s * f * j - h / 2, depth: r(), at: 0.8 + r() * 2.4, bad: r() < 0.16 });
+  }
+  return out;
+}
 
 /** Beside the claims: three nodes on an inner orbit, seven on an outer. */
 export const WIDE: Layout = {
   sw: 640,
-  cards: [
-    [24, 46], [176, 80], [336, 30], [494, 66], [60, 178], [222, 206], [392, 170], [516, 244],
-    [18, 310], [168, 340], [330, 306], [480, 362], [92, 450], [268, 478], [436, 500],
-  ],
+  cards: [[40, 58], [236, 40], [432, 66], [80, 182], [276, 200], [472, 172], [30, 310], [226, 296], [422, 320], [76, 440], [272, 456], [468, 432]],
   insts: [[197, 197], [443, 197], [320, 150], [68, 190], [572, 190], [170, 90], [470, 90], [62, 316], [578, 316], [320, 55]],
   db: { x: 180, y: 356, w: 280, h: 236 },
   lw: 460,
   field: [600, 390, 5200],
+  crowd: ring(GHOSTS, 320, 296, 372, 318, CARD.w, CARD.h, 11),
+  wider: ring(WIDER, 320, HUB_Y, 360, 318, CHIP.w, CHIP.h, 23, true),
 };
 
 /** Under the claims on a phone: the same parts, stacked taller. */
 export const TALL: Layout = {
   sw: 400,
-  cards: [
-    [6, 14], [140, 30], [274, 8], [30, 128], [160, 112], [276, 136], [4, 236], [138, 252],
-    [272, 228], [28, 352], [158, 336], [278, 360], [8, 460], [142, 476], [274, 452],
-  ],
+  cards: [[24, 20], [220, 44], [52, 118], [240, 142], [16, 216], [212, 240], [48, 314], [232, 338], [20, 412], [216, 436], [56, 510], [236, 522]],
   insts: [[110, 190], [290, 190], [200, 150], [64, 270], [336, 270], [90, 106], [310, 106], [64, 336], [336, 336], [200, 62]],
   db: { x: 60, y: 362, w: 280, h: 236 },
   lw: 360,
   field: [260, 430, 2600],
+  crowd: ring(GHOSTS, 200, 300, 262, 352, CARD.w, CARD.h, 11),
+  wider: ring(WIDER, 200, HUB_Y, 250, 330, CHIP.w, CHIP.h, 23, true),
 };
 
 /** The hub, centred across the scene so the scene mirrors about it. */
 export const hubOf = (L: Layout) => ({ x: L.sw / 2 - HUB_W / 2, y: HUB_Y - HUB_H / 2, cx: L.sw / 2, cy: HUB_Y });
 /** Which way a card floats: out from the middle of the scene, so the cards
     come in from every side and drift back out the way they came. */
-export const away = (L: Layout, i: number) => {
-  const [x, y] = L.cards[i];
+export const away = (L: Layout, x: number, y: number) => {
   const dx = x + CARD.w / 2 - L.sw / 2;
   const dy = y + CARD.h / 2 - SH / 2;
   const l = Math.hypot(dx, dy) || 1;
@@ -133,33 +153,75 @@ export const away = (L: Layout, i: number) => {
 export const slotAt = (L: Layout, k: number) => ({ x: L.insts[k][0] - CHIP.w / 2, y: L.insts[k][1] - CHIP.h / 2 });
 export const rowAt = (L: Layout, r: number) => ({ x: L.db.x + 9, y: L.db.y + 47 + r * 26 });
 
+/* ── A bond: two strands braided round a bowed curve from the hub ── */
+export type Curve = { x0: number; y0: number; cx: number; cy: number; x1: number; y1: number; len: number };
+export const tieOf = (L: Layout, k: number): Curve => {
+  const h = hubOf(L);
+  const [x1, y1] = L.insts[k];
+  const dx = x1 - h.cx;
+  const dy = y1 - h.cy;
+  const len = Math.hypot(dx, dy) || 1;
+  const bow = (k % 2 ? 1 : -1) * len * 0.1;
+  return { x0: h.cx, y0: h.cy, cx: (h.cx + x1) / 2 - (dy / len) * bow, cy: (h.cy + y1) / 2 + (dx / len) * bow, x1, y1, len };
+};
+export const along = (c: Curve, u: number): Pt => {
+  const v = 1 - u;
+  return [v * v * c.x0 + 2 * v * u * c.cx + u * u * c.x1, v * v * c.y0 + 2 * v * u * c.cy + u * u * c.y1];
+};
+export const curveD = (c: Curve) => `M${c.x0} ${c.y0}Q${c.cx.toFixed(1)} ${c.cy.toFixed(1)} ${c.x1} ${c.y1}`;
+/** The two strands, out to `draw` of the way: loose while the bond is new,
+    braided tight as `trust` grows; `twist` turns them. */
+export function strands(c: Curve, draw: number, trust: number, twist: number): [string, string] {
+  const n = 32;
+  const amp = 1.4 + 6 * (1 - trust);
+  const turns = Math.max(2, c.len / 52);
+  let a = "";
+  let b = "";
+  for (let i = 0; i <= n; i++) {
+    const u = (i / n) * draw;
+    const [px, py] = along(c, u);
+    const tx = 2 * (1 - u) * (c.cx - c.x0) + 2 * u * (c.x1 - c.cx);
+    const ty = 2 * (1 - u) * (c.cy - c.y0) + 2 * u * (c.y1 - c.cy);
+    const tl = Math.hypot(tx, ty) || 1;
+    const o = amp * Math.sin(Math.PI * u) * Math.sin(Math.PI * 2 * turns * u + twist);
+    const nx = (-ty / tl) * o;
+    const ny = (tx / tl) * o;
+    const p = i ? "L" : "M";
+    a += `${p}${(px + nx).toFixed(1)} ${(py + ny).toFixed(1)}`;
+    b += `${p}${(px - nx).toFixed(1)} ${(py - ny).toFixed(1)}`;
+  }
+  return [a, b];
+}
+
 /* Story time. Act one: the cards float in, then each is read in turn. */
-export const enterAt = (i: number) => 0.04 + i * 0.05;
+export const enterAt = (i: number) => 0.04 + i * 0.06;
 export const ENTER = 0.6;
 /** How far a card floats in from, and drifts on its own while it is read. */
 export const FLOAT_IN = 280;
 export const DRIFT = 6;
-export const scanAt = (i: number) => 0.7 + i * 0.14;
-export const SCAN = 0.42;
+export const scanAt = (i: number) => 0.7 + i * 0.17;
+export const SCAN = 0.44;
 /** A card's institution or fraud shows once the reading is this far down. */
 export const FOUND = 0.8;
 
 /* Act two: the candidates drift away; the hub and the database rise; the
-   chips fly to their places; each institution bonds; the frauds and three
+   chips fly to their places; each institution bonds; the frauds and five
    older rows are masked into the database. */
-export const leaveAt = (i: number) => ACT[1] + i * 0.025;
+export const leaveAt = (i: number) => ACT[1] + i * 0.03;
 export const LEAVE = 0.45;
 export const HUB_AT = 3.7;
 export const DB_AT = 3.85;
-export const travelAt = (i: number) => 3.75 + i * 0.04;
+export const travelAt = (i: number) => 3.75 + i * 0.045;
 export const TRAVEL = 0.7;
 export const bondAt = (k: number) => 4.4 + k * 0.13;
 export const BOND = 0.9;
 export const rowTime = (r: number) => {
   const i = CARDS.findIndex((c) => c.fraud === r);
-  return i >= 0 ? travelAt(i) + TRAVEL * 0.85 : 5.6 + (r - FRAUDS.length) * 0.22;
+  return i >= 0 ? travelAt(i) + TRAVEL * 0.85 : 5.2 + (r - FRAUDS.length) * 0.2;
 };
 export const SAFE = 6.3;
+/** The wider network fades in round the nodes, and is trusted, over this. */
+export const WIDER_AT = [4.0, 1.8] as const;
 /** The year on the hub runs 2018 to today over this. */
 export const YEAR = [4.4, 2.0] as const;
 

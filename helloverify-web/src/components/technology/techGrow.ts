@@ -14,9 +14,10 @@
     the page scrolls. Colour is read from the stylesheet. */
 import { cssRgb, type RGB } from "@/lib/cssColour";
 import {
-  ACT, BOND, CAPTION, CARDS, CHIP_IN, CONVERGE, COUNT, DB_AT, DRIFT, ENTER, FADE, FLOAT_IN, FLY, FOUND, HUB_AT, INSTS,
-  LEAVE, MARKED, MARK_Y, PRIMARY, ROWS, SAFE, SCAN, SH, SWEEP, TALL, TRAVEL, WIDE, YEAR, ZMIN, ZOOM, away, bondAt,
-  enterAt, hubOf, leaveAt, rowAt, rowTime, scanAt, slotAt, travelAt, type Layout,
+  ACT, BOND, CAPTION, CARDS, CHIP, CHIP_IN, CONVERGE, COUNT, DB_AT, DRIFT, ENTER, FADE, FLOAT_IN, FLY, FOUND, HUB_AT,
+  INSTS, LEAVE, MARKED, MARK_Y, MESH, ROWS, SAFE, SCAN, SH, SWEEP, TALL, TRAVEL, WIDE, WIDER, WIDER_AT, YEAR, ZMIN,
+  ZOOM, along, away, bondAt, curveD, enterAt, hubOf, leaveAt, rowAt, rowTime, scanAt, slotAt, strands, tieOf,
+  travelAt, type Layout,
 } from "./techGrowPlan";
 
 const TAU = Math.PI * 2;
@@ -123,10 +124,14 @@ export class TechGrow {
   private cards: HTMLElement[];
   private chips: HTMLElement[];
   private rows: HTMLElement[];
-  private bonds: SVGElement[];
-  private pulses: SVGElement[];
+  private ties: { g: Element; a: Element | null; b: Element | null; out: Element | null; back: Element | null }[];
+  private mesh: Element[];
+  private aura: Element[];
+  private far: Element[];
+  private crowd: HTMLElement[];
+  private wider: HTMLElement[];
   private figs: HTMLElement[];
-  private one: Record<"world" | "hub" | "db" | "link" | "year", Element | null>;
+  private one: Record<"world" | "hub" | "db" | "link" | "dbpulse" | "far" | "year", Element | null>;
   private today: string;
 
   constructor(
@@ -138,11 +143,24 @@ export class TechGrow {
     this.cards = all("[data-card]");
     this.chips = all("[data-chip]");
     this.rows = all("[data-row]");
-    this.bonds = all(".tk-cx-bond");
-    this.pulses = all(".tk-cx-pulse");
+    this.ties = all("[data-tie]").map((g) => ({
+      g,
+      a: g.querySelector(".tk-cx-tie-a"),
+      b: g.querySelector(".tk-cx-tie-b"),
+      out: g.querySelector(".tk-cx-pulse:not(.tk-cx-pulse-back)"),
+      back: g.querySelector(".tk-cx-pulse-back"),
+    }));
+    this.mesh = all("[data-mesh]");
+    this.aura = all("[data-aura]");
+    this.far = all(".tk-cx-far line");
+    this.crowd = all("[data-ghost]");
+    this.wider = all("[data-wider]");
     this.figs = all("[data-fig]");
     const one = (s: string) => art.querySelector(s);
-    this.one = { world: one(".tk-cx-world"), hub: one(".tk-cx-hub"), db: one(".tk-cx-db"), link: one(".tk-cx-dblink"), year: one(".tk-cx-year") };
+    this.one = {
+      world: one(".tk-cx-world"), hub: one(".tk-cx-hub"), db: one(".tk-cx-db"), link: one(".tk-cx-dblink"),
+      dbpulse: one("[data-dbpulse]"), far: one(".tk-cx-far"), year: one(".tk-cx-year"),
+    };
     this.today = this.one.year?.textContent ?? "";
 
     const cs = getComputedStyle(art);
@@ -188,15 +206,18 @@ export class TechGrow {
     this.hub = hubOf(L);
     const h = this.hub;
     this.art.querySelector(".tk-cx-bonds")?.setAttribute("viewBox", `0 0 ${L.sw} ${SH}`);
-    const line = (el: Element | null | undefined, x2: number, y2: number) => {
-      el?.setAttribute("x1", String(h.cx));
-      el?.setAttribute("y1", String(h.cy));
+    const line = (el: Element | null | undefined, x1: number, y1: number, x2: number, y2: number) => {
+      el?.setAttribute("x1", String(x1));
+      el?.setAttribute("y1", String(y1));
       el?.setAttribute("x2", String(x2));
       el?.setAttribute("y2", String(y2));
     };
-    this.bonds.forEach((b, k) => line(b, L.insts[k][0], L.insts[k][1]));
-    line(this.one.link, h.cx, L.db.y);
-    this.pulses.forEach((p) => p.setAttribute("cx", String(h.cx)));
+    line(this.one.link, h.cx, h.cy, h.cx, L.db.y);
+    this.one.dbpulse?.setAttribute("cx", String(h.cx));
+    MESH.forEach(([a, b], i) => line(this.mesh[i], L.insts[a][0], L.insts[a][1], L.insts[b][0], L.insts[b][1]));
+    this.far.forEach((el, i) => line(el, h.cx, h.cy, L.wider[i].x + CHIP.w / 2, L.wider[i].y + CHIP.h / 2));
+    this.aura.forEach((el) => el.setAttribute("cx", String(h.cx)));
+    this.ties.forEach(({ g }, k) => g.querySelector(".tk-cx-tie-glow")?.setAttribute("d", curveD(tieOf(L, k))));
     this.wrote = new WeakMap();
     this.build(this.logo ? sampleMark(this.logo, L.lw, h.cx) : []);
   }
@@ -242,12 +263,13 @@ export class TechGrow {
     CARDS.forEach((c, i) => {
       // The card floats in from its side, drifts while it is read, and
       // drifts back out once its check has given up what it holds.
-      const d = away(L, i);
+      const [cx0, cy0] = L.cards[i];
+      const d = away(L, cx0, cy0);
       const e = out(seg(t, enterAt(i), ENTER));
       const l = io(seg(t, leaveAt(i), LEAVE));
       const drift = DRIFT * Math.min(t, ACT[1]);
-      const bx = L.cards[i][0] + d.x * FLOAT_IN * (1 - e) - d.y * drift;
-      const by = L.cards[i][1] + d.y * FLOAT_IN * (1 - e) + d.x * drift;
+      const bx = cx0 + d.x * FLOAT_IN * (1 - e) - d.y * drift;
+      const by = cy0 + d.y * FLOAT_IN * (1 - e) + d.x * drift;
       this.move(this.cards[i], bx + d.x * 90 * l, by + d.y * 90 * l, 1 - 0.12 * l, e * (1 - l));
       const sc = seg(t, scanAt(i), SCAN);
       this.set(this.cards[i], "--scan", sc.toFixed(3));
@@ -255,28 +277,71 @@ export class TechGrow {
 
       // Its chip rides along its foot, then flies to its node or its row.
       const bad = c.fraud !== undefined;
-      const goal = bad ? { x: rowAt(L, c.fraud ?? 0).x, y: rowAt(L, c.fraud ?? 0).y - 2 } : slotAt(L, c.inst ?? 0);
+      const goal = bad ? { x: rowAt(L, c.fraud ?? 0).x, y: rowAt(L, c.fraud ?? 0).y - 4 } : slotAt(L, c.inst ?? 0);
       const m = io(seg(t, travelAt(i), TRAVEL));
-      const merge = bad || PRIMARY[c.inst ?? 0] !== i;
-      const gone = merge ? seg(t, travelAt(i) + TRAVEL * 0.8, 0.15) : 0;
+      const gone = bad ? seg(t, travelAt(i) + TRAVEL * 0.8, 0.15) : 0;
       const x = lerp(bx + CHIP_IN.x, goal.x, m);
       const y = lerp(by + CHIP_IN.y, goal.y, m) - Math.sin(Math.PI * m) * 30;
+      this.move(this.chips[i], x, y, bad ? 1 - 0.1 * m : 1, e * (1 - gone));
       const k = c.inst ?? 0;
-      // A node takes a small bump as a second check from it arrives.
-      const bump = merge ? 0 : CARDS.reduce((a, o, j) => (o.inst === k && j !== i ? a + Math.sin(Math.PI * seg(t, travelAt(j) + TRAVEL * 0.8, 0.3)) : a), 0);
-      this.move(this.chips[i], x, y, (bad ? 1 - 0.1 * m : 1) + 0.12 * bump, e * (1 - gone));
       const b = bond[k];
       this.set(this.chips[i], "data-s", !found(i) ? "raw" : bad ? "fraud" : b >= 1 ? "trusted" : t >= bondAt(k) ? "bond" : "found");
       if (!bad) this.set(this.chips[i], "--trust", c01((b - 0.25) / 0.75).toFixed(3));
     });
 
+    // The crowd floats in with the cards, slower and softer, is read in
+    // passing, and drifts out as the candidates do.
+    L.crowd.forEach((g, i) => {
+      const el = this.crowd[i];
+      const d = away(L, g.x, g.y);
+      const e = out(seg(t, 0.1 + (i % 9) * 0.07, 0.8));
+      const l = io(seg(t, ACT[1] + (i % 7) * 0.03, 0.5));
+      const drift = DRIFT * 0.5 * Math.min(t, ACT[1]);
+      const alpha = (0.62 - g.depth * 0.36) * (g.x + 68 < 0 ? 0.45 : 1);
+      const x = g.x + d.x * (FLOAT_IN * 0.6 * (1 - e) + 70 * l) - d.y * drift;
+      const y = g.y + d.y * (FLOAT_IN * 0.6 * (1 - e) + 70 * l) + d.x * drift;
+      this.move(el, x, y, 0.9 - g.depth * 0.12, e * (1 - l) * alpha);
+      this.set(el, "data-s", t >= g.at ? (g.bad ? "bad" : "ok") : "\0");
+    });
+    L.wider.forEach((g, i) => {
+      const el = this.wider[i];
+      const d = away(L, g.x, g.y);
+      const e = out(seg(t, WIDER_AT[0] + (i % 6) * 0.07, 0.7));
+      const alpha = (0.62 - g.depth * 0.36) * (g.x + 61 < 0 ? 0.45 : 1);
+      this.move(el, g.x + d.x * 50 * (1 - e), g.y + d.y * 50 * (1 - e), 0.92 - g.depth * 0.1, e * alpha);
+      this.set(el, "data-s", t >= WIDER_AT[0] + 0.5 + (i / WIDER) * WIDER_AT[1] ? "trusted" : "\0");
+    });
+    this.set(this.one.far, "opacity", (seg(t, WIDER_AT[0] + 0.3, 0.8) * 0.9).toFixed(3));
+
+    // Each bond: the strands reach out, then braid tighter as trust grows,
+    // turning as the page scrolls, with a pulse out and a pulse back.
     INSTS.forEach((_, k) => {
-      this.set(this.bonds[k], "--b", bond[k].toFixed(3));
-      const u = frac((t - bondAt(k)) * 1.6 + k * 0.23);
-      const p = this.pulses[k];
-      this.set(p, "@cx", lerp(hub.cx, L.insts[k][0], u).toFixed(1));
-      this.set(p, "@cy", lerp(hub.cy, L.insts[k][1], u).toFixed(1));
-      this.set(p, "opacity", (bond[k] > 0.3 && t < ACT[2] ? Math.sin(Math.PI * u) : 0).toFixed(2));
+      const tie = this.ties[k];
+      const b = bond[k];
+      const c = tieOf(L, k);
+      this.set(tie.g, "--b", b.toFixed(3));
+      const [sa, sb] = b > 0 ? strands(c, Math.min(1, b * 3), c01((b - 0.25) / 0.75), t * 2.4 + k) : ["", ""];
+      this.set(tie.a, "@d", sa);
+      this.set(tie.b, "@d", sb);
+      const live = b > 0.35 && t < ACT[2];
+      const u = frac((t - bondAt(k)) * 1.5 + k * 0.23);
+      const v = frac(u + 0.5);
+      const [ox, oy] = along(c, u);
+      const [bx, by] = along(c, 1 - v);
+      this.set(tie.out, "@cx", ox.toFixed(1));
+      this.set(tie.out, "@cy", oy.toFixed(1));
+      this.set(tie.out, "opacity", (live ? Math.sin(Math.PI * u) : 0).toFixed(2));
+      this.set(tie.back, "@cx", bx.toFixed(1));
+      this.set(tie.back, "@cy", by.toFixed(1));
+      this.set(tie.back, "opacity", (live ? Math.sin(Math.PI * v) : 0).toFixed(2));
+    });
+    // Trusted neighbours knit into a web, and rings of trust gather round
+    // the hub as the trusted nodes add up.
+    MESH.forEach(([a, b], i) => this.set(this.mesh[i], "--m", seg(t, Math.max(bondAt(a), bondAt(b)) + BOND, 0.3).toFixed(3)));
+    const trusted = bond.reduce((n, b) => n + Math.min(1, b), 0);
+    this.aura.forEach((el, i) => {
+      this.set(el, "--a", c01((trusted - (1 + i * 3)) / 3).toFixed(3));
+      this.set(el, "stroke-dashoffset", (t * (14 + i * 6) * (i % 2 ? 1 : -1)).toFixed(1));
     });
 
     const h = out(seg(t, HUB_AT, 0.4));
@@ -291,9 +356,8 @@ export class TechGrow {
       this.set(this.rows[r], "--m", io(seg(t, a + 0.1, 0.35)).toFixed(3));
     }
     const du = frac((t - 4.3) * 1.3);
-    const dp = this.pulses[INSTS.length];
-    this.set(dp, "@cy", lerp(hub.cy, L.db.y, du).toFixed(1));
-    this.set(dp, "opacity", (t > 4.3 && t < 6.5 ? Math.sin(Math.PI * du) : 0).toFixed(2));
+    this.set(this.one.dbpulse, "@cy", lerp(hub.cy, L.db.y, du).toFixed(1));
+    this.set(this.one.dbpulse, "opacity", (t > 4.3 && t < 6.5 ? Math.sin(Math.PI * du) : 0).toFixed(2));
 
     const z = 1 - (1 - ZMIN) * io(seg(t, ZOOM[0], ZOOM[1]));
     this.set(this.one.world, "transform", z === 1 ? "none" : `scale(${z.toFixed(4)})`);
