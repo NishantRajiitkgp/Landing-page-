@@ -14,14 +14,11 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { whenNear } from "@/lib/whenNear";
-import { CAP, DOC, OFFICE, SHIELD, type TechArt } from "./TechPillarKit";
+import { CAP, OFFICE, PERSON, SHIELD, type TechArt } from "./TechPillarKit";
 import type { TechGlobe } from "./techGlobe";
 
 type G = TechArt["globe"];
 const CROSS = "M9.5 4.5h5v5h5v5h-5v5h-5v-5h-5v-5h5z";
-/** The case's specimen reference. A code, not a word, so not in the copy. */
-const CASE_NO = "HV-24817";
-
 /** The four stops, in the order `./techGlobe` visits them. */
 const STOPS = [
   { check: "employment", kind: "corporate", city: "singapore", flag: "/flags/sg.svg", g: OFFICE },
@@ -126,12 +123,12 @@ export function TechHeroGlobe({ art }: { art: TechArt }) {
 
         <div className="tk-gl-case" data-s="in">
           <span className="tk-gl-case-h">
-            <span className="tk-gl-tile">
-              <Ico g={DOC} />
+            <span className="tk-gl-face">
+              <Ico g={PERSON} />
             </span>
             <span className="tk-gl-tx">
-              <b>{g.case}</b>
-              <small>{CASE_NO}</small>
+              <b>{art.story.person}</b>
+              <small>{art.story.profile}</small>
             </span>
           </span>
           <span className="tk-gl-case-s">

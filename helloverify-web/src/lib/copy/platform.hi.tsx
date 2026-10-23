@@ -442,7 +442,6 @@ export const hi: PlatformCopy = {
       monitored: "निगरानी में",
       once: "एक बार सत्यापित",
       globe: {
-        case: "नया केस",
         routing: "प्राथमिक स्रोतों तक भेजा जा रहा है",
         done: "सत्यापन पूरा",
         employment: "रोज़गार",

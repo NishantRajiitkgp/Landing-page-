@@ -134,8 +134,10 @@
 .tk-gl-case[data-s="out"] { opacity: 0; translate: 0 calc(var(--gu) * -12); }
 .tk-gl-case:is([data-s="done"], [data-s="out"]) { border-color: rgb(from var(--tk-ok) r g b / .45); }
 .tk-gl-case-h { display: flex; align-items: center; gap: calc(var(--gu) * 9); }
-.tk-gl-case-h small { font-family: var(--mono); }
-.tk-gl-case:is([data-s="done"], [data-s="out"]) .tk-gl-case-h .tk-gl-tile { background: var(--tk-ok-pale); color: var(--tk-ok-ink); }
+.tk-gl-face { flex: none; display: grid; place-items: center; width: 2.6em; height: 2.6em; border-radius: 50%; background: var(--paper); color: var(--muted); }
+.tk-gl-face .tk-gl-ico { width: 1.35em; height: 1.35em; }
+.tk-gl-case-h small { font-family: var(--mono); font-size: .72em; }
+.tk-gl-case-h small:lang(en) { letter-spacing: .1em; text-transform: uppercase; }
 .tk-gl-case-s { display: grid; padding-block: calc(var(--gu) * 6); border-block: 1px solid var(--hair); font-family: var(--mono); font-size: .76em; font-weight: 600; }
 .tk-gl-case-s:lang(en) { letter-spacing: .06em; text-transform: uppercase; }
 .tk-gl-case-s > span { grid-area: 1 / 1; transition: opacity .15s ease; }

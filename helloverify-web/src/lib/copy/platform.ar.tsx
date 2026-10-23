@@ -440,7 +440,6 @@ export const ar: PlatformCopy = {
       monitored: "مراقَب",
       once: "تحقق مرة واحدة",
       globe: {
-        case: "حالة جديدة",
         routing: "التوجيه إلى المصادر الأساسية",
         done: "اكتمل التحقق",
         employment: "العمل",

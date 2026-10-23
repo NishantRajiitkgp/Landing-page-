@@ -523,7 +523,6 @@ export const en = {
       /** The hero globe: one case routed through four authorities abroad.
        *  `pause`/`play` label its motion control, the one part read out. */
       globe: {
-        case: "New case",
         routing: "Routing to primary sources",
         done: "Verification complete",
         employment: "Employment",
