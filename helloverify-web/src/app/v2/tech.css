@@ -647,10 +647,10 @@
   mask-image: linear-gradient(calc(var(--flip) * 90deg), transparent 24%, black 52%);
 }
 
-/* ── The claims, and the headline they add up to ── */
-.tk-cx-copy { position: relative; z-index: 3; display: flex; flex-direction: column; gap: 34px; }
-.tk-cx-end { order: 1; margin: 0; max-width: 13ch; font-size: clamp(36px, 3.5vw, 52px); }
-.tk-cx-end em { font-style: italic; color: var(--primary-ink); }
+/* ── The headline, and the claims that build up under it ── */
+.tk-cx-copy { position: relative; z-index: 3; display: flex; flex-direction: column; gap: 32px; }
+.tk-cx-h { margin: 0; max-width: 14ch; font-size: clamp(34px, 3.2vw, 48px); }
+.tk-cx-h em { font-style: italic; color: var(--primary-ink); }
 .tk-cx-steps { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
 .tk-cx-step { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: baseline; }
 .tk-cx-n { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--primary-ink); transition: color .4s ease; }
@@ -664,13 +664,9 @@
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .tk-cx-step { opacity: 0; translate: 0 16px; transition: opacity .5s ease, translate .7s cubic-bezier(.2, .8, .2, 1); }
   .tk-cx-p { grid-template-rows: 0fr; opacity: 0; }
-  .tk-cx-end { opacity: 0; translate: 0 20px; transition: opacity .6s ease, translate .8s cubic-bezier(.2, .8, .2, 1); }
   :is([data-step="0"] .tk-cx-step:nth-child(1), [data-step="1"] .tk-cx-step:nth-child(-n + 2), [data-step="2"] .tk-cx-step) { opacity: 1; translate: 0 0; }
-  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2), [data-end] .tk-cx-step) :is(h3, .tk-cx-n) { color: var(--muted); }
-  .tk-cmp:not([data-end])[data-step="0"] .tk-cx-step:nth-child(1) .tk-cx-p,
-  .tk-cmp:not([data-end])[data-step="1"] .tk-cx-step:nth-child(2) .tk-cx-p,
-  .tk-cmp:not([data-end])[data-step="2"] .tk-cx-step:nth-child(3) .tk-cx-p { grid-template-rows: 1fr; opacity: 1; }
-  [data-end] .tk-cx-end { opacity: 1; translate: 0 0; }
+  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2)) :is(h3, .tk-cx-n) { color: var(--muted); }
+  :is([data-step="0"] .tk-cx-step:nth-child(1), [data-step="1"] .tk-cx-step:nth-child(2), [data-step="2"] .tk-cx-step:nth-child(3)) .tk-cx-p { grid-template-rows: 1fr; opacity: 1; }
 }
 
 /* ── The scene: fitted into the frame beside the claims and out to the
@@ -886,7 +882,8 @@
   .tk-cx-board { width: 100vw; margin-inline: calc(50% - 50vw); }
   .tk-cx-step h3 { font-size: 22px; }
   .tk-cx-p > p { font-size: 14.5px; }
-  .tk-cx-end { max-width: none; font-size: 30px; }
+  .tk-cx-copy { gap: 16px; }
+  .tk-cx-h { max-width: none; font-size: 27px; }
 }
 /* The tall layout; without script the scene rests on the wide one's places. */
 @media (max-width: 1080px) and (scripting: enabled) {
@@ -894,16 +891,14 @@
   .tk-cx-cap { inset-inline: calc(var(--su) * 24); }
 }
 @media (max-width: 1080px) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .tk-cx-copy { display: grid; }
-  .tk-cx-copy > *, .tk-cx-step { grid-area: 1 / 1; }
-  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2), [data-end] .tk-cx-step) { opacity: 0; }
+  .tk-cx-step { grid-area: 1 / 1; }
+  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2)) { opacity: 0; }
 }
 
 /* ── Reduced motion and no script: no runway; the claims in a column ── */
 @media (prefers-reduced-motion: reduce), (scripting: none) {
   .tk-cx-run { height: auto; }
   .tk-cx-pin { position: relative; height: auto; padding-block: 40px 0; }
-  .tk-cx-end { order: -1; }
   .tk-cx-board { height: min(720px, 60vw); }
 }
 @media (max-width: 1080px) and ((prefers-reduced-motion: reduce) or (scripting: none)) {

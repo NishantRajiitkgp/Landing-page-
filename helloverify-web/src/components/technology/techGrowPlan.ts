@@ -21,8 +21,6 @@ export const SH = 600;
 export const HUB_Y = 260;
 export const END = 10;
 export const ACT = [0, 3.4, 6.8] as const;
-/** When the headline lands in the column beside the scene. */
-export const CONCLUDE = 8.9;
 /** When the caption under the finished mark shows. */
 export const CAPTION = 9.1;
 

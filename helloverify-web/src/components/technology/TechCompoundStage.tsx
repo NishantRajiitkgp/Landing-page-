@@ -5,13 +5,13 @@
     Scroll through the runway is story time, 0 to `END` (`./techGrowPlan`),
     followed through a short ease so a wheel notch glides instead of
     jumping. It writes to the section `data-step`, the claim on show (0 to
-    2), and `data-end` once the headline lands, and hands the time to
-    `./techGrow`, fetched as the section nears, which draws the board.
+    2), and hands the time to `./techGrow`, fetched as the section nears,
+    which draws the board.
     Under reduced motion the stylesheet drops the runway and the board
     shows its last frame. */
 import { useEffect, useRef, type ReactNode } from "react";
 import { whenNear } from "@/lib/whenNear";
-import { ACT, CONCLUDE, END } from "./techGrowPlan";
+import { ACT, END } from "./techGrowPlan";
 import type { TechGrow } from "./techGrow";
 
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
@@ -33,8 +33,6 @@ export function TechCompoundStage({ children }: { children: ReactNode }) {
       shown = t;
       const step = String(t < ACT[1] ? 0 : t < ACT[2] ? 1 : 2);
       if (root.dataset.step !== step) root.dataset.step = step;
-      if (t >= CONCLUDE) root.dataset.end = "";
-      else delete root.dataset.end;
       engine?.render(t);
     };
 
