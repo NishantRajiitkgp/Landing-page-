@@ -1,22 +1,22 @@
 /** The drawing of the `/technology` compounding story (`./TechGrowBoard`).
 
-    `render(t)` puts the board at story time `t` (`./techGrowPlan`). Acts
-    one and two are the island's HTML, which this places in board units
+    `render(t)` puts the scene at story time `t` (`./techGrowPlan`). Acts
+    one and two are the island's HTML, which this places in scene units
     and whose `data-s` it sets: a card is `scan` while it is read and
     `read` after; a chip is `raw`, `found` once its card is read, `bond`
     while it bonds to HelloVerify and then `trusted`, or `fraud`. Act
-    three is the canvas: the view pulls back over a field of checks
-    (ink), institutions (green) and fraud (red), each check joining its
-    institution as it comes in, until every dot flies to its place in the
-    HelloVerify mark, sampled from the hub's own logo.
+    three is the canvas behind the whole frame: the view pulls back over a
+    field of checks (ink), institutions (green) and fraud (red), each check
+    joining its institution as it comes in, until every dot flies to its
+    place in the HelloVerify mark, sampled from the hub's own logo.
 
     Nothing here runs on its own: `./TechCompoundStage` calls `render` as
     the page scrolls. Colour is read from the stylesheet. */
 import { cssRgb, type RGB } from "@/lib/cssColour";
 import {
-  ACT, BOND, CAPTION, CARDS, CONVERGE, COUNT, DB, DB_AT, ENTER, FADE, FLY, FOUND, FRAUDS, HC, HUB, HUB_AT, INSTS,
-  LEAVE, LW, MARKED, MARK_Y, ROWS, SAFE, SCAN, SLOTS, SW, SWEEP, TRAVEL, YEAR, ZMIN, ZOOM, bondAt, cardAt, enterAt, fraudAt1,
-  instAt1, leaveAt, rowAt, rowTime, scanAt, travelAt,
+  ACT, BOND, CAPTION, CARDS, CHIP_IN, CONVERGE, COUNT, DB_AT, DRIFT, ENTER, FADE, FLOAT_IN, FLY, FOUND, HUB_AT, INSTS,
+  LEAVE, MARKED, MARK_Y, PRIMARY, ROWS, SAFE, SCAN, SH, SWEEP, TALL, TRAVEL, WIDE, YEAR, ZMIN, ZOOM, away, bondAt,
+  enterAt, hubOf, leaveAt, rowAt, rowTime, scanAt, slotAt, travelAt, type Layout,
 } from "./techGrowPlan";
 
 const TAU = Math.PI * 2;
@@ -26,22 +26,21 @@ const io = (x: number) => (x < 0.5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2);
 const out = (x: number) => 1 - (1 - x) ** 3;
 const lerp = (a: number, b: number, f: number) => a + (b - a) * f;
 const rand = (s: number) => () => (s = (s * 16807) % 2147483647) / 2147483647;
+const frac = (n: number) => ((n % 1) + 1) % 1;
 
 /** A figure counted up to `f` of itself: each number in it scales, the
     rest of it stays ("20M+" at a half is "10M+"). */
 const countUp = (v: string, f: number) =>
   f >= 1 ? v : v.replace(/\d[\d,]*/g, (n) => Math.round(Number(n.replace(/,/g, "")) * f).toLocaleString("en-US"));
 
-/** The field once the view has pulled back: an ellipse round the hub, its
-    middle left to the network itself. */
-const RX = 262;
-const RY = 182;
+/** The field once the view has pulled back is an ellipse round the hub as
+    big as the page (the layout's `field`), its middle left to the network. */
 const HOLE = 0.17;
-/** Radii, in board units: a check, an institution, a fraud, HelloVerify. */
-const KIND_R = [1.05, 1.75, 1.35, 3.4];
+/** Radii, in scene units: a check, an institution, a fraud, HelloVerify. */
+const KIND_R = [1.0, 1.7, 1.3, 3.4];
 const KIND_A = [0.5, 0.95, 0.9, 1];
 const MARK_R = 1.18;
-/** The mark's sampling pitch, in board units. */
+/** The mark's sampling pitch, in scene units. */
 const PITCH = 2.5;
 const STEPS = 8;
 
@@ -67,10 +66,10 @@ type Dot = {
 type Mark = { x: number; y: number; red: boolean };
 
 /** The mark as dots: the logo's paths filled offscreen and read back on a
-    staggered grid, `LW` units wide and centred on the hub. */
-function sampleMark(svg: SVGSVGElement): Mark[] {
+    staggered grid, `lw` units wide and centred on `cx`. */
+function sampleMark(svg: SVGSVGElement, lw: number, cx: number): Mark[] {
   const vb = svg.viewBox.baseVal;
-  const scale = LW / vb.width;
+  const scale = lw / vb.width;
   const lh = vb.height * scale;
   const res = 6;
   const cv = document.createElement("canvas");
@@ -86,11 +85,11 @@ function sampleMark(svg: SVGSVGElement): Mark[] {
     c.fill(new Path2D(p.getAttribute("d") ?? ""));
   });
   const px = c.getImageData(0, 0, cv.width, cv.height).data;
-  const ox = HC.x - LW / 2;
+  const ox = cx - lw / 2;
   const oy = MARK_Y - lh / 2;
   const marks: Mark[] = [];
   for (let row = 0, y = PITCH / 2; y < lh; y += PITCH * 0.866, row++) {
-    for (let x = row % 2 ? PITCH : PITCH / 2; x < LW; x += PITCH) {
+    for (let x = row % 2 ? PITCH : PITCH / 2; x < lw; x += PITCH) {
       const i = (Math.floor((y / scale) * res) * cv.width + Math.floor((x / scale) * res)) * 4;
       if (px[i + 3] < 128) continue;
       marks.push({ x: ox + x, y: oy + y, red: px[i] > 150 && px[i + 1] < 110 });
@@ -102,9 +101,15 @@ function sampleMark(svg: SVGSVGElement): Mark[] {
 export class TechGrow {
   private ctx: CanvasRenderingContext2D;
   private pal: { ink: RGB; red: RGB; ok: RGB };
+  private L: Layout | null = null;
+  private hub = hubOf(WIDE);
+  private logo: SVGSVGElement | null;
   private k = 1;
   private dpr = 1;
   private flip = 1;
+  /** Where the scene's corner sits on the canvas, in CSS pixels. */
+  private ox = 0;
+  private oy = 0;
   private t = 0;
   private painted = false;
   private dots: Dot[] = [];
@@ -116,12 +121,10 @@ export class TechGrow {
   private ro: ResizeObserver;
 
   private cards: HTMLElement[];
-  private insts: HTMLElement[];
-  private frauds: HTMLElement[];
+  private chips: HTMLElement[];
   private rows: HTMLElement[];
   private bonds: SVGElement[];
   private pulses: SVGElement[];
-  private tally: HTMLElement[];
   private figs: HTMLElement[];
   private one: Record<"world" | "hub" | "db" | "link" | "year", Element | null>;
   private today: string;
@@ -133,12 +136,10 @@ export class TechGrow {
     this.ctx = canvas.getContext("2d")!;
     const all = <E extends Element>(s: string) => [...art.querySelectorAll<E>(s)];
     this.cards = all("[data-card]");
-    this.insts = all("[data-inst]");
-    this.frauds = all("[data-fraud]");
+    this.chips = all("[data-chip]");
     this.rows = all("[data-row]");
     this.bonds = all(".tk-cx-bond");
     this.pulses = all(".tk-cx-pulse");
-    this.tally = all("[data-tally]");
     this.figs = all("[data-fig]");
     const one = (s: string) => art.querySelector(s);
     this.one = { world: one(".tk-cx-world"), hub: one(".tk-cx-hub"), db: one(".tk-cx-db"), link: one(".tk-cx-dblink"), year: one(".tk-cx-year") };
@@ -148,14 +149,14 @@ export class TechGrow {
     const tok = (n: string) => cssRgb(cs.getPropertyValue(n));
     this.pal = { ink: tok("--ink"), red: tok("--primary"), ok: tok("--tk-ok") };
     this.flip = cs.direction === "rtl" ? -1 : 1;
-    const logo = art.querySelector<SVGSVGElement>(".tk-cx-hub svg");
-    this.build(logo ? sampleMark(logo) : []);
+    this.logo = art.querySelector<SVGSVGElement>(".tk-cx-hub svg");
 
     this.ro = new ResizeObserver(() => {
       this.size();
       this.render(this.t);
     });
     this.ro.observe(art);
+    this.ro.observe(canvas);
     this.size();
   }
 
@@ -170,88 +171,118 @@ export class TechGrow {
   }
 
   private size() {
-    this.k = this.art.clientWidth / SW || 1;
+    const L = Number.parseFloat(getComputedStyle(this.art).getPropertyValue("--sw")) < WIDE.sw ? TALL : WIDE;
+    if (L !== this.L) this.layout(L);
+    this.k = this.art.clientWidth / L.sw || 1;
     this.dpr = Math.min(2, window.devicePixelRatio || 1);
-    this.canvas.width = Math.round(this.art.clientWidth * this.dpr);
-    this.canvas.height = Math.round(this.art.clientHeight * this.dpr);
+    const c = this.canvas.getBoundingClientRect();
+    this.canvas.width = Math.round(c.width * this.dpr);
+    this.canvas.height = Math.round(c.height * this.dpr);
     this.painted = true;
+  }
+
+  /** Moves the parts that are not placed each frame onto `L`'s plan, and
+      lays the field out for it. */
+  private layout(L: Layout) {
+    this.L = L;
+    this.hub = hubOf(L);
+    const h = this.hub;
+    this.art.querySelector(".tk-cx-bonds")?.setAttribute("viewBox", `0 0 ${L.sw} ${SH}`);
+    const line = (el: Element | null | undefined, x2: number, y2: number) => {
+      el?.setAttribute("x1", String(h.cx));
+      el?.setAttribute("y1", String(h.cy));
+      el?.setAttribute("x2", String(x2));
+      el?.setAttribute("y2", String(y2));
+    };
+    this.bonds.forEach((b, k) => line(b, L.insts[k][0], L.insts[k][1]));
+    line(this.one.link, h.cx, L.db.y);
+    this.pulses.forEach((p) => p.setAttribute("cx", String(h.cx)));
+    this.wrote = new WeakMap();
+    this.build(this.logo ? sampleMark(this.logo, L.lw, h.cx) : []);
+  }
+
+  /** Where the scene's corner sits on the canvas; read as it is painted,
+      since the claims above it change height on a phone. */
+  private offset() {
+    const c = this.canvas.getBoundingClientRect();
+    const a = this.art.getBoundingClientRect();
+    this.ox = a.left - c.left;
+    this.oy = a.top - c.top;
   }
 
   /* ── The HTML, acts one and two ───────────────────────────────────── */
 
-  private set(el: Element | null, key: string, val: string) {
+  private set(el: Element | null | undefined, key: string, val: string) {
     if (!el) return;
     let w = this.wrote.get(el);
     if (!w) this.wrote.set(el, (w = {}));
     if (w[key] === val) return;
     w[key] = val;
     const s = (el as HTMLElement).style;
-    if (key.startsWith("--")) s.setProperty(key, val);
-    else if (key.startsWith("@")) el.setAttribute(key.slice(1), val);
-    else if (key.startsWith("#")) el.textContent = val;
+    if (key.startsWith("@")) el.setAttribute(key.slice(1), val);
+    else if (key === "#") el.textContent = val;
     else if (key.startsWith("data-")) {
       if (val === "\0") el.removeAttribute(key);
       else el.setAttribute(key, val);
     } else s.setProperty(key, val);
   }
 
-  private move(el: Element | null, x: number, y: number, s: number, o: number) {
+  private move(el: Element | null | undefined, x: number, y: number, s: number, o: number) {
     const tx = `translate(${(this.flip * x * this.k).toFixed(1)}px,${(y * this.k).toFixed(1)}px)`;
     this.set(el, "transform", s === 1 ? tx : `${tx} scale(${s.toFixed(3)})`);
     this.set(el, "opacity", o.toFixed(3));
   }
 
   private place(t: number) {
-    const found = (card: number) => t >= scanAt(card) + SCAN * FOUND;
+    const L = this.L ?? WIDE;
+    const hub = this.hub;
+    const found = (i: number) => t >= scanAt(i) + SCAN * FOUND;
+    const bond = INSTS.map((_, k) => seg(t, bondAt(k), BOND));
 
-    CARDS.forEach((_, i) => {
-      const el = this.cards[i];
-      const at = cardAt(i);
+    CARDS.forEach((c, i) => {
+      // The card floats in from its side, drifts while it is read, and
+      // drifts back out once its check has given up what it holds.
+      const d = away(L, i);
       const e = out(seg(t, enterAt(i), ENTER));
       const l = io(seg(t, leaveAt(i), LEAVE));
-      this.move(el, at.x, at.y + 34 * (1 - e) + 22 * l, 0.94 + 0.06 * e - 0.1 * l, e * (1 - l));
+      const drift = DRIFT * Math.min(t, ACT[1]);
+      const bx = L.cards[i][0] + d.x * FLOAT_IN * (1 - e) - d.y * drift;
+      const by = L.cards[i][1] + d.y * FLOAT_IN * (1 - e) + d.x * drift;
+      this.move(this.cards[i], bx + d.x * 90 * l, by + d.y * 90 * l, 1 - 0.12 * l, e * (1 - l));
       const sc = seg(t, scanAt(i), SCAN);
-      this.set(el, "--scan", sc.toFixed(3));
-      this.set(el, "data-s", sc <= 0 ? "wait" : sc < 1 ? "scan" : "read");
+      this.set(this.cards[i], "--scan", sc.toFixed(3));
+      this.set(this.cards[i], "data-s", sc <= 0 ? "wait" : sc < 1 ? "scan" : "read");
+
+      // Its chip rides along its foot, then flies to its node or its row.
+      const bad = c.fraud !== undefined;
+      const goal = bad ? { x: rowAt(L, c.fraud ?? 0).x, y: rowAt(L, c.fraud ?? 0).y - 2 } : slotAt(L, c.inst ?? 0);
+      const m = io(seg(t, travelAt(i), TRAVEL));
+      const merge = bad || PRIMARY[c.inst ?? 0] !== i;
+      const gone = merge ? seg(t, travelAt(i) + TRAVEL * 0.8, 0.15) : 0;
+      const x = lerp(bx + CHIP_IN.x, goal.x, m);
+      const y = lerp(by + CHIP_IN.y, goal.y, m) - Math.sin(Math.PI * m) * 30;
+      const k = c.inst ?? 0;
+      // A node takes a small bump as a second check from it arrives.
+      const bump = merge ? 0 : CARDS.reduce((a, o, j) => (o.inst === k && j !== i ? a + Math.sin(Math.PI * seg(t, travelAt(j) + TRAVEL * 0.8, 0.3)) : a), 0);
+      this.move(this.chips[i], x, y, (bad ? 1 - 0.1 * m : 1) + 0.12 * bump, e * (1 - gone));
+      const b = bond[k];
+      this.set(this.chips[i], "data-s", !found(i) ? "raw" : bad ? "fraud" : b >= 1 ? "trusted" : t >= bondAt(k) ? "bond" : "found");
+      if (!bad) this.set(this.chips[i], "--trust", c01((b - 0.25) / 0.75).toFixed(3));
     });
 
-    INSTS.forEach((c, k) => {
-      const el = this.insts[k];
-      const a = instAt1(k);
-      const b = SLOTS[k];
-      const e = out(seg(t, enterAt(c.card), ENTER));
-      const m = io(seg(t, travelAt(k), TRAVEL));
-      const bond = seg(t, bondAt(k), BOND);
-      this.move(el, lerp(a.x, b.x, m), lerp(a.y, b.y, m) + 34 * (1 - e) - Math.sin(Math.PI * m) * 26, 1, e);
-      this.set(el, "data-s", !found(c.card) ? "raw" : bond >= 1 ? "trusted" : t >= bondAt(k) ? "bond" : "found");
-      this.set(el, "--trust", c01((bond - 0.25) / 0.75).toFixed(3));
-      this.set(this.bonds[k], "--b", bond.toFixed(3));
-      const u = (((t - bondAt(k)) * 1.6 + k * 0.23) % 1 + 1) % 1;
+    INSTS.forEach((_, k) => {
+      this.set(this.bonds[k], "--b", bond[k].toFixed(3));
+      const u = frac((t - bondAt(k)) * 1.6 + k * 0.23);
       const p = this.pulses[k];
-      this.set(p, "@cx", lerp(HC.x, b.cx, u).toFixed(1));
-      this.set(p, "@cy", lerp(HC.y, b.cy, u).toFixed(1));
-      this.set(p, "opacity", (bond > 0.3 && t < ACT[2] ? Math.sin(Math.PI * u) : 0).toFixed(2));
-    });
-
-    FRAUDS.forEach((f, r) => {
-      const el = this.frauds[r];
-      const seal = f.kind === "seal";
-      const a = fraudAt1(r);
-      const b = rowAt(r);
-      const j = INSTS.length + r;
-      const at = scanAt(f.card) + SCAN * FOUND;
-      const e = seal ? out(seg(t, at, 0.3)) : out(seg(t, enterAt(f.card), ENTER));
-      const m = io(seg(t, travelAt(j), TRAVEL));
-      const gone = seg(t, travelAt(j) + TRAVEL * 0.8, 0.15);
-      const y = lerp(a.y, b.y - 8, m) + (seal ? 0 : 34 * (1 - e)) - Math.sin(Math.PI * m) * 26;
-      this.move(el, lerp(a.x, b.x, m), y, (seal ? 0.8 + 0.2 * e : 1) * (1 - 0.12 * m), e * (1 - gone));
-      this.set(el, "data-s", t >= at ? "fraud" : "raw");
+      this.set(p, "@cx", lerp(hub.cx, L.insts[k][0], u).toFixed(1));
+      this.set(p, "@cy", lerp(hub.cy, L.insts[k][1], u).toFixed(1));
+      this.set(p, "opacity", (bond[k] > 0.3 && t < ACT[2] ? Math.sin(Math.PI * u) : 0).toFixed(2));
     });
 
     const h = out(seg(t, HUB_AT, 0.4));
-    this.move(this.one.hub, HUB.x, HUB.y, 0.7 + 0.3 * h, h);
+    this.move(this.one.hub, hub.x, hub.y, 0.7 + 0.3 * h, h);
     const d = out(seg(t, DB_AT, 0.45));
-    this.move(this.one.db, DB.x, DB.y + 18 * (1 - d), 1, d);
+    this.move(this.one.db, L.db.x, L.db.y + 18 * (1 - d), 1, d);
     this.set(this.one.db, "data-safe", t >= SAFE ? "" : "\0");
     this.set(this.one.link, "opacity", d.toFixed(3));
     for (let r = 0; r < ROWS; r++) {
@@ -259,10 +290,10 @@ export class TechGrow {
       this.set(this.rows[r], "--o", seg(t, a, 0.15).toFixed(3));
       this.set(this.rows[r], "--m", io(seg(t, a + 0.1, 0.35)).toFixed(3));
     }
-    const du = (((t - 4.3) * 1.3) % 1 + 1) % 1;
+    const du = frac((t - 4.3) * 1.3);
     const dp = this.pulses[INSTS.length];
-    this.set(dp, "@cy", lerp(HC.y, DB.y, du).toFixed(1));
-    this.set(dp, "opacity", (t > 4.3 && t < 6.3 ? Math.sin(Math.PI * du) : 0).toFixed(2));
+    this.set(dp, "@cy", lerp(hub.cy, L.db.y, du).toFixed(1));
+    this.set(dp, "opacity", (t > 4.3 && t < 6.5 ? Math.sin(Math.PI * du) : 0).toFixed(2));
 
     const z = 1 - (1 - ZMIN) * io(seg(t, ZOOM[0], ZOOM[1]));
     this.set(this.one.world, "transform", z === 1 ? "none" : `scale(${z.toFixed(4)})`);
@@ -270,12 +301,6 @@ export class TechGrow {
 
     const yr = seg(t, YEAR[0], YEAR[1]);
     this.set(this.one.year, "#", yr >= 1 ? this.today : String(2018 + Math.min(7, Math.floor(yr * 8))));
-    const counts = [
-      CARDS.filter((_, i) => t >= scanAt(i) + SCAN).length,
-      INSTS.filter((c) => found(c.card)).length,
-      FRAUDS.filter((f) => found(f.card)).length,
-    ];
-    this.tally.forEach((el, i) => this.set(el, "#", String(counts[i])));
     const f = io(seg(t, COUNT[0], COUNT[1]));
     this.figs.forEach((el) => this.set(el, "#", countUp(el.dataset.fig ?? "", f)));
 
@@ -287,6 +312,9 @@ export class TechGrow {
   /* ── The field and the mark, act three ────────────────────────────── */
 
   private build(marks: Mark[]) {
+    const L = this.L ?? WIDE;
+    const [RX, RY, n] = L.field;
+    const { cx, cy } = this.hub;
     const r = rand(20181);
     const dots: Dot[] = [];
     const add = (d: Partial<Dot>) => dots.push({ k: 0, x: 0, y: 0, p: -1, g: 0, net: false, tx: 0, ty: 0, red: false, c: 0, curl: 0, ...d });
@@ -299,29 +327,29 @@ export class TechGrow {
       }
     };
 
-    // The network on the board, which the HTML hands over to.
+    // The network on the scene, which the HTML hands over to.
     add({ k: 3, net: true });
-    SLOTS.forEach((s) => add({ k: 1, x: this.flip * (s.cx - HC.x), y: s.cy - HC.y, net: true }));
+    L.insts.forEach(([x, y]) => add({ k: 1, x: this.flip * (x - cx), y: y - cy, net: true }));
     for (let i = 0; i < ROWS; i++) {
-      const w = rowAt(i);
-      add({ k: 2, x: this.flip * (w.x + 130 - HC.x), y: w.y + 12 - HC.y, net: true });
+      const w = rowAt(L, i);
+      add({ k: 2, x: this.flip * (w.x + 131 - cx), y: w.y + 11 - cy, net: true });
     }
     // Everything else: institutions, fraud, and the checks round each institution.
     const insts: number[] = [];
-    for (let i = 0; i < 110; i++) {
+    for (let i = 0; i < n * 0.05; i++) {
       const [x, y] = ring();
       insts.push(dots.length);
       add({ k: 1, x, y, g: 6.95 + r() * 0.8 });
     }
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < n * 0.058; i++) {
       const [x, y] = ring();
       add({ k: 2, x, y });
     }
-    const total = Math.max(2100, Math.round(marks.length * 1.15));
+    const total = Math.max(n, Math.round(marks.length * 1.15));
     while (dots.length < total) {
       const p = insts[Math.floor(r() * insts.length)];
       const a = r() * TAU;
-      const m = Math.sqrt(-2 * Math.log(1 - r() * 0.999)) * 15;
+      const m = Math.sqrt(-2 * Math.log(1 - r() * 0.999)) * 20;
       const x = dots[p].x * ZMIN + Math.cos(a) * m;
       const y = dots[p].y * ZMIN + Math.sin(a) * m * 0.8;
       const e = (x / RX) ** 2 + (y / RY) ** 2;
@@ -334,15 +362,15 @@ export class TechGrow {
     if (marks.length) {
       const ang = (x: number, y: number) => Math.atan2(y, x);
       const order = dots.map((_, i) => i).sort((a, b) => ang(dots[a].x, dots[a].y) - ang(dots[b].x, dots[b].y));
-      const ms = [...marks].sort((a, b) => ang(a.x - HC.x, a.y - MARK_Y) - ang(b.x - HC.x, b.y - MARK_Y));
+      const ms = [...marks].sort((a, b) => ang(a.x - cx, a.y - MARK_Y) - ang(b.x - cx, b.y - MARK_Y));
       order.forEach((di, rank) => {
         const mk = ms[Math.floor((rank * ms.length) / order.length)];
         const d = dots[di];
         d.tx = mk.x;
         d.ty = mk.y;
         d.red = mk.red;
-        d.c = CONVERGE + SWEEP * ((mk.x - (HC.x - LW / 2)) / LW) + r() * 0.12;
-        d.curl = (r() - 0.5) * 70;
+        d.c = CONVERGE + SWEEP * ((mk.x - (cx - L.lw / 2)) / L.lw) + r() * 0.12;
+        d.curl = (r() - 0.5) * 90;
       });
     } else dots.forEach((d) => (d.c = Infinity));
 
@@ -371,22 +399,26 @@ export class TechGrow {
   private paint(t: number) {
     const { ctx, canvas, dots, X, Y, U } = this;
     if (t < ACT[2]) {
-      if (this.painted) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (this.painted) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
       this.painted = false;
       return;
     }
     this.painted = true;
+    this.offset();
     const m = this.k * this.dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.setTransform(m, 0, 0, m, 0, 0);
+    ctx.setTransform(m, 0, 0, m, this.ox * this.dpr, this.oy * this.dpr);
 
     const z = 1 - (1 - ZMIN) * io(seg(t, ZOOM[0], ZOOM[1]));
     const field = seg(t, ZOOM[0], 0.25);
     const net = seg(t, FADE[0], FADE[1]);
     const lines = 1 - seg(t, CONVERGE, 0.35);
-    const hx = HC.x;
-    const hy = HC.y;
+    const hx = this.hub.cx;
+    const hy = this.hub.cy;
 
     for (let i = 0; i < dots.length; i++) {
       const d = dots[i];
@@ -409,12 +441,12 @@ export class TechGrow {
     // HelloVerify's glow at the middle of the field.
     const glow = (1 - seg(t, CONVERGE, 0.5)) * net;
     if (glow > 0) {
-      const g = ctx.createRadialGradient(hx, hy, 0, hx, hy, 46);
+      const g = ctx.createRadialGradient(hx, hy, 0, hx, hy, 60);
       const [r0, g0, b0] = this.pal.red;
       g.addColorStop(0, `rgba(${r0},${g0},${b0},${(0.22 * glow).toFixed(3)})`);
       g.addColorStop(1, `rgba(${r0},${g0},${b0},0)`);
       ctx.fillStyle = g;
-      ctx.fillRect(hx - 46, hy - 46, 92, 92);
+      ctx.fillRect(hx - 60, hy - 60, 120, 120);
     }
 
     if (lines > 0) {
@@ -433,13 +465,13 @@ export class TechGrow {
         ctx.stroke();
       };
       // A check joining its institution, as it comes in.
-      line(this.pal.ink, 0.11 * lines * field, (i, d) => {
+      line(this.pal.ink, 0.09 * lines * field, (i, d) => {
         if (d.k !== 0) return null;
         const g = seg(t, d.g, 0.35);
         return g > 0 ? [d.p, i, g] : null;
       });
       // Every institution, joined to HelloVerify.
-      line(this.pal.red, 0.08 * lines * field, (i, d) => {
+      line(this.pal.red, 0.06 * lines * field, (i, d) => {
         if (d.k !== 1 || d.net) return null;
         const g = seg(t, d.g, 0.4);
         return g > 0 ? [0, i, g] : null;

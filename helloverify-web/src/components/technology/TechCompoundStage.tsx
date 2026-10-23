@@ -23,7 +23,7 @@ export function TechCompoundStage({ children }: { children: ReactNode }) {
     const root = ref.current;
     const run = root?.querySelector<HTMLElement>(".tk-cx-run");
     const art = root?.querySelector<HTMLElement>(".tk-cx-art");
-    const canvas = art?.querySelector("canvas");
+    const canvas = root?.querySelector<HTMLCanvasElement>(".tk-cx-cv");
     if (!root || !run || !art || !canvas) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 

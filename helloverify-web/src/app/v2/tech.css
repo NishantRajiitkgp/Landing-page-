@@ -627,22 +627,28 @@
 /* ═══════════════════════════════════════════════════ COMPOUNDING NETWORK ═══
    The three claims as one scroll story (TechCompound, TechGrowBoard,
    TechCompoundStage, techGrow). A tall runway pins the claims beside a
-   board; scrolling builds the claims up one by one while the board plays
-   them: checks read for what they teach, institutions bonding into the
-   network while fraud is masked into the database, then the view pulling
-   back over every check since 2018 as the dots draw the HelloVerify mark.
-   `techGrow` places the board's parts in its units (`--su`); without it
-   they rest on the network, and the claims sit in a column. */
+   scene that runs out to the edge of the page, on the page itself, like
+   the hero's globe; scrolling builds the claims up one by one while the
+   scene plays them: checks read for what they teach, institutions bonding
+   into the network while fraud is masked into the database, then the view
+   pulling back over every check since 2018 as the dots draw the HelloVerify
+   mark. `techGrow` places the scene's parts in its units (`--su`); without
+   it they rest on the network, and the claims sit in a column. */
 
-.tk-cmp { padding-block-start: 110px; }
-.tk-cx-run { position: relative; height: 540vh; }
+.tk-cmp { padding-block-start: 110px; overflow-x: clip; }
+.tk-cx-run { position: relative; height: 560vh; }
 .tk-cx-pin {
-  position: sticky; top: 0; box-sizing: border-box; height: 100vh; height: 100svh; padding-block: 76px 28px;
-  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: clamp(32px, 5vw, 80px);
+  position: sticky; top: 0; box-sizing: border-box; height: 100vh; height: 100svh; padding-block: 76px 16px; overflow: clip;
+  display: grid; grid-template-columns: minmax(300px, 31%) minmax(0, 1fr); align-items: center; gap: clamp(20px, 3vw, 48px);
+}
+/* The field of act three spans the whole frame, fading out behind the claims. */
+.tk-cx-cv {
+  position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none;
+  mask-image: linear-gradient(calc(var(--flip) * 90deg), transparent 24%, black 52%);
 }
 
 /* ── The claims, and the headline they add up to ── */
-.tk-cx-copy { display: flex; flex-direction: column; gap: 34px; }
+.tk-cx-copy { position: relative; z-index: 3; display: flex; flex-direction: column; gap: 34px; }
 .tk-cx-end { order: 1; margin: 0; max-width: 13ch; font-size: clamp(36px, 3.5vw, 52px); }
 .tk-cx-end em { font-style: italic; color: var(--primary-ink); }
 .tk-cx-steps { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
@@ -667,35 +673,35 @@
   [data-end] .tk-cx-end { opacity: 1; translate: 0 0; }
 }
 
-/* ── The board: one unit is a 560th of its width ── */
-.tk-cx-board { position: relative; justify-self: center; width: min(100%, calc((100svh - 150px) * 560 / 520)); aspect-ratio: 560 / 520; container-type: inline-size; }
+/* ── The scene: fitted into the frame beside the claims and out to the
+   page's edge, `--sw` units wide and `--sh` tall (techGrowPlan's layout). ── */
+.tk-cx-board {
+  align-self: stretch; min-height: 0; display: grid; place-items: center;
+  margin-inline-end: calc(-1 * clamp(24px, 8.334vw, 120px)); container-type: size;
+}
 .tk-cx-art {
-  --su: calc(100cqw / 560);
-  position: absolute; inset: 0; isolation: isolate; overflow: hidden;
-  border-radius: calc(var(--su) * 30); border: 1px solid var(--hair); background: var(--white);
-  box-shadow: 0 1px 0 rgb(from var(--ink) r g b / .03), 0 60px 110px -70px rgb(from var(--ink) r g b / .45);
+  --sw: 640; --sh: 600; --su: min(100cqw / var(--sw), 100cqh / var(--sh));
+  position: relative; width: calc(var(--su) * var(--sw)); height: calc(var(--su) * var(--sh));
   font-size: calc(var(--su) * 11); line-height: 1.25; color: var(--ink);
 }
 .tk-cx-art::before {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background-image: radial-gradient(circle, var(--hair) 1px, transparent 1.5px); background-size: calc(var(--su) * 22) calc(var(--su) * 22);
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, black 20%, transparent 85%);
+  content: ""; position: absolute; inset: -8%; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 48% 46% at 50% 46%, var(--white), transparent 72%);
 }
-.tk-cx-world { position: absolute; inset: 0; transform-origin: 50% calc(var(--su) * 214); }
+.tk-cx-world { position: absolute; inset: 0; transform-origin: 50% calc(var(--su) * 260); }
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .tk-cx-art:not([data-live]) :is(.tk-cx-world, .tk-cx-tag) { opacity: 0; }
+  .tk-cx-art:not([data-live]) .tk-cx-world { opacity: 0; }
 }
-.tk-cx-cv { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
 .tk-cx-at { position: absolute; inset-block-start: 0; inset-inline-start: 0; transform: translate(calc(var(--flip) * var(--x, 0) * var(--su)), calc(var(--y, 0) * var(--su))); }
 .tk-cx-art svg { display: block; }
-.tk-cx-art :is(.tk-cx-face, .tk-cx-ico, .tk-cx-db-h, .tk-cx-safe) svg { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+.tk-cx-art :is(.tk-cx-face, .tk-cx-ico, .tk-cx-db-h, .tk-cx-safe) > svg { fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 .tk-cx-tx { display: grid; flex: 1; min-width: 0; }
-.tk-cx-tx b { font-size: max(9px, calc(var(--su) * 11.5)); font-weight: 600; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .35s ease; }
-.tk-cx-tx small { display: flex; align-items: center; gap: calc(var(--su) * 4); font-size: max(8px, calc(var(--su) * 9.5)); line-height: 1.3; color: var(--muted); white-space: nowrap; overflow: hidden; }
-.tk-cx-flag { flex: none; width: calc(var(--su) * 12); height: auto; border-radius: 1px; }
+.tk-cx-tx b { font-weight: 600; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .35s ease; }
+.tk-cx-tx small { display: flex; align-items: center; gap: calc(var(--su) * 3); line-height: 1.3; color: var(--muted); white-space: nowrap; overflow: hidden; }
+.tk-cx-flag { flex: none; width: calc(var(--su) * 10); height: auto; border-radius: 1px; }
 
 /* A tick or a cross in a disc, popping in */
-.tk-cx-mk { flex: none; width: calc(var(--su) * 15); height: calc(var(--su) * 15); opacity: 0; scale: .4; transition: opacity .25s ease, scale .45s cubic-bezier(.2, 1.6, .4, 1); }
+.tk-cx-mk { flex: none; width: calc(var(--su) * 12); height: calc(var(--su) * 12); opacity: 0; scale: .4; transition: opacity .25s ease, scale .45s cubic-bezier(.2, 1.6, .4, 1); }
 .tk-cx-mk svg { width: 100%; height: 100%; }
 .tk-cx-mk circle { fill: var(--tk-ok); }
 .tk-cx-mk path { fill: none; stroke: var(--white); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
@@ -703,50 +709,50 @@
 
 /* ── Act one: a candidate's check, read top to bottom ── */
 .tk-cx-card {
-  box-sizing: border-box; width: calc(var(--su) * 164); height: calc(var(--su) * 150); padding: calc(var(--su) * 11); overflow: hidden; opacity: 0;
-  border-radius: calc(var(--su) * 14); border: 1px solid var(--hair); background: var(--white);
-  box-shadow: 0 calc(var(--su) * 14) calc(var(--su) * 26) calc(var(--su) * -18) rgb(from var(--ink) r g b / .32);
+  box-sizing: border-box; width: calc(var(--su) * 120); height: calc(var(--su) * 70); padding: calc(var(--su) * 8); overflow: hidden; opacity: 0;
+  border-radius: calc(var(--su) * 11); border: 1px solid var(--hair); background: var(--white);
+  box-shadow: 0 calc(var(--su) * 12) calc(var(--su) * 22) calc(var(--su) * -14) rgb(from var(--ink) r g b / .3);
   transition: border-color .35s ease;
 }
-.tk-cx-who { display: flex; align-items: center; gap: calc(var(--su) * 8); }
-.tk-cx-who .tk-cx-tx small { display: block; text-overflow: ellipsis; }
-.tk-cx-face { flex: none; display: grid; place-items: center; width: calc(var(--su) * 28); height: calc(var(--su) * 28); border-radius: 50%; background: var(--paper); color: var(--ink-soft); }
-.tk-cx-face svg { width: 62%; height: 62%; stroke-width: 1.7; }
-.tk-cx-doc { position: relative; display: grid; align-content: center; gap: calc(var(--su) * 5); height: calc(var(--su) * 40); margin-block-start: calc(var(--su) * 10); padding-inline: calc(var(--su) * 10); border-radius: calc(var(--su) * 8); background: var(--paper); }
-.tk-cx-doc i { display: block; width: 58%; height: calc(var(--su) * 3.5); border-radius: 2px; background: var(--tick-off); transition: background-color .3s ease; }
-.tk-cx-doc i:nth-child(2) { width: 42%; }
-.tk-cx-doc i:nth-child(3) { width: 50%; }
-.tk-cx-seal { position: absolute; inset-inline-end: calc(var(--su) * 10); top: 50%; translate: 0 -50%; width: calc(var(--su) * 20); height: calc(var(--su) * 20); box-sizing: border-box; border-radius: 50%; border: 1.5px solid var(--tick-off); transition: border-color .3s ease, background-color .3s ease; }
-.tk-cx-beam {
-  position: absolute; z-index: 3; inset-inline: 0; top: 0; height: calc(var(--su) * 2); opacity: 0;
-  background: var(--primary); box-shadow: 0 0 calc(var(--su) * 10) calc(var(--su) * 2) rgb(from var(--primary) r g b / .45);
-  translate: 0 calc(var(--scan, 0) * var(--su) * 148); transition: opacity .2s ease;
+.tk-cx-who { display: flex; align-items: center; gap: calc(var(--su) * 6); }
+.tk-cx-who .tk-cx-tx b { font-size: max(8px, calc(var(--su) * 10)); }
+.tk-cx-who .tk-cx-tx small { display: block; font-size: max(7.5px, calc(var(--su) * 8.5)); text-overflow: ellipsis; }
+.tk-cx-face { position: relative; flex: none; display: grid; place-items: center; width: calc(var(--su) * 22); height: calc(var(--su) * 22); border-radius: 50%; background: var(--paper); color: var(--ink-soft); }
+.tk-cx-face > svg { width: 62%; height: 62%; stroke-width: 1.7; }
+/* Verified, or caught, as a badge on the candidate's picture */
+.tk-cx-face .tk-cx-mk {
+  position: absolute; inset-block-end: calc(var(--su) * -3); inset-inline-end: calc(var(--su) * -4);
+  width: calc(var(--su) * 11); height: calc(var(--su) * 11); border-radius: 50%; box-shadow: 0 0 0 1.5px var(--white);
 }
-.tk-cx-beam::before { content: ""; position: absolute; inset-inline: 0; bottom: 100%; height: calc(var(--su) * 44); background: linear-gradient(to top, rgb(from var(--primary) r g b / .13), transparent); }
+.tk-cx-beam {
+  position: absolute; z-index: 3; inset-inline: 0; top: 0; height: calc(var(--su) * 1.6); opacity: 0;
+  background: var(--primary); box-shadow: 0 0 calc(var(--su) * 8) calc(var(--su) * 1.5) rgb(from var(--primary) r g b / .45);
+  translate: 0 calc(var(--scan, 0) * var(--su) * 68); transition: opacity .2s ease;
+}
+.tk-cx-beam::before { content: ""; position: absolute; inset-inline: 0; bottom: 100%; height: calc(var(--su) * 30); background: linear-gradient(to top, rgb(from var(--primary) r g b / .13), transparent); }
 .tk-cx-card[data-s="scan"] { border-color: rgb(from var(--primary) r g b / .5); }
 .tk-cx-card[data-s="scan"] .tk-cx-beam { opacity: 1; }
-.tk-cx-card[data-s="read"] .tk-cx-doc i { background: var(--hair); }
 .tk-cx-card[data-s="read"] .tk-cx-mk { opacity: 1; scale: 1; }
 .tk-cx-card[data-s="read"][data-bad] { border-color: rgb(from var(--primary) r g b / .45); }
-.tk-cx-card[data-card="5"][data-s="read"] .tk-cx-seal { border-color: var(--primary); background: var(--primary-pale); }
 
 /* ── What a check gives up: an institution, or a fraud ── */
 .tk-cx-chip {
-  z-index: 1; box-sizing: border-box; display: flex; align-items: center; gap: calc(var(--su) * 7);
-  width: calc(var(--su) * 150); height: calc(var(--su) * 40); padding-inline: calc(var(--su) * 7) calc(var(--su) * 9);
-  border-radius: calc(var(--su) * 10); border: 1px dashed var(--tick-off); background: transparent;
+  z-index: 1; box-sizing: border-box; display: flex; align-items: center; gap: calc(var(--su) * 5);
+  width: calc(var(--su) * 108); height: calc(var(--su) * 26); padding-inline: calc(var(--su) * 4) calc(var(--su) * 6);
+  border-radius: calc(var(--su) * 8); border: 1px dashed var(--tick-off); background: transparent;
   transition: border-color .35s ease, background-color .35s ease, box-shadow .35s ease;
 }
-.tk-cx-chip[data-fraud] { opacity: 0; }
-.tk-cx-chip .tk-cx-mk { position: absolute; inset-block-start: calc(var(--su) * -6); inset-inline-end: calc(var(--su) * -6); border-radius: 50%; box-shadow: 0 0 0 2px var(--white); }
-.tk-cx-ico { flex: none; display: grid; place-items: center; width: calc(var(--su) * 24); height: calc(var(--su) * 24); border-radius: calc(var(--su) * 7); background: var(--paper); color: var(--muted); transition: background-color .35s ease, color .35s ease; }
-.tk-cx-ico svg { width: 66%; height: 66%; stroke-width: 1.6; }
-.tk-cx-chip .tk-cx-tx b { font-size: max(9px, calc(var(--su) * 11)); color: var(--ink-soft); }
-.tk-cx-trust { position: absolute; inset-inline: calc(var(--su) * 9); inset-block-end: calc(var(--su) * 4); height: calc(var(--su) * 2.5); overflow: hidden; opacity: 0; border-radius: 2px; background: var(--hair); transition: opacity .3s ease; }
+.tk-cx-chip[data-s="fraud"] { opacity: 0; }
+.tk-cx-chip .tk-cx-mk { position: absolute; inset-block-start: calc(var(--su) * -5); inset-inline-end: calc(var(--su) * -5); border-radius: 50%; box-shadow: 0 0 0 1.5px var(--white); }
+.tk-cx-ico { flex: none; display: grid; place-items: center; width: calc(var(--su) * 18); height: calc(var(--su) * 18); border-radius: calc(var(--su) * 5); background: var(--paper); color: var(--muted); transition: background-color .35s ease, color .35s ease; }
+.tk-cx-ico svg { width: 68%; height: 68%; stroke-width: 1.7; }
+.tk-cx-chip .tk-cx-tx b { font-size: max(8px, calc(var(--su) * 9.5)); color: var(--ink-soft); }
+.tk-cx-chip .tk-cx-tx small { font-size: max(7px, calc(var(--su) * 8)); }
+.tk-cx-trust { position: absolute; inset-inline: calc(var(--su) * 6); inset-block-end: calc(var(--su) * 2.5); height: calc(var(--su) * 2); overflow: hidden; opacity: 0; border-radius: 2px; background: var(--hair); transition: opacity .3s ease; }
 .tk-cx-trust::after { content: ""; position: absolute; inset: 0; background: var(--tk-ok); transform: scaleX(var(--trust, 0)); transform-origin: var(--origin-x); }
 .tk-cx-chip:not([data-s="raw"]) {
   border-style: solid; border-color: var(--hair); background: var(--white);
-  box-shadow: 0 calc(var(--su) * 10) calc(var(--su) * 20) calc(var(--su) * -14) rgb(from var(--ink) r g b / .35);
+  box-shadow: 0 calc(var(--su) * 8) calc(var(--su) * 16) calc(var(--su) * -11) rgb(from var(--ink) r g b / .35);
 }
 .tk-cx-chip:not([data-s="raw"]) .tk-cx-ico { color: var(--ink); }
 .tk-cx-chip:not([data-s="raw"]) .tk-cx-tx b { color: var(--ink); }
@@ -764,95 +770,89 @@
 
 /* ── Act two: HelloVerify, its bonds, and the fraud database ── */
 .tk-cx-hub {
-  z-index: 2; box-sizing: border-box; display: grid; place-items: center;
-  width: calc(var(--su) * 140); height: calc(var(--su) * 50); border-radius: 999px; border: 1px solid var(--hair); background: var(--white);
+  z-index: 2; box-sizing: border-box; display: grid; place-items: center; align-content: center; gap: calc(var(--su) * 3);
+  width: calc(var(--su) * 150); height: calc(var(--su) * 60); border-radius: calc(var(--su) * 18); border: 1px solid var(--hair); background: var(--white);
   box-shadow: 0 0 0 calc(var(--su) * 6) rgb(from var(--primary) r g b / .07), 0 calc(var(--su) * 16) calc(var(--su) * 30) calc(var(--su) * -16) rgb(from var(--primary) r g b / .45);
 }
 .tk-cx-hub svg { width: calc(var(--su) * 100); height: auto; }
+.tk-cx-hub small { display: inline-flex; align-items: baseline; gap: calc(var(--su) * 5); font-family: var(--mono); font-size: max(7px, calc(var(--su) * 7.5)); color: var(--muted); white-space: nowrap; }
+.tk-cx-hub small:lang(en) { letter-spacing: .08em; text-transform: uppercase; }
+.tk-cx-year { direction: ltr; unicode-bidi: isolate; font-family: var(--serif); font-size: max(9px, calc(var(--su) * 11)); font-weight: 400; letter-spacing: 0; color: var(--ink); }
 .tk-cx-bonds { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; transform: scaleX(var(--flip)); }
 .tk-cx-bond {
-  fill: none; stroke: color-mix(in srgb, var(--tk-ok) calc(var(--b, 1) * 100%), var(--tick-off)); stroke-width: calc(1px + var(--b, 1) * 2.2px); stroke-linecap: round;
+  fill: none; stroke: color-mix(in srgb, var(--tk-ok) calc(var(--b, 1) * 100%), var(--tick-off)); stroke-width: calc(.8px + var(--b, 1) * 1.8px); stroke-linecap: round;
   stroke-dasharray: 1; stroke-dashoffset: calc(1 - min(1, var(--b, 1) * 3)); opacity: calc(.4 + .6 * var(--b, 1));
 }
-.tk-cx-dblink { fill: none; stroke: var(--primary); stroke-width: 1.4px; stroke-dasharray: 3 4; }
+.tk-cx-dblink { fill: none; stroke: var(--primary); stroke-width: 1.2px; stroke-dasharray: 3 4; }
 .tk-cx-pulse { fill: var(--tk-ok); opacity: 0; }
 .tk-cx-pulse-bad { fill: var(--primary); }
 
 .tk-cx-db {
-  box-sizing: border-box; width: calc(var(--su) * 280); height: calc(var(--su) * 192); padding: calc(var(--su) * 10);
-  border-radius: calc(var(--su) * 16); border: 1px solid var(--hair); background: var(--white);
+  box-sizing: border-box; width: calc(var(--su) * 280); height: calc(var(--su) * 236); padding: calc(var(--su) * 9);
+  border-radius: calc(var(--su) * 14); border: 1px solid var(--hair); background: var(--white);
   box-shadow: 0 calc(var(--su) * 18) calc(var(--su) * 34) calc(var(--su) * -22) rgb(from var(--ink) r g b / .38);
 }
-.tk-cx-db-h { display: flex; align-items: center; gap: calc(var(--su) * 7); height: calc(var(--su) * 26); padding-inline: calc(var(--su) * 4); color: var(--primary); }
-.tk-cx-db-h > svg { flex: none; width: calc(var(--su) * 16); height: calc(var(--su) * 16); stroke-width: 1.6; }
-.tk-cx-db-h b { font-size: max(9px, calc(var(--su) * 11.5)); font-weight: 600; color: var(--ink); white-space: nowrap; }
+.tk-cx-db-h { display: flex; align-items: center; gap: calc(var(--su) * 6); height: calc(var(--su) * 30); padding-inline: calc(var(--su) * 4); color: var(--primary); }
+.tk-cx-db-h > svg { flex: none; width: calc(var(--su) * 15); height: calc(var(--su) * 15); stroke-width: 1.6; }
+.tk-cx-db-h b { font-size: max(9px, calc(var(--su) * 11)); font-weight: 600; color: var(--ink); white-space: nowrap; }
 .tk-cx-safe {
-  display: inline-flex; align-items: center; gap: calc(var(--su) * 4); height: calc(var(--su) * 20); margin-inline-start: auto; padding-inline: calc(var(--su) * 7);
-  border-radius: 999px; border: 1px solid var(--hair); font-size: max(8px, calc(var(--su) * 9.5)); color: var(--muted); white-space: nowrap;
+  display: inline-flex; align-items: center; gap: calc(var(--su) * 4); height: calc(var(--su) * 19); margin-inline-start: auto; padding-inline: calc(var(--su) * 7);
+  border-radius: 999px; border: 1px solid var(--hair); font-size: max(7.5px, calc(var(--su) * 9)); color: var(--muted); white-space: nowrap;
   transition: border-color .4s ease, background-color .4s ease, color .4s ease;
 }
-.tk-cx-safe svg { width: calc(var(--su) * 11); height: calc(var(--su) * 11); stroke-width: 1.8; }
+.tk-cx-safe svg { width: calc(var(--su) * 10); height: calc(var(--su) * 10); stroke-width: 1.8; }
 .tk-cx-db[data-safe] .tk-cx-safe { border-color: rgb(from var(--tk-ok) r g b / .45); background: var(--tk-ok-pale); color: var(--tk-ok-ink); }
 .tk-cx-db ul { display: grid; gap: calc(var(--su) * 4); margin: 0; margin-block-start: calc(var(--su) * 8); padding: 0; list-style: none; }
 .tk-cx-db li {
-  display: flex; align-items: center; gap: calc(var(--su) * 6); height: calc(var(--su) * 24); padding-inline: calc(var(--su) * 7);
-  border-radius: calc(var(--su) * 7); background: var(--paper); color: var(--primary); opacity: var(--o, 1); translate: 0 calc((1 - var(--o, 1)) * var(--su) * 6);
+  display: flex; align-items: center; gap: calc(var(--su) * 6); height: calc(var(--su) * 22); padding-inline: calc(var(--su) * 7);
+  border-radius: calc(var(--su) * 6); background: var(--paper); opacity: var(--o, 1); translate: 0 calc((1 - var(--o, 1)) * var(--su) * 6);
 }
-.tk-cx-x { flex: none; width: calc(var(--su) * 12); height: calc(var(--su) * 12); }
+.tk-cx-x { flex: none; width: calc(var(--su) * 11); height: calc(var(--su) * 11); }
 .tk-cx-x circle { fill: var(--primary); }
 .tk-cx-x path { fill: none; stroke: var(--white); stroke-width: 2; stroke-linecap: round; }
-.tk-cx-row-l { flex: 1; min-width: 0; font-size: max(8.5px, calc(var(--su) * 10)); color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tk-cx-id { position: relative; flex: none; width: calc(var(--su) * 72); height: calc(var(--su) * 12); font-size: max(8px, calc(var(--su) * 9.5)); line-height: calc(var(--su) * 12); color: var(--muted); white-space: nowrap; overflow: hidden; }
+.tk-cx-row-l { flex: 1; min-width: 0; font-size: max(8px, calc(var(--su) * 9.5)); color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tk-cx-id { position: relative; flex: none; width: calc(var(--su) * 72); height: calc(var(--su) * 11); font-size: max(7.5px, calc(var(--su) * 9)); line-height: calc(var(--su) * 11); color: var(--muted); white-space: nowrap; overflow: hidden; }
 .tk-cx-id::after { content: ""; position: absolute; inset: 0; border-radius: 3px; background: var(--ink); transform: scaleX(var(--m, 1)); transform-origin: var(--origin-x); }
 
-/* ── Over the board: the act's tag, the tallies, the figures, the caption ── */
-.tk-cx-tag { position: absolute; z-index: 3; inset-block-start: calc(var(--su) * 16); inset-inline-start: calc(var(--su) * 18); display: grid; }
-.tk-cx-tag > span {
-  grid-area: 1 / 1; justify-self: start; display: inline-flex; align-items: center; gap: calc(var(--su) * 7); height: calc(var(--su) * 26); padding-inline: calc(var(--su) * 10) calc(var(--su) * 12);
-  border-radius: 999px; border: 1px solid var(--hair); background: var(--white); font-family: var(--mono); font-size: max(8.5px, calc(var(--su) * 10)); color: var(--muted); white-space: nowrap;
-  opacity: 0; translate: 0 -6px; transition: opacity .35s ease, translate .45s cubic-bezier(.2, .8, .2, 1);
-}
-.tk-cx-tag:lang(en) > span { letter-spacing: .08em; text-transform: uppercase; }
-:is([data-act="0"] .tk-cx-tag > [data-a="0"], [data-act="1"] .tk-cx-tag > [data-a="1"], [data-act="2"] .tk-cx-tag > [data-a="2"]) { opacity: 1; translate: 0 0; }
-[data-mark] .tk-cx-tag > [data-a="2"] { opacity: 0; translate: 0 -6px; }
-.tk-cx-live { width: calc(var(--su) * 7); height: calc(var(--su) * 7); border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 calc(var(--su) * 3) rgb(from var(--primary) r g b / .15); }
-.tk-cx-year { direction: ltr; unicode-bidi: isolate; font-family: var(--serif); font-size: calc(var(--su) * 15); font-weight: 400; letter-spacing: 0; color: var(--ink); }
-.tk-cx-tag [data-k] { flex: none; width: calc(var(--su) * 7); height: calc(var(--su) * 7); border-radius: 50%; background: var(--ink-soft); }
-.tk-cx-tag [data-k]:not(:first-child) { margin-inline-start: calc(var(--su) * 6); }
-.tk-cx-tag [data-k="i"] { background: var(--tk-ok); }
-.tk-cx-tag [data-k="f"] { background: var(--primary); }
-
-:is(.tk-cx-tally, .tk-cx-figs) {
-  position: absolute; z-index: 3; inset-inline: calc(var(--su) * 22); inset-block-end: calc(var(--su) * 18);
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: calc(var(--su) * 14); padding-block-start: calc(var(--su) * 12); border-block-start: 1px solid var(--hair);
+/* ── Act three: the site's figures, and the caption under the mark ── */
+.tk-cx-figs {
+  position: absolute; z-index: 3; inset-inline: calc(var(--su) * 10); inset-block-end: 0;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: calc(var(--su) * 16); padding-block: calc(var(--su) * 26) calc(var(--su) * 4);
+  background: linear-gradient(to top, var(--paper) 62%, rgb(from var(--paper) r g b / 0));
   opacity: 0; translate: 0 10px; transition: opacity .4s ease, translate .6s cubic-bezier(.2, .8, .2, 1);
 }
-.tk-cx-figs { grid-template-columns: repeat(4, minmax(0, 1fr)); background: var(--white); }
-:is(.tk-cx-tally, .tk-cx-figs) > span { display: grid; gap: calc(var(--su) * 3); align-content: start; }
-:is(.tk-cx-tally, .tk-cx-figs) b {
-  direction: ltr; unicode-bidi: isolate; justify-self: start; font-family: var(--serif); font-size: calc(var(--su) * 26); font-weight: 400;
-  line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--ink);
+.tk-cx-figs > span { display: grid; gap: calc(var(--su) * 3); align-content: start; padding-block-start: calc(var(--su) * 12); border-block-start: 1px solid var(--hair); }
+.tk-cx-figs b {
+  direction: ltr; unicode-bidi: isolate; justify-self: start; font-family: var(--serif); font-size: calc(var(--su) * 32); font-weight: 400;
+  line-height: 1; letter-spacing: -.02em; font-variant-numeric: tabular-nums; color: var(--primary-ink);
 }
-.tk-cx-figs b { color: var(--primary-ink); }
-:is(.tk-cx-tally, .tk-cx-figs) small { font-size: max(8px, calc(var(--su) * 9.5)); line-height: 1.3; color: var(--muted); }
-:is([data-act="0"] .tk-cx-tally, [data-act="2"] .tk-cx-figs) { opacity: 1; translate: 0 0; }
+.tk-cx-figs small { font-size: max(8px, calc(var(--su) * 9.5)); line-height: 1.3; color: var(--muted); }
+[data-act="2"] .tk-cx-figs { opacity: 1; translate: 0 0; }
 
 .tk-cx-cap {
-  position: absolute; z-index: 3; inset-inline: calc(var(--su) * 60); inset-block-start: calc(var(--su) * 284); margin: 0;
-  text-align: center; font-family: var(--serif); font-size: calc(var(--su) * 17); line-height: 1.3; color: var(--ink-soft); text-wrap: balance;
+  position: absolute; z-index: 3; inset-inline: calc(var(--su) * 60); inset-block-start: calc(var(--su) * 340); margin: 0;
+  text-align: center; font-family: var(--serif); font-size: calc(var(--su) * 19); line-height: 1.3; color: var(--ink-soft); text-wrap: balance;
   opacity: 0; translate: 0 8px; transition: opacity .5s ease, translate .7s cubic-bezier(.2, .8, .2, 1);
 }
 [data-cap] .tk-cx-cap { opacity: 1; translate: 0 0; }
 
-/* ── Phone and tablet: the claim on show over the board, one at a time ── */
+/* ── Phone and tablet: the claim on show over the scene, one at a time ── */
 @media (max-width: 1080px) {
   .tk-cmp { padding-block-start: 76px; }
-  .tk-cx-run { height: 600vh; }
-  .tk-cx-pin { grid-template-columns: minmax(0, 1fr); align-content: center; gap: 22px; padding-block: 64px 16px; }
-  .tk-cx-step h3 { font-size: 24px; }
-  .tk-cx-p > p { font-size: 15px; }
-  .tk-cx-end { max-width: none; font-size: 32px; }
-  .tk-cx-board { width: min(100%, calc((100svh - 330px) * 560 / 520)); }
+  .tk-cx-run { height: 620vh; }
+  .tk-cx-pin { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-items: stretch; gap: 10px; padding-block: 72px 10px; }
+  .tk-cx-cv { mask-image: linear-gradient(to bottom, transparent 20%, black 36%); }
+  .tk-cx-copy { align-self: end; }
+  .tk-cx-board { width: 100vw; margin-inline: calc(50% - 50vw); }
+  .tk-cx-step h3 { font-size: 22px; }
+  .tk-cx-p > p { font-size: 14.5px; }
+  .tk-cx-end { max-width: none; font-size: 30px; }
+}
+/* The tall layout; without script the scene rests on the wide one's places. */
+@media (max-width: 1080px) and (scripting: enabled) {
+  .tk-cx-art { --sw: 400; }
+  .tk-cx-cap { inset-inline: calc(var(--su) * 24); }
+  .tk-cx-figs { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: calc(var(--su) * 10); }
 }
 @media (max-width: 1080px) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .tk-cx-copy { display: grid; }
@@ -863,8 +863,12 @@
 /* ── Reduced motion and no script: no runway; the claims in a column ── */
 @media (prefers-reduced-motion: reduce), (scripting: none) {
   .tk-cx-run { height: auto; }
-  .tk-cx-pin { position: static; height: auto; padding-block: 40px 0; }
+  .tk-cx-pin { position: relative; height: auto; padding-block: 40px 0; }
   .tk-cx-end { order: -1; }
+  .tk-cx-board { height: min(720px, 60vw); }
+}
+@media (max-width: 1080px) and ((prefers-reduced-motion: reduce) or (scripting: none)) {
+  .tk-cx-board { height: 92vw; }
 }
 
 /* ═══════════════════════════════════════════════════════ PLATFORM AREAS ═══
