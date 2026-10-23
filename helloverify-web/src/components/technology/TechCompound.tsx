@@ -1,45 +1,50 @@
-/** "A platform that gets stronger with every verification" on `/technology`.
-    The headline's claim is proved by a race (`./TechRace`): a static system
-    and HelloVerify run the same cases on one clock, and only one of them
-    gets faster, and safer, with each. The three claims sit under it and
-    light as the race reaches the moment each one describes. */
-import type { CSSProperties, ReactNode } from "react";
+/** "A platform that gets stronger with every verification" on `/technology`,
+    as one scroll story. A tall runway pins the three claims beside a board
+    (`./TechGrowBoard`): scrolling builds the claims up one by one while the
+    board plays each in turn, and the headline lands last, as their sum. It
+    leads the markup, so it still heads the section when read out. The
+    scroll is `./TechCompoundStage`. */
+import type { ReactNode } from "react";
 import "@/app/v2/tech.css";
 import type { PlatformCopy } from "@/lib/copy/platform";
+import type { TechArt } from "./TechPillarKit";
 import { TechCompoundStage } from "./TechCompoundStage";
-import { TechRace } from "./TechRace";
+import { TechGrowBoard } from "./TechGrowBoard";
 
 export function TechCompound({
   h,
-  sub,
   cards,
-  race,
+  grow,
+  art,
 }: {
   h: ReactNode;
-  sub: string;
   cards: { t: string; p: string }[];
-  race: PlatformCopy["technology"]["compound"]["race"];
+  grow: PlatformCopy["technology"]["compound"]["grow"];
+  art: TechArt;
 }) {
   return (
     <TechCompoundStage>
-      <div className="sec-head tk-head">
-        <h2 className="h2 tk-rv tk-cmp-h">{h}</h2>
-        <p className="lede tk-rv tk-rv2">{sub}</p>
+      <div className="tk-cx-run">
+        <div className="wrap tk-cx-pin">
+          <div className="tk-cx-copy">
+            <h2 className="h2 tk-cx-end">{h}</h2>
+            <ol className="tk-cx-steps">
+              {cards.map((c, i) => (
+                <li key={c.t} className="tk-cx-step">
+                  <span className="tk-cx-n" aria-hidden="true">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3>{c.t}</h3>
+                  <div className="tk-cx-p">
+                    <p>{c.p}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <TechGrowBoard g={grow} art={art} />
+        </div>
       </div>
-
-      <TechRace r={race} />
-
-      <ol className="tk-cmp-list tk-rc-claims">
-        {cards.map((c, i) => (
-          <li key={c.t} className="tk-cmp-c" data-k={`c${i}`} style={{ "--d": `${(0.2 + i * 0.12).toFixed(2)}s` } as CSSProperties}>
-            <span className="tk-cmp-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-            <div>
-              <h3>{c.t}</h3>
-              <p>{c.p}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
     </TechCompoundStage>
   );
 }

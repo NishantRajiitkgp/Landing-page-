@@ -1967,8 +1967,13 @@ const PLATFORM_FILES: Record<string, readonly [number, number]> = {
    *  five `orbit` words and `art.static`/`art.compounding` (-8). In:
    *  `compound.race` (+44): its lanes, narration and keeps, four figures
    *  already on `/about` or the homepage (a value and a label each) and its
-   *  pause control's two labels. All plain strings. */
-  technology: [52, 194],
+   *  pause control's two labels. All plain strings.
+   *  194 -> 186: the race became a scroll story. Out: `compound.race`
+   *  (-44). In: `compound.grow` (+36): five candidates, two check types,
+   *  four kinds of institution and a city, the tallies, the frauds and the
+   *  database's words, the legend, the same four figures and the caption
+   *  under the mark. All plain strings. */
+  technology: [52, 186],
   security: [43, 99],
 };
 
@@ -2004,8 +2009,8 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 482 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 482 &&
+  "platform holds 474 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 474 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
@@ -2043,10 +2048,11 @@ check(
  *  captions. 365 -> 407 (23 Oct 2026): the pillar story, 67 labels in for
  *  25 out (see `technology` above). 407 -> 426: the hero globe's 20, less
  *  the `art.sources` label the caption no longer draws. 426 -> 462: the
- *  compounding race (see `technology` above). Rich text is unchanged at 20. */
+ *  compounding race (see `technology` above). 462 -> 454: the race became
+ *  the scroll story. Rich text is unchanged at 20. */
 check(
-  "platform: 462 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 462 &&
+  "platform: 454 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 454 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },

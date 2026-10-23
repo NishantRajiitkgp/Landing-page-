@@ -55,12 +55,7 @@ export default async function TechnologyPage({
 
       <TechPillars h={d.pillars.h} sub={d.pillars.sub} cards={Object.values(d.pillars.cards)} art={d.art} />
 
-      <TechCompound
-        h={d.compound.h}
-        sub={d.compound.sub}
-        cards={Object.values(d.compound.cards)}
-        race={d.compound.race}
-      />
+      <TechCompound h={d.compound.h} cards={Object.values(d.compound.cards)} grow={d.compound.grow} art={d.art} />
 
       <TechAreas
         h={d.platform.h}

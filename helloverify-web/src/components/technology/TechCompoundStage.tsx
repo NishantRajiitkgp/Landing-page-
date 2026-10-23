@@ -1,141 +1,110 @@
 "use client";
 
-/** The clock of the `/technology` race (`./TechRace`, `./techRaceData`).
+/** The scroll of the `/technology` compounding story (`./TechCompound`).
 
-    - `tk-in` is added the first time the section is on screen, for the
-      head and the claims to rise in.
-    - The loop: a beat, the race (both lanes on one clock), a rest on the
-      result, HelloVerify's lane becoming every check since 2018 with the
-      site's figures, a fade, and again. Written to the section, read by the
-      stylesheet:
-        `--c`          the clock, in case units (0 to `SPAN`)
-        `data-st`, `data-hv`   the case each lane is on, or `end`
-        `data-claim`   the claim HelloVerify's current case proves
-        `data-phase`   `race`, `done`, `scale` or `fade`
-    - It runs only on screen, in a visible tab, and not paused (WCAG 2.2.2).
-      Under reduced motion it shows the finished race and never moves. */
+    Scroll through the runway is story time, 0 to `END` (`./techGrowPlan`),
+    followed through a short ease so a wheel notch glides instead of
+    jumping. It writes to the section `data-step`, the claim on show (0 to
+    2), and `data-end` once the headline lands, and hands the time to
+    `./techGrow`, fetched as the section nears, which draws the board.
+    Under reduced motion the stylesheet drops the runway and the board
+    shows its last frame. */
+import { useEffect, useRef, type ReactNode } from "react";
+import { whenNear } from "@/lib/whenNear";
+import { ACT, CONCLUDE, END } from "./techGrowPlan";
+import type { TechGrow } from "./techGrow";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import { CLAIM, HV, SPAN, STATIC } from "./techRaceData";
-
-const BEAT = 0.6;
-const RACE = 13;
-const DONE = 1.4;
-const SCALE = 4.6;
-const FADE = 0.8;
-const LOOP = BEAT + RACE + DONE + SCALE + FADE;
-const PAUSE_D = "M5 3.5h2v9H5zM9 3.5h2v9H9z";
-const PLAY_D = "M5 3.5v9l7-4.5z";
-
-const onCase = (plan: { s: number; d: number }[], c: number) => {
-  const last = plan[plan.length - 1];
-  if (c >= last.s + last.d) return plan.length - 1;
-  let i = 0;
-  while (i + 1 < plan.length && plan[i + 1].s <= c) i++;
-  return i;
-};
+const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
 export function TechCompoundStage({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLElement>(null);
-  const [seen, setSeen] = useState(false);
 
   useEffect(() => {
     const root = ref.current;
-    if (!root) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (!e.isIntersecting) return;
-        setSeen(true);
-        io.disconnect();
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(root);
-
+    const run = root?.querySelector<HTMLElement>(".tk-cx-run");
+    const art = root?.querySelector<HTMLElement>(".tk-cx-art");
+    const canvas = art?.querySelector("canvas");
+    if (!root || !run || !art || !canvas) return;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const btn = root.querySelector<HTMLButtonElement>("[data-fw-pause]");
-    const wrote: Record<string, string> = {};
-    const put = (k: string, val: string) => {
-      if (wrote[k] === val) return;
-      wrote[k] = val;
-      if (k.startsWith("--")) root.style.setProperty(k, val);
-      else root.dataset[k] = val;
+
+    let engine: TechGrow | null = null;
+    let shown = -1;
+    const show = (t: number) => {
+      shown = t;
+      const step = String(t < ACT[1] ? 0 : t < ACT[2] ? 1 : 2);
+      if (root.dataset.step !== step) root.dataset.step = step;
+      if (t >= CONCLUDE) root.dataset.end = "";
+      else delete root.dataset.end;
+      engine?.render(t);
     };
 
-    const apply = (t: number) => {
-      const c = Math.min(SPAN, Math.max(0, ((t - BEAT) / RACE) * SPAN));
-      const phase = t < BEAT + RACE ? "race" : t < BEAT + RACE + DONE ? "done" : t < LOOP - FADE ? "scale" : "fade";
-      const late = phase === "scale" || phase === "fade";
-      const hv = onCase(HV, c);
-      put("--c", c.toFixed(3));
-      put("phase", phase);
-      put("st", late ? "end" : String(onCase(STATIC, c)));
-      put("hv", late ? "end" : String(hv));
-      put("claim", phase === "race" ? String(CLAIM[hv]) : "");
+    // The story starts a little before the frame pins and ends as it lets go.
+    let top = 0;
+    let span = 1;
+    const measure = () => {
+      const r = run.getBoundingClientRect();
+      const vh = window.innerHeight;
+      top = r.top + window.scrollY - vh * 0.35;
+      span = Math.max(1, r.height - vh * 0.65);
     };
+    const read = () => (reduce.matches ? END : clamp((window.scrollY - top) / span, 0, 1) * END);
 
-    let clock = 0;
+    let cur = -1;
+    let target = 0;
     let raf = 0;
-    let last = 0;
-    let visible = false;
-    let paused = false;
-    const tick = (now: number) => {
-      const dt = last ? Math.min(0.05, (now - last) / 1000) : 0;
-      last = now;
-      clock = (clock + dt) % LOOP;
-      apply(clock);
-      raf = requestAnimationFrame(tick);
+    let then = 0;
+    const step = (now: number) => {
+      const dt = Math.min(50, now - then);
+      then = now;
+      cur = cur < 0 ? target : cur + (target - cur) * (1 - Math.exp(-dt / 130));
+      if (Math.abs(target - cur) < 0.0004) cur = target;
+      show(cur);
+      raf = cur === target ? 0 : requestAnimationFrame(step);
     };
     const kick = () => {
-      if (reduce.matches) {
-        cancelAnimationFrame(raf);
-        raf = 0;
-        apply(BEAT + RACE + DONE + 0.01);
-        return;
-      }
-      const run = visible && !paused && !document.hidden;
-      if (run && !raf) {
-        last = 0;
-        raf = requestAnimationFrame(tick);
-      } else if (!run && raf) {
-        cancelAnimationFrame(raf);
-        raf = 0;
-      }
+      target = read();
+      if (raf) return;
+      then = performance.now();
+      raf = requestAnimationFrame(step);
     };
-
-    const watch = new IntersectionObserver(([e]) => {
-      visible = e.isIntersecting;
-      kick();
-    });
-    const box = root.querySelector(".tk-rc-box");
-    if (box) watch.observe(box);
-    apply(0);
-    kick();
-
-    const toggle = () => {
-      paused = !paused;
-      if (paused) root.dataset.paused = "";
-      else delete root.dataset.paused;
-      btn?.setAttribute("aria-label", (paused ? btn.dataset.play : btn.dataset.pause) ?? "");
-      btn?.querySelector("path")?.setAttribute("d", paused ? PLAY_D : PAUSE_D);
+    const jump = () => {
+      measure();
+      cur = -1;
       kick();
     };
-    btn?.addEventListener("click", toggle);
-    reduce.addEventListener("change", kick);
-    document.addEventListener("visibilitychange", kick);
 
+    const stop = whenNear(
+      art,
+      () => import("./techGrow"),
+      ({ TechGrow }) => {
+        const e = new TechGrow(art, canvas);
+        engine = e;
+        art.dataset.live = "";
+        e.render(shown < 0 ? read() : shown);
+        return () => {
+          e.destroy();
+          engine = null;
+        };
+      },
+      "1200px 0px",
+    );
+
+    jump();
+    window.addEventListener("scroll", kick, { passive: true });
+    const ro = new ResizeObserver(jump);
+    ro.observe(run);
+    reduce.addEventListener("change", jump);
     return () => {
-      io.disconnect();
-      watch.disconnect();
+      stop();
+      ro.disconnect();
       cancelAnimationFrame(raf);
-      btn?.removeEventListener("click", toggle);
-      reduce.removeEventListener("change", kick);
-      document.removeEventListener("visibilitychange", kick);
+      window.removeEventListener("scroll", kick);
+      reduce.removeEventListener("change", jump);
     };
   }, []);
 
   return (
-    <section ref={ref} className={seen ? "wrap tk-cmp tk-in" : "wrap tk-cmp"}>
+    <section ref={ref} className="tk-cmp" data-step="0">
       {children}
     </section>
   );
