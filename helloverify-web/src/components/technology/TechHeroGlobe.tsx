@@ -148,7 +148,7 @@ export function TechHeroGlobe({ art }: { art: TechArt }) {
         </div>
 
         <p className="tk-gl-cap">
-          {art.sources} · {g.more}
+          {g.more}
         </p>
       </div>
 

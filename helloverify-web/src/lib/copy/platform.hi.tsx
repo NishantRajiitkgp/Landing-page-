@@ -427,7 +427,6 @@ export const hi: PlatformCopy = {
 
     art: {
       ai: "AI",
-      sources: "अधिकृत स्रोत",
       ready: "सत्यापन के लिए तैयार",
       manual: "कोई मैन्युअल प्रविष्टि नहीं",
       registrar: "रजिस्ट्रार",
@@ -459,7 +458,7 @@ export const hi: PlatformCopy = {
         trained: "लाखों सत्यापनों पर प्रशिक्षित",
         checking: "जाँच जारी",
         verified: "सत्यापित",
-        more: "और भी, दुनिया भर में",
+        more: "दुनिया भर में अधिकृत स्रोत",
         pause: "एनिमेशन रोकें",
         play: "एनिमेशन चलाएँ",
       },

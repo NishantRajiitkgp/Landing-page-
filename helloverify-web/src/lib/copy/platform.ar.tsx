@@ -425,7 +425,6 @@ export const ar: PlatformCopy = {
 
     art: {
       ai: "ذكاء اصطناعي",
-      sources: "المصادر المعتمدة",
       ready: "جاهزة للتحقق",
       manual: "دون إدخال يدوي",
       registrar: "المسجّل",
@@ -457,7 +456,7 @@ export const ar: PlatformCopy = {
         trained: "مدرَّب على ملايين عمليات التحقق",
         checking: "قيد التحقق",
         verified: "موثَّق",
-        more: "والمزيد حول العالم",
+        more: "مصادر معتمدة حول العالم",
         pause: "إيقاف الحركة مؤقتًا",
         play: "تشغيل الحركة",
       },

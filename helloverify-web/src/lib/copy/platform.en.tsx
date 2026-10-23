@@ -506,7 +506,6 @@ export const en = {
      *  researched and routed abroad, so the specimen values recur card to card. */
     art: {
       ai: "AI",
-      sources: "Authorised sources",
       ready: "Verification-ready",
       manual: "No manual entry",
       registrar: "Registrar",
@@ -540,7 +539,7 @@ export const en = {
         trained: "Trained on millions of verifications",
         checking: "Checking",
         verified: "Verified",
-        more: "and more, worldwide",
+        more: "Authorised sources worldwide",
         pause: "Pause animation",
         play: "Play animation",
       },
