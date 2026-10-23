@@ -486,6 +486,12 @@ const BASELINE = {
   "decl #A9ADAF": { n: 1, why: "--v2-fc-roof: tin roofs in a capture" },
   "decl #8A5236": { n: 1, why: "--v2-fc-rust: rusted tin roofs in a capture" },
 
+  // ── /technology (`src/app/v2/tech.css`, 23 Oct 2026): the pillar story's
+  //    verified green, the one colour that has to read apart from the red
+  //    that flags fraud on the same card. Text takes `--tk-ok-ink`, a mix
+  //    with black at 5.6:1 on --white, never this directly.
+  "decl #1F9D55": { n: 1, why: "--tk-ok: verified on the technology story (ticks, Verified pills, green routes)" },
+
   // ── homepage v2 · How we know (`src/app/v2/how.css`): the case file's table
   //    and rails, and the custody orb. All surfaces.
   "decl #F4F1EA": { n: 1, why: "--v2-hw-table: the desk the specimen lies on" },
