@@ -59,11 +59,7 @@ export default async function TechnologyPage({
         h={d.compound.h}
         sub={d.compound.sub}
         cards={Object.values(d.compound.cards)}
-        trust={d.compound.trust}
-        orbit={d.compound.orbit}
-        stats={d.compound.stats}
-        motion={{ pause: d.compound.pause, play: d.compound.play }}
-        art={d.art}
+        race={d.compound.race}
       />
 
       <TechAreas

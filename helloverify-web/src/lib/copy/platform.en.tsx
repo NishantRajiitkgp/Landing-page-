@@ -427,25 +427,53 @@ export const en = {
           p: "More customers means more verifications, more data, more connections and better outcome for everyone.",
         },
       },
-      trust: "Trust",
-      orbit: {
-        verifications: "Verifications",
-        intelligence: "Intelligence",
-        institutions: "Institutions",
-        customers: "Customers",
-        ecosystem: "Ecosystem",
+      /** The race beside the claims: the same eight cases, from three
+       *  customers, run by a static system and by HelloVerify on one clock.
+       *  `say*` narrate HelloVerify's lane case by case; `keep*` are what it
+       *  keeps. The scale figures are the site's own (`/about`, the homepage
+       *  fraud band); none is new here. */
+      race: {
+        clock: "Same cases · same clock",
+        staticName: "A static system",
+        staticTag: "Starts from zero, every time",
+        hvTag: "Compounds with every check",
+        keeps: "What it keeps",
+        nothing: "Nothing. The next case starts from zero.",
+        customer: "Customer",
+        degree: "Degree",
+        employment: "Employment",
+        licence: "Medical licence",
+        iit: "IIT Delhi",
+        abc: "ABC Tech",
+        uae: "UAE",
+        checking: "Checking",
+        verified: "Verified",
+        caught: "Forgery caught",
+        missed: "Forgery missed",
+        again: "From zero, again.",
+        passed: "A forged degree passes: there is nothing to compare it with.",
+        still: "Still starting from zero.",
+        say1: "New institution: researched once, its registrar kept.",
+        say2: "New employer: its verified HR contact joins the network.",
+        say3: "A new customer's check goes to a source we already know.",
+        say4: "The forged seal matches a learned pattern. Caught.",
+        say5: "Known employer, verified contact on file.",
+        say6: "A new country, reached through the authority network.",
+        say7: "Every answer makes the next one faster.",
+        keepRegistrar: "IIT Delhi registrar",
+        keepHr: "ABC Tech HR contact",
+        keepB: "Customer B joined",
+        keepPattern: "Forged seal pattern",
+        keepC: "Customer C joined",
+        keepUae: "UAE medical council",
+        scale: "Now multiply it by every check since 2018.",
+        checks: { v: "20M+", l: "checks completed since 2018" },
+        fraud: { v: "12–14%", l: "of applications flagged for fraud" },
+        countries: { v: "120+", l: "countries, checked at the source" },
+        clients: { v: "2,000+", l: "enterprise clients" },
+        pause: "Pause animation",
+        play: "Play animation",
       },
-      /** The flywheel's four stations, one figure each. Every figure is one
-       *  the site already states (`/about`, the homepage's fraud band); none
-       *  is new here. */
-      stats: {
-        verifications: { v: "20M+", l: "checks completed since 2018" },
-        intelligence: { v: "12–14%", l: "of applications flagged for fraud" },
-        institutions: { v: "120+", l: "countries, checked at the source" },
-        customers: { v: "2,000+", l: "enterprise clients" },
-      },
-      pause: "Pause animation",
-      play: "Play animation",
     },
 
     platform: {
@@ -526,8 +554,6 @@ export const en = {
       consent: "Consent",
       legalised: "Legalisation",
       residency: "Data residency",
-      static: "Static",
-      compounding: "Compounding",
       monitored: "Monitored",
       once: "Verified once",
       /** The hero globe: one case routed through four authorities abroad.
