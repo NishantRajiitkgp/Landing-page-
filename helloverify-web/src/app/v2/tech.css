@@ -125,7 +125,7 @@
 
 /* The case card: its four checks, each waiting, on its way, being checked, confirmed */
 .tk-gl-case {
-  position: absolute; z-index: 3; top: 0; inset-inline-start: 0; box-sizing: border-box; width: max(196px, calc(var(--gu) * 232));
+  position: absolute; z-index: 3; top: 0; inset-inline-start: 0; box-sizing: border-box; width: max(228px, calc(var(--gu) * 268));
   display: grid; gap: calc(var(--gu) * 8); padding: calc(var(--gu) * 12);
   border-radius: calc(var(--gu) * 16); border: 1px solid var(--hair); background: var(--white);
   box-shadow: 0 calc(var(--gu) * 24) calc(var(--gu) * 40) calc(var(--gu) * -26) rgb(from var(--ink) r g b / .5);

@@ -380,7 +380,7 @@ export class TechGlobe {
     // The case itself: filed into the hub, then along the route, then home.
     const feed = clamp((t - FEED.at) / FEED.dur, 0, 1);
     if (feed > 0 && feed < 1 && h[2] > 0) {
-      const a: [number, number] = [this.rtl ? BW - 212 : 212, 196];
+      const a: [number, number] = [this.rtl ? BW - 270 : 270, 196];
       const f = ease(feed);
       const cx = h[0], cy = a[1];
       const x = (1 - f) ** 2 * a[0] + 2 * (1 - f) * f * cx + f * f * h[0];
