@@ -7,8 +7,9 @@
     amid a crowd of others out of focus, and are read; each gives up what
     is behind it: an institution, or a fraud. Act two, from `ACT[1]`: the
     candidates drift away. The institutions bond to HelloVerify one by one,
-    each bond braiding tighter until the node is trusted, the trusted nodes
-    knit into a web, and the frauds are masked into the fraud database; a
+    each bond drawing out and strengthening until the node is trusted, the
+    trusted nodes knit into a web, and the frauds are masked into the fraud
+    database; a
     wider network waits out of focus. Act three, from `ACT[2]`: the view
     pulls back over every check since 2018, and the dots draw the mark.
 
@@ -153,45 +154,14 @@ export const away = (L: Layout, x: number, y: number) => {
 export const slotAt = (L: Layout, k: number) => ({ x: L.insts[k][0] - CHIP.w / 2, y: L.insts[k][1] - CHIP.h / 2 });
 export const rowAt = (L: Layout, r: number) => ({ x: L.db.x + 9, y: L.db.y + 47 + r * 26 });
 
-/* ── A bond: two strands braided round a bowed curve from the hub ── */
-export type Curve = { x0: number; y0: number; cx: number; cy: number; x1: number; y1: number; len: number };
-export const tieOf = (L: Layout, k: number): Curve => {
+/* ── A bond: a straight line from the hub to its node ── */
+export type Tie = { x0: number; y0: number; x1: number; y1: number };
+export const tieOf = (L: Layout, k: number): Tie => {
   const h = hubOf(L);
-  const [x1, y1] = L.insts[k];
-  const dx = x1 - h.cx;
-  const dy = y1 - h.cy;
-  const len = Math.hypot(dx, dy) || 1;
-  const bow = (k % 2 ? 1 : -1) * len * 0.1;
-  return { x0: h.cx, y0: h.cy, cx: (h.cx + x1) / 2 - (dy / len) * bow, cy: (h.cy + y1) / 2 + (dx / len) * bow, x1, y1, len };
+  return { x0: h.cx, y0: h.cy, x1: L.insts[k][0], y1: L.insts[k][1] };
 };
-export const along = (c: Curve, u: number): Pt => {
-  const v = 1 - u;
-  return [v * v * c.x0 + 2 * v * u * c.cx + u * u * c.x1, v * v * c.y0 + 2 * v * u * c.cy + u * u * c.y1];
-};
-export const curveD = (c: Curve) => `M${c.x0} ${c.y0}Q${c.cx.toFixed(1)} ${c.cy.toFixed(1)} ${c.x1} ${c.y1}`;
-/** The two strands, out to `draw` of the way: loose while the bond is new,
-    braided tight as `trust` grows; `twist` turns them. */
-export function strands(c: Curve, draw: number, trust: number, twist: number): [string, string] {
-  const n = 32;
-  const amp = 1.4 + 6 * (1 - trust);
-  const turns = Math.max(2, c.len / 52);
-  let a = "";
-  let b = "";
-  for (let i = 0; i <= n; i++) {
-    const u = (i / n) * draw;
-    const [px, py] = along(c, u);
-    const tx = 2 * (1 - u) * (c.cx - c.x0) + 2 * u * (c.x1 - c.cx);
-    const ty = 2 * (1 - u) * (c.cy - c.y0) + 2 * u * (c.y1 - c.cy);
-    const tl = Math.hypot(tx, ty) || 1;
-    const o = amp * Math.sin(Math.PI * u) * Math.sin(Math.PI * 2 * turns * u + twist);
-    const nx = (-ty / tl) * o;
-    const ny = (tx / tl) * o;
-    const p = i ? "L" : "M";
-    a += `${p}${(px + nx).toFixed(1)} ${(py + ny).toFixed(1)}`;
-    b += `${p}${(px - nx).toFixed(1)} ${(py - ny).toFixed(1)}`;
-  }
-  return [a, b];
-}
+export const along = (c: Tie, u: number): Pt => [c.x0 + (c.x1 - c.x0) * u, c.y0 + (c.y1 - c.y0) * u];
+export const tieD = (c: Tie) => `M${c.x0} ${c.y0}L${c.x1} ${c.y1}`;
 
 /* Story time. Act one: the cards float in, then each is read in turn. */
 export const enterAt = (i: number) => 0.04 + i * 0.06;

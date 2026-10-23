@@ -4,8 +4,8 @@
     network, so each part carries its place there: `--x`/`--y`, in scene
     units, of the wide layout (`./techGrowPlan`); `./techGrow` moves them
     to the tall one on a phone. Every card has one chip, the institution or
-    the fraud its check gives up. Each bond is two strands braided round a
-    curve, with a glow under it and a pulse each way; trusted nodes knit
+    the fraud its check gives up. Each bond is a straight line drawn out
+    from the hub, with a glow under it and a pulse each way; trusted nodes knit
     into a web, and rings of trust gather round the hub. The first
     candidate, the look-alike and four of the cities are the pillar story's
     and the hero's. Nothing here is read out. */
@@ -15,7 +15,7 @@ import { Logo } from "@/components/brand/Logo";
 import type { PlatformCopy } from "@/lib/copy/platform";
 import { CAP, DB as DB_ICON, INST, OFFICE, PERSON, SEAL, SHIELD, type TechArt } from "./TechPillarKit";
 import { TechGrowCrowd } from "./TechGrowCrowd";
-import { CARDS, CHIP, FRAUDS, INSTS, MESH, ROWS, SH, WIDE as L, curveD, hubOf, rowAt, slotAt, strands, tieOf } from "./techGrowPlan";
+import { CARDS, CHIP, FRAUDS, INSTS, MESH, ROWS, SH, WIDE as L, hubOf, rowAt, slotAt, tieD, tieOf } from "./techGrowPlan";
 
 type G = PlatformCopy["technology"]["compound"]["grow"];
 const CROSS = "M9.5 4.5h5v5h5v5h-5v5h-5v-5h-5v-5h5z";
@@ -100,13 +100,11 @@ export function TechGrowBoard({ g, art }: { g: G; art: TechArt }) {
               <line key={i} className="tk-cx-mesh" data-mesh={i} x1={L.insts[a][0]} y1={L.insts[a][1]} x2={L.insts[b][0]} y2={L.insts[b][1]} />
             ))}
             {INSTS.map((c, k) => {
-              const cv = tieOf(L, k);
-              const [sa, sb] = strands(cv, 1, 1, 0);
+              const d = tieD(tieOf(L, k));
               return (
                 <g key={c.city} className="tk-cx-tie" data-tie={k}>
-                  <path className="tk-cx-tie-glow" d={curveD(cv)} pathLength={1} />
-                  <path className="tk-cx-tie-a" d={sa} />
-                  <path className="tk-cx-tie-b" d={sb} />
+                  <path className="tk-cx-tie-glow" d={d} pathLength={1} />
+                  <path className="tk-cx-tie-line" d={d} pathLength={1} />
                   <circle className="tk-cx-pulse" r={3} cx={hub.cx} cy={hub.cy} />
                   <circle className="tk-cx-pulse tk-cx-pulse-back" r={2.2} cx={hub.cx} cy={hub.cy} />
                 </g>

@@ -16,8 +16,8 @@ import { cssRgb, type RGB } from "@/lib/cssColour";
 import {
   ACT, BOND, CAPTION, CARDS, CHIP, CHIP_IN, CONVERGE, COUNT, DB_AT, DRIFT, ENTER, FADE, FLOAT_IN, FLY, FOUND, HUB_AT,
   INSTS, LEAVE, MARKED, MARK_Y, MESH, ROWS, SAFE, SCAN, SH, SWEEP, TALL, TRAVEL, WIDE, WIDER, WIDER_AT, YEAR, ZMIN,
-  ZOOM, along, away, bondAt, curveD, enterAt, hubOf, leaveAt, rowAt, rowTime, scanAt, slotAt, strands, tieOf,
-  travelAt, type Layout,
+  ZOOM, along, away, bondAt, enterAt, hubOf, leaveAt, rowAt, rowTime, scanAt, slotAt, tieD, tieOf, travelAt,
+  type Layout,
 } from "./techGrowPlan";
 
 const TAU = Math.PI * 2;
@@ -124,7 +124,7 @@ export class TechGrow {
   private cards: HTMLElement[];
   private chips: HTMLElement[];
   private rows: HTMLElement[];
-  private ties: { g: Element; a: Element | null; b: Element | null; out: Element | null; back: Element | null }[];
+  private ties: { g: Element; out: Element | null; back: Element | null }[];
   private mesh: Element[];
   private aura: Element[];
   private far: Element[];
@@ -145,8 +145,6 @@ export class TechGrow {
     this.rows = all("[data-row]");
     this.ties = all("[data-tie]").map((g) => ({
       g,
-      a: g.querySelector(".tk-cx-tie-a"),
-      b: g.querySelector(".tk-cx-tie-b"),
       out: g.querySelector(".tk-cx-pulse:not(.tk-cx-pulse-back)"),
       back: g.querySelector(".tk-cx-pulse-back"),
     }));
@@ -217,7 +215,7 @@ export class TechGrow {
     MESH.forEach(([a, b], i) => line(this.mesh[i], L.insts[a][0], L.insts[a][1], L.insts[b][0], L.insts[b][1]));
     this.far.forEach((el, i) => line(el, h.cx, h.cy, L.wider[i].x + CHIP.w / 2, L.wider[i].y + CHIP.h / 2));
     this.aura.forEach((el) => el.setAttribute("cx", String(h.cx)));
-    this.ties.forEach(({ g }, k) => g.querySelector(".tk-cx-tie-glow")?.setAttribute("d", curveD(tieOf(L, k))));
+    this.ties.forEach(({ g }, k) => g.querySelectorAll("path").forEach((p) => p.setAttribute("d", tieD(tieOf(L, k)))));
     this.wrote = new WeakMap();
     this.build(this.logo ? sampleMark(this.logo, L.lw, h.cx) : []);
   }
@@ -313,16 +311,13 @@ export class TechGrow {
     });
     this.set(this.one.far, "opacity", (seg(t, WIDER_AT[0] + 0.3, 0.8) * 0.9).toFixed(3));
 
-    // Each bond: the strands reach out, then braid tighter as trust grows,
-    // turning as the page scrolls, with a pulse out and a pulse back.
+    // Each bond draws out from the hub and strengthens as trust grows (the
+    // stylesheet reads `--b`), with a pulse out and a pulse back.
     INSTS.forEach((_, k) => {
       const tie = this.ties[k];
       const b = bond[k];
       const c = tieOf(L, k);
       this.set(tie.g, "--b", b.toFixed(3));
-      const [sa, sb] = b > 0 ? strands(c, Math.min(1, b * 3), c01((b - 0.25) / 0.75), t * 2.4 + k) : ["", ""];
-      this.set(tie.a, "@d", sa);
-      this.set(tie.b, "@d", sb);
       const live = b > 0.35 && t < ACT[2];
       const u = frac((t - bondAt(k)) * 1.5 + k * 0.23);
       const v = frac(u + 0.5);
