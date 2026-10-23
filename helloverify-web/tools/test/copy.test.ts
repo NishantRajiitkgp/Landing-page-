@@ -1958,8 +1958,10 @@ const PLATFORM_FILES: Record<string, readonly [number, number]> = {
    *  97 -> 139 (23 Oct 2026): the three pillar boards became one story on
    *  one thread. Out: the 20 `orch` captions and the five words only the
    *  old boards drew (Uploaded, Research, Fraud, Routed, Abroad). In: the
-   *  67 labels of `technology.art.story`. All plain strings. */
-  technology: [52, 139],
+   *  67 labels of `technology.art.story`. All plain strings.
+   *  139 -> 160: the hero globe's 21 (`technology.art.globe`), two of them
+   *  the pause control's labels. All plain strings. */
+  technology: [52, 160],
   security: [43, 99],
 };
 
@@ -1995,8 +1997,8 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 427 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 427 &&
+  "platform holds 448 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 448 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
@@ -2032,10 +2034,11 @@ check(
  *  written 323 before that addition. 341 -> 343: Research and Fraud.
  *  343 -> 345: Routed and Abroad. 345 -> 365: the orchestration map's
  *  captions. 365 -> 407 (23 Oct 2026): the pillar story, 67 labels in for
- *  25 out (see `technology` above). Rich text is unchanged at 20. */
+ *  25 out (see `technology` above). 407 -> 428: the hero globe's 21.
+ *  Rich text is unchanged at 20. */
 check(
-  "platform: 407 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 407 &&
+  "platform: 428 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 428 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },
