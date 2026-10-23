@@ -664,8 +664,8 @@
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .tk-cx-step { opacity: 0; translate: 0 16px; transition: opacity .5s ease, translate .7s cubic-bezier(.2, .8, .2, 1); }
   .tk-cx-p { grid-template-rows: 0fr; opacity: 0; }
-  :is([data-step="0"] .tk-cx-step:nth-child(1), [data-step="1"] .tk-cx-step:nth-child(-n + 2), [data-step="2"] .tk-cx-step) { opacity: 1; translate: 0 0; }
-  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2)) :is(h3, .tk-cx-n) { color: var(--muted); }
+  :is([data-step="0"] .tk-cx-step:nth-child(1), [data-step="1"] .tk-cx-step:nth-child(-n + 2), [data-step="2"] .tk-cx-step, [data-step="3"] .tk-cx-step) { opacity: 1; translate: 0 0; }
+  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2), [data-step="3"] .tk-cx-step) :is(h3, .tk-cx-n) { color: var(--muted); }
   :is([data-step="0"] .tk-cx-step:nth-child(1), [data-step="1"] .tk-cx-step:nth-child(2), [data-step="2"] .tk-cx-step:nth-child(3)) .tk-cx-p { grid-template-rows: 1fr; opacity: 1; }
 }
 
@@ -892,7 +892,7 @@
 }
 @media (max-width: 1080px) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
   .tk-cx-step { grid-area: 1 / 1; }
-  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2)) { opacity: 0; }
+  :is([data-step="1"] .tk-cx-step:nth-child(1), [data-step="2"] .tk-cx-step:nth-child(-n + 2), [data-step="3"] .tk-cx-step:nth-child(-n + 2)) { opacity: 0; }
 }
 
 /* ── Reduced motion and no script: no runway; the claims in a column ── */

@@ -23,6 +23,8 @@ export const END = 10;
 export const ACT = [0, 3.4, 6.8] as const;
 /** When the caption under the finished mark shows. */
 export const CAPTION = 9.1;
+/** When the last claim's line closes, as the next section arrives. */
+export const CLOSE = 9.4;
 
 export const CARD = { w: 136, h: 78 } as const;
 export const CHIP = { w: 122, h: 30 } as const;
