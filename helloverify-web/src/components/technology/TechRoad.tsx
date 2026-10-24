@@ -3,17 +3,21 @@
     nine screens wide: the eight platform areas as stops, in story order
     from one professional out to the whole economy, then the destination.
     Scrolling rides a case down the road from HelloVerify, one stop at a
-    time: each stop's copy and scene rise in as the case arrives, the scene
-    builds itself (`./TechRoadPeople`, `./TechRoadTrade`, `./TechRoadWorld`),
-    and both dissolve as the case rides on. A rail across the top tracks
-    the eight and jumps between them. The scroll is `./TechRoadStage`. */
+    time: each stop's copy and scene rise in as the case arrives, the
+    scene's floating pieces build themselves round the road (`./TechRoadPeople`,
+    `./TechRoadPapers`, `./TechRoadTrade`, `./TechRoadFirm`, `./TechRoadWorld`), and both
+    dissolve as the case rides on. A rail across the top tracks the eight
+    and jumps between them. The scroll is `./TechRoadStage`. */
 import type { CSSProperties, ReactNode } from "react";
 import "@/app/v2/tech.css";
 import type { PlatformArea, PlatformCopy } from "@/lib/copy/platform";
 import type { TechArt } from "./TechPillarKit";
-import { Credentials, Finance, Identity, Mobility } from "./TechRoadPeople";
+import { RoadDefs } from "./TechRoadKit";
+import { Credentials, Finance } from "./TechRoadPapers";
+import { Identity, Mobility } from "./TechRoadPeople";
 import { TechRoadStage } from "./TechRoadStage";
-import { Business, Compliance, Procurement } from "./TechRoadTrade";
+import { Business } from "./TechRoadFirm";
+import { Compliance, Procurement } from "./TechRoadTrade";
 import { CrossBorder, RoadEnd, RoadStart } from "./TechRoadWorld";
 
 /** The story's order: a person crossing a border, their identity, their
@@ -59,6 +63,7 @@ export function TechRoad({
 }) {
   return (
     <TechRoadStage>
+      <RoadDefs />
       <div className="wrap">
         <div className="sec-head tk-head">
           <h2 className="h2 tk-rv">{h}</h2>

@@ -11,10 +11,12 @@
 
     - on each frame (`.tk-rd-stop`): `--v`, how much of it is on show,
       `--w`, +1 while arriving and -1 while leaving, and `--b`, how far its
-      scene has built (`./TechRoadArt`);
+      scene has built (`./TechRoadKit`);
     - on each stretch of road: `--g`, how much of it is laid;
-    - the world's transform (the camera, pulling back a little mid-ride),
-      the case's, the dot field's drift, and the rail's `--rf` and stops.
+    - the world's transform (the camera, pulling back a little mid-ride)
+      and `--fl`, the journey so far, which the floating pieces bob on;
+      the case's transform, the dot field's drift, and the rail's `--rf`
+      and stops.
 
     The road itself is drawn here once per layout (`./techRoadPlan`), from
     each stop's out port to the next one's in port, so it follows the
@@ -127,7 +129,7 @@ export function TechRoadStage({ children }: { children: ReactNode }) {
       span = Math.max(1, r.height - H * 0.6);
     };
 
-    const last = { v: [] as number[], w: [] as number[], b: [] as number[], g: [] as number[], cam: "", fx: "", car: "", co: -1, rf: -1, a: -1 };
+    const last = { v: [] as number[], w: [] as number[], b: [] as number[], g: [] as number[], cam: "", fx: "", fl: "", car: "", co: -1, rf: -1, a: -1 };
     const apply = (p: number) => {
       let t = clamp(p, 0, 1) * TOTAL;
       let si = 0;
@@ -178,6 +180,8 @@ export function TechRoadStage({ children }: { children: ReactNode }) {
       const ty = H / 2 - s * (cam.y + H / 2);
       const tf = `translate3d(${tx.toFixed(1)}px, ${ty.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
       if (tf !== last.cam) world.style.transform = last.cam = tf;
+      const fl = (clamp(p, 0, 1) * TOTAL).toFixed(3);
+      if (fl !== last.fl) world.style.setProperty("--fl", (last.fl = fl));
       const fx = `${((-cam.x * 0.3) % 28).toFixed(1)}px ${((-cam.y * 0.3) % 28).toFixed(1)}px`;
       if (fx !== last.fx) pin.style.setProperty("--fd", (last.fx = fx));
 
