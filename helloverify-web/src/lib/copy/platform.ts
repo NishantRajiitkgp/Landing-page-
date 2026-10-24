@@ -42,3 +42,7 @@ export type CoverageCheck = keyof PlatformCopy["coverage"]["checks"]["rows"];
 export type ArtefactKey = keyof PlatformCopy["security"]["artefacts"];
 export type ResidencyKey = keyof PlatformCopy["security"]["residency"];
 export type SecurityFaqKey = keyof PlatformCopy["security"]["faqs"];
+
+/** `/technology`'s eight platform areas, which the trust road
+ *  (`components/technology/TechRoad.tsx`) visits in its own story order. */
+export type PlatformArea = keyof PlatformCopy["technology"]["platform"]["cards"];

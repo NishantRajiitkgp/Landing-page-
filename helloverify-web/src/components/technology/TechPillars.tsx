@@ -23,11 +23,20 @@ export function TechPillars({
   art: TechArt;
 }) {
   const s = art.story;
+  const keep = "Global Workforce & Business";
+  const head = h.startsWith(keep) ? (
+    <>
+      <span className="tk-pil-keep">{keep}</span>
+      {h.slice(keep.length)}
+    </>
+  ) : (
+    h
+  );
   return (
     <TechPillarsStage>
       <div className="wrap">
         <div className="sec-head tk-head">
-          <h2 className="h2 tk-rv">{h}</h2>
+          <h2 className="h2 tk-rv">{head}</h2>
           <p className="lede tk-rv tk-rv2">{sub}</p>
         </div>
       </div>

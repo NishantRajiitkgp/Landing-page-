@@ -10,10 +10,10 @@
    Hover replays are the only repeats. `prefers-reduced-motion` is handled
    site-wide (`globals.css`), with the delays zeroed at the foot of this file. */
 
-/* The verified green, shared by the hero globe, the pillar story and the
-   compounding story: the one colour that has to read apart from the red
-   that flags fraud beside it. */
-:is(.tk-hero, .tk-pil, .tk-cmp) {
+/* The verified green, shared by the hero globe, the pillar story, the
+   compounding story and the trust road: the one colour that has to read
+   apart from the red that flags fraud beside it. */
+:is(.tk-hero, .tk-pil, .tk-cmp, .tk-road) {
   --tk-ok: #1F9D55;
   --tk-ok-ink: color-mix(in srgb, var(--tk-ok), black 24%);
   --tk-ok-pale: color-mix(in srgb, var(--tk-ok), white 90%);
@@ -211,6 +211,10 @@
   padding-block-start: 140px;
 }
 .tk-head { align-items: end; }
+/* "Global Workforce & Business" stays one line; the rest wraps after it.
+   Balance would otherwise split the phrase to even the lines out. */
+.tk-pil .h2 { text-wrap: wrap; }
+.tk-pil-keep { white-space: nowrap; }
 
 /* Section heads rise in once the section is reached. Only when script runs,
    so the copy is never left invisible without it. */
@@ -552,6 +556,7 @@
 /* ── Phone and tablet: one unit is fixed, and the view follows the head ── */
 @media (max-width: 1080px) {
   .tk-pil { --su: .86px; padding-block-start: 76px; }
+  .tk-pil .h2 { font-size: min(40px, calc((100vw - 40px) / 11.5)); }
   .tk-sy-run { height: 680vh; }
   .tk-sy-pin { gap: 22px; }
   .tk-sy-step { grid-template-columns: minmax(0, 1fr); }
@@ -611,11 +616,9 @@
 .tk-pale { fill: var(--primary-pale); }
 .tk-loop { fill: none; stroke: var(--primary); stroke-width: 1.4; stroke-dasharray: 4 4; stroke-linecap: round; }
 
-/* ── Board strokes the areas and the future still draw with ── */
+/* ── Board strokes the future still draws with ── */
 .tk-p-link { stroke: var(--primary); stroke-width: 1.6; stroke-dasharray: 1; }
 .tk-strike { stroke: var(--primary); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1; }
-.tk-abroad { fill: rgb(from var(--paper) r g b / .8); }
-.tk-border { stroke: var(--tick-off); stroke-width: 1.2; stroke-dasharray: 4 5; }
 
 @keyframes tkArtIn { from { opacity: 0; translate: 0 18px; } }
 @keyframes tkDropIn { from { opacity: 0; translate: 0 -22px; } }
@@ -905,98 +908,334 @@
   .tk-cx-board { height: 92vw; }
 }
 
-/* ═══════════════════════════════════════════════════════ PLATFORM AREAS ═══
-   A bento of eight tiles. One pointer light (`--cx`/`--cy` per tile, `--lit`
-   on the grid, TechAreasStage) paints the border ring and a faint wash, so
-   neighbouring tiles catch the same light. The ring is a 1px padding box
-   masked to its edge. */
+/* ═══════════════════════════════════════════════════════════ TRUST ROAD ═══
+   "From verification provider to global trust platform" as one journey
+   (TechRoad, TechRoadArt, TechRoadStage). A tall runway pins a frame over a
+   world `--frames` screens wide: the eight stops, then the destination, one
+   frame each, strung on one road. The stage moves the camera (the world's
+   transform) and the case along the road, and writes each frame's `--v`
+   (on show), `--w` (+1 arriving, -1 leaving) and `--b` (built). A scene's
+   parts arrive by transition as `--b` passes their `--at`, so scrolling
+   back plays them back; `.tk-rd-t` parts follow `--b` continuously. With
+   no script, or under reduced motion, the stops sit finished in a column
+   and there is no road. */
 
-.tk-areas { padding-block-start: 150px; }
-.tk-bento {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(240px, auto); gap: 14px;
-  margin: 56px 0 0; padding: 0; list-style: none;
+.tk-road {
+  --rd-ease: cubic-bezier(.2, .8, .2, 1);
+  --rd-pop: cubic-bezier(.2, 1.6, .4, 1);
+  --rd-line: rgb(from var(--ink) r g b / .5);
+  padding-block-start: 150px; overflow-x: clip;
 }
-.tk-tile-a { grid-column: span 2; grid-row: span 2; }
-.tk-tile-h { grid-column: span 2; }
-
-.tk-tile {
-  position: relative; isolation: isolate; overflow: hidden;
-  display: flex; flex-direction: column; gap: 18px; padding: 26px;
-  border-radius: 24px; border: 1px solid var(--hair); background: var(--white);
-  box-shadow: 0 30px 60px -56px rgb(from var(--ink) r g b / .55);
-  transition: transform .5s cubic-bezier(.2, .8, .2, 1), box-shadow .5s;
+.tk-rd-run { position: relative; height: 1050vh; margin-block-start: 16px; }
+.tk-rd-pin { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: clip; }
+/* A dot field behind the world, drifting slower than it does. */
+.tk-rd-pin::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle, rgb(from var(--ink) r g b / .08) 1px, transparent 1.5px) var(--fd, 0 0) / 28px 28px;
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 55%, black 25%, transparent 85%);
 }
-.tk-tile::before, .tk-tile::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: var(--lit, 0); transition: opacity .45s; }
-.tk-tile::before {
-  z-index: 2; padding: 1px;
-  background: radial-gradient(340px circle at var(--cx, -999px) var(--cy, -999px), rgb(from var(--primary) r g b / .8), transparent 45%);
-  -webkit-mask: linear-gradient(black 0 0) content-box, linear-gradient(black 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
+
+/* ── The world, the road, the frames ── */
+.tk-rd-world { position: absolute; top: 0; inset-inline-start: 0; width: calc(var(--frames) * 100%); height: 100%; transform-origin: 0 0; will-change: transform; }
+.tk-rd-road { position: absolute; top: 0; inset-inline-start: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.tk-rd-stops { margin: 0; padding: 0; list-style: none; }
+.tk-rd-stop {
+  position: absolute; top: calc(var(--wy, 0) * 1%); inset-inline-start: calc(var(--i) * 100% / var(--frames));
+  box-sizing: border-box; width: calc(100% / var(--frames)); height: 100%; container-type: size;
+  display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 8fr); grid-template-rows: minmax(0, 1fr); align-items: center;
+  column-gap: clamp(24px, 4vw, 64px); padding-block: 96px 56px; padding-inline: clamp(24px, 8.334vw, 120px);
 }
-.tk-tile::after {
-  z-index: -1;
-  background: radial-gradient(420px circle at var(--cx, -999px) var(--cy, -999px), rgb(from var(--primary) r g b / .055), transparent 60%);
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .tk-rd-stop { --v: 0; --b: 0; }
+  .tk-rd-stop:first-child { --v: 1; }
 }
-.tk-tile:hover { transform: translateY(-4px); box-shadow: 0 44px 74px -48px rgb(from var(--primary) r g b / .42); }
 
-.tk-tile-top { display: flex; align-items: flex-start; justify-content: flex-end; }
-.tk-tile-n { font-family: var(--mono); font-size: 11.5px; letter-spacing: .08em; color: var(--muted); }
-.tk-tile-tx { margin-block-start: auto; }
-.tk-tile h3 { margin: 0; font-family: var(--serif); font-size: 26px; font-weight: 400; line-height: 1.08; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; }
-.tk-tile p { margin: 10px 0 0; max-width: 36ch; font-size: 15px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
-
-/* Every tile's scene: the small ones sit between the number and the copy. */
-.tk-tile-art { display: block; width: 100%; height: auto; overflow: visible; }
-.tk-sc { max-width: 260px; margin-inline: auto; }
-.tk-sc-ring { fill: none; stroke: var(--primary); stroke-width: 1.2; stroke-dasharray: 3 4; }
-.tk-sc-land { fill: var(--paper); }
-.tk-sc-phone { fill: var(--white); stroke: var(--ink); stroke-width: 1.5; }
-.tk-sc-rail { stroke: var(--ink-soft); stroke-width: 1.4; stroke-dasharray: 1; }
-.tk-sc-sleeper { stroke: var(--tick-off); stroke-width: 1.2; }
-
-/* Feature tile: a professional crossing a border between cities. */
-.tk-tile-a { background: radial-gradient(circle at 70% 35%, var(--primary-pale), transparent 55%), var(--white); }
-.tk-tile-a h3 { font-size: 46px; }
-.tk-tile-a p { font-size: 17px; }
-.tk-tile-a .tk-sc { max-width: none; margin-block: 18px 0; }
-.tk-route { stroke: rgb(from var(--primary) r g b / .45); stroke-width: 1.3; stroke-dasharray: 1; }
-.tk-city-halo { fill: rgb(from var(--primary) r g b / .12); }
-
-/* Wide tile: the credential chain beside the copy. */
-.tk-tile-h { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); grid-template-rows: auto 1fr; column-gap: 28px; }
-.tk-tile-h .tk-tile-top { grid-column: 1; grid-row: 1; justify-content: flex-start; }
-.tk-tile-h .tk-tile-tx { grid-column: 1; grid-row: 2; align-self: end; }
-.tk-tile-h .tk-sc { grid-column: 2; grid-row: 1 / 3; align-self: center; max-width: none; }
-.tk-chain-link { stroke: var(--primary-light); stroke-width: 1.5; stroke-dasharray: 1; }
-
-@media (scripting: enabled) {
-  .tk-areas:not(.tk-in) .tk-tile { opacity: 0; }
+/* The road between stops: a faint dashed route ahead, and six strands laid
+   up to the case (`--g`), with a glow under them and a comet at the head. */
+.tk-rd-ghost { fill: none; stroke: var(--tick-off); stroke-width: 1.4; stroke-dasharray: 2 8; stroke-linecap: round; }
+.tk-rd-glow { fill: none; stroke: var(--primary); stroke-width: 16; stroke-linecap: round; opacity: .06; }
+:is(.tk-rd-glow, .tk-rd-str) { stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--g, 0)); }
+:is(.tk-rd-lane, .tk-rd-str) { fill: none; stroke-linecap: round; }
+.tk-rd-s0 { stroke: var(--primary); stroke-width: 1.6; }
+.tk-rd-s1 { stroke: var(--primary-light); stroke-width: 1.2; }
+.tk-rd-s2 { stroke: rgb(from var(--ink) r g b / .4); stroke-width: 1; }
+.tk-rd-s3 { stroke: var(--primary); stroke-width: 1; }
+.tk-rd-s4 { stroke: var(--primary-tint); stroke-width: 2; }
+.tk-rd-s5 { stroke: var(--tick-off); stroke-width: 1.2; }
+.tk-rd-comet {
+  fill: none; stroke: var(--primary); stroke-width: 4; stroke-linecap: round; stroke-dasharray: .06 2; stroke-dashoffset: calc(.06 - var(--g, 0));
+  opacity: calc(clamp(0, var(--g, 0) * 40, 1) * clamp(0, (1 - var(--g, 0)) * 40, 1));
 }
-.tk-in .tk-tile { animation: tkTileIn .9s cubic-bezier(.2, .8, .2, 1) var(--d) both; }
-.tk-in .tk-sc .tk-a-in { animation: tkArtIn .6s cubic-bezier(.2, .8, .2, 1) calc(var(--d) + var(--s, 0s)) both; }
-.tk-in .tk-sc .tk-a-fade { animation: tkFadeIn .5s ease calc(var(--d) + var(--s, 0s)) both; }
-.tk-in .tk-sc .tk-a-pop { animation: tkPopIn .42s cubic-bezier(.2, 1.5, .4, 1) calc(var(--d) + var(--s, 0s)) both; }
-.tk-in .tk-sc .tk-a-draw { animation: tkDraw .6s cubic-bezier(.4, 0, .2, 1) calc(var(--d) + var(--s, 0s)) both; }
-.tk-in .tk-sc-train { animation: tkTrain 1.4s cubic-bezier(.3, 0, .2, 1) calc(var(--d) + var(--s, 0s)) both; }
-@keyframes tkTileIn { from { opacity: 0; translate: 0 30px; scale: .97; } }
-@keyframes tkTrain { from { opacity: 0; translate: -60px 0; } 30% { opacity: 1; } }
+.tk-rd-car {
+  position: absolute; z-index: 3; top: 0; inset-inline-start: 0; width: 20px; height: 20px; margin: -10px;
+  display: grid; place-items: center; border-radius: 50%; background: var(--primary); opacity: 0; will-change: transform, opacity;
+  box-shadow: 0 0 0 6px rgb(from var(--primary) r g b / .16), 0 0 26px 8px rgb(from var(--primary) r g b / .45);
+}
+.tk-rd-car svg { width: 11px; height: 11px; fill: none; stroke: var(--white); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
+/* ── A stop's copy: number, name, line, each leaving a beat before the last ── */
+.tk-rd-tx { position: relative; z-index: 2; max-width: 480px; }
+.tk-rd-tx > * { --o: clamp(0, (var(--v, 1) - var(--k, 0)) * 2.4, 1); opacity: var(--o); translate: 0 calc((1 - var(--o)) * var(--w, 1) * 26px); }
+.tk-rd-n { display: flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: 12.5px; letter-spacing: .1em; color: var(--muted); }
+.tk-rd-n b { font-weight: 500; color: var(--primary-ink); }
+.tk-rd-n::after { content: ""; flex: none; width: 64px; height: 1px; margin-inline-start: 6px; background: var(--hair); }
+.tk-rd-tx h3 {
+  --k: .12; margin: 20px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(40px, min(4.6vw, 8cqh), 68px);
+  line-height: 1.02; letter-spacing: -.03em; color: var(--ink); text-wrap: balance;
+}
+.tk-rd-tx p { --k: .24; margin: 20px 0 0; max-width: 32ch; font-size: 18px; line-height: 1.55; color: var(--muted); text-wrap: pretty; }
+
+/* ── A stop's scene: the board, its number behind it, running out into the
+   frame's end margin ── */
+.tk-rd-scene {
+  position: relative; justify-self: end; width: min(100% + 5vw, 800px, (100cqh - 130px) * 1.3043); margin-inline-end: -5vw;
+  opacity: var(--v, 1); scale: calc(.9 + .1 * var(--v, 1)); translate: 0 calc((1 - var(--v, 1)) * var(--w, 1) * 40px);
+}
+.tk-rd-big {
+  position: absolute; z-index: -1; inset-block-start: -18%; inset-inline-end: 7%; pointer-events: none;
+  font-family: var(--serif); font-size: min(320px, 44cqh); line-height: 1; letter-spacing: -.06em; color: rgb(from var(--ink) r g b / .045);
+  translate: 0 calc((1 - var(--v, 1)) * var(--w, 1) * -60px);
+}
+.tk-rd-board { position: relative; aspect-ratio: 600 / 460; container-type: inline-size; }
+.tk-rd-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tk-rd-port { position: absolute; width: 0; height: 0; inset-inline-start: calc(var(--px) * 1%); top: calc(var(--py) * 1%); }
+
+/* How a part arrives (`--on`), or follows the build (`--t`) */
+.tk-rd-p { --on: clamp(0, (var(--b, 1) - var(--at, 0)) * 1000, 1); }
+.tk-rd-t { --t: clamp(0, (var(--b, 1) - var(--t0, 0)) / var(--td, 1), 1); }
+.tk-rd-rise { opacity: var(--on); translate: 0 calc((1 - var(--on)) * 22px); transition: opacity .45s ease, translate .8s var(--rd-ease); }
+.tk-rd-drop { opacity: var(--on); translate: 0 calc((1 - var(--on)) * -38px); transition: opacity .4s ease, translate .9s var(--rd-ease); }
+.tk-rd-pop { opacity: var(--on); scale: calc(.3 + .7 * var(--on)); transition: opacity .25s ease, scale .55s var(--rd-pop); }
+.tk-rd-fade { opacity: var(--on); transition: opacity .6s ease; }
+.tk-rd-grow { opacity: clamp(0, var(--on) * 3, 1); scale: 1 calc(.02 + .98 * var(--on)); transition: opacity .3s ease, scale 1s var(--rd-ease); }
+.tk-rd-stamp { opacity: var(--on); scale: calc(1.9 - .9 * var(--on)); transition: opacity .2s ease, scale .5s cubic-bezier(.3, 1.5, .5, 1); }
+.tk-rd-dim { opacity: calc(1 - .6 * var(--on)); transition: opacity .5s ease; }
+.tk-rd-draw { stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--on)); transition: stroke-dashoffset 1s var(--rd-ease); }
+:is(.tk-rd-pop, .tk-rd-stamp, .tk-rd-grow) { transform-box: fill-box; transform-origin: center; }
+.tk-rd-grow { transform-origin: 50% 100%; }
+
+/* The slab and its faces, lit from the top left */
+.tk-rd-svg :is(.tk-rd-ft, .tk-rd-fl, .tk-rd-fr, .tk-rd-fl2, .tk-rd-fr2, .tk-rd-floor, .tk-rd-pages) { stroke: var(--rd-line); stroke-width: 1; stroke-linejoin: round; }
+:is(.tk-rd-ft, .tk-rd-floor, .tk-rd-pages) { fill: var(--white); }
+.tk-rd-fl { fill: color-mix(in srgb, var(--paper) 50%, var(--white)); }
+.tk-rd-fr { fill: color-mix(in srgb, var(--hair) 70%, var(--paper)); }
+.tk-rd-fl2 { fill: var(--paper); }
+.tk-rd-fr2 { fill: var(--hair); }
+:is(.tk-rd-dark, .tk-rd-dark2) { stroke: var(--ink); stroke-width: 1; stroke-linejoin: round; }
+.tk-rd-dark { fill: var(--ink); }
+.tk-rd-dark2 { fill: var(--ink-soft); }
+.tk-rd-red { fill: var(--primary); }
+.tk-rd-grid { stroke: var(--hair); stroke-width: 1; }
+.tk-rd-glow0 { stop-color: var(--primary); stop-opacity: .14; }
+.tk-rd-glow1 { stop-color: var(--primary); stop-opacity: 0; }
+.tk-rd-halo { opacity: calc(.25 + .75 * clamp(0, var(--b, 1) * 2.5, 1)); }
+.tk-rd-shade { fill: rgb(from var(--ink) r g b / .08); }
+.tk-rd-lane { stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - clamp(0, var(--b, 1) / .2, 1)); }
+.tk-rd-sock { fill: color-mix(in srgb, var(--primary) calc(var(--on) * 100%), var(--white)); stroke: var(--primary-light); stroke-width: 1.6; transition: fill .35s ease; }
+
+/* Words over the board */
+.tk-rd-chip {
+  position: absolute; z-index: 2; inset-inline-start: calc(var(--x) * 1%); top: calc(var(--y) * 1%); translate: calc(var(--flip) * -50%) -50%;
+  display: inline-flex; align-items: center; gap: .55em; box-sizing: border-box; height: 2.5em; padding-inline: 1em;
+  border-radius: 999px; border: 1px solid var(--hair); background: var(--white); white-space: nowrap;
+  font-family: var(--mono); font-size: clamp(8.5px, 1.75cqw, 11px); font-weight: 500; color: var(--ink-soft);
+  box-shadow: 0 10px 22px -14px rgb(from var(--ink) r g b / .5);
+}
+.tk-rd-chip:lang(en) { letter-spacing: .08em; text-transform: uppercase; }
+.tk-rd-chip-ok { border-color: rgb(from var(--tk-ok) r g b / .4); color: var(--tk-ok-ink); }
+.tk-rd-chip-bad { border-color: rgb(from var(--primary) r g b / .4); color: var(--primary-ink); }
+.tk-rd-mk { flex: none; width: 1.35em; height: 1.35em; }
+.tk-rd-mk circle { fill: var(--tk-ok); }
+.tk-rd-chip-bad .tk-rd-mk circle { fill: var(--primary); }
+.tk-rd-mk path { fill: none; stroke: var(--white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Parts the scenes share */
+.tk-rd-ln { fill: none; stroke: var(--rd-line); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.tk-rd-card { fill: var(--white); stroke: var(--rd-line); stroke-width: 1; }
+.tk-rd-paperc { fill: var(--paper); }
+.tk-rd-tint { fill: var(--primary-tint); }
+.tk-rd-inkbar, .tk-rd-inkfill { fill: var(--ink-soft); }
+.tk-rd-bar { fill: var(--hair); }
+.tk-rd-hole { fill: var(--white); }
+.tk-rd-body { fill: var(--white); stroke: var(--ink-soft); stroke-width: 1.3; }
+.tk-rd-node { fill: var(--white); stroke: var(--hair); stroke-width: 1.2; }
+.tk-rd-node-r { stroke: rgb(from var(--primary) r g b / .5); }
+.tk-rd-ring { fill: none; stroke: var(--primary-light); stroke-width: 1.2; stroke-dasharray: 3 4; }
+.tk-rd-link { fill: none; stroke: var(--primary); stroke-width: 1.4; stroke-linecap: round; }
+.tk-rd-tick circle, .tk-rd-okdot { fill: var(--tk-ok); }
+.tk-rd-tick path { fill: none; stroke: var(--white); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.tk-rd-tick-bad circle { fill: var(--primary); }
+.tk-rd-okpill { fill: var(--tk-ok-pale); stroke: rgb(from var(--tk-ok) r g b / .5); stroke-width: 1; }
+.tk-rd-okbar { fill: rgb(from var(--tk-ok) r g b / .45); }
+.tk-rd-screen { fill: var(--white); }
+.tk-rd-notch { fill: var(--ink-soft); }
+.tk-rd-field { fill: var(--paper); }
+.tk-rd-scan { translate: 0 calc(var(--t) * var(--sd) * 1px); opacity: calc(clamp(0, var(--t) * 30, 1) * clamp(0, (1 - var(--t)) * 30, 1)); }
+.tk-rd-ray { fill: var(--primary); }
+.tk-rd-ray-g { fill: rgb(from var(--primary) r g b / .12); }
+.tk-rd-coin, .tk-rd-coin-s { fill: var(--white); }
+.tk-rd-coin { stroke: var(--rd-line); stroke-width: 1; }
+.tk-rd-coin-t { fill: var(--primary-tint); stroke: var(--primary); }
+.tk-rd-coin-r { fill: none; stroke: var(--primary); stroke-width: 1; }
+.tk-rd-wline { fill: none; stroke: var(--white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.tk-rd-post { fill: none; stroke: var(--ink-soft); stroke-width: 2.4; stroke-linecap: round; }
+.tk-rd-globe { fill: var(--white); stroke: var(--rd-line); stroke-width: 1.2; }
+.tk-rd-gl { fill: none; stroke: var(--tick-off); stroke-width: 1; }
+
+/* 01 · Mobility: the border, the turning globe, the flight */
+.tk-rd-abroad { fill: rgb(from var(--paper) r g b / .9); }
+.tk-rd-border { stroke: var(--tick-off); stroke-width: 1.4; stroke-dasharray: 5 6; }
+.tk-rd-mer { transform-box: fill-box; transform-origin: center; scale: calc(cos(var(--t) * 180deg + var(--ph, 0deg))) 1; }
+.tk-rd-route { fill: none; stroke: var(--tick-off); stroke-width: 1.4; stroke-dasharray: 3 5; }
+.tk-rd-flown { fill: none; stroke: var(--primary); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--t)); }
+.tk-rd-leave { opacity: calc(1 - .8 * var(--t)); }
+.tk-rd-arrive { opacity: var(--t); translate: 0 calc((1 - var(--t)) * 10px); }
+/* The credential rides the flight's curve: a quadratic from `--x0/--y0` over `--x1/--y1`. */
+.tk-rd-fly {
+  --u: calc(1 - var(--t));
+  opacity: clamp(0, var(--t) * 40, 1);
+  translate:
+    calc((var(--u) * var(--u) * var(--x0) + 2 * var(--u) * var(--t) * var(--x1) + var(--t) * var(--t) * var(--x2)) * 1px)
+    calc((var(--u) * var(--u) * var(--y0) + 2 * var(--u) * var(--t) * var(--y1) + var(--t) * var(--t) * var(--y2)) * 1px);
+}
+
+/* 02 · Identity: the face frame */
+.tk-rd-frame { fill: none; stroke: var(--primary); stroke-width: 2; stroke-linecap: round; }
+
+/* 03 · Finance: the vault door and its dial, the card riding in */
+.tk-rd-seam { fill: none; stroke: var(--hair); stroke-width: 1; }
+.tk-rd-door0 { fill: var(--paper); stroke: var(--rd-line); stroke-width: 1.6; }
+.tk-rd-door1 { fill: var(--white); stroke: var(--rd-line); stroke-width: 1; }
+.tk-rd-bolt { fill: var(--tick-off); }
+.tk-rd-hub { fill: var(--primary); }
+.tk-rd-spoke { fill: none; stroke: var(--ink-soft); stroke-width: 2.6; stroke-linecap: round; }
+.tk-rd-dial { transform-box: fill-box; transform-origin: center; rotate: calc(var(--t) * 300deg); }
+.tk-rd-slide { translate: calc((70 + var(--t) * 230) * 1px) 288px; opacity: calc(clamp(0, var(--t) * 25, 1) * clamp(0, (1 - var(--t)) * 6, 1)); }
+
+/* 04 · Credentials: signatures, seals, the chain, the strike */
+.tk-rd-sign { fill: none; stroke: var(--ink-soft); stroke-width: 1.1; stroke-linecap: round; }
+.tk-rd-sealc { fill: var(--primary-pale); stroke: var(--primary-light); stroke-width: 1; }
+.tk-rd-sealring { fill: none; stroke: var(--white); stroke-width: 1.2; opacity: .8; }
+.tk-rd-chain { fill: none; stroke: var(--primary); stroke-width: 1.6; stroke-linecap: round; }
+.tk-rd-strike { fill: none; stroke: var(--primary); stroke-width: 1.8; stroke-linecap: round; }
+
+/* 05 · Compliance: the scales swing level about their pivot */
+.tk-rd-panf { fill: var(--white); stroke: var(--ink-soft); stroke-width: 1.3; stroke-linejoin: round; }
+.tk-rd-arm { transform-box: view-box; transform-origin: 474px 136px; rotate: calc((1 - var(--t)) * -15deg); }
+.tk-rd-pan { transform-box: fill-box; transform-origin: 50% 0; rotate: calc((1 - var(--t)) * 15deg); }
+
+/* 06 · Procurement: the feeds, windows and tape */
+.tk-rd-feed { fill: none; stroke: var(--primary-light); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tk-rd-win { fill: var(--paper); stroke: var(--hair); stroke-width: .8; }
+.tk-rd-win2 { fill: color-mix(in srgb, var(--hair) 60%, var(--white)); }
+.tk-rd-litwin { fill: var(--primary-tint); }
+.tk-rd-tape { fill: none; stroke: var(--primary-tint); stroke-width: 3; stroke-linecap: round; }
+
+/* 07 · Business: the lens runs up the tower */
+.tk-rd-handle { fill: none; stroke: var(--ink); stroke-width: 6; stroke-linecap: round; }
+.tk-rd-glass { fill: rgb(from var(--white) r g b / .55); stroke: var(--primary); stroke-width: 3.5; }
+.tk-rd-lens { translate: calc((var(--t) * 46 + sin(var(--t) * 540deg) * 10) * 1px) calc(var(--t) * -104px); }
+.tk-rd-okline { fill: none; stroke: var(--tk-ok); stroke-width: 2; stroke-linecap: round; }
+
+/* 08 · Cross-border: the sea, the dot map, the rails, the ships */
+.tk-rd-sea { fill: color-mix(in srgb, var(--paper) 70%, var(--white)); }
+.tk-rd-dots { fill: none; stroke: rgb(from var(--ink) r g b / .3); stroke-width: 3.8; stroke-linecap: round; }
+.tk-rd-cityh { fill: rgb(from var(--primary) r g b / .16); }
+.tk-rd-arc { fill: none; stroke: var(--primary); stroke-width: 1.8; stroke-linecap: round; }
+.tk-rd-arc2 { stroke: var(--primary-light); }
+.tk-rd-hull { fill: var(--ink-soft); }
+.tk-rd-ship { translate: calc((var(--sx) + var(--t) * var(--dx)) * 1px) calc((var(--sy) + var(--t) * var(--dy)) * 1px); }
+
+/* ── Both ends of the road ── */
+.tk-rd-start { position: absolute; z-index: 2; inset-inline-start: clamp(24px, 8.334vw, 120px); bottom: 11%; display: inline-flex; align-items: center; gap: 12px; opacity: var(--v, 1); }
+.tk-rd-start-logo {
+  display: grid; place-items: center; height: 46px; padding-inline: 16px; border-radius: 999px; border: 1px solid var(--hair); background: var(--white);
+  box-shadow: 0 0 0 5px rgb(from var(--primary) r g b / .06), 0 14px 26px -16px rgb(from var(--ink) r g b / .5);
+}
+.tk-rd-start small { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+.tk-rd-start small:lang(en) { letter-spacing: .1em; text-transform: uppercase; }
+
+.tk-rd-fin { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+.tk-rd-fin-in { display: grid; justify-items: center; gap: clamp(14px, 3cqh, 28px); opacity: var(--v, 1); scale: calc(.92 + .08 * var(--v, 1)); }
+.tk-rd-orb { position: relative; width: min(58cqh, 80cqw, 540px); aspect-ratio: 1; }
+.tk-rd-orb-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.tk-rd-orbit { fill: none; stroke: var(--primary-light); stroke-width: 1.4; }
+.tk-rd-spoke2 { fill: none; stroke: var(--primary); stroke-width: 1.6; stroke-linecap: round; }
+/* The eight stops round the globe, each lit in turn */
+.tk-rd-orb-n {
+  position: absolute; inset-inline-start: calc(var(--x) * 1%); top: calc(var(--y) * 1%); translate: calc(var(--flip) * -50%) -50%;
+  display: grid; place-items: center; box-sizing: border-box; width: 12.5%; aspect-ratio: 1; border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--primary) calc(var(--on) * 100%), var(--hair));
+  background: color-mix(in srgb, var(--primary) calc(var(--on) * 100%), var(--white));
+  color: color-mix(in srgb, var(--white) calc(var(--on) * 100%), var(--muted));
+  font-family: var(--mono); font-size: clamp(10px, 2.4cqh, 14px); font-weight: 500;
+  box-shadow: 0 0 0 calc(var(--on) * 6px) rgb(from var(--primary) r g b / .14), 0 12px 22px -14px rgb(from var(--ink) r g b / .5);
+  scale: calc(.86 + .14 * var(--on));
+  transition: background-color .4s ease, color .4s ease, border-color .4s ease, box-shadow .5s ease, scale .5s var(--rd-pop);
+}
+.tk-rd-orb-logo {
+  position: absolute; top: 50%; inset-inline-start: 50%; translate: calc(var(--flip) * -50%) -50%;
+  display: grid; place-items: center; box-sizing: border-box; width: 36%; padding: 3.5% 5%; border-radius: 999px; background: var(--white);
+  box-shadow: 0 0 0 8px rgb(from var(--primary) r g b / .07), 0 24px 40px -22px rgb(from var(--ink) r g b / .55);
+}
+.tk-rd-orb-logo svg { width: 100%; height: auto; }
+.tk-rd-fin-t { font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 6cqh, 56px); line-height: 1; letter-spacing: -.03em; color: var(--ink); text-align: center; }
+
+/* ── The rail: the eight, how far along, and a way to jump ── */
+.tk-rd-rail {
+  position: absolute; z-index: 4; top: clamp(18px, 3.6vh, 36px); inset-inline: clamp(24px, 8.334vw, 120px);
+  display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); margin: 0; padding: 0; list-style: none;
+}
+.tk-rd-rail::before, .tk-rd-rail::after { content: ""; position: absolute; top: 8px; inset-inline: 6.25%; height: 2px; border-radius: 2px; background: var(--hair); }
+.tk-rd-rail::after { background: var(--primary); transform: scaleX(var(--rf, 0)); transform-origin: var(--origin-x); }
+.tk-rd-hop { position: relative; z-index: 1; display: grid; justify-items: center; gap: 8px; width: 100%; padding: 0 0 4px; border: 0; background: none; font: inherit; color: var(--muted); cursor: pointer; }
+.tk-rd-hop i {
+  box-sizing: border-box; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--tick-off); background: var(--paper);
+  transition: border-color .3s ease, background-color .3s ease, box-shadow .4s ease, scale .4s var(--rd-pop);
+}
+.tk-rd-hop > span:not(.sr-only) { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; transition: color .3s ease; }
+.tk-rd-hop[data-s="done"] i { border-color: var(--primary); background: var(--primary); }
+.tk-rd-hop[data-s="now"] i { border-color: var(--primary); background: var(--white); box-shadow: 0 0 0 6px rgb(from var(--primary) r g b / .14); scale: 1.15; }
+.tk-rd-hop:is([data-s="now"], :hover) > span { color: var(--ink); }
+.tk-rd-hop:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 8px; }
+
+/* ── Phone and tablet: the copy over the scene ── */
 @media (max-width: 1080px) {
-  .tk-areas { padding-block-start: 84px; }
-  .tk-bento { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(210px, auto); margin-block-start: 32px; gap: 12px; }
-  .tk-tile-a { grid-row: span 1; }
-  .tk-tile-a h3 { font-size: 34px; }
-  .tk-tile { padding: 22px; border-radius: 20px; }
+  .tk-road { padding-block-start: 84px; }
+  .tk-rd-run { height: 1150vh; }
+  .tk-rd-stop { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-items: stretch; row-gap: 8px; padding-block: 76px 24px; }
+  .tk-rd-tx { align-self: start; }
+  .tk-rd-tx h3 { margin-block-start: 10px; font-size: clamp(28px, 8vw, 40px); }
+  .tk-rd-tx p { margin-block-start: 10px; font-size: 15.5px; }
+  .tk-rd-scene { align-self: center; justify-self: center; width: min(100% + 32px, 560px, (100cqh - 260px) * 1.3043); margin-inline: -16px; }
+  .tk-rd-fin { grid-template-rows: minmax(0, 1fr); align-items: center; }
+  .tk-rd-big { inset-block-start: -10%; font-size: min(200px, 26cqh); }
+  .tk-rd-start { bottom: 3%; }
+  .tk-rd-start-logo { height: 40px; padding-inline: 12px; }
+  .tk-rd-rail { top: 16px; }
+  .tk-rd-rail::before, .tk-rd-rail::after { top: 6px; }
+  .tk-rd-hop i { width: 14px; height: 14px; }
+  .tk-rd-hop > span:not(.sr-only) { font-size: 10px; }
 }
-@media (max-width: 640px) {
-  .tk-bento { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; }
-  .tk-tile-a, .tk-tile-h { grid-column: auto; }
-  .tk-tile-h { display: flex; }
-  .tk-tile h3 { font-size: 24px; }
-  .tk-tile-a h3 { font-size: 30px; }
-  .tk-tile-a p { font-size: 16px; }
-  .tk-tile-tx { margin-block-start: 6px; }
+
+/* ── Reduced motion and no script: the stops, finished, in a column ── */
+@media (prefers-reduced-motion: reduce), (scripting: none) {
+  .tk-rd-run { height: auto; margin-block-start: 48px; }
+  .tk-rd-pin { position: static; height: auto; overflow: visible; }
+  .tk-rd-pin::before { content: none; }
+  .tk-rd-world { position: static; width: auto; height: auto; transform: none !important; }
+  .tk-rd-stops { display: grid; }
+  .tk-rd-stop { position: static; width: auto; height: auto; container-type: normal; padding-block: 40px; }
+  .tk-rd-stop + .tk-rd-stop { border-block-start: 1px solid var(--hair); }
+  .tk-rd-scene { width: min(100%, 620px); margin-inline: 0; }
+  .tk-rd-big { font-size: 240px; }
+  :is(.tk-rd-road, .tk-rd-car, .tk-rd-rail, .tk-rd-start, .tk-rd-fin) { display: none; }
 }
+@media (max-width: 1080px) and ((prefers-reduced-motion: reduce) or (scripting: none)) {
+  .tk-rd-stop { grid-template-rows: auto auto; row-gap: 24px; }
+  .tk-rd-big { font-size: 160px; }
+}
+@keyframes tkTileIn { from { opacity: 0; translate: 0 30px; scale: .97; } }
 
 /* ══ Part 5 · The future of trust: three layers, one board ══ */
 .tk-fut { padding-block-start: 150px; }
@@ -1158,9 +1397,9 @@
    `:not(#…)` lifts this past every one of them: each section lands on its
    finished frame at once. */
 @media (prefers-reduced-motion: reduce) {
-  :is(.tk-hero, .tk-pil, .tk-cmp, .tk-areas, .tk-fut, .tk-sec) :not(#tk-still),
-  :is(.tk-hero, .tk-pil, .tk-cmp, .tk-areas, .tk-fut, .tk-sec) :not(#tk-still)::before,
-  :is(.tk-hero, .tk-pil, .tk-cmp, .tk-areas, .tk-fut, .tk-sec) :not(#tk-still)::after {
+  :is(.tk-hero, .tk-pil, .tk-cmp, .tk-road, .tk-fut, .tk-sec) :not(#tk-still),
+  :is(.tk-hero, .tk-pil, .tk-cmp, .tk-road, .tk-fut, .tk-sec) :not(#tk-still)::before,
+  :is(.tk-hero, .tk-pil, .tk-cmp, .tk-road, .tk-fut, .tk-sec) :not(#tk-still)::after {
     animation-delay: 0s !important;
     animation-duration: .01ms !important;
   }

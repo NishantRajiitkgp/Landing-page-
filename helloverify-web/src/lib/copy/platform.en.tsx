@@ -653,6 +653,24 @@ export const en = {
         hesa: "HESA (Higher Education)",
         mom: "MOM (Ministry of Manpower)",
       },
+      /** The trust road under "From verification provider to global trust
+       *  platform": its two ends, named after that heading, and the words
+       *  drawn at its stops. The cities, "Verified", "Identity / KYC",
+       *  "University Degree", "Flagged" and "Regulatory body" are the
+       *  globe's and the pillar story's, so they are not repeated here. */
+      road: {
+        start: "Verification provider",
+        end: "Global trust platform",
+        digitalId: "Digital ID",
+        account: "Account opened",
+        tamper: "Tamper evident",
+        standards: "Standards met",
+        supply: "Supply chain",
+        vendor: "Vendor onboarded",
+        diligence: "Due diligence",
+        counterparty: "Counterparty verified",
+        rails: "Trust rails",
+      },
     },
   },
 
