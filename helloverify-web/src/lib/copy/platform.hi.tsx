@@ -578,6 +578,18 @@ export const hi: PlatformCopy = {
         counterparty: "काउंटरपार्टी सत्यापित",
         rails: "ट्रस्ट रेल्स",
       },
+      future: {
+        company: "ABC Tech Pvt. Ltd.",
+        business: "व्यवसाय",
+        live: "लाइव",
+        updated: "अपडेटेड",
+        gov: "सरकार",
+        enterprise: "उद्यम",
+        bank: "बैंक",
+        hospital: "अस्पताल",
+        repeat: "दोबारा जाँच",
+        infra: "ट्रस्ट इन्फ्रास्ट्रक्चर",
+      },
     },
   },
 

@@ -1,12 +1,10 @@
-/** The parts the `/technology` drawings are built from: beat timing, the
-    glyphs on a 24 box, the status dot and the short labels. */
-import type { CSSProperties } from "react";
+/** The parts the `/technology` drawings are built from: rounding and the
+    glyphs on a 24 box. */
 import type { PlatformCopy } from "@/lib/copy/platform";
 
 /** `technology.art`: the few words drawn inside the boards. */
 export type TechArt = PlatformCopy["technology"]["art"];
 
-export const d = (s: number, more: Record<string, string> = {}) => ({ "--d": `${s.toFixed(2)}s`, ...more }) as CSSProperties;
 export const n = (v: number) => +v.toFixed(2);
 
 export const PERSON = "M12 11.5a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5zM5 20c1.1-3.4 3.8-5.2 7-5.2s5.9 1.8 7 5.2";
@@ -36,28 +34,4 @@ export const DB = "M5 6c0-1.4 3.1-2.5 7-2.5s7 1.1 7 2.5-3.1 2.5-7 2.5S5 7.4 5 6z
 
 export function Glyph({ g, x, y, s = 0.62, cls = "tk-ic" }: { g: string; x: number; y: number; s?: number; cls?: string }) {
   return <path className={cls} d={g} transform={`translate(${n(x - 12 * s)} ${n(y - 12 * s)}) scale(${s})`} vectorEffect="non-scaling-stroke" />;
-}
-
-/** A status dot: a tick for verified, a cross for fraud. Pops in at `at`. */
-export function Ok({ x, y, r = 8, at, bad }: { x: number; y: number; r?: number; at: number; bad?: boolean }) {
-  const k = r / 8;
-  const mark = bad
-    ? `M${n(x - 3 * k)} ${n(y - 3 * k)}l${n(6 * k)} ${n(6 * k)}M${n(x + 3 * k)} ${n(y - 3 * k)}l${n(-6 * k)} ${n(6 * k)}`
-    : `M${n(x - 3.6 * k)} ${n(y + 0.2 * k)}l${n(2.4 * k)} ${n(2.4 * k)} ${n(4.8 * k)} ${n(-5 * k)}`;
-  return (
-    <g className={bad ? "tk-ok tk-ok-bad tk-a-pop" : "tk-ok tk-a-pop"} style={d(at)}>
-      <circle cx={x} cy={y} r={r} />
-      <path className="tk-uf" d={mark} />
-    </g>
-  );
-}
-
-/** A word or two on a board, centred on `x`. It flips back on itself under
-    `dir="rtl"`, so it reads the right way round on a mirrored board. */
-export function Label({ x, y, at, red, children }: { x: number; y: number; at: number; red?: boolean; children: string }) {
-  return (
-    <text className={red ? "tk-lbl tk-lbl-r tk-a-fade" : "tk-lbl tk-a-fade"} x={x} y={y} textAnchor="middle" style={d(at)}>
-      {children}
-    </text>
-  );
 }

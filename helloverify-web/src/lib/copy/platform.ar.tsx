@@ -576,6 +576,18 @@ export const ar: PlatformCopy = {
         counterparty: "طرف مقابل موثَّق",
         rails: "مسارات الثقة",
       },
+      future: {
+        company: "ABC Tech Pvt. Ltd.",
+        business: "نشاط تجاري",
+        live: "مباشر",
+        updated: "مُحدَّث",
+        gov: "حكومة",
+        enterprise: "مؤسسة",
+        bank: "بنك",
+        hospital: "مستشفى",
+        repeat: "فحص مكرر",
+        infra: "بنية تحتية للثقة",
+      },
     },
   },
 

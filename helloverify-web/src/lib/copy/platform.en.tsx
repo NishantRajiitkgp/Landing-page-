@@ -671,6 +671,24 @@ export const en = {
         counterparty: "Counterparty verified",
         rails: "Trust rails",
       },
+      /** The scene under "Building the Future of Digital Trust": the
+       *  business stored beside the pillar story's applicant and degree, the
+       *  states a stored asset shows, the four organisations that reach it,
+       *  the check they no longer repeat, and what HelloVerify becomes.
+       *  "Verified", "Monitored", "Verified once", "Consent" and
+       *  "Verification provider" are reused, so they are not repeated here. */
+      future: {
+        company: "ABC Tech Pvt. Ltd.",
+        business: "Business",
+        live: "Live",
+        updated: "Updated",
+        gov: "Government",
+        enterprise: "Enterprise",
+        bank: "Bank",
+        hospital: "Hospital",
+        repeat: "Repeat check",
+        infra: "Trust infrastructure",
+      },
     },
   },
 

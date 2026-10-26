@@ -1976,8 +1976,13 @@ const PLATFORM_FILES: Record<string, readonly [number, number]> = {
    *  190 -> 201 (24 Oct 2026): the platform areas became the trust road.
    *  In: `art.road` (+11), the road's two ends and the words drawn at its
    *  stops; the cities, Verified, KYC, degree, Flagged and the regulator
-   *  are reused from the globe and the pillar story. All plain strings. */
-  technology: [52, 201],
+   *  are reused from the globe and the pillar story. All plain strings.
+   *  201 -> 211 (26 Oct 2026): the future of trust became a scroll story.
+   *  In: `art.future` (+10), the stored business, a stored asset's two
+   *  states, the four organisations, the repeat check and what HelloVerify
+   *  becomes; Verified, Monitored, Verified once, Consent and the
+   *  verification provider are reused. All plain strings. */
+  technology: [52, 211],
   security: [43, 99],
 };
 
@@ -2013,8 +2018,8 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 489 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 489 &&
+  "platform holds 499 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 499 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
@@ -2054,10 +2059,11 @@ check(
  *  the `art.sources` label the caption no longer draws. 426 -> 462: the
  *  compounding race (see `technology` above). 462 -> 458: the race became
  *  the scroll story. 458 -> 469 (24 Oct 2026): the trust road's eleven
- *  labels (see `technology` above). Rich text is unchanged at 20. */
+ *  labels (see `technology` above). 469 -> 479 (26 Oct 2026): the future
+ *  of trust's ten. Rich text is unchanged at 20. */
 check(
-  "platform: 469 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 469 &&
+  "platform: 479 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 479 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },
