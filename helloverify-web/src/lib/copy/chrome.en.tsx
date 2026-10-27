@@ -124,6 +124,7 @@ export const en = {
       instagram: "Instagram",
     },
     about: "About us",
+    partner: "Partner with us",
     contact: "Contact & support",
     cols: {
       governments: "Governments",

@@ -80,6 +80,7 @@ import { FORMS } from "../../src/lib/copy/forms.ts";
 import { ACCOUNT } from "../../src/lib/copy/account.ts";
 import { AUTHORITY } from "../../src/lib/copy/authority.ts";
 import { ITALY_PARTNER } from "../../src/lib/copy/italyPartner.ts";
+import { PARTNER } from "../../src/lib/copy/partner.ts";
 import { MOM_APPLY } from "../../src/lib/copy/momApply.ts";
 import { MOM_ORG } from "../../src/lib/copy/momOrg.ts";
 import { MOM_STEPS } from "../../src/lib/copy/momSteps.ts";
@@ -129,6 +130,7 @@ const NAMESPACES: readonly { name: string; dict: Dictionary<unknown> }[] = [
   { name: "account", dict: ACCOUNT },
   { name: "authority", dict: AUTHORITY },
   { name: "italyPartner", dict: ITALY_PARTNER },
+  { name: "partner", dict: PARTNER },
   { name: "momApply", dict: MOM_APPLY },
   { name: "momSteps", dict: MOM_STEPS },
   { name: "momOrg", dict: MOM_ORG },
@@ -1021,9 +1023,11 @@ console.log("7. the numbers this slice is measured by");
 /** 199 -> 197 strings (200 -> 198 leaves, 10 Oct 2026): the Ministry of
  *  Manpower mark left the footer's certifications, taking its `alt` and its
  *  seal caption. */
+/** 197 -> 198 strings (198 -> 199 leaves, 27 Oct 2026): the footer's
+ *  "Partner with us" link, `footer.partner`. */
 check(
-  "chrome/en holds 197 string leaves plus the one rich-text leaf",
-  stringLeaves(EN).length === 197 && leafPaths(EN).length === 198,
+  "chrome/en holds 198 string leaves plus the one rich-text leaf",
+  stringLeaves(EN).length === 198 && leafPaths(EN).length === 199,
   { strings: stringLeaves(EN).length, all: leafPaths(EN).length },
 );
 
@@ -1044,8 +1048,8 @@ check(
  *  `COLS`/`CERTS`, and `consent.body` — a real text node the matcher drops
  *  because the node contains a `{" "}`. */
 check(
-  "the >text< matcher saw 24 of them; 53 is the undercount (+28 v2 footer leaves, +54 nav mega-menu leaves, +41 login, -2 MOM mark)",
-  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 + 28 + 54 + 41 - 2 === leafPaths(EN).length,
+  "the >text< matcher saw 24 of them; 53 is the undercount (+28 v2 footer leaves, +54 nav mega-menu leaves, +41 login, -2 MOM mark, +1 partner link)",
+  10 + 5 + 2 + 35 + 1 === 53 && 24 + 53 + 28 + 54 + 41 - 2 + 1 === leafPaths(EN).length,
   leafPaths(EN).length,
 );
 

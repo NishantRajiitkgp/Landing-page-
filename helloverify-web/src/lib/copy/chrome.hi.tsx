@@ -95,6 +95,7 @@ export const hi: ChromeCopy = {
       instagram: "Instagram",
     },
     about: "हमारे बारे में",
+    partner: "हमारे पार्टनर बनें",
     contact: "संपर्क और सहायता",
     cols: {
       governments: "सरकारें",

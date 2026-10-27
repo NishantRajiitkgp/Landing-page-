@@ -166,6 +166,11 @@ export const STATIC_AR: Record<StaticSeoPath, PageCopy> = {
     description:
       "الثقة أصبحت البنية التحتية الرقمية الحيوية القادمة في العالم. HelloVerify تبني المنصة التي ستتحرك الثقة من خلالها.",
   },
+  "/partner-with-us": {
+    title: "برنامج شركاء HelloVerify · اربح عمولة تصل إلى 15%",
+    description:
+      "انضم إلى برنامج شركاء HelloVerify واربح عمولة تصل إلى 15% على كل خدمة تحقق من الخلفية يستخدمها عملاؤك. الانضمام مجاني ورقمي بالكامل.",
+  },
   "/contact": {
     title: "لنبني الأعمال معًا — HelloVerify",
     description:

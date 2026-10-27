@@ -219,6 +219,11 @@ export const STATIC_EN = {
     description:
       "Trust is becoming the world's next critical digital infrastructure. HelloVerify is building the platform through which trust will move.",
   },
+  "/partner-with-us": {
+    title: "HelloVerify Partner Programme · Earn up to 15% commission",
+    description:
+      "Join the HelloVerify Partner Programme and earn up to 15% commission on every background verification service your clients use. Free to join, completely digital.",
+  },
   "/contact": {
     title: "Lets Build the Business Together — HelloVerify",
     description:

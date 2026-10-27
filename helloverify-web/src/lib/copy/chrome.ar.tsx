@@ -87,6 +87,7 @@ export const ar: ChromeCopy = {
       instagram: "Instagram",
     },
     about: "من نحن",
+    partner: "كن شريكاً لنا",
     contact: "التواصل والدعم",
     cols: {
       governments: "الحكومات",
