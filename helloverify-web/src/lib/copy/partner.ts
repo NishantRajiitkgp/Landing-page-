@@ -12,8 +12,6 @@ export type PartnerCopy = typeof en;
 export const PARTNER: Dictionary<PartnerCopy> = { en, hi, ar };
 
 export type PartnerTypeKey = keyof PartnerCopy["form"]["type"]["options"];
-export type PartnerSectionKey = keyof PartnerCopy["onPage"]["links"];
-
 /** What a Client Component may take: no function leaves, which React will
  *  not serialise across the boundary. */
 export type PartnerFormUi = Omit<PartnerCopy["form"], "notice" | "talk"> & {

@@ -14,17 +14,6 @@ export const en = {
     call: "Call +91 9289 6276 22",
   },
 
-  onPage: {
-    label: "Partner Programme sections",
-    links: {
-      advantages: "Advantages",
-      services: "Services",
-      earnings: "Earnings",
-      process: "Process",
-      faqs: "FAQs",
-    },
-  },
-
   hero: {
     k: "HelloVerify Partner Programme · Earn up to 15% commission",
     h1: "Recommend with confidence.",
@@ -37,9 +26,7 @@ export const en = {
       </>
     ),
     join: "Join as a Partner",
-    calc: "Calculate Your Earnings",
-    chip: { k: "Commission credited", v: "₹15,000", p: "on a client billing ₹1,00,000" },
-  },
+    calc: "Calculate Your Earnings",  },
 
   form: {
     h: "Join as a Partner",
@@ -297,6 +284,7 @@ export const en = {
       agreement: { t: "Sign the Partner Agreement", p: "Sign and stamp it, then upload the scan. Your service scope, commission rate and payout terms are confirmed here before you go live." },
       refer: { t: "Start Referring Clients", p: "You receive your partner code, share it with your network or introduce clients directly, and start earning from your very first referral." },
     },
+    download: "Download Agreement (PDF)",
     between: (
       <>
         <strong>Between step 3 and step 4 we run the checks at our end.</strong> It takes up to two working days and there is nothing for you to do. We message you on WhatsApp the moment it clears.

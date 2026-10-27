@@ -4,7 +4,7 @@
 import { AppLink } from "@/components/chrome/AppLink";
 import { Arrow } from "@/components/brand/Arrow";
 import { Reveal } from "@/components/about/AboutMotion";
-import { d, Head, Icon, JOIN, Phone, SALES, TEL, type IconName, type PartnerCopy } from "./partnerParts";
+import { AGREEMENT_PDF, d, Head, Icon, JOIN, Phone, SALES, TEL, type IconName, type PartnerCopy } from "./partnerParts";
 
 type Proc = PartnerCopy["process"];
 
@@ -32,6 +32,12 @@ export function PartnerProcess({ c, phone }: { c: Proc; phone: PartnerCopy["phon
               </span>
               <h3>{c.steps[k].t}</h3>
               <p>{c.steps[k].p}</p>
+              {k === "agreement" ? (
+                <a href={AGREEMENT_PDF} className="btn pw-btn-line pw-dl" download>
+                  <Icon n="download" />
+                  {c.download}
+                </a>
+              ) : null}
             </li>
           ))}
         </ol>

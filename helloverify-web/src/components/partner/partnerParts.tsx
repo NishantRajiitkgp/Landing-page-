@@ -10,6 +10,9 @@ export type { PartnerCopy };
 export const TEL = "tel:+919289627622";
 export const JOIN = "#join";
 export const SALES = "/contact?tab=enquiry";
+/** Served from `public/docs/`; a path with an extension skips the locale
+ *  proxy, so it is a plain `<a>`, not an `AppLink`. */
+export const AGREEMENT_PDF = "/docs/helloverify-partner-agreement.pdf";
 
 /** The stagger index the entrances in `app/v2/partner.css` multiply by. */
 export const d = (i: number) => ({ "--i": i }) as CSSProperties;
@@ -58,6 +61,7 @@ const P = {
   wallet: "M4 6h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2zM2 10h20M16 15h2",
   check: "M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18zM8 12l3 3 5-6",
   doc: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6",
+  download: "M12 3v12M7 10l5 5 5-5M4 21h16",
   case: "M4 7h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2zM16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2",
   medal: "M12 3a6 6 0 1 1 0 12 6 6 0 0 1 0-12zM8.5 14.2 7 22l5-3 5 3-1.5-7.8",
   userPlus: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM19 8v6M22 11h-6",
