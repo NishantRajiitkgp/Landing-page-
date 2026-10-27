@@ -125,7 +125,8 @@ export const en = {
     k: "Why partner",
     h: "Enjoy the advantages of the HelloVerify Partner Programme",
     sub: "Whether you run a travel agency, an HR consultancy or simply have a strong business network, the programme is built to help you earn more from the relationships you already have, without adding work to your day.",
-    rate: "15%",
+    /** The figures drawn into three of the cards' artwork. */
+    art: { rate: "15%", free: "₹0", more: "30+" },
     items: {
       commission: { t: "Earn Up to 15% Commission", p: "Earn up to 15% on the service fee of the clients you refer. Refer a client billing ₹1,00,000 and earn up to ₹15,000." },
       recurring: { t: "Recurring, Passive Income", p: "Verification is never one-and-done. Every new hire, tenant, driver or visa applicant your client verifies adds to your earnings." },
