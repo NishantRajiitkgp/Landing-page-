@@ -476,7 +476,7 @@ export const en = {
     },
 
     platform: {
-      h: "From verification provider to global trust platform.",
+      h: "From Delivering Verifications to Enabling Trust at Scale",
       sub: "HelloVerify is evolving into a global trust platform the infrastructure layer for trusted economic activity across borders.",
       cards: {
         workforceMobility: {
@@ -671,23 +671,24 @@ export const en = {
         counterparty: "Counterparty verified",
         rails: "Trust rails",
       },
-      /** The scene under "Building the Future of Digital Trust": the
-       *  business stored beside the pillar story's applicant and degree, the
-       *  states a stored asset shows, the four organisations that reach it,
-       *  the check they no longer repeat, and what HelloVerify becomes.
-       *  "Verified", "Monitored", "Verified once", "Consent" and
-       *  "Verification provider" are reused, so they are not repeated here. */
+      /** The board under "Building the Future of Digital Trust": the five
+       *  records on its left, the four checks they pass through, and the
+       *  four authorities on its right. The two layer names drawn over it
+       *  are the cards' own titles, so they are not repeated here. */
       future: {
-        company: "ABC Tech Pvt. Ltd.",
-        business: "Business",
-        live: "Live",
-        updated: "Updated",
-        gov: "Government",
-        enterprise: "Enterprise",
-        bank: "Bank",
-        hospital: "Hospital",
-        repeat: "Repeat check",
-        infra: "Trust infrastructure",
+        identity: "Individual Identity",
+        employment: "Employment Records",
+        education: "Education Credentials",
+        criminal: "Criminal Records",
+        business: "Business Registration",
+        verify: "Verify",
+        validate: "Validate",
+        monitor: "Monitor",
+        update: "Update",
+        gov: "Government Authorities",
+        enterprise: "Enterprises",
+        medical: "Medical Authorities",
+        edu: "Educational Institutions",
       },
     },
   },

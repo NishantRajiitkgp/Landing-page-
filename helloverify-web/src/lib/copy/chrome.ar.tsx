@@ -193,8 +193,6 @@ export const ar: ChromeCopy = {
     policy: "سياسة ملفات الارتباط",
     accept: "قبول",
     reject: "رفض",
-    reopenRegion: "اختيارك لملفات الارتباط",
-    reopen: "تفضيلات ملفات الارتباط",
   },
 
   faq: {

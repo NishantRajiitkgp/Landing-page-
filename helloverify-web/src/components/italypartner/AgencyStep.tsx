@@ -6,19 +6,18 @@ import { FieldError } from "@/components/momapply/PasswordField";
 import { TickIcon } from "@/components/momapply/icons";
 import type { ItalyPartnerCopy } from "@/lib/copy/italyPartner";
 
-import { isPlace, saveAgency, tidy, useAgency, type Settle, type Volume } from "./agency";
+import { isPlace, saveAgency, tidy, useAgency, type Volume } from "./agency";
 
-const EMPTY = { name: "", city: "", volume: "" as Volume | "", settle: "" as Settle | "" };
+const EMPTY = { name: "", city: "", volume: "" as Volume | "" };
 
 export function AgencyStep({ t, partnerId, onContinue }: { t: ItalyPartnerCopy; partnerId: string; onContinue: () => void }) {
   const saved = useAgency(partnerId);
   const [form, setForm] = useState<typeof EMPTY | null>(null);
   const [tried, setTried] = useState(false);
-  const view = form ?? (saved ? { name: saved.name, city: saved.city, volume: saved.volume, settle: saved.settle } : EMPTY);
+  const view = form ?? (saved ? { name: saved.name, city: saved.city, volume: saved.volume } : EMPTY);
   const nameOk = isPlace(view.name, 80);
   const cityOk = isPlace(view.city, 40);
   const volumeOk = t.agency.volumes.some((v) => v.id === view.volume);
-  const settleOk = t.agency.settles.some((s) => s.id === view.settle);
   const clean = saved !== null && form === null;
 
   function edit(patch: Partial<typeof EMPTY>) {
@@ -27,13 +26,12 @@ export function AgencyStep({ t, partnerId, onContinue }: { t: ItalyPartnerCopy; 
 
   function save() {
     setTried(true);
-    if (!nameOk || !cityOk || !volumeOk || !settleOk || !view.volume || !view.settle) return;
+    if (!nameOk || !cityOk || !volumeOk || !view.volume) return;
     const draft = {
       v: 1 as const,
       name: tidy(view.name),
       city: tidy(view.city),
       volume: view.volume,
-      settle: view.settle,
     };
     saveAgency(partnerId, draft);
     setForm(null);
@@ -106,23 +104,6 @@ export function AgencyStep({ t, partnerId, onContinue }: { t: ItalyPartnerCopy; 
             ))}
           </div>
           {tried && !volumeOk ? <FieldError id="ip-volume-err">{t.errors.required}</FieldError> : null}
-        </fieldset>
-        <fieldset className="ma-field mf-set">
-          <legend className="ma-l">{t.agency.settle}</legend>
-          <div className={`mf-pills${tried && !settleOk ? " is-bad" : ""}`}>
-            {t.agency.settles.map((s) => (
-              <label key={s.id} className={view.settle === s.id ? "is-on" : undefined}>
-                <input
-                  type="radio"
-                  name="ip-settle"
-                  checked={view.settle === s.id}
-                  onChange={() => edit({ settle: s.id as Settle })}
-                />
-                <span>{s.t}</span>
-              </label>
-            ))}
-          </div>
-          {tried && !settleOk ? <FieldError id="ip-settle-err">{t.errors.required}</FieldError> : null}
         </fieldset>
         <div className="mf-nav">
           <span className="mf-saved">{clean ? <><TickIcon />{t.agency.saved}</> : null}</span>

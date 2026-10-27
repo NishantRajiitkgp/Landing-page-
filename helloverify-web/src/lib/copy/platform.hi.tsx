@@ -394,7 +394,7 @@ export const hi: PlatformCopy = {
     },
 
     platform: {
-      h: "सत्यापन प्रदाता से वैश्विक ट्रस्ट प्लेटफ़ॉर्म तक।",
+      h: "सत्यापन प्रदान करने से बड़े पैमाने पर भरोसा सक्षम करने तक",
       sub: "HelloVerify एक वैश्विक ट्रस्ट प्लेटफ़ॉर्म में विकसित हो रहा है — सीमाओं के पार विश्वसनीय आर्थिक गतिविधि के लिए इन्फ्रास्ट्रक्चर लेयर।",
       cards: {
         workforceMobility: {
@@ -579,16 +579,19 @@ export const hi: PlatformCopy = {
         rails: "ट्रस्ट रेल्स",
       },
       future: {
-        company: "ABC Tech Pvt. Ltd.",
-        business: "व्यवसाय",
-        live: "लाइव",
-        updated: "अपडेटेड",
-        gov: "सरकार",
+        identity: "व्यक्तिगत पहचान",
+        employment: "रोज़गार रिकॉर्ड",
+        education: "शैक्षिक प्रमाण-पत्र",
+        criminal: "आपराधिक रिकॉर्ड",
+        business: "व्यवसाय पंजीकरण",
+        verify: "सत्यापन",
+        validate: "पुष्टि",
+        monitor: "निगरानी",
+        update: "अपडेट",
+        gov: "सरकारी प्राधिकरण",
         enterprise: "उद्यम",
-        bank: "बैंक",
-        hospital: "अस्पताल",
-        repeat: "दोबारा जाँच",
-        infra: "ट्रस्ट इन्फ्रास्ट्रक्चर",
+        medical: "चिकित्सा प्राधिकरण",
+        edu: "शैक्षणिक संस्थान",
       },
     },
   },

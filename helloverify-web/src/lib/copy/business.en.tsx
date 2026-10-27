@@ -740,40 +740,180 @@ export const en = {
     },
   },
 
-  /** `/products/customer-kyc` — the old `customerKyc.base.json`, word for
-   *  word, in its order: hero (title, subtitle, Talk to Sales), the six-step
-   *  How it Works grid with Talk to Sales, Solutions We Offer (six cards).
-   *  Step numbers and icons live in the page. */
+  /** `/products/customer-kyc` — copy from the Customer KYC redesign, in its
+   *  order. Step numbers, the case layout and the two sales links live in
+   *  the page. `[YOUR PRICE]` and `[API · SDK · HOSTED LINK]` are the
+   *  redesign’s own placeholders. */
   customerKyc: {
-    crumb: "KYC",
+    crumb: "Customer KYC",
     hero: {
-      h1: (<>KYC <em>Platform</em></>),
-      sub: "Onboard faster. Detect fraud earlier. Our comprehensive KYC solution brings every step of the digital onboarding process together creating a seamless experience that keeps fraudsters out and genuine customers moving forward.",
-      cta: "Talk to Sales",
+      k: "Customer KYC · India",
+      h1: "Know who’s on the other side of the screen.",
+      sub: "Consent, selfie, PAN, face match and DigiLocker — in one flow, with one decision at the end.",
+      cta: "Get the KYC bundle",
+      cta2: "See how it works",
+      points: ["Instant verification", "Auto-approval", "No ops overhead"],
+      case: {
+        id: "Case HV-24817",
+        time: "14:02 → 14:05",
+        name: "Ananya Mehta",
+        rows: [
+          { t: "Consent", s: "logged" },
+          { t: "Name", s: "captured" },
+          { t: "Selfie", s: "live person" },
+          { t: "PAN", s: "valid · name matches" },
+          { t: "Face match", s: "selfie ↔ PAN" },
+          { t: "DigiLocker", s: "Aadhaar · signed" },
+        ],
+        result: "Auto-approved",
+        passed: "6 of 6 checks passed",
+      },
+    },
+    why: {
+      k: "Why KYC",
+      h: "Online, anyone can type a name. KYC proves who it is.",
+      cards: {
+        law: {
+          t: "It’s the law",
+          p: "Banks, lenders, insurers, brokers and other regulated businesses must verify every customer before they serve them.",
+        },
+        fraud: {
+          t: "It stops fraud at sign-up",
+          p: "Fake, borrowed and rented identities get in through weak online checks. In December 2025, several large banks paused fully digital account opening over mule-account fraud.",
+          source: "Source:",
+          sourceName: "Business Standard",
+          sourceHref: "https://www.business-standard.com/finance/news/bank-accounts-digital-onboarding-fraud-prevention-mule-accounts-rbi-kyc-125121200255_1.html",
+        },
+        trust: {
+          t: "It builds trust",
+          p: "Customers, partners and regulators trust a platform that knows exactly who is on it.",
+        },
+      },
     },
     how: {
-      h: "We deliver robust protection against online identity fraud powerful, seamless and always on.",
+      k: "How it works",
+      h: "Six steps on the customer’s phone.",
+      sub: "Each check runs the moment its step is done.",
       steps: {
-        upload: { t: "The user uploads a photo of their ID", body: ["\"Entity Verification\" (MCA, GST, Company Check)", "\"Financial Checks\" (Bank Statement, Credit, Global DB)", "\"Director & Ownership\" (Identity, Directorship)"], alt: "Step 1" },
-        selfie: { t: "User takes a Selfie", body: ["Point your camera at any government ID — our AI detects document type automatically, no manual selection needed."], alt: "Step 2" },
-        face: { t: "Facial Recognition", body: ["HelloVerify simplifies the experience with real-time guidance and smart document detection, automatically recognizing document types and removing the need for manual data entry—resulting in faster processing and significantly fewer errors."], alt: "Step 3" },
-        liveness: { t: "Liveliness Check", body: ["HelloVerify enhances the user experience with real-time guidance and intelligent document recognition, automatically identifying document types and eliminating manual data entry—delivering faster processing with greater accuracy and minimal errors."], alt: "Step 4" },
-        decision: { t: "Get Decision", body: ["HelloVerify makes the process smoother with real-time guidance and smart document recognition, instantly identifying document types and removing the need for manual input—resulting in quicker processing, higher accuracy and fewer errors."], alt: "Step 5" },
-        onboard: { t: "Onboard the Customer", body: ["HelloVerify streamlines the process with real-time user guidance and automatic document detection, removing the need for manual data entry—accelerating workflows while reducing errors and improving overall accuracy."], alt: "Step 6" },
+        consent: { t: "Consent", p: "The customer sees what will be checked and agrees. We log it before anything is fetched." },
+        name: { t: "Name", p: "The customer enters their name. Every document that follows must match it." },
+        selfie: { t: "Selfie", p: "One guided selfie. A liveness check confirms a real person is present — not a photo, screen or mask." },
+        pan: { t: "PAN capture", p: "The customer photographs their PAN card. We verify the PAN is valid and the name matches." },
+        face: { t: "Face match", p: "We compare the live selfie with the photo on the PAN card. Nothing for the customer to do." },
+        digilocker: { t: "DigiLocker", p: "The customer shares Aadhaar from DigiLocker. It arrives digitally signed by the issuer — no uploads to fake." },
       },
-      cta: "Talk to Sales",
+      decision: {
+        k: "Then",
+        h: "One decision",
+        approved: { t: "Approved", p: "All checks pass. Approved instantly, no one in the loop." },
+        flagged: { t: "Flagged", p: "Something doesn’t match. The case comes to you with the reason." },
+      },
     },
-    solutions: {
-      h: "Solutions We Offer",
-      sub: "Comprehensive KYC solution to help streamline processes involved in digital onboarding and fraud detection.",
-      cards: {
-        kyc: { t: "KYC (Know your customer)", items: ["Identity Verification", "Location Confirmation", "Liveliness Check", "Facial Recognition"] },
-        kyb: { t: "KYB (Know Your Business)", items: ["GST Verification", "MCA Verification", "Udyog/Udyam Aadhaar", "Company PAN"] },
-        underwriting: { t: "Underwriting", items: ["GST-Lite & Advanced", "Bank Statement Analysis", "ITR Check", "MCA Data Pull"] },
-        fraud: { t: "Fraud & Risk", items: ["Court Record Check", "PAN Aadhaar Link", "Email Risk Analysis", "1:N Face-Match"] },
-        execute: { t: "Execute", items: ["Bank Account Validation", "E-sign", "Device Fingerprinting", "E-stamp"] },
-        aml: { t: "AML", items: ["HelloVerify helps mitigate risk", "Perform real-time screening", "Monitor transactions continuously", "Conduct comprehensive risk assessments"] },
+    ops: {
+      k: "No ops overhead",
+      h: "No KYC desk to run.",
+      without: {
+        k: "Without it",
+        items: ["Four vendors for four checks", "A team reviewing every selfie and card", "Customers waiting days for approval"],
       },
+      with: {
+        k: "With HelloVerify",
+        items: ["One integration for every check", "Clean cases approve themselves", "Your team sees only the exceptions"],
+      },
+    },
+    bundle: {
+      k: "The bundle",
+      h: "Every check, one package.",
+      name: "Instant KYC Bundle",
+      price: "[YOUR PRICE]",
+      per: "per completed KYC",
+      items: [
+        "Consent capture and log",
+        "Name capture",
+        "Selfie with liveness check",
+        "PAN capture and verification",
+        "Face match: selfie ↔ PAN",
+        "Aadhaar via DigiLocker",
+        "Auto-decision with reasons",
+        "Audit trail per customer",
+      ],
+      plug: "Plugs in via [API · SDK · HOSTED LINK]",
+      buy: "Buy the bundle",
+      sales: "Talk to sales",
+      traits: {
+        instant: { t: "Instant", p: "The customer finishes in minutes. The decision follows the last step." },
+        automatic: { t: "Automatic", p: "Clean cases never reach a person." },
+        audit: { t: "Audit-ready", p: "Consent, checks and decision in one record." },
+      },
+    },
+    who: {
+      k: "Where KYC is needed",
+      h: "Who needs KYC.",
+      law: {
+        h: "Mandatory by law",
+        p: "These are reporting entities under the Prevention of Money Laundering Act, 2002, which requires them to verify the identity of every client (Section 11A).",
+        cards: {
+          banks: { t: "Banks", tag: "RBI", p: "Every account holder.", src: "RBI KYC Directions, 2025" },
+          nbfc: { t: "NBFCs and lenders", tag: "RBI", p: "Every borrower.", src: "RBI KYC Directions for NBFCs, 2025" },
+          payments: { t: "Payments and wallets", tag: "RBI", p: "Every merchant a payment aggregator onboards. Every full-KYC wallet holder.", src: "RBI Payment Aggregator Directions, 2025 · PPI Master Directions" },
+          insurance: { t: "Insurance", tag: "IRDAI", p: "Every customer, when the relationship begins.", src: "IRDAI AML/CFT Master Guidelines, 2022" },
+          markets: { t: "Stockbroking and mutual funds", tag: "SEBI", p: "Every investor, recorded with a KYC Registration Agency.", src: "SEBI KRA Regulations, 2011" },
+          crypto: { t: "Crypto (VDA) platforms", tag: "FIU-IND", p: "Every user, since VDA providers came under PMLA.", src: "Finance Ministry notification, 7 March 2023" },
+        },
+      },
+      platforms: {
+        h: "Recommended for platforms that onboard people",
+        cards: {
+          gig: { t: "Gig and delivery", p: "Riders and partners" },
+          marketplaces: { t: "Marketplaces", p: "Sellers and buyers" },
+          rentals: { t: "Rentals and co-living", p: "Tenants and hosts" },
+          workforce: { t: "Workforce", p: "New joiners and contractors" },
+          agents: { t: "Agent networks", p: "Field agents and resellers" },
+        },
+      },
+    },
+    rbi: {
+      k: "For RBI-regulated entities",
+      h: "What we do, and what RBI leaves to you.",
+      sub: "RBI counts DigiLocker as a digital mode for onboarding customers who don’t visit a branch — a “non-face-to-face” mode. It allows this with extra conditions.",
+      does: {
+        k: "The bundle does",
+        items: [
+          "Takes the customer’s consent",
+          "Verifies the PAN",
+          "Fetches Aadhaar from DigiLocker as a signed e-document",
+          "Checks liveness and matches the face",
+          "Keeps the evidence in one record",
+        ],
+      },
+      asks: {
+        k: "RBI also asks banks to",
+        items: [
+          "Offer Video KYC (V-CIP) first, if they provide it",
+          "Make the first transaction a credit from the customer’s own KYC-complied bank account",
+          "Classify these customers as high-risk, with enhanced monitoring",
+        ],
+        source: "Source:",
+        sourceName: "RBI (Commercial Banks – KYC) Directions, 2025",
+        sourceHref: "https://www.rbi.org.in/Scripts/BS_ViewMasDirections.aspx?id=13141",
+        sourceTail: ", para 44. Other entities should check the Directions that apply to them.",
+      },
+    },
+    faq: {
+      h: "Common questions.",
+      items: [
+        { q: "Is this “Full KYC” or “Minimum KYC”?", a: "Neither. Both are defined terms in RBI rules, so we don’t use them as labels. This is a consent-based, non-face-to-face KYC. Whether it meets the requirement for your product is your compliance team’s call." },
+        { q: "How long does it take?", a: "A few minutes for the customer. Each check runs as its step finishes, so the decision is ready as soon as DigiLocker is shared." },
+        { q: "What if a check fails?", a: "The case is flagged with the reason — a name mismatch or a failed liveness check, for example — and sent to your team." },
+        { q: "Does the customer upload Aadhaar?", a: "No. It comes from DigiLocker, signed by the issuer. The customer only takes a selfie and a photo of their PAN card." },
+        { q: "Can non-regulated businesses use it?", a: "Yes. Marketplaces, gig, rental and staffing platforms use it to know who they’re onboarding." },
+      ],
+    },
+    close: {
+      h: "Verify your next customer in minutes.",
+      sub: "Six checks. One decision. No ops desk.",
+      cta: "Get the KYC bundle",
+      cta2: "Talk to sales",
     },
   },
 

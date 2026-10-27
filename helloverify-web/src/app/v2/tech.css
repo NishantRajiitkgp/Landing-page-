@@ -1132,9 +1132,8 @@
 .tk-rd-scan { translate: 0 calc(var(--t) * var(--sd) * 1px); opacity: calc(clamp(0, var(--t) * 30, 1) * clamp(0, (1 - var(--t)) * 30, 1)); }
 .tk-rd-ripple { stroke: var(--primary); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; scale: calc(.5 + var(--t) * 1.6); opacity: calc(sin(calc(var(--t) * 180deg)) * .8); }
 /* Riding a quadratic from `--x0/--y0` over `--x1/--y1` to `--x2/--y2`:
-   the plane turned along it, the data dots showing only mid-way. The
-   future of trust's keys and credentials ride the same way. */
-:is(.tk-rd-plane, .tk-rd-bit, .tk-ft-ride) {
+   the plane turned along it, the data dots showing only mid-way. */
+:is(.tk-rd-plane, .tk-rd-bit) {
   --u: calc(1 - var(--t));
   translate:
     calc((var(--u) * var(--u) * var(--x0) + 2 * var(--u) * var(--t) * var(--x1) + var(--t) * var(--t) * var(--x2)) * 1px)
@@ -1313,288 +1312,219 @@
 @keyframes tkTileIn { from { opacity: 0; translate: 0 30px; scale: .97; } }
 
 /* ═══════════════════════════════════════════ FUTURE OF DIGITAL TRUST ═══
-   "Building the Future of Digital Trust" as one scroll story (TechFuture,
-   TechFutureStage, techFuturePlan). A tall runway pins the heading and
-   the three layers beside one scene on the page itself, 800 × 700 units of
-   `--su` px each. The stage writes each act's build (`--b1`…`--b3`), the
-   pull-back (`--z`) and the scroll clock (`--fl`) to the section; a part
-   takes its act's build as `--b` and arrives or follows it the trust
-   road's way (`.tk-rd-p`, `.tk-rd-t`), in the road's paint. With no
-   script, or under reduced motion, every value rests at 1: the scene
-   shows its last frame and the layers sit in a column. */
+   "Building the Future of Digital Trust" as one board that stands still
+   (TechFuture, TechFutureArt, TechFutureKit, techFuturePlan): records wired
+   through four glass checks into the trust core on HelloVerify's platform,
+   wired on to four authorities, and the three layers under it. On a wide
+   screen the board is 1200 × 520 units of `--su` px with its parts placed
+   on it; narrower, they stack in order down the page. Pointing at a layer
+   writes `data-focus`: the parts whose `data-g` holds it light (`--lit`),
+   the rest quiet, and its wires carry a current. */
 
-.tk-fut {
-  --rd-ease: cubic-bezier(.2, .8, .2, 1);
-  --rd-pop: cubic-bezier(.2, 1.6, .4, 1);
-  --rd-line: rgb(from var(--ink) r g b / .5);
-  --sw: calc(var(--fl, 0) * 34deg);
-  padding-block-start: 110px; overflow-x: clip;
-}
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .tk-fut { --b1: 0; --b2: 0; --b3: 0; --z: 0; }
-}
-.tk-ft-a1 { --b: var(--b1, 1); }
-.tk-ft-a2 { --b: var(--b2, 1); }
-.tk-ft-a3 { --b: var(--b3, 1); }
-.tk-ft-run { position: relative; height: 540vh; }
-.tk-ft-pin {
-  position: sticky; top: 0; box-sizing: border-box; height: 100vh; height: 100svh; padding-block: 76px 16px; overflow: visible clip;
-  display: grid; grid-template-columns: minmax(300px, 32%) minmax(0, 1fr); align-items: center; gap: clamp(20px, 3vw, 48px);
-}
-/* A dot field behind the scene, as behind the road. */
-.tk-ft-pin::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background: radial-gradient(circle, rgb(from var(--ink) r g b / .07) 1px, transparent 1.5px) 0 0 / 28px 28px;
-  mask-image: radial-gradient(ellipse 70% 70% at 50% 55%, black 20%, transparent 80%);
-}
+.tk-fut { padding-block: 130px 24px; }
+.tk-ft-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.tk-ft-c-pane0 { stop-color: var(--white); stop-opacity: .82; }
+.tk-ft-c-pane1 { stop-color: var(--primary-pale); stop-opacity: .42; }
+.tk-ft-c-ped0 { stop-color: var(--white); }
+.tk-ft-c-ped1 { stop-color: color-mix(in srgb, var(--hair) 80%, var(--paper)); }
+.tk-ft-c-sh0 { stop-color: var(--white); }
+.tk-ft-c-sh1 { stop-color: color-mix(in srgb, var(--hair) 70%, var(--white)); }
+.tk-ft-c-top0 { stop-color: var(--white); }
+.tk-ft-c-top1 { stop-color: color-mix(in srgb, var(--paper) 70%, var(--white)); }
+.tk-ft-c-sp0 { stop-color: var(--white); stop-opacity: .96; }
+.tk-ft-c-sp1 { stop-color: var(--white); stop-opacity: .6; }
+.tk-ft-c-sp2 { stop-color: var(--primary-pale); stop-opacity: .6; }
+.tk-ft-c-sp3 { stop-color: var(--primary-light); stop-opacity: .5; }
+.tk-ft-c-dm0 { stop-color: var(--white); }
+.tk-ft-c-dm1 { stop-color: color-mix(in srgb, var(--hair) 85%, var(--paper)); }
+.tk-ft-c-gl0 { stop-color: var(--primary); stop-opacity: .2; }
+.tk-ft-c-gl1 { stop-color: var(--primary); stop-opacity: 0; }
+.tk-ft-c-sd0 { stop-color: var(--ink); stop-opacity: .18; }
+.tk-ft-c-sd1 { stop-color: var(--ink); stop-opacity: 0; }
 
-/* ── The heading, and the three layers under it, one line open at a time ── */
-.tk-ft-copy { position: relative; z-index: 3; display: flex; flex-direction: column; gap: 32px; }
-.tk-ft-h { margin: 0; max-width: 12ch; font-size: clamp(34px, 3.2vw, 48px); }
-.tk-ft-steps { display: grid; gap: 22px; margin: 0; padding: 0; list-style: none; }
-.tk-ft-step { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: baseline; transition: opacity .5s ease; }
-.tk-ft-n { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; color: var(--primary-ink); transition: color .4s ease; }
-.tk-ft-step h3 {
-  grid-column: 2; margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.1vw, 30px);
-  line-height: 1.12; letter-spacing: -.02em; color: var(--ink); text-wrap: balance; transition: color .4s ease;
+.tk-ft-h { margin: 0; max-width: 17ch; font-size: clamp(42px, 5.2vw, 76px); line-height: 1.02; letter-spacing: -.035em; text-wrap: balance; }
+.tk-ft-stop { color: var(--primary); }
+
+/* ── The board ── */
+.tk-ft-stage { container-type: inline-size; margin-block-start: 26px; }
+.tk-ft-board { --su: calc(100cqw / 1200); position: relative; isolation: isolate; height: calc(var(--su) * 520); }
+.tk-ft-board::before {
+  content: ""; position: absolute; inset: -6% 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 36% 50% at calc(50% + var(--flip) * 8%) 50%, var(--white), transparent 75%);
 }
+:is(.tk-ft-recs, .tk-ft-panes, .tk-ft-sites, .tk-ft-site) { display: contents; }
+:is(.tk-ft-rec, .tk-ft-pane, .tk-ft-core, .tk-ft-org, .tk-ft-lab, .tk-ft-sites > .tk-ft-tag) {
+  position: absolute; inset-inline-start: calc(var(--x) * 1%); top: calc(var(--y) * 1%); translate: calc(var(--flip) * -50%) -50%;
+}
+.tk-ft-wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.tk-ft-front { z-index: 10; }
+.tk-ft-tag { font-family: var(--mono); font-size: max(8px, calc(var(--su) * 10.5)); font-weight: 500; line-height: 1.55; color: var(--ink-soft); text-align: center; white-space: nowrap; }
+.tk-ft-tag:lang(en) { letter-spacing: .16em; text-transform: uppercase; }
+.tk-ft-ok { display: block; flex: none; width: calc(var(--su) * 19); height: calc(var(--su) * 19); }
+.tk-ft-ok svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.tk-ft-ok circle { fill: var(--tk-ok-pale); stroke: var(--tk-ok); stroke-width: 1.3; }
+.tk-ft-ok path { fill: none; stroke: var(--tk-ok-ink); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+
+/* The records, turned a little toward the checks */
+.tk-ft-rec {
+  box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: calc(var(--su) * 11);
+  width: calc(var(--su) * 236); height: calc(var(--su) * 62); padding-inline: calc(var(--su) * 11) calc(var(--su) * 12);
+  border-radius: calc(var(--su) * 12); border: 1px solid color-mix(in srgb, var(--primary-light) calc(var(--lit, 0) * 100%), var(--hair)); background: var(--white);
+  box-shadow: 0 0 0 calc(var(--lit, 0) * var(--su) * 4) rgb(from var(--primary) r g b / .08), 0 calc(var(--su) * 16) calc(var(--su) * 28) calc(var(--su) * -16) rgb(from var(--ink) r g b / .32);
+  transform: perspective(calc(var(--su) * 700)) rotateY(calc(var(--flip) * 14deg));
+}
+.tk-ft-rec-ic { display: grid; place-items: center; overflow: hidden; width: calc(var(--su) * 38); height: calc(var(--su) * 38); border-radius: calc(var(--su) * 10); background: var(--paper); color: var(--ink-soft); }
+.tk-ft-rec-ic > svg { width: 56%; height: 56%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.tk-ft-rec:first-child .tk-ft-rec-ic > svg { width: 100%; height: 100%; stroke: none; }
+.tk-ft-av-bg { fill: var(--primary-pale); }
+.tk-ft-av-hair { fill: var(--ink); }
+.tk-ft-av-top { fill: var(--ink-soft); }
+.tk-ft-av-skin { fill: color-mix(in srgb, var(--tick-off) 55%, var(--paper)); }
+.tk-ft-rec-tx { display: grid; gap: calc(var(--su) * 5); min-width: 0; }
+.tk-ft-rec-tx b { font-size: max(9.5px, calc(var(--su) * 12)); font-weight: 600; line-height: 1.2; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tk-ft-rec-tx i { display: block; height: calc(var(--su) * 5); border-radius: 3px; background: var(--hair); }
+.tk-ft-rec-tx i:last-child { width: 62%; }
+
+/* The checks, panes of glass the wires pass through */
+.tk-ft-pane { width: calc(var(--su) * 90); height: calc(var(--su) * 270); }
+.tk-ft-pane-svg {
+  display: block; width: 100%; height: 100%; overflow: visible;
+  filter: drop-shadow(0 calc(var(--su) * 16) calc(var(--su) * 16) rgb(from var(--ink) r g b / .1)) drop-shadow(0 0 calc(var(--lit, 0) * var(--su) * 12) rgb(from var(--primary) r g b / .35));
+}
+.tk-ft-glass { stroke: color-mix(in srgb, var(--primary-light) calc(var(--lit, 0) * 100%), var(--white)); stroke-width: 1.5; }
+.tk-ft-glass-in { stroke: rgb(from var(--white) r g b / .7); stroke-width: 1; }
+.tk-ft-pane-l {
+  position: absolute; inset-inline: 0; top: 15%; display: grid; justify-items: center; gap: calc(var(--su) * 7);
+  font-family: var(--mono); font-size: max(7.5px, calc(var(--su) * 9)); font-weight: 500; color: var(--ink-soft); white-space: nowrap;
+}
+.tk-ft-pane-l:lang(en) { letter-spacing: .1em; text-transform: uppercase; }
+.tk-ft-pane-l svg { width: calc(var(--su) * 20); height: calc(var(--su) * 20); fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+
+/* The core: the glass sphere on HelloVerify's platform */
+.tk-ft-core { width: calc(var(--su) * 400); height: calc(var(--su) * 330); }
+.tk-ft-core-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.tk-ft-tag-core { position: absolute; inset-inline-start: 50%; top: 0; width: calc(var(--su) * 150); translate: calc(var(--flip) * -50%) -50%; white-space: normal; }
+.tk-ft-edge { stroke: rgb(from var(--ink) r g b / .1); stroke-width: 1; }
+.tk-ft-floor { stroke: rgb(from var(--primary) r g b / calc(.26 + var(--lit, 0) * .3)); stroke-width: 1.2; }
+.tk-ft-floor2 { stroke-dasharray: 3 6; }
+.tk-ft-orbit { stroke: var(--primary-light); stroke-width: 1.2; stroke-dasharray: 2 6; stroke-linecap: round; opacity: .75; }
+.tk-ft-inring { stroke: var(--hair); stroke-width: 1.2; }
+.tk-ft-hot { stroke: var(--primary); stroke-width: 1.6; opacity: calc(.4 + var(--lit, 0) * .5); filter: drop-shadow(0 0 4px rgb(from var(--primary) r g b / .6)); }
+.tk-ft-pedlogo { filter: drop-shadow(0 0 calc(var(--lit, 0) * 6px) rgb(from var(--primary) r g b / .45)); }
+.tk-ft-sphere { stroke: var(--white); stroke-width: 2; filter: drop-shadow(0 0 calc(4px + var(--lit, 0) * 14px) rgb(from var(--primary) r g b / .35)); }
+.tk-ft-sphere-in { stroke: rgb(from var(--white) r g b / .65); stroke-width: 1; }
+.tk-ft-shield { stroke: rgb(from var(--ink) r g b / .12); stroke-width: 1; filter: drop-shadow(0 6px 8px rgb(from var(--primary) r g b / .25)); }
+.tk-ft-shield-in { stroke: var(--white); stroke-width: 1.2; opacity: .9; }
+.tk-ft-gloss { stroke: var(--white); stroke-width: 5; stroke-linecap: round; opacity: .75; }
+.tk-ft-arcp { stroke: var(--primary-light); stroke-width: 1.2; stroke-dasharray: 3 6; stroke-linecap: round; }
+
+/* The authorities on their slabs, in isometric */
+.tk-ft-org { width: calc(var(--su) * 180); height: calc(var(--su) * 200); }
+.tk-ft-org svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.tk-ft-slab-sh { fill: url(#tk-ft-g-shade); }
+:is(.tk-ft-st, .tk-ft-sl, .tk-ft-sr) { stroke-width: 5; stroke-linejoin: round; }
+.tk-ft-st { fill: var(--white); stroke: var(--white); }
+.tk-ft-sl { fill: color-mix(in srgb, var(--hair) 55%, var(--white)); stroke: color-mix(in srgb, var(--hair) 55%, var(--white)); }
+.tk-ft-sr { fill: color-mix(in srgb, var(--hair) 90%, var(--paper)); stroke: color-mix(in srgb, var(--hair) 90%, var(--paper)); }
+.tk-ft-slab-in { stroke: rgb(from var(--primary) r g b / calc(var(--lit, 0) * .55)); stroke-width: 1.2; }
+:is(.tk-ft-ft, .tk-ft-fl, .tk-ft-fr, .tk-ft-roof, .tk-ft-dome, .tk-ft-plaque) { stroke: rgb(from var(--ink) r g b / .14); stroke-width: .8; stroke-linejoin: round; }
+.tk-ft-ft { fill: var(--white); }
+.tk-ft-fl { fill: color-mix(in srgb, var(--paper) 40%, var(--white)); }
+.tk-ft-fr { fill: color-mix(in srgb, var(--hair) 70%, var(--paper)); }
+.tk-ft-ft.tk-ft-redb { fill: color-mix(in srgb, var(--primary), var(--white) 18%); }
+.tk-ft-fl.tk-ft-redb { fill: var(--primary); }
+.tk-ft-fr.tk-ft-redb { fill: var(--primary-ink); }
+.tk-ft-roof { fill: color-mix(in srgb, var(--hair) 85%, var(--paper)); }
+.tk-ft-dome { fill: url(#tk-ft-g-dome); }
+.tk-ft-plaque { fill: var(--white); }
+.tk-ft-win { fill: color-mix(in srgb, var(--ink) 22%, var(--paper)); }
+.tk-ft-glass-w { fill: color-mix(in srgb, var(--ink) 15%, var(--paper)); }
+.tk-ft-glass-w.tk-ft-shade { fill: color-mix(in srgb, var(--ink) 27%, var(--paper)); }
+.tk-ft-colon { fill: color-mix(in srgb, var(--ink) 30%, var(--paper)); }
+.tk-ft-pole { stroke: var(--ink-soft); stroke-width: 1.4; stroke-linecap: round; }
+.tk-ft-flag { fill: var(--primary); }
+.tk-ft-door { fill: var(--ink-soft); }
+.tk-ft-lab {
+  box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: calc(var(--su) * 10);
+  width: calc(var(--su) * 150); min-height: calc(var(--su) * 50); padding-block: calc(var(--su) * 8); padding-inline: calc(var(--su) * 12) calc(var(--su) * 10);
+  border-radius: calc(var(--su) * 10); border: 1px solid color-mix(in srgb, var(--primary-light) calc(var(--lit, 0) * 100%), var(--hair)); background: var(--white);
+  box-shadow: 0 0 0 calc(var(--lit, 0) * var(--su) * 4) rgb(from var(--primary) r g b / .08), 0 calc(var(--su) * 12) calc(var(--su) * 24) calc(var(--su) * -14) rgb(from var(--ink) r g b / .3);
+}
+.tk-ft-lab b { font-size: max(9.5px, calc(var(--su) * 12)); font-weight: 500; line-height: 1.25; color: var(--ink); }
+
+/* The wires: a glow, a companion strand, the line, and the current */
+.tk-ft-wire path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.tk-ft-glow { stroke: var(--primary); stroke-width: 7; opacity: calc(.09 + var(--lit, 0) * .12); }
+.tk-ft-ln { stroke: var(--primary); stroke-width: calc(1.4px + var(--lit, 0) * .8px); opacity: .85; filter: drop-shadow(0 0 2px rgb(from var(--primary) r g b / .45)); }
+.tk-ft-ln2 { stroke: var(--primary-light); stroke-width: 1; opacity: .55; }
+.tk-ft-flow { stroke: var(--primary); stroke-width: 3.4; stroke-dasharray: .012 .068; opacity: var(--lit, 0); transition: opacity .3s ease; }
+.tk-ft-dot {
+  fill: var(--primary); stroke: var(--white); stroke-width: 2; transform-box: fill-box; transform-origin: center;
+  scale: calc(1 + var(--lit, 0) * .35); transition: scale .4s cubic-bezier(.2, 1.6, .4, 1);
+}
+.tk-ft-dot-s { stroke-width: 1.5; }
+
+/* ── Pointing at a layer lights its part of the board ── */
+.tk-ft-board [data-g] { --lit: 0; transition: opacity .45s ease, filter .45s ease; }
+:is(.tk-fut[data-focus="0"] [data-g~="0"], .tk-fut[data-focus="1"] [data-g~="1"], .tk-fut[data-focus="2"] [data-g~="2"]) { --lit: 1; }
+.tk-fut[data-focus] .tk-ft-board [data-g] { opacity: calc(.16 + .84 * var(--lit)); filter: grayscale(calc((1 - var(--lit)) * .8)); }
+:is(.tk-ft-rec, .tk-ft-lab) { transition: opacity .45s ease, filter .45s ease, border-color .4s ease, box-shadow .4s ease; }
+@media (prefers-reduced-motion: no-preference) {
+  :is(.tk-fut[data-focus="0"] [data-g~="0"], .tk-fut[data-focus="1"] [data-g~="1"], .tk-fut[data-focus="2"] [data-g~="2"]) > .tk-ft-flow { animation: tkFtFlow 2.4s linear infinite; }
+}
+@keyframes tkFtFlow { to { stroke-dashoffset: -.4; } }
+
+/* ── The three layers, under the board ── */
+.tk-ft-items { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 48px); margin: 34px 0 0; padding: 0; list-style: none; }
+.tk-ft-item { cursor: default; transition: opacity .4s ease; }
+.tk-ft-rule { display: flex; align-items: center; gap: 14px; }
+.tk-ft-num { font-family: var(--mono); font-size: 13px; letter-spacing: .06em; color: var(--muted); transition: color .3s ease; }
+.tk-ft-rule i { position: relative; flex: 1; height: 1px; background: var(--hair); }
+.tk-ft-rule i::before {
+  content: ""; position: absolute; z-index: 1; inset-inline-start: 0; top: 50%; width: 7px; height: 7px; margin-block-start: -3.5px;
+  border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 0 rgb(from var(--primary) r g b / .18); transition: box-shadow .4s ease;
+}
+.tk-ft-rule i::after {
+  content: ""; position: absolute; inset: 0; background: var(--primary);
+  transform: scaleX(0); transform-origin: var(--origin-x); transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+}
+.tk-ft-item h3 { margin: 18px 0 0; font: inherit; }
 .tk-ft-go {
-  margin: 0; padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; color: inherit; text-align: start; cursor: pointer;
-  text-decoration: underline 1px transparent; text-underline-offset: .2em; transition: color .3s ease, text-decoration-color .3s ease;
+  margin: 0; padding: 0; border: 0; background: none; cursor: pointer; text-align: start;
+  font-family: var(--mono); font-size: 13px; font-weight: 500; line-height: 1.5; color: var(--ink); transition: color .3s ease;
 }
-.tk-ft-go:hover { color: var(--primary-ink); text-decoration-color: rgb(from var(--primary) r g b / .5); }
+.tk-ft-go:lang(en) { letter-spacing: .14em; text-transform: uppercase; }
 .tk-ft-go:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; border-radius: 4px; }
-.tk-ft-p { grid-column: 2; display: grid; grid-template-rows: 1fr; transition: grid-template-rows .6s var(--rd-ease), opacity .45s ease; }
-.tk-ft-p > p { min-height: 0; overflow: hidden; margin: 0; padding-block-start: 10px; max-width: 46ch; font-size: 16px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
-
-@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .tk-ft-step { opacity: .32; }
-  .tk-ft-p { grid-template-rows: 0fr; opacity: 0; }
-  :is([data-step="0"] .tk-ft-step:nth-child(1), [data-step="1"] .tk-ft-step:nth-child(-n + 2), [data-step="2"] .tk-ft-step, [data-step="3"] .tk-ft-step) { opacity: 1; }
-  :is([data-step="1"] .tk-ft-step:nth-child(1), [data-step="2"] .tk-ft-step:nth-child(-n + 2), [data-step="3"] .tk-ft-step) :is(h3, .tk-ft-n) { color: var(--muted); }
-  :is([data-step="0"] .tk-ft-step:nth-child(1), [data-step="1"] .tk-ft-step:nth-child(2), [data-step="2"] .tk-ft-step:nth-child(3)) .tk-ft-p { grid-template-rows: 1fr; opacity: 1; }
+.tk-ft-item p { margin: 12px 0 0; max-width: 44ch; font-size: 15px; line-height: 1.6; color: var(--muted); text-wrap: pretty; }
+.tk-fut[data-focus] .tk-ft-item { opacity: .4; }
+:is(.tk-fut[data-focus="0"] .tk-ft-item:nth-child(1), .tk-fut[data-focus="1"] .tk-ft-item:nth-child(2), .tk-fut[data-focus="2"] .tk-ft-item:nth-child(3)) {
+  opacity: 1;
+  & .tk-ft-rule i::after { transform: scaleX(1); }
+  & .tk-ft-rule i::before { box-shadow: 0 0 0 5px rgb(from var(--primary) r g b / .18); }
+  & .tk-ft-num, & .tk-ft-go { color: var(--primary-ink); }
 }
 
-/* ── The scene: fitted into the frame beside the copy and out to the page's
-   edge. Nothing it draws crosses its inline-start edge into the copy, even
-   mid pull-back; every other side runs free. ── */
-.tk-ft-scene {
-  align-self: stretch; min-height: 0; display: grid; place-items: center;
-  margin-inline-end: calc(-1 * clamp(24px, 8.334vw, 120px)); container-type: size;
-  clip-path: inset(-50vh calc((1 + var(--flip)) * -50vw) -50vh calc((1 - var(--flip)) * -50vw));
-}
-.tk-ft-art { --su: min(100cqw / 800, 100cqh / 700); position: relative; width: calc(var(--su) * 800); height: calc(var(--su) * 700); color: var(--ink); }
-.tk-ft-art::before {
-  content: ""; position: absolute; inset: -6%; z-index: -1; pointer-events: none;
-  background: radial-gradient(ellipse 50% 50% at 50% 50%, var(--white), transparent 72%);
-}
-.tk-ft-lay { position: absolute; inset: 0; }
-.tk-ft-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-/* The pull-back: the hub shrinks about the core while the network closes in round it. */
-.tk-ft-hub { scale: calc(1 - .5 * var(--z, 1)); }
-.tk-ft-net { opacity: clamp(0, var(--z, 1) * 1.8, 1); scale: calc(1 + .9 * (1 - var(--z, 1))); }
-.tk-ft-zf { opacity: clamp(0, 1 - var(--z, 1) * 2.5, 1); }
-
-/* Placed at a board point and centred on it, bobbing on the clock. */
-.tk-ft-at {
-  --bobt: sin(calc((var(--fl, 0) * .5 + var(--ph, 0)) * 1turn));
-  position: absolute; inset-inline-start: calc(var(--x) * 1%); top: calc(var(--y) * 1%);
-  translate: calc(var(--flip) * -50%) calc(-50% + var(--bobt) * 3px);
-}
-.tk-ft-at > .tk-rd-p { position: relative; }
-
-/* ── Act one: the core, its orbit and sweep, the tethers ── */
-.tk-ft-band { stroke: var(--primary); stroke-width: 2.4; stroke-linecap: round; }
-.tk-ft-face-l { stroke: rgb(from var(--ink) r g b / .08); stroke-width: 1; }
-.tk-ft-lit .tk-ic { stroke: color-mix(in srgb, var(--primary) calc(var(--on) * 100%), var(--tick-off)); transition: stroke .4s ease; }
-.tk-ft-orbit { stroke: var(--primary-light); stroke-width: 1.4; }
-.tk-ft-sweep { transform: translate(400px, 350px) scale(1, .648) rotate(var(--sw)); transform-box: view-box; transform-origin: 0 0; }
-.tk-ft-trail { fill: var(--primary); fill-opacity: var(--o); }
-.tk-ft-edge { stroke: var(--primary); stroke-width: 1.4; opacity: .5; vector-effect: non-scaling-stroke; }
-.tk-ft-teth {
-  stroke: var(--primary-light); stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--t));
-  transition: stroke .3s ease, stroke-width .3s ease;
-}
-.tk-ft-flow {
-  stroke: var(--primary); stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: .07 .93; stroke-dashoffset: calc(var(--fl, 0) * -.5);
-  opacity: var(--on); transition: opacity .4s ease;
-}
-.tk-ft-flow-ok { stroke: var(--tk-ok); }
-.tk-ft-bit { fill: var(--primary); }
-.tk-ft-ride { opacity: calc(clamp(0, var(--t) * 25, 1) * clamp(0, (1 - var(--t)) * 25, 1)); }
-.tk-ft-braid { mask-image: linear-gradient(calc(var(--flip) * 90deg), transparent 2%, black 18%); opacity: calc(1 - var(--z, 1)); }
-:is(.tk-ft-str, .tk-ft-braid-g) { stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--t)); }
-.tk-ft-braid-g { stroke: var(--primary); stroke-width: 16; opacity: .06; }
-
-/* The assets as cards on the orbit: scanned and ticked, then live on the
-   watch, glowing as the sweep passes, and updated once, the old version
-   slipping out behind. */
-.tk-ft-asset {
-  --mon: clamp(0, (var(--b, 1) - .5) * 1000, 1);
-  --was: clamp(0, (var(--b, 1) - var(--up)) * 1000, 1);
-  --upd: calc(var(--was) * clamp(0, (var(--up) + .1 - var(--b, 1)) * 1000, 1));
-  --hit: calc(var(--mon) * clamp(0, (cos(calc(var(--sw) - var(--ang) - 8deg)) - .9) * 10, 1));
-}
-.tk-ft-card {
-  position: relative; box-sizing: border-box; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: calc(var(--su) * 9);
-  width: calc(var(--su) * 194); padding: calc(var(--su) * 11) calc(var(--su) * 11) calc(var(--su) * 9); overflow: hidden;
-  border-radius: calc(var(--su) * 13); border: 1px solid color-mix(in srgb, var(--primary) calc(var(--upd) * 60%), var(--hair)); background: var(--white);
-  font-size: calc(var(--su) * 11); line-height: 1.25;
-  box-shadow:
-    0 0 0 calc(var(--hit) * var(--su) * 5) rgb(from var(--tk-ok) r g b / calc(var(--hit) * .22)),
-    0 calc(var(--su) * 14) calc(var(--su) * 26) calc(var(--su) * -14) rgb(from var(--ink) r g b / .34);
-  transition: border-color .35s ease, translate .4s var(--rd-ease);
-}
-.tk-ft-ver {
-  position: absolute; inset: 0; border-radius: calc(var(--su) * 13); border: 1px solid var(--hair); background: var(--white);
-  box-shadow: 0 calc(var(--su) * 10) calc(var(--su) * 20) calc(var(--su) * -14) rgb(from var(--ink) r g b / .3);
-  opacity: calc(var(--was) * .9); translate: calc(var(--was) * var(--flip) * var(--su) * 9) calc(var(--was) * var(--su) * -9);
-  transition: opacity .4s ease, translate .7s var(--rd-ease);
-}
-.tk-ft-face { display: grid; place-items: center; width: calc(var(--su) * 32); height: calc(var(--su) * 32); border-radius: 50%; background: var(--paper); color: var(--ink-soft); }
-.tk-ft-card:not([data-a="0"]) .tk-ft-face { border-radius: calc(var(--su) * 9); }
-.tk-ft-face svg { width: 58%; height: 58%; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.tk-ft-tx { display: grid; min-width: 0; padding-inline-end: calc(var(--su) * 16); }
-.tk-ft-tx b { font-size: max(7px, calc(var(--su) * 11.5)); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; unicode-bidi: plaintext; text-align: start; }
-.tk-ft-tx small {
-  justify-self: start; max-width: 100%; margin-block-start: calc(var(--su) * 2); margin-inline-start: calc(var(--su) * -3); padding-inline: calc(var(--su) * 3);
-  border-radius: calc(var(--su) * 3); font-size: max(6.5px, calc(var(--su) * 9.5)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  color: color-mix(in srgb, var(--primary-ink) calc(var(--upd) * 100%), var(--muted)); background: rgb(from var(--primary) r g b / calc(var(--upd) * .1));
-  transition: color .3s ease, background-color .3s ease;
-}
-.tk-ft-mk {
-  position: absolute; top: calc(var(--su) * 9); inset-inline-end: calc(var(--su) * 9); width: calc(var(--su) * 15); height: calc(var(--su) * 15);
-  scale: calc((.3 + .7 * var(--on)) * (1 + var(--hit) * .3));
-}
-.tk-ft-mk svg { display: block; width: 100%; height: 100%; }
-.tk-ft-mk circle { fill: var(--tk-ok); }
-.tk-ft-mk path { fill: none; stroke: var(--white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.tk-ft-row { grid-column: 1 / -1; display: flex; align-items: center; gap: calc(var(--su) * 8); padding-block-start: calc(var(--su) * 8); border-block-start: 1px solid var(--hair); }
-.tk-ft-ecg { flex: none; width: calc(var(--su) * 84); height: calc(var(--su) * 14); overflow: visible; }
-.tk-ft-ecg path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.tk-ft-ecg0 { stroke: var(--hair); stroke-width: 1.5; }
-.tk-ft-ecg1 { stroke: var(--tk-ok); stroke-width: 2; stroke-dasharray: .26 .74; stroke-dashoffset: calc(var(--fl, 0) * -1.1); opacity: var(--mon); transition: opacity .4s ease; }
-.tk-ft-st { display: grid; min-width: 0; font-family: var(--mono); font-size: max(6px, calc(var(--su) * 8.5)); font-weight: 500; white-space: nowrap; }
-.tk-ft-st:lang(en) { letter-spacing: .08em; text-transform: uppercase; }
-.tk-ft-st > span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: .55em; transition: opacity .3s ease; }
-.tk-ft-st-v { color: var(--tk-ok-ink); opacity: calc(var(--on) * (1 - var(--mon))); }
-.tk-ft-st-l { color: var(--tk-ok-ink); opacity: calc(var(--mon) * (1 - var(--upd))); }
-.tk-ft-st-l::before { content: ""; flex: none; width: .7em; height: .7em; border-radius: 50%; background: var(--tk-ok); box-shadow: 0 0 0 .25em rgb(from var(--tk-ok) r g b / .18); }
-.tk-ft-st-u { color: var(--primary-ink); opacity: var(--upd); }
-.tk-ft-scan {
-  position: absolute; z-index: 2; inset-inline: 0; top: calc(var(--t) * 100%); height: calc(var(--su) * 2); background: var(--primary);
-  box-shadow: 0 0 calc(var(--su) * 8) calc(var(--su) * 1.5) rgb(from var(--primary) r g b / .45);
-  opacity: calc(clamp(0, var(--t) * 30, 1) * clamp(0, (1 - var(--t)) * 30, 1));
-}
-.tk-ft-scan::before { content: ""; position: absolute; inset-inline: 0; bottom: 100%; height: calc(var(--su) * 26); background: linear-gradient(to top, rgb(from var(--primary) r g b / .12), transparent); }
-
-/* ── Act two: the organisations, their keys and their answers ── */
-.tk-ft-org { width: calc(var(--pw) * 1%); }
-.tk-ft-pcs { display: block; width: 100%; height: auto; overflow: visible; transition: translate .4s var(--rd-ease); }
-.tk-ft-beam { stroke: var(--tick-off); stroke-width: 1.4; stroke-dasharray: 2 6; stroke-linecap: round; }
-:is(.tk-ft-req, .tk-ft-ok) { stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--t)); transition: stroke-width .3s ease; }
-.tk-ft-req { stroke: var(--primary); stroke-width: 1.6; }
-.tk-ft-ok { stroke: var(--tk-ok); stroke-width: 2.2; }
-.tk-ft-tok { fill: var(--white); stroke: var(--primary-light); stroke-width: 1.4; }
-.tk-ft-gh { fill: var(--white); stroke: var(--tick-off); stroke-width: 1.4; stroke-dasharray: 3 4; }
-.tk-ft-strike { stroke: var(--primary); stroke-width: 2.4; stroke-linecap: round; }
-.tk-ft-gone { opacity: calc(1 - var(--on)); transition: opacity .5s ease .15s; }
-.tk-ft-x { text-decoration: line-through 1.5px rgb(from var(--primary) r g b / var(--on)); transition: text-decoration-color .3s ease; }
-
-/* Pointing at a card or an organisation lifts it and lights its line. */
-@media (hover: hover) {
-  .tk-ft-card:hover { translate: 0 calc(var(--su) * -4); border-color: rgb(from var(--primary) r g b / .45); }
-  .tk-ft-org:hover .tk-ft-pcs { translate: 0 -4%; }
-  :is(
-    .tk-ft-hub:has(.tk-ft-card[data-a="0"]:hover) .tk-ft-teth[data-a="0"],
-    .tk-ft-hub:has(.tk-ft-card[data-a="1"]:hover) .tk-ft-teth[data-a="1"],
-    .tk-ft-hub:has(.tk-ft-card[data-a="2"]:hover) .tk-ft-teth[data-a="2"]
-  ) { stroke: var(--primary); stroke-width: 3; }
-  :is(
-    .tk-ft-hub:has(.tk-ft-org:nth-child(1):hover) g.tk-ft-a2 > g:nth-child(1),
-    .tk-ft-hub:has(.tk-ft-org:nth-child(2):hover) g.tk-ft-a2 > g:nth-child(2),
-    .tk-ft-hub:has(.tk-ft-org:nth-child(3):hover) g.tk-ft-a2 > g:nth-child(3),
-    .tk-ft-hub:has(.tk-ft-org:nth-child(4):hover) g.tk-ft-a2 > g:nth-child(4)
-  ) :is(.tk-ft-req, .tk-ft-ok) { stroke-width: 3.6; }
-}
-
-/* ── HelloVerify under the core, and the caption telling each act ── */
-.tk-ft-badge {
-  position: absolute; z-index: 3; inset-inline-start: calc(var(--x) * 1%); top: calc(var(--y) * 1%);
-  display: grid; justify-items: center; gap: calc(var(--su) * 9);
-  translate: calc(var(--flip) * -50%) calc(-50% - var(--z, 1) * var(--su) * 40);
-}
-.tk-ft-logo {
-  display: grid; place-items: center; height: calc(var(--su) * 42); padding-inline: calc(var(--su) * 15); border-radius: 999px; border: 1px solid var(--hair); background: var(--white);
-  box-shadow: 0 0 0 calc(var(--su) * 5) rgb(from var(--primary) r g b / .06), 0 calc(var(--su) * 14) calc(var(--su) * 26) calc(var(--su) * -16) rgb(from var(--ink) r g b / .5);
-}
-.tk-ft-logo svg { width: auto; height: 60%; }
-.tk-ft-cap { display: grid; justify-items: center; }
-.tk-ft-cap > * { grid-area: 1 / 1; }
-.tk-ft-cap-once { opacity: clamp(0, 1 - var(--z, 1) * 3, 1); }
-.tk-ft-chip {
-  display: inline-flex; align-items: center; gap: .65em; box-sizing: border-box; height: 2.5em; padding-inline: 1em;
-  border-radius: 999px; border: 1px solid var(--hair); background: var(--white); white-space: nowrap;
-  font-family: var(--mono); font-size: clamp(8.5px, 1.4cqw, 11px); font-weight: 500; color: var(--ink-soft);
-  box-shadow: 0 10px 22px -14px rgb(from var(--ink) r g b / .5);
-}
-.tk-ft-chip:lang(en) { letter-spacing: .08em; text-transform: uppercase; }
-.tk-ft-chip.tk-ft-chip-on {
-  height: auto; padding: .3em .85em .38em; border-color: rgb(from var(--primary) r g b / .35);
-  font-family: var(--serif); font-size: max(15px, calc(var(--su) * 24)); font-weight: 400; letter-spacing: -.015em; text-transform: none; color: var(--ink);
-  box-shadow: 0 0 0 calc(var(--su) * 5) rgb(from var(--primary) r g b / .07), 0 calc(var(--su) * 16) calc(var(--su) * 30) calc(var(--su) * -18) rgb(from var(--ink) r g b / .55);
-}
-.tk-ft-dots { display: inline-flex; gap: .4em; }
-.tk-ft-dots i {
-  box-sizing: border-box; width: .8em; height: .8em; border-radius: 50%; border: 1.5px solid color-mix(in srgb, var(--tk-ok) calc(var(--on) * 100%), var(--tick-off));
-  background: color-mix(in srgb, var(--tk-ok) calc(var(--on) * 100%), var(--white)); transition: background-color .3s ease, border-color .3s ease;
-}
-
-/* ── Act three: the network the core powers ── */
-.tk-ft-ground { mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, black 35%, transparent 80%); }
-.tk-ft-grid { stroke: rgb(from var(--ink) r g b / .09); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.tk-ft-wave {
-  stroke: var(--primary); stroke-width: 1.4; vector-effect: non-scaling-stroke; transform-box: fill-box; transform-origin: center;
-  scale: calc(.6 + var(--t) * 4.2); opacity: calc(sin(calc(var(--t) * 180deg)) * .35);
-}
-.tk-ft-mesh { stroke: var(--tk-ok); stroke-width: 1.2; stroke-dasharray: 2 5; stroke-linecap: round; opacity: calc(var(--on) * .6); transition: opacity .6s ease; }
-.tk-ft-tr { stroke: var(--tick-off); stroke-width: 1.2; stroke-dasharray: 2 5; stroke-linecap: round; stroke-linejoin: round; }
-.tk-ft-tr-on { stroke: var(--primary); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - var(--t)); }
-.tk-ft-farl { opacity: .45; }
-.tk-ft-tile-off { fill: rgb(from var(--white) r g b / .75); stroke: var(--tick-off); stroke-width: 1.2; stroke-dasharray: 3 3; }
-.tk-ft-far { filter: blur(1.6px); opacity: calc(.3 + .3 * var(--on)); transition: opacity .6s ease; }
-
-/* ── Phone and tablet: the layer on show over the scene, one at a time ── */
+/* ── Narrower: the parts stack in order down the page ── */
 @media (max-width: 1080px) {
-  .tk-fut { padding-block-start: 76px; }
-  .tk-ft-run { height: 600vh; }
-  .tk-ft-pin { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); align-items: stretch; gap: 10px; padding-block: 72px 10px; }
-  .tk-ft-copy { align-self: end; gap: 16px; }
-  .tk-ft-h { max-width: none; font-size: 27px; }
-  .tk-ft-step h3 { font-size: 22px; }
-  .tk-ft-p > p { font-size: 14.5px; }
-  .tk-ft-scene { width: 100vw; margin-inline: calc(50% - 50vw); }
-  .tk-ft-art { --su: min(100cqw / 760, 100cqh / 700); }
-  .tk-ft-art :is(.tk-rd-chip, .tk-ft-chip:not(.tk-ft-chip-on)) { font-size: clamp(7px, 1.75cqw, 11px); }
+  .tk-fut { padding-block-start: 84px; }
+  .tk-ft-board { --su: min(1px, calc(100cqw / 430)); display: grid; justify-items: center; height: auto; max-width: 540px; margin-inline: auto; }
+  .tk-ft-board::before, .tk-ft-wires { display: none; }
+  :is(.tk-ft-rec, .tk-ft-pane, .tk-ft-core, .tk-ft-org, .tk-ft-lab, .tk-ft-sites > .tk-ft-tag) { position: relative; inset: auto; translate: none; }
+  .tk-ft-recs { display: grid; gap: 10px; width: 100%; max-width: 340px; }
+  .tk-ft-rec { width: auto; transform: none; }
+  /* A stem of wire into each part from the one above */
+  :is(.tk-ft-panes, .tk-ft-core, .tk-ft-sites) { background: linear-gradient(var(--primary-light), var(--primary)) 50% 0 / 1.5px 30px no-repeat; }
+  .tk-ft-panes { display: flex; justify-content: center; padding-block-start: 24px; }
+  .tk-ft-pane { width: calc(var(--su) * 76); height: calc(var(--su) * 228); margin-inline: calc(var(--su) * -6); }
+  .tk-ft-core { margin-block-start: 6px; padding-block-start: 40px; height: calc(var(--su) * 330 + 40px); }
+  .tk-ft-tag-core { top: 40px; }
+  .tk-ft-sites { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; width: 100%; padding-block-start: 40px; }
+  .tk-ft-sites > .tk-ft-tag { grid-column: 1 / -1; justify-self: center; margin-block-end: 6px; }
+  .tk-ft-site { display: grid; justify-items: center; align-content: start; }
+  .tk-ft-org { margin-block: calc(var(--su) * -36) calc(var(--su) * -26); }
+  .tk-ft-lab { width: 100%; max-width: 190px; margin-block-end: 18px; }
+  .tk-ft-items { grid-template-columns: minmax(0, 1fr); gap: 28px; margin-block-start: 32px; }
 }
-@media (max-width: 1080px) and (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  .tk-ft-step { grid-area: 1 / 1; }
-  :is([data-step="0"] .tk-ft-step:not(:nth-child(1)), [data-step="1"] .tk-ft-step:not(:nth-child(2)), :is([data-step="2"], [data-step="3"]) .tk-ft-step:not(:nth-child(3))) { opacity: 0; pointer-events: none; }
-}
-
-/* ── Reduced motion and no script: no runway; the scene rests on its last
-   frame, and a layer's name shows its own act finished ── */
-@media (prefers-reduced-motion: reduce), (scripting: none) {
-  .tk-ft-run { height: auto; }
-  .tk-ft-pin { position: relative; height: auto; padding-block: 40px 0; }
-  .tk-ft-scene { height: min(720px, 56vw); }
-}
-@media (max-width: 1080px) and ((prefers-reduced-motion: reduce) or (scripting: none)) {
-  .tk-ft-scene { height: 88vw; }
-}
-.tk-fut[data-focus="0"] { --z: 0; --b2: 0; --b3: 0; }
-.tk-fut[data-focus="1"] { --z: 0; --b3: 0; }
-:is(.tk-fut[data-focus="0"] .tk-ft-step:not(:nth-child(1)), .tk-fut[data-focus="1"] .tk-ft-step:not(:nth-child(2)), .tk-fut[data-focus="2"] .tk-ft-step:not(:nth-child(3))) { opacity: .4; }
 
 /* ══ Part 6 · Security & compliance: the vault ══ */
 .tk-sec { padding-block: 150px 140px; }

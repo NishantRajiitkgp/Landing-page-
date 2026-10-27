@@ -958,28 +958,6 @@ html[lang="ar"] .hv3-tier .nm { letter-spacing: 0; }
 .ent3-adv li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 22px 20px; text-align: center; font-size: 14.5px; line-height: 1.5; color: var(--ink-soft); }
 .ent3-adv li + li { border-inline-start: 1px solid var(--hair); }
 .ent3-adv li .v { font-family: var(--serif); font-size: 44px; line-height: 1; color: var(--ink); }
-/* /products/customer-kyc — the six step cards (first one lit until another is hovered) and the solution cards */
-.kyc3-h { max-width: 1000px; margin-inline: auto; font-size: clamp(28px, 3vw, 44px); }
-.kyc3-steps { list-style: none; margin: 0; padding: 64px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 84px 28px; }
-.kyc3-steps > li { position: relative; display: flex; flex-direction: column; gap: 8px; min-height: 260px; padding: 84px 22px 26px; border: 1px solid var(--hair); border-radius: 20px; background: var(--white); outline: none; transition: background-color 0.2s, color 0.2s, border-color 0.2s; }
-.kyc3-steps .ph { position: absolute; top: -56px; inset-inline-start: 22px; width: 112px; height: 112px; overflow: hidden; border-radius: 50%; background: var(--paper); box-shadow: 0 0 0 3px var(--white), 0 0 0 4px var(--hair); }
-.kyc3-steps .ph img { width: 100%; height: 100%; object-fit: contain; }
-.kyc3-steps .badge { position: absolute; top: 14px; inset-inline-end: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 62px; height: 62px; border-radius: 50%; background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--hair); line-height: 1; }
-.kyc3-steps .badge span { font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em; }
-.kyc3-steps .badge b { margin-top: 3px; font-family: var(--serif); font-size: 24px; font-weight: 400; }
-.kyc3-steps h3 { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.35; color: inherit; }
-.kyc3-steps p { margin: 0; font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
-.kyc3-steps:not(:hover):not(:focus-within) > li:first-child, .kyc3-steps > li:hover, .kyc3-steps > li:focus-visible { border-color: var(--ink); background: var(--ink); color: var(--white); }
-:is(.kyc3-steps:not(:hover):not(:focus-within) > li:first-child, .kyc3-steps > li:hover, .kyc3-steps > li:focus-visible) p { color: var(--paper); }
-:is(.kyc3-steps:not(:hover):not(:focus-within) > li:first-child, .kyc3-steps > li:hover, .kyc3-steps > li:focus-visible) .badge { background: var(--white); }
-.kyc3-sol ol { margin: 0; padding-inline-start: 1.3em; font-size: 15px; line-height: 1.9; color: var(--ink-soft); }
-@media (max-width: 1080px) {
-  .kyc3-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 640px) {
-  .kyc3-steps { grid-template-columns: minmax(0, 1fr); }
-}
-
 /* /products/certifier — light card language shared with emp4 / mom3 */
 .cf4 { padding-bottom: 48px; }
 .cf4 .sec3 { padding-top: 96px; }

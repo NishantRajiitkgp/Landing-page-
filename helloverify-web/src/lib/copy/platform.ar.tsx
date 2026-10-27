@@ -392,7 +392,7 @@ export const ar: PlatformCopy = {
     },
 
     platform: {
-      h: "من مزوّد تحقق إلى منصة ثقة عالمية.",
+      h: "من تقديم عمليات التحقق إلى تمكين الثقة على نطاق واسع",
       sub: "تتطور HelloVerify إلى منصة ثقة عالمية — طبقة البنية التحتية للنشاط الاقتصادي الموثوق عبر الحدود.",
       cards: {
         workforceMobility: {
@@ -577,16 +577,19 @@ export const ar: PlatformCopy = {
         rails: "مسارات الثقة",
       },
       future: {
-        company: "ABC Tech Pvt. Ltd.",
-        business: "نشاط تجاري",
-        live: "مباشر",
-        updated: "مُحدَّث",
-        gov: "حكومة",
-        enterprise: "مؤسسة",
-        bank: "بنك",
-        hospital: "مستشفى",
-        repeat: "فحص مكرر",
-        infra: "بنية تحتية للثقة",
+        identity: "الهوية الفردية",
+        employment: "سجلات التوظيف",
+        education: "الشهادات التعليمية",
+        criminal: "السجلات الجنائية",
+        business: "السجل التجاري",
+        verify: "تحقق",
+        validate: "مصادقة",
+        monitor: "مراقبة",
+        update: "تحديث",
+        gov: "الجهات الحكومية",
+        enterprise: "المؤسسات",
+        medical: "الجهات الطبية",
+        edu: "المؤسسات التعليمية",
       },
     },
   },

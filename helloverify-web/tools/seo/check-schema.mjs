@@ -87,9 +87,8 @@ const SERVICE_PAGES = new Set([
 const HOWTO_PAGES = new Set([
   "/en/business",
   "/en/products/bgv-smb",
-  // `/en/products/customer-kyc` left on 6 Oct 2026: the old page's six step
-  // cards are not one instruction each (step 1 lists three check groups), so
-  // they render as the old cards, not a `Steps` strip
+  // `/en/products/customer-kyc` stays off this list: the six phone steps are
+  // descriptive cards, not a `Steps` strip, so they do not emit a HowTo
   "/en/individuals",
   // the old "How it works" (Register & Upload → … → Receive Your Verification
   // Report); the page's "Our Services" strip has no `name` and emits nothing

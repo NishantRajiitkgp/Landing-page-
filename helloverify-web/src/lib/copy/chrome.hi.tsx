@@ -201,8 +201,6 @@ export const hi: ChromeCopy = {
     policy: "कुकी नीति",
     accept: "स्वीकार करें",
     reject: "अस्वीकार करें",
-    reopenRegion: "आपकी कुकी पसंद",
-    reopen: "कुकी प्राथमिकताएँ",
   },
 
   faq: {

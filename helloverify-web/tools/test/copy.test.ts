@@ -719,16 +719,16 @@ check(
   "neither business locale keeps the invented enterprise note",
   !("note" in businessHi.enterprise) && !("note" in businessAr.enterprise),
 );
-/** 6 Oct 2026: the `&amp;` faqHead this used to pin was KYC's, and the KYC
- *  rebuild from `customerKyc.base.json` dropped its invented FAQ. What has
- *  to hold now is the old shape: six steps, six solution cards, no FAQ. */
+/** 26 Oct 2026: Customer KYC took the redesign's copy — six phone steps,
+ *  six regulated sectors, eight bundle lines, five questions. */
 check(
-  "both business locales carry the old KYC shape: six steps, six cards, no FAQ",
+  "both business locales carry the Customer KYC redesign",
   [businessHi, businessAr].every(
     (b) =>
-      !("faqs" in b.customerKyc) &&
       Object.keys(b.customerKyc.how.steps).length === 6 &&
-      Object.keys(b.customerKyc.solutions.cards).length === 6,
+      Object.keys(b.customerKyc.who.law.cards).length === 6 &&
+      b.customerKyc.bundle.items.length === 8 &&
+      b.customerKyc.faq.items.length === 5,
   ),
 );
 
@@ -1298,24 +1298,28 @@ const TPL = pick(TEMPLATES, DEFAULT);
  *  leaves 21 -> 18: its closing heading, four strip items and its faqHead
  *  went; the three Vendor Monitoring lines (old CMS `bold` parts) came.
  *  597 -> 598 strings (6 Oct 2026): `smb.summary.cartName`, the custom
- *  package's name in checkout, the cart and My Orders. */
+ *  package's name in checkout, the cart and My Orders.
+ *  598 -> 702 strings (26 Oct 2026): `/products/customer-kyc` took the
+ *  redesign's copy. Its heading is a plain sentence, so rich leaves
+ *  18 -> 17. */
 check(
-  "business/en holds 598 string leaves and 18 rich-text leaves",
-  stringLeaves(BIZ).length === 598 && leafPaths(BIZ).length === 616,
+  "business/en holds 702 string leaves and 17 rich-text leaves",
+  stringLeaves(BIZ).length === 702 && leafPaths(BIZ).length === 719,
   { strings: stringLeaves(BIZ).length, all: leafPaths(BIZ).length },
 );
 
-/** The 18, itemised, so changing one of them has to change this line. Six
- *  `<h1>`s and the enterprise screening heading carry an `<em>`; the 8
- *  trust-strip items are `<b>figure</b> tail`, which is TWO children and
- *  therefore one rich-text leaf rather than two string leaves — splitting
- *  them would put two adjacent text children where one sits today, and
- *  React's SSR writes `<!-- -->` between those (measured with
- *  `renderToString` before the move); and the three certifier Vendor
- *  Monitoring lines carry the old `<b>` runs. No function leaf is left. */
+/** The 17, itemised, so changing one of them has to change this line. Five
+ *  `<h1>`s and the enterprise screening heading carry an `<em>` — Customer
+ *  KYC's heading is a string, not one of them; the 8 trust-strip items are
+ *  `<b>figure</b> tail`, which is TWO children and therefore one rich-text
+ *  leaf rather than two string leaves — splitting them would put two adjacent
+ *  text children where one sits today, and React's SSR writes `<!-- -->`
+ *  between those (measured with `renderToString` before the move); and the
+ *  three certifier Vendor Monitoring lines carry the old `<b>` runs. No
+ *  function leaf is left. */
 check(
-  "…and the 18 are 6 h1 + 1 screening heading + 3 monitoring lines + 8 strip",
-  6 + 1 + 3 + 8 === leafPaths(BIZ).length - stringLeaves(BIZ).length,
+  "…and the 17 are 5 h1 + 1 screening heading + 3 monitoring lines + 8 strip",
+  5 + 1 + 3 + 8 === leafPaths(BIZ).length - stringLeaves(BIZ).length,
   leafPaths(BIZ).length - stringLeaves(BIZ).length,
 );
 
@@ -1981,12 +1985,11 @@ const PLATFORM_FILES: Record<string, readonly [number, number]> = {
    *  In: `art.road` (+11), the road's two ends and the words drawn at its
    *  stops; the cities, Verified, KYC, degree, Flagged and the regulator
    *  are reused from the globe and the pillar story. All plain strings.
-   *  201 -> 211 (26 Oct 2026): the future of trust became a scroll story.
-   *  In: `art.future` (+10), the stored business, a stored asset's two
-   *  states, the four organisations, the repeat check and what HelloVerify
-   *  becomes; Verified, Monitored, Verified once, Consent and the
-   *  verification provider are reused. All plain strings. */
-  technology: [52, 211],
+   *  201 -> 214 (26 Oct 2026): the future of trust became one board.
+   *  In: `art.future` (+13), its five records, four checks and four
+   *  authorities; the two layer names drawn over it are the cards' own
+   *  titles. All plain strings. */
+  technology: [52, 214],
   security: [43, 99],
 };
 
@@ -2022,8 +2025,8 @@ for (const [k, v] of Object.entries(GOVERNMENT_FILES)) {
  *  "a label per destination" shape `chrome.footer.links` uses, which is why
  *  they sit above the pages rather than inside four of them. */
 check(
-  "platform holds 499 leaves for 156 matched nodes — four pages plus the shared crumb",
-  leafPaths(EN_PLATFORM).length === 499 &&
+  "platform holds 502 leaves for 156 matched nodes — four pages plus the shared crumb",
+  leafPaths(EN_PLATFORM).length === 502 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[0], 0) === 156 &&
     Object.values(PLATFORM_FILES).reduce((a, b) => a + b[1], 0) + 1 === leafPaths(EN_PLATFORM).length,
   { measured: leafPaths(EN_PLATFORM).length },
@@ -2063,11 +2066,11 @@ check(
  *  the `art.sources` label the caption no longer draws. 426 -> 462: the
  *  compounding race (see `technology` above). 462 -> 458: the race became
  *  the scroll story. 458 -> 469 (24 Oct 2026): the trust road's eleven
- *  labels (see `technology` above). 469 -> 479 (26 Oct 2026): the future
- *  of trust's ten. Rich text is unchanged at 20. */
+ *  labels (see `technology` above). 469 -> 482 (26 Oct 2026): the future
+ *  of trust's thirteen. Rich text is unchanged at 20. */
 check(
-  "platform: 479 string leaves and 20 rich-text leaves",
-  stringLeaves(EN_PLATFORM).length === 479 &&
+  "platform: 482 string leaves and 20 rich-text leaves",
+  stringLeaves(EN_PLATFORM).length === 482 &&
     leafPaths(EN_PLATFORM).length - stringLeaves(EN_PLATFORM).length === 20 &&
     8 + 8 + 1 + 1 + 2 === 20,
   { strings: stringLeaves(EN_PLATFORM).length, all: leafPaths(EN_PLATFORM).length },

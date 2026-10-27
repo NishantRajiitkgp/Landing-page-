@@ -266,12 +266,9 @@ svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) {
    which is the same direction Consent Mode fails in (`denied`). A bar whose
    buttons cannot work is worse than no bar.
 
-   The attribute is written by a parser-blocking script that runs BEFORE these
-   elements are parsed, so neither ever toggles after first paint. That is the
-   §17 condition 3 argument: CLS is 0.000 on every measured page and an
-   element revealed after layout would move content. In flow rather than
-   `position: fixed` for a different reason — see the component header; a
-   fixed bar covers the controls under it, for Playwright and for a person.
+   The attribute is written by a parser-blocking script that runs BEFORE this
+   element is parsed, so it never toggles after first paint. Fixed to the
+   viewport bottom, so showing it never moves content (CLS stays 0.000).
 
    REJECTED: the `hidden` attribute instead of these two rules. jsdom does not
    load the external stylesheet, so `tools/a11y/check-axe.mjs` audits this
@@ -279,23 +276,25 @@ svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) {
    would then be the one component on the site that no accessibility gate ever
    looks at.
    ───────────────────────────────────────────────────────────────────────── */
-.ckb,
-.ckr {
+.ckb {
   display: none;
 }
 [data-hv-consent="ask"] .ckb {
   display: block;
 }
-[data-hv-consent="set"] .ckr {
-  display: block;
-}
 
-/* Full-bleed band, 1440px column inside it — the same shape `.page` and
-   `.wrap` give every other section, so the bar's text lines up with the nav
-   below it at both artboard widths. */
+/* Full-bleed band pinned to the bottom, 1440px column inside it — the same
+   shape `.page` and `.wrap` give every other section. Below the login scrim
+   (`auth.css`, 80) so a sign-in dialog still sits on top. */
 .ckb {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-end: 0;
+  z-index: 70;
+  padding-block-end: env(safe-area-inset-bottom);
   background: var(--ink);
   color: var(--paper);
+  box-shadow: 0 -12px 32px -16px rgb(from var(--ink) r g b / .45);
 }
 .ckb-in {
   max-width: 1440px;
@@ -345,14 +344,4 @@ svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) {
 .ckb:focus-visible {
   outline: 2px solid var(--paper);
   outline-offset: -4px;
-}
-
-.ckr {
-  border-block-start: 1px solid var(--hair);
-}
-.ckr-in {
-  max-width: 1440px;
-  margin-inline: auto;
-  padding-block: 14px;
-  padding-inline: clamp(24px, 8.334vw, 120px);
 }

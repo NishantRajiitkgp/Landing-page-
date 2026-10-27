@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { getLocale } from "next-intl/server";
 
-import { AppLink } from "@/components/chrome/AppLink";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { localise } from "@/lib/i18n/href";
 import { SIZES_FEATURE, noteInk, tint } from "@/lib/img";
 import { copy } from "@/lib/copy/request";
 import { FORMS, formsUi } from "@/lib/copy/forms";
@@ -108,7 +108,7 @@ export async function Contact() {
                 consent={
                   <p className="consent">
                     {t.consent.lead}{' '}
-                    <AppLink href="/legal/privacy-policy">{t.consent.policy}</AppLink>
+                    <a href={localise("/legal/privacy-policy", locale)}>{t.consent.policy}</a>
                     {t.consent.mid}{' '}
                     <a href="mailto:privacy@helloverify.com">{t.consent.email}</a>
                     {t.consent.end}
@@ -152,7 +152,7 @@ export async function Contact() {
                 consent={
                   <p className="consent">
                     {t.consent.leadMob}{' '}
-                    <AppLink href="/legal/privacy-policy">{t.consent.policy}</AppLink>
+                    <a href={localise("/legal/privacy-policy", locale)}>{t.consent.policy}</a>
                     {t.consent.tailMob}
                   </p>
                 }

@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
   /** The default `X-Powered-By: Next.js` names the framework on every response. */
   poweredByHeader: false,
 
+  /** The dev-only route/issues badge injects inline styles, which `style-src`
+   *  below refuses, so it renders as raw boxes over the page. Compile and
+   *  runtime errors still surface with this off. */
+  devIndicators: false,
+
   experimental: {
     /** On by default since 16.4, and it writes every browser console line to
      *  `.next/dev/logs/next-development.log`. On Windows each write wakes the

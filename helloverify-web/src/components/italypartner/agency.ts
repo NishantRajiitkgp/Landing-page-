@@ -6,12 +6,13 @@ import { agentCode, isAgentCode } from "@/lib/italy/partner/code";
 import { FILE_MAX_BYTES } from "@/lib/mom/apply/policy";
 
 export const VOLUMES = ["under10", "10-25", "26-75", "76+"] as const;
-export const SETTLES = ["client", "wallet"] as const;
+/** The client always pays HelloVerify. Older drafts that chose a wallet are read as this. */
+export const SETTLE = "client" as const;
 export const DOC_SLOTS = ["pan", "address", "bank", "gst"] as const;
 export const REQUIRED_DOCS = ["pan", "address", "bank"] as const;
 
 export type Volume = (typeof VOLUMES)[number];
-export type Settle = (typeof SETTLES)[number];
+export type Settle = typeof SETTLE;
 export type DocSlot = (typeof DOC_SLOTS)[number];
 
 export type PartnerDoc = { id: string; name: string; size: number; type: string };
@@ -88,14 +89,14 @@ function parse(raw: string | null): AgencyDraft | null {
   try {
     const d = JSON.parse(raw) as AgencyDraft;
     if (d?.v !== 1 || !isPlace(d.name, 80) || !isPlace(d.city, 40)) return null;
-    if (!VOLUMES.includes(d.volume) || !SETTLES.includes(d.settle)) return null;
+    if (!VOLUMES.includes(d.volume)) return null;
     const docs = docsOf(d.docs);
     return {
       v: 1,
       name: tidy(d.name),
       city: tidy(d.city),
       volume: d.volume,
-      settle: d.settle,
+      settle: SETTLE,
       docs,
       sent: d.sent === true && docsReady(docs),
       cleared: d.cleared === true && d.sent === true && docsReady(docs),
@@ -139,10 +140,11 @@ function write(id: string, draft: AgencyDraft) {
   listeners.forEach((fn) => fn());
 }
 
-export function saveAgency(id: string, draft: Omit<AgencyDraft, "docs" | "sent" | "cleared" | "agreement" | "signed" | "live" | "code">) {
+export function saveAgency(id: string, draft: Omit<AgencyDraft, "settle" | "docs" | "sent" | "cleared" | "agreement" | "signed" | "live" | "code">) {
   const prev = read(id);
   write(id, {
     ...draft,
+    settle: SETTLE,
     docs: prev?.docs ?? EMPTY_DOCS,
     sent: prev?.sent ?? false,
     cleared: prev?.cleared ?? false,

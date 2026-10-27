@@ -279,8 +279,6 @@ export const en = {
     policy: "Cookie Policy",
     accept: "Accept",
     reject: "Reject",
-    reopenRegion: "Your cookie choice",
-    reopen: "Cookie preferences",
   },
 
   /** `chrome/FaqSection.tsx`. Only the eyebrow: the questions and answers are
