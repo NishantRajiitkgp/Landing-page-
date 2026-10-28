@@ -1,13 +1,11 @@
-/** `/partner-with-us`: the programme's eight advantages as eight equal
- *  cards, each with its own drawing, then the pull line and a way in; and
- *  the case for HelloVerify: the record, six figures that count up once
- *  seen, and the reviewed marks. */
+/** `/partner-with-us`: the programme's eight advantages as one equal
+ *  index, then the pull line and a way in; and the case for HelloVerify:
+ *  the record, six figures that count up once seen, and the reviewed marks. */
 import Image from "next/image";
 import { Arrow } from "@/components/brand/Arrow";
 import { YCBadge } from "@/components/brand/YCBadge";
 import { Count, Reveal } from "@/components/about/AboutMotion";
 import { CREDENTIAL_MARKS } from "@/lib/content/company";
-import { AdvantageArt, type AdvKey } from "./AdvantageArt";
 import { d, Head, Icon, JOIN, TEL, type PartnerCopy } from "./partnerParts";
 
 type Adv = PartnerCopy["advantages"];
@@ -22,7 +20,7 @@ const ADV = [
   "transparent",
   "wider",
   "credibility",
-] as const satisfies readonly AdvKey[];
+] as const satisfies readonly (keyof Adv["items"])[];
 
 export function PartnerAdvantages({ c, join }: { c: Adv; join: string }) {
   return (
@@ -31,9 +29,7 @@ export function PartnerAdvantages({ c, join }: { c: Adv; join: string }) {
       <Reveal as="ul" className="pw-advs">
         {ADV.map((k, i) => (
           <li key={k} style={d(i)}>
-            <div className="pw-adv-art">
-              <AdvantageArt k={k} a={c.art} />
-            </div>
+            <span className="pw-adv-n">{String(i + 1).padStart(2, "0")}</span>
             <h3>{c.items[k].t}</h3>
             <p>{c.items[k].p}</p>
           </li>
