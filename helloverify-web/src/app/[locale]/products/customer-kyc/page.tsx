@@ -65,7 +65,6 @@ export default async function CustomerKycPage({
         <div className="wrap">
           <section className="kz-hero" aria-labelledby="kyc-h1">
             <span className="kz-grid" aria-hidden="true" />
-            <span className="kz-glow" aria-hidden="true" />
             <div className="kz-hero-copy">
               <p className="k">{c.hero.k}</p>
               <h1 className="h1" id="kyc-h1">
@@ -92,6 +91,7 @@ export default async function CustomerKycPage({
               time={c.hero.case.time}
               name={c.hero.case.name}
               rows={c.hero.case.rows}
+              pending={c.hero.case.pending}
               result={c.hero.case.result}
               passed={c.hero.case.passed}
             />

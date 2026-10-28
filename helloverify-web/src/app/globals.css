@@ -345,3 +345,83 @@ svg:has(> path[d="M3 8h10M9 4l4 4-4 4"]) {
   outline: 2px solid var(--paper);
   outline-offset: -4px;
 }
+
+/* Floating sales link (components/chrome/TalkToSales.tsx). Pinned to the
+   trailing corner of the viewport — bottom-right in English and Hindi,
+   bottom-left in Arabic — and out of the document flow so it never shifts
+   layout. Below the consent bar (70) and the login scrim (80): when the
+   bar is asking, the link sits above it rather than on the Accept / Reject
+   buttons.
+
+   The rem offset is the fallback. Where anchor positioning exists, the
+   link's bottom edge tracks the bar's top, so a wrapped mobile bar cannot
+   cover it and a one-line desktop bar does not leave a large gap. */
+.hv-sales {
+  position: fixed;
+  z-index: 65;
+  inset-inline-end: max(16px, env(safe-area-inset-inline-end, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding-block: 0;
+  padding-inline: 14px 18px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow:
+    0 10px 28px -10px rgb(from var(--ink) r g b / .55),
+    0 2px 8px -4px rgb(from var(--ink) r g b / .35);
+  transition: background .18s, transform .18s, box-shadow .18s;
+}
+.hv-sales:hover {
+  background: color-mix(in srgb, var(--ink) 86%, white);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+.hv-sales:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+  box-shadow:
+    0 0 0 2px var(--white),
+    0 10px 28px -10px rgb(from var(--ink) r g b / .55);
+}
+.hv-sales-ic {
+  display: flex;
+  width: 18px;
+  height: 18px;
+}
+.hv-sales-ic svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+[data-hv-consent="ask"] .hv-sales {
+  bottom: calc(11.5rem + env(safe-area-inset-bottom, 0px));
+}
+@media (max-width: 720px) {
+  [data-hv-consent="ask"] .hv-sales {
+    bottom: calc(15rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+@supports (anchor-name: --hv-consent) {
+  [data-hv-consent="ask"] .ckb { anchor-name: --hv-consent; }
+  [data-hv-consent="ask"] .hv-sales {
+    position-anchor: --hv-consent;
+    bottom: calc(anchor(top) + 12px);
+  }
+}
+@media print {
+  .hv-sales { display: none; }
+}

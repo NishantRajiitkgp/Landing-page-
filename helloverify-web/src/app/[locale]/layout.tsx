@@ -11,6 +11,7 @@ import { notFound } from "next/navigation";
 import { directionOf, openGraphLocales, routing, scriptStackOf } from "@/lib/i18n/routing";
 import { Analytics } from "@/components/analytics/Analytics";
 import { ConsentBanner } from "@/components/chrome/ConsentBanner";
+import { TalkToSales } from "@/components/chrome/TalkToSales";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ORGANIZATION, WEBSITE } from "@/lib/seo/schema/organization";
 import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
@@ -209,6 +210,9 @@ export default async function LocaleLayout({
         <AuthPortal login={login} checkout={checkout} locale={locale}>
           {children}
         </AuthPortal>
+        {/* After the page in source, so tab order reaches it last. Fixed to
+            the viewport in CSS, and lifted while the consent bar is open. */}
+        <TalkToSales locale={locale} />
         {/* GA4, and it renders NOTHING unless NEXT_PUBLIC_GA_MEASUREMENT_ID is
             set at build time — no script, no request, no cookie. See the file:
             the id is the small half of turning it on, and the cookie policy

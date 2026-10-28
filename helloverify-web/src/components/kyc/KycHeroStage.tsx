@@ -1,8 +1,9 @@
 "use client";
 
 /** The hero's moving case: the phone plays the six steps and the decision,
- *  and the case card ticks each check as its step finishes, then shows the
- *  result. Runs only while on screen; under reduced motion, and in the
+ *  and the case card ticks each check as its step finishes. The tally counts
+ *  those ticks — "{n} of 6" — and the approval lands only when all six are
+ *  done. Runs only while on screen; under reduced motion, and in the
  *  server HTML, it rests on the finished case. */
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
@@ -20,6 +21,7 @@ export function KycHeroStage({
   time,
   name,
   rows,
+  pending,
   result,
   passed,
 }: {
@@ -29,6 +31,7 @@ export function KycHeroStage({
   time: string;
   name: string;
   rows: readonly Row[];
+  pending: string;
   result: string;
   passed: string;
 }) {
@@ -60,6 +63,8 @@ export function KycHeroStage({
   }, [running, step, last, screens.length]);
 
   const done = step === last;
+  const passedCount = done ? rows.length : Math.min(step, rows.length);
+  const tally = passed.replaceAll("{n}", String(passedCount));
 
   return (
     <div ref={ref} className={`kh-stage${done ? " is-done" : ""}`} data-step={step}>
@@ -89,8 +94,8 @@ export function KycHeroStage({
           ))}
         </ol>
         <div className="ok">
-          <b>{result}</b>
-          <span>{passed}</span>
+          <b>{done ? result : pending}</b>
+          <span key={passedCount}>{tally}</span>
         </div>
       </aside>
     </div>

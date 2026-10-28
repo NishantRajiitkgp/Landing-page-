@@ -668,8 +668,9 @@ export const hi: BusinessCopy = {
           { t: "फेस मैच", s: "सेल्फी ↔ PAN" },
           { t: "DigiLocker", s: "आधार · हस्ताक्षरित" },
         ],
+        pending: "जाँच जारी",
         result: "स्वतः स्वीकृत",
-        passed: "6 में से 6 जाँच पूरी",
+        passed: "{n} में से 6 जाँच पूरी",
       },
     },
     why: {

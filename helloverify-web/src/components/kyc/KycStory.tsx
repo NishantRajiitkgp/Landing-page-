@@ -21,7 +21,8 @@ export function KycWhy({ c }: { c: KycCopy["why"] }) {
         {WHY.map(([k, src], i) => (
           <article key={k} className={`kz-why-${k}`} style={d(i)}>
             <div className="kz-ph">
-              <Image src={src} alt="" width={1152} height={864} sizes="(max-width: 1080px) 92vw, 400px" />
+              <span className="n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+              <Image src={src} alt="" width={1152} height={864} sizes="(max-width: 1080px) 92vw, 380px" />
             </div>
             <div className="kz-body">
               <h3>{c.cards[k].t}</h3>
@@ -41,21 +42,23 @@ export function KycDecision({ c }: { c: KycCopy["how"]["decision"] }) {
       <div className="kz-lead">
         <p className="k">{c.k}</p>
         <h3>{c.h}</h3>
-        <svg className="kz-fork-lines" viewBox="0 0 200 120" preserveAspectRatio="none" aria-hidden="true">
-          <path pathLength={1} d="M0 60H70C110 60 110 20 200 20" />
-          <path className="b" pathLength={1} d="M0 60H70C110 60 110 100 200 100" />
-        </svg>
       </div>
-      <article className="kz-yes">
-        <span className="kz-badge"><Tick tone="inverse" /></span>
-        <h4>{c.approved.t}</h4>
-        <p>{c.approved.p}</p>
-      </article>
-      <article className="kz-flag">
-        <span className="kz-badge" aria-hidden="true">!</span>
-        <h4>{c.flagged.t}</h4>
-        <p>{c.flagged.p}</p>
-      </article>
+      <div className="kz-split">
+        <article className="kz-yes">
+          <span className="kz-mark" aria-hidden="true"><Tick tone="inverse" /></span>
+          <div>
+            <h4>{c.approved.t}</h4>
+            <p>{c.approved.p}</p>
+          </div>
+        </article>
+        <article className="kz-flag">
+          <span className="kz-mark" aria-hidden="true">!</span>
+          <div>
+            <h4>{c.flagged.t}</h4>
+            <p>{c.flagged.p}</p>
+          </div>
+        </article>
+      </div>
     </Reveal>
   );
 }
@@ -65,36 +68,22 @@ export function KycOps({ c }: { c: KycCopy["ops"] }) {
     <section className="wrap kz-sec" aria-labelledby="kyc-ops-h">
       <Head k={c.k} h={c.h} id="kyc-ops-h" />
       <Reveal className="kz-ops">
-        <div className="kz-ops-off">
-          <div className="vis" aria-hidden="true">
-            <svg viewBox="0 0 300 160" preserveAspectRatio="none">
-              <path d="M40 40C120 140 180 -20 260 120" />
-              <path d="M40 120C140 20 160 160 260 40" />
-              <path d="M150 20C60 80 240 90 150 140" />
-            </svg>
-            <span className="v v1" /><span className="v v2" /><span className="v v3" /><span className="v v4" />
-            <span className="clock"><i /></span>
-          </div>
+        <article className="kz-ops-off">
           <p className="k">{c.without.k}</p>
           <ul>
             {c.without.items.map((x, i) => (
               <li key={x} style={d(i)}><span className="no" aria-hidden="true" />{x}</li>
             ))}
           </ul>
-        </div>
-        <div className="kz-ops-on">
-          <div className="vis" aria-hidden="true">
-            <span className="hub"><Tick tone="inverse" /></span>
-            <span className="pipe"><i /><i /><i /><i /><i /></span>
-            <span className="end"><Tick /></span>
-          </div>
+        </article>
+        <article className="kz-ops-on">
           <p className="k">{c.with.k}</p>
           <ul>
             {c.with.items.map((x, i) => (
-              <li key={x} style={d(i)}><Tick tone="inverse" />{x}</li>
+              <li key={x} style={d(i)}><Tick />{x}</li>
             ))}
           </ul>
-        </div>
+        </article>
       </Reveal>
     </section>
   );

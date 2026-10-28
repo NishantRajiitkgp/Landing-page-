@@ -670,8 +670,9 @@ export const ar: BusinessCopy = {
           { t: "مطابقة الوجه", s: "سيلفي ↔ PAN" },
           { t: "DigiLocker", s: "آدهار · موقَّع" },
         ],
+        pending: "قيد التحقق",
         result: "موافقة تلقائية",
-        passed: "نجحت 6 من 6 فحوصات",
+        passed: "نجحت {n} من 6 فحوصات",
       },
     },
     why: {

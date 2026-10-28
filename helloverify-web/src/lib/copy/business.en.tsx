@@ -765,8 +765,9 @@ export const en = {
           { t: "Face match", s: "selfie ↔ PAN" },
           { t: "DigiLocker", s: "Aadhaar · signed" },
         ],
+        pending: "Checking",
         result: "Auto-approved",
-        passed: "6 of 6 checks passed",
+        passed: "{n} of 6 checks passed",
       },
     },
     why: {
