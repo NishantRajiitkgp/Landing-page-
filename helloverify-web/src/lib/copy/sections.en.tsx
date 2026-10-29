@@ -402,7 +402,7 @@ export const en = {
     k: "Consumer · HelloV",
     headingA: "Consumer Services",
     headingB: "Instant Verification In Minutes",
-    lede: "Verify Your Staff\nTrack verification progress from your phone",
+    lede: "HelloV\nTrack verification progress from your phone",
     /** Homepage v2: the HelloV storefront, at every width — eight photo panels,
      *  a price card, the QR steps and the phone. `k`, `headingA`, `headingB`
      *  and `lede` above are this tree's too, so they are not repeated
