@@ -59,8 +59,10 @@ function qrPath(rows: string[]) {
   return d;
 }
 
-/** Two sentences, same words: the first is the heading, the second the red italic line. */
+/** Two lines: a newline, or the first sentence, is the heading; the rest is the red italic line. */
 function splitLede(text: string) {
+  const nl = text.indexOf("\n");
+  if (nl >= 0) return { lead: text.slice(0, nl).trim(), rest: text.slice(nl + 1).trim() };
   const cut = text.search(/[.।](?=\s)/);
   if (cut < 0) return { lead: text, rest: "" };
   return { lead: text.slice(0, cut + 1), rest: text.slice(cut + 1).trim() };
