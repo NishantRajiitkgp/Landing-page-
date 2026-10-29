@@ -237,7 +237,11 @@ export const en = {
   enterprise: {
     crumb: "Enterprise",
     hero: {
-      h1: (<>AI-Powered Background Screening Trusted by India’s Leading Enterprises <br /><em>Stop Bad Hires Before They Happen</em></>),
+      h1: (<>
+        <span className="ex-lead">AI-Powered Background Screening Trusted<br />by India’s Leading Enterprises</span>
+        <br />
+        <em>Stop Bad Hires<br />Before They Happen</em>
+      </>),
       cta: "Talk to Sales",
     },
     trust: {
