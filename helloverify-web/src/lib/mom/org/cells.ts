@@ -37,18 +37,21 @@ function ymd(y: number, m: number, d: number): string {
 /** Excel stores dates as days since 1899-12-30 when the cell isn't formatted as one. */
 const serial = (n: number) => (n > 0 && n < 100000 ? isoDay(new Date(Date.UTC(1899, 11, 30) + Math.round(n) * 86400000)) : "");
 
+/** 90 → 1990, 05 → 2005. Sheets from this region still write the year short. */
+const yearOf = (yy: number) => (yy >= 100 ? yy : yy >= 50 ? 1900 + yy : 2000 + yy);
+
 export function toDay(cell: Cell): string {
   if (cell instanceof Date) return text(cell);
   if (typeof cell === "number") return serial(cell);
-  const s = text(cell);
+  const s = text(cell).replace(/(\d)(?:st|nd|rd|th)\b/gi, "$1");
   let m = /^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(?:[T ].*)?$/.exec(s);
   if (m) return ymd(+m[1], +m[2], +m[3]);
-  m = /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})$/.exec(s);
-  if (m) return ymd(+m[3], +m[2], +m[1]);
-  m = /^(\d{1,2})[ -]([a-z]{3,9})\.?[ -,]*(\d{4})$/i.exec(s);
-  if (m && monthOf(m[2])) return ymd(+m[3], monthOf(m[2]), +m[1]);
-  m = /^([a-z]{3,9})\.? (\d{1,2}),? (\d{4})$/i.exec(s);
-  if (m && monthOf(m[1])) return ymd(+m[3], monthOf(m[1]), +m[2]);
+  m = /^(\d{1,2})[-/.](\d{1,2})[-/.](\d{2,4})$/.exec(s);
+  if (m) return ymd(yearOf(+m[3]), +m[2], +m[1]);
+  m = /^(\d{1,2})[-\s]([a-z]{3,9})\.?[-,\s]*(\d{2,4})$/i.exec(s);
+  if (m && monthOf(m[2])) return ymd(yearOf(+m[3]), monthOf(m[2]), +m[1]);
+  m = /^([a-z]{3,9})\.? (\d{1,2}),? (\d{2,4})$/i.exec(s);
+  if (m && monthOf(m[1])) return ymd(yearOf(+m[3]), monthOf(m[1]), +m[2]);
   return "";
 }
 
@@ -99,8 +102,14 @@ function countryIndex(): Map<string, string> {
 export function toCountry(cell: Cell): string {
   const s = text(cell);
   if (!s) return "";
+  const compact = fold(s).replace(/ /g, "");
+  if (compact === "usa" || compact === "us") return "US";
+  if (compact === "uk") return "GB";
+  if (compact === "prc") return "CN";
   if (COUNTRY_CODES.has(s.toUpperCase())) return s.toUpperCase();
-  return countryIndex().get(fold(s)) ?? "";
+  const index = countryIndex();
+  const bare = fold(s).replace(/^(republic of( the)?|the) /, "");
+  return index.get(fold(s)) ?? index.get(bare) ?? "";
 }
 
 const PASS_NAMES: Record<string, PassType> = {
@@ -115,9 +124,16 @@ const PASS_NAMES: Record<string, PassType> = {
 
 export function toPass(cell: Cell): PassType | "" {
   const s = fold(text(cell));
+  if (!s) return "";
   const code = s.replace(/ /g, "").toUpperCase();
   if ((PASS_TYPES as readonly string[]).includes(code)) return code as PassType;
-  return PASS_NAMES[s] ?? "";
+  if (PASS_NAMES[s]) return PASS_NAMES[s];
+  if (/\btraining employment pass\b/.test(s) || code === "TEP") return "TEP";
+  if (/\bpersonalised employment pass\b|\bpersonalized employment pass\b/.test(s) || code === "PEP") return "PEP";
+  if (/\bone pass\b|\boverseas networks expertise pass\b/.test(s)) return "ONE";
+  if (/\bs pass\b/.test(s) || code === "SPASS") return "SP";
+  if (/\bemployment pass\b/.test(s)) return "EP";
+  return "";
 }
 
 const LEVEL_WORDS: [RegExp, Level][] = [

@@ -146,11 +146,6 @@ export const en = {
       { id: "26-75", t: "26–75" },
       { id: "76+", t: "76+" },
     ],
-    settle: "How the fee is paid",
-    settles: [
-      { id: "client", t: "The client pays HelloVerify" },
-      { id: "wallet", t: "Prepaid wallet" },
-    ],
     save: "Save",
     saved: "Saved",
   },
@@ -208,7 +203,7 @@ export const en = {
       lines: [
         "Document verification for Italian national visa applicants in the India North jurisdiction.",
         "You guide the client. We do the checks and issue the reference.",
-        "The fee is what you chose: the client pays HelloVerify, or a prepaid wallet.",
+        "The client pays the fee to HelloVerify.",
         "Commission is paid on each completed file, at your agency's rate.",
         "We do not submit the visa or decide the outcome.",
       ],

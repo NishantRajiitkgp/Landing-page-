@@ -6,7 +6,6 @@ import {
 } from "@/lib/analytics/consent";
 import { pick } from "@/lib/copy";
 import { CHROME } from "@/lib/copy/chrome";
-import { copy } from "@/lib/copy/request";
 import { localise } from "@/lib/i18n/href";
 
 /** The cookie consent bar (BUILD-SPEC §11a.5, §12, §13; §17 conditions 3, 11,
@@ -46,23 +45,16 @@ import { localise } from "@/lib/i18n/href";
  *  homepage: the markup and the script add ~0.7 KB brotli, including the copy
  *  the RSC flight payload carries a second time.
  *
- *  ## IN FLOW AT THE TOP, not a fixed overlay
+ *  ## A fixed bar at the bottom of the viewport
  *
- *  A `position: fixed` bottom sheet is the conventional shape and it was
- *  rejected on evidence. It covers whatever is under it: Playwright's click
- *  actionability check fails when another element is at the hit point, and
- *  `tools/e2e/contact-form.spec.ts` clicks a Submit button that sits low on a
- *  long form — Blink's `scrollIntoViewIfNeeded` does not scroll an element
- *  that is already inside the viewport, occluded or not. That is not merely a
- *  test problem: the same bar covers the same button for a real visitor.
+ *  Fixed, so it never shifts layout: CLS stays at the 0.000 §17 condition 3
+ *  records. The boot script has already written `data-hv-consent` on `<html>`
+ *  by the time this element is parsed, so it never appears after paint.
  *
- *  In flow, nothing is covered, and CLS stays at the 0.000 §17 condition 3
- *  records — the bar is laid out at first paint or not at all, because the
- *  boot script has already written `data-hv-consent` on `<html>` by the time
- *  this element is parsed. It never appears or disappears after paint. The one
- *  shift it can cause is the bar being removed when a button is clicked, which
- *  falls inside the 500 ms `hadRecentInput` window every CLS implementation
- *  excludes.
+ *  The cost is that it covers whatever sits under it until a choice is made:
+ *  Playwright's click actionability check fails when another element is at the
+ *  hit point (`tools/e2e/contact-form.spec.ts` clicks a Submit button low on a
+ *  long form). Specs that click near the bottom should accept or reject first.
  *
  *  ## Accept and reject are the same button
  *
@@ -132,9 +124,9 @@ export function ConsentBanner({ locale }: { locale: string }) {
       >
         <div className="ckb-in">
           <div className="ckb-c">
-            {/* A <p>, not an <h2>. The bar renders above every page's <h1>,
-                and a heading there is a heading in the document outline that
-                belongs to no section of the document. The accessible name of
+            {/* A <p>, not an <h2>. The bar comes before every page's <h1> in
+                the source, and a heading there is a heading in the document
+                outline that belongs to no section of it. The accessible name of
                 the landmark is this visible line, which is also what WCAG
                 2.5.3 asks for. */}
             <p className="ckb-s" id={`${CONSENT_BANNER_ID}-t`}>
@@ -163,44 +155,5 @@ export function ConsentBanner({ locale }: { locale: string }) {
         </div>
       </section>
     </>
-  );
-}
-
-/** The re-open control. Mount at the END of `<body>`, after `{children}`.
- *
- *  It has to exist somewhere a visitor can find it, and the copy already
- *  promises where: the privacy policy says the manager is "opened by selecting
- *  Cookie Preferences in the website footer", and the cookie policy's
- *  `managing` section says "the cookie settings option in the website footer".
- *  `components/chrome/SiteFooter.tsx` is where that belongs and it is being
- *  edited concurrently by another agent, so this renders as its own strip
- *  immediately below the footer instead — same place on the page, one file to
- *  delete when the footer link lands.
- *
- *  Either way the wiring is already done: the boot script listens for
- *  `hashchange`, so `<a href="#cookie-settings">` anywhere on the site reopens
- *  the bar and scrolls to it with no JavaScript of its own. Whoever adds the
- *  footer link needs that href and nothing else.
- *
- *  Hidden until a decision exists — `[data-hv-consent="set"]` — so a first
- *  visit shows the bar and not a second control saying the same thing, and a
- *  visitor with JavaScript off sees neither.
- *
- *  ASYNC, UNLIKE `ConsentBanner` ABOVE, and for the one reason that matters:
- *  it takes no props. Adding a `locale` prop would mean editing
- *  `app/[locale]/layout.tsx`, and the copy layer exists partly so that a
- *  component migration never has to touch a call site — so it awaits
- *  `copy(CHROME)` like the rest of the chrome does. */
-export async function ConsentSettings() {
-  const t = (await copy(CHROME)).consent;
-
-  return (
-    <section className="ckr" aria-label={t.reopenRegion}>
-      <div className="ckr-in">
-        <button type="button" className="btn btn-sm btn-line" {...act("open")}>
-          {t.reopen}
-        </button>
-      </div>
-    </section>
   );
 }

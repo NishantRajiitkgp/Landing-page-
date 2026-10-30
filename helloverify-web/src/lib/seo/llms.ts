@@ -123,7 +123,7 @@ const SECTIONS: readonly { heading: string; match: (path: string) => boolean }[]
   { heading: "Verification checks", match: (p) => p.startsWith("/checks/") },
   { heading: "Country guides", match: (p) => p.startsWith("/countries/") },
   { heading: "Resources", match: (p) => p === "/resources" || p.startsWith("/resources/") },
-  { heading: "Company", match: (p) => p === "/about" || p === "/contact" },
+  { heading: "Company", match: (p) => p === "/about" || p === "/partner-with-us" || p === "/contact" },
   { heading: "Legal", match: (p) => p.startsWith("/legal/") },
 ];
 

@@ -1,114 +1,99 @@
-/** "Building the Future of Digital Trust" on `/technology`: the three
-    future layers as an isometric stack beside their copy. Top to bottom:
-    the persistent layer (credentials held and watched), trusted access
-    (one lock, many parties), and the infrastructure under both (a circuit
-    slab). The stack parts as the section scrolls in; hovering a row lifts
-    its layer. The stack is decoration (`aria-hidden`). */
-import type { CSSProperties } from "react";
+/** "Building the Future of Digital Trust" on `/technology`: one board,
+    standing still, under the heading and over the three layers.
+
+    Five records (identity, employment, education, criminal, business) send
+    their wires through four panes of glass (verify, validate, monitor,
+    update) into a glass sphere holding HelloVerify's shield: the
+    persistent trust layer. It sits on HelloVerify's platform, and from it
+    wires run out to four authorities on their slabs: trusted access.
+
+    Pointing at a layer, or at its part of the board, lights that part and
+    quiets the rest (`./TechFutureStage`): the records, checks and sphere
+    for the persistent layer; the authorities for trusted access; the
+    platform and every wire for the infrastructure. The board is
+    decoration (`aria-hidden`); its parts are `./TechFutureArt`. */
 import "@/app/v2/tech.css";
+import type { TechArt } from "./TechPillarKit";
 import { TechFutureStage } from "./TechFutureStage";
+import { Core, FutureDefs, Panes, Records, Sites } from "./TechFutureArt";
+import { ENDS, PIERCE, PORTS, WIRES_IN, WIRES_OUT, type Pt } from "./techFuturePlan";
 
-const HELD = new Set([1, 6, 8, 11, 13]);
-const CORNERS = [
-  [44, 44], [256, 44], [44, 256], [256, 256],
-] as const;
-const TRACES = [
-  "M24 70 H110 V128 H150",
-  "M276 92 H206 V150 H150",
-  "M70 276 V206 H128 V150",
-  "M232 276 V214 H172 V150",
-  "M24 196 H84 V236",
-  "M196 24 V64 H252",
-];
-const d = (s: number) => ({ "--d": `${s.toFixed(2)}s` }) as CSSProperties;
-
-function Persistent() {
+/** A wire: a soft glow, a fine companion strand, the line itself, and the
+    current that runs along it while its layer is lit. */
+function Wire({ d, d2, g }: { d: string; d2: string; g: string }) {
   return (
-    <div className="tk-face tk-face0">
-      <div className="tk-f-grid">
-        {Array.from({ length: 16 }, (_, i) => (
-          <i key={i} className={HELD.has(i) ? "on" : undefined} style={d(1 + i * 0.05)}>
-            {HELD.has(i) && <b />}
-          </i>
-        ))}
-      </div>
-      <span className="tk-f-scan" />
-    </div>
+    <g className="tk-ft-wire" data-g={g}>
+      <path className="tk-ft-glow" d={d} />
+      <path className="tk-ft-ln2" d={d2} />
+      <path className="tk-ft-ln" d={d} />
+      <path className="tk-ft-flow" d={d} pathLength={1} />
+    </g>
+  );
+}
+const Dots = ({ pts, g, s }: { pts: Pt[]; g: string; s?: boolean }) => (
+  <g data-g={g}>
+    {pts.map((p, i) => (
+      <circle key={i} className={s ? "tk-ft-dot tk-ft-dot-s" : "tk-ft-dot"} cx={p.x} cy={p.y} r={s ? 3 : 4} />
+    ))}
+  </g>
+);
+
+/** The heading, its closing stop picked out in red. */
+function Heading({ h }: { h: string }) {
+  const stop = /[.।]$/.test(h);
+  return (
+    <h2 className="h2 tk-ft-h">
+      {stop ? h.slice(0, -1) : h}
+      {stop && <span className="tk-ft-stop">{h.slice(-1)}</span>}
+    </h2>
   );
 }
 
-function Access() {
-  return (
-    <div className="tk-face tk-face1">
-      <svg className="tk-f-svg" viewBox="0 0 300 300" fill="none">
-        <circle className="tk-acc-ring" cx="150" cy="150" r="62" />
-        <circle className="tk-acc-ring tk-acc-ring2" cx="150" cy="150" r="100" />
-        {CORNERS.map(([x, y], i) => (
-          <line key={i} className="tk-acc-l" x1="150" y1="150" x2={x} y2={y} pathLength="1" style={d(1.1 + i * 0.12)} />
-        ))}
-        {CORNERS.map(([x, y], i) => (
-          <g key={i} transform={`translate(${x} ${y})`}>
-            <circle className="tk-node" r="19" />
-            <circle className="tk-dot-ink" r="4" />
-          </g>
-        ))}
-        <rect className="tk-acc-lock" x="116" y="116" width="68" height="68" rx="18" />
-        <path className="tk-acc-key" d="M140 148v-6a10 10 0 0 1 20 0v6M136 148h28v20h-28zM150 155v6" />
-      </svg>
-    </div>
-  );
-}
-
-function Infrastructure() {
-  return (
-    <div className="tk-face tk-face2">
-      <svg className="tk-f-svg" viewBox="0 0 300 300" fill="none">
-        {TRACES.map((t, i) => (
-          <path key={i} className={i < 4 ? "tk-trace tk-trace-on" : "tk-trace"} d={t} pathLength="1" style={d(1.3 + i * 0.15)} />
-        ))}
-        {TRACES.map((t, i) => {
-          const m = /^M(\d+) (\d+)/.exec(t);
-          return m && <rect key={i} className="tk-pad" x={Number(m[1]) - 5} y={Number(m[2]) - 5} width="10" height="10" rx="2.5" />;
-        })}
-        <rect className="tk-chip" x="122" y="122" width="56" height="56" rx="12" />
-        <circle className="tk-dot-red" cx="150" cy="150" r="7" />
-      </svg>
-    </div>
-  );
-}
-
-const FACES = [Persistent, Access, Infrastructure];
-
-export function TechFuture({ h, cards }: { h: string; cards: { t: string; p: string }[] }) {
+export function TechFuture({ h, cards, art }: { h: string; cards: { t: string; p: string }[]; art: TechArt }) {
+  const f = art.future;
   return (
     <TechFutureStage>
-      <div className="tk-fut-grid">
-        <div className="tk-stack" aria-hidden="true">
-          {[0, 1].map((side) => (
-            <span key={side} className={`tk-conn tk-conn${side}`} />
-          ))}
-          {FACES.map((Face, k) => (
-            <div key={k} className={`tk-plate tk-plate${k}`} style={{ "--k": k, ...d(0.15 + (2 - k) * 0.18) } as CSSProperties}>
-              <Face />
-            </div>
-          ))}
-        </div>
+      <FutureDefs />
+      <Heading h={h} />
 
-        <div className="tk-fut-tx">
-          <h2 className="h2 tk-rv">{h}</h2>
-          <ol className="tk-fut-list">
-            {cards.map((c, i) => (
-              <li key={c.t} className="tk-fut-r" data-k={i} style={d(0.3 + i * 0.14)}>
-                <span className="tk-fut-n" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-                <div>
-                  <h3>{c.t}</h3>
-                  <p>{c.p}</p>
-                </div>
-              </li>
+      <div className="tk-ft-stage" aria-hidden="true">
+        <div className="tk-ft-board">
+          <svg className="tk-ft-wires tk-mirror" viewBox="0 0 1200 520" fill="none">
+            {WIRES_IN.map((w, k) => (
+              <Wire key={k} {...w} g="0 2" />
             ))}
-          </ol>
+            {WIRES_OUT.map((w, k) => (
+              <Wire key={k} {...w} g="1 2" />
+            ))}
+          </svg>
+          <Records names={[f.identity, f.employment, f.education, f.criminal, f.business]} />
+          <Panes names={[f.verify, f.validate, f.monitor, f.update]} />
+          <Core tag={cards[0].t} />
+          <Sites names={[f.gov, f.enterprise, f.medical, f.edu]} tag={cards[1].t} />
+          <svg className="tk-ft-wires tk-ft-front tk-mirror" viewBox="0 0 1200 520" fill="none">
+            <Dots pts={PORTS} g="0 2" />
+            <Dots pts={PIERCE} g="0 2" s />
+            <Dots pts={ENDS} g="1 2" />
+          </svg>
         </div>
       </div>
+
+      <ol className="tk-ft-items">
+        {cards.map((c, i) => (
+          <li key={c.t} className="tk-ft-item" data-hg={i}>
+            <span className="tk-ft-rule" aria-hidden="true">
+              <span className="tk-ft-num">{String(i + 1).padStart(2, "0")}</span>
+              <i />
+            </span>
+            <h3>
+              <button type="button" className="tk-ft-go" aria-pressed="false">
+                {c.t}
+              </button>
+            </h3>
+            <p>{c.p}</p>
+          </li>
+        ))}
+      </ol>
     </TechFutureStage>
   );
 }

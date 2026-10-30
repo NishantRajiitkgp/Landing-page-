@@ -1,18 +1,21 @@
 "use client";
 
-/** The old HelloV product tabs: Packages (three STEP pills, the package
- *  accordion beside the WhatsApp QR card) and Single Checks (three cards a
- *  page, with a pager). Every panel stays in the DOM and only the open one
- *  shows, as the old page's content was all one tab away. */
+/** The HelloV product tabs: Packages (`./HelloVPackages`, each service's
+ *  Basic and Advanced tiers) and Single Checks (three cards a page, with a
+ *  pager). Every panel stays in the DOM and only the open one shows, as the
+ *  old page's content was all one tab away. */
 import { useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { CommerceCta } from "@/components/commerce/CommerceCta";
 import type { IndividualsCopy } from "@/lib/copy/individuals";
 
+import { HelloVPackages, type Offer, type OfferLabels } from "./HelloVPackages";
+
+export type { Offer, OfferLabels, PackageKey } from "./HelloVPackages";
+
 type C = IndividualsCopy["hellov"];
 type Tab = keyof C["tabs"];
-type PackageKey = keyof C["packages"]["items"];
 export type SingleKey = keyof C["singles"]["cards"];
 
 export type Single = {
@@ -34,44 +37,18 @@ function Bolt() {
   );
 }
 
-function Chevron() {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M4 6l4 4 4-4" />
-    </svg>
-  );
-}
-
-function Tick() {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3.5 8.5l3 3 6-7" />
-    </svg>
-  );
-}
-
-function Arrow() {
-  return (
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M3 8h10M9 4l4 4-4 4" />
-    </svg>
-  );
-}
-
 type HelloVTabsProps = {
   c: C;
-  whatsapp: string;
+  offers: readonly Offer[];
+  labels: OfferLabels;
   singles: readonly Single[];
   initial?: string | null;
 };
 
-export function HelloVTabs({ c, whatsapp, singles, initial }: HelloVTabsProps) {
+export function HelloVTabs({ c, offers, labels, singles, initial }: HelloVTabsProps) {
   const [tab, setTab] = useState<Tab>(() => (initial && initial in c.tabs ? (initial as Tab) : "packages"));
-  const keys = Object.keys(c.packages.items) as PackageKey[];
-  const [open, setOpen] = useState<PackageKey>(keys[0]);
   const [page, setPage] = useState(0);
   const pages = Math.ceil(singles.length / PER_PAGE);
-  const p = c.packages;
 
   return (
     <div className="wrap sec3 hv3" id="hellov-product-tabs">
@@ -93,81 +70,7 @@ export function HelloVTabs({ c, whatsapp, singles, initial }: HelloVTabsProps) {
       </div>
 
       <div id="hv-panel-packages" role="tabpanel" aria-labelledby="hv-tab-packages" hidden={tab !== "packages"}>
-        <div className="hv3-head">
-          <h2 className="h2">{p.h}</h2>
-          <p className="lede">{p.sub}</p>
-        </div>
-        <ol className="hv3-steps">
-          {Object.values(p.steps).map((s, i) => (
-            <li key={s.t}>
-              <span className="n">
-                <small>{p.stepLabel}</small>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span className="tx">
-                <b>{s.t}</b>
-                <span>{s.p}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-        <div className="hv3-grid">
-          <ul className="hv3-acc">
-            {keys.map((k, i) => {
-              const it = p.items[k];
-              const isOpen = open === k;
-              return (
-                <li key={k} className={isOpen ? "on" : undefined}>
-                  <h3>
-                    <button
-                      type="button"
-                      aria-expanded={isOpen}
-                      aria-controls={`hv-pkg-${k}`}
-                      onClick={() => setOpen(k)}
-                    >
-                      <span className="ix" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
-                      <span className="t">{it.t}</span>
-                      <span className="cv">
-                        <Chevron />
-                      </span>
-                    </button>
-                  </h3>
-                  <div id={`hv-pkg-${k}`} className="bd" hidden={!isOpen}>
-                    <p>{it.p}</p>
-                    <p className="lb">{p.checksInclude}</p>
-                    <ul className="pills">
-                      {it.pills.map((x) => (
-                        <li key={x}>
-                          <Tick />
-                          {x}
-                        </li>
-                      ))}
-                    </ul>
-                    <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-ink btn-sm">
-                      {p.buy}
-                      <Arrow />
-                    </a>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-          <div className="hv3-promo">
-            <p className="br">{p.promo.brand}</p>
-            <p className="tg">{p.promo.tagline}</p>
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="qr" aria-label={p.promo.qrAlt}>
-              <Image src="/img/hellov/qr-code.png" alt="" width={1040} height={1040} sizes="240px" />
-            </a>
-            <p className="cp">{p.promo.caption}</p>
-            <a href={whatsapp} target="_blank" rel="noopener noreferrer" className="hv3-cta">
-              <span className="wa">
-                <Image src="/img/hellov/whatsapp.png" alt="" width={68} height={68} sizes="24px" />
-              </span>
-              <span className="lbl">{p.promo.cta}</span>
-              <Arrow />
-            </a>
-          </div>
-        </div>
+        <HelloVPackages c={c} offers={offers} labels={labels} />
       </div>
 
       <div id="hv-panel-single" role="tabpanel" aria-labelledby="hv-tab-single" hidden={tab !== "single"}>

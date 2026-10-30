@@ -37,7 +37,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "next": "16.4.0",
+    "next": "16.4.3",
     "next-intl": "^4.14.5",
     "react": "19.2.8",
     "react-dom": "19.2.8",
@@ -56,7 +56,7 @@
     "@types/react-dom": "^19",
     "axe-core": "^4.13.0",
     "eslint": "^9.39.5",
-    "eslint-config-next": "16.4.0",
+    "eslint-config-next": "16.4.3",
     "jsdom": "^30.1.0",
     "schema-dts": "^2.0.0",
     "subset-font": "^2.7.0",

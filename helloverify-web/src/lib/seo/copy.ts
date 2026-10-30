@@ -105,9 +105,9 @@ export const STATIC_EN = {
       "As a global provider of background screening solutions, we help organizations of all sizes hire the right people for the right opportunities. Join us to Modernize the way you hire & scale heights.",
   },
   "/products/customer-kyc": {
-    title: "KYC Platform — HelloVerify",
+    title: "Customer KYC — HelloVerify",
     description:
-      "Onboard faster. Detect fraud earlier. Our comprehensive KYC solution brings every step of the digital onboarding process together creating a seamless experience that keeps fraudsters out and genuine customers moving forward.",
+      "Consent, selfie, PAN, face match and DigiLocker — in one flow, with one decision at the end.",
   },
   "/products/certifier": {
     title: "Certifier — HelloVerify",
@@ -218,6 +218,11 @@ export const STATIC_EN = {
     title: "About HelloVerify",
     description:
       "Trust is becoming the world's next critical digital infrastructure. HelloVerify is building the platform through which trust will move.",
+  },
+  "/partner-with-us": {
+    title: "HelloVerify Partner Programme · Earn up to 15% commission",
+    description:
+      "Join the HelloVerify Partner Programme and earn up to 15% commission on every background verification service your clients use. Free to join, completely digital.",
   },
   "/contact": {
     title: "Lets Build the Business Together — HelloVerify",

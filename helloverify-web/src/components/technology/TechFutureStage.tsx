@@ -1,69 +1,67 @@
 "use client";
 
-/** The behaviour of the `/technology` future-of-trust stack (`./TechFuture`).
+/** The behaviour of the `/technology` future-of-trust board (`./TechFuture`).
 
-    - `tk-in` once the section is on screen: the slabs drop in, once.
-    - `--sp` (0…1) follows the scroll as the section rises through the
-      viewport, and the stack's gaps are a function of it: the layers part
-      as the reader arrives. Scroll-linked, so nothing moves on its own;
-      under reduced motion it is left at its CSS default, open.
-    - Hovering a row writes its `data-k` to `data-focus`, which lifts that
-      layer and replays its drawing. */
-
-import { useEffect, useRef, useState, type ReactNode } from "react";
+    Nothing moves on its own or with the scroll. Pointing at one of the
+    three layers, or at a part of the board marked with its layer
+    (`data-hg`), writes that layer to the section's `data-focus`, which
+    lights its part of the board and quiets the rest; leaving puts it back.
+    A layer's name is a toggle: pressing it (a tap, where there is no
+    pointer to hover with) pins its layer lit until it is pressed again, or
+    another is; keyboard focus lights a layer while it is held. */
+import { useEffect, useRef, type ReactNode } from "react";
 
 export function TechFutureStage({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLElement>(null);
-  const [seen, setSeen] = useState(false);
 
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (!e.isIntersecting) return;
-        setSeen(true);
-        io.disconnect();
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(root);
+    const gos = [...root.querySelectorAll<HTMLButtonElement>(".tk-ft-go")];
+    let pinned: string | null = null;
 
-    const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let raf = 0;
-    const onScroll = () => {
-      if (still) return;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const r = root.getBoundingClientRect();
-        const vh = window.innerHeight;
-        const p = Math.min(1, Math.max(0, (vh * 0.95 - r.top) / (vh * 0.7)));
-        root.style.setProperty("--sp", p.toFixed(4));
-      });
+    const show = (g: string | null) => {
+      if (g === null) delete root.dataset.focus;
+      else root.dataset.focus = g;
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
+    const layer = (t: EventTarget | null) => (t instanceof Element ? t.closest("[data-hg]")?.getAttribute("data-hg") ?? null : null);
 
     const over = (e: PointerEvent) => {
-      const k = (e.target as Element).closest?.<HTMLElement>("[data-k]")?.dataset.k;
-      if (k) root.dataset.focus = k;
-      else delete root.dataset.focus;
+      if (e.pointerType !== "touch") show(layer(e.target) ?? pinned);
     };
-    const out = () => delete root.dataset.focus;
-    root.addEventListener("pointerover", over);
-    root.addEventListener("pointerleave", out);
+    const leave = () => show(pinned);
+    const press = (e: MouseEvent) => {
+      const b = (e.target as Element).closest(".tk-ft-go");
+      const g = b && layer(b);
+      if (g === null || !b) return;
+      pinned = pinned === g ? null : g;
+      gos.forEach((x) => x.setAttribute("aria-pressed", String(pinned !== null && layer(x) === pinned)));
+      show(pinned);
+    };
+    const enter = (e: FocusEvent) => {
+      const g = layer(e.target);
+      if (g !== null) show(g);
+    };
+    const exit = (e: FocusEvent) => {
+      if (!root.contains(e.relatedTarget as Node | null)) show(pinned);
+    };
 
+    root.addEventListener("pointerover", over);
+    root.addEventListener("pointerleave", leave);
+    root.addEventListener("click", press);
+    root.addEventListener("focusin", enter);
+    root.addEventListener("focusout", exit);
     return () => {
-      io.disconnect();
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
       root.removeEventListener("pointerover", over);
-      root.removeEventListener("pointerleave", out);
+      root.removeEventListener("pointerleave", leave);
+      root.removeEventListener("click", press);
+      root.removeEventListener("focusin", enter);
+      root.removeEventListener("focusout", exit);
     };
   }, []);
 
   return (
-    <section ref={ref} className={seen ? "wrap tk-fut tk-in" : "wrap tk-fut"}>
+    <section ref={ref} className="wrap tk-fut">
       {children}
     </section>
   );

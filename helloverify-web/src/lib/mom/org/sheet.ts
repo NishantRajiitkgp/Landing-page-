@@ -66,16 +66,32 @@ const ALIASES: Record<Column, string[]> = {
   english: ["english", "in english", "english documents"],
 };
 
+const compact = (s: string) => fold(s).replace(/ /g, "");
 const LOOKUP = new Map<string, Column>();
-for (const c of COLUMNS) for (const name of [HEADINGS[c], ...ALIASES[c]]) LOOKUP.set(fold(name), c);
+for (const c of COLUMNS) for (const name of [HEADINGS[c], ...ALIASES[c]]) LOOKUP.set(compact(name), c);
 
-/** RFC 4180, with the delimiter read off the first line: tab for pasted
- *  cells, semicolon for European Excel, comma otherwise. */
+/** RFC 4180. The delimiter is read off the first line: an Excel `sep=` hint,
+ *  otherwise whichever of tab, semicolon, pipe or comma appears most. */
 export function parseDelimited(input: string): string[][] {
-  const src = input.replace(/^\uFEFF/, "");
-  const first = src.split(/\r?\n/, 1)[0] ?? "";
-  const count = (ch: string) => first.split(ch).length - 1;
-  const delim = count("\t") ? "\t" : count(";") > count(",") ? ";" : ",";
+  let src = input.replace(/^\uFEFF/, "");
+  const breakAt = src.search(/\r?\n/);
+  const first = breakAt === -1 ? src : src.slice(0, breakAt);
+  const hinted = /^sep=\s*([,;\t|])/i.exec(first.trim());
+  let delim = hinted?.[1] ?? "";
+  if (hinted) src = breakAt === -1 ? "" : src.slice(breakAt).replace(/^\r?\n/, "");
+  if (!delim) {
+    const line = hinted ? "" : first;
+    const count = (ch: string) => line.split(ch).length - 1;
+    let best = 0;
+    for (const ch of ["\t", ";", "|", ","]) {
+      const n = count(ch);
+      if (n > best) {
+        best = n;
+        delim = ch;
+      }
+    }
+    if (!delim) delim = ",";
+  }
   const rows: string[][] = [];
   let row: string[] = [];
   let field = "";
@@ -117,12 +133,12 @@ function columnsOf(table: readonly (readonly Cell[])[]): { start: number; map: (
   for (let r = 0; r < Math.min(table.length, 5); r++) {
     const seen = new Set<Column>();
     const map = table[r].map((cell) => {
-      const col = LOOKUP.get(fold(text(cell)));
+      const col = LOOKUP.get(compact(text(cell)));
       if (!col || seen.has(col)) return null;
       seen.add(col);
       return col;
     });
-    if (seen.size >= 3) return { start: r + 1, map };
+    if (seen.size >= 2) return { start: r + 1, map };
   }
   return { start: 0, map: [...COLUMNS] };
 }
@@ -155,7 +171,7 @@ const blankQualOnly = (c: Candidate) =>
 function absorb(c: Candidate, row: Row): boolean {
   const read = {
     fullName: () => clip(normalizeName(text(row.fullName)), FULL_NAME_MAX),
-    email: () => normalizeEmail(text(row.email)),
+    email: () => normalizeEmail(text(row.email).replace(/^mailto:/i, "").replace(/ /g, "")),
     passportNo: () => normalizePassport(text(row.passportNo)),
     nationality: () => toCountry(row.nationality),
     dob: () => toDay(row.dob),
@@ -194,7 +210,10 @@ export function importRows(
       if (col) row[col] = cells[i];
     });
     const passport = normalizePassport(text(row.passportNo));
+    const named = text(row.fullName) || text(row.email);
     let c = passport ? byPassport.get(passport) : undefined;
+    /** A following row with only a qualification belongs to the candidate above it. */
+    if (!c && !passport && !named && list.length) c = list[list.length - 1];
     if (!c) {
       if (list.length >= BATCH_MAX) {
         skipped++;

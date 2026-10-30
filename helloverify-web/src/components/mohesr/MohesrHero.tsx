@@ -1,12 +1,17 @@
 import Image from "next/image";
 
+import { AppLink } from "@/components/chrome/AppLink";
+import { MomIcon } from "@/components/mom/MomBits";
 import type { MohesrDoc } from "@/lib/mohesr/doc";
 
-/** Hero fields follow the live CMS key order. The price figures sit in the
- *  strip; `value` is an audit skip key, so those figures are allowed. */
-export function MohesrHero({ hero }: { hero: MohesrDoc["hero"] }) {
+type Roles = MohesrDoc["screening"]["roleCards"];
+
+/** Hero fields follow the live CMS key order. The candidate and employer
+ *  cards fill the column beside the title. */
+export function MohesrHero({ hero, roles }: { hero: MohesrDoc["hero"]; roles: Roles }) {
+  const employers = roles.employers;
   return (
-    <div className="wrap hero3 mom3-hero">
+    <div className="wrap hero3 mom3-hero mom3-hero-split">
       <p hidden>
         {hero.breadcrumb[0].label} {hero.breadcrumb[1].label}
       </p>
@@ -19,14 +24,27 @@ export function MohesrHero({ hero }: { hero: MohesrDoc["hero"] }) {
       </p>
       <h1 className="h1">{hero.title}</h1>
       <p className="sub">{hero.subtitle}</p>
-      <div className="strip3 mohesr-strip">
-        {hero.priceStrip.map((item) => (
-          <div key={item.label} className="it">
-            <span>{item.label}</span>
-            <b>{item.value}</b>
-            {item.footnote ? <span>{item.footnote}</span> : null}
+      <div className="mom3-hero-roles">
+        <article className="mom3-card mom3-role">
+          <MomIcon src="/img/mom/icon-candidates.svg" />
+          <h2>{roles.candidates.title}</h2>
+          <p>{roles.candidates.body}</p>
+          <div className="mom3-acts">
+            <a className="btn btn-ink btn-sm" href={roles.candidates.primaryCta.href}>
+              {roles.candidates.primaryCta.label}
+            </a>
           </div>
-        ))}
+        </article>
+        <article className="mom3-card mom3-role">
+          <MomIcon src="/img/mom/icon-employers.svg" />
+          <h2>{employers.title}</h2>
+          <p>{employers.body}</p>
+          <div className="mom3-acts">
+            <AppLink className="btn btn-ink btn-sm" href={employers.secondaryCta.href}>
+              {employers.secondaryCta.label}
+            </AppLink>
+          </div>
+        </article>
       </div>
     </div>
   );

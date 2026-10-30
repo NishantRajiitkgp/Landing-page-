@@ -401,15 +401,15 @@ export const en = {
   consumer: {
     k: "Consumer · HelloV",
     headingA: "Consumer Services",
-    headingB: "Verify anyone, from your phone, in 30 minutes.",
-    lede: "Verify Anyone Instantly on WhatsApp",
+    headingB: "Instant Verification In Minutes",
+    lede: "HelloV\nTrack verification progress from your phone",
     /** Homepage v2: the HelloV storefront, at every width — eight photo panels,
      *  a price card, the QR steps and the phone. `k`, `headingA`, `headingB`
      *  and `lede` above are this tree's too, so they are not repeated
      *  here. The product names, one-liners and check
-     *  lists are the old homepage tabs and `/products/hellov`, verbatim; a
-     *  service without `price` shows the placeholder, which is deliberate
-     *  until the founder confirms the figure. */
+     *  lists are the old homepage tabs and `/products/hellov`, verbatim.
+     *  Every tier's price is Hello Staff's (`packages.ts`): Basic ₹699,
+     *  Advanced ₹1499. */
     shop: {
       sheet: "Sheet 07 / 12",
       lede: "The nannies, house staff, drivers, and tenants you trust with your home deserve thorough verification. 100% digital, fast and accurate — so you never have to wonder about the people closest to your family.",
@@ -421,7 +421,7 @@ export const en = {
       currency: "INR",
       tbc: { mark: "₹ —", note: "price to confirm" },
       buy: "Buy Now",
-      /** Prefixes the Advanced price on a closed panel: "from ₹1799". */
+      /** Prefixes the Basic price on a closed panel: "from ₹699". */
       from: "from",
       groups: { home: "In your home", online: "Online" },
       qr: "QR code: verify on WhatsApp",
@@ -443,33 +443,37 @@ export const en = {
           short: "Driver",
           title: "Driver Verification",
           line: "Comprehensive driver verification ensures safe and reliable hiring.",
-          basic: ["Driving License Check", "Criminal Check"],
-          advanced: ["Driving License Check", "Criminal Check", "Address Check"],
-          price: "₹1799",
+          basic: ["Driving License Check", "Court Records"],
+          advanced: ["Driving License Check", "Court Records", "FIR Record"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
         homeStaff: {
           short: "Home Staff",
           title: "Home Staff Verification",
           line: "End to end home staff verification ensures safe and trustworthy hiring.",
-          basic: ["Identity Check", "Criminal Check"],
-          advanced: ["Voter Id Check", "Criminal Check", "Address Check"],
-          price: "₹1399",
+          basic: ["ID Verification (Aadhaar)", "Court Records"],
+          advanced: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
         tenant: {
           short: "Tenant",
           title: "Tenant Verification",
           line: "End-to-end tenant checks including credit, criminal, and identity signals.",
-          basic: ["Identity Check", "Criminal Check"],
-          advanced: ["Credit Check", "Criminal Check", "Aadhaar Check"],
-          price: "₹1799",
+          basic: ["ID Verification (Aadhaar)", "Court Records"],
+          advanced: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
         nanny: {
           short: "Nanny",
           title: "Nanny Verification",
           line: "Trusted nanny verification covering identity, criminal, and address checks for your family.",
-          basic: ["Identity Check", "Criminal Check"],
-          advanced: ["Identity Check", "Criminal Check", "Address Check"],
-          price: "₹1399",
+          basic: ["ID Verification (Aadhaar)", "Court Records"],
+          advanced: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
         verifyAnyone: {
           short: "Verify Anyone",
@@ -477,6 +481,8 @@ export const en = {
           line: "Know your tenant, tutor, caretaker, or anyone else with fast identity and background checks.",
           basic: ["Identity Check", "Criminal Check"],
           advanced: ["Identity Check", "Criminal Check", "Current Address Check"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
         cyberIdentity: {
           short: "Cyber Identity",
@@ -484,6 +490,8 @@ export const en = {
           line: "Comprehensive cyber identity verification to protect against online fraud and impersonation.",
           basic: ["Identity Check", "Criminal Check"],
           advanced: ["Identity Check", "Criminal Check", "Social Media Check"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
         knowIdentity: {
           short: "Know The Identity",
@@ -491,6 +499,8 @@ export const en = {
           line: "Protect yourself from online identity fraud with fast document and database verification.",
           basic: ["Identity Check"],
           advanced: ["Identity Check", "Criminal Check"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
         knowContact: {
           short: "Know Your Contact",
@@ -498,6 +508,8 @@ export const en = {
           line: "Protect yourself from frauds — verify picture, ID, and location before you trust a contact.",
           basic: ["Identity Check", "Criminal Check"],
           advanced: ["Identity Check", "Criminal Check", "Email Verification Check"],
+          basicPrice: "₹699",
+          price: "₹1499",
         },
       },
       /** The chat the phone plays for each service. The driver's is

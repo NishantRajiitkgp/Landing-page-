@@ -1,7 +1,7 @@
 /** /technology — the old SPA's Technology page (`technology.base.json`) on the
  *  new design, in the CMS order: the three AI pillars, the compounding
- *  platform and its Trust orbit, the trust-platform areas, the future of
- *  digital trust and the shared certifications block. */
+ *  platform and its Trust orbit, the trust road through the platform areas,
+ *  the future of digital trust and the shared certifications block. */
 import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { PageShell } from "@/components/chrome/PageShell";
@@ -11,7 +11,7 @@ import { copy } from "@/lib/copy/request";
 import { TechHero } from "@/components/technology/TechHero";
 import { TechPillars } from "@/components/technology/TechPillars";
 import { TechCompound } from "@/components/technology/TechCompound";
-import { TechAreas } from "@/components/technology/TechAreas";
+import { TechRoad } from "@/components/technology/TechRoad";
 import { TechFuture } from "@/components/technology/TechFuture";
 import { TechCerts } from "@/components/technology/TechCerts";
 
@@ -50,25 +50,16 @@ export default async function TechnologyPage({
         sub={d.hero.sub}
         cta={d.hero.cta}
         href={ENQUIRY}
+        art={d.art}
       />
 
-      <TechPillars h={d.pillars.h} sub={d.pillars.sub} cards={Object.values(d.pillars.cards)} />
+      <TechPillars h={d.pillars.h} sub={d.pillars.sub} cards={Object.values(d.pillars.cards)} art={d.art} />
 
-      <TechCompound
-        h={d.compound.h}
-        sub={d.compound.sub}
-        cards={Object.values(d.compound.cards)}
-        trust={d.compound.trust}
-        orbit={d.compound.orbit}
-      />
+      <TechCompound h={d.compound.h} cards={Object.values(d.compound.cards)} grow={d.compound.grow} art={d.art} />
 
-      <TechAreas
-        h={d.platform.h}
-        sub={d.platform.sub}
-        areas={Object.entries(d.platform.cards).map(([key, c]) => ({ key, ...c }))}
-      />
+      <TechRoad h={d.platform.h} sub={d.platform.sub} cards={d.platform.cards} art={d.art} />
 
-      <TechFuture h={d.future.h} cards={Object.values(d.future.cards)} />
+      <TechFuture h={d.future.h} cards={Object.values(d.future.cards)} art={d.art} />
 
       <TechCerts h={d.certs.h} lede={d.certs.lede} alts={d.certs.logos} />
     </PageShell>

@@ -48,7 +48,7 @@ export const SEALS: { id: GovSealId; k: number; lift: number; logo: string; href
   { id: "mom", k: 26, lift: 40, logo: "/img/mom.jpg", href: "/solutions/manpower-and-education-authorities/ministry-of-manpower", apply: "/solutions/manpower-and-education-authorities/ministry-of-manpower", ctas: [["apply"], ["sales"]] },
   { id: "latvia", k: 32, lift: 8, logo: "/img/latvia-coat-of-arms.png", href: "/solutions/immigration-authorities", apply: "/products/immigration", ctas: [["visa"], ["partner"]] },
   { id: "italy", k: 36, lift: 8, logo: "/img/italy-emblem.png", href: "/solutions/immigration-authorities", apply: "/products/immigration", partner: ITALY_JOIN_PATH, ctas: [["visa"], ["partner"]] },
-  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/solutions/manpower-and-education-authorities/mohesr", apply: "https://applicant.helloverify.ae/en/signin", ctas: [["apply"], ["sales"]] },
+  { id: "mohesr", k: 30, lift: 40, logo: "/img/mohesr-emblem.png", href: "/solutions/manpower-and-education-authorities/mohesr", apply: "/solutions/manpower-and-education-authorities/mohesr", ctas: [["apply"], ["sales"]] },
 ];
 
 function actHref(s: (typeof SEALS)[number], a: Act): string {

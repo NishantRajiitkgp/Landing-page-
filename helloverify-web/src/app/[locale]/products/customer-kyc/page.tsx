@@ -1,7 +1,8 @@
-/** /products/customer-kyc — the old SPA's KYC page in its order: hero
- *  (title, subtitle, Talk to Sales), the six-step How it Works grid, Solutions
- *  We Offer. Copy is `customerKyc.base.json` word for word
- *  (`business.customerKyc`). */
+/** /products/customer-kyc — the Customer KYC redesign's copy, staged: a
+ *  hero where the case runs itself, the six steps told by scrolling, and a
+ *  drawing or a photograph beside every claim. Motion and its still frames
+ *  live in `app/v2/kyc.css`; the sections and two islands are
+ *  `components/kyc/*`. */
 import type { Metadata } from "next";
 import Image from "next/image";
 import { pageMetadata } from "@/lib/seo/metadata";
@@ -10,32 +11,25 @@ import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
 import { AppLink } from "@/components/chrome/AppLink";
+import { FaqSection } from "@/components/chrome/FaqSection";
+import { Tick } from "@/components/brand/Tick";
+import { Arrow } from "@/components/brand/Arrow";
+import { KycHeroStage } from "@/components/kyc/KycHeroStage";
+import { KycScrolly } from "@/components/kyc/KycScrolly";
+import { d, Head, STEPS, Words } from "@/components/kyc/kycParts";
+import { KycDecision, KycOps, KycWhy } from "@/components/kyc/KycStory";
+import { KycBundle, KycClose, KycRbi, KycWho } from "@/components/kyc/KycOffer";
 import { setRequestLocale } from "next-intl/server";
-import { KycIcon, type KycIconId } from "@/components/kyc/KycIcons";
-import { BUSINESS, type BusinessCopy } from "@/lib/copy/business";
+import { BUSINESS } from "@/lib/copy/business";
 import { copy } from "@/lib/copy/request";
+import "@/app/v2/kyc.css";
 
 const PATH = "/products/customer-kyc";
 
-type C = BusinessCopy["customerKyc"];
-
-/** Old CMS step numbers and images (`public/img/kyc/tsstep<n>.png`, 623×572). */
-const STEPS: readonly [keyof C["how"]["steps"], string][] = [
-  ["upload", "01"],
-  ["selfie", "02"],
-  ["face", "03"],
-  ["liveness", "04"],
-  ["decision", "05"],
-  ["onboard", "06"],
-];
-const CARDS: readonly [keyof C["solutions"]["cards"], KycIconId][] = [
-  ["kyc", "rocket"],
-  ["kyb", "scales"],
-  ["underwriting", "shield"],
-  ["fraud", "shield"],
-  ["execute", "shieldTall"],
-  ["aml", "listChecks"],
-];
+/** The phone's screens, `public/img/kyc/her/*.jpg`: the six steps in
+ *  order, then the decision. The hero plays all seven; the scroll story
+ *  shows the six. */
+const SCREENS = [...STEPS, "done"] as const;
 
 export async function generateMetadata({
   params,
@@ -48,7 +42,7 @@ export async function generateMetadata({
 
 const SERVICE: ServiceFacts = {
   path: PATH,
-  name: "KYC platform",
+  name: "Customer KYC",
   description: copyFor(PATH).description,
   serviceType: "Identity verification",
 };
@@ -61,72 +55,67 @@ export default async function CustomerKycPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const c = (await copy(BUSINESS)).customerKyc;
+  const screens = SCREENS.map((k) => (
+    <Image key={k} src={`/img/kyc/her/${k}.jpg`} alt="" width={720} height={1675} sizes="(max-width: 1080px) 200px, 280px" />
+  ));
 
   return (
     <PageShell crumbs={[{ label: c.crumb }]} closing={false}>
-      <div className="wrap hero3">
-        <h1 className="h1">{c.hero.h1}</h1>
-        <p className="sub">{c.hero.sub}</p>
-        <div className="hrow">
-          <AppLink href="/contact?tab=enquiry" className="btn btn-ink">
-            {c.hero.cta}
-          </AppLink>
-        </div>
-      </div>
-
-      <div className="wrap sec3" id="how-it-works">
-        <div className="sec-head smb3-head">
-          <h2 className="h2 kyc3-h">{c.how.h}</h2>
-        </div>
-        <ol className="body3 kyc3-steps">
-          {STEPS.map(([k, n], i) => {
-            const st = c.how.steps[k];
-            return (
-              <li key={k} tabIndex={0}>
-                <span className="ph">
-                  <Image src={`/img/kyc/tsstep${i + 1}.png`} alt={st.alt} width={623} height={572} sizes="120px" />
-                </span>
-                <span className="badge">
-                  <span>STEP</span>
-                  <b>{n}</b>
-                </span>
-                <h3>{st.t}</h3>
-                {st.body.map((x) => (
-                  <p key={x}>{x}</p>
+      <div className="kz">
+        <div className="wrap">
+          <section className="kz-hero" aria-labelledby="kyc-h1">
+            <span className="kz-grid" aria-hidden="true" />
+            <div className="kz-hero-copy">
+              <p className="k">{c.hero.k}</p>
+              <h1 className="h1" id="kyc-h1">
+                <Words text={c.hero.h1} />
+              </h1>
+              <p className="sub">{c.hero.sub}</p>
+              <div className="hrow">
+                <AppLink href="#bundle" className="btn kz-btn-light">
+                  {c.hero.cta}
+                  <Arrow />
+                </AppLink>
+                <AppLink href="#how" className="btn kz-btn-out">{c.hero.cta2}</AppLink>
+              </div>
+              <ul className="kz-pts">
+                {c.hero.points.map((x, i) => (
+                  <li key={x} style={d(i)}><span className="pip"><Tick tone="inverse" /></span>{x}</li>
                 ))}
-              </li>
-            );
-          })}
-        </ol>
-        <div className="emp3-cta">
-          <AppLink href="/contact" className="btn btn-ink">
-            {c.how.cta}
-          </AppLink>
+              </ul>
+            </div>
+            <KycHeroStage
+              photo={<Image src="/img/kyc/hero-selfie-2.jpg" alt="" width={1024} height={1024} priority sizes="(max-width: 1080px) 92vw, 560px" />}
+              screens={screens}
+              id={c.hero.case.id}
+              time={c.hero.case.time}
+              name={c.hero.case.name}
+              rows={c.hero.case.rows}
+              pending={c.hero.case.pending}
+              result={c.hero.case.result}
+              passed={c.hero.case.passed}
+            />
+          </section>
         </div>
-      </div>
 
-      <div className="wrap sec3" id="solutions-we-offer">
-        <div className="sec-head smb3-head">
-          <h2 className="h2">{c.solutions.h}</h2>
-          <p className="lede">{c.solutions.sub}</p>
-        </div>
-        <ul className="body3 smb3-cards kyc3-sol">
-          {CARDS.map(([k, icon]) => (
-            <li key={k}>
-              <span className="ic">
-                <KycIcon id={icon} />
-              </span>
-              <h3>{c.solutions.cards[k].t}</h3>
-              <ol>
-                {c.solutions.cards[k].items.map((x) => (
-                  <li key={x}>{x}</li>
-                ))}
-              </ol>
-            </li>
-          ))}
-        </ul>
-      </div>
+        <KycWhy c={c.why} />
 
+        <section className="wrap kz-sec" id="how" aria-labelledby="kyc-how-h">
+          <Head k={c.how.k} h={c.how.h} id="kyc-how-h" sub={c.how.sub} />
+          <KycScrolly
+            screens={screens.slice(0, STEPS.length)}
+            steps={STEPS.map((k, i) => ({ n: String(i + 1).padStart(2, "0"), t: c.how.steps[k].t, p: c.how.steps[k].p }))}
+          />
+          <KycDecision c={c.how.decision} />
+        </section>
+
+        <KycOps c={c.ops} />
+        <KycBundle c={c.bundle} />
+        <KycWho c={c.who} />
+        <KycRbi c={c.rbi} />
+        <FaqSection head={c.faq.h} faqs={c.faq.items} />
+        <KycClose c={c.close} />
+      </div>
       <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>
   );

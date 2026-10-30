@@ -88,6 +88,7 @@ export const STATIC_ROUTES: readonly RouteEntry[] = [
 
   // Utility
   r("/about", "monthly", 0.7),
+  r("/partner-with-us", "monthly", 0.7),
   r("/contact", "monthly", 0.6),
 ];
 

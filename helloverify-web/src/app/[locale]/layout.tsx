@@ -10,7 +10,8 @@ import { notFound } from "next/navigation";
 
 import { directionOf, openGraphLocales, routing, scriptStackOf } from "@/lib/i18n/routing";
 import { Analytics } from "@/components/analytics/Analytics";
-import { ConsentBanner, ConsentSettings } from "@/components/chrome/ConsentBanner";
+import { ConsentBanner } from "@/components/chrome/ConsentBanner";
+import { TalkToSales } from "@/components/chrome/TalkToSales";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ORGANIZATION, WEBSITE } from "@/lib/seo/schema/organization";
 import { SITE_NAME, SITE_URL } from "@/lib/seo/site";
@@ -187,8 +188,9 @@ export default async function LocaleLayout({
         <a className="skip-link" href="#main-content">
           {t.skipToContent}
         </a>
-        {/* The consent bar, in flow, directly after the bypass link — so the
-            tab order is skip link, consent, nav. It carries its own inline
+        {/* The consent bar, fixed to the viewport bottom but directly after
+            the bypass link in source — so the tab order is skip link, consent,
+            nav. It carries its own inline
             boot script, which must be parsed before the bar it governs; see
             the file. Costs 0.0 KB of `/_next/static` script. */}
         <ConsentBanner locale={locale} />
@@ -208,11 +210,9 @@ export default async function LocaleLayout({
         <AuthPortal login={login} checkout={checkout} locale={locale}>
           {children}
         </AuthPortal>
-        {/* "Cookie preferences", below the footer, visible only once a choice
-            exists. The copy promises it IN the footer; `SiteFooter.tsx` is
-            being edited concurrently, so it is a strip of its own for now and
-            `href="#cookie-settings"` already works from anywhere. */}
-        <ConsentSettings />
+        {/* After the page in source, so tab order reaches it last. Fixed to
+            the viewport in CSS, and lifted while the consent bar is open. */}
+        <TalkToSales locale={locale} />
         {/* GA4, and it renders NOTHING unless NEXT_PUBLIC_GA_MEASUREMENT_ID is
             set at build time — no script, no request, no cookie. See the file:
             the id is the small half of turning it on, and the cookie policy

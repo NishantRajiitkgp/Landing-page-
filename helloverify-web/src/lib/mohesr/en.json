@@ -34,6 +34,7 @@
     "roleCards": {
       "candidates": {
         "title": "For Candidates",
+        "body": "Validate your accreditation and educational credentials through our self service portal, supported by a guided verification process for a smooth and hassle free experience",
         "iconSrc": "/assets/saudi/icon-candidates.svg",
         "primaryCta": {
           "label": "Start Verification",
@@ -42,6 +43,7 @@
       },
       "employers": {
         "title": "For Employers & Agencies",
+        "body": "Verify employee qualifications at scale, manage multiple cases, and receive dedicated support with compliance-ready documentation.",
         "iconSrc": "/assets/saudi/icon-employers.svg",
         "primaryCta": { "label": "Start Verification", "href": "https://agency.helloverify.ae/", "hidden": true },
         "secondaryCta": { "label": "Talk to Sales", "href": "/contact?tab=enquiry&role=applicant&contact=mohesr" }

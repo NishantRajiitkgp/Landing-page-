@@ -46,7 +46,7 @@ export default async function MinistryOfManpower({
   setRequestLocale(locale);
   const doc = momDoc(locale);
   const tabs = doc.screening.tabs.map((tab) => ({ id: tab.id, label: tab.label }));
-  const hero = <MomHero hero={doc.hero} locale={locale} />;
+  const hero = <MomHero hero={doc.hero} roles={doc.screening.overview.roleCards} locale={locale} />;
 
   return (
     <PageShell crumbs={[{ label: doc.hero.breadcrumb[1].label }]} closing={false}>

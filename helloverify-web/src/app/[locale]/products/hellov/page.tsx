@@ -1,6 +1,6 @@
-/** /products/hellov — the old SPA's HelloV page in its order: hero, intro,
- *  the Packages / Single Checks tabs, the Advanced Package cards. Copy is
- *  `hellov.base.json` word for word (`individuals.hellov`). */
+/** /products/hellov — the old SPA's HelloV page: hero, intro, the Packages /
+ *  Single Checks tabs. The Advanced Package cards came off on 16 Oct 2026;
+ *  those tiers now sit inside the Packages widgets. */
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { pageMetadata } from "@/lib/seo/metadata";
@@ -8,19 +8,14 @@ import { copyFor } from "@/lib/seo/copy";
 import { serviceNode, type ServiceFacts } from "@/lib/seo/schema/service";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { PageShell } from "@/components/chrome/PageShell";
-import { AppLink } from "@/components/chrome/AppLink";
 import { setRequestLocale } from "next-intl/server";
-import { CommerceCta } from "@/components/commerce/CommerceCta";
-import { HelloVTabs, HelloVTabsBound, type Single } from "@/components/hellov/HelloVTabs";
-import { HeaderIcon, CheckIcon, type HeaderIconId, type CheckIconId } from "@/components/hellov/HelloVIcons";
-import type { IndividualsCopy } from "@/lib/copy/individuals";
+import { HelloVTabs, HelloVTabsBound, type Offer, type OfferLabels, type PackageKey, type Single } from "@/components/hellov/HelloVTabs";
 import { INDIVIDUALS } from "@/lib/copy/individuals";
 import { copy } from "@/lib/copy/request";
-import { HELLOV_WHATSAPP } from "@/lib/hellov";
+import { SECTIONS } from "@/lib/copy/sections";
+import { liveBuyUrl, type LiveServiceKey } from "@/lib/hellostaff/live";
 
 const PATH = "/products/hellov";
-const SALES = "/contact?tab=enquiry&role=consumer&contact=general-queries";
-type AdvancedKey = keyof IndividualsCopy["hellov"]["advanced"]["cards"];
 
 /** Structure, not copy: the old CMS `unitAmount`, `verificationMinutes` and
  *  `checkoutPackageName` per single check, in the CMS order. */
@@ -33,20 +28,18 @@ const SINGLES: readonly Single[] = [
   { key: "address", id: "digital-address", unitAmount: 299, minutes: 30, checkoutName: "Digital Location Check", img: { src: "/img/hellov/single-address.jpg", w: 900, h: 600 } },
 ];
 
-const ADVANCED: readonly {
-  key: AdvancedKey;
-  id: string;
-  unitAmount: number;
-  checkoutName: string;
-  icon: HeaderIconId;
-  checks: readonly CheckIconId[];
-  popular?: true;
-}[] = [
-  { key: "homeStaff", id: "advanced-home-staff", unitAmount: 1399, checkoutName: "Home Staff Advanced Package", icon: "homeStaff", checks: ["voterId", "criminal", "address"] },
-  { key: "nanny", id: "advanced-nanny", unitAmount: 1399, checkoutName: "Nanny Verification Advanced Package", icon: "nanny", checks: ["identity", "criminal", "address"] },
-  { key: "driver", id: "advanced-driver", unitAmount: 1799, checkoutName: "Driver Verification Advanced Package", icon: "driver", checks: ["drivingLicense", "criminal", "voterId", "address"], popular: true },
-  { key: "tenant", id: "advanced-tenant", unitAmount: 1799, checkoutName: "Tenant Verification Advanced Package", icon: "tenant", checks: ["creditCheck", "criminal", "aadhaar"] },
-];
+/** Every package tier buys on the Hello Staff storefront, the same
+ *  `/buy/<package>-<tier>` links the homepage uses. */
+const BUY_KEYS: Record<PackageKey, LiveServiceKey> = {
+  driver: "driver",
+  homeStaff: "homeStaff",
+  tenant: "tenant",
+  nanny: "nanny",
+  verifyAnyone: "verifyAnyone",
+  cyberIdentity: "cyberIdentity",
+  knowIdentity: "knowIdentity",
+  knowContact: "knowContact",
+};
 
 export async function generateMetadata({
   params,
@@ -57,17 +50,13 @@ export async function generateMetadata({
   return pageMetadata(locale, PATH);
 }
 
-/** BUILD-SPEC §8.2. `offers` name two Advanced cards and a check each shows,
- *  so `check-schema` finds both on the page. */
+/** BUILD-SPEC §8.2. No `offers`: the package names are translated per locale,
+ *  so an English catalogue would fail the "name is on the page" check. */
 const SERVICE: ServiceFacts = {
   path: PATH,
   name: "HelloV — verification on WhatsApp",
   description: copyFor(PATH).description,
   serviceType: "Background verification",
-  offers: [
-    { name: "Driver Verification", description: "Driving License Check" },
-    { name: "Home Staff Verification", description: "Criminal Check" },
-  ],
 };
 
 export default async function HelloVPage({
@@ -78,72 +67,35 @@ export default async function HelloVPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const c = (await copy(INDIVIDUALS)).hellov;
+  const shop = (await copy(SECTIONS)).consumer.shop;
+  const keys = Object.keys(c.packages.items) as PackageKey[];
+  const offers: Offer[] = keys.map((key) => {
+    const s = shop.services[key];
+    const prices = { basic: "basicPrice" in s ? s.basicPrice : undefined, advanced: "price" in s ? s.price : undefined };
+    const tier = (tk: "basic" | "advanced") => ({
+      checks: s[tk],
+      price: prices[tk],
+      href: liveBuyUrl(BUY_KEYS[key], tk),
+      external: true,
+    });
+    return { key, popular: key === "driver", basic: tier("basic"), advanced: tier("advanced") };
+  });
+  const labels: OfferLabels = {
+    tiers: shop.tiers,
+    popular: shop.popular,
+    currency: shop.currency,
+  };
 
   return (
     <PageShell crumbs={[{ label: c.crumb }]} closing={false}>
-      <div className="wrap hero3">
+      <div className="wrap hero3 hv3-hero">
         <h1 className="h1">{c.hero.h1}</h1>
-        <p className="sub">{c.hero.sub}</p>
-        <div className="hrow">
-          <AppLink href={SALES} className="btn btn-ink">
-            {c.hero.cta}
-          </AppLink>
-        </div>
-      </div>
-
-      <div className="wrap sec3">
         <p className="hv3-lead">{c.intro}</p>
       </div>
 
-      <Suspense fallback={<HelloVTabs c={c} whatsapp={HELLOV_WHATSAPP} singles={SINGLES} />}>
-        <HelloVTabsBound c={c} whatsapp={HELLOV_WHATSAPP} singles={SINGLES} />
+      <Suspense fallback={<HelloVTabs c={c} offers={offers} labels={labels} singles={SINGLES} />}>
+        <HelloVTabsBound c={c} offers={offers} labels={labels} singles={SINGLES} />
       </Suspense>
-
-      <div className="wrap sec3" id="hellov-premium">
-        <div className="sec-head">
-          <h2 className="h2">{c.advanced.h}</h2>
-        </div>
-        <ul className="body3 hv3-adv">
-          {ADVANCED.map((a) => {
-            const it = c.advanced.cards[a.key];
-            return (
-              <li key={a.key}>
-                {a.popular ? <span className="bdg">{c.advanced.badge}</span> : null}
-                <div className="hd">
-                  <span className="ic">
-                    <HeaderIcon id={a.icon} />
-                  </span>
-                  <h3>{it.t}</h3>
-                </div>
-                <p className="pr">{it.price}</p>
-                <ul className="ck">
-                  {it.checks.map((label, i) => (
-                    <li key={label}>
-                      <span className="ic">
-                        <CheckIcon id={a.checks[i]} />
-                      </span>
-                      <span>{label}</span>
-                    </li>
-                  ))}
-                </ul>
-                <CommerceCta
-                  className="btn btn-ink btn-sm"
-                  label={c.advanced.buy}
-                  loginRedirect="products/hellov"
-                  packageDetails={{
-                    packageType: "home",
-                    packageId: a.id,
-                    packageName: a.checkoutName,
-                    priceDisplay: it.price,
-                    unitAmount: a.unitAmount,
-                    includedChecks: [...it.checks],
-                  }}
-                />
-              </li>
-            );
-          })}
-        </ul>
-      </div>
 
       <JsonLd data={serviceNode(locale, SERVICE)} />
     </PageShell>

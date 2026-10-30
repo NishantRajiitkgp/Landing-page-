@@ -10,6 +10,11 @@ const nextConfig: NextConfig = {
   /** The default `X-Powered-By: Next.js` names the framework on every response. */
   poweredByHeader: false,
 
+  /** The dev-only route/issues badge injects inline styles, which `style-src`
+   *  below refuses, so it renders as raw boxes over the page. Compile and
+   *  runtime errors still surface with this off. */
+  devIndicators: false,
+
   experimental: {
     /** On by default since 16.4, and it writes every browser console line to
      *  `.next/dev/logs/next-development.log`. On Windows each write wakes the
@@ -133,7 +138,10 @@ const nextConfig: NextConfig = {
     /** MOM applicant pay loads checkout.js only once `MOM_APPLY_LIVE` is on.
      *  The demo confirms in-page and never requests the script. */
     const momApplyLive = ["1", "true", "yes"].includes((process.env.MOM_APPLY_LIVE ?? "").trim().toLowerCase());
-    const liveRzp = liveTravel || momApplyLive;
+    /** HelloV home-service checkout (`/products/hellov/verify/*`) pays
+     *  through Hello Staff's Razorpay once `HELLOSTAFF_LIVE` is on. */
+    const helloStaffLive = ["1", "true", "yes"].includes((process.env.HELLOSTAFF_LIVE ?? "").trim().toLowerCase());
+    const liveRzp = liveTravel || momApplyLive || helloStaffLive;
     const rzp = liveRzp ? " https://checkout.razorpay.com" : "";
     const rzpConnect = liveRzp
       ? " https://api.razorpay.com https://lumberjack.razorpay.com https://checkout.razorpay.com"

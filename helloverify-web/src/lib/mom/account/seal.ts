@@ -4,7 +4,7 @@ import "server-only";
 
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 
-export type SealPurpose = "session" | "proof" | "challenge" | "demo" | "document" | "payment" | "case" | "batch" | "loa" | "loa-proof" | "loa-signed";
+export type SealPurpose = "session" | "proof" | "challenge" | "demo" | "document" | "payment" | "case" | "batch" | "loa" | "loa-proof" | "loa-signed" | "hellostaff";
 
 type Envelope<T> = { exp: number; data: T };
 

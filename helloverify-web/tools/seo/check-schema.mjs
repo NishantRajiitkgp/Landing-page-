@@ -87,9 +87,8 @@ const SERVICE_PAGES = new Set([
 const HOWTO_PAGES = new Set([
   "/en/business",
   "/en/products/bgv-smb",
-  // `/en/products/customer-kyc` left on 6 Oct 2026: the old page's six step
-  // cards are not one instruction each (step 1 lists three check groups), so
-  // they render as the old cards, not a `Steps` strip
+  // `/en/products/customer-kyc` stays off this list: the six phone steps are
+  // descriptive cards, not a `Steps` strip, so they do not emit a HowTo
   "/en/individuals",
   // the old "How it works" (Register & Upload → … → Receive Your Verification
   // Report); the page's "Our Services" strip has no `name` and emits nothing
@@ -151,7 +150,7 @@ const sitemapPaths = new Set(
 
 const pageFiles = await htmlPages(root);
 /** Gated account shells — prerendered, noindex, not in the sitemap. */
-const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings|solutions\/manpower-and-education-authorities\/ministry-of-manpower\/(?:register|sign-in|apply|authorise|employers(?:\/register|\/sign-in)?)|governments\/immigration\/embassy-of-italy\/partners(?:\/join|\/sign-in)?)$/;
+const ACCOUNT_PAGE = /^\/[a-z]{2}\/(cart|orders|orders\/candidate|orders\/smb-candidates|profile-settings|products\/hellov\/verify\/(?:driver|home-staff|nanny|tenant)|solutions\/manpower-and-education-authorities\/ministry-of-manpower\/(?:register|sign-in|apply|authorise|employers(?:\/register|\/sign-in)?)|governments\/immigration\/embassy-of-italy\/partners(?:\/join|\/sign-in)?)$/;
 /** The per-page decisions below are written once, against `/en`; `hi` and
  *  `ar` render the same templates, so they inherit the English row. */
 const asEn = (path) => path.replace(/^\/[a-z]{2}(?=\/|$)/, "/en");

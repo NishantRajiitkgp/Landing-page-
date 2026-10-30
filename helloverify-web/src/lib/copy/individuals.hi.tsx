@@ -124,8 +124,9 @@ export const hi: IndividualsCopy = {
   /** `/products/hellov` — the old `hellov.base.json`, word for word, in its
    *  order: hero, intro, the Packages / Single Checks tabs (the AI Travel tab
    *  was switched off, `showAi: false`), the Advanced Package cards.
-   *  `checksInclude` is the old `common.checksInclude` label; `stepLabel`,
-   *  `banner` and `mins` were hard-coded English in the old components and
+   *  The Packages tab's WhatsApp steps, QR card and check pills went on
+   *  16 Oct 2026: its Basic / Advanced tiers are the homepage storefront's
+   *  (`sections.consumer.shop`). `banner` and `mins` were hard-coded English in the old components and
    *  stay English in every locale, as the old page showed them. `pager` is
    *  the old pager's aria labels. */
   hellov: {
@@ -140,62 +141,40 @@ export const hi: IndividualsCopy = {
     packages: {
       h: "पैकेजेस",
       sub: "प्रक्रिया इतनी आसान है कि आप इसे खुद कर सकते हैं",
-      stepLabel: "STEP",
-      steps: {
-        scan: { t: "QR कोड स्कैन करें", p: "WhatsApp कैमरा से" },
-        select: { t: "चुनें", p: "आप किसका वेरिफाई करना चाहते हैं" },
-        photo: { t: "फ़ोटो भेजें", p: "दस्तावेज़ का" },
-      },
-      checksInclude: "शामिल जाँचें",
       buy: "अभी खरीदें",
       items: {
         driver: {
           t: "ड्राइवर वेरिफिकेशन",
           p: "ड्राइविंग लाइसेंस और पहचान का त्वरित सत्यापन कर प्रामाणिकता और पात्रता की पुष्टि करें — तेज़, सुरक्षित और आसान डिजिटल चेक के साथ बेहतर निर्णय लें।",
-          pills: ["Driving License Check", "Address Check"],
         },
         homeStaff: {
           t: "होम स्टाफ",
           p: "हायर करने से पहले घरेलू मदद और सिक्योरिटी स्टाफ का सत्यापन करें। भरोसेमंद डिजिटल चेक्स के साथ अपने परिवार के लिए सुरक्षित माहौल बनाएं।",
-          pills: ["Criminal Check", "Identity Check"],
         },
         tenant: {
           t: "टेनेंट वेरिफिकेशन",
           p: "फ़ैसला लेने से पहले जानें कि आप किसे अंदर आने दे रहे हैं। टेनेंट, ट्यूटर, केयरटेकर या किसी को भी पहचान और लोकेशन क्लैरिटी के साथ वेरिफाई करें।",
-          pills: ["Identity Check", "Address Check"],
         },
         nanny: {
           t: "नैनी वेरिफिकेशन",
           p: "सुनिश्चित करें कि आपका बच्चा सुरक्षित हाथों में है। नैनी और केयरगिवर्स को वेरिफाई करें — जितना भरोसा आप किसी पर करते हैं, उतने ही सख्त चेक्स के साथ।",
-          pills: ["Criminal Check", "Identity Check"],
         },
         verifyAnyone: {
           t: "किसी को भी वेरिफाई करें",
           p: "फ़ैसला लेने से पहले, जिस पर भरोसा करना है उसे वेरिफाई करें। तेज़, सुरक्षित डिजिटल चेक्स के साथ पहचान और आपराधिक बैकग्राउंड की पुष्टि करें।",
-          pills: ["Identity Check", "Criminal Check"],
         },
         cyberIdentity: {
           t: "साइबर आइडेंटिटी वेरिफिकेशन",
           p: "ऑनलाइन धोखाधड़ी और पहचान की नकल से सुरक्षित रहें। तेज़, सुरक्षित चेक्स से साइबर पहचान वेरिफाई करें और डिजिटल इंटरैक्शन पर भरोसा करें।",
-          pills: ["Identity Check", "Criminal Check"],
         },
         knowIdentity: {
           t: "पहचान जानें",
           p: "ऑनलाइन पहचान धोखाधड़ी से खुद को सुरक्षित रखें। तेज़, सटीक चेक्स से दस्तावेज़ और डेटाबेस वैलिडेट करें जो पुष्टि करें कि सामने वाला वास्तव में कौन है।",
-          pills: ["Identity Check"],
         },
         knowContact: {
           t: "अपने कॉन्टैक्ट को जानें",
           p: "किसी नए कॉन्टैक्ट पर भरोसा करने से पहले जानें कि आप किससे डील कर रहे हैं। तेज़, भरोसेमंद चेक्स से फ़ोटो, ID और बैकग्राउंड वेरिफाई करें।",
-          pills: ["Identity Check", "Criminal Check"],
         },
-      },
-      promo: {
-        brand: "HelloV",
-        tagline: "WhatsApp पर तुरंत किसी का भी वेरिफाई करें",
-        qrAlt: "WhatsApp पर HelloV खोलने के लिए स्कैन करें",
-        caption: "HelloVerify द्वारा WhatsApp पर आसान वेरिफिकेशन।",
-        cta: "वेरिफिकेशन शुरू करें",
       },
     },
     singles: {
@@ -244,23 +223,23 @@ export const hi: IndividualsCopy = {
       cards: {
         homeStaff: {
           t: "Home Staff Verification",
-          price: "INR ₹1399",
-          checks: ["Voter Id Check", "Criminal Check", "Address Check"],
+          price: "INR ₹699",
+          checks: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
         },
         nanny: {
           t: "Nanny Verification",
-          price: "INR ₹1399",
-          checks: ["Identity Check", "Criminal Check", "Address Check"],
+          price: "INR ₹899",
+          checks: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
         },
         driver: {
           t: "Driver Verification",
-          price: "INR ₹1799",
-          checks: ["Driving License Check", "Criminal Check", "Voter Id Check", "Address Check"],
+          price: "INR ₹799",
+          checks: ["Driving License Check", "Court Records", "FIR Record"],
         },
         tenant: {
           t: "Tenant Verification",
-          price: "INR ₹1799",
-          checks: ["Credit Check", "Criminal Check", "Aadhaar Check"],
+          price: "INR ₹1299",
+          checks: ["ID Verification (Aadhaar)", "Court Records", "FIR Record"],
         },
       },
     },

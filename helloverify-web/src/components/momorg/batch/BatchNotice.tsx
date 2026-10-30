@@ -31,13 +31,13 @@ export function BatchNotice({
   if (notice?.kind === "import") {
     const r = notice.report;
     text = [
-      r.added ? fill(b.added, { n: r.added }) : "",
+      r.added ? fill(r.added === 1 ? b.foundOne : b.found, { n: r.added }) : "",
       r.updated ? fill(b.updated, { n: r.updated }) : "",
+      toFix ? fill(toFix === 1 ? b.attentionOne : b.attention, { n: toFix }) : "",
       r.skipped ? fill(b.skipped, { n: r.skipped }) : "",
-      toFix ? fill(b.toFix, { n: toFix }) : "",
     ]
       .filter(Boolean)
-      .join(" · ");
+      .join(" ");
   } else if (notice?.kind === "removed") text = fill(b.removed, { n: notice.ids.length });
   else if (notice) text = notice.text;
 

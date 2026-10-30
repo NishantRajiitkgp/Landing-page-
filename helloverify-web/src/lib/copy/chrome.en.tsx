@@ -80,7 +80,7 @@ export const en = {
       trust: { t: "Trust & Safety - KYC", d: "Secure identity verification and onboarding with advanced KYC checks" },
       premHealth: { t: "Doctor, Dentist & Other Health Practitioners", d: "Services designed to ensure accurate submission for healthcare professionals applying to authorities" },
       premImmigration: { t: "Immigration Documents Pre-Screening", d: "Personalized support to ensure accurate & hassle free visa pre-screening process" },
-      premConsumer: { t: "Consumer Service", d: "Advanced verification package with extra background checks for greater confidence, safety, and peace of mind" },
+      premConsumer: { t: "Staff Verification", d: "Advanced verification package with extra background checks for greater confidence, safety, and peace of mind" },
       enquiry: { t: "Enquiry", d: "Reach our team for questions, pricing, and partnership opportunities." },
     },
     about: "About Us",
@@ -124,6 +124,7 @@ export const en = {
       instagram: "Instagram",
     },
     about: "About us",
+    partner: "Partner with us",
     contact: "Contact & support",
     cols: {
       governments: "Governments",
@@ -278,8 +279,6 @@ export const en = {
     policy: "Cookie Policy",
     accept: "Accept",
     reject: "Reject",
-    reopenRegion: "Your cookie choice",
-    reopen: "Cookie preferences",
   },
 
   /** `chrome/FaqSection.tsx`. Only the eyebrow: the questions and answers are

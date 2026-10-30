@@ -53,9 +53,9 @@ export const STATIC_AR: Record<StaticSeoPath, PageCopy> = {
       "بصفتنا مزودًا عالميًا لحلول فحص الخلفيات، نساعد المؤسسات بمختلف أحجامها على توظيف الأشخاص المناسبين للفرص المناسبة. انضم إلينا لتحديث طريقة التوظيف والتوسع.",
   },
   "/products/customer-kyc": {
-    title: "منصة KYC — HelloVerify",
+    title: "اعرف عميلك — HelloVerify",
     description:
-      "قم بضم العملاء أسرع. اكتشف الاحتيال مبكرًا. يجمع حل KYC الشامل لدينا كل خطوة من خطوات الانضمام الرقمي في تجربة سلسة تُبقي المحتالين خارجًا وتُبقي العملاء الحقيقيين في مسارهم للأمام.",
+      "الموافقة، والسيلفي، وPAN، ومطابقة الوجه، وDigiLocker — في مسار واحد، وقرار واحد في النهاية.",
   },
   "/products/certifier": {
     title: "Certifier — HelloVerify",
@@ -165,6 +165,11 @@ export const STATIC_AR: Record<StaticSeoPath, PageCopy> = {
     title: "عن HelloVerify",
     description:
       "الثقة أصبحت البنية التحتية الرقمية الحيوية القادمة في العالم. HelloVerify تبني المنصة التي ستتحرك الثقة من خلالها.",
+  },
+  "/partner-with-us": {
+    title: "برنامج شركاء HelloVerify · اربح عمولة تصل إلى 15%",
+    description:
+      "انضم إلى برنامج شركاء HelloVerify واربح عمولة تصل إلى 15% على كل خدمة تحقق من الخلفية يستخدمها عملاؤك. الانضمام مجاني ورقمي بالكامل.",
   },
   "/contact": {
     title: "لنبني الأعمال معًا — HelloVerify",

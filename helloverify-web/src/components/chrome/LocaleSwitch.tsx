@@ -5,14 +5,13 @@
  *  A DROPDOWN, not the three endonyms in a row. Unicode `→` was the last
  *  directional residue; this was the leftover layout one: three names sat
  *  in `.acts` and the bar hid the whole control below 1280px to fit. The
- *  trigger is the current endonym; the others live in a `<details>` panel.
- *  No client JS — the same disclosure the burger groups already use.
+ *  trigger is the current endonym; the others live in a `<details>` panel,
+ *  the same disclosure the burger groups already use.
  *
- *  The link goes to that locale's HOME, not to the mirrored current path.
- *  Mirroring needs the request pathname; there is no stable server-side way to
- *  read it in this router, and the client-side answer is next-intl's
- *  `usePathname`, which forces `NextIntlClientProvider` at the root and the
- *  15.7 KB brotli runtime `chrome/AppLink.tsx` measured and rejected.
+ *  The link stays on the current page and only swaps the locale prefix:
+ *  `/en/products/customer-kyc` becomes `/hi/products/customer-kyc`.
+ *  The prefix swap lives in `LocaleLinks`: this file still cannot see the
+ *  request path, and calling `headers()` for it would make every page dynamic.
  *
  *  ENDONYM is a table rather than `Intl.DisplayNames`: the name has to be in
  *  its OWN language — a reader who needs हिन्दी cannot be asked to find the
@@ -28,7 +27,7 @@
 import type { CSSProperties } from "react";
 import { getLocale } from "next-intl/server";
 
-import { localise } from "@/lib/i18n/href";
+import { LocaleLinks } from "@/components/chrome/LocaleLinks";
 import { routing } from "@/lib/i18n/routing";
 
 const ENDONYM: Record<string, string | undefined> = {
@@ -60,9 +59,10 @@ export async function LocaleSwitch({ style }: { style?: CSSProperties }) {
         </svg>
       </summary>
       <div className="lang-list">
-        {others.map((l) => (
-          <a key={l} href={localise("/", l)} hrefLang={l} lang={l}>{endonym(l)}</a>
-        ))}
+        <LocaleLinks
+          locales={routing.locales}
+          others={others.map((l) => ({ code: l, name: endonym(l) }))}
+        />
       </div>
     </details>
   );

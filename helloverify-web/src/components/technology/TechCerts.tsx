@@ -1,14 +1,19 @@
 /** "Enterprise-Grade Security & Compliance" on `/technology`: a white vault
-    panel. The dial beside the copy turns with the scroll until its red mark
-    meets the index, then the lock closes once. Below it, the certification
-    and membership marks, one tile each. The dial is decoration
-    (`aria-hidden`); the logos carry their alts from the copy. */
+    panel. The dial beside the copy carries the layers of protection round
+    the data; it turns with the scroll until its red mark meets the index,
+    then the lock closes once and every layer is ticked. Below it, the
+    certification and membership marks, one tile each. The dial is
+    decoration (`aria-hidden`); the logos carry their alts from the copy. */
 import type { CSSProperties } from "react";
 import Image from "next/image";
 import "@/app/v2/tech.css";
 import { LOGOS, type Alts } from "@/components/chrome/CertLogos";
 import { TechCertsStage } from "./TechCertsStage";
+import { GLOBE, Glyph, KEY, LOCK, PULSE } from "./TechPillarKit";
 
+/** The layers of protection round the data: encryption, access control,
+    monitoring, residency. Each is ticked when the lock closes. */
+const LAYERS = [LOCK, KEY, PULSE, GLOBE];
 const SEALS = ["nsr", "pbsa", "iso9001", "gdpr"] as const;
 const C = 200;
 const r2 = (n: number) => Math.round(n * 100) / 100;
@@ -34,6 +39,20 @@ function Dial() {
         <circle className="tk-dial-dash" cx={C} cy={C} r="124" />
         <circle className="tk-dot-red" cx={C} cy={C - 124} r="4" />
       </g>
+      {LAYERS.map((g, i) => {
+        const a = ((45 + i * 90) * Math.PI) / 180;
+        const [x, y] = [r2(C + 124 * Math.cos(a)), r2(C + 124 * Math.sin(a))];
+        return (
+          <g key={i} className="tk-layer" style={{ ...d(0.7 + i * 0.12), "--i": i } as CSSProperties}>
+            <circle className="tk-node" cx={x} cy={y} r="16" />
+            <Glyph g={g} x={x} y={y} s={0.62} />
+            <g className="tk-ok tk-layer-ok">
+              <circle cx={r2(x + 12)} cy={r2(y - 12)} r="6" />
+              <path className="tk-uf" d={`M${r2(x + 9.3)} ${r2(y - 11.85)}l1.8 1.8 3.6-3.75`} />
+            </g>
+          </g>
+        );
+      })}
       <circle className="tk-dial-ring" cx={C} cy={C} r="96" pathLength="1" style={d(0.55)} />
       <circle className="tk-dial-rip" cx={C} cy={C} r="96" />
       <path className="tk-dial-shield" d="M200 134l52 18v42c0 36-23 59-52 72c-29-13-52-36-52-72v-42z" />

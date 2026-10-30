@@ -1,6 +1,3 @@
-import Image from "next/image";
-
-import { AppLink } from "@/components/chrome/AppLink";
 import { localise } from "@/lib/i18n/href";
 import type { MohesrDoc } from "@/lib/mohesr/doc";
 
@@ -11,36 +8,28 @@ function outbound(href: string, locale: string) {
   return href;
 }
 
-export function MohesrOverview({ screening, locale }: { screening: Screening; locale: string }) {
-  const { roleCards, overview } = screening;
-  const employers = roleCards.employers;
+export function MohesrOverview({
+  screening,
+  prices,
+  locale,
+}: {
+  screening: Screening;
+  prices: MohesrDoc["hero"]["priceStrip"];
+  locale: string;
+}) {
+  const { overview } = screening;
   const how = overview.howItWorks;
   return (
     <>
       <section className="wrap sec3">
-        <div className="mom3-grid2">
-          <article className="mom3-card mohesr-role">
-            <span className="mohesr-mark">
-              <Image src="/img/mom/icon-candidates.svg" alt="" width={29} height={20} />
-            </span>
-            <h2>{roleCards.candidates.title}</h2>
-            <div className="mom3-acts">
-              <a className="btn btn-ink btn-sm" href={roleCards.candidates.primaryCta.href}>
-                {roleCards.candidates.primaryCta.label}
-              </a>
-            </div>
-          </article>
-          <article className="mom3-card mohesr-role">
-            <span className="mohesr-mark">
-              <Image src="/img/mom/icon-employers.svg" alt="" width={22} height={25} />
-            </span>
-            <h2>{employers.title}</h2>
-            <div className="mom3-acts">
-              <AppLink className="btn btn-ink btn-sm" href={employers.secondaryCta.href}>
-                {employers.secondaryCta.label}
-              </AppLink>
-            </div>
-          </article>
+        <div className="mom3-pricebreak mohesr-prices">
+          {prices.map((item) => (
+            <article key={item.label}>
+              <b>{item.value}</b>
+              <h3>{item.label}</h3>
+              {item.footnote ? <p>{item.footnote}</p> : null}
+            </article>
+          ))}
         </div>
       </section>
 

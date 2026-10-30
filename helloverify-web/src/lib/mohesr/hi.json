@@ -34,6 +34,7 @@
     "roleCards": {
       "candidates": {
         "title": "उम्मीदवारों के लिए",
+        "body": "हमारे सेल्फ‑सर्विस पोर्टल के माध्यम से अपनी मान्यता और शैक्षणिक क्रेडेंशियल सत्यापित करें — निर्देशित सत्यापन प्रक्रिया के साथ सहज और परेशानी‑मुक्त अनुभव।",
         "iconSrc": "/assets/saudi/icon-candidates.svg",
         "primaryCta": {
           "label": "सत्यापन शुरू करें",
@@ -42,6 +43,7 @@
       },
       "employers": {
         "title": "नियोक्ताओं और एजेंसियों के लिए",
+        "body": "कर्मचारी योग्यताओं का बड़े पैमाने पर सत्यापन करें, कई केस प्रबंधित करें, और अनुपालन‑तैयार दस्तावेज़ीकरण के साथ समर्पित सहायता प्राप्त करें।",
         "iconSrc": "/assets/saudi/icon-employers.svg",
         "primaryCta": { "label": "सत्यापन शुरू करें", "href": "https://agency.helloverify.ae/", "hidden": true },
         "secondaryCta": { "label": "बिक्री टीम से बात करें", "href": "/contact?tab=enquiry&role=applicant&contact=mohesr" }

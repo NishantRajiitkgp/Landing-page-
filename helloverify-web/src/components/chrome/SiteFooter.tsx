@@ -187,6 +187,7 @@ export async function SiteFooter() {
             </div>
             <div className="co">
               <AppLink href="/about">{t.about}</AppLink>
+              <AppLink href="/partner-with-us">{t.partner}</AppLink>
               <AppLink href="/contact">{t.contact}</AppLink>
               <LocaleSwitch />
             </div>
